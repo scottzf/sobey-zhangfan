@@ -13,11 +13,20 @@
 		location="classpath*:/application.functional.properties,
           			  classpath*:/application.functional-local.properties" />
 
-	 <jaxws:client id="service" serviceClass="com.sobey.cmdbuild.webservice.CmdbuildSoapService" 
-		address="${baseUrl}/cxf/soap/cmdbuildSoapService"  />
+	<jaxws:client id="service"
+		serviceClass="com.sobey.cmdbuild.webservice.CmdbuildSoapService"
+		address="${baseUrl}/cxf/soap/cmdbuildSoapService" />
 
 	<jaxws:client id="infrastructureService"
 		serviceClass="com.sobey.cmdbuild.webservice.InfrastructureSoapService"
 		address="${baseUrl}/cxf/soap/infrastructureSoapService" />
+
+	<jaxws:client id="financialSoapService"
+		serviceClass="com.sobey.cmdbuild.webservice.FinancialSoapService"
+		address="${baseUrl}/cxf/soap/financialSoapService" />
+
+	<jaxws:client id="iaasSoapService"
+		serviceClass="com.sobey.cmdbuild.webservice.IaasSoapService"
+		address="${baseUrl}/cxf/soap/iaasSoapService" />
 
 </beans>

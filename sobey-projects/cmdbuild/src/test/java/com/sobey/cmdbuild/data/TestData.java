@@ -2,17 +2,25 @@ package com.sobey.cmdbuild.data;
 
 import java.util.Date;
 
+import com.sobey.cmdbuild.entity.As2;
 import com.sobey.cmdbuild.entity.Company;
 import com.sobey.cmdbuild.entity.Consumptions;
+import com.sobey.cmdbuild.entity.Cs2;
 import com.sobey.cmdbuild.entity.DeviceSpec;
+import com.sobey.cmdbuild.entity.Dns;
+import com.sobey.cmdbuild.entity.Ecs;
 import com.sobey.cmdbuild.entity.EcsSpec;
+import com.sobey.cmdbuild.entity.Eip;
 import com.sobey.cmdbuild.entity.EipSpec;
+import com.sobey.cmdbuild.entity.Elb;
 import com.sobey.cmdbuild.entity.Es3Spec;
+import com.sobey.cmdbuild.entity.Esg;
 import com.sobey.cmdbuild.entity.Fimas;
 import com.sobey.cmdbuild.entity.FimasBox;
 import com.sobey.cmdbuild.entity.FimasPort;
 import com.sobey.cmdbuild.entity.Firewall;
 import com.sobey.cmdbuild.entity.FirewallPort;
+import com.sobey.cmdbuild.entity.GroupPolicy;
 import com.sobey.cmdbuild.entity.HardDisk;
 import com.sobey.cmdbuild.entity.Idc;
 import com.sobey.cmdbuild.entity.Ipaddress;
@@ -32,6 +40,7 @@ import com.sobey.cmdbuild.entity.Switches;
 import com.sobey.cmdbuild.entity.Tag;
 import com.sobey.cmdbuild.entity.Tenants;
 import com.sobey.cmdbuild.entity.Vlan;
+import com.sobey.cmdbuild.entity.Vpn;
 import com.sobey.test.data.RandomData;
 
 public class TestData {
@@ -79,27 +88,32 @@ public class TestData {
 	}
 
 	public static Idc randomIdc() {
+
 		Idc idc = new Idc();
+		
 		idc.setId(0);
 		idc.setCode(RandomData.randomName("code"));
 		idc.setDescription(RandomData.randomName("description"));
+		//idc.setBeginDate(startDate);
 
 		idc.setRemark(RandomData.randomName("remark"));
 		idc.setCity(RandomData.randomName("city"));
 		idc.setZip(RandomData.randomName("zip"));
 		idc.setAddress(RandomData.randomName("address"));
 		idc.setPhone(RandomData.randomName("phone"));
+		
 		return idc;
 	}
 
 	public static Rack randomRack() {
 		Rack rack = new Rack();
-		rack.setId(0);
-		rack.setCode(RandomData.randomName("code"));
-		rack.setDescription(RandomData.randomName("description"));
+		//rack.setId(0);
+		//rack.setCode(RandomData.randomName("code"));
+		//rack.setDescription(RandomData.randomName("description"));
 
-		rack.setRemark(RandomData.randomName("remark"));
-		rack.setIdc(129);
+		//rack.setRemark(RandomData.randomName("remark"));
+		//rack.setRemark("");
+		//rack.setIdc(85);
 		return rack;
 	}
 
@@ -263,20 +277,32 @@ public class TestData {
 		hardDisk.setCode(RandomData.randomName("code"));
 		hardDisk.setDescription(RandomData.randomName("description"));
 		hardDisk.setBeginDate(startDate);
-		hardDisk.setIdc(86);
 		hardDisk.setHardDiskSize(1024);
+		hardDisk.setIdc(85);
 
 		// 非必须参数
 		// hardDisk.setServer(0);
+		
 
 		return hardDisk;
 	}
 
 	public static Ipaddress randomIpaddress() {
+		
 		Ipaddress ipaddress = new Ipaddress();
+
 		ipaddress.setId(0);
 		ipaddress.setCode(RandomData.randomName("code"));
 		ipaddress.setDescription(RandomData.randomName("description"));
+		ipaddress.setIpaddressPool(46);//ip协议
+		ipaddress.setIpaddressStatus(49);
+		ipaddress.setVlan(91);
+		ipaddress.setBeginDate(startDate);
+		
+		ipaddress.setNetMask(RandomData.randomName("netMask"));
+		ipaddress.setIsp(44);
+		ipaddress.setGateway(RandomData.randomName("gateway"));
+		
 		return ipaddress;
 	}
 
@@ -438,11 +464,104 @@ public class TestData {
 		vlan.setCode(RandomData.randomName("code"));
 		vlan.setDescription(RandomData.randomName("description"));
 		vlan.setBeginDate(startDate);
-		vlan.setTenants(0);
+		vlan.setTenants(87);
+		vlan.setIdc(90);
 
 		vlan.setRemark(RandomData.randomName("remark"));
+		vlan.setSegment(RandomData.randomName("segment"));
+		vlan.setNetMask(RandomData.randomName("netMask"));
 
 		return vlan;
+	}
+	
+	public static Cs2 randomCs2(){
+		Cs2 cs2 = new Cs2();
+		cs2.setDiskSize(1024);
+		cs2.setEs3Spec(0);
+		cs2.setFimas(0);
+		cs2.setIpaddress(0);
+		cs2.setRemark(RandomData.randomName("remark"));
+		cs2.setTag(0);
+		cs2.setTenants(116);
+		return cs2;
+	}
+
+	public static As2 randomAs2(){
+		As2 as2 = new As2();
+		as2.setDiskSize(1024);
+		as2.setEs3Spec(0);
+		as2.setIpaddress(0);
+		as2.setNetAppController(0);
+		as2.setRemark(RandomData.randomName("remark"));
+		as2.setTag(0);
+		as2.setTenants(116);
+		as2.setVolumePath(RandomData.randomName("volumePath"));
+		as2.setVolumeType(0);
+		return as2;
+	}
+	
+	public static Eip randomEip(){
+		Eip eip = new Eip();
+		eip.setBandwidth(1024);
+		eip.setEipSpec(0);
+		eip.setEipStatus(0);
+		eip.setIpaddress(0);
+		eip.setRemark(RandomData.randomName("remark"));
+		eip.setTag(0);
+		eip.setTenants(116);
+		return eip;
+	}
+	
+	public static Elb randomElb(){
+		Elb elb = new Elb();
+		elb.setIpaddress(0);
+		elb.setIsSession(true);
+		elb.setRemark(RandomData.randomName("remark"));
+		elb.setTag(0);
+		elb.setTenants(116);
+		return elb;
+	}
+	
+	public static Dns randomDns(){
+		Dns dns = new Dns();
+		dns.setCnameDomain(RandomData.randomName("cnameDomain"));
+		dns.setDomainName(RandomData.randomName("domainName"));
+		dns.setDomainType(0);
+		dns.setRemark(RandomData.randomName("remark"));
+		dns.setTag(0);
+		dns.setTenants(116);
+		return dns;
+	}
+	
+	public static Esg randomEsg(){
+		Esg esg = new Esg();
+		esg.setAclNumber(0);
+		esg.setIsPublic(true);
+		esg.setRemark(RandomData.randomName("remark"));
+		esg.setTag(0);
+		esg.setTenants(116);
+		return esg;
+	}
+	
+	public static Vpn randomVpn(){
+		Vpn vpn = new Vpn();
+		vpn.setRemark(RandomData.randomName("remark"));
+		vpn.setTag(0);
+		vpn.setTenants(116);
+		vpn.setVpnName(RandomData.randomName("vpnName"));
+		vpn.setVpnPassword(RandomData.randomName("vpnPassword"));
+		return vpn;
+	}
+	
+	public static GroupPolicy randomGroupPolicy(){
+		GroupPolicy groupPolicy = new GroupPolicy();
+		groupPolicy.setRemark(RandomData.randomName("remark"));
+		groupPolicy.setTenants(116);
+		return groupPolicy;
+	}
+
+	public static Ecs randomEcs() {
+		return null;
 	}
 
 }
