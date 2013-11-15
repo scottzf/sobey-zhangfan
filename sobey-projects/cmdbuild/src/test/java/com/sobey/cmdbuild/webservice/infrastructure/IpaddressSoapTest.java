@@ -83,7 +83,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 
 	}
 
-	 @Test
+	@Test
 	// @Ignore
 	public void testCreateIpaddress() {
 
@@ -153,12 +153,11 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 		for (int i = 0; i < 10; i++) {
 
 			Ipaddress ipaddress = TestData.randomIpaddress();
-			
-			System.out.println(ipaddress.getCode()+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+			System.out.println(ipaddress.getCode() + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
 			IpaddressDTO ipaddressDTO = BeanMapper.map(ipaddress, IpaddressDTO.class);
 
-			
 			list.add(ipaddressDTO);
 
 		}

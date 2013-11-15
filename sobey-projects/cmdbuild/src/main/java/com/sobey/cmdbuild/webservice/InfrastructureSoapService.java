@@ -485,5 +485,5 @@ public interface InfrastructureSoapService {
 	 * @return List<IdResult>
 	 */
 	List<IdResult> insertVlan(@WebParam(name = "vlanDTOList") List<VlanDTO> vlanDTOList);
-	
+
 }

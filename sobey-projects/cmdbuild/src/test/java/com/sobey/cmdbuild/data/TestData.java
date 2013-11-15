@@ -92,30 +92,30 @@ public class TestData {
 	public static Idc randomIdc() {
 
 		Idc idc = new Idc();
-		
+
 		idc.setId(0);
 		idc.setCode(RandomData.randomName("code"));
 		idc.setDescription(RandomData.randomName("description"));
-		//idc.setBeginDate(startDate);
+		// idc.setBeginDate(startDate);
 
 		idc.setRemark(RandomData.randomName("remark"));
 		idc.setCity(RandomData.randomName("city"));
 		idc.setZip(RandomData.randomName("zip"));
 		idc.setAddress(RandomData.randomName("address"));
 		idc.setPhone(RandomData.randomName("phone"));
-		
+
 		return idc;
 	}
 
 	public static Rack randomRack() {
 		Rack rack = new Rack();
-		//rack.setId(0);
-		//rack.setCode(RandomData.randomName("code"));
-		//rack.setDescription(RandomData.randomName("description"));
+		// rack.setId(0);
+		// rack.setCode(RandomData.randomName("code"));
+		// rack.setDescription(RandomData.randomName("description"));
 
-		//rack.setRemark(RandomData.randomName("remark"));
-		//rack.setRemark("");
-		//rack.setIdc(85);
+		// rack.setRemark(RandomData.randomName("remark"));
+		// rack.setRemark("");
+		// rack.setIdc(85);
 		return rack;
 	}
 
@@ -284,27 +284,26 @@ public class TestData {
 
 		// 非必须参数
 		// hardDisk.setServer(0);
-		
 
 		return hardDisk;
 	}
 
 	public static Ipaddress randomIpaddress() {
-		
+
 		Ipaddress ipaddress = new Ipaddress();
 
 		ipaddress.setId(0);
 		ipaddress.setCode(RandomData.randomName("code"));
 		ipaddress.setDescription(RandomData.randomName("description"));
-		ipaddress.setIpaddressPool(46);//ip协议
+		ipaddress.setIpaddressPool(46);// ip协议
 		ipaddress.setIpaddressStatus(49);
 		ipaddress.setVlan(91);
 		ipaddress.setBeginDate(startDate);
-		
+
 		ipaddress.setNetMask(RandomData.randomName("netMask"));
 		ipaddress.setIsp(44);
 		ipaddress.setGateway(RandomData.randomName("gateway"));
-		
+
 		return ipaddress;
 	}
 
@@ -483,8 +482,8 @@ public class TestData {
 
 		return vlan;
 	}
-	
-	public static Cs2 randomCs2(){
+
+	public static Cs2 randomCs2() {
 		Cs2 cs2 = new Cs2();
 		cs2.setDiskSize(1024);
 		cs2.setEs3Spec(0);
@@ -496,7 +495,7 @@ public class TestData {
 		return cs2;
 	}
 
-	public static As2 randomAs2(){
+	public static As2 randomAs2() {
 		As2 as2 = new As2();
 		as2.setDiskSize(1024);
 		as2.setEs3Spec(0);
@@ -509,8 +508,8 @@ public class TestData {
 		as2.setVolumeType(0);
 		return as2;
 	}
-	
-	public static Eip randomEip(){
+
+	public static Eip randomEip() {
 		Eip eip = new Eip();
 		eip.setBandwidth(1024);
 		eip.setEipSpec(0);
@@ -521,8 +520,8 @@ public class TestData {
 		eip.setTenants(116);
 		return eip;
 	}
-	
-	public static Elb randomElb(){
+
+	public static Elb randomElb() {
 		Elb elb = new Elb();
 		elb.setIpaddress(0);
 		elb.setIsSession(true);
@@ -531,8 +530,8 @@ public class TestData {
 		elb.setTenants(116);
 		return elb;
 	}
-	
-	public static Dns randomDns(){
+
+	public static Dns randomDns() {
 		Dns dns = new Dns();
 		dns.setCnameDomain(RandomData.randomName("cnameDomain"));
 		dns.setDomainName(RandomData.randomName("domainName"));
@@ -542,8 +541,8 @@ public class TestData {
 		dns.setTenants(116);
 		return dns;
 	}
-	
-	public static Esg randomEsg(){
+
+	public static Esg randomEsg() {
 		Esg esg = new Esg();
 		esg.setAclNumber(0);
 		esg.setIsPublic(true);
@@ -552,8 +551,8 @@ public class TestData {
 		esg.setTenants(116);
 		return esg;
 	}
-	
-	public static Vpn randomVpn(){
+
+	public static Vpn randomVpn() {
 		Vpn vpn = new Vpn();
 		vpn.setRemark(RandomData.randomName("remark"));
 		vpn.setTag(0);
@@ -562,8 +561,8 @@ public class TestData {
 		vpn.setVpnPassword(RandomData.randomName("vpnPassword"));
 		return vpn;
 	}
-	
-	public static GroupPolicy randomGroupPolicy(){
+
+	public static GroupPolicy randomGroupPolicy() {
 		GroupPolicy groupPolicy = new GroupPolicy();
 		groupPolicy.setRemark(RandomData.randomName("remark"));
 		groupPolicy.setTenants(116);
