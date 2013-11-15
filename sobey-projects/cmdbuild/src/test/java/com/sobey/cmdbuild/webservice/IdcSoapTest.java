@@ -9,7 +9,6 @@ import java.util.Map;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -39,14 +38,11 @@ import com.sobey.core.mapper.BeanMapper;
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
 public class IdcSoapTest extends BaseFunctionalTestCase {
 
-	@Autowired
-	private CmdbuildSoapService service;
-
 	@Test
 	@Ignore
 	public void find() {
 		Integer id = 110;
-		DTOResult<IdcDTO> response = service.findIdc(id);
+		DTOResult<IdcDTO> response = cmdbuildSoapService.findIdc(id);
 		assertEquals("sobey", response.getDto().getCode());
 	}
 
@@ -54,16 +50,16 @@ public class IdcSoapTest extends BaseFunctionalTestCase {
 	@Ignore
 	public void getList() {
 		Map<String, Object> searchParams = Maps.newHashMap();
-		DTOListResult<IdcDTO> result = service.getIdcList(searchParams);
+		DTOListResult<IdcDTO> result = cmdbuildSoapService.getIdcList(searchParams);
 		assertEquals("0", result.getCode());
 	}
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void save() {
 		Idc idc = TestData.randomIdc();
 		IdcDTO idcDTO = BeanMapper.map(idc, IdcDTO.class);
-		IdResult response = service.createIdc(idcDTO);
+		IdResult response = cmdbuildSoapService.createIdc(idcDTO);
 		assertNotNull(response.getId());
 	}
 
@@ -71,10 +67,10 @@ public class IdcSoapTest extends BaseFunctionalTestCase {
 	@Ignore
 	public void update() {
 		Integer id = 110;
-		DTOResult<IdcDTO> response = service.findIdc(id);
+		DTOResult<IdcDTO> response = cmdbuildSoapService.findIdc(id);
 		IdcDTO idcDTO = response.getDto();
 		idcDTO.setDescription("冬天来了啊");
-		IdResult result = service.updateIdc(id, idcDTO);
+		IdResult result = cmdbuildSoapService.updateIdc(id, idcDTO);
 		assertNotNull(result.getId());
 	}
 
@@ -82,7 +78,7 @@ public class IdcSoapTest extends BaseFunctionalTestCase {
 	@Ignore
 	public void delete() {
 		Integer id = 110;
-		IdResult response = service.deleteTag(id);
+		IdResult response = cmdbuildSoapService.deleteTag(id);
 		assertNotNull(response.getId());
 	}
 
@@ -92,7 +88,7 @@ public class IdcSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<IdcDTO> result = service.getIdcPagination(searchParams, 1, 10);
+		PaginationResult<IdcDTO> result = cmdbuildSoapService.getIdcPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 		System.out.println("返回的查询结果数量:" + result.getGetTotalElements());

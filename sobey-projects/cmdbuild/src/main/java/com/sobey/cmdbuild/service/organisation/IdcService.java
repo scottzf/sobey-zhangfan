@@ -26,7 +26,6 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class IdcService extends BasicSevcie {
-
 	@Autowired
 	private IdcDao idcDao;
 
@@ -51,7 +50,7 @@ public class IdcService extends BasicSevcie {
 	 * 
 	 * @param searchParams
 	 *            动态查询条件Map
-	 * @return
+	 * @return Idc
 	 */
 	public Idc findIdc(Map<String, Object> searchParams) {
 		return idcDao.findOne(buildSpecification(searchParams));
@@ -60,7 +59,7 @@ public class IdcService extends BasicSevcie {
 	/**
 	 * 新增、保存对象
 	 * 
-	 * @param idc
+	 * @param Idc
 	 * @return Idc
 	 */
 	public Idc saveOrUpdate(Idc idc) {
@@ -86,8 +85,7 @@ public class IdcService extends BasicSevcie {
 	 * </pre>
 	 * 
 	 * @param searchParams
-	 *            动态查询条件Map
-	 * @return List<Idc>
+	 *            动态查询条件Map * @return List<Idc>
 	 */
 	public List<Idc> getIdcList(Map<String, Object> searchParams) {
 		return idcDao.findAll(buildSpecification(searchParams));
@@ -141,8 +139,11 @@ public class IdcService extends BasicSevcie {
 	 * @return PaginationResult<IdcDTO>
 	 */
 	public PaginationResult<IdcDTO> getIdcDTOPagination(Map<String, Object> searchParams, int pageNumber, int pageSize) {
+
 		Page<Idc> page = getIdcPage(searchParams, pageNumber, pageSize);
+
 		List<IdcDTO> dtos = BeanMapper.mapList(page.getContent(), IdcDTO.class);
+
 		return fillPaginationResult(page, dtos);
 	}
 }
