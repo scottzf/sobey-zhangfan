@@ -46,7 +46,7 @@ public class BaseFunctionalTestCase {
 
 	@Autowired
 	protected CmdbuildSoapService cmdbuildSoapService;
-	
+
 	@Autowired
 	protected IaasSoapService iaasSoapService;
 

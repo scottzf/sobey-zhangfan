@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.sobey</groupId>
-  <artifactId>sobey-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../modules/parent/</relativePath>
-  </parent>
-  <groupId>com.sobey.cmdbuild</groupId>
-  <artifactId>cmdbuild</artifactId>
-  <packaging>war</packaging>
-  <name>Sobey :: Projects :: CMDBuild</name>
-  
-  <!-- 项目属性 -->
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.sobey</groupId>
+		<artifactId>sobey-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../modules/parent/</relativePath>
+	</parent>
+	<groupId>com.sobey.cmdbuild</groupId>
+	<artifactId>cmdbuild</artifactId>
+	<packaging>war</packaging>
+	<name>Sobey :: Projects :: CMDBuild</name>
+
+	<!-- 项目属性 -->
 	<properties>
 		<jdbc.driver.groupId>postgresql</jdbc.driver.groupId>
 		<jdbc.driver.artifactId>postgresql</jdbc.driver.artifactId>
 		<jdbc.driver.version>${postgresql.version}</jdbc.driver.version>
 	</properties>
-  
-  	<!-- 依赖项定义 -->
+
+	<!-- 依赖项定义 -->
 	<dependencies>
 		<!-- SPRINGSIDE begin -->
 		<dependency>
@@ -39,9 +39,9 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
 		</dependency>
-		<!-- SPRING basic end -->	
+		<!-- SPRING basic end -->
 		<!-- SPRING end -->
-	
+
 		<!-- AOP begin -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
@@ -51,7 +51,7 @@
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
 		</dependency>
-		<!-- AOP end -->	
+		<!-- AOP end -->
 
 		<!-- PERSISTENCE begin -->
 		<!-- hibernate -->
@@ -63,7 +63,7 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-ehcache</artifactId>
 		</dependency>
-		
+
 		<!-- mybatis -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
@@ -119,7 +119,7 @@
 			<artifactId>servlet-api</artifactId>
 		</dependency>
 		<!-- WEB end -->
-		
+
 		<!-- SECURITY begin -->
 		<dependency>
 			<groupId>org.apache.shiro</groupId>
@@ -130,7 +130,7 @@
 			<artifactId>shiro-ehcache</artifactId>
 		</dependency>
 		<!-- SECURITY end -->
-		
+
 		<!-- SOAP begin -->
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
@@ -141,16 +141,16 @@
 			<artifactId>cxf-rt-transports-http</artifactId>
 		</dependency>
 		<!-- SOAP end -->
-		
+
 		<!-- JAX-RS begin -->
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-frontend-jaxrs</artifactId>
 		</dependency>
 		<dependency>
-	    	<groupId>com.fasterxml.jackson.jaxrs</groupId>
-	        <artifactId>jackson-jaxrs-json-provider</artifactId>
-	    </dependency>	
+			<groupId>com.fasterxml.jackson.jaxrs</groupId>
+			<artifactId>jackson-jaxrs-json-provider</artifactId>
+		</dependency>
 		<!-- JAX-RS end -->
 
 		<!-- JMS begin -->
@@ -170,13 +170,13 @@
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
 		</dependency>
-  		
-  		<!-- Redis -->	
+
+		<!-- Redis -->
 		<dependency>
-		    <groupId>redis.clients</groupId>
-		    <artifactId>jedis</artifactId>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
 		</dependency>
-		
+
 		<!-- CACHE begin -->
 		<dependency>
 			<groupId>net.spy</groupId>
@@ -193,19 +193,19 @@
 			<artifactId>ehcache-core</artifactId>
 		</dependency>
 		<!-- CACHE end -->
-		
+
 		<!-- jolokia Restful JMX -->
 		<dependency>
 			<groupId>org.jolokia</groupId>
 			<artifactId>jolokia-core</artifactId>
 		</dependency>
-				
-		<!-- JSR303  BeanValidator -->
+
+		<!-- JSR303 BeanValidator -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
-		
+
 		<!-- JSON -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -216,10 +216,10 @@
 			<artifactId>jackson-module-jaxb-annotations</artifactId>
 		</dependency>
 		<dependency>
-	    	<groupId>com.fasterxml.jackson.datatype</groupId>
-	        <artifactId>jackson-datatype-joda</artifactId>
-       	</dependency>
-		
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-joda</artifactId>
+		</dependency>
+
 		<!-- XML begin -->
 		<dependency>
 			<groupId>dom4j</groupId>
@@ -230,19 +230,19 @@
 			<groupId>jaxen</groupId>
 			<artifactId>jaxen</artifactId>
 		</dependency>
-		<!-- XML end -->	
-		
+		<!-- XML end -->
+
 		<!-- LOGGING begin -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>log4j-over-slf4j</artifactId>
@@ -253,11 +253,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
-	        <artifactId>jul-to-slf4j</artifactId>
-	    </dependency>
+			<artifactId>jul-to-slf4j</artifactId>
+		</dependency>
 
 		<dependency>
-		 	<groupId>com.googlecode.log4jdbc</groupId>
+			<groupId>com.googlecode.log4jdbc</groupId>
 			<artifactId>log4jdbc</artifactId>
 		</dependency>
 		<!-- LOGGING end -->
@@ -312,7 +312,7 @@
 			<artifactId>activation</artifactId>
 		</dependency>
 		<!-- OTHER TOOLS end -->
-	
+
 		<!-- MONITOR begin -->
 		<dependency>
 			<groupId>org.javasimon</groupId>
@@ -326,9 +326,9 @@
 			<groupId>org.javasimon</groupId>
 			<artifactId>javasimon-console-embed</artifactId>
 		</dependency>
-		<!-- MONITOR end -->		
+		<!-- MONITOR end -->
 
-		<!-- TEST begin -->		
+		<!-- TEST begin -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -385,13 +385,8 @@
 			<artifactId>jetty-jsp</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
-		<!-- h2 如果生产数据库不是H2，解开下面的注释
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-		</dependency>
-		-->
+
+		<!-- h2 如果生产数据库不是H2，解开下面的注释 <dependency> <groupId>com.h2database</groupId> <artifactId>h2</artifactId> </dependency> -->
 
 		<!-- mail server simulator -->
 		<dependency>
@@ -404,8 +399,8 @@
 			<version>5.1.0</version>
 		</dependency>
 	</dependencies>
-  
-  <build>
+
+	<build>
 		<plugins>
 			<!-- test插件, 设定內存 -->
 			<plugin>
@@ -449,7 +444,7 @@
 					</webAppConfig>
 				</configuration>
 			</plugin>
-			
+
 			<!-- tomcat7 插件 -->
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
@@ -462,13 +457,13 @@
 					<useTestClasspath>true</useTestClasspath>
 				</configuration>
 			</plugin>
-			
+
 			<!-- enforcer插件, 规则统一定义在parent -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
 			</plugin>
-			
+
 			<!-- cxf wsdl2java 插件 -->
 			<plugin>
 				<groupId>org.apache.cxf</groupId>
@@ -485,5 +480,5 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 </project>

@@ -83,7 +83,7 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 
 	}
 
-	 @Test
+	@Test
 	// @Ignore
 	public void testCreateVlan() {
 
@@ -144,7 +144,7 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 	/**
 	 * 批量添加Vlan
 	 */
-	 @Test
+	@Test
 	// @Ignore
 	public void testInsertVlan() {
 

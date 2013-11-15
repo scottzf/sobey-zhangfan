@@ -22,17 +22,15 @@ public enum DevicePortTypeEnum {
 	 */
 	FIREWALLPORT("FirewallPort", 4),
 
-
 	/**
 	 * 
 	 */
 	LOADBALANCEPORT("LoadBalancePort", 5),
-	
+
 	/**
 	 * 
 	 */
 	NETAPPPORT("NetAppPort", 6);
-
 
 	private String name;
 	private int value;

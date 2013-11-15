@@ -31,6 +31,7 @@
 		<logback.version>1.0.13</logback.version>
 		<commons-lang3.version>3.1</commons-lang3.version>
 		<commons-io.version>2.4</commons-io.version>
+		<commons-net.version>3.3</commons-net.version>
 		<guava.version>15.0</guava.version>
 		<joda-time.version>2.3</joda-time.version>
 		<dozer.version>5.4.0</dozer.version>
@@ -529,6 +530,12 @@
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
 				<version>${commons-io.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>commons-net</groupId>
+				<artifactId>commons-net</artifactId>
+				<version>${commons-net.version}</version>
 			</dependency>
 			
 			<dependency>

@@ -3839,7 +3839,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 		List<IdResult> results = new ArrayList<IdResult>();
 
 		try {
-			
+
 			// 先判断对象是否为空
 			Validate.notNull(ipaddressDTOList, ERROR.INPUT_NULL);
 
@@ -3945,8 +3945,8 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			return results;
 		}
 
-		int i=0;
-		
+		int i = 0;
+
 		for (VlanDTO vlanDTO : vlanDTOList) {
 
 			try {
