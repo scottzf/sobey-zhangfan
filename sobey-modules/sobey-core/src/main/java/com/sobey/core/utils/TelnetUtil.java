@@ -27,6 +27,11 @@ public class TelnetUtil implements Runnable, TelnetNotificationHandler {
 
 	private PrintStream out;
 
+	/**
+	 * 默认端口
+	 */
+	private static final int default_port = 23;
+
 	public TelnetUtil() {
 		super();
 	}
@@ -45,6 +50,27 @@ public class TelnetUtil implements Runnable, TelnetNotificationHandler {
 	 * @param command
 	 *            脚本字符串
 	 */
+	public static void execCommand(String ip, Integer port, String username, String password, String command) {
+		Thread t = new Thread(new TelnetUtil(ip, port, username, password, command));
+		t.start();
+	}
+
+	/**
+	 * 用于以telnet方式远程执行脚本. 默认端口为 23
+	 * 
+	 * @param ip
+	 *            主机IP地址
+	 * @param username
+	 *            登录名
+	 * @param password
+	 *            登录密码
+	 * @param command
+	 *            脚本字符串
+	 */
+	public static void execCommand(String ip, String username, String password, String command) {
+		execCommand(ip, default_port, username, password, command);
+	}
+
 	public TelnetUtil(String ip, Integer port, String username, String password, String command) {
 		if (intconnect(ip, port)) {
 			write(username);
