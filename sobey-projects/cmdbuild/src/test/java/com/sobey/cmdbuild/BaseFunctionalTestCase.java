@@ -7,8 +7,13 @@ import org.eclipse.jetty.server.Server;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
+import com.sobey.cmdbuild.webservice.CmdbuildSoapService;
+import com.sobey.cmdbuild.webservice.FinancialSoapService;
+import com.sobey.cmdbuild.webservice.IaasSoapService;
+import com.sobey.cmdbuild.webservice.InfrastructureSoapService;
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.test.data.DataFixtures;
 import com.sobey.test.jetty.JettyFactory;
@@ -32,6 +37,18 @@ public class BaseFunctionalTestCase {
 			"classpath:/application.functional.properties", "classpath:/application.functional-local.properties");
 
 	private static Logger logger = LoggerFactory.getLogger(BaseFunctionalTestCase.class);
+
+	@Autowired
+	protected InfrastructureSoapService infrastructureService;
+
+	@Autowired
+	protected FinancialSoapService financialSoapService;
+
+	@Autowired
+	protected CmdbuildSoapService cmdbuildSoapService;
+
+	@Autowired
+	protected IaasSoapService iaasSoapService;
 
 	@BeforeClass
 	public static void initFunctionalTestEnv() throws Exception {

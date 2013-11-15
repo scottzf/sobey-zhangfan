@@ -40,9 +40,26 @@ public class IpaddressService extends BasicSevcie {
 	}
 
 	/**
+	 * 根据自定义动态查询条件获得对象.
+	 * 
+	 * 将条件查询放入searchParams中. 查询条件可查询{@link SearchFilter}类.
+	 * 
+	 * <pre>
+	 * searchParams.put(&quot;EQ_status&quot;, 'A');
+	 * </pre>
+	 * 
+	 * @param searchParams
+	 *            动态查询条件Map
+	 * @return Ipaddress
+	 */
+	public Ipaddress findIpaddress(Map<String, Object> searchParams) {
+		return ipaddressDao.findOne(buildSpecification(searchParams));
+	}
+
+	/**
 	 * 新增、保存对象
 	 * 
-	 * @param ipaddress
+	 * @param Ipaddress
 	 * @return Ipaddress
 	 */
 	public Ipaddress saveOrUpdate(Ipaddress ipaddress) {
@@ -59,22 +76,19 @@ public class IpaddressService extends BasicSevcie {
 	}
 
 	/**
-	 * 根据code获得状态为"A"的有效对象
+	 * 根据自定义动态查询条件获得对象集合.
 	 * 
-	 * @param code
-	 * @return Ipaddress
-	 */
-	public Ipaddress findByCode(String code) {
-		return ipaddressDao.findByCodeAndStatus(code, CMDBuildConstants.STATUS_ACTIVE);
-	}
-
-	/**
-	 * 获得所有对象集合
+	 * 将条件查询放入searchParams中. 查询条件可查询{@link SearchFilter}类.
 	 * 
-	 * @return List<Ipaddress>
+	 * <pre>
+	 * searchParams.put(&quot;EQ_status&quot;, 'A');
+	 * </pre>
+	 * 
+	 * @param searchParams
+	 *            动态查询条件Map * @return List<Ipaddress>
 	 */
-	public List<Ipaddress> getCompanies() {
-		return ipaddressDao.findAllByStatus(CMDBuildConstants.STATUS_ACTIVE);
+	public List<Ipaddress> getIpaddressList(Map<String, Object> searchParams) {
+		return ipaddressDao.findAll(buildSpecification(searchParams));
 	}
 
 	/**
@@ -86,31 +100,38 @@ public class IpaddressService extends BasicSevcie {
 	 * @return Page<Ipaddress>
 	 */
 	private Page<Ipaddress> getIpaddressPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
+
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
+
 		Specification<Ipaddress> spec = buildSpecification(searchParams);
+
 		return ipaddressDao.findAll(spec, pageRequest);
 	}
 
 	/**
 	 * 创建动态查询条件组合.
 	 * 
-	 * 自定义的查询在此进行组合.
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
 	 * 
 	 * @param searchParams
 	 * @return Specification<Ipaddress>
 	 */
-	private Specification<Ipaddress> buildSpecification(Map<String, Object> searchParams) { // 将条件查询放入Map中.查询条件可查询SearchFilter类.
+	private Specification<Ipaddress> buildSpecification(Map<String, Object> searchParams) {
+
 		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-		Specification<Ipaddress> spec = DynamicSpecifications.bySearchFilter(filters.values(), Ipaddress.class);
-		return spec;
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), Ipaddress.class);
 	}
 
 	/**
 	 * IpaddressDTO webservice分页查询.
 	 * 
-	 * 将Page<T>重新组织成符合DTO格式的分页格式对象. * @param searchParams 查询语句Map.
+	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
 	 * 
+	 * @param searchParams
+	 *            查询语句Map.
 	 * @param pageNumber
 	 *            当前页数,最小为1.
 	 * @param pageSize
@@ -119,11 +140,11 @@ public class IpaddressService extends BasicSevcie {
 	 */
 	public PaginationResult<IpaddressDTO> getIpaddressDTOPagination(Map<String, Object> searchParams, int pageNumber,
 			int pageSize) {
-		Page<Ipaddress> page = getIpaddressPage(searchParams, pageNumber, pageSize); // 将List<Ipaddress>中的数据转换为List<IpaddressDTO>
+
+		Page<Ipaddress> page = getIpaddressPage(searchParams, pageNumber, pageSize);
+
 		List<IpaddressDTO> dtos = BeanMapper.mapList(page.getContent(), IpaddressDTO.class);
-		PaginationResult<IpaddressDTO> paginationResult = new PaginationResult<IpaddressDTO>(page.getNumber(),
-				page.getSize(), page.getTotalPages(), page.getNumberOfElements(), page.getNumberOfElements(),
-				page.hasPreviousPage(), page.isFirstPage(), page.hasNextPage(), page.isLastPage(), dtos);
-		return paginationResult;
+
+		return fillPaginationResult(page, dtos);
 	}
 }

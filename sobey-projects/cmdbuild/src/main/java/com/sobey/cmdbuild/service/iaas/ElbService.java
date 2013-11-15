@@ -40,9 +40,26 @@ public class ElbService extends BasicSevcie {
 	}
 
 	/**
+	 * 根据自定义动态查询条件获得对象.
+	 * 
+	 * 将条件查询放入searchParams中. 查询条件可查询{@link SearchFilter}类.
+	 * 
+	 * <pre>
+	 * searchParams.put(&quot;EQ_status&quot;, 'A');
+	 * </pre>
+	 * 
+	 * @param searchParams
+	 *            动态查询条件Map
+	 * @return Elb
+	 */
+	public Elb findElb(Map<String, Object> searchParams) {
+		return elbDao.findOne(buildSpecification(searchParams));
+	}
+
+	/**
 	 * 新增、保存对象
 	 * 
-	 * @param elb
+	 * @param Elb
 	 * @return Elb
 	 */
 	public Elb saveOrUpdate(Elb elb) {
@@ -59,22 +76,19 @@ public class ElbService extends BasicSevcie {
 	}
 
 	/**
-	 * 根据code获得状态为"A"的有效对象
+	 * 根据自定义动态查询条件获得对象集合.
 	 * 
-	 * @param code
-	 * @return Elb
-	 */
-	public Elb findByCode(String code) {
-		return elbDao.findByCodeAndStatus(code, CMDBuildConstants.STATUS_ACTIVE);
-	}
-
-	/**
-	 * 获得所有对象集合
+	 * 将条件查询放入searchParams中. 查询条件可查询{@link SearchFilter}类.
 	 * 
-	 * @return List<Elb>
+	 * <pre>
+	 * searchParams.put(&quot;EQ_status&quot;, 'A');
+	 * </pre>
+	 * 
+	 * @param searchParams
+	 *            动态查询条件Map * @return List<Elb>
 	 */
-	public List<Elb> getCompanies() {
-		return elbDao.findAllByStatus(CMDBuildConstants.STATUS_ACTIVE);
+	public List<Elb> getElbList(Map<String, Object> searchParams) {
+		return elbDao.findAll(buildSpecification(searchParams));
 	}
 
 	/**
@@ -86,31 +100,38 @@ public class ElbService extends BasicSevcie {
 	 * @return Page<Elb>
 	 */
 	private Page<Elb> getElbPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
+
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
+
 		Specification<Elb> spec = buildSpecification(searchParams);
+
 		return elbDao.findAll(spec, pageRequest);
 	}
 
 	/**
 	 * 创建动态查询条件组合.
 	 * 
-	 * 自定义的查询在此进行组合.
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
 	 * 
 	 * @param searchParams
 	 * @return Specification<Elb>
 	 */
-	private Specification<Elb> buildSpecification(Map<String, Object> searchParams) { // 将条件查询放入Map中.查询条件可查询SearchFilter类.
+	private Specification<Elb> buildSpecification(Map<String, Object> searchParams) {
+
 		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-		Specification<Elb> spec = DynamicSpecifications.bySearchFilter(filters.values(), Elb.class);
-		return spec;
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), Elb.class);
 	}
 
 	/**
 	 * ElbDTO webservice分页查询.
 	 * 
-	 * 将Page<T>重新组织成符合DTO格式的分页格式对象. * @param searchParams 查询语句Map.
+	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
 	 * 
+	 * @param searchParams
+	 *            查询语句Map.
 	 * @param pageNumber
 	 *            当前页数,最小为1.
 	 * @param pageSize
@@ -118,11 +139,11 @@ public class ElbService extends BasicSevcie {
 	 * @return PaginationResult<ElbDTO>
 	 */
 	public PaginationResult<ElbDTO> getElbDTOPagination(Map<String, Object> searchParams, int pageNumber, int pageSize) {
-		Page<Elb> page = getElbPage(searchParams, pageNumber, pageSize); // 将List<Elb>中的数据转换为List<ElbDTO>
+
+		Page<Elb> page = getElbPage(searchParams, pageNumber, pageSize);
+
 		List<ElbDTO> dtos = BeanMapper.mapList(page.getContent(), ElbDTO.class);
-		PaginationResult<ElbDTO> paginationResult = new PaginationResult<ElbDTO>(page.getNumber(), page.getSize(),
-				page.getTotalPages(), page.getNumberOfElements(), page.getNumberOfElements(), page.hasPreviousPage(),
-				page.isFirstPage(), page.hasNextPage(), page.isLastPage(), dtos);
-		return paginationResult;
+
+		return fillPaginationResult(page, dtos);
 	}
 }

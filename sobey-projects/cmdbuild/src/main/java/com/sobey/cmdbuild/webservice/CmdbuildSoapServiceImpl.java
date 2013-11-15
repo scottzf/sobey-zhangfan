@@ -7,19 +7,23 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.validation.ConstraintViolationException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.cxf.feature.Features;
 
+import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
 import com.sobey.cmdbuild.constants.ERROR;
 import com.sobey.cmdbuild.constants.WsConstants;
 import com.sobey.cmdbuild.entity.Company;
 import com.sobey.cmdbuild.entity.Idc;
+import com.sobey.cmdbuild.entity.LookUp;
 import com.sobey.cmdbuild.entity.Rack;
 import com.sobey.cmdbuild.entity.Tag;
 import com.sobey.cmdbuild.entity.Tenants;
 import com.sobey.cmdbuild.webservice.response.dto.CompanyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.IdcDTO;
+import com.sobey.cmdbuild.webservice.response.dto.LookUpDTO;
 import com.sobey.cmdbuild.webservice.response.dto.RackDTO;
 import com.sobey.cmdbuild.webservice.response.dto.TagDTO;
 import com.sobey.cmdbuild.webservice.response.dto.TenantsDTO;
@@ -35,15 +39,64 @@ import com.sobey.core.mapper.BeanMapper;
 @Features(features = "org.apache.cxf.feature.LoggingFeature")
 public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements CmdbuildSoapService {
 
+	/**
+	 * CMDBuild的默认超级用户名
+	 */
+	private static final String DEFAULT_USER = "admin";
+
 	@Override
-	public DTOResult<CompanyDTO> findCompany(@WebParam(name = "id") Integer id) {
-		DTOResult<CompanyDTO> result = new DTOResult<CompanyDTO>();
+	public DTOResult<LookUpDTO> findLookUp(@WebParam(name = "id") Integer id) {
+
+		DTOResult<LookUpDTO> result = new DTOResult<LookUpDTO>();
+
 		try {
+
 			Validate.notNull(id, ERROR.INPUT_NULL);
-			Company company = comm.companyService.findCompany(id);
-			Validate.notNull(company, ERROR.OBJECT_NULL);
-			CompanyDTO companyDTO = BeanMapper.map(company, CompanyDTO.class);
-			result.setDto(companyDTO);
+
+			LookUp lookUp = comm.lookUpService.findLookUp(id);
+
+			Validate.notNull(lookUp, ERROR.OBJECT_NULL);
+
+			result.setDto(BeanMapper.map(lookUp, LookUpDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<LookUpDTO> findLookUpByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
+		DTOResult<LookUpDTO> result = new DTOResult<LookUpDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			LookUp lookUp = comm.lookUpService.findLookUp(searchParams);
+
+			Validate.notNull(lookUp, ERROR.OBJECT_NULL);
+
+			result.setDto(BeanMapper.map(lookUp, LookUpDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
+	}
+
+	@Override
+	public DTOListResult<LookUpDTO> getLookUpList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+		DTOListResult<LookUpDTO> result = new DTOListResult<LookUpDTO>();
+		try {
+			result.setDtos(BeanMapper.mapList(comm.lookUpService.getLookUpList(searchParams), LookUpDTO.class));
 			return result;
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -53,59 +106,141 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOResult<CompanyDTO> findCompanyByCode(@WebParam(name = "code") String code) {
-		DTOResult<CompanyDTO> result = new DTOResult<CompanyDTO>();
+	public PaginationResult<LookUpDTO> getLookUpPagination(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+		PaginationResult<LookUpDTO> result = new PaginationResult<LookUpDTO>();
 		try {
-			Validate.notNull(code, ERROR.INPUT_NULL);
-			Company company = comm.companyService.findByCode(code);
-			Validate.notNull(company, ERROR.OBJECT_NULL);
-			CompanyDTO companyDTO = BeanMapper.map(company, CompanyDTO.class);
-			result.setDto(companyDTO);
-			return result;
+			return comm.lookUpService.getLookUpDTOPagination(searchParams, pageNumber, pageSize);
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
 			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<CompanyDTO> findCompany(@WebParam(name = "id") Integer id) {
+
+		DTOResult<CompanyDTO> result = new DTOResult<CompanyDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Company company = comm.companyService.findCompany(id);
+
+			Validate.notNull(company, ERROR.OBJECT_NULL);
+
+			result.setDto(BeanMapper.map(company, CompanyDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<CompanyDTO> findCompanyByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
+		DTOResult<CompanyDTO> result = new DTOResult<CompanyDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Company company = comm.companyService.findCompany(searchParams);
+
+			Validate.notNull(company, ERROR.OBJECT_NULL);
+
+			result.setDto(BeanMapper.map(company, CompanyDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
 		}
 	}
 
 	@Override
 	public IdResult createCompany(@WebParam(name = "companyDTO") CompanyDTO companyDTO) {
+
 		IdResult result = new IdResult();
+
 		try {
+
 			Validate.notNull(companyDTO, ERROR.INPUT_NULL);
+
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_code", companyDTO.getCode());
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.companyService.findByCode(companyDTO.getCode()) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(comm.companyService.findCompany(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象
 			Company company = BeanMapper.map(companyDTO, Company.class);
+			company.setUser(DEFAULT_USER);
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, company);
+
 			comm.companyService.saveOrUpdate(company);
+
 			return new IdResult(company.getId());
+
+		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
 			return handleGeneralError(result, e);
 		}
-
 	}
 
 	@Override
 	public IdResult updateCompany(@WebParam(name = "id") Integer id,
 			@WebParam(name = "companyDTO") CompanyDTO companyDTO) {
+
 		IdResult result = new IdResult();
+
 		try {
+
 			Validate.notNull(companyDTO, ERROR.INPUT_NULL);
+
 			Company company = comm.companyService.findCompany(id);
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_code", companyDTO.getCode());
+
 			Validate.isTrue(
-					comm.companyService.findByCode(companyDTO.getCode()) == null
+					comm.companyService.findCompany(searchParams) == null
 							|| company.getCode().equals(companyDTO.getCode()), ERROR.OBJECT_DUPLICATE);
-			Company companyEntity = BeanMapper.map(companyDTO, Company.class);
-			BeanMapper.copy(companyEntity, company);
-			companyEntity.setIdClass(Company.class.getSimpleName());
-			companyEntity.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			comm.companyService.saveOrUpdate(companyEntity);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(companyDTO, Company.class), company);
+
+			company.setUser(DEFAULT_USER);
+			company.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			company.setIdClass(Company.class.getSimpleName());
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, company);
+
+			comm.companyService.saveOrUpdate(company);
+
 			return new IdResult(company.getId());
+
 		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
+		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
 			return handleGeneralError(result, e);
@@ -114,16 +249,20 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public IdResult deleteCompany(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
+
 		try {
+
 			Validate.notNull(id, ERROR.INPUT_NULL);
+
 			Company company = comm.companyService.findCompany(id);
-			Company companyEntity = BeanMapper.map(findCompany(id).getDto(), Company.class);
-			BeanMapper.copy(companyEntity, company);
-			companyEntity.setIdClass(Company.class.getSimpleName());
-			companyEntity.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
-			comm.companyService.saveOrUpdate(companyEntity);
+			company.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.companyService.saveOrUpdate(company);
+
 			return new IdResult(company.getId());
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -143,16 +282,13 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 		} catch (RuntimeException e) {
 			return handleGeneralError(result, e);
 		}
-
 	}
 
 	@Override
-	public DTOListResult<CompanyDTO> getCompanies() {
+	public DTOListResult<CompanyDTO> getCompanyList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
 		DTOListResult<CompanyDTO> result = new DTOListResult<CompanyDTO>();
 		try {
-			List<Company> companies = comm.companyService.getCompanies();
-			List<CompanyDTO> dtos = BeanMapper.mapList(companies, CompanyDTO.class);
-			result.setDtos(dtos);
+			result.setDtos(BeanMapper.mapList(comm.companyService.getCompanyList(searchParams), CompanyDTO.class));
 			return result;
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -163,14 +299,21 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public DTOResult<TenantsDTO> findTenants(@WebParam(name = "id") Integer id) {
+
 		DTOResult<TenantsDTO> result = new DTOResult<TenantsDTO>();
+
 		try {
+
 			Validate.notNull(id, ERROR.INPUT_NULL);
+
 			Tenants tenants = comm.tenantsService.findTenants(id);
+
 			Validate.notNull(tenants, ERROR.OBJECT_NULL);
-			TenantsDTO tenantsDTO = BeanMapper.map(tenants, TenantsDTO.class);
-			result.setDto(tenantsDTO);
+
+			result.setDto(BeanMapper.map(tenants, TenantsDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -179,33 +322,57 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOResult<TenantsDTO> findTenantsByCode(@WebParam(name = "code") String code) {
+	public DTOResult<TenantsDTO> findTenantsByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<TenantsDTO> result = new DTOResult<TenantsDTO>();
+
 		try {
-			Validate.notNull(code, ERROR.INPUT_NULL);
-			Tenants tenants = comm.tenantsService.findByCode(code);
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Tenants tenants = comm.tenantsService.findTenants(searchParams);
+
 			Validate.notNull(tenants, ERROR.OBJECT_NULL);
-			TenantsDTO tenantsDTO = BeanMapper.map(tenants, TenantsDTO.class);
-			result.setDto(tenantsDTO);
+
+			result.setDto(BeanMapper.map(tenants, TenantsDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
 		}
 	}
 
 	@Override
 	public IdResult createTenants(@WebParam(name = "tenantsDTO") TenantsDTO tenantsDTO) {
+
 		IdResult result = new IdResult();
+
 		try {
+
 			Validate.notNull(tenantsDTO, ERROR.INPUT_NULL);
+
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_code", tenantsDTO.getCode());
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.tenantsService.findByCode(tenantsDTO.getCode()) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(comm.tenantsService.findTenants(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象
 			Tenants tenants = BeanMapper.map(tenantsDTO, Tenants.class);
+			tenants.setUser(DEFAULT_USER);
+
 			BeanValidators.validateWithException(validator, tenants);
+
 			comm.tenantsService.saveOrUpdate(tenants);
+
 			return new IdResult(tenants.getId());
+
+		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -216,21 +383,41 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	@Override
 	public IdResult updateTenants(@WebParam(name = "id") Integer id,
 			@WebParam(name = "tenantsDTO") TenantsDTO tenantsDTO) {
+
 		IdResult result = new IdResult();
+
 		try {
+
 			Validate.notNull(tenantsDTO, ERROR.INPUT_NULL);
+
 			Tenants tenants = comm.tenantsService.findTenants(id);
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_code", tenantsDTO.getCode());
+
 			Validate.isTrue(
-					comm.tenantsService.findByCode(tenantsDTO.getCode()) == null
+					comm.tenantsService.findTenants(searchParams) == null
 							|| tenants.getCode().equals(tenantsDTO.getCode()), ERROR.OBJECT_DUPLICATE);
-			Tenants tenantsEntity = BeanMapper.map(tenantsDTO, Tenants.class);
-			BeanMapper.copy(tenantsEntity, tenants);
-			tenantsEntity.setIdClass(Tenants.class.getSimpleName());
-			tenantsEntity.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			comm.tenantsService.saveOrUpdate(tenantsEntity);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(tenantsDTO, Tenants.class), tenants);
+
+			tenants.setUser(DEFAULT_USER);
+			tenants.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			tenants.setIdClass(Tenants.class.getSimpleName());
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, tenants);
+
+			comm.tenantsService.saveOrUpdate(tenants);
+
 			return new IdResult(tenants.getId());
+
 		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
+		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
 			return handleGeneralError(result, e);
@@ -239,16 +426,20 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public IdResult deleteTenants(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
+
 		try {
+
 			Validate.notNull(id, ERROR.INPUT_NULL);
+
 			Tenants tenants = comm.tenantsService.findTenants(id);
-			Tenants tenantsEntity = BeanMapper.map(findTenants(id).getDto(), Tenants.class);
-			BeanMapper.copy(tenantsEntity, tenants);
-			tenantsEntity.setIdClass(Tenants.class.getSimpleName());
-			tenantsEntity.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
-			comm.tenantsService.saveOrUpdate(tenantsEntity);
+			tenants.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.tenantsService.saveOrUpdate(tenants);
+
 			return new IdResult(tenants.getId());
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -271,11 +462,12 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOListResult<TenantsDTO> getTenantsList() {
+	public DTOListResult<TenantsDTO> getTenantsList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<TenantsDTO> result = new DTOListResult<TenantsDTO>();
 		try {
-			List<Tenants> companies = comm.tenantsService.getTenants();
-			List<TenantsDTO> list = BeanMapper.mapList(companies, TenantsDTO.class);
+			List<TenantsDTO> list = BeanMapper.mapList(comm.tenantsService.getTenantsList(searchParams),
+					TenantsDTO.class);
 			result.setDtos(list);
 			return result;
 		} catch (IllegalArgumentException e) {
@@ -287,14 +479,21 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public DTOResult<TagDTO> findTag(@WebParam(name = "id") Integer id) {
+
 		DTOResult<TagDTO> result = new DTOResult<TagDTO>();
+
 		try {
+
 			Validate.notNull(id, ERROR.INPUT_NULL);
+
 			Tag tag = comm.tagService.findTag(id);
+
 			Validate.notNull(tag, ERROR.OBJECT_NULL);
-			TagDTO tagDTO = BeanMapper.map(tag, TagDTO.class);
-			result.setDto(tagDTO);
+
+			result.setDto(BeanMapper.map(tag, TagDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -303,35 +502,59 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOResult<TagDTO> findTagByCode(@WebParam(name = "code") String code) {
+	public DTOResult<TagDTO> findTagByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<TagDTO> result = new DTOResult<TagDTO>();
+
 		try {
-			Validate.notNull(code, ERROR.INPUT_NULL);
-			Tag tag = comm.tagService.findByCode(code);
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Tag tag = comm.tagService.findTag(searchParams);
+
 			Validate.notNull(tag, ERROR.OBJECT_NULL);
-			TagDTO tagDTO = BeanMapper.map(tag, TagDTO.class);
-			result.setDto(tagDTO);
+
+			result.setDto(BeanMapper.map(tag, TagDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
 		}
 	}
 
 	@Override
 	public IdResult createTag(@WebParam(name = "tagDTO") TagDTO tagDTO) {
+
 		IdResult result = new IdResult();
+
 		try {
+
 			Validate.notNull(tagDTO, ERROR.INPUT_NULL);
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			// 此处先判断同一Tenants下是否有相同的code如果有相同的code名称，则不能创建.
-			Validate.isTrue(comm.tagService.findByCodeAndTenants(tagDTO.getCode(), tagDTO.getTenants()) == null,
-					ERROR.OBJECT_DUPLICATE);
+			// 此处先判断同一Tenants下是否有相同的code,如果有相同的code名称，则不能创建.
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_code", tagDTO.getCode());
+			searchParams.put("EQ_tenants", tagDTO.getTenants());
+
+			Validate.isTrue(comm.tagService.findTag(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象
 			Tag tag = BeanMapper.map(tagDTO, Tag.class);
+			tag.setUser(DEFAULT_USER);
+
 			BeanValidators.validateWithException(validator, tag);
+
 			comm.tagService.saveOrUpdate(tag);
+
 			return new IdResult(tag.getId());
+
+		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -341,21 +564,42 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public IdResult updateTag(@WebParam(name = "id") Integer id, @WebParam(name = "tagDTO") TagDTO tagDTO) {
+
 		IdResult result = new IdResult();
+
 		try {
+
 			Validate.notNull(tagDTO, ERROR.INPUT_NULL);
+
 			Tag tag = comm.tagService.findTag(id);
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(
-					comm.tagService.findByCode(tagDTO.getCode()) == null || tag.getCode().equals(tagDTO.getCode()),
+			// 此处先判断同一Tenants下是否有相同的code如果有相同的code名称，则不能创建.
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_code", tagDTO.getCode());
+			searchParams.put("EQ_tenants", tagDTO.getTenants());
+
+			Validate.isTrue(comm.tagService.findTag(searchParams) == null || tag.getCode().equals(tagDTO.getCode()),
 					ERROR.OBJECT_DUPLICATE);
-			Tag tagEntity = BeanMapper.map(tagDTO, Tag.class);
-			BeanMapper.copy(tagEntity, tag);
-			tagEntity.setIdClass(Tag.class.getSimpleName());
-			tagEntity.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			comm.tagService.saveOrUpdate(tagEntity);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(tagDTO, Tag.class), tag);
+
+			tag.setUser(DEFAULT_USER);
+			tag.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			tag.setIdClass(Tag.class.getSimpleName());
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, tag);
+
+			comm.tagService.saveOrUpdate(tag);
+
 			return new IdResult(tag.getId());
+
 		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
+		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
 			return handleGeneralError(result, e);
@@ -364,16 +608,20 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public IdResult deleteTag(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
+
 		try {
+
 			Validate.notNull(id, ERROR.INPUT_NULL);
+
 			Tag tag = comm.tagService.findTag(id);
-			Tag tagEntity = BeanMapper.map(findTag(id).getDto(), Tag.class);
-			BeanMapper.copy(tagEntity, tag);
-			tagEntity.setIdClass(Tag.class.getSimpleName());
-			tagEntity.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
-			comm.tagService.saveOrUpdate(tagEntity);
+			tag.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.tagService.saveOrUpdate(tag);
+
 			return new IdResult(tag.getId());
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -395,27 +643,10 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOListResult<TagDTO> getTagList() {
+	public DTOListResult<TagDTO> getTagList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
 		DTOListResult<TagDTO> result = new DTOListResult<TagDTO>();
 		try {
-			List<Tag> companies = comm.tagService.getTags();
-			List<TagDTO> list = BeanMapper.mapList(companies, TagDTO.class);
-			result.setDtos(list);
-			return result;
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public DTOListResult<TagDTO> getTagListByTenants(@WebParam(name = "tenantsId") Integer tenantsId) {
-		DTOListResult<TagDTO> result = new DTOListResult<TagDTO>();
-		try {
-			List<Tag> companies = comm.tagService.getTagsByTenants(tenantsId);
-			List<TagDTO> list = BeanMapper.mapList(companies, TagDTO.class);
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.tagService.getTagList(searchParams), TagDTO.class));
 			return result;
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -426,14 +657,21 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public DTOResult<IdcDTO> findIdc(@WebParam(name = "id") Integer id) {
+
 		DTOResult<IdcDTO> result = new DTOResult<IdcDTO>();
+
 		try {
+
 			Validate.notNull(id, ERROR.INPUT_NULL);
+
 			Idc idc = comm.idcService.findIdc(id);
+
 			Validate.notNull(idc, ERROR.OBJECT_NULL);
-			IdcDTO idcDTO = BeanMapper.map(idc, IdcDTO.class);
-			result.setDto(idcDTO);
+
+			result.setDto(BeanMapper.map(idc, IdcDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -442,33 +680,58 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOResult<IdcDTO> findIdcByCode(@WebParam(name = "code") String code) {
+	public DTOResult<IdcDTO> findIdcByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<IdcDTO> result = new DTOResult<IdcDTO>();
+
 		try {
-			Validate.notNull(code, ERROR.INPUT_NULL);
-			Idc idc = comm.idcService.findByCode(code);
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Idc idc = comm.idcService.findIdc(searchParams);
+
 			Validate.notNull(idc, ERROR.OBJECT_NULL);
-			IdcDTO idcDTO = BeanMapper.map(idc, IdcDTO.class);
-			result.setDto(idcDTO);
+
+			result.setDto(BeanMapper.map(idc, IdcDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
 		}
 	}
 
 	@Override
 	public IdResult createIdc(@WebParam(name = "idcDTO") IdcDTO idcDTO) {
+
 		IdResult result = new IdResult();
+
 		try {
+
 			Validate.notNull(idcDTO, ERROR.INPUT_NULL);
+
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_code", idcDTO.getCode());
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.idcService.findByCode(idcDTO.getCode()) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(comm.idcService.findIdc(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象
 			Idc idc = BeanMapper.map(idcDTO, Idc.class);
+			idc.setUser(DEFAULT_USER);
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, idc);
+
 			comm.idcService.saveOrUpdate(idc);
+
 			return new IdResult(idc.getId());
+
+		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -478,21 +741,39 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public IdResult updateIdc(@WebParam(name = "id") Integer id, @WebParam(name = "idcDTO") IdcDTO idcDTO) {
+
 		IdResult result = new IdResult();
+
 		try {
+
 			Validate.notNull(idcDTO, ERROR.INPUT_NULL);
+
 			Idc idc = comm.idcService.findIdc(id);
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(
-					comm.idcService.findByCode(idcDTO.getCode()) == null || idc.getCode().equals(idcDTO.getCode()),
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_code", idcDTO.getCode());
+			Validate.isTrue(comm.idcService.findIdc(searchParams) == null || idc.getCode().equals(idcDTO.getCode()),
 					ERROR.OBJECT_DUPLICATE);
-			Idc idcEntity = BeanMapper.map(idcDTO, Idc.class);
-			BeanMapper.copy(idcEntity, idc);
-			idcEntity.setIdClass(Idc.class.getSimpleName());
-			idcEntity.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			comm.idcService.saveOrUpdate(idcEntity);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(idcDTO, Idc.class), idc);
+
+			idc.setUser(DEFAULT_USER);
+			idc.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			idc.setIdClass(Idc.class.getSimpleName());
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, idc);
+
+			comm.idcService.saveOrUpdate(idc);
+
 			return new IdResult(idc.getId());
+
 		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
+		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
 			return handleGeneralError(result, e);
@@ -501,16 +782,20 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public IdResult deleteIdc(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
+
 		try {
+
 			Validate.notNull(id, ERROR.INPUT_NULL);
+
 			Idc idc = comm.idcService.findIdc(id);
-			Idc idcEntity = BeanMapper.map(findIdc(id).getDto(), Idc.class);
-			BeanMapper.copy(idcEntity, idc);
-			idcEntity.setIdClass(Idc.class.getSimpleName());
-			idcEntity.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
-			comm.idcService.saveOrUpdate(idcEntity);
+			idc.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.idcService.saveOrUpdate(idc);
+
 			return new IdResult(idc.getId());
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -532,12 +817,10 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOListResult<IdcDTO> getIdcList() {
+	public DTOListResult<IdcDTO> getIdcList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
 		DTOListResult<IdcDTO> result = new DTOListResult<IdcDTO>();
 		try {
-			List<Idc> companies = comm.idcService.getIdcs();
-			List<IdcDTO> list = BeanMapper.mapList(companies, IdcDTO.class);
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.idcService.getIdcList(searchParams), IdcDTO.class));
 			return result;
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -548,14 +831,21 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public DTOResult<RackDTO> findRack(@WebParam(name = "id") Integer id) {
+
 		DTOResult<RackDTO> result = new DTOResult<RackDTO>();
+
 		try {
+
 			Validate.notNull(id, ERROR.INPUT_NULL);
+
 			Rack rack = comm.rackService.findRack(id);
+
 			Validate.notNull(rack, ERROR.OBJECT_NULL);
-			RackDTO rackDTO = BeanMapper.map(rack, RackDTO.class);
-			result.setDto(rackDTO);
+
+			result.setDto(BeanMapper.map(rack, RackDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -564,33 +854,57 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOResult<RackDTO> findRackByCode(@WebParam(name = "code") String code) {
+	public DTOResult<RackDTO> findRackByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<RackDTO> result = new DTOResult<RackDTO>();
+
 		try {
-			Validate.notNull(code, ERROR.INPUT_NULL);
-			Rack rack = comm.rackService.findByCode(code);
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Rack rack = comm.rackService.findRack(searchParams);
+
 			Validate.notNull(rack, ERROR.OBJECT_NULL);
-			RackDTO rackDTO = BeanMapper.map(rack, RackDTO.class);
-			result.setDto(rackDTO);
+
+			result.setDto(BeanMapper.map(rack, RackDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
 		}
 	}
 
 	@Override
 	public IdResult createRack(@WebParam(name = "rackDTO") RackDTO rackDTO) {
+
 		IdResult result = new IdResult();
+
 		try {
+
 			Validate.notNull(rackDTO, ERROR.INPUT_NULL);
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.rackService.findByCode(rackDTO.getCode()) == null, ERROR.OBJECT_DUPLICATE);
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_code", rackDTO.getCode());
+
+			Validate.isTrue(comm.rackService.findRack(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象
 			Rack rack = BeanMapper.map(rackDTO, Rack.class);
+			rack.setUser(DEFAULT_USER);
+
 			BeanValidators.validateWithException(validator, rack);
+
 			comm.rackService.saveOrUpdate(rack);
+
 			return new IdResult(rack.getId());
+
+		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -600,21 +914,40 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public IdResult updateRack(@WebParam(name = "id") Integer id, @WebParam(name = "rackDTO") RackDTO rackDTO) {
+
 		IdResult result = new IdResult();
+
 		try {
+
 			Validate.notNull(rackDTO, ERROR.INPUT_NULL);
+
 			Rack rack = comm.rackService.findRack(id);
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_code", rackDTO.getCode());
+
 			Validate.isTrue(
-					comm.rackService.findByCode(rackDTO.getCode()) == null || rack.getCode().equals(rackDTO.getCode()),
+					comm.rackService.findRack(searchParams) == null || rack.getCode().equals(rackDTO.getCode()),
 					ERROR.OBJECT_DUPLICATE);
-			Rack rackEntity = BeanMapper.map(rackDTO, Rack.class);
-			BeanMapper.copy(rackEntity, rack);
-			rackEntity.setIdClass(Rack.class.getSimpleName());
-			rackEntity.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			comm.rackService.saveOrUpdate(rackEntity);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(rackDTO, Rack.class), rack);
+
+			rack.setUser(DEFAULT_USER);
+			rack.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			rack.setIdClass(Rack.class.getSimpleName());
+
+			BeanValidators.validateWithException(validator, rack);
+
+			comm.rackService.saveOrUpdate(rack);
+
 			return new IdResult(rack.getId());
+
 		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
+		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
 			return handleGeneralError(result, e);
@@ -623,16 +956,20 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public IdResult deleteRack(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
+
 		try {
+
 			Validate.notNull(id, ERROR.INPUT_NULL);
+
 			Rack rack = comm.rackService.findRack(id);
-			Rack rackEntity = BeanMapper.map(findRack(id).getDto(), Rack.class);
-			BeanMapper.copy(rackEntity, rack);
-			rackEntity.setIdClass(Rack.class.getSimpleName());
-			rackEntity.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
-			comm.rackService.saveOrUpdate(rackEntity);
+			rack.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.rackService.saveOrUpdate(rack);
+
 			return new IdResult(rack.getId());
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -655,12 +992,10 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOListResult<RackDTO> getRackList() {
+	public DTOListResult<RackDTO> getRackList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
 		DTOListResult<RackDTO> result = new DTOListResult<RackDTO>();
 		try {
-			List<Rack> companies = comm.rackService.getRacks();
-			List<RackDTO> list = BeanMapper.mapList(companies, RackDTO.class);
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.rackService.getRackList(searchParams), RackDTO.class));
 			return result;
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -668,4 +1003,5 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			return handleGeneralError(result, e);
 		}
 	}
+
 }

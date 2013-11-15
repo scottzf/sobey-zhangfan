@@ -40,9 +40,26 @@ public class NetappPortService extends BasicSevcie {
 	}
 
 	/**
+	 * 根据自定义动态查询条件获得对象.
+	 * 
+	 * 将条件查询放入searchParams中. 查询条件可查询{@link SearchFilter}类.
+	 * 
+	 * <pre>
+	 * searchParams.put(&quot;EQ_status&quot;, 'A');
+	 * </pre>
+	 * 
+	 * @param searchParams
+	 *            动态查询条件Map
+	 * @return NetappPort
+	 */
+	public NetappPort findNetappPort(Map<String, Object> searchParams) {
+		return netappPortDao.findOne(buildSpecification(searchParams));
+	}
+
+	/**
 	 * 新增、保存对象
 	 * 
-	 * @param netappPort
+	 * @param NetappPort
 	 * @return NetappPort
 	 */
 	public NetappPort saveOrUpdate(NetappPort netappPort) {
@@ -59,22 +76,19 @@ public class NetappPortService extends BasicSevcie {
 	}
 
 	/**
-	 * 根据code获得状态为"A"的有效对象
+	 * 根据自定义动态查询条件获得对象集合.
 	 * 
-	 * @param code
-	 * @return NetappPort
-	 */
-	public NetappPort findByCode(String code) {
-		return netappPortDao.findByCodeAndStatus(code, CMDBuildConstants.STATUS_ACTIVE);
-	}
-
-	/**
-	 * 获得所有对象集合
+	 * 将条件查询放入searchParams中. 查询条件可查询{@link SearchFilter}类.
 	 * 
-	 * @return List<NetappPort>
+	 * <pre>
+	 * searchParams.put(&quot;EQ_status&quot;, 'A');
+	 * </pre>
+	 * 
+	 * @param searchParams
+	 *            动态查询条件Map * @return List<NetappPort>
 	 */
-	public List<NetappPort> getCompanies() {
-		return netappPortDao.findAllByStatus(CMDBuildConstants.STATUS_ACTIVE);
+	public List<NetappPort> getNetappPortList(Map<String, Object> searchParams) {
+		return netappPortDao.findAll(buildSpecification(searchParams));
 	}
 
 	/**
@@ -86,31 +100,38 @@ public class NetappPortService extends BasicSevcie {
 	 * @return Page<NetappPort>
 	 */
 	private Page<NetappPort> getNetappPortPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
+
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
+
 		Specification<NetappPort> spec = buildSpecification(searchParams);
+
 		return netappPortDao.findAll(spec, pageRequest);
 	}
 
 	/**
 	 * 创建动态查询条件组合.
 	 * 
-	 * 自定义的查询在此进行组合.
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
 	 * 
 	 * @param searchParams
 	 * @return Specification<NetappPort>
 	 */
-	private Specification<NetappPort> buildSpecification(Map<String, Object> searchParams) { // 将条件查询放入Map中.查询条件可查询SearchFilter类.
+	private Specification<NetappPort> buildSpecification(Map<String, Object> searchParams) {
+
 		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-		Specification<NetappPort> spec = DynamicSpecifications.bySearchFilter(filters.values(), NetappPort.class);
-		return spec;
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), NetappPort.class);
 	}
 
 	/**
 	 * NetappPortDTO webservice分页查询.
 	 * 
-	 * 将Page<T>重新组织成符合DTO格式的分页格式对象. * @param searchParams 查询语句Map.
+	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
 	 * 
+	 * @param searchParams
+	 *            查询语句Map.
 	 * @param pageNumber
 	 *            当前页数,最小为1.
 	 * @param pageSize
@@ -119,11 +140,11 @@ public class NetappPortService extends BasicSevcie {
 	 */
 	public PaginationResult<NetappPortDTO> getNetappPortDTOPagination(Map<String, Object> searchParams, int pageNumber,
 			int pageSize) {
-		Page<NetappPort> page = getNetappPortPage(searchParams, pageNumber, pageSize); // 将List<NetappPort>中的数据转换为List<NetappPortDTO>
+
+		Page<NetappPort> page = getNetappPortPage(searchParams, pageNumber, pageSize);
+
 		List<NetappPortDTO> dtos = BeanMapper.mapList(page.getContent(), NetappPortDTO.class);
-		PaginationResult<NetappPortDTO> paginationResult = new PaginationResult<NetappPortDTO>(page.getNumber(),
-				page.getSize(), page.getTotalPages(), page.getNumberOfElements(), page.getNumberOfElements(),
-				page.hasPreviousPage(), page.isFirstPage(), page.hasNextPage(), page.isLastPage(), dtos);
-		return paginationResult;
+
+		return fillPaginationResult(page, dtos);
 	}
 }

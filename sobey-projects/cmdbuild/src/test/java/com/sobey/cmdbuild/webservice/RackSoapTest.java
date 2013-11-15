@@ -9,12 +9,12 @@ import java.util.Map;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
+import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
 import com.sobey.cmdbuild.entity.Rack;
@@ -38,21 +38,19 @@ import com.sobey.core.mapper.BeanMapper;
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
 public class RackSoapTest extends BaseFunctionalTestCase {
 
-	@Autowired
-	private CmdbuildSoapService service;
-
 	@Test
 	@Ignore
 	public void find() {
 		Integer id = 115;
-		DTOResult<RackDTO> response = service.findRack(id);
+		DTOResult<RackDTO> response = cmdbuildSoapService.findRack(id);
 		assertEquals("sobey", response.getDto().getCode());
 	}
 
 	@Test
 	@Ignore
 	public void getList() {
-		DTOListResult<RackDTO> result = service.getRackList();
+		Map<String, Object> searchParams = Maps.newHashMap();
+		DTOListResult<RackDTO> result = cmdbuildSoapService.getRackList(searchParams);
 		assertEquals("0", result.getCode());
 	}
 
@@ -61,7 +59,7 @@ public class RackSoapTest extends BaseFunctionalTestCase {
 	public void save() {
 		Rack rack = TestData.randomRack();
 		RackDTO rackDTO = BeanMapper.map(rack, RackDTO.class);
-		IdResult response = service.createRack(rackDTO);
+		IdResult response = cmdbuildSoapService.createRack(rackDTO);
 		assertNotNull(response.getId());
 	}
 
@@ -69,10 +67,10 @@ public class RackSoapTest extends BaseFunctionalTestCase {
 	@Ignore
 	public void update() {
 		Integer id = 115;
-		DTOResult<RackDTO> response = service.findRack(id);
+		DTOResult<RackDTO> response = cmdbuildSoapService.findRack(id);
 		RackDTO rackDTO = response.getDto();
 		rackDTO.setDescription("冬天来了啊");
-		IdResult result = service.updateRack(id, rackDTO);
+		IdResult result = cmdbuildSoapService.updateRack(id, rackDTO);
 		assertNotNull(result.getId());
 	}
 
@@ -80,7 +78,7 @@ public class RackSoapTest extends BaseFunctionalTestCase {
 	@Ignore
 	public void delete() {
 		Integer id = 115;
-		IdResult response = service.deleteTag(id);
+		IdResult response = cmdbuildSoapService.deleteTag(id);
 		assertNotNull(response.getId());
 	}
 
@@ -92,7 +90,7 @@ public class RackSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_idc", 110);
 
-		PaginationResult<RackDTO> result = service.getRackPagination(searchParams, 1, 10);
+		PaginationResult<RackDTO> result = cmdbuildSoapService.getRackPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 		System.out.println("返回的查询结果数量:" + result.getGetTotalElements());

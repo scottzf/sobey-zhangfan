@@ -8,3 +8,8 @@
 
 ### sobey-projects 各个具体的项目模块
 * cmdbuild : CMDBuild的webservice接口
+* instance : Instance的webservice接口
+* storage : Storage的webservice接口
+* switch : Switch的webservice接口
+* firewall : Firewall的webservice接口
+* loadbalancer : LoadBalancer的webservice接口

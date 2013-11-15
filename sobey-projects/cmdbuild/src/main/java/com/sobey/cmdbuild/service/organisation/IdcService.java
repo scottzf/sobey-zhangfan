@@ -26,7 +26,6 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class IdcService extends BasicSevcie {
-
 	@Autowired
 	private IdcDao idcDao;
 
@@ -41,9 +40,26 @@ public class IdcService extends BasicSevcie {
 	}
 
 	/**
+	 * 根据自定义动态查询条件获得对象.
+	 * 
+	 * 将条件查询放入searchParams中. 查询条件可查询{@link SearchFilter}类.
+	 * 
+	 * <pre>
+	 * searchParams.put(&quot;EQ_status&quot;, 'A');
+	 * </pre>
+	 * 
+	 * @param searchParams
+	 *            动态查询条件Map
+	 * @return Idc
+	 */
+	public Idc findIdc(Map<String, Object> searchParams) {
+		return idcDao.findOne(buildSpecification(searchParams));
+	}
+
+	/**
 	 * 新增、保存对象
 	 * 
-	 * @param idc
+	 * @param Idc
 	 * @return Idc
 	 */
 	public Idc saveOrUpdate(Idc idc) {
@@ -60,22 +76,19 @@ public class IdcService extends BasicSevcie {
 	}
 
 	/**
-	 * 根据code获得状态为"A"的有效对象
+	 * 根据自定义动态查询条件获得对象集合.
 	 * 
-	 * @param code
-	 * @return Idc
-	 */
-	public Idc findByCode(String code) {
-		return idcDao.findByCodeAndStatus(code, CMDBuildConstants.STATUS_ACTIVE);
-	}
-
-	/**
-	 * 获得所有对象集合
+	 * 将条件查询放入searchParams中. 查询条件可查询{@link SearchFilter}类.
 	 * 
-	 * @return List<Idc>
+	 * <pre>
+	 * searchParams.put(&quot;EQ_status&quot;, 'A');
+	 * </pre>
+	 * 
+	 * @param searchParams
+	 *            动态查询条件Map * @return List<Idc>
 	 */
-	public List<Idc> getIdcs() {
-		return idcDao.findAllByStatus(CMDBuildConstants.STATUS_ACTIVE);
+	public List<Idc> getIdcList(Map<String, Object> searchParams) {
+		return idcDao.findAll(buildSpecification(searchParams));
 	}
 
 	/**
@@ -98,7 +111,7 @@ public class IdcService extends BasicSevcie {
 	/**
 	 * 创建动态查询条件组合.
 	 * 
-	 * 自定义的查询在此进行组合.
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
 	 * 
 	 * @param searchParams
 	 * @return Specification<Idc>
@@ -126,8 +139,11 @@ public class IdcService extends BasicSevcie {
 	 * @return PaginationResult<IdcDTO>
 	 */
 	public PaginationResult<IdcDTO> getIdcDTOPagination(Map<String, Object> searchParams, int pageNumber, int pageSize) {
+
 		Page<Idc> page = getIdcPage(searchParams, pageNumber, pageSize);
+
 		List<IdcDTO> dtos = BeanMapper.mapList(page.getContent(), IdcDTO.class);
+
 		return fillPaginationResult(page, dtos);
 	}
 }

@@ -13,46 +13,91 @@ import com.sobey.cmdbuild.constants.WsConstants;
 @XmlType(name = "EcsSpecDTO", namespace = WsConstants.NS)
 public class EcsSpecDTO {
 
-	private Integer id;
-	private String code;
-	private String description;
 	private Date beginDate;
+	private Integer brand;
+	private String code;
+	private Integer cpuNumber;
+	private String description;
+	private String diskSize;
+	private Integer id;
+	private Integer memory;
+	private Double price;
 	private String remark;
 
-	public Integer getId() {
-		return id;
+	public Date getBeginDate() {
+		return beginDate;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public Integer getBrand() {
+		return brand;
 	}
 
 	public String getCode() {
 		return code;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public Integer getCpuNumber() {
+		return cpuNumber;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public String getDiskSize() {
+		return diskSize;
 	}
 
-	public Date getBeginDate() {
-		return beginDate;
+	public Integer getId() {
+		return id;
+	}
+
+	public Integer getMemory() {
+		return memory;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public String getRemark() {
+		return remark;
 	}
 
 	public void setBeginDate(Date beginDate) {
 		this.beginDate = beginDate;
 	}
 
-	public String getRemark() {
-		return remark;
+	public void setBrand(Integer brand) {
+		this.brand = brand;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public void setCpuNumber(Integer cpuNumber) {
+		this.cpuNumber = cpuNumber;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setDiskSize(String diskSize) {
+		this.diskSize = diskSize;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setMemory(Integer memory) {
+		this.memory = memory;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
 	}
 
 	public void setRemark(String remark) {

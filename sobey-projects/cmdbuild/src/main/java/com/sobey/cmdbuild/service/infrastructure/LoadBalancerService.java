@@ -40,9 +40,26 @@ public class LoadBalancerService extends BasicSevcie {
 	}
 
 	/**
+	 * 根据自定义动态查询条件获得对象.
+	 * 
+	 * 将条件查询放入searchParams中. 查询条件可查询{@link SearchFilter}类.
+	 * 
+	 * <pre>
+	 * searchParams.put(&quot;EQ_status&quot;, 'A');
+	 * </pre>
+	 * 
+	 * @param searchParams
+	 *            动态查询条件Map
+	 * @return LoadBalancer
+	 */
+	public LoadBalancer findLoadBalancer(Map<String, Object> searchParams) {
+		return loadBalancerDao.findOne(buildSpecification(searchParams));
+	}
+
+	/**
 	 * 新增、保存对象
 	 * 
-	 * @param loadBalancer
+	 * @param LoadBalancer
 	 * @return LoadBalancer
 	 */
 	public LoadBalancer saveOrUpdate(LoadBalancer loadBalancer) {
@@ -59,22 +76,19 @@ public class LoadBalancerService extends BasicSevcie {
 	}
 
 	/**
-	 * 根据code获得状态为"A"的有效对象
+	 * 根据自定义动态查询条件获得对象集合.
 	 * 
-	 * @param code
-	 * @return LoadBalancer
-	 */
-	public LoadBalancer findByCode(String code) {
-		return loadBalancerDao.findByCodeAndStatus(code, CMDBuildConstants.STATUS_ACTIVE);
-	}
-
-	/**
-	 * 获得所有对象集合
+	 * 将条件查询放入searchParams中. 查询条件可查询{@link SearchFilter}类.
 	 * 
-	 * @return List<LoadBalancer>
+	 * <pre>
+	 * searchParams.put(&quot;EQ_status&quot;, 'A');
+	 * </pre>
+	 * 
+	 * @param searchParams
+	 *            动态查询条件Map * @return List<LoadBalancer>
 	 */
-	public List<LoadBalancer> getCompanies() {
-		return loadBalancerDao.findAllByStatus(CMDBuildConstants.STATUS_ACTIVE);
+	public List<LoadBalancer> getLoadBalancerList(Map<String, Object> searchParams) {
+		return loadBalancerDao.findAll(buildSpecification(searchParams));
 	}
 
 	/**
@@ -86,31 +100,38 @@ public class LoadBalancerService extends BasicSevcie {
 	 * @return Page<LoadBalancer>
 	 */
 	private Page<LoadBalancer> getLoadBalancerPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
+
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
+
 		Specification<LoadBalancer> spec = buildSpecification(searchParams);
+
 		return loadBalancerDao.findAll(spec, pageRequest);
 	}
 
 	/**
 	 * 创建动态查询条件组合.
 	 * 
-	 * 自定义的查询在此进行组合.
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
 	 * 
 	 * @param searchParams
 	 * @return Specification<LoadBalancer>
 	 */
-	private Specification<LoadBalancer> buildSpecification(Map<String, Object> searchParams) { // 将条件查询放入Map中.查询条件可查询SearchFilter类.
+	private Specification<LoadBalancer> buildSpecification(Map<String, Object> searchParams) {
+
 		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-		Specification<LoadBalancer> spec = DynamicSpecifications.bySearchFilter(filters.values(), LoadBalancer.class);
-		return spec;
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), LoadBalancer.class);
 	}
 
 	/**
 	 * LoadBalancerDTO webservice分页查询.
 	 * 
-	 * 将Page<T>重新组织成符合DTO格式的分页格式对象. * @param searchParams 查询语句Map.
+	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
 	 * 
+	 * @param searchParams
+	 *            查询语句Map.
 	 * @param pageNumber
 	 *            当前页数,最小为1.
 	 * @param pageSize
@@ -119,11 +140,11 @@ public class LoadBalancerService extends BasicSevcie {
 	 */
 	public PaginationResult<LoadBalancerDTO> getLoadBalancerDTOPagination(Map<String, Object> searchParams,
 			int pageNumber, int pageSize) {
-		Page<LoadBalancer> page = getLoadBalancerPage(searchParams, pageNumber, pageSize); // 将List<LoadBalancer>中的数据转换为List<LoadBalancerDTO>
+
+		Page<LoadBalancer> page = getLoadBalancerPage(searchParams, pageNumber, pageSize);
+
 		List<LoadBalancerDTO> dtos = BeanMapper.mapList(page.getContent(), LoadBalancerDTO.class);
-		PaginationResult<LoadBalancerDTO> paginationResult = new PaginationResult<LoadBalancerDTO>(page.getNumber(),
-				page.getSize(), page.getTotalPages(), page.getNumberOfElements(), page.getNumberOfElements(),
-				page.hasPreviousPage(), page.isFirstPage(), page.hasNextPage(), page.isLastPage(), dtos);
-		return paginationResult;
+
+		return fillPaginationResult(page, dtos);
 	}
 }
