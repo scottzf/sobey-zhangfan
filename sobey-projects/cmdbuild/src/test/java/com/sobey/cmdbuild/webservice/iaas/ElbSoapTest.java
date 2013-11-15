@@ -1,11 +1,9 @@
-package com.sobey.cmdbuild.webservice.infrastructure;
+package com.sobey.cmdbuild.webservice.iaas;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
@@ -18,8 +16,8 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
-import com.sobey.cmdbuild.entity.Vlan;
-import com.sobey.cmdbuild.webservice.response.dto.VlanDTO;
+import com.sobey.cmdbuild.entity.Elb;
+import com.sobey.cmdbuild.webservice.response.dto.ElbDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
@@ -30,38 +28,38 @@ import com.sobey.test.data.RandomData;
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class })
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
-public class VlanSoapTest extends BaseFunctionalTestCase {
+public class ElbSoapTest extends BaseFunctionalTestCase {
 	private Integer id = 0;
 
 	private String code = "";
 
 	@Test
 	public void testAll() {
-		testCreateVlan();
-		testFindVlan();
-		testGetVlanList();
-		testGetVlanPagination();
-		testUpdateVlan();
-		testDeleteVlan();
+		testCreateElb();
+		testFindElb();
+		testGetElbList();
+		testGetElbPagination();
+		testUpdateElb();
+		testDeleteElb();
 
 	}
 
 	// @Test
 	// @Ignore
-	public void testFindVlan() {
+	public void testFindElb() {
 		System.out.println(code + ">>>>>>>>>>>>>");
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<VlanDTO> responseParams = infrastructureService.findVlanByParams(searchParams);
+		DTOResult<ElbDTO> responseParams = iaasSoapService.findElbByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<VlanDTO> response = infrastructureService.findVlan(id);
+		DTOResult<ElbDTO> response = iaasSoapService.findElb(id);
 
 		assertNotNull(response);
 
@@ -71,11 +69,11 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 
 	// @Test
 	// @Ignore
-	public void testGetVlanList() {
+	public void testGetElbList() {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<VlanDTO> result = infrastructureService.getVlanList(searchParams);
+		DTOListResult<ElbDTO> result = iaasSoapService.getElbList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -83,35 +81,35 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 
 	}
 
-	 @Test
+	// @Test
 	// @Ignore
-	public void testCreateVlan() {
+	public void testCreateElb() {
 
-		Vlan vlan = TestData.randomVlan();
+		Elb elb = TestData.randomElb();
 
-		VlanDTO vlanDTO = BeanMapper.map(vlan, VlanDTO.class);
+		ElbDTO elbDTO = BeanMapper.map(elb, ElbDTO.class);
 
-		IdResult response = infrastructureService.createVlan(vlanDTO);
+		IdResult response = iaasSoapService.createElb(elbDTO);
 
 		assertNotNull(response.getId());
 
-		code = vlan.getCode();// 设置code
+		code = elb.getCode();// 设置code
 
 	}
 
 	// @Test
 	// @Ignore
-	public void testUpdateVlan() {
+	public void testUpdateElb() {
 
-		DTOResult<VlanDTO> response = infrastructureService.findVlan(id);
+		DTOResult<ElbDTO> response = iaasSoapService.findElb(id);
 
-		VlanDTO vlanDTO = response.getDto();
+		ElbDTO elbDTO = response.getDto();
 
-		vlanDTO.setCode(RandomData.randomName("code"));
+		elbDTO.setCode(RandomData.randomName("code"));
 
-		vlanDTO.setDescription(RandomData.randomName("update"));
+		elbDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateVlan(id, vlanDTO);
+		IdResult result = iaasSoapService.updateElb(id, elbDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,9 +117,9 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 
 	// @Test
 	// @Ignore
-	public void testDeleteVlan() {
+	public void testDeleteElb() {
 
-		IdResult response = infrastructureService.deleteVlan(id);
+		IdResult response = iaasSoapService.deleteElb(id);
 
 		assertNotNull(response.getId());
 
@@ -129,43 +127,15 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 
 	// @Test
 	// @Ignore
-	public void testGetVlanPagination() {
+	public void testGetElbPagination() {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<VlanDTO> result = infrastructureService.getVlanPagination(searchParams, 1, 10);
+		PaginationResult<ElbDTO> result = iaasSoapService.getElbPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 
 		System.out.println("返回的查询结果数量:" + result.getGetTotalElements());
 
 	}
-
-	/**
-	 * 批量添加Vlan
-	 */
-	 @Test
-	// @Ignore
-	public void testInsertVlan() {
-
-		List<VlanDTO> list = new ArrayList<VlanDTO>();
-
-		for (int i = 0; i < 10; i++) {
-
-			Vlan vlan = TestData.randomVlan();
-
-			VlanDTO vlanDTO = BeanMapper.map(vlan, VlanDTO.class);
-
-			list.add(vlanDTO);
-
-		}
-
-		List<IdResult> results = infrastructureService.insertVlan(list);
-
-		for (IdResult idResult : results) {
-			assertEquals("0", idResult.getCode());
-		}
-
-	}
-
 }

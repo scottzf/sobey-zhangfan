@@ -1260,6 +1260,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			BeanValidators.validateWithException(validator, ipaddress);
 
 			ipaddress.setIpaddressStatus(50);// 设置状态为未使用
+			ipaddress.setUser(DEFAULT_USER);
 
 			comm.ipaddressService.saveOrUpdate(ipaddress);
 
@@ -3683,6 +3684,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Vlan vlan = BeanMapper.map(vlanDTO, Vlan.class);
 
+			vlan.setIdClass(TableNameUtil.getTableName(Vlan.class));
+			vlan.setUser(DEFAULT_USER);
+
 			BeanValidators.validateWithException(validator, vlan);
 
 			comm.vlanService.saveOrUpdate(vlan);
@@ -3828,15 +3832,15 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	}
 
 	@Override
-	public List<IdResult> insertIPAddress(@WebParam(name = "IpaddressDTOList") List<IpaddressDTO> ipaddressDTOList) {
+	public List<IdResult> insertIPAddress(@WebParam(name = "ipaddressDTOList") List<IpaddressDTO> ipaddressDTOList) {
 
 		IdResult result = new IdResult();
 
 		List<IdResult> results = new ArrayList<IdResult>();
 
-		// 先判断对象是否为空
 		try {
-
+			
+			// 先判断对象是否为空
 			Validate.notNull(ipaddressDTOList, ERROR.INPUT_NULL);
 
 			Validate.isTrue(ipaddressDTOList.size() > 0, ERROR.INPUT_NULL);
@@ -3848,6 +3852,8 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			results.add(handleGeneralError(result, e));
 			return results;
 		}
+
+		int i = 0;
 
 		for (IpaddressDTO ipaddressDTO : ipaddressDTOList) {
 
@@ -3864,12 +3870,20 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 				BeanValidators.validateWithException(validator, ipaddress);
 
+				ipaddress.setIdClass(TableNameUtil.getTableName(Ipaddress.class));
 				ipaddress.setIpaddressStatus(50);// 设置状态为未使用
+				ipaddress.setUser(DEFAULT_USER);
 
-				comm.ipaddressService.saveOrUpdate(ipaddress);
+				ipaddress.setId(i);// id不能重复
+
+				Ipaddress re = comm.ipaddressService.saveOrUpdate(ipaddress);
+
+				ipaddress.setId(re.getId());
 
 				result.setId(0);
 				results.add(result);
+
+				i--;
 
 			} catch (IllegalArgumentException e) {
 				results.add(handleParameterError(result, e));
@@ -3911,7 +3925,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	}
 
 	@Override
-	public List<IdResult> insertVlan(@WebParam(name = "VlanDTOList") List<VlanDTO> vlanDTOList) {
+	public List<IdResult> insertVlan(@WebParam(name = "vlanDTOList") List<VlanDTO> vlanDTOList) {
 		IdResult result = new IdResult();
 
 		List<IdResult> results = new ArrayList<IdResult>();
@@ -3931,6 +3945,8 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			return results;
 		}
 
+		int i=0;
+		
 		for (VlanDTO vlanDTO : vlanDTOList) {
 
 			try {
@@ -3944,12 +3960,17 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 				Vlan vlan = BeanMapper.map(vlanDTO, Vlan.class);
 
+				vlan.setIdClass(TableNameUtil.getTableName(Vlan.class));
+				vlan.setUser(DEFAULT_USER);
+				vlan.setId(i);
+
 				BeanValidators.validateWithException(validator, vlan);
 
 				comm.vlanService.saveOrUpdate(vlan);
 
 				result.setId(0);
 				results.add(result);
+				i--;
 
 			} catch (IllegalArgumentException e) {
 				results.add(handleParameterError(result, e));

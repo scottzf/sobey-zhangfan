@@ -1,11 +1,9 @@
-package com.sobey.cmdbuild.webservice.infrastructure;
+package com.sobey.cmdbuild.webservice.iaas;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
@@ -18,8 +16,8 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
-import com.sobey.cmdbuild.entity.Vlan;
-import com.sobey.cmdbuild.webservice.response.dto.VlanDTO;
+import com.sobey.cmdbuild.entity.As2;
+import com.sobey.cmdbuild.webservice.response.dto.As2DTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
@@ -30,38 +28,38 @@ import com.sobey.test.data.RandomData;
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class })
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
-public class VlanSoapTest extends BaseFunctionalTestCase {
+public class As2SoapTest extends BaseFunctionalTestCase {
 	private Integer id = 0;
 
 	private String code = "";
 
 	@Test
 	public void testAll() {
-		testCreateVlan();
-		testFindVlan();
-		testGetVlanList();
-		testGetVlanPagination();
-		testUpdateVlan();
-		testDeleteVlan();
+		testCreateAs2();
+		testFindAs2();
+		testGetAs2List();
+		testGetAs2Pagination();
+		testUpdateAs2();
+		testDeleteAs2();
 
 	}
 
 	// @Test
 	// @Ignore
-	public void testFindVlan() {
+	public void testFindAs2() {
 		System.out.println(code + ">>>>>>>>>>>>>");
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<VlanDTO> responseParams = infrastructureService.findVlanByParams(searchParams);
+		DTOResult<As2DTO> responseParams = iaasSoapService.findAs2ByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<VlanDTO> response = infrastructureService.findVlan(id);
+		DTOResult<As2DTO> response = iaasSoapService.findAs2(id);
 
 		assertNotNull(response);
 
@@ -71,11 +69,11 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 
 	// @Test
 	// @Ignore
-	public void testGetVlanList() {
+	public void testGetAs2List() {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<VlanDTO> result = infrastructureService.getVlanList(searchParams);
+		DTOListResult<As2DTO> result = iaasSoapService.getAs2List(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -83,35 +81,35 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 
 	}
 
-	 @Test
+	// @Test
 	// @Ignore
-	public void testCreateVlan() {
+	public void testCreateAs2() {
 
-		Vlan vlan = TestData.randomVlan();
+		As2 as2 = TestData.randomAs2();
 
-		VlanDTO vlanDTO = BeanMapper.map(vlan, VlanDTO.class);
+		As2DTO as2DTO = BeanMapper.map(as2, As2DTO.class);
 
-		IdResult response = infrastructureService.createVlan(vlanDTO);
+		IdResult response = iaasSoapService.createAs2(as2DTO);
 
 		assertNotNull(response.getId());
 
-		code = vlan.getCode();// 设置code
+		code = as2.getCode();// 设置code
 
 	}
 
 	// @Test
 	// @Ignore
-	public void testUpdateVlan() {
+	public void testUpdateAs2() {
 
-		DTOResult<VlanDTO> response = infrastructureService.findVlan(id);
+		DTOResult<As2DTO> response = iaasSoapService.findAs2(id);
 
-		VlanDTO vlanDTO = response.getDto();
+		As2DTO as2DTO = response.getDto();
 
-		vlanDTO.setCode(RandomData.randomName("code"));
+		as2DTO.setCode(RandomData.randomName("code"));
 
-		vlanDTO.setDescription(RandomData.randomName("update"));
+		as2DTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateVlan(id, vlanDTO);
+		IdResult result = iaasSoapService.updateAs2(id, as2DTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,9 +117,9 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 
 	// @Test
 	// @Ignore
-	public void testDeleteVlan() {
+	public void testDeleteAs2() {
 
-		IdResult response = infrastructureService.deleteVlan(id);
+		IdResult response = iaasSoapService.deleteAs2(id);
 
 		assertNotNull(response.getId());
 
@@ -129,43 +127,15 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 
 	// @Test
 	// @Ignore
-	public void testGetVlanPagination() {
+	public void testGetAs2Pagination() {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<VlanDTO> result = infrastructureService.getVlanPagination(searchParams, 1, 10);
+		PaginationResult<As2DTO> result = iaasSoapService.getAs2Pagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 
 		System.out.println("返回的查询结果数量:" + result.getGetTotalElements());
 
 	}
-
-	/**
-	 * 批量添加Vlan
-	 */
-	 @Test
-	// @Ignore
-	public void testInsertVlan() {
-
-		List<VlanDTO> list = new ArrayList<VlanDTO>();
-
-		for (int i = 0; i < 10; i++) {
-
-			Vlan vlan = TestData.randomVlan();
-
-			VlanDTO vlanDTO = BeanMapper.map(vlan, VlanDTO.class);
-
-			list.add(vlanDTO);
-
-		}
-
-		List<IdResult> results = infrastructureService.insertVlan(list);
-
-		for (IdResult idResult : results) {
-			assertEquals("0", idResult.getCode());
-		}
-
-	}
-
 }

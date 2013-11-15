@@ -18,7 +18,7 @@ import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 
-//@WebService(name = "CmdbuildService", targetNamespace = WsConstants.NS)
+//@WebService(name = "IaasSoapService", targetNamespace = WsConstants.NS)
 public interface IaasSoapService {
 
 	// ==============================//

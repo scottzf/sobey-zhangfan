@@ -12,6 +12,7 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import com.sobey.cmdbuild.webservice.CmdbuildSoapService;
 import com.sobey.cmdbuild.webservice.FinancialSoapService;
+import com.sobey.cmdbuild.webservice.IaasSoapService;
 import com.sobey.cmdbuild.webservice.InfrastructureSoapService;
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.test.data.DataFixtures;
@@ -45,6 +46,9 @@ public class BaseFunctionalTestCase {
 
 	@Autowired
 	protected CmdbuildSoapService cmdbuildSoapService;
+	
+	@Autowired
+	protected IaasSoapService iaasSoapService;
 
 	@BeforeClass
 	public static void initFunctionalTestEnv() throws Exception {

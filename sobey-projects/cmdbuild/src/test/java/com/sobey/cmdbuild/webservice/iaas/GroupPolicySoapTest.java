@@ -1,11 +1,9 @@
-package com.sobey.cmdbuild.webservice.infrastructure;
+package com.sobey.cmdbuild.webservice.iaas;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
@@ -18,8 +16,8 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
-import com.sobey.cmdbuild.entity.Vlan;
-import com.sobey.cmdbuild.webservice.response.dto.VlanDTO;
+import com.sobey.cmdbuild.entity.GroupPolicy;
+import com.sobey.cmdbuild.webservice.response.dto.GroupPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
@@ -30,38 +28,38 @@ import com.sobey.test.data.RandomData;
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class })
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
-public class VlanSoapTest extends BaseFunctionalTestCase {
+public class GroupPolicySoapTest extends BaseFunctionalTestCase {
 	private Integer id = 0;
 
 	private String code = "";
 
 	@Test
 	public void testAll() {
-		testCreateVlan();
-		testFindVlan();
-		testGetVlanList();
-		testGetVlanPagination();
-		testUpdateVlan();
-		testDeleteVlan();
+		testCreateGroupPolicy();
+		testFindGroupPolicy();
+		testGetGroupPolicyList();
+		testGetGroupPolicyPagination();
+		testUpdateGroupPolicy();
+		testDeleteGroupPolicy();
 
 	}
 
 	// @Test
 	// @Ignore
-	public void testFindVlan() {
+	public void testFindGroupPolicy() {
 		System.out.println(code + ">>>>>>>>>>>>>");
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<VlanDTO> responseParams = infrastructureService.findVlanByParams(searchParams);
+		DTOResult<GroupPolicyDTO> responseParams = iaasSoapService.findGroupPolicyByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<VlanDTO> response = infrastructureService.findVlan(id);
+		DTOResult<GroupPolicyDTO> response = iaasSoapService.findGroupPolicy(id);
 
 		assertNotNull(response);
 
@@ -71,11 +69,11 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 
 	// @Test
 	// @Ignore
-	public void testGetVlanList() {
+	public void testGetGroupPolicyList() {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<VlanDTO> result = infrastructureService.getVlanList(searchParams);
+		DTOListResult<GroupPolicyDTO> result = iaasSoapService.getGroupPolicyList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -83,35 +81,35 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 
 	}
 
-	 @Test
+	// @Test
 	// @Ignore
-	public void testCreateVlan() {
+	public void testCreateGroupPolicy() {
 
-		Vlan vlan = TestData.randomVlan();
+		GroupPolicy groupPolicy = TestData.randomGroupPolicy();
 
-		VlanDTO vlanDTO = BeanMapper.map(vlan, VlanDTO.class);
+		GroupPolicyDTO groupPolicyDTO = BeanMapper.map(groupPolicy, GroupPolicyDTO.class);
 
-		IdResult response = infrastructureService.createVlan(vlanDTO);
+		IdResult response = iaasSoapService.createGroupPolicy(groupPolicyDTO);
 
 		assertNotNull(response.getId());
 
-		code = vlan.getCode();// 设置code
+		code = groupPolicy.getCode();// 设置code
 
 	}
 
 	// @Test
 	// @Ignore
-	public void testUpdateVlan() {
+	public void testUpdateGroupPolicy() {
 
-		DTOResult<VlanDTO> response = infrastructureService.findVlan(id);
+		DTOResult<GroupPolicyDTO> response = iaasSoapService.findGroupPolicy(id);
 
-		VlanDTO vlanDTO = response.getDto();
+		GroupPolicyDTO groupPolicyDTO = response.getDto();
 
-		vlanDTO.setCode(RandomData.randomName("code"));
+		groupPolicyDTO.setCode(RandomData.randomName("code"));
 
-		vlanDTO.setDescription(RandomData.randomName("update"));
+		groupPolicyDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateVlan(id, vlanDTO);
+		IdResult result = iaasSoapService.updateGroupPolicy(id, groupPolicyDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,9 +117,9 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 
 	// @Test
 	// @Ignore
-	public void testDeleteVlan() {
+	public void testDeleteGroupPolicy() {
 
-		IdResult response = infrastructureService.deleteVlan(id);
+		IdResult response = iaasSoapService.deleteGroupPolicy(id);
 
 		assertNotNull(response.getId());
 
@@ -129,43 +127,15 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 
 	// @Test
 	// @Ignore
-	public void testGetVlanPagination() {
+	public void testGetGroupPolicyPagination() {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<VlanDTO> result = infrastructureService.getVlanPagination(searchParams, 1, 10);
+		PaginationResult<GroupPolicyDTO> result = iaasSoapService.getGroupPolicyPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 
 		System.out.println("返回的查询结果数量:" + result.getGetTotalElements());
 
 	}
-
-	/**
-	 * 批量添加Vlan
-	 */
-	 @Test
-	// @Ignore
-	public void testInsertVlan() {
-
-		List<VlanDTO> list = new ArrayList<VlanDTO>();
-
-		for (int i = 0; i < 10; i++) {
-
-			Vlan vlan = TestData.randomVlan();
-
-			VlanDTO vlanDTO = BeanMapper.map(vlan, VlanDTO.class);
-
-			list.add(vlanDTO);
-
-		}
-
-		List<IdResult> results = infrastructureService.insertVlan(list);
-
-		for (IdResult idResult : results) {
-			assertEquals("0", idResult.getCode());
-		}
-
-	}
-
 }

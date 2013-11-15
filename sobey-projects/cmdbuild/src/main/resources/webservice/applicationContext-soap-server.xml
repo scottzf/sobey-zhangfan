@@ -10,19 +10,28 @@
 	<jaxws:endpoint address="/soap/cmdbuildSoapService">
 		<jaxws:implementor ref="cmdbuildSoapService" />
 	</jaxws:endpoint>
-	
-	
+
 	<jaxws:endpoint address="/soap/infrastructureSoapService">
 		<jaxws:implementor ref="infrastructureSoapService" />
 	</jaxws:endpoint>
 
+	<jaxws:endpoint address="/soap/financialSoapService">
+		<jaxws:implementor ref="financialSoapService" />
+	</jaxws:endpoint>
+
+	<jaxws:endpoint address="/soap/iaasSoapService">
+		<jaxws:implementor ref="iaasSoapService" />
+	</jaxws:endpoint>
+
 	<!-- WebService的实现Bean定义 -->
-	
+
 	<bean id="cmdbuildSoapService" class="com.sobey.cmdbuild.webservice.CmdbuildSoapServiceImpl" />
 
 	<bean id="infrastructureSoapService"
 		class="com.sobey.cmdbuild.webservice.InfrastructureSoapServiceImpl" />
 
+	<bean id="financialSoapService" class="com.sobey.cmdbuild.webservice.FinancialSoapServiceImpl" />
 
+	<bean id="iaasSoapService" class="com.sobey.cmdbuild.webservice.IaasSoapServiceImpl" />
 
 </beans>

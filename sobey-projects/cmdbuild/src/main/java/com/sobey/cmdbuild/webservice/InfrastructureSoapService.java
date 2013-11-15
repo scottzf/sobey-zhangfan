@@ -47,9 +47,9 @@ public interface InfrastructureSoapService {
 
 	DTOResult<FimasDTO> findFimasByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createFimas(@WebParam(name = "FimasDTO") FimasDTO fimasDTO);
+	IdResult createFimas(@WebParam(name = "fimasDTO") FimasDTO fimasDTO);
 
-	IdResult updateFimas(@WebParam(name = "id") Integer id, @WebParam(name = "FimasDTO") FimasDTO fimasDTO);
+	IdResult updateFimas(@WebParam(name = "id") Integer id, @WebParam(name = "fimasDTO") FimasDTO fimasDTO);
 
 	IdResult deleteFimas(@WebParam(name = "id") Integer id);
 
@@ -66,9 +66,9 @@ public interface InfrastructureSoapService {
 
 	DTOResult<FimasBoxDTO> findFimasBoxByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createFimasBox(@WebParam(name = "FimasBoxDTO") FimasBoxDTO fimasBoxDTO);
+	IdResult createFimasBox(@WebParam(name = "fimasBoxDTO") FimasBoxDTO fimasBoxDTO);
 
-	IdResult updateFimasBox(@WebParam(name = "id") Integer id, @WebParam(name = "FimasBoxDTO") FimasBoxDTO fimasBoxDTO);
+	IdResult updateFimasBox(@WebParam(name = "id") Integer id, @WebParam(name = "fimasBoxDTO") FimasBoxDTO fimasBoxDTO);
 
 	IdResult deleteFimasBox(@WebParam(name = "id") Integer id);
 
@@ -86,10 +86,10 @@ public interface InfrastructureSoapService {
 
 	DTOResult<FimasPortDTO> findFimasPortByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createFimasPort(@WebParam(name = "FimasPortDTO") FimasPortDTO fimasPortDTO);
+	IdResult createFimasPort(@WebParam(name = "fimasPortDTO") FimasPortDTO fimasPortDTO);
 
 	IdResult updateFimasPort(@WebParam(name = "id") Integer id,
-			@WebParam(name = "FimasPortDTO") FimasPortDTO fimasPortDTO);
+			@WebParam(name = "fimasPortDTO") FimasPortDTO fimasPortDTO);
 
 	IdResult deleteFimasPort(@WebParam(name = "id") Integer id);
 
@@ -107,9 +107,9 @@ public interface InfrastructureSoapService {
 
 	DTOResult<FirewallDTO> findFirewallByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createFirewall(@WebParam(name = "FirewallDTO") FirewallDTO firewallDTO);
+	IdResult createFirewall(@WebParam(name = "firewallDTO") FirewallDTO firewallDTO);
 
-	IdResult updateFirewall(@WebParam(name = "id") Integer id, @WebParam(name = "FirewallDTO") FirewallDTO firewallDTO);
+	IdResult updateFirewall(@WebParam(name = "id") Integer id, @WebParam(name = "firewallDTO") FirewallDTO firewallDTO);
 
 	IdResult deleteFirewall(@WebParam(name = "id") Integer id);
 
@@ -128,10 +128,10 @@ public interface InfrastructureSoapService {
 	DTOResult<FirewallPortDTO> findFirewallPortByParams(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createFirewallPort(@WebParam(name = "FirewallPortDTO") FirewallPortDTO firewallPortDTO);
+	IdResult createFirewallPort(@WebParam(name = "firewallPortDTO") FirewallPortDTO firewallPortDTO);
 
 	IdResult updateFirewallPort(@WebParam(name = "id") Integer id,
-			@WebParam(name = "FirewallPortDTO") FirewallPortDTO firewallPortDTO);
+			@WebParam(name = "firewallPortDTO") FirewallPortDTO firewallPortDTO);
 
 	IdResult deleteFirewallPort(@WebParam(name = "id") Integer id);
 
@@ -149,9 +149,9 @@ public interface InfrastructureSoapService {
 
 	DTOResult<HardDiskDTO> findHardDiskByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createHardDisk(@WebParam(name = "HardDiskDTO") HardDiskDTO hardDiskDTO);
+	IdResult createHardDisk(@WebParam(name = "hardDiskDTO") HardDiskDTO hardDiskDTO);
 
-	IdResult updateHardDisk(@WebParam(name = "id") Integer id, @WebParam(name = "HardDiskDTO") HardDiskDTO hardDiskDTO);
+	IdResult updateHardDisk(@WebParam(name = "id") Integer id, @WebParam(name = "hardDiskDTO") HardDiskDTO hardDiskDTO);
 
 	IdResult deleteHardDisk(@WebParam(name = "id") Integer id);
 
@@ -169,10 +169,10 @@ public interface InfrastructureSoapService {
 
 	DTOResult<IpaddressDTO> findIpaddressByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createIpaddress(@WebParam(name = "IpaddressDTO") IpaddressDTO ipaddressDTO);
+	IdResult createIpaddress(@WebParam(name = "ipaddressDTO") IpaddressDTO ipaddressDTO);
 
 	IdResult updateIpaddress(@WebParam(name = "id") Integer id,
-			@WebParam(name = "IpaddressDTO") IpaddressDTO ipaddressDTO);
+			@WebParam(name = "ipaddressDTO") IpaddressDTO ipaddressDTO);
 
 	IdResult deleteIpaddress(@WebParam(name = "id") Integer id);
 
@@ -198,7 +198,7 @@ public interface InfrastructureSoapService {
 	 * @param ipaddressDTOList
 	 * @return List<IdResult>
 	 */
-	List<IdResult> insertIPAddress(@WebParam(name = "IpaddressDTOList") List<IpaddressDTO> ipaddressDTOList);
+	List<IdResult> insertIPAddress(@WebParam(name = "ipaddressDTOList") List<IpaddressDTO> ipaddressDTOList);
 
 	/**
 	 * 初始化 IPAddress。<br/>
@@ -218,10 +218,10 @@ public interface InfrastructureSoapService {
 	DTOResult<LoadBalancerDTO> findLoadBalancerByParams(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createLoadBalancer(@WebParam(name = "LoadBalancerDTO") LoadBalancerDTO loadBalancerDTO);
+	IdResult createLoadBalancer(@WebParam(name = "loadBalancerDTO") LoadBalancerDTO loadBalancerDTO);
 
 	IdResult updateLoadBalancer(@WebParam(name = "id") Integer id,
-			@WebParam(name = "LoadBalancerDTO") LoadBalancerDTO loadBalancerDTO);
+			@WebParam(name = "loadBalancerDTO") LoadBalancerDTO loadBalancerDTO);
 
 	IdResult deleteLoadBalancer(@WebParam(name = "id") Integer id);
 
@@ -240,10 +240,10 @@ public interface InfrastructureSoapService {
 	DTOResult<LoadBalancerPortDTO> findLoadBalancerPortByParams(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createLoadBalancerPort(@WebParam(name = "LoadBalancerPortDTO") LoadBalancerPortDTO loadBalancerPortDTO);
+	IdResult createLoadBalancerPort(@WebParam(name = "loadBalancerPortDTO") LoadBalancerPortDTO loadBalancerPortDTO);
 
 	IdResult updateLoadBalancerPort(@WebParam(name = "id") Integer id,
-			@WebParam(name = "LoadBalancerPortDTO") LoadBalancerPortDTO loadBalancerPortDTO);
+			@WebParam(name = "loadBalancerPortDTO") LoadBalancerPortDTO loadBalancerPortDTO);
 
 	IdResult deleteLoadBalancerPort(@WebParam(name = "id") Integer id);
 
@@ -262,9 +262,9 @@ public interface InfrastructureSoapService {
 
 	DTOResult<MemoryDTO> findMemoryByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createMemory(@WebParam(name = "MemoryDTO") MemoryDTO memoryDTO);
+	IdResult createMemory(@WebParam(name = "memoryDTO") MemoryDTO memoryDTO);
 
-	IdResult updateMemory(@WebParam(name = "id") Integer id, @WebParam(name = "MemoryDTO") MemoryDTO memoryDTO);
+	IdResult updateMemory(@WebParam(name = "id") Integer id, @WebParam(name = "memoryDTO") MemoryDTO memoryDTO);
 
 	IdResult deleteMemory(@WebParam(name = "id") Integer id);
 
@@ -281,10 +281,10 @@ public interface InfrastructureSoapService {
 
 	DTOResult<NetappBoxDTO> findNetappBoxByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createNetappBox(@WebParam(name = "NetappBoxDTO") NetappBoxDTO netappBoxDTO);
+	IdResult createNetappBox(@WebParam(name = "netappBoxDTO") NetappBoxDTO netappBoxDTO);
 
 	IdResult updateNetappBox(@WebParam(name = "id") Integer id,
-			@WebParam(name = "NetappBoxDTO") NetappBoxDTO netappBoxDTO);
+			@WebParam(name = "netappBoxDTO") NetappBoxDTO netappBoxDTO);
 
 	IdResult deleteNetappBox(@WebParam(name = "id") Integer id);
 
@@ -303,10 +303,10 @@ public interface InfrastructureSoapService {
 	DTOResult<NetappControllerDTO> findNetappControllerByParams(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createNetappController(@WebParam(name = "NetappControllerDTO") NetappControllerDTO netappControllerDTO);
+	IdResult createNetappController(@WebParam(name = "netappControllerDTO") NetappControllerDTO netappControllerDTO);
 
 	IdResult updateNetappController(@WebParam(name = "id") Integer id,
-			@WebParam(name = "NetappControllerDTO") NetappControllerDTO netappControllerDTO);
+			@WebParam(name = "netappControllerDTO") NetappControllerDTO netappControllerDTO);
 
 	IdResult deleteNetappController(@WebParam(name = "id") Integer id);
 
@@ -325,10 +325,10 @@ public interface InfrastructureSoapService {
 
 	DTOResult<NetappPortDTO> findNetappPortByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createNetappPort(@WebParam(name = "NetappPortDTO") NetappPortDTO netappPortDTO);
+	IdResult createNetappPort(@WebParam(name = "netappPortDTO") NetappPortDTO netappPortDTO);
 
 	IdResult updateNetappPort(@WebParam(name = "id") Integer id,
-			@WebParam(name = "NetappPortDTO") NetappPortDTO netappPortDTO);
+			@WebParam(name = "netappPortDTO") NetappPortDTO netappPortDTO);
 
 	IdResult deleteNetappPort(@WebParam(name = "id") Integer id);
 
@@ -346,9 +346,9 @@ public interface InfrastructureSoapService {
 
 	DTOResult<NicDTO> findNicByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createNic(@WebParam(name = "NicDTO") NicDTO nicDTO);
+	IdResult createNic(@WebParam(name = "nicDTO") NicDTO nicDTO);
 
-	IdResult updateNic(@WebParam(name = "id") Integer id, @WebParam(name = "NicDTO") NicDTO nicDTO);
+	IdResult updateNic(@WebParam(name = "id") Integer id, @WebParam(name = "nicDTO") NicDTO nicDTO);
 
 	IdResult deleteNic(@WebParam(name = "id") Integer id);
 
@@ -365,9 +365,9 @@ public interface InfrastructureSoapService {
 
 	DTOResult<NicPortDTO> findNicPortByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createNicPort(@WebParam(name = "NicPortDTO") NicPortDTO nicPortDTO);
+	IdResult createNicPort(@WebParam(name = "nicPortDTO") NicPortDTO nicPortDTO);
 
-	IdResult updateNicPort(@WebParam(name = "id") Integer id, @WebParam(name = "NicPortDTO") NicPortDTO nicPortDTO);
+	IdResult updateNicPort(@WebParam(name = "id") Integer id, @WebParam(name = "nicPortDTO") NicPortDTO nicPortDTO);
 
 	IdResult deleteNicPort(@WebParam(name = "id") Integer id);
 
@@ -385,9 +385,9 @@ public interface InfrastructureSoapService {
 
 	DTOResult<ServerDTO> findServerByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createServer(@WebParam(name = "ServerDTO") ServerDTO serverDTO);
+	IdResult createServer(@WebParam(name = "serverDTO") ServerDTO serverDTO);
 
-	IdResult updateServer(@WebParam(name = "id") Integer id, @WebParam(name = "ServerDTO") ServerDTO serverDTO);
+	IdResult updateServer(@WebParam(name = "id") Integer id, @WebParam(name = "serverDTO") ServerDTO serverDTO);
 
 	IdResult deleteServer(@WebParam(name = "id") Integer id);
 
@@ -404,10 +404,10 @@ public interface InfrastructureSoapService {
 
 	DTOResult<ServerPortDTO> findServerPortByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createServerPort(@WebParam(name = "ServerPortDTO") ServerPortDTO serverPortDTO);
+	IdResult createServerPort(@WebParam(name = "serverPortDTO") ServerPortDTO serverPortDTO);
 
 	IdResult updateServerPort(@WebParam(name = "id") Integer id,
-			@WebParam(name = "ServerPortDTO") ServerPortDTO serverPortDTO);
+			@WebParam(name = "serverPortDTO") ServerPortDTO serverPortDTO);
 
 	IdResult deleteServerPort(@WebParam(name = "id") Integer id);
 
@@ -425,9 +425,9 @@ public interface InfrastructureSoapService {
 
 	DTOResult<SwitchesDTO> findSwitchesByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createSwitches(@WebParam(name = "SwitchesDTO") SwitchesDTO switchesDTO);
+	IdResult createSwitches(@WebParam(name = "switchesDTO") SwitchesDTO switchesDTO);
 
-	IdResult updateSwitches(@WebParam(name = "id") Integer id, @WebParam(name = "SwitchesDTO") SwitchesDTO switchesDTO);
+	IdResult updateSwitches(@WebParam(name = "id") Integer id, @WebParam(name = "switchesDTO") SwitchesDTO switchesDTO);
 
 	IdResult deleteSwitches(@WebParam(name = "id") Integer id);
 
@@ -445,10 +445,10 @@ public interface InfrastructureSoapService {
 
 	DTOResult<SwitchPortDTO> findSwitchPortByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createSwitchPort(@WebParam(name = "SwitchPortDTO") SwitchPortDTO switchPortDTO);
+	IdResult createSwitchPort(@WebParam(name = "switchPortDTO") SwitchPortDTO switchPortDTO);
 
 	IdResult updateSwitchPort(@WebParam(name = "id") Integer id,
-			@WebParam(name = "SwitchPortDTO") SwitchPortDTO switchPortDTO);
+			@WebParam(name = "switchPortDTO") SwitchPortDTO switchPortDTO);
 
 	IdResult deleteSwitchPort(@WebParam(name = "id") Integer id);
 
@@ -466,9 +466,9 @@ public interface InfrastructureSoapService {
 
 	DTOResult<VlanDTO> findVlanByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createVlan(@WebParam(name = "VlanDTO") VlanDTO vlanDTO);
+	IdResult createVlan(@WebParam(name = "vlanDTO") VlanDTO vlanDTO);
 
-	IdResult updateVlan(@WebParam(name = "id") Integer id, @WebParam(name = "VlanDTO") VlanDTO vlanDTO);
+	IdResult updateVlan(@WebParam(name = "id") Integer id, @WebParam(name = "vlanDTO") VlanDTO vlanDTO);
 
 	IdResult deleteVlan(@WebParam(name = "id") Integer id);
 
@@ -484,6 +484,6 @@ public interface InfrastructureSoapService {
 	 * @param vlanDTOList
 	 * @return List<IdResult>
 	 */
-	List<IdResult> insertVlan(@WebParam(name = "VlanDTOList") List<VlanDTO> vlanDTOList);
-
+	List<IdResult> insertVlan(@WebParam(name = "vlanDTOList") List<VlanDTO> vlanDTOList);
+	
 }

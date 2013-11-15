@@ -37,7 +37,7 @@ import com.sobey.core.beanvalidator.BeanValidators;
 import com.sobey.core.mapper.BeanMapper;
 import com.sobey.core.utils.TableNameUtil;
 
-//@WebService(serviceName = "CmdbuildService", endpointInterface = "com.sobey.cmdbuild.webservice.CmdbuildSoapService", targetNamespace = WsConstants.NS)
+//@WebService(serviceName = "IaasSoapService", endpointInterface = "com.sobey.cmdbuild.webservice.IaasSoapServiceImpl", targetNamespace = WsConstants.NS)
 //查看webservice的日志.
 @Features(features = "org.apache.cxf.feature.LoggingFeature")
 public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapService {
@@ -519,6 +519,13 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			BeanValidators.validateWithException(validator, ecs);
 
 			comm.ecsService.saveOrUpdate(ecs);
+
+			// 调用 ECS Agent 中的 cloneVM 接口。虚拟机创建成功，将数据保存至 CMDBuild 中；
+			// 创建失败，返回错误提示至页面。
+
+			// 分配 IP。
+			// 创建订单。
+			// 为虚拟机创建监控。
 
 			return new IdResult(ecs.getId());
 
