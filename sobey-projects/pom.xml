@@ -14,5 +14,6 @@
 	
 	<modules>
 	  <module>cmdbuild</module>
-	</modules>
+    <module>switch</module>
+  </modules>
 </project>
