@@ -127,7 +127,7 @@ public class DeviceSpecSoapTest extends BaseFunctionalTestCase {
 
 	}
 
-	// @Test
+	 @Test
 	// @Ignore
 	public void testGetDeviceSpecPagination() {
 
