@@ -81,7 +81,7 @@ public class HardDiskSoapTest extends BaseFunctionalTestCase {
 
 	}
 
-	// @Test
+	@Test
 	// @Ignore
 	public void testCreateHardDisk() {
 

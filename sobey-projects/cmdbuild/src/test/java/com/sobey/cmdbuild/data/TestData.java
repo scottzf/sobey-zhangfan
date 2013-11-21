@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.sobey.cmdbuild.constants.DeviceTypeEnum;
 import com.sobey.cmdbuild.entity.As2;
 import com.sobey.cmdbuild.entity.Company;
 import com.sobey.cmdbuild.entity.Consumptions;
@@ -43,6 +44,8 @@ import com.sobey.cmdbuild.entity.Tag;
 import com.sobey.cmdbuild.entity.Tenants;
 import com.sobey.cmdbuild.entity.Vlan;
 import com.sobey.cmdbuild.entity.Vpn;
+import com.sobey.cmdbuild.webservice.response.dto.InfrastructureDTO;
+import com.sobey.cmdbuild.webservice.response.dto.InfrastructurePortDTO;
 import com.sobey.test.data.RandomData;
 
 public class TestData {
@@ -109,13 +112,14 @@ public class TestData {
 
 	public static Rack randomRack() {
 		Rack rack = new Rack();
-		// rack.setId(0);
-		// rack.setCode(RandomData.randomName("code"));
-		// rack.setDescription(RandomData.randomName("description"));
 
-		// rack.setRemark(RandomData.randomName("remark"));
-		// rack.setRemark("");
-		// rack.setIdc(85);
+		rack.setId(0);
+		rack.setCode(RandomData.randomName("code"));
+		rack.setDescription(RandomData.randomName("description"));
+
+		rack.setRemark(RandomData.randomName("remark"));
+		rack.setIdc(90);
+
 		return rack;
 	}
 
@@ -143,7 +147,7 @@ public class TestData {
 		DeviceSpec dev = new DeviceSpec();
 
 		dev.setId(0);
-		dev.setDeviceType(0);
+		dev.setDeviceType(26);
 		dev.setBeginDate(startDate);
 		dev.setCode(RandomData.randomName("code10"));
 		dev.setDescription(RandomData.randomName("description"));
@@ -227,19 +231,21 @@ public class TestData {
 	public static FimasBox randomFimasBox() {
 
 		FimasBox fimasBox = new FimasBox();
+
 		fimasBox.setId(0);
 		fimasBox.setCode(RandomData.randomName("code"));
 		fimasBox.setDescription(RandomData.randomName("description"));
 		fimasBox.setBeginDate(startDate);
-		fimasBox.setIdc(0);
-		fimasBox.setRack(0);
-		fimasBox.setDeviceSpec(0);
-		fimasBox.setDiskType(0);
+		fimasBox.setIdc(90);
+		fimasBox.setRack(218);
+		fimasBox.setDeviceSpec(226);
+		fimasBox.setDiskType(53);// SATA
 		fimasBox.setDiskNumber(RandomData.randomInt());
 		fimasBox.setSite(0);
 
 		// 非必须参数
-		fimasBox.setIpaddress(0);
+		fimasBox.setIpaddress(94);
+		// fimasBox.setNotes(RandomData.randomName("nodes"));
 		fimasBox.setSn(RandomData.randomName("sn"));
 		fimasBox.setGdzcSn(RandomData.randomName("gdzcSn"));
 		fimasBox.setRemark(RandomData.randomName("remark"));
@@ -355,21 +361,22 @@ public class TestData {
 	public static NetappBox randomNetappBox() {
 
 		NetappBox netappBox = new NetappBox();
+
 		netappBox.setId(0);
 		netappBox.setCode(RandomData.randomName("code"));
 		netappBox.setDescription(RandomData.randomName("description"));
 		netappBox.setBeginDate(startDate);
-		netappBox.setIdc(0);
-		netappBox.setRack(0);
-		netappBox.setDeviceSpec(0);
-		netappBox.setDiskNumber(3);
-		netappBox.setDiskType(0);
+		netappBox.setIdc(90);
+		netappBox.setRack(218);
+		netappBox.setDeviceSpec(226);
+		netappBox.setDiskNumber(RandomData.randomInt());
+		netappBox.setDiskType(53);// SATA
 
 		// 非必须参数
 		netappBox.setGdzcSn(RandomData.randomName("gdzcSn"));
 		netappBox.setRemark(RandomData.randomName("remark"));
 		netappBox.setSn(RandomData.randomName("sn"));
-		netappBox.setIpaddress(0);
+		netappBox.setIpaddress(94);
 
 		return netappBox;
 	}
@@ -571,6 +578,46 @@ public class TestData {
 
 	public static Ecs randomEcs() {
 		return null;
+	}
+
+	public static InfrastructureDTO randomInfrastructureDTO() {
+
+		InfrastructureDTO infrastructureDTO = new InfrastructureDTO();
+
+		infrastructureDTO.setId(0);
+		infrastructureDTO.setBeginDate(startDate);
+		infrastructureDTO.setCode(RandomData.randomName("code"));
+		infrastructureDTO.setDescription(RandomData.randomName("desc"));
+		infrastructureDTO.setDeviceSpec(226);
+		infrastructureDTO.setDeviceStatus(0);// 参数定义未知
+		infrastructureDTO.setRack(218);
+		infrastructureDTO.setIdc(90);
+		infrastructureDTO.setSite(RandomData.randomName("site"));
+
+		infrastructureDTO.setGdzcSn(RandomData.randomName("gdzcSn"));
+		infrastructureDTO.setRemark(RandomData.randomName("remark"));
+		infrastructureDTO.setSn(RandomData.randomName("sn"));
+		infrastructureDTO.setIpAddress(94);
+
+		return infrastructureDTO;
+	}
+
+	public static InfrastructurePortDTO randomInfrastructurePortDTO() {
+
+		InfrastructurePortDTO infrastructurePortDTO = new InfrastructurePortDTO();
+
+		infrastructurePortDTO.setId(0);
+		infrastructurePortDTO.setBeginDate(startDate);
+		infrastructurePortDTO.setCode(RandomData.randomName("code"));
+		infrastructurePortDTO.setDescription(RandomData.randomName("desc"));
+		infrastructurePortDTO.setSite(RandomData.randomName("site"));
+
+		infrastructurePortDTO.setRemark(RandomData.randomName("remark"));
+		infrastructurePortDTO.setIpAddress(94);
+		//infrastructurePortDTO.setConnectedTo(0);//连接的 switch 端口 ID
+		infrastructurePortDTO.setMacAddress(RandomData.randomName("mac"));
+
+		return infrastructurePortDTO;
 	}
 
 }

@@ -13,6 +13,8 @@ import com.sobey.cmdbuild.webservice.response.dto.FimasPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.FirewallDTO;
 import com.sobey.cmdbuild.webservice.response.dto.FirewallPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.HardDiskDTO;
+import com.sobey.cmdbuild.webservice.response.dto.InfrastructureDTO;
+import com.sobey.cmdbuild.webservice.response.dto.InfrastructurePortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.IpaddressDTO;
 import com.sobey.cmdbuild.webservice.response.dto.LoadBalancerDTO;
 import com.sobey.cmdbuild.webservice.response.dto.LoadBalancerPortDTO;
@@ -486,4 +488,60 @@ public interface InfrastructureSoapService {
 	 */
 	List<IdResult> insertVlan(@WebParam(name = "vlanDTOList") List<VlanDTO> vlanDTOList);
 
+	// ////////////////////////////////
+		// ////////////////////////////////
+		// //////Infrastructure////////////
+		// ////////////////////////////////
+		// ////////////////////////////////
+
+		DTOResult<Object> findInfrastructure(@WebParam(name = "infrastructureDTO") InfrastructureDTO infrastructureDTO);
+
+		DTOResult<Object> findInfrastructureByParams(
+				@WebParam(name = "infrastructureDTO") InfrastructureDTO infrastructureDTO);
+
+		IdResult createInfrastructure(@WebParam(name = "infrastructureDTO") InfrastructureDTO infrastructureDTO);
+
+		IdResult updateInfrastructure(@WebParam(name = "infrastructureDTO") InfrastructureDTO infrastructureDTO);
+
+		IdResult deleteInfrastructure(@WebParam(name = "infrastructureDTO") InfrastructureDTO infrastructureDTO);
+
+		DTOListResult<Object> getInfrastructureList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+
+		PaginationResult<Object> getInfrastructurePagination(
+				@WebParam(name = "searchParams") Map<String, Object> searchParams,
+				@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+		IdResult reportInfrastructure(@WebParam(name = "infrastructureDTO") InfrastructureDTO infrastructureDTO);
+
+		// ////////////////////////////////
+		// ////////////////////////////////
+		// //////InfrastructurePort////////////
+		// ////////////////////////////////
+		// ////////////////////////////////
+
+		DTOResult<Object> findInfrastructurePort(
+				@WebParam(name = "infrastructurePortDTO") InfrastructurePortDTO infrastructurePortDTO);
+
+		DTOResult<Object> findInfrastructurePortByParams(
+				@WebParam(name = "infrastructurePortDTO") InfrastructurePortDTO infrastructurePortDTO);
+
+		IdResult createInfrastructurePort(
+				@WebParam(name = "infrastructurePortDTO") InfrastructurePortDTO infrastructurePortDTO);
+
+		IdResult updateInfrastructurePort(
+				@WebParam(name = "infrastructurePortDTO") InfrastructurePortDTO infrastructurePortDTO);
+
+		IdResult deleteInfrastructurePort(
+				@WebParam(name = "infrastructurePortDTO") InfrastructurePortDTO infrastructurePortDTO);
+
+		DTOListResult<Object> getInfrastructurePortList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+
+		PaginationResult<InfrastructurePortDTO> getInfrastructurePortPagination(
+				@WebParam(name = "searchParams") Map<String, Object> searchParams,
+				@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+		IdResult reportInfrastructurePort(
+				@WebParam(name = "infrastructurePortDTO") InfrastructurePortDTO infrastructurePortDTO);
+
+	
 }

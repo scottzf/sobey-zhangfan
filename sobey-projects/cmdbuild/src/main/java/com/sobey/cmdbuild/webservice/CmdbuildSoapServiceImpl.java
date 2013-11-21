@@ -883,7 +883,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 		IdResult result = new IdResult();
 
 		try {
-
+			
 			Validate.notNull(rackDTO, ERROR.INPUT_NULL);
 
 			// 验证code是否唯一.如果不为null,则弹出错误.

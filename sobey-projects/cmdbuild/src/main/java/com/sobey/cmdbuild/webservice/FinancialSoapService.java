@@ -3,7 +3,11 @@ package com.sobey.cmdbuild.webservice;
 import java.util.Map;
 
 import javax.jws.WebParam;
+import javax.jws.WebService;
 
+import org.springframework.stereotype.Component;
+
+import com.sobey.cmdbuild.constants.WsConstants;
 import com.sobey.cmdbuild.webservice.response.dto.ConsumptionsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DeviceSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EcsSpecDTO;
@@ -14,8 +18,8 @@ import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 
-//@Component("CmdbuildService")
-//@WebService(name = "CmdbuildService", targetNamespace = WsConstants.NS)
+@Component("FinancialSoapService")
+@WebService(name = "FinancialSoapService", targetNamespace = WsConstants.NS)
 public interface FinancialSoapService {
 
 	/*************************************************

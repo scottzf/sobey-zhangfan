@@ -12,6 +12,7 @@ import org.apache.cxf.feature.Features;
 
 import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
+import com.sobey.cmdbuild.constants.DevicePortTypeEnum;
 import com.sobey.cmdbuild.constants.ERROR;
 import com.sobey.cmdbuild.constants.WsConstants;
 import com.sobey.cmdbuild.entity.Fimas;
@@ -40,6 +41,8 @@ import com.sobey.cmdbuild.webservice.response.dto.FimasPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.FirewallDTO;
 import com.sobey.cmdbuild.webservice.response.dto.FirewallPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.HardDiskDTO;
+import com.sobey.cmdbuild.webservice.response.dto.InfrastructureDTO;
+import com.sobey.cmdbuild.webservice.response.dto.InfrastructurePortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.IpaddressDTO;
 import com.sobey.cmdbuild.webservice.response.dto.LoadBalancerDTO;
 import com.sobey.cmdbuild.webservice.response.dto.LoadBalancerPortDTO;
@@ -139,6 +142,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			Validate.isTrue(comm.fimasService.findFimas(searchParams) == null, ERROR.OBJECT_DUPLICATE);
 
 			Fimas fimas = BeanMapper.map(fimasDTO, Fimas.class);
+
+			fimas.setUser(DEFAULT_USER);
+			fimas.setIdClass(TableNameUtil.getTableName(Fimas.class));
 
 			BeanValidators.validateWithException(validator, fimas);
 
@@ -325,6 +331,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			FimasBox fimasBox = BeanMapper.map(fimasBoxDTO, FimasBox.class);
 
 			fimasBox.setUser(DEFAULT_USER);
+			fimasBox.setIdClass(TableNameUtil.getTableName(FimasBox.class));
+			fimasBox.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			
 			BeanValidators.validateWithException(validator, fimasBox);
 
 			comm.fimasBoxService.saveOrUpdate(fimasBox);
@@ -513,6 +522,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			FimasPort fimasPort = BeanMapper.map(fimasPortDTO, FimasPort.class);
 
+			fimasPort.setUser(DEFAULT_USER);
+			fimasPort.setIdClass(TableNameUtil.getTableName(FimasPort.class));
+			
 			BeanValidators.validateWithException(validator, fimasPort);
 
 			comm.fimasPortService.saveOrUpdate(fimasPort);
@@ -699,6 +711,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Firewall firewall = BeanMapper.map(firewallDTO, Firewall.class);
 
+			firewall.setUser(DEFAULT_USER);
+			firewall.setIdClass(TableNameUtil.getTableName(Firewall.class));
+			
 			BeanValidators.validateWithException(validator, firewall);
 
 			comm.firewallService.saveOrUpdate(firewall);
@@ -885,6 +900,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			FirewallPort firewallPort = BeanMapper.map(firewallPortDTO, FirewallPort.class);
 
+			firewallPort.setUser(DEFAULT_USER);
+			firewallPort.setIdClass(TableNameUtil.getTableName(FirewallPort.class));
+			
 			BeanValidators.validateWithException(validator, firewallPort);
 
 			comm.firewallPortService.saveOrUpdate(firewallPort);
@@ -1071,6 +1089,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			HardDisk hardDisk = BeanMapper.map(hardDiskDTO, HardDisk.class);
 
+			hardDisk.setUser(DEFAULT_USER);
+			hardDisk.setIdClass(TableNameUtil.getTableName(HardDisk.class));
+			
 			BeanValidators.validateWithException(validator, hardDisk);
 
 			comm.hardDiskService.saveOrUpdate(hardDisk);
@@ -1261,6 +1282,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			ipaddress.setIpaddressStatus(50);// 设置状态为未使用
 			ipaddress.setUser(DEFAULT_USER);
+			ipaddress.setIdClass(TableNameUtil.getTableName(Ipaddress.class));
 
 			comm.ipaddressService.saveOrUpdate(ipaddress);
 
@@ -1447,6 +1469,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			LoadBalancer loadBalancer = BeanMapper.map(loadBalancerDTO, LoadBalancer.class);
 
+			loadBalancer.setUser(DEFAULT_USER);
+			loadBalancer.setIdClass(TableNameUtil.getTableName(LoadBalancer.class));
+			
 			BeanValidators.validateWithException(validator, loadBalancer);
 
 			comm.loadBalancerService.saveOrUpdate(loadBalancer);
@@ -1823,6 +1848,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			Validate.isTrue(comm.memoryService.findMemory(searchParams) == null, ERROR.OBJECT_DUPLICATE);
 
 			Memory memory = BeanMapper.map(memoryDTO, Memory.class);
+			
+			memory.setUser(DEFAULT_USER);
+			memory.setIdClass(TableNameUtil.getTableName(Memory.class));
 
 			BeanValidators.validateWithException(validator, memory);
 
@@ -2009,6 +2037,10 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NetappBox netappBox = BeanMapper.map(netappBoxDTO, NetappBox.class);
 
+			netappBox.setUser(DEFAULT_USER);
+			netappBox.setIdClass(TableNameUtil.getTableName(NetappBox.class));
+			netappBox.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			
 			BeanValidators.validateWithException(validator, netappBox);
 
 			comm.netappBoxService.saveOrUpdate(netappBox);
@@ -2198,6 +2230,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NetappController netappController = BeanMapper.map(netappControllerDTO, NetappController.class);
 
+			netappController.setUser(DEFAULT_USER);
+			netappController.setIdClass(TableNameUtil.getTableName(NetappController.class));
+			
 			BeanValidators.validateWithException(validator, netappController);
 
 			comm.netappControllerService.saveOrUpdate(netappController);
@@ -2387,6 +2422,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NetappPort netappPort = BeanMapper.map(netappPortDTO, NetappPort.class);
 
+			netappPort.setUser(DEFAULT_USER);
+			netappPort.setIdClass(TableNameUtil.getTableName(NetappPort.class));
+			
 			BeanValidators.validateWithException(validator, netappPort);
 
 			comm.netappPortService.saveOrUpdate(netappPort);
@@ -2572,6 +2610,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			Validate.isTrue(comm.nicService.findNic(searchParams) == null, ERROR.OBJECT_DUPLICATE);
 
 			Nic nic = BeanMapper.map(nicDTO, Nic.class);
+			
+			nic.setUser(DEFAULT_USER);
+			nic.setIdClass(TableNameUtil.getTableName(Nic.class));
 
 			BeanValidators.validateWithException(validator, nic);
 
@@ -2756,6 +2797,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NicPort nicPort = BeanMapper.map(nicPortDTO, NicPort.class);
 
+			nicPort.setUser(DEFAULT_USER);
+			nicPort.setIdClass(TableNameUtil.getTableName(NicPort.class));
+			
 			BeanValidators.validateWithException(validator, nicPort);
 
 			comm.nicPortService.saveOrUpdate(nicPort);
@@ -2941,6 +2985,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Server server = BeanMapper.map(serverDTO, Server.class);
 
+			server.setUser(DEFAULT_USER);
+			server.setIdClass(TableNameUtil.getTableName(Server.class));
+			
 			BeanValidators.validateWithException(validator, server);
 
 			comm.serverService.saveOrUpdate(server);
@@ -3126,6 +3173,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			ServerPort serverPort = BeanMapper.map(serverPortDTO, ServerPort.class);
 
+			serverPort.setUser(DEFAULT_USER);
+			serverPort.setIdClass(TableNameUtil.getTableName(ServerPort.class));
+			
 			BeanValidators.validateWithException(validator, serverPort);
 
 			comm.serverPortService.saveOrUpdate(serverPort);
@@ -3312,6 +3362,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Switches switches = BeanMapper.map(switchesDTO, Switches.class);
 
+			switches.setUser(DEFAULT_USER);
+			switches.setIdClass(TableNameUtil.getTableName(Switches.class));
+			
 			BeanValidators.validateWithException(validator, switches);
 
 			comm.switchesService.saveOrUpdate(switches);
@@ -3498,6 +3551,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			SwitchPort switchPort = BeanMapper.map(switchPortDTO, SwitchPort.class);
 
+			switchPort.setUser(DEFAULT_USER);
+			switchPort.setIdClass(TableNameUtil.getTableName(SwitchPort.class));
+			
 			BeanValidators.validateWithException(validator, switchPort);
 
 			comm.switchPortService.saveOrUpdate(switchPort);
@@ -3982,5 +4038,592 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 		return results;
 	}
+	
+	
+
+	@Override
+	public DTOResult<Object> findInfrastructure(
+			@WebParam(name = "infrastructureDTO") InfrastructureDTO infrastructureDTO) {
+
+		DTOResult<Object> result = new DTOResult<Object>();
+
+		try {
+
+			Validate.notNull(infrastructureDTO, ERROR.INPUT_NULL);
+
+			Validate.notNull(infrastructureDTO.getDeviceType(), ERROR.INPUT_NULL);
+
+			Integer id = infrastructureDTO.getId();
+
+			switch (infrastructureDTO.getDeviceType().getValue()) {
+
+			case 1:
+
+				Server server = comm.serverService.findServer(id);
+
+				Validate.notNull(server, ERROR.OBJECT_NULL);
+
+				ServerDTO serverDTO = BeanMapper.map(server, ServerDTO.class);
+
+				result.setDto(serverDTO);
+
+				break;
+			case 2:
+
+				Switches switches = comm.switchesService.findSwitches(id);
+
+				Validate.notNull(switches, ERROR.OBJECT_NULL);
+
+				SwitchesDTO switchesDTO = BeanMapper.map(switches, SwitchesDTO.class);
+
+				result.setDto(switchesDTO);
+
+				break;
+			case 3:
+
+				Fimas fimas = comm.fimasService.findFimas(id);
+
+				Validate.notNull(fimas, ERROR.OBJECT_NULL);
+
+				FimasDTO fimasDTO = BeanMapper.map(fimas, FimasDTO.class);
+
+				result.setDto(fimasDTO);
+
+				break;
+			case 4:
+
+				Firewall firewall = comm.firewallService.findFirewall(id);
+
+				Validate.notNull(firewall, ERROR.OBJECT_NULL);
+
+				FirewallDTO firewallDTO = BeanMapper.map(firewall, FirewallDTO.class);
+
+				result.setDto(firewallDTO);
+
+				break;
+			case 5:
+
+				NetappController netappController = comm.netappControllerService.findNetappController(id);
+
+				Validate.notNull(netappController, ERROR.OBJECT_NULL);
+
+				NetappControllerDTO netappControllerDTO = BeanMapper.map(netappController, NetappControllerDTO.class);
+
+				result.setDto(netappControllerDTO);
+
+				break;
+			case 6:
+
+				LoadBalancer loadBalancer = comm.loadBalancerService.findLoadBalancer(id);
+
+				Validate.notNull(loadBalancer, ERROR.OBJECT_NULL);
+
+				LoadBalancerDTO loadBalancerDTO = BeanMapper.map(loadBalancer, LoadBalancerDTO.class);
+
+				result.setDto(loadBalancerDTO);
+
+				break;
+			}
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public DTOResult<Object> findInfrastructureByParams(
+			@WebParam(name = "infrastructureDTO") InfrastructureDTO infrastructureDTO) {
+
+		return null;
+	}
+
+	@Override
+	public IdResult createInfrastructure(@WebParam(name = "infrastructureDTO") InfrastructureDTO infrastructureDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(infrastructureDTO, ERROR.INPUT_NULL);
+
+			Validate.notNull(infrastructureDTO.getDeviceType(), ERROR.INPUT_NULL);
+
+			// 验证code是否唯一.如果不为null,则弹出错误.
+			Map<String, Object> searchParams = Maps.newHashMap();
+
+			searchParams.put("EQ_code", infrastructureDTO.getCode());
+
+			switch (infrastructureDTO.getDeviceType().getValue()) {
+
+			case 1:
+
+				Validate.isTrue(comm.serverService.findServer(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+				Server server = BeanMapper.map(infrastructureDTO, Server.class);
+				
+				server.setIdClass(TableNameUtil.getTableName(Server.class));
+				server.setUser(DEFAULT_USER);
+				server.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+				
+				BeanValidators.validateWithException(validator, server);
+
+				comm.serverService.saveOrUpdate(server);
+
+				break;
+			case 2:
+
+				Validate.isTrue(comm.switchesService.findSwitches(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+				Switches switches = BeanMapper.map(infrastructureDTO, Switches.class);
+
+				switches.setIdClass(TableNameUtil.getTableName(Switches.class));
+				switches.setUser(DEFAULT_USER);
+				switches.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+				
+				BeanValidators.validateWithException(validator, switches);
+
+				comm.switchesService.saveOrUpdate(switches);
+
+				break;
+			case 3:
+
+				Validate.isTrue(comm.fimasService.findFimas(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+				Fimas fimas = BeanMapper.map(infrastructureDTO, Fimas.class);
+
+				fimas.setIdClass(TableNameUtil.getTableName(Fimas.class));
+				fimas.setUser(DEFAULT_USER);
+				fimas.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+				
+				BeanValidators.validateWithException(validator, fimas);
+
+				comm.fimasService.saveOrUpdate(fimas);
+
+				break;
+			case 4:
+
+				Validate.isTrue(comm.firewallService.findFirewall(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+				Firewall firewall = BeanMapper.map(infrastructureDTO, Firewall.class);
+
+				firewall.setIdClass(TableNameUtil.getTableName(Firewall.class));
+				firewall.setUser(DEFAULT_USER);
+				firewall.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+				
+				BeanValidators.validateWithException(validator, firewall);
+
+				comm.firewallService.saveOrUpdate(firewall);
+
+				break;
+			case 5:
+
+				Validate.isTrue(comm.netappControllerService.findNetappController(searchParams) == null,
+						ERROR.OBJECT_DUPLICATE);
+
+				NetappController netappController = BeanMapper.map(infrastructureDTO, NetappController.class);
+
+				netappController.setIdClass(TableNameUtil.getTableName(NetappController.class));
+				netappController.setUser(DEFAULT_USER);
+				netappController.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+				
+				BeanValidators.validateWithException(validator, netappController);
+
+				comm.netappControllerService.saveOrUpdate(netappController);
+
+				break;
+			case 6:
+
+				Validate.isTrue(comm.loadBalancerService.findLoadBalancer(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+				LoadBalancer loadBalancer = BeanMapper.map(infrastructureDTO, LoadBalancer.class);
+
+				loadBalancer.setIdClass(TableNameUtil.getTableName(LoadBalancer.class));
+				loadBalancer.setUser(DEFAULT_USER);
+				loadBalancer.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+				
+				BeanValidators.validateWithException(validator, loadBalancer);
+
+				comm.loadBalancerService.saveOrUpdate(loadBalancer);
+
+				break;
+			}
+
+			return new IdResult(0);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public IdResult updateInfrastructure(@WebParam(name = "infrastructureDTO") InfrastructureDTO infrastructureDTO) {
+
+		return null;
+	}
+
+	@Override
+	public IdResult deleteInfrastructure(@WebParam(name = "infrastructureDTO") InfrastructureDTO infrastructureDTO) {
+
+		return null;
+	}
+
+	@Override
+	public DTOListResult<Object> getInfrastructureList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
+		return null;
+	}
+
+	@Override
+	public PaginationResult<Object> getInfrastructurePagination(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
+		return null;
+	}
+
+	@Override
+	public IdResult reportInfrastructure(@WebParam(name = "infrastructureDTO") InfrastructureDTO infrastructureDTO) {
+
+		return null;
+	}
+
+	@Override
+	public DTOResult<Object> findInfrastructurePort(
+			@WebParam(name = "infrastructurePortDTO") InfrastructurePortDTO infrastructurePortDTO) {
+
+		DTOResult<Object> result = new DTOResult<Object>();
+
+		try {
+
+			Validate.notNull(infrastructurePortDTO, ERROR.INPUT_NULL);
+
+			Validate.notNull(infrastructurePortDTO.getDevicePortType(), ERROR.INPUT_NULL);
+
+			Integer id = infrastructurePortDTO.getId();
+
+			switch (infrastructurePortDTO.getDevicePortType().getValue()) {
+
+			case 1:
+
+				ServerPort serverPort = comm.serverPortService.findServerPort(id);
+
+				Validate.notNull(serverPort, ERROR.OBJECT_NULL);
+
+				ServerPortDTO serverPortDTO = BeanMapper.map(serverPort, ServerPortDTO.class);
+
+				result.setDto(serverPortDTO);
+
+				break;
+			case 2:
+
+				SwitchPort switchesPort = comm.switchPortService.findSwitchPort(id);
+
+				Validate.notNull(switchesPort, ERROR.OBJECT_NULL);
+
+				SwitchPortDTO switchesPortDTO = BeanMapper.map(switchesPort, SwitchPortDTO.class);
+
+				result.setDto(switchesPortDTO);
+
+				break;
+			case 3:
+
+				FimasPort fimasPort = comm.fimasPortService.findFimasPort(id);
+
+				Validate.notNull(fimasPort, ERROR.OBJECT_NULL);
+
+				FimasPortDTO fimasPortDTO = BeanMapper.map(fimasPort, FimasPortDTO.class);
+
+				result.setDto(fimasPortDTO);
+
+				break;
+			case 4:
+
+				FirewallPort firewallPort = comm.firewallPortService.findFirewallPort(id);
+
+				Validate.notNull(firewallPort, ERROR.OBJECT_NULL);
+
+				FirewallPortDTO firewallPortDTO = BeanMapper.map(firewallPort, FirewallPortDTO.class);
+
+				result.setDto(firewallPortDTO);
+
+				break;
+			case 5:
+
+				LoadBalancerPort loadBalancerPort = comm.loadBalancerPortService.findLoadBalancerPort(id);
+
+				Validate.notNull(loadBalancerPort, ERROR.OBJECT_NULL);
+
+				LoadBalancerPortDTO loadBalancerPortDTO = BeanMapper.map(loadBalancerPort, LoadBalancerPortDTO.class);
+
+				result.setDto(loadBalancerPortDTO);
+
+				break;
+			case 6:
+
+				NetappPort netappPort = comm.netappPortService.findNetappPort(id);
+
+				Validate.notNull(netappPort, ERROR.OBJECT_NULL);
+
+				NetappPortDTO netappPortDTO = BeanMapper.map(netappPort, NetappPortDTO.class);
+
+				result.setDto(netappPortDTO);
+
+				break;
+			}
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public DTOResult<Object> findInfrastructurePortByParams(
+			@WebParam(name = "infrastructurePortDTO") InfrastructurePortDTO infrastructurePortDTO) {
+
+		return null;
+	}
+
+	@Override
+	public IdResult createInfrastructurePort(
+			@WebParam(name = "infrastructurePortDTO") InfrastructurePortDTO infrastructurePortDTO) {
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(infrastructurePortDTO, ERROR.INPUT_NULL);
+
+			Validate.notNull(infrastructurePortDTO.getDevicePortType(), ERROR.INPUT_NULL);
+
+			// 验证code是否唯一.如果不为null,则弹出错误.
+			Map<String, Object> searchParams = Maps.newHashMap();
+
+			searchParams.put("EQ_code", infrastructurePortDTO.getCode());
+
+			switch (infrastructurePortDTO.getDevicePortType().getValue()) {
+
+			case 1:
+
+				Validate.isTrue(comm.serverPortService.findServerPort(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+				ServerPort serverPort = BeanMapper.map(infrastructurePortDTO, ServerPort.class);
+				
+				serverPort.setIdClass(TableNameUtil.getTableName(ServerPort.class));
+				serverPort.setUser(DEFAULT_USER);
+				serverPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+
+				BeanValidators.validateWithException(validator, serverPort);
+
+				comm.serverPortService.saveOrUpdate(serverPort);
+
+				break;
+			case 2:
+
+				Validate.isTrue(comm.switchPortService.findSwitchPort(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+				SwitchPort switchPort = BeanMapper.map(infrastructurePortDTO, SwitchPort.class);
+
+				switchPort.setIdClass(TableNameUtil.getTableName(SwitchPort.class));
+				switchPort.setUser(DEFAULT_USER);
+				switchPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+				
+				BeanValidators.validateWithException(validator, switchPort);
+
+				comm.switchPortService.saveOrUpdate(switchPort);
+
+				break;
+			case 3:
+
+				Validate.isTrue(comm.fimasPortService.findFimasPort(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+				FimasPort fimasPort = BeanMapper.map(infrastructurePortDTO, FimasPort.class);
+
+				fimasPort.setIdClass(TableNameUtil.getTableName(FimasPort.class));
+				fimasPort.setUser(DEFAULT_USER);
+				fimasPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+				
+				BeanValidators.validateWithException(validator, fimasPort);
+
+				comm.fimasPortService.saveOrUpdate(fimasPort);
+
+				break;
+			case 4:
+
+				Validate.isTrue(comm.firewallPortService.findFirewallPort(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+				FirewallPort firewallPort = BeanMapper.map(infrastructurePortDTO, FirewallPort.class);
+
+				firewallPort.setIdClass(TableNameUtil.getTableName(FirewallPort.class));
+				firewallPort.setUser(DEFAULT_USER);
+				firewallPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+				
+				BeanValidators.validateWithException(validator, firewallPort);
+
+				comm.firewallPortService.saveOrUpdate(firewallPort);
+
+				break;
+			case 5:
+
+				Validate.isTrue(comm.loadBalancerPortService.findLoadBalancerPort(searchParams) == null,
+						ERROR.OBJECT_DUPLICATE);
+
+				LoadBalancerPort loadBalancerPort = BeanMapper.map(infrastructurePortDTO, LoadBalancerPort.class);
+
+				loadBalancerPort.setIdClass(TableNameUtil.getTableName(LoadBalancerPort.class));
+				loadBalancerPort.setUser(DEFAULT_USER);
+				loadBalancerPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+				
+				BeanValidators.validateWithException(validator, loadBalancerPort);
+
+				comm.loadBalancerPortService.saveOrUpdate(loadBalancerPort);
+
+				break;
+			case 6:
+
+				Validate.isTrue(comm.netappPortService.findNetappPort(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+				NetappPort netappPort = BeanMapper.map(infrastructurePortDTO, NetappPort.class);
+
+				netappPort.setIdClass(TableNameUtil.getTableName(NetappPort.class));
+				netappPort.setUser(DEFAULT_USER);
+				netappPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+				
+				BeanValidators.validateWithException(validator, netappPort);
+
+				comm.netappPortService.saveOrUpdate(netappPort);
+
+				break;
+			}
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult updateInfrastructurePort(
+			@WebParam(name = "infrastructurePortDTO") InfrastructurePortDTO infrastructurePortDTO) {
+
+		return null;
+	}
+
+	@Override
+	public IdResult deleteInfrastructurePort(
+			@WebParam(name = "infrastructurePortDTO") InfrastructurePortDTO infrastructurePortDTO) {
+
+		return null;
+	}
+
+	@Override
+	public DTOListResult<Object> getInfrastructurePortList(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
+		return null;
+	}
+
+	@Override
+	public PaginationResult<InfrastructurePortDTO> getInfrastructurePortPagination(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
+		// PaginationResult<Object> result = new PaginationResult<Object>();
+
+		PaginationResult<InfrastructurePortDTO> result = new PaginationResult<InfrastructurePortDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Validate.notNull(searchParams.containsKey("devicePortType"), ERROR.INPUT_NULL);
+
+			DevicePortTypeEnum devicePortType = (DevicePortTypeEnum) searchParams.get("devicePortType");
+
+			Validate.notNull(devicePortType, ERROR.INPUT_NULL);
+
+			switch (devicePortType.getValue()) {
+
+			case 1:
+
+				// ServerPort
+				break;
+			case 2:
+
+				PaginationResult<SwitchPortDTO> list = comm.switchPortService.getSwitchPortDTOPagination(searchParams,
+						pageNumber, pageSize);
+
+				List<InfrastructurePortDTO> content = BeanMapper.mapList(list.getGetContent(),
+						InfrastructurePortDTO.class);
+
+				result.setGetSize(list.getGetSize());
+				result.setGetNumber(list.getGetNumber());
+				result.setGetNumberOfElements(list.getGetNumberOfElements());
+				result.setGetTotalPages(list.getGetTotalPages());
+				result.setGetTotalElements(list.getGetTotalElements());
+				result.setHasNextPage(list.isHasNextPage());
+				result.setHasPreviousPage(list.isHasPreviousPage());
+				result.setLastPage(list.isLastPage());
+				result.setGetContent(content);
+
+				// return list;
+
+				break;
+			case 3:
+
+				Validate.isTrue(comm.fimasPortService.findFimasPort(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+				// FimasPort fimasPort = BeanMapper.map(infrastructurePortDTO, FimasPort.class);
+
+				break;
+			case 4:
+
+				Validate.isTrue(comm.firewallPortService.findFirewallPort(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+				// FirewallPort firewallPort = BeanMapper.map(infrastructurePortDTO, FirewallPort.class);
+
+				break;
+			case 5:
+
+				// LoadBalancerPort
+
+				break;
+			case 6:
+
+				// NetappPort
+				break;
+			}
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public IdResult reportInfrastructurePort(
+			@WebParam(name = "infrastructurePortDTO") InfrastructurePortDTO infrastructurePortDTO) {
+
+		return null;
+	}
+
 
 }
