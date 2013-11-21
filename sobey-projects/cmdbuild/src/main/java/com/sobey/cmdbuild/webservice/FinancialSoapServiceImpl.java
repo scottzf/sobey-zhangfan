@@ -3,6 +3,7 @@ package com.sobey.cmdbuild.webservice;
 import java.util.Map;
 
 import javax.jws.WebParam;
+import javax.jws.WebService;
 import javax.validation.ConstraintViolationException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +13,7 @@ import org.apache.cxf.feature.Features;
 import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
 import com.sobey.cmdbuild.constants.ERROR;
+import com.sobey.cmdbuild.constants.WsConstants;
 import com.sobey.cmdbuild.entity.Consumptions;
 import com.sobey.cmdbuild.entity.DeviceSpec;
 import com.sobey.cmdbuild.entity.EcsSpec;
@@ -30,8 +32,9 @@ import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.core.beanvalidator.BeanValidators;
 import com.sobey.core.mapper.BeanMapper;
 import com.sobey.core.utils.MathsUtil;
+import com.sobey.core.utils.TableNameUtil;
 
-//@WebService(serviceName = "CmdbuildService", endpointInterface = "com.sobey.cmdbuild.webservice.CmdbuildSoapService", targetNamespace = WsConstants.NS)
+@WebService(serviceName = "FinancialSoapService", endpointInterface = "com.sobey.cmdbuild.webservice.FinancialSoapService", targetNamespace = WsConstants.NS)
 //查看webservice的日志.
 @Features(features = "org.apache.cxf.feature.LoggingFeature")
 public class FinancialSoapServiceImpl extends BasicSoapSevcie implements FinancialSoapService {
@@ -108,6 +111,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 			// 将DTO对象转换至Entity对象
 			Consumptions consumptions = BeanMapper.map(consumptionsDTO, Consumptions.class);
 			consumptions.setUser(DEFAULT_USER);
+			consumptions.setIdClass(TableNameUtil.getTableName(Consumptions.class));
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, consumptions);
@@ -332,6 +336,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 			// 将DTO对象转换至Entity对象
 			DeviceSpec deviceSpec = BeanMapper.map(deviceSpecDTO, DeviceSpec.class);
 			deviceSpec.setUser(DEFAULT_USER);
+			deviceSpec.setIdClass(TableNameUtil.getTableName(DeviceSpec.class));
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, deviceSpec);
@@ -513,6 +518,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 			// 将DTO对象转换至Entity对象
 			EcsSpec ecsSpec = BeanMapper.map(ecsSpecDTO, EcsSpec.class);
 			ecsSpec.setUser(DEFAULT_USER);
+			ecsSpec.setIdClass(TableNameUtil.getTableName(EcsSpec.class));
 
 			BeanValidators.validateWithException(validator, ecsSpec);
 
@@ -689,6 +695,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 			// 将DTO对象转换至Entity对象
 			EipSpec eipSpec = BeanMapper.map(eipSpecDTO, EipSpec.class);
 			eipSpec.setUser(DEFAULT_USER);
+			eipSpec.setIdClass(TableNameUtil.getTableName(EipSpec.class));
 
 			BeanValidators.validateWithException(validator, eipSpec);
 
@@ -865,6 +872,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 			// 将DTO对象转换至Entity对象
 			Es3Spec es3Spec = BeanMapper.map(es3SpecDTO, Es3Spec.class);
 			es3Spec.setUser(DEFAULT_USER);
+			es3Spec.setIdClass(TableNameUtil.getTableName(Es3Spec.class));
 
 			BeanValidators.validateWithException(validator, es3Spec);
 
