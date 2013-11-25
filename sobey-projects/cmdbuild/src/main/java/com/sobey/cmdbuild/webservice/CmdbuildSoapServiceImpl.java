@@ -33,6 +33,7 @@ import com.sobey.cmdbuild.webservice.response.result.IdResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.core.beanvalidator.BeanValidators;
 import com.sobey.core.mapper.BeanMapper;
+import com.sobey.core.utils.TableNameUtil;
 
 @WebService(serviceName = "CmdbuildService", endpointInterface = "com.sobey.cmdbuild.webservice.CmdbuildSoapService", targetNamespace = WsConstants.NS)
 // 查看webservice的日志.
@@ -228,7 +229,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			company.setUser(DEFAULT_USER);
 			company.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			company.setIdClass(Company.class.getSimpleName());
+			company.setIdClass(TableNameUtil.getTableName(Company.class));
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, company);
@@ -405,7 +406,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			tenants.setUser(DEFAULT_USER);
 			tenants.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			tenants.setIdClass(Tenants.class.getSimpleName());
+			tenants.setIdClass(TableNameUtil.getTableName(Tenants.class));
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, tenants);
@@ -587,7 +588,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			tag.setUser(DEFAULT_USER);
 			tag.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			tag.setIdClass(Tag.class.getSimpleName());
+			tag.setIdClass(TableNameUtil.getTableName(Tag.class));
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, tag);
@@ -761,7 +762,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			idc.setUser(DEFAULT_USER);
 			idc.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			idc.setIdClass(Idc.class.getSimpleName());
+			idc.setIdClass(TableNameUtil.getTableName(Idc.class));
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, idc);
@@ -883,7 +884,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 		IdResult result = new IdResult();
 
 		try {
-			
+
 			Validate.notNull(rackDTO, ERROR.INPUT_NULL);
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
@@ -936,7 +937,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			rack.setUser(DEFAULT_USER);
 			rack.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			rack.setIdClass(Rack.class.getSimpleName());
+			rack.setIdClass(TableNameUtil.getTableName(Rack.class));
 
 			BeanValidators.validateWithException(validator, rack);
 
