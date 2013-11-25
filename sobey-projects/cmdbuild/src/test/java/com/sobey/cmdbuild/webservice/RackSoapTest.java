@@ -39,11 +39,15 @@ import com.sobey.core.mapper.BeanMapper;
 public class RackSoapTest extends BaseFunctionalTestCase {
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void find() {
-		Integer id = 115;
+		Integer id = 218;
 		DTOResult<RackDTO> response = cmdbuildSoapService.findRack(id);
-		assertEquals("sobey", response.getDto().getCode());
+		assertNotNull(response.getDto().getBrandText());
+		assertNotNull(response.getDto().getHeightText());
+		assertNotNull(response.getDto().getPowerText());
+		assertNotNull(response.getDto().getIdcDTO());
+		assertEquals("code2027", response.getDto().getCode());
 	}
 
 	@Test
@@ -55,7 +59,7 @@ public class RackSoapTest extends BaseFunctionalTestCase {
 	}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void save() {
 		Rack rack = TestData.randomRack();
 		RackDTO rackDTO = BeanMapper.map(rack, RackDTO.class);
