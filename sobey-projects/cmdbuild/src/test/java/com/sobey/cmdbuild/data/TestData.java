@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.sobey.cmdbuild.constants.DeviceTypeEnum;
 import com.sobey.cmdbuild.entity.As2;
 import com.sobey.cmdbuild.entity.Company;
 import com.sobey.cmdbuild.entity.Consumptions;

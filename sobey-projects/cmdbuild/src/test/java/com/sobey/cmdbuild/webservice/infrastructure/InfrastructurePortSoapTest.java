@@ -15,7 +15,6 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.constants.DevicePortTypeEnum;
-import com.sobey.cmdbuild.constants.DeviceTypeEnum;
 import com.sobey.cmdbuild.data.TestData;
 import com.sobey.cmdbuild.webservice.response.dto.InfrastructurePortDTO;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;

@@ -1,8 +1,7 @@
 package com.sobey.cmdbuild.webservice.infrastructure;
 
-import static org.junit.Assert.*;
-
-import java.util.Map;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,11 +10,9 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
-import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.constants.DeviceTypeEnum;
 import com.sobey.cmdbuild.data.TestData;
-import com.sobey.cmdbuild.webservice.response.dto.FirewallDTO;
 import com.sobey.cmdbuild.webservice.response.dto.InfrastructureDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
