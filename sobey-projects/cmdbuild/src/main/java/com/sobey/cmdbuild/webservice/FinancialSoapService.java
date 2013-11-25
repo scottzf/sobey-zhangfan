@@ -60,7 +60,8 @@ public interface FinancialSoapService {
 	 * @param ConsumptionsDTO
 	 * @return IdResult
 	 */
-	IdResult settleConsumptions(@WebParam(name = "cid") Integer cid, @WebParam(name = "tid") Integer tid);
+	IdResult settleConsumptions(@WebParam(name = "consumptionsId") Integer consumptionsId,
+			@WebParam(name = "tenantsId") Integer tenantsId);
 
 	/**
 	 * 多条件获取对象集合，并导出列表的信息为 Excel 文件。

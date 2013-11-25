@@ -250,26 +250,26 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 	}
 
 	@Override
-	public IdResult settleConsumptions(Integer cid, Integer tid) {
+	public IdResult settleConsumptions(Integer consumptionsId, Integer tenantsId) {
 
 		IdResult result = new IdResult();
 
 		try {
 
-			Validate.notNull(cid, ERROR.INPUT_NULL);
-			Validate.notNull(tid, ERROR.INPUT_NULL);
+			Validate.notNull(consumptionsId, ERROR.INPUT_NULL);
+			Validate.notNull(tenantsId, ERROR.INPUT_NULL);
 
-			Tenants tenants = comm.tenantsService.findTenants(tid);
+			Tenants tenants = comm.tenantsService.findTenants(tenantsId);
 			Validate.notNull(tenants, ERROR.OBJECT_NULL);
 
-			Consumptions consumptions = comm.consumptionsService.findConsumptions(cid);
-
+			Consumptions consumptions = comm.consumptionsService.findConsumptions(consumptionsId);
 			Validate.notNull(consumptions, ERROR.OBJECT_NULL);
 
-			// 更新租户的余额.
+			/* 更新租户的余额. */
+			// 余额 = 租户账户上的账户余额 - 订单价格.
 			tenants.setAccontBalance(MathsUtil.sub(tenants.getAccontBalance(), consumptions.getSpending()));
 
-			// TODO更新订单状态为"完成",从lookup中读取"完成"状态的ID.
+			// TODO 更新订单状态为"完成",从lookup中读取"完成"状态的ID.
 			consumptions.setConsumptionsStatus(42);
 
 			comm.tenantsService.saveOrUpdate(tenants);
