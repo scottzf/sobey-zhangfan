@@ -39,7 +39,16 @@ import com.sobey.core.mapper.BeanMapper;
 public class TagSoapTest extends BaseFunctionalTestCase {
 
 	@Test
-	@Ignore
+	// @Ignore
+	public void find() {
+		Integer id = 334;
+		DTOResult<TagDTO> response = cmdbuildSoapService.findTag(id);
+		assertNotNull(response.getDto().getTenantsDTO());
+		assertEquals("code2396", response.getDto().getCode());
+	}
+
+	@Test
+	// @Ignore
 	public void getList() {
 		Map<String, Object> searchParams = Maps.newHashMap();
 		DTOListResult<TagDTO> result = cmdbuildSoapService.getTagList(searchParams);
@@ -56,7 +65,7 @@ public class TagSoapTest extends BaseFunctionalTestCase {
 	}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void update() {
 		Integer id = 220;
 		DTOResult<TagDTO> response = cmdbuildSoapService.findTag(id);
@@ -77,7 +86,7 @@ public class TagSoapTest extends BaseFunctionalTestCase {
 	}
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void getPagination() {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
