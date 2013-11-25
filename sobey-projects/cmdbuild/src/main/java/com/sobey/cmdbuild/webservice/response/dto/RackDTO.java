@@ -14,20 +14,23 @@ import com.sobey.cmdbuild.constants.WsConstants;
 public class RackDTO {
 
 	private Date beginDate;
-	private Integer brand;
 	private String code;
 	private String description;
 	private String gdzcSn;
-	private Integer height;
 	private Integer id;
 	private Integer idc;
 	private String model;
-	private Integer power;
 	private Double price;
 	private String remark;
 	private String sn;
 	private Integer unitNumber;
 	private IdcDTO idcDTO;
+	private Integer height;
+	private Integer brand;
+	private Integer power;
+	private String heightText;
+	private String brandText;
+	private String powerText;
 
 	public IdcDTO getIdcDTO() {
 		return idcDTO;
@@ -147,6 +150,30 @@ public class RackDTO {
 
 	public void setUnitNumber(Integer unitNumber) {
 		this.unitNumber = unitNumber;
+	}
+
+	public String getHeightText() {
+		return heightText;
+	}
+
+	public void setHeightText(String heightText) {
+		this.heightText = heightText;
+	}
+
+	public String getBrandText() {
+		return brandText;
+	}
+
+	public void setBrandText(String brandText) {
+		this.brandText = brandText;
+	}
+
+	public String getPowerText() {
+		return powerText;
+	}
+
+	public void setPowerText(String powerText) {
+		this.powerText = powerText;
 	}
 
 	/**

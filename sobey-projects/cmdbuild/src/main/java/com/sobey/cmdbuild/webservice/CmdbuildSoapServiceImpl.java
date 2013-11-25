@@ -863,7 +863,17 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(rack, ERROR.OBJECT_NULL);
 
-			result.setDto(BeanMapper.map(rack, RackDTO.class));
+			RackDTO dto = BeanMapper.map(rack, RackDTO.class);
+
+			// DTO中增加复杂对象的属性,获得复杂关联对象DTO,set进DTO中.
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+
+			// 查询出Lookup中的description,并将其设置到DTO中增加的String字段中.
+			dto.setBrandText(findLookUp(dto.getBrand()).getDto().getDescription());
+			dto.setHeightText(findLookUp(dto.getHeight()).getDto().getDescription());
+			dto.setPowerText(findLookUp(dto.getPower()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -887,7 +897,17 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(rack, ERROR.OBJECT_NULL);
 
-			result.setDto(BeanMapper.map(rack, RackDTO.class));
+			RackDTO dto = BeanMapper.map(rack, RackDTO.class);
+
+			// DTO中增加复杂对象的属性,获得复杂关联对象DTO,set进DTO中.
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+
+			// 查询出Lookup中的description,并将其设置到DTO中增加的String字段中.
+			dto.setBrandText(findLookUp(dto.getBrand()).getDto().getDescription());
+			dto.setHeightText(findLookUp(dto.getHeight()).getDto().getDescription());
+			dto.setPowerText(findLookUp(dto.getPower()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
