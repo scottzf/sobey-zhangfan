@@ -14,23 +14,26 @@ import com.sobey.cmdbuild.constants.WsConstants;
 public class DeviceSpecDTO {
 
 	private Date beginDate;
-	private Integer brand;
 	private String code;
 	private String cpuModel;
 	private Integer cpuNumber;
 	private String description;
-	private Integer deviceType;
 	private Integer hdnumber;
-	private Integer hight;
 	private Integer id;
-	private Integer maintenance;
 	private Integer nicNumber;
-	private Integer power;
 	private Double price;
-
 	private Integer ramNumber;
-
 	private String remark;
+	private Integer brand;
+	private Integer deviceType;
+	private Integer hight;
+	private Integer maintenance;
+	private Integer power;
+	private String brandText;
+	private String deviceTypeText;
+	private String hightText;
+	private String maintenanceText;
+	private String powerText;
 
 	public Date getBeginDate() {
 		return beginDate;
@@ -158,6 +161,46 @@ public class DeviceSpecDTO {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getBrandText() {
+		return brandText;
+	}
+
+	public void setBrandText(String brandText) {
+		this.brandText = brandText;
+	}
+
+	public String getDeviceTypeText() {
+		return deviceTypeText;
+	}
+
+	public void setDeviceTypeText(String deviceTypeText) {
+		this.deviceTypeText = deviceTypeText;
+	}
+
+	public String getHightText() {
+		return hightText;
+	}
+
+	public void setHightText(String hightText) {
+		this.hightText = hightText;
+	}
+
+	public String getMaintenanceText() {
+		return maintenanceText;
+	}
+
+	public void setMaintenanceText(String maintenanceText) {
+		this.maintenanceText = maintenanceText;
+	}
+
+	public String getPowerText() {
+		return powerText;
+	}
+
+	public void setPowerText(String powerText) {
+		this.powerText = powerText;
 	}
 
 	/**

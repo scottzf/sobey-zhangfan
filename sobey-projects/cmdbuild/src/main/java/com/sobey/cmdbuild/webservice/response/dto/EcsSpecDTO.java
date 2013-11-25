@@ -23,6 +23,15 @@ public class EcsSpecDTO {
 	private Integer memory;
 	private Double price;
 	private String remark;
+	private String brandText;
+
+	public String getBrandText() {
+		return brandText;
+	}
+
+	public void setBrandText(String brandText) {
+		this.brandText = brandText;
+	}
 
 	public Date getBeginDate() {
 		return beginDate;

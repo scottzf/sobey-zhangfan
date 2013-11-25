@@ -15,17 +15,19 @@ public class ConsumptionsDTO {
 
 	private Date beginDate;
 	private String code;
-	private Integer consumptionsStatus;
 	private String description;
 	private Integer id;
 	private String identifier;
 	private String remark;
 	private Date serviceEnd;
 	private Date serviceStart;
-	private Integer serviceType;
 	private Double spending;
 	private Integer tenants;
 	private TenantsDTO tenantsDTO;
+	private Integer consumptionsStatus;
+	private Integer serviceType;
+	private String consumptionsStatusText;
+	private String serviceTypeText;
 
 	public Date getBeginDate() {
 		return beginDate;
@@ -129,6 +131,22 @@ public class ConsumptionsDTO {
 
 	public void setTenantsDTO(TenantsDTO tenantsDTO) {
 		this.tenantsDTO = tenantsDTO;
+	}
+
+	public String getConsumptionsStatusText() {
+		return consumptionsStatusText;
+	}
+
+	public void setConsumptionsStatusText(String consumptionsStatusText) {
+		this.consumptionsStatusText = consumptionsStatusText;
+	}
+
+	public String getServiceTypeText() {
+		return serviceTypeText;
+	}
+
+	public void setServiceTypeText(String serviceTypeText) {
+		this.serviceTypeText = serviceTypeText;
 	}
 
 	/**

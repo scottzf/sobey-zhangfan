@@ -19,6 +19,15 @@ public class EipSpecDTO {
 	private Integer id;
 	private Double price;
 	private Integer brand;
+	private String brandText;
+
+	public String getBrandText() {
+		return brandText;
+	}
+
+	public void setBrandText(String brandText) {
+		this.brandText = brandText;
+	}
 
 	public Integer getBrand() {
 		return brand;
