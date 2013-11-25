@@ -311,7 +311,12 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(tenants, ERROR.OBJECT_NULL);
 
-			result.setDto(BeanMapper.map(tenants, TenantsDTO.class));
+			TenantsDTO dto = BeanMapper.map(tenants, TenantsDTO.class);
+
+			// DTO中增加复杂对象的属性,获得复杂关联对象DTO,set进DTO中.
+			dto.setCompanyDTO(findCompany(dto.getCompany()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -335,7 +340,12 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(tenants, ERROR.OBJECT_NULL);
 
-			result.setDto(BeanMapper.map(tenants, TenantsDTO.class));
+			TenantsDTO dto = BeanMapper.map(tenants, TenantsDTO.class);
+
+			// DTO中增加复杂对象的属性,获得复杂关联对象DTO,set进DTO中.
+			dto.setCompanyDTO(findCompany(dto.getCompany()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -491,7 +501,12 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(tag, ERROR.OBJECT_NULL);
 
-			result.setDto(BeanMapper.map(tag, TagDTO.class));
+			TagDTO dto = BeanMapper.map(tag, TagDTO.class);
+
+			// DTO中增加复杂对象的属性,获得复杂关联对象DTO,set进DTO中.
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -515,7 +530,12 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(tag, ERROR.OBJECT_NULL);
 
-			result.setDto(BeanMapper.map(tag, TagDTO.class));
+			TagDTO dto = BeanMapper.map(tag, TagDTO.class);
+
+			// DTO中增加复杂对象的属性,获得复杂关联对象DTO,set进DTO中.
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
