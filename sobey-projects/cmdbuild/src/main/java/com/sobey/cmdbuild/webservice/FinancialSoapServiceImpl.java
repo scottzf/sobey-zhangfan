@@ -9,6 +9,7 @@ import javax.validation.ConstraintViolationException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.cxf.feature.Features;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
@@ -35,9 +36,12 @@ import com.sobey.core.utils.MathsUtil;
 import com.sobey.core.utils.TableNameUtil;
 
 @WebService(serviceName = "FinancialSoapService", endpointInterface = "com.sobey.cmdbuild.webservice.FinancialSoapService", targetNamespace = WsConstants.NS)
-//查看webservice的日志.
+// 查看webservice的日志.
 @Features(features = "org.apache.cxf.feature.LoggingFeature")
 public class FinancialSoapServiceImpl extends BasicSoapSevcie implements FinancialSoapService {
+
+	@Autowired
+	private CmdbuildSoapServiceImpl cmdbuildSoapServiceImpl;
 
 	/**
 	 * CMDBuild的默认超级用户名
@@ -57,7 +61,17 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			Validate.notNull(consumptions, ERROR.OBJECT_NULL);
 
-			result.setDto(BeanMapper.map(consumptions, ConsumptionsDTO.class));
+			ConsumptionsDTO dto = BeanMapper.map(consumptions, ConsumptionsDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+
+			// LookUp
+			dto.setServiceTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getServiceType()).getDto().getDescription());
+			dto.setConsumptionsStatusText(cmdbuildSoapServiceImpl.findLookUp(dto.getConsumptionsStatus()).getDto()
+					.getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -82,7 +96,17 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			Validate.notNull(consumptions, ERROR.OBJECT_NULL);
 
-			result.setDto(BeanMapper.map(consumptions, ConsumptionsDTO.class));
+			ConsumptionsDTO dto = BeanMapper.map(consumptions, ConsumptionsDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+
+			// LookUp
+			dto.setServiceTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getServiceType()).getDto().getDescription());
+			dto.setConsumptionsStatusText(cmdbuildSoapServiceImpl.findLookUp(dto.getConsumptionsStatus()).getDto()
+					.getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -281,7 +305,16 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			Validate.notNull(deviceSpec, ERROR.OBJECT_NULL);
 
-			result.setDto(BeanMapper.map(deviceSpec, DeviceSpecDTO.class));
+			DeviceSpecDTO dto = BeanMapper.map(deviceSpec, DeviceSpecDTO.class);
+
+			// LookUp
+			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+			dto.setHightText(cmdbuildSoapServiceImpl.findLookUp(dto.getHight()).getDto().getDescription());
+			dto.setMaintenanceText(cmdbuildSoapServiceImpl.findLookUp(dto.getMaintenance()).getDto().getDescription());
+			dto.setPowerText(cmdbuildSoapServiceImpl.findLookUp(dto.getPower()).getDto().getDescription());
+			dto.setDeviceTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getDeviceType()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -306,8 +339,16 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			Validate.notNull(deviceSpec, ERROR.OBJECT_NULL);
 
-			result.setDto(BeanMapper.map(deviceSpec, DeviceSpecDTO.class));
+			DeviceSpecDTO dto = BeanMapper.map(deviceSpec, DeviceSpecDTO.class);
 
+			// LookUp
+			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+			dto.setHightText(cmdbuildSoapServiceImpl.findLookUp(dto.getHight()).getDto().getDescription());
+			dto.setMaintenanceText(cmdbuildSoapServiceImpl.findLookUp(dto.getMaintenance()).getDto().getDescription());
+			dto.setPowerText(cmdbuildSoapServiceImpl.findLookUp(dto.getPower()).getDto().getDescription());
+			dto.setDeviceTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getDeviceType()).getDto().getDescription());
+
+			result.setDto(dto);
 			return result;
 
 		} catch (IllegalArgumentException e) {
@@ -465,7 +506,12 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			Validate.notNull(ecsSpec, ERROR.OBJECT_NULL);
 
-			result.setDto(BeanMapper.map(ecsSpec, EcsSpecDTO.class));
+			EcsSpecDTO dto = BeanMapper.map(ecsSpec, EcsSpecDTO.class);
+
+			// LookUp
+			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -489,8 +535,12 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			Validate.notNull(ecsSpec, ERROR.OBJECT_NULL);
 
-			result.setDto(BeanMapper.map(ecsSpec, EcsSpecDTO.class));
+			EcsSpecDTO dto = BeanMapper.map(ecsSpec, EcsSpecDTO.class);
 
+			// LookUp
+			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+
+			result.setDto(dto);
 			return result;
 
 		} catch (IllegalArgumentException e) {
@@ -642,7 +692,12 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			Validate.notNull(eipSpec, ERROR.OBJECT_NULL);
 
-			result.setDto(BeanMapper.map(eipSpec, EipSpecDTO.class));
+			EipSpecDTO dto = BeanMapper.map(eipSpec, EipSpecDTO.class);
+
+			// LookUp
+			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -666,7 +721,12 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			Validate.notNull(eipSpec, ERROR.OBJECT_NULL);
 
-			result.setDto(BeanMapper.map(eipSpec, EipSpecDTO.class));
+			EipSpecDTO dto = BeanMapper.map(eipSpec, EipSpecDTO.class);
+
+			// LookUp
+			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -819,7 +879,12 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			Validate.notNull(es3Spec, ERROR.OBJECT_NULL);
 
-			result.setDto(BeanMapper.map(es3Spec, Es3SpecDTO.class));
+			Es3SpecDTO dto = BeanMapper.map(es3Spec, Es3SpecDTO.class);
+
+			// LookUp
+			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -843,7 +908,12 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			Validate.notNull(es3Spec, ERROR.OBJECT_NULL);
 
-			result.setDto(BeanMapper.map(es3Spec, Es3SpecDTO.class));
+			Es3SpecDTO dto = BeanMapper.map(es3Spec, Es3SpecDTO.class);
+
+			// LookUp
+			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
