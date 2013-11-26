@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.sobey.cmdbuild.constants.ConsumptionsStatusEnum;
+import com.sobey.cmdbuild.constants.ServiceTypeEnum;
 import com.sobey.cmdbuild.entity.As2;
 import com.sobey.cmdbuild.entity.Company;
 import com.sobey.cmdbuild.entity.Consumptions;
@@ -128,12 +130,13 @@ public class TestData {
 		con.setId(0);
 		con.setNotes(RandomData.randomName("note"));
 		con.setCode(RandomData.randomName("code10"));
-		con.setConsumptionsStatus(69);// 执行中
+		con.setConsumptionsStatus(ConsumptionsStatusEnum.Execution.getValue());// 执行中
 
 		con.setServiceStart(startDate);
 		con.setServiceEnd(endDate);
 		con.setIdentifier(RandomData.randomName("fuwuid"));
 		con.setTenants(87);
+		con.setServiceType(ServiceTypeEnum.ECS.getValue());
 
 		con.setDescription(RandomData.randomName("description"));
 		con.setRemark(RandomData.randomName("remark"));
@@ -613,7 +616,7 @@ public class TestData {
 
 		infrastructurePortDTO.setRemark(RandomData.randomName("remark"));
 		infrastructurePortDTO.setIpAddress(94);
-		//infrastructurePortDTO.setConnectedTo(0);//连接的 switch 端口 ID
+		// infrastructurePortDTO.setConnectedTo(0);//连接的 switch 端口 ID
 		infrastructurePortDTO.setMacAddress(RandomData.randomName("mac"));
 
 		return infrastructurePortDTO;
