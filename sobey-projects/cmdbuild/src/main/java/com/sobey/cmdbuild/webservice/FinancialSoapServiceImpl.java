@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
+import com.sobey.cmdbuild.constants.ConsumptionsStatusEnum;
 import com.sobey.cmdbuild.constants.ERROR;
 import com.sobey.cmdbuild.constants.WsConstants;
 import com.sobey.cmdbuild.entity.Consumptions;
@@ -265,25 +266,29 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 			Consumptions consumptions = comm.consumptionsService.findConsumptions(consumptionsId);
 			Validate.notNull(consumptions, ERROR.OBJECT_NULL);
 
+			// TODO 是否需要对ConsumptionsStatus进行判断?待后续流程明晰做决定.
+
 			/* 更新租户的余额. */
 			// 余额 = 租户账户上的账户余额 - 订单价格.
 			tenants.setAccontBalance(MathsUtil.sub(tenants.getAccontBalance(), consumptions.getSpending()));
 
-			// TODO 更新订单状态为"完成",从lookup中读取"完成"状态的ID.
-			consumptions.setConsumptionsStatus(42);
+			// 更新订单状态为"完成"
+			consumptions.setConsumptionsStatus(ConsumptionsStatusEnum.Complete.getValue());
 
 			comm.tenantsService.saveOrUpdate(tenants);
 
 			comm.consumptionsService.saveOrUpdate(consumptions);
 
-			// 租户消费历史
+			result.setId(consumptions.getId());
+
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
 			return handleGeneralError(result, e);
 		}
-		return result;
+
 	}
 
 	@Override

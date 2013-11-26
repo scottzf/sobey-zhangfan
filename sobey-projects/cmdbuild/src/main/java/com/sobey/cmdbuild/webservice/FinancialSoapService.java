@@ -49,15 +49,13 @@ public interface FinancialSoapService {
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	/**
-	 * Consumptions 结算。<br/>
-	 * 在租户用户的账号余额基础上扣除 Consumptions 的 Spending(消费金额),<br/>
-	 * 并将 Consumptions 锁定。<br/>
+	 * Consumptions 结算.<br/>
+	 * 在租户用户的账号余额基础上扣除 Consumptions 的 Spending(消费金额), 并将 Consumptions 状态改为"完成"。<br/>
 	 * 
-	 * @param cid
+	 * @param consumptionsId
 	 *            消费id
-	 * @param tid
+	 * @param tenantsId
 	 *            租户id
-	 * @param ConsumptionsDTO
 	 * @return IdResult
 	 */
 	IdResult settleConsumptions(@WebParam(name = "consumptionsId") Integer consumptionsId,

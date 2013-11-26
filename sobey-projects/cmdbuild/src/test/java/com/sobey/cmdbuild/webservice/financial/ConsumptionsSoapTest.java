@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -34,6 +35,14 @@ public class ConsumptionsSoapTest extends BaseFunctionalTestCase {
 	private String code = "";
 
 	@Test
+	public void settle() {
+		Integer consumptionsId = 346; // 533.66
+		Integer tenantsId = 87; // 876.81
+		financialSoapService.settleConsumptions(consumptionsId, tenantsId);
+	}
+
+	@Test
+	@Ignore
 	public void testAll() {
 		testCreateConsumptions();
 		testFindConsumptions();
