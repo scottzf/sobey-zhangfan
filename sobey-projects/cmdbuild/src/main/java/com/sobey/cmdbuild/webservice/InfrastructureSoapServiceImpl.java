@@ -9,6 +9,7 @@ import javax.jws.WebService;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.cxf.feature.Features;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
@@ -67,6 +68,12 @@ import com.sobey.core.utils.TableNameUtil;
 @Features(features = "org.apache.cxf.feature.LoggingFeature")
 public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements InfrastructureSoapService {
 
+	@Autowired
+	private CmdbuildSoapServiceImpl cmdbuildSoapServiceImpl;
+
+	@Autowired
+	private FinancialSoapServiceImpl financialSoapServiceImpl;
+
 	/**
 	 * CMDBuild的默认超级用户名
 	 */
@@ -84,9 +91,16 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(fimas, ERROR.OBJECT_NULL);
 
-			FimasDTO fimasDTO = BeanMapper.map(fimas, FimasDTO.class);
+			FimasDTO dto = BeanMapper.map(fimas, FimasDTO.class);
 
-			result.setDto(fimasDTO);
+			// Reference
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
+			dto.setFimasBoxDTO(findFimasBox(dto.getFimasBox()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -108,10 +122,16 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			Fimas fimas = comm.fimasService.findFimas(searchParams);
 
 			Validate.notNull(fimas, ERROR.OBJECT_NULL);
+			FimasDTO dto = BeanMapper.map(fimas, FimasDTO.class);
 
-			FimasDTO fimasDTO = BeanMapper.map(fimas, FimasDTO.class);
+			// Reference
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
+			dto.setFimasBoxDTO(findFimasBox(dto.getFimasBox()).getDto());
 
-			result.setDto(fimasDTO);
+			result.setDto(dto);
 
 			return result;
 
