@@ -216,6 +216,8 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Company company = comm.companyService.findCompany(id);
 
+			Validate.notNull(company, ERROR.INPUT_NULL);
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
 			Map<String, Object> searchParams = Maps.newHashMap();
 			searchParams.put("EQ_code", companyDTO.getCode());
@@ -258,6 +260,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
 			Company company = comm.companyService.findCompany(id);
+
+			Validate.notNull(company, ERROR.INPUT_NULL);
+
 			company.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.companyService.saveOrUpdate(company);
@@ -403,6 +408,8 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Tenants tenants = comm.tenantsService.findTenants(id);
 
+			Validate.notNull(tenants, ERROR.OBJECT_NULL);
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
 			Map<String, Object> searchParams = Maps.newHashMap();
 			searchParams.put("EQ_code", tenantsDTO.getCode());
@@ -445,6 +452,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
 			Tenants tenants = comm.tenantsService.findTenants(id);
+
+			Validate.notNull(tenants, ERROR.INPUT_NULL);
+
 			tenants.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.tenantsService.saveOrUpdate(tenants);
@@ -594,6 +604,8 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Tag tag = comm.tagService.findTag(id);
 
+			Validate.notNull(tag, ERROR.OBJECT_NULL);
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
 			// 此处先判断同一Tenants下是否有相同的code如果有相同的code名称，则不能创建.
 			Map<String, Object> searchParams = Maps.newHashMap();
@@ -608,7 +620,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			tag.setUser(DEFAULT_USER);
 			tag.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			tag.setIdClass(TableNameUtil.getTableName(Tag.class));
+			// tag.setIdClass(TableNameUtil.getTableName(Tag.class));
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, tag);
@@ -637,6 +649,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
 			Tag tag = comm.tagService.findTag(id);
+
+			Validate.notNull(tag, ERROR.OBJECT_NULL);
+
 			tag.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.tagService.saveOrUpdate(tag);
@@ -771,6 +786,8 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Idc idc = comm.idcService.findIdc(id);
 
+			Validate.notNull(idc, ERROR.OBJECT_NULL);
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
 			Map<String, Object> searchParams = Maps.newHashMap();
 			searchParams.put("EQ_code", idcDTO.getCode());
@@ -811,6 +828,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
 			Idc idc = comm.idcService.findIdc(id);
+
+			Validate.notNull(idc, ERROR.OBJECT_NULL);
+
 			idc.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.idcService.saveOrUpdate(idc);
@@ -964,6 +984,8 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Rack rack = comm.rackService.findRack(id);
 
+			Validate.notNull(rack, ERROR.OBJECT_NULL);
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
 			Map<String, Object> searchParams = Maps.newHashMap();
 			searchParams.put("EQ_code", rackDTO.getCode());
@@ -1005,6 +1027,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
 			Rack rack = comm.rackService.findRack(id);
+
+			Validate.notNull(rack, ERROR.OBJECT_NULL);
+
 			rack.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.rackService.saveOrUpdate(rack);

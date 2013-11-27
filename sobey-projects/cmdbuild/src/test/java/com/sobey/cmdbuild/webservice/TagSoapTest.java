@@ -39,7 +39,7 @@ import com.sobey.core.mapper.BeanMapper;
 public class TagSoapTest extends BaseFunctionalTestCase {
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void find() {
 		Integer id = 334;
 		DTOResult<TagDTO> response = cmdbuildSoapService.findTag(id);
@@ -48,7 +48,7 @@ public class TagSoapTest extends BaseFunctionalTestCase {
 	}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void getList() {
 		Map<String, Object> searchParams = Maps.newHashMap();
 		DTOListResult<TagDTO> result = cmdbuildSoapService.getTagList(searchParams);
@@ -56,7 +56,7 @@ public class TagSoapTest extends BaseFunctionalTestCase {
 	}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void save() {
 		Tag tag = TestData.randomTag();
 		TagDTO tagDTO = BeanMapper.map(tag, TagDTO.class);
@@ -67,12 +67,10 @@ public class TagSoapTest extends BaseFunctionalTestCase {
 	@Test
 	@Ignore
 	public void update() {
-		Integer id = 220;
+		Integer id = 334;
 		DTOResult<TagDTO> response = cmdbuildSoapService.findTag(id);
 		TagDTO tagDTO = response.getDto();
-		tagDTO.setCode("code137");
 		tagDTO.setDescription("冬天来了啊");
-		tagDTO.setTenants(217);
 		IdResult result = cmdbuildSoapService.updateTag(id, tagDTO);
 		assertNotNull(result.getId());
 	}
@@ -80,7 +78,7 @@ public class TagSoapTest extends BaseFunctionalTestCase {
 	@Test
 	@Ignore
 	public void delete() {
-		Integer id = 102;
+		Integer id = 340;
 		IdResult response = cmdbuildSoapService.deleteTag(id);
 		assertNotNull(response.getId());
 	}

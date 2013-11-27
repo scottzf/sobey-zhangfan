@@ -81,6 +81,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<FimasDTO> findFimas(@WebParam(name = "id") Integer id) {
+
 		DTOResult<FimasDTO> result = new DTOResult<FimasDTO>();
 
 		try {
@@ -113,6 +114,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<FimasDTO> findFimasByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<FimasDTO> result = new DTOResult<FimasDTO>();
 
 		try {
@@ -122,6 +124,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			Fimas fimas = comm.fimasService.findFimas(searchParams);
 
 			Validate.notNull(fimas, ERROR.OBJECT_NULL);
+
 			FimasDTO dto = BeanMapper.map(fimas, FimasDTO.class);
 
 			// Reference
@@ -144,6 +147,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult createFimas(@WebParam(name = "fimasDTO") FimasDTO fimasDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -151,9 +155,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			Validate.notNull(fimasDTO, ERROR.INPUT_NULL);
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-
 			Map<String, Object> searchParams = Maps.newHashMap();
-
 			searchParams.put("EQ_code", fimasDTO.getCode());
 
 			Validate.isTrue(comm.fimasService.findFimas(searchParams) == null, ERROR.OBJECT_DUPLICATE);
@@ -178,6 +180,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult updateFimas(@WebParam(name = "id") Integer id, @WebParam(name = "fimasDTO") FimasDTO fimasDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -185,6 +188,8 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			Validate.notNull(fimasDTO, ERROR.INPUT_NULL);
 
 			Fimas fimas = comm.fimasService.findFimas(id);
+
+			Validate.notNull(fimas, ERROR.OBJECT_NULL);
 
 			Map<String, Object> searchParams = Maps.newHashMap();
 
@@ -218,6 +223,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteFimas(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1390,7 +1396,6 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			Validate.notNull(ipaddress, ERROR.OBJECT_NULL);
 
 			ipaddress.setIdClass(TableNameUtil.getTableName(Ipaddress.class));
-
 			ipaddress.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.ipaddressService.saveOrUpdate(ipaddress);
@@ -4051,7 +4056,6 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 				tempId--;
 				insertSuccessCount++;
-
 			}
 
 			String message = insertSuccessCount.equals("0") ? "Vlan已存在" : "插入Vlan " + insertCount + " 条,成功创建Vlan "

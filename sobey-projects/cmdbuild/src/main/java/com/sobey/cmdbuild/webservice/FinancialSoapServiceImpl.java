@@ -167,6 +167,8 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			Consumptions consumptions = comm.consumptionsService.findConsumptions(id);
 
+			Validate.notNull(consumptions, ERROR.OBJECT_NULL);
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
 			Map<String, Object> searchParams = Maps.newHashMap();
 			searchParams.put("EQ_code", consumptionsDTO.getCode());
@@ -208,6 +210,10 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
 			Consumptions consumptions = comm.consumptionsService.findConsumptions(id);
+
+			Validate.notNull(consumptions, ERROR.OBJECT_NULL);
+
+			consumptions.setIdClass(TableNameUtil.getTableName(Consumptions.class));
 			consumptions.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.consumptionsService.saveOrUpdate(consumptions);
@@ -261,9 +267,11 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 			Validate.notNull(tenantsId, ERROR.INPUT_NULL);
 
 			Tenants tenants = comm.tenantsService.findTenants(tenantsId);
+
 			Validate.notNull(tenants, ERROR.OBJECT_NULL);
 
 			Consumptions consumptions = comm.consumptionsService.findConsumptions(consumptionsId);
+
 			Validate.notNull(consumptions, ERROR.OBJECT_NULL);
 
 			// TODO 是否需要对ConsumptionsStatus进行判断?待后续流程明晰做决定.
@@ -413,6 +421,8 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			DeviceSpec deviceSpec = comm.deviceSpecService.findDeviceSpec(id);
 
+			Validate.notNull(deviceSpec, ERROR.OBJECT_NULL);
+
 			Map<String, Object> searchParams = Maps.newHashMap();
 			searchParams.put("EQ_code", deviceSpecDTO.getCode());
 			searchParams.put("EQ_deviceType", deviceSpecDTO.getDeviceType());
@@ -456,6 +466,9 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
 			DeviceSpec deviceSpec = comm.deviceSpecService.findDeviceSpec(id);
+
+			Validate.notNull(deviceSpec, ERROR.OBJECT_NULL);
+
 			deviceSpec.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.deviceSpecService.saveOrUpdate(deviceSpec);
@@ -603,6 +616,8 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			EcsSpec ecsSpec = comm.ecsSpecService.findEcsSpec(id);
 
+			Validate.notNull(ecsSpec, ERROR.OBJECT_NULL);
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
 			Map<String, Object> searchParams = Maps.newHashMap();
 			searchParams.put("EQ_code", ecsSpecDTO.getCode());
@@ -644,6 +659,9 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
 			EcsSpec ecsSpec = comm.ecsSpecService.findEcsSpec(id);
+
+			Validate.notNull(ecsSpec, ERROR.OBJECT_NULL);
+
 			ecsSpec.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.ecsSpecService.saveOrUpdate(ecsSpec);
@@ -790,6 +808,8 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			EipSpec eipSpec = comm.eipSpecService.findEipSpec(id);
 
+			Validate.notNull(eipSpec, ERROR.OBJECT_NULL);
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
 			Map<String, Object> searchParams = Maps.newHashMap();
 			searchParams.put("EQ_code", eipSpecDTO.getCode());
@@ -831,6 +851,9 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
 			EipSpec eipSpec = comm.eipSpecService.findEipSpec(id);
+
+			Validate.notNull(eipSpec, ERROR.OBJECT_NULL);
+
 			eipSpec.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.eipSpecService.saveOrUpdate(eipSpec);
@@ -978,6 +1001,8 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			Es3Spec es3Spec = comm.es3SpecService.findEs3Spec(id);
 
+			Validate.notNull(es3Spec, ERROR.OBJECT_NULL);
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
 			Map<String, Object> searchParams = Maps.newHashMap();
 			searchParams.put("EQ_code", es3SpecDTO.getCode());
@@ -1019,6 +1044,9 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
 			Es3Spec es3Spec = comm.es3SpecService.findEs3Spec(id);
+
+			Validate.notNull(es3Spec, ERROR.OBJECT_NULL);
+
 			es3Spec.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.es3SpecService.saveOrUpdate(es3Spec);
