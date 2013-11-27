@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.sobey.cmdbuild.constants.ConsumptionsStatusEnum;
-import com.sobey.cmdbuild.constants.ServiceTypeEnum;
+import com.sobey.cmdbuild.constants.LookUpConstants;
 import com.sobey.cmdbuild.entity.As2;
 import com.sobey.cmdbuild.entity.Company;
 import com.sobey.cmdbuild.entity.Consumptions;
@@ -45,8 +44,6 @@ import com.sobey.cmdbuild.entity.Tag;
 import com.sobey.cmdbuild.entity.Tenants;
 import com.sobey.cmdbuild.entity.Vlan;
 import com.sobey.cmdbuild.entity.Vpn;
-import com.sobey.cmdbuild.webservice.response.dto.InfrastructureDTO;
-import com.sobey.cmdbuild.webservice.response.dto.InfrastructurePortDTO;
 import com.sobey.test.data.RandomData;
 
 public class TestData {
@@ -130,13 +127,13 @@ public class TestData {
 		con.setId(0);
 		con.setNotes(RandomData.randomName("note"));
 		con.setCode(RandomData.randomName("code10"));
-		con.setConsumptionsStatus(ConsumptionsStatusEnum.Execution.getValue());// 执行中
+		con.setConsumptionsStatus(LookUpConstants.ConsumptionsStatus.Execution.getValue());// 执行中
 
 		con.setServiceStart(startDate);
 		con.setServiceEnd(endDate);
 		con.setIdentifier(RandomData.randomName("fuwuid"));
 		con.setTenants(87);
-		con.setServiceType(ServiceTypeEnum.ECS.getValue());
+		con.setServiceType(LookUpConstants.ServiceType.ECS.getValue());
 
 		con.setDescription(RandomData.randomName("description"));
 		con.setRemark(RandomData.randomName("remark"));
@@ -580,46 +577,6 @@ public class TestData {
 
 	public static Ecs randomEcs() {
 		return null;
-	}
-
-	public static InfrastructureDTO randomInfrastructureDTO() {
-
-		InfrastructureDTO infrastructureDTO = new InfrastructureDTO();
-
-		infrastructureDTO.setId(0);
-		infrastructureDTO.setBeginDate(startDate);
-		infrastructureDTO.setCode(RandomData.randomName("code"));
-		infrastructureDTO.setDescription(RandomData.randomName("desc"));
-		infrastructureDTO.setDeviceSpec(226);
-		infrastructureDTO.setDeviceStatus(0);// 参数定义未知
-		infrastructureDTO.setRack(218);
-		infrastructureDTO.setIdc(90);
-		infrastructureDTO.setSite(RandomData.randomName("site"));
-
-		infrastructureDTO.setGdzcSn(RandomData.randomName("gdzcSn"));
-		infrastructureDTO.setRemark(RandomData.randomName("remark"));
-		infrastructureDTO.setSn(RandomData.randomName("sn"));
-		infrastructureDTO.setIpAddress(94);
-
-		return infrastructureDTO;
-	}
-
-	public static InfrastructurePortDTO randomInfrastructurePortDTO() {
-
-		InfrastructurePortDTO infrastructurePortDTO = new InfrastructurePortDTO();
-
-		infrastructurePortDTO.setId(0);
-		infrastructurePortDTO.setBeginDate(startDate);
-		infrastructurePortDTO.setCode(RandomData.randomName("code"));
-		infrastructurePortDTO.setDescription(RandomData.randomName("desc"));
-		infrastructurePortDTO.setSite(RandomData.randomName("site"));
-
-		infrastructurePortDTO.setRemark(RandomData.randomName("remark"));
-		infrastructurePortDTO.setIpAddress(94);
-		// infrastructurePortDTO.setConnectedTo(0);//连接的 switch 端口 ID
-		infrastructurePortDTO.setMacAddress(RandomData.randomName("mac"));
-
-		return infrastructurePortDTO;
 	}
 
 }

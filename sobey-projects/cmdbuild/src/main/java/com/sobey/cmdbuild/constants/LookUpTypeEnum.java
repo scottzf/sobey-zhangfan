@@ -8,7 +8,7 @@ package com.sobey.cmdbuild.constants;
  * @author Administrator
  * 
  */
-public enum LookUpEnum {
+public enum LookUpTypeEnum {
 
 	/**
 	 * 品牌

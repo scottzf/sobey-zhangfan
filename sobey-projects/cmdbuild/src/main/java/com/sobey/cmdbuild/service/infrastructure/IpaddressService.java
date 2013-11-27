@@ -65,11 +65,10 @@ public class IpaddressService extends BasicSevcie {
 	public Ipaddress saveOrUpdate(Ipaddress ipaddress) {
 		return ipaddressDao.save(ipaddress);
 	}
-	
-	public Iterable<Ipaddress> saveAll(List<Ipaddress> ipaddresses){
+
+	public Iterable<Ipaddress> saveAll(List<Ipaddress> ipaddresses) {
 		return ipaddressDao.save(ipaddresses);
 	}
-	
 
 	/**
 	 * 根据ID删除对象

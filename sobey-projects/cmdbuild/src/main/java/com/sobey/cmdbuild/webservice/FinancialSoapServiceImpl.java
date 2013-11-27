@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
-import com.sobey.cmdbuild.constants.ConsumptionsStatusEnum;
 import com.sobey.cmdbuild.constants.ERROR;
+import com.sobey.cmdbuild.constants.LookUpConstants;
 import com.sobey.cmdbuild.constants.WsConstants;
 import com.sobey.cmdbuild.entity.Consumptions;
 import com.sobey.cmdbuild.entity.DeviceSpec;
@@ -273,7 +273,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 			tenants.setAccontBalance(MathsUtil.sub(tenants.getAccontBalance(), consumptions.getSpending()));
 
 			// 更新订单状态为"完成"
-			consumptions.setConsumptionsStatus(ConsumptionsStatusEnum.Complete.getValue());
+			consumptions.setConsumptionsStatus(LookUpConstants.ConsumptionsStatus.Complete.getValue());
 
 			comm.tenantsService.saveOrUpdate(tenants);
 

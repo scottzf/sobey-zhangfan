@@ -16,7 +16,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 
 import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
-import com.sobey.cmdbuild.constants.LookUpEnum;
+import com.sobey.cmdbuild.constants.LookUpTypeEnum;
 import com.sobey.cmdbuild.webservice.response.dto.LookUpDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
@@ -43,7 +43,7 @@ public class LookUpSoapTest extends BaseFunctionalTestCase {
 		assertEquals("CentOS 6.4 64bit", response.getDto().getDescription());
 
 		Map<String, Object> searchParams = Maps.newHashMap();
-		searchParams.put("EQ_type", LookUpEnum.Image.name());
+		searchParams.put("EQ_type", LookUpTypeEnum.Image.name());
 		searchParams.put("EQ_description", "CentOS 6.4 64bit");
 
 		DTOResult<LookUpDTO> responseParams = cmdbuildSoapService.findLookUpByParams(searchParams);
@@ -54,7 +54,7 @@ public class LookUpSoapTest extends BaseFunctionalTestCase {
 	@Ignore
 	public void getList() {
 		Map<String, Object> searchParams = Maps.newHashMap();
-		searchParams.put("EQ_type", LookUpEnum.Image.name());
+		searchParams.put("EQ_type", LookUpTypeEnum.Image.name());
 
 		DTOListResult<LookUpDTO> result = cmdbuildSoapService.getLookUpList(searchParams);
 		System.out.println("获得集合数量:" + result.getDtos().size());

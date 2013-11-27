@@ -1,14 +1,12 @@
 package com.sobey.cmdbuild.webservice.response.dto;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.google.common.collect.Lists;
 import com.sobey.cmdbuild.constants.WsConstants;
 
 @XmlRootElement
