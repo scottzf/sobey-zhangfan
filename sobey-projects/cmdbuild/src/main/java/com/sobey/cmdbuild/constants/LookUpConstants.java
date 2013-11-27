@@ -40,9 +40,9 @@ public class LookUpConstants {
 		Maturity("Maturity", 43);
 
 		private String name;
-		private int value;
+		private Integer value;
 
-		private ConsumptionsStatus(String name, int value) {
+		private ConsumptionsStatus(String name, Integer value) {
 			this.name = name;
 			this.value = value;
 		}
@@ -51,7 +51,7 @@ public class LookUpConstants {
 			return name;
 		}
 
-		public int getValue() {
+		public Integer getValue() {
 			return value;
 		}
 	}
@@ -89,9 +89,9 @@ public class LookUpConstants {
 		VPN("VPN", 0);
 
 		private String name;
-		private int value;
+		private Integer value;
 
-		private ServiceType(String name, int value) {
+		private ServiceType(String name, Integer value) {
 			this.name = name;
 			this.value = value;
 		}
@@ -100,7 +100,7 @@ public class LookUpConstants {
 			return name;
 		}
 
-		public int getValue() {
+		public Integer getValue() {
 			return value;
 		}
 	}
@@ -123,9 +123,9 @@ public class LookUpConstants {
 		未使用("未使用", 50);
 
 		private String name;
-		private int value;
+		private Integer value;
 
-		private IPAddressStatus(String name, int value) {
+		private IPAddressStatus(String name, Integer value) {
 			this.name = name;
 			this.value = value;
 		}
@@ -134,7 +134,7 @@ public class LookUpConstants {
 			return name;
 		}
 
-		public int getValue() {
+		public Integer getValue() {
 			return value;
 		}
 	}
