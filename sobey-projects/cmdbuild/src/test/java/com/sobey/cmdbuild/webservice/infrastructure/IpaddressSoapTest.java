@@ -3,7 +3,6 @@ package com.sobey.cmdbuild.webservice.infrastructure;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +60,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 	@Test
 	@Ignore
 	public void delete() {
-		Integer id = 469;
+		Integer id = 527;
 		IdResult response = infrastructureService.deleteIpaddress(id);
 		assertNotNull(response.getId());
 	}
@@ -175,29 +174,35 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 	/**
 	 * 批量添加测试，预期返回结果，如果某个添加成功的会返回对应错误
 	 */
-	// @Test
+	@Test
 	// @Ignore
 	public void testInsertIPAddress() {
 
-		List<IpaddressDTO> list = new ArrayList<IpaddressDTO>();
+		List<IpaddressDTO> list = BeanMapper.mapList(TestData.randomIpaddressList(10), IpaddressDTO.class);
 
-		for (int i = 0; i < 10; i++) {
+		IdResult results = infrastructureService.insertIPAddress(list);
+		System.err.println(results.getMessage());
+		assertEquals("0", results.getCode());
 
-			Ipaddress ipaddress = TestData.randomIpaddress();
+	}
 
-			System.out.println(ipaddress.getCode() + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+	/**
+	 * 批量添加包含一些code重复的数据.
+	 */
+	@Test
+	// @Ignore
+	public void testInsertIPAddress2() {
 
-			IpaddressDTO ipaddressDTO = BeanMapper.map(ipaddress, IpaddressDTO.class);
+		// 已有的IP
+		List<IpaddressDTO> list = infrastructureService.getIpaddressPagination(new HashMap<String, Object>(), 1, 5)
+				.getGetContent();
 
-			list.add(ipaddressDTO);
+		// 将随机数据插入IPList
+		list.addAll(BeanMapper.mapList(TestData.randomIpaddressList(5), IpaddressDTO.class));
 
-		}
-
-		List<IdResult> results = infrastructureService.insertIPAddress(list);
-
-		for (IdResult idResult : results) {
-			assertEquals("0", idResult.getCode());
-		}
+		IdResult results = infrastructureService.insertIPAddress(list);
+		System.err.println(results.getMessage());
+		assertEquals("0", results.getCode());
 
 	}
 

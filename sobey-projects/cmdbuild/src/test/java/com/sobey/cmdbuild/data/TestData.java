@@ -298,7 +298,7 @@ public class TestData {
 		Ipaddress ipaddress = new Ipaddress();
 
 		ipaddress.setId(0);
-//		ipaddress.setCode("code7575");
+		// ipaddress.setCode("code7575");
 		ipaddress.setCode(RandomData.randomName("code"));
 		ipaddress.setDescription(RandomData.randomName("description"));
 		ipaddress.setIpaddressPool(46);// ip协议
