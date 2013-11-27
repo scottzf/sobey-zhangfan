@@ -620,7 +620,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			tag.setUser(DEFAULT_USER);
 			tag.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			// tag.setIdClass(TableNameUtil.getTableName(Tag.class));
+			tag.setIdClass(TableNameUtil.getTableName(Tag.class));
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, tag);

@@ -22,7 +22,7 @@ import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 public interface IaasSoapService {
 
 	// ==============================//
-	// =========== Ecs ===========//
+	// ============= Ecs ============//
 	// ==============================//
 
 	DTOResult<EcsDTO> findECS(@WebParam(name = "id") Integer id);
@@ -47,7 +47,7 @@ public interface IaasSoapService {
 	DTOListResult<EcsDTO> reportECS(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
 	// ==============================//
-	// =========== Cs2 ===========//
+	// ============ Cs2 =============//
 	// ==============================//
 
 	DTOResult<Cs2DTO> findCs2(@WebParam(name = "id") Integer id);
@@ -74,7 +74,7 @@ public interface IaasSoapService {
 	DTOListResult<Cs2DTO> reportCS2(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
 	// ==============================//
-	// =========== As2 ===========//
+	// ============== As2 ===========//
 	// ==============================//
 
 	DTOResult<As2DTO> findAs2(@WebParam(name = "id") Integer id);
@@ -101,7 +101,7 @@ public interface IaasSoapService {
 	DTOListResult<As2DTO> reportAS2(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
 	// ==============================//
-	// =========== Eip ===========//
+	// ============= Eip ============//
 	// ==============================//
 
 	DTOResult<EipDTO> findEip(@WebParam(name = "id") Integer id);
@@ -136,7 +136,7 @@ public interface IaasSoapService {
 	DTOListResult<EipDTO> reportEIP(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
 	// ==============================//
-	// =========== Elb ===========//
+	// ============ Elb =============//
 	// ==============================//
 
 	DTOResult<ElbDTO> findElb(@WebParam(name = "id") Integer id);
@@ -161,7 +161,7 @@ public interface IaasSoapService {
 	DTOListResult<ElbDTO> reportELB(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
 	// ==============================//
-	// =========== Dns ===========//
+	// ============ Dns =============//
 	// ==============================//
 
 	DTOResult<DnsDTO> findDns(@WebParam(name = "id") Integer id);
@@ -184,7 +184,7 @@ public interface IaasSoapService {
 	DTOListResult<DnsDTO> reportDNS(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
 	// ==============================//
-	// =========== Esg ===========//
+	// ============ Esg =============//
 	// ==============================//
 
 	DTOResult<EsgDTO> findEsg(@WebParam(name = "id") Integer id);
@@ -207,7 +207,7 @@ public interface IaasSoapService {
 	DTOListResult<EsgDTO> reportESG(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
 	// ==============================//
-	// =========== Vpn ===========//
+	// ============ Vpn =============//
 	// ==============================//
 
 	DTOResult<VpnDTO> findVpn(@WebParam(name = "id") Integer id);
@@ -232,7 +232,7 @@ public interface IaasSoapService {
 	DTOListResult<VpnDTO> reportVPN(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
 	// ==============================//
-	// =========== GroupPolicy ===========//
+	// ========= GroupPolicy ========//
 	// ==============================//
 
 	DTOResult<GroupPolicyDTO> findGroupPolicy(@WebParam(name = "id") Integer id);
