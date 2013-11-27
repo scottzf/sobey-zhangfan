@@ -479,11 +479,11 @@ public interface InfrastructureSoapService {
 
 	/**
 	 * 
-	 * 批量插入 Vlan。先判断是否有相同的 code，如果有相同的 code 则不能创建
+	 * 批量插入 Vlan. 先判断是否有相同的 code，如果有相同的 code 则跳过.
 	 * 
 	 * @param vlanDTOList
-	 * @return List<IdResult>
+	 * @return IdResult
 	 */
-	List<IdResult> insertVlan(@WebParam(name = "vlanDTOList") List<VlanDTO> vlanDTOList);
+	IdResult insertVlan(@WebParam(name = "vlanDTOList") List<VlanDTO> vlanDTOList);
 
 }

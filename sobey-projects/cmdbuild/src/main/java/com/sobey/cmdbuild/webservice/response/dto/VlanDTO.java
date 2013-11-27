@@ -13,21 +13,45 @@ import com.sobey.cmdbuild.constants.WsConstants;
 @XmlType(name = "VlanDTO", namespace = WsConstants.NS)
 public class VlanDTO {
 
+	private Integer id;
 	private Date beginDate;
 	private String code;
 	private String description;
-	private String gateway;
-	private Integer id;
+	private String remark;
 
-	// IDC Integer IDC Id
-	// Segment String 网段
-	// Netmask String 子网掩码
-	// Gateway String 网关
+	private String gateway;
+	private String netmask;
+	private String segment;
 
 	private Integer idc;
-	private String netmask;
-	private String remark;
-	private String segment;
+	private IdcDTO idcDTO;
+
+	private Integer tenants;
+	private TenantsDTO tenantsDTO;
+
+	public IdcDTO getIdcDTO() {
+		return idcDTO;
+	}
+
+	public void setIdcDTO(IdcDTO idcDTO) {
+		this.idcDTO = idcDTO;
+	}
+
+	public Integer getTenants() {
+		return tenants;
+	}
+
+	public void setTenants(Integer tenants) {
+		this.tenants = tenants;
+	}
+
+	public TenantsDTO getTenantsDTO() {
+		return tenantsDTO;
+	}
+
+	public void setTenantsDTO(TenantsDTO tenantsDTO) {
+		this.tenantsDTO = tenantsDTO;
+	}
 
 	public Date getBeginDate() {
 		return beginDate;

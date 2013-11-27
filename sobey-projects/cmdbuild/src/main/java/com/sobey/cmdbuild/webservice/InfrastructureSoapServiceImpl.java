@@ -1,6 +1,5 @@
 package com.sobey.cmdbuild.webservice;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -1263,6 +1262,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public DTOResult<IpaddressDTO> findIpaddressByParams(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<IpaddressDTO> result = new DTOResult<IpaddressDTO>();
 
 		try {
@@ -1298,6 +1298,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult createIpaddress(@WebParam(name = "ipaddressDTO") IpaddressDTO ipaddressDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1317,8 +1318,8 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			BeanValidators.validateWithException(validator, ipaddress);
 
 			ipaddress.setIpaddressStatus(LookUpConstants.IPAddressStatus.未使用.getValue());
-			ipaddress.setUser(DEFAULT_USER);
 			ipaddress.setIdClass(TableNameUtil.getTableName(Ipaddress.class));
+			ipaddress.setUser(DEFAULT_USER);
 
 			comm.ipaddressService.saveOrUpdate(ipaddress);
 
@@ -1334,6 +1335,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public IdResult updateIpaddress(@WebParam(name = "id") Integer id,
 			@WebParam(name = "ipaddressDTO") IpaddressDTO ipaddressDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1341,6 +1343,8 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			Validate.notNull(ipaddressDTO, ERROR.INPUT_NULL);
 
 			Ipaddress ipaddress = comm.ipaddressService.findIpaddress(id);
+
+			Validate.notNull(ipaddress, ERROR.INPUT_NULL);
 
 			Map<String, Object> searchParams = Maps.newHashMap();
 
@@ -1374,6 +1378,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteIpaddress(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -3708,6 +3713,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<VlanDTO> findVlan(@WebParam(name = "id") Integer id) {
+
 		DTOResult<VlanDTO> result = new DTOResult<VlanDTO>();
 
 		try {
@@ -3718,9 +3724,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(vlan, ERROR.OBJECT_NULL);
 
-			VlanDTO vlanDTO = BeanMapper.map(vlan, VlanDTO.class);
+			VlanDTO dto = BeanMapper.map(vlan, VlanDTO.class);
 
-			result.setDto(vlanDTO);
+			// Reference
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -3733,6 +3743,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<VlanDTO> findVlanByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<VlanDTO> result = new DTOResult<VlanDTO>();
 
 		try {
@@ -3743,9 +3754,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(vlan, ERROR.OBJECT_NULL);
 
-			VlanDTO vlanDTO = BeanMapper.map(vlan, VlanDTO.class);
+			VlanDTO dto = BeanMapper.map(vlan, VlanDTO.class);
 
-			result.setDto(vlanDTO);
+			// Reference
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -3800,19 +3815,23 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Vlan vlan = comm.vlanService.findVlan(id);
 
+			Validate.notNull(vlan, ERROR.OBJECT_NULL);
+
 			Map<String, Object> searchParams = Maps.newHashMap();
 
 			searchParams.put("EQ_code", vlanDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.vlanService.findVlan(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(
+					comm.vlanService.findVlan(searchParams) == null || vlan.getCode().equals(vlanDTO.getCode()),
+					ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(vlanDTO, Vlan.class), vlan);
 
 			vlan.setIdClass(TableNameUtil.getTableName(Vlan.class));
-
 			vlan.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			vlan.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, vlan);
@@ -3838,10 +3857,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Vlan vlan = comm.vlanService.findVlan(id);
 
-			Validate.isTrue(vlan != null, ERROR.OBJECT_NULL);
+			Validate.notNull(vlan, ERROR.OBJECT_NULL);
 
 			vlan.setIdClass(TableNameUtil.getTableName(Vlan.class));
-
 			vlan.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.vlanService.saveOrUpdate(vlan);
@@ -3859,6 +3877,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	public PaginationResult<VlanDTO> getVlanPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<VlanDTO> result = new PaginationResult<VlanDTO>();
 
 		try {
@@ -3874,15 +3893,12 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOListResult<VlanDTO> getVlanList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<VlanDTO> result = new DTOListResult<VlanDTO>();
 
 		try {
 
-			List<Vlan> vlan = comm.vlanService.getVlanList(searchParams);
-
-			List<VlanDTO> list = BeanMapper.mapList(vlan, VlanDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.vlanService.getVlanList(searchParams), VlanDTO.class));
 
 			return result;
 
@@ -3999,62 +4015,59 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	}
 
 	@Override
-	public List<IdResult> insertVlan(@WebParam(name = "vlanDTOList") List<VlanDTO> vlanDTOList) {
+	public IdResult insertVlan(@WebParam(name = "vlanDTOList") List<VlanDTO> vlanDTOList) {
+
 		IdResult result = new IdResult();
 
-		List<IdResult> results = new ArrayList<IdResult>();
-
-		// 先判断对象是否为空
 		try {
 
+			// 先判断对象是否为空
 			Validate.notNull(vlanDTOList, ERROR.INPUT_NULL);
 
-			Validate.isTrue(vlanDTOList.size() > 0, ERROR.INPUT_NULL);
+			Integer tempId = 0;
+			Integer insertCount = vlanDTOList.size(); // 插入Vlan的数量
+			Integer insertSuccessCount = 0; // 成功插入Vlan的数量
 
-		} catch (IllegalArgumentException e) {
-			results.add(handleParameterError(result, e));
-			return results;
-		} catch (RuntimeException e) {
-			results.add(handleGeneralError(result, e));
-			return results;
-		}
-
-		int i = 0;
-
-		for (VlanDTO vlanDTO : vlanDTOList) {
-
-			try {
+			for (VlanDTO vlanDTO : vlanDTOList) {
 
 				Map<String, Object> searchParams = Maps.newHashMap();
 
 				searchParams.put("EQ_code", vlanDTO.getCode());
 
-				// 验证code是否唯一.如果不为null,添加错误
-				Validate.isTrue(comm.vlanService.findVlan(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+				// 如果code重复,跳过本次loop
+				if (comm.vlanService.findVlan(searchParams) != null) {
+					continue;
+				}
 
 				Vlan vlan = BeanMapper.map(vlanDTO, Vlan.class);
 
 				vlan.setIdClass(TableNameUtil.getTableName(Vlan.class));
 				vlan.setUser(DEFAULT_USER);
-				vlan.setId(i);
+				vlan.setId(tempId);
 
 				BeanValidators.validateWithException(validator, vlan);
 
 				comm.vlanService.saveOrUpdate(vlan);
 
-				result.setId(0);
-				results.add(result);
-				i--;
+				tempId--;
+				insertSuccessCount++;
 
-			} catch (IllegalArgumentException e) {
-				results.add(handleParameterError(result, e));
-			} catch (RuntimeException e) {
-				results.add(handleGeneralError(result, e));
 			}
 
+			String message = insertSuccessCount.equals("0") ? "Vlan已存在" : "插入Vlan " + insertCount + " 条,成功创建Vlan "
+					+ insertSuccessCount + " 条";
+
+			result.setMessage(message);
+			result.setId(0);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
 		}
 
-		return results;
 	}
 
 }
