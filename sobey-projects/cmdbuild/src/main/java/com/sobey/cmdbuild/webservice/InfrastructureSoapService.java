@@ -191,14 +191,14 @@ public interface InfrastructureSoapService {
 	IdResult allocateIPAddress(@WebParam(name = "id") Integer id);
 
 	/**
-	 * 批量插入 IPAddress。 新增对象。<br/>
-	 * 先判断是否有相同的 code，如果有相同的 code 则不能创建。<br/>
+	 * 批量插入 IPAddress。<br/>
+	 * 先判断是否有相同的 code，如果有相同的 code 则跳过。<br/>
 	 * 初始的状态为“未使用” 。<br/>
 	 * 
 	 * @param ipaddressDTOList
-	 * @return List<IdResult>
+	 * @return IdResult
 	 */
-	List<IdResult> insertIPAddress(@WebParam(name = "ipaddressDTOList") List<IpaddressDTO> ipaddressDTOList);
+	IdResult insertIPAddress(@WebParam(name = "ipaddressDTOList") List<IpaddressDTO> ipaddressDTOList);
 
 	/**
 	 * 初始化 IPAddress。<br/>

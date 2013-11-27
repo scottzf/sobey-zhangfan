@@ -3899,68 +3899,61 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	}
 
 	@Override
-	public List<IdResult> insertIPAddress(@WebParam(name = "ipaddressDTOList") List<IpaddressDTO> ipaddressDTOList) {
+	public IdResult insertIPAddress(@WebParam(name = "ipaddressDTOList") List<IpaddressDTO> ipaddressDTOList) {
 
 		IdResult result = new IdResult();
-
-		List<IdResult> results = new ArrayList<IdResult>();
 
 		try {
 
 			// 先判断对象是否为空
 			Validate.notNull(ipaddressDTOList, ERROR.INPUT_NULL);
 
-			Validate.isTrue(ipaddressDTOList.size() > 0, ERROR.INPUT_NULL);
+			Integer tempId = 0;
+			Integer insertCount = ipaddressDTOList.size(); // 插入Ipaddress的数量
+			Integer insertSuccessCount = 0; // 成功插入Ipaddress的数量
 
-		} catch (IllegalArgumentException e) {
-			results.add(handleParameterError(result, e));
-			return results;
-		} catch (RuntimeException e) {
-			results.add(handleGeneralError(result, e));
-			return results;
-		}
-
-		int i = 0;
-
-		for (IpaddressDTO ipaddressDTO : ipaddressDTOList) {
-
-			try {
+			for (IpaddressDTO ipaddressDTO : ipaddressDTOList) {
 
 				Map<String, Object> searchParams = Maps.newHashMap();
 
 				searchParams.put("EQ_code", ipaddressDTO.getCode());
 
-				// 验证code是否唯一.如果不为null,添加错误
-				Validate.isTrue(comm.ipaddressService.findIpaddress(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+				// 如果code重复,跳过本次loop
+				if (comm.ipaddressService.findIpaddress(searchParams) != null) {
+					continue;
+				}
 
 				Ipaddress ipaddress = BeanMapper.map(ipaddressDTO, Ipaddress.class);
 
 				BeanValidators.validateWithException(validator, ipaddress);
 
 				ipaddress.setIdClass(TableNameUtil.getTableName(Ipaddress.class));
-				ipaddress.setIpaddressStatus(50);// 设置状态为未使用
+				ipaddress.setIpaddressStatus(LookUpConstants.IPAddressStatus.未使用.getValue());// 设置状态为未使用
 				ipaddress.setUser(DEFAULT_USER);
 
-				ipaddress.setId(i);// id不能重复
+				/* 使用spring-data-jap,在postgresql中,id不能重复,mysql则无此问题.不知道是否和主键策略有关系! */
+				ipaddress.setId(tempId);
 
-				Ipaddress re = comm.ipaddressService.saveOrUpdate(ipaddress);
+				comm.ipaddressService.saveOrUpdate(ipaddress);
 
-				ipaddress.setId(re.getId());
-
-				result.setId(0);
-				results.add(result);
-
-				i--;
-
-			} catch (IllegalArgumentException e) {
-				results.add(handleParameterError(result, e));
-			} catch (RuntimeException e) {
-				results.add(handleGeneralError(result, e));
+				tempId--;
+				insertSuccessCount++;
 			}
 
+			String message = insertSuccessCount.equals("0") ? "Ipaddress已存在" : "插入Ipaddress " + insertCount
+					+ " 条,成功创建Ipaddress " + insertSuccessCount + " 条";
+
+			result.setMessage(message);
+			result.setId(0);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
 		}
 
-		return results;
 	}
 
 	@Override
