@@ -3879,31 +3879,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult allocateIPAddress(@WebParam(name = "id") Integer id) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			Validate.notNull(id, ERROR.INPUT_NULL);
-
-			Ipaddress ipaddress = comm.ipaddressService.findIpaddress(id);
-
-			Validate.notNull(ipaddress, ERROR.OBJECT_NULL);
-
-			// 设置状态为使用
-			ipaddress.setIpaddressStatus(LookUpConstants.IPAddressStatus.使用中.getValue());
-
-			comm.ipaddressService.saveOrUpdate(ipaddress);
-
-			result.setId(ipaddress.getId());
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
+		return changeIpaddressStatus(id, LookUpConstants.IPAddressStatus.使用中.getValue());
 	}
 
 	@Override
@@ -3973,6 +3949,19 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult initIPAddress(Integer id) {
+		return changeIpaddressStatus(id, LookUpConstants.IPAddressStatus.未使用.getValue());
+	}
+
+	/**
+	 * 修改Ipaddress对象的ipaddressStatus.
+	 * 
+	 * @param id
+	 *            ipaddress Id
+	 * @param ipaddressStatus
+	 *            ipaddress状态 {@link LookUpConstants.IPAddressStatus}
+	 * @return
+	 */
+	private IdResult changeIpaddressStatus(Integer id, Integer ipaddressStatus) {
 
 		IdResult result = new IdResult();
 
@@ -3984,8 +3973,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(ipaddress, ERROR.OBJECT_NULL);
 
-			// 设置状态为未使用
-			ipaddress.setIpaddressStatus(LookUpConstants.IPAddressStatus.未使用.getValue());
+			ipaddress.setIpaddressStatus(ipaddressStatus);
 
 			comm.ipaddressService.saveOrUpdate(ipaddress);
 
@@ -3998,6 +3986,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 		} catch (RuntimeException e) {
 			return handleGeneralError(result, e);
 		}
+
 	}
 
 	@Override
