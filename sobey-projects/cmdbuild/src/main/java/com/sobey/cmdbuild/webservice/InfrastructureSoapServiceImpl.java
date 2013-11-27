@@ -3984,7 +3984,8 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(ipaddress, ERROR.OBJECT_NULL);
 
-			ipaddress.setIpaddressStatus(50);// 设置状态为未使用
+			// 设置状态为未使用
+			ipaddress.setIpaddressStatus(LookUpConstants.IPAddressStatus.未使用.getValue());
 
 			comm.ipaddressService.saveOrUpdate(ipaddress);
 
