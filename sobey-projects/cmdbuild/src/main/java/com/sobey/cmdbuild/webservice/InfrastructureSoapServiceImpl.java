@@ -227,7 +227,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Fimas fimas = comm.fimasService.findFimas(id);
 
-			Validate.isTrue(fimas == null, ERROR.OBJECT_NULL);
+			Validate.notNull(fimas, ERROR.OBJECT_NULL);
 
 			fimas.setIdClass(TableNameUtil.getTableName(Fimas.class));
 			fimas.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
@@ -1382,7 +1382,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Ipaddress ipaddress = comm.ipaddressService.findIpaddress(id);
 
-			Validate.isTrue(ipaddress == null, ERROR.OBJECT_NULL);
+			Validate.notNull(ipaddress, ERROR.OBJECT_NULL);
 
 			ipaddress.setIdClass(TableNameUtil.getTableName(Ipaddress.class));
 
