@@ -179,7 +179,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			consumptions.setUser(DEFAULT_USER);
 			consumptions.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			consumptions.setIdClass(Consumptions.class.getSimpleName());
+			consumptions.setIdClass(TableNameUtil.getTableName(Consumptions.class));
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, consumptions);
@@ -427,7 +427,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			deviceSpec.setUser(DEFAULT_USER);
 			deviceSpec.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			deviceSpec.setIdClass(DeviceSpec.class.getSimpleName());
+			deviceSpec.setIdClass(TableNameUtil.getTableName(DeviceSpec.class));
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, deviceSpec);
@@ -616,7 +616,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			ecsSpec.setUser(DEFAULT_USER);
 			ecsSpec.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			ecsSpec.setIdClass(EcsSpec.class.getSimpleName());
+			ecsSpec.setIdClass(TableNameUtil.getTableName(EcsSpec.class));
 
 			BeanValidators.validateWithException(validator, ecsSpec);
 
@@ -803,7 +803,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			eipSpec.setUser(DEFAULT_USER);
 			eipSpec.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			eipSpec.setIdClass(EipSpec.class.getSimpleName());
+			eipSpec.setIdClass(TableNameUtil.getTableName(EipSpec.class));
 
 			BeanValidators.validateWithException(validator, eipSpec);
 
@@ -991,7 +991,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			es3Spec.setUser(DEFAULT_USER);
 			es3Spec.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			es3Spec.setIdClass(Es3Spec.class.getSimpleName());
+			es3Spec.setIdClass(TableNameUtil.getTableName(Es3Spec.class));
 
 			BeanValidators.validateWithException(validator, es3Spec);
 
