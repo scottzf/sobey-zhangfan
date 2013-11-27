@@ -1,9 +1,9 @@
 package com.sobey.cmdbuild.constants;
 
 /**
- * CMDBuild数据库中 LookUp的enum字典.
+ * CMDBuild数据库中 LookUp的enum字典.<br>
  * 
- * 需手动保持和表LookUp的Id字段同步.
+ * <b>注意保持和CMDBuild中表lookup中的数据(Id & Description)一致.</b>
  * 
  * @author Administrator
  * 
@@ -11,9 +11,7 @@ package com.sobey.cmdbuild.constants;
 public class LookUpConstants {
 
 	/**
-	 * 描述LookUp中ConsumptionsStatus的Description和Id. <br>
-	 * 
-	 * <b>注意保持和CMDBuild中表lookup中的数据一致.</b>
+	 * 描述LookUp中ConsumptionsStatus的Description和Id.
 	 * 
 	 * <pre>
 	 * 执行:	Execution	 41 
@@ -56,13 +54,10 @@ public class LookUpConstants {
 		public int getValue() {
 			return value;
 		}
-
 	}
 
 	/**
-	 * 描述LookUp中ServiceType的Description和Id. <br>
-	 * 
-	 * <b>注意保持和CMDBuild中表lookup中的数据一致.</b>
+	 * 描述LookUp中ServiceType的Description和Id.
 	 * 
 	 * <pre>
 	 * ECS	 35 
@@ -108,7 +103,40 @@ public class LookUpConstants {
 		public int getValue() {
 			return value;
 		}
+	}
 
+	/**
+	 * 描述LookUp中IPAddressStatus的Description和Id.
+	 * 
+	 * <pre>
+	 * 使用中	 49 
+	 * 未使用 	 50
+	 * </pre>
+	 * 
+	 * @author Administrator
+	 * 
+	 */
+	public enum IPAddressStatus {
+
+		使用中("使用中", 49),
+
+		未使用("未使用", 50);
+
+		private String name;
+		private int value;
+
+		private IPAddressStatus(String name, int value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public int getValue() {
+			return value;
+		}
 	}
 
 }

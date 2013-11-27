@@ -92,7 +92,7 @@ public class CompanySoapTest extends BaseFunctionalTestCase {
 	}
 
 	@Test
-	//@Ignore
+	// @Ignore
 	public void getPagination() {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();

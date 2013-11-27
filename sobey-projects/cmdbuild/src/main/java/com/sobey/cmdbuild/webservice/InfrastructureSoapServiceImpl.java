@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
 import com.sobey.cmdbuild.constants.ERROR;
+import com.sobey.cmdbuild.constants.LookUpConstants;
 import com.sobey.cmdbuild.constants.WsConstants;
 import com.sobey.cmdbuild.entity.Fimas;
 import com.sobey.cmdbuild.entity.FimasBox;
@@ -3889,7 +3890,8 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(ipaddress, ERROR.OBJECT_NULL);
 
-			ipaddress.setIpaddressStatus(49);// 设置状态为使用
+			// 设置状态为使用
+			ipaddress.setIpaddressStatus(LookUpConstants.IPAddressStatus.使用中.getValue());
 
 			comm.ipaddressService.saveOrUpdate(ipaddress);
 
