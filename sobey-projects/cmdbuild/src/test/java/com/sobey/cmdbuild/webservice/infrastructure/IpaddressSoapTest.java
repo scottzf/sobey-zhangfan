@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -36,6 +37,36 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 	private String code = "";
 
 	@Test
+	@Ignore
+	public void save() {
+		Ipaddress ipaddress = TestData.randomIpaddress();
+		IpaddressDTO ipaddressDTO = BeanMapper.map(ipaddress, IpaddressDTO.class);
+		IdResult response = infrastructureService.createIpaddress(ipaddressDTO);
+		assertNotNull(response.getId());
+	}
+
+	@Test
+	@Ignore
+	public void update() {
+
+		Integer id = 469;
+
+		DTOResult<IpaddressDTO> response = infrastructureService.findIpaddress(id);
+		IpaddressDTO dto = response.getDto();
+		dto.setDescription("我是超人啊~!");
+		IdResult result = infrastructureService.updateIpaddress(id, dto);
+		assertNotNull(result.getId());
+	}
+
+	@Test
+	@Ignore
+	public void delete() {
+		Integer id = 469;
+		IdResult response = infrastructureService.deleteIpaddress(id);
+		assertNotNull(response.getId());
+	}
+
+	// @Test
 	public void testAll() {
 		testCreateIpaddress();
 		testFindIpaddress();
@@ -144,7 +175,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 	/**
 	 * 批量添加测试，预期返回结果，如果某个添加成功的会返回对应错误
 	 */
-	@Test
+	// @Test
 	// @Ignore
 	public void testInsertIPAddress() {
 

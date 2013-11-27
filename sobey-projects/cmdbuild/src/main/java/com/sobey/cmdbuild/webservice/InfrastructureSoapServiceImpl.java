@@ -192,14 +192,16 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			searchParams.put("EQ_code", fimasDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.fimasService.findFimas(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(
+					comm.fimasService.findFimas(searchParams) == null || fimas.getCode().equals(fimasDTO.getCode()),
+					ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(fimasDTO, Fimas.class), fimas);
 
 			fimas.setIdClass(TableNameUtil.getTableName(Fimas.class));
-
 			fimas.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			fimas.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, fimas);
@@ -225,10 +227,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Fimas fimas = comm.fimasService.findFimas(id);
 
-			Validate.isTrue(fimas != null, ERROR.OBJECT_NULL);
+			Validate.isTrue(fimas == null, ERROR.OBJECT_NULL);
 
 			fimas.setIdClass(TableNameUtil.getTableName(Fimas.class));
-
 			fimas.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.fimasService.saveOrUpdate(fimas);
@@ -265,11 +266,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 		try {
 
-			List<Fimas> fimas = comm.fimasService.getFimasList(searchParams);
-
-			List<FimasDTO> list = BeanMapper.mapList(fimas, FimasDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.fimasService.getFimasList(searchParams), FimasDTO.class));
 
 			return result;
 
@@ -1229,6 +1226,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<IpaddressDTO> findIpaddress(@WebParam(name = "id") Integer id) {
+
 		DTOResult<IpaddressDTO> result = new DTOResult<IpaddressDTO>();
 
 		try {
@@ -1239,9 +1237,19 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(ipaddress, ERROR.OBJECT_NULL);
 
-			IpaddressDTO ipaddressDTO = BeanMapper.map(ipaddress, IpaddressDTO.class);
+			IpaddressDTO dto = BeanMapper.map(ipaddress, IpaddressDTO.class);
 
-			result.setDto(ipaddressDTO);
+			// Reference
+			dto.setVlanDTO(findVlan(dto.getVlan()).getDto());
+
+			// LookUp
+			dto.setIspText(cmdbuildSoapServiceImpl.findLookUp(dto.getIsp()).getDto().getDescription());
+			dto.setIpAddressPoolText(cmdbuildSoapServiceImpl.findLookUp(dto.getIpAddressPool()).getDto()
+					.getDescription());
+			dto.setIpAddressStatusText(cmdbuildSoapServiceImpl.findLookUp(dto.getIpAddressStatus()).getDto()
+					.getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -1265,9 +1273,19 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(ipaddress, ERROR.OBJECT_NULL);
 
-			IpaddressDTO ipaddressDTO = BeanMapper.map(ipaddress, IpaddressDTO.class);
+			IpaddressDTO dto = BeanMapper.map(ipaddress, IpaddressDTO.class);
 
-			result.setDto(ipaddressDTO);
+			// Reference
+			dto.setVlanDTO(findVlan(dto.getVlan()).getDto());
+
+			// LookUp
+			dto.setIspText(cmdbuildSoapServiceImpl.findLookUp(dto.getIsp()).getDto().getDescription());
+			dto.setIpAddressPoolText(cmdbuildSoapServiceImpl.findLookUp(dto.getIpAddressPool()).getDto()
+					.getDescription());
+			dto.setIpAddressStatusText(cmdbuildSoapServiceImpl.findLookUp(dto.getIpAddressStatus()).getDto()
+					.getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -1298,7 +1316,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			BeanValidators.validateWithException(validator, ipaddress);
 
-			ipaddress.setIpaddressStatus(50);// 设置状态为未使用
+			ipaddress.setIpaddressStatus(LookUpConstants.IPAddressStatus.未使用.getValue());
 			ipaddress.setUser(DEFAULT_USER);
 			ipaddress.setIdClass(TableNameUtil.getTableName(Ipaddress.class));
 
@@ -1329,14 +1347,16 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			searchParams.put("EQ_code", ipaddressDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.ipaddressService.findIpaddress(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(
+					comm.ipaddressService.findIpaddress(searchParams) == null
+							|| ipaddress.getCode().equals(ipaddressDTO.getCode()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(ipaddressDTO, Ipaddress.class), ipaddress);
 
 			ipaddress.setIdClass(TableNameUtil.getTableName(Ipaddress.class));
-
 			ipaddress.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			ipaddress.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, ipaddress);
@@ -1362,7 +1382,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Ipaddress ipaddress = comm.ipaddressService.findIpaddress(id);
 
-			Validate.isTrue(ipaddress != null, ERROR.OBJECT_NULL);
+			Validate.isTrue(ipaddress == null, ERROR.OBJECT_NULL);
 
 			ipaddress.setIdClass(TableNameUtil.getTableName(Ipaddress.class));
 
@@ -1403,11 +1423,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 		try {
 
-			List<Ipaddress> ipaddress = comm.ipaddressService.getIpaddressList(searchParams);
-
-			List<IpaddressDTO> list = BeanMapper.mapList(ipaddress, IpaddressDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.ipaddressService.getIpaddressList(searchParams), IpaddressDTO.class));
 
 			return result;
 

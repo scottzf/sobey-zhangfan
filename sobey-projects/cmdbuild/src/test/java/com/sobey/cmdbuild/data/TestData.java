@@ -298,10 +298,11 @@ public class TestData {
 		Ipaddress ipaddress = new Ipaddress();
 
 		ipaddress.setId(0);
+//		ipaddress.setCode("code7575");
 		ipaddress.setCode(RandomData.randomName("code"));
 		ipaddress.setDescription(RandomData.randomName("description"));
 		ipaddress.setIpaddressPool(46);// ip协议
-		ipaddress.setIpaddressStatus(49);
+		ipaddress.setIpaddressStatus(LookUpConstants.IPAddressStatus.未使用.getValue());
 		ipaddress.setVlan(91);
 		ipaddress.setBeginDate(startDate);
 

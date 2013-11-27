@@ -13,25 +13,56 @@ import com.sobey.cmdbuild.constants.WsConstants;
 @XmlType(name = "IpaddressDTO", namespace = WsConstants.NS)
 public class IpaddressDTO {
 
-	private Date beginDate;
+	private Integer id;
 	private String code;
 	private String description;
+	private Date beginDate;
+	private String remark;
 	private String gateway;
-	private Integer id;
+	private String netmask;
 
-	// Vlan Integer VlanId
-	// ISP Integer ISP供应商 Id（电信、联通）
-	// IPAddressPool Integer IPAddressPool类型Id
-	// IPAddressStatus Integer IP状态 Id (使用、未使用)
-	// Netmask String 子网掩码
-	// Gateway String 网关
+	private Integer vlan;
+	private VlanDTO vlanDTO;
 
+	private Integer isp;
 	private Integer ipAddressPool;
 	private Integer ipAddressStatus;
-	private Integer isp;
-	private String netmask;
-	private String remark;
-	private Integer vlan;
+
+	private String ispText;
+	private String ipAddressPoolText;
+	private String ipAddressStatusText;
+
+	public VlanDTO getVlanDTO() {
+		return vlanDTO;
+	}
+
+	public void setVlanDTO(VlanDTO vlanDTO) {
+		this.vlanDTO = vlanDTO;
+	}
+
+	public String getIspText() {
+		return ispText;
+	}
+
+	public void setIspText(String ispText) {
+		this.ispText = ispText;
+	}
+
+	public String getIpAddressPoolText() {
+		return ipAddressPoolText;
+	}
+
+	public void setIpAddressPoolText(String ipAddressPoolText) {
+		this.ipAddressPoolText = ipAddressPoolText;
+	}
+
+	public String getIpAddressStatusText() {
+		return ipAddressStatusText;
+	}
+
+	public void setIpAddressStatusText(String ipAddressStatusText) {
+		this.ipAddressStatusText = ipAddressStatusText;
+	}
 
 	public Date getBeginDate() {
 		return beginDate;
