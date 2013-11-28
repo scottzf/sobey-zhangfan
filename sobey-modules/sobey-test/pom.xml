@@ -6,7 +6,7 @@
 		<groupId>com.sobey</groupId>
 		<artifactId>sobey-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../parent/</relativePath>
+		<relativePath>../sobey-parent/</relativePath>
 	</parent>
 	<artifactId>sobey-test</artifactId>
 	<packaging>jar</packaging>

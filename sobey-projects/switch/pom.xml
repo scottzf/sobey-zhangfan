@@ -6,7 +6,7 @@
 		<groupId>com.sobey</groupId>
 		<artifactId>sobey-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../modules/parent/</relativePath>
+		<relativePath>../sobey-modules/sobey-parent/</relativePath>
 	</parent>
 	<groupId>com.sobey.switch</groupId>
 	<artifactId>switch</artifactId>
