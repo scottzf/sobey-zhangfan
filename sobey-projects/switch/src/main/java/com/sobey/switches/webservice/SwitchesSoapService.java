@@ -4,40 +4,53 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import com.sobey.switches.constans.WsConstants;
-import com.sobey.switches.webservice.response.dto.SgpDTO;
+import com.sobey.switches.webservice.response.dto.ESGParameter;
+import com.sobey.switches.webservice.response.dto.VlanParameter;
+import com.sobey.switches.webservice.response.result.WSResult;
 
 /**
- * 交换机和防火墙接口
+ * 交换机的webservice接口
+ * 
+ * @author Administrator
+ * 
  */
-@WebService(name = "SwitchesSoapService", targetNamespace = WsConstants.NS)
+@WebService(name = "SwitchesService", targetNamespace = WsConstants.NS)
 public interface SwitchesSoapService {
 
 	/**
-	 * 核心交换机创建租户VLAN及VLAN网关地址<br/>
+	 * 在核心、接入层交换机上执行脚本，创建Vlan
 	 * 
-	 * @param tenantsId
-	 *            租户id
-	 * @param ipAddress
-	 *            ip地址
-	 * @param subnetMask
-	 *            子网掩码
+	 * @param vlanParameter
+	 *            {@link VlanParameter}
+	 * @return
 	 */
-	void createTenantsVlan(@WebParam(name = "tenantsId") Integer tenantsId,
-			@WebParam(name = "ipAddress") String ipAddress, @WebParam(name = "subnetMask") String subnetMask);
+	WSResult createVlanBySwtich(@WebParam(name = "vlanParameter") VlanParameter vlanParameter);
 
 	/**
-	 * 接入层交换机创建租户VLAN<br/>
+	 * 在核心、接入层交换机上执行脚本，删除指定的Vlan
 	 * 
-	 * @param tenantsId
-	 *            租户id
+	 * @param vlanId
+	 *            Vlan编号
+	 * @return
 	 */
-	void createInterfaceTenants(@WebParam(name = "tenantsId") Integer tenantsId);
+	WSResult deleteVlanBySwtich(@WebParam(name = "vlanId") Integer vlanId);
 
 	/**
-	 * 多租户之间SGP安全组IP控制
+	 * 在交换机上执行脚本，创建租户ESG安全组脚本
 	 * 
-	 * @param sgpDTO
+	 * @param esgParameter
+	 *            {@link ESGParameter}
+	 * @return
 	 */
-	void createSgp(@WebParam(name = "sgpDTO") SgpDTO sgpDTO);
+	WSResult createESGBySwtich(@WebParam(name = "esgParameter") ESGParameter esgParameter);
+
+	/**
+	 * 在交换机上执行脚本，删除租户ESG安全组脚本
+	 * 
+	 * @param aclNumber
+	 *            acl编号(3000-3999)
+	 * @return
+	 */
+	WSResult deleteESGBySwtich(@WebParam(name = "aclNumber") Integer aclNumber);
 
 }
