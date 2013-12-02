@@ -16,14 +16,14 @@ cd sobey-projects\cmdbuild
 start "CMDBuild" %MVN% clean jetty:run 
 if errorlevel 1 goto error
 
-cd ..\instance
-start "Instance" %MVN% clean jetty:run -Djetty.port=8081
-if errorlevel 1 goto error
-cd ..\..\
+rem cd ..\instance
+rem start "Instance" %MVN% clean jetty:run -Djetty.port=8081
+rem if errorlevel 1 goto error
+rem cd ..\..\
 
 echo [INFO] Please wait a moment. When you see "[INFO] Started Jetty Server" in consoles, you can access below demo sites:
 echo [INFO] http://localhost:8080/cmdbuild
-echo [INFO] http://localhost:8081/instance
+rem echo [INFO] http://localhost:8081/instance
 
 goto end
 :error
