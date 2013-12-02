@@ -20,7 +20,7 @@ public class VlanDTO {
 	private String remark;
 
 	private String gateway;
-	private String netmask;
+	private String netMask;
 	private String segment;
 
 	private Integer idc;
@@ -77,10 +77,6 @@ public class VlanDTO {
 		return idc;
 	}
 
-	public String getNetmask() {
-		return netmask;
-	}
-
 	public String getRemark() {
 		return remark;
 	}
@@ -113,16 +109,20 @@ public class VlanDTO {
 		this.idc = idc;
 	}
 
-	public void setNetmask(String netmask) {
-		this.netmask = netmask;
-	}
-
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
 
 	public void setSegment(String segment) {
 		this.segment = segment;
+	}
+
+	public String getNetMask() {
+		return netMask;
+	}
+
+	public void setNetMask(String netMask) {
+		this.netMask = netMask;
 	}
 
 	/**
