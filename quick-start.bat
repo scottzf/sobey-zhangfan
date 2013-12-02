@@ -13,17 +13,23 @@ cd ..\
 
 echo [Step 2] Start all sobey projects.
 cd sobey-projects\cmdbuild
-start "CMDBuild" %MVN% clean jetty:run 
+start "CMDBuild" %MVN% clean clean tomcat:run -Dmaven.tomcat.port=8080
 if errorlevel 1 goto error
 
 rem cd ..\instance
-rem start "Instance" %MVN% clean jetty:run -Djetty.port=8081
+rem start "Instance" %MVN% clean tomcat:run -Dmaven.tomcat.port=8081
 rem if errorlevel 1 goto error
 rem cd ..\..\
 
+cd ..\switch
+start "Switch" %MVN% clean tomcat:run -Dmaven.tomcat.port=8082
+if errorlevel 1 goto error
+cd ..\..\
+
 echo [INFO] Please wait a moment. When you see "[INFO] Started Jetty Server" in consoles, you can access below demo sites:
 echo [INFO] http://localhost:8080/cmdbuild
-rem echo [INFO] http://localhost:8081/instance
+echo [INFO] http://localhost:8081/instance
+echo [INFO] http://localhost:8082/switch
 
 goto end
 :error
