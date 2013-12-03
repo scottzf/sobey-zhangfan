@@ -17,21 +17,33 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 	/**
 	 * 加载applicationContext.propertie文件
 	 */
-	public static PropertiesLoader TELNET_LOADER = new PropertiesLoader("classpath:/telnet.properties");
+	public static PropertiesLoader CORE_LOADER = new PropertiesLoader("classpath:/Core.properties");
+	public static PropertiesLoader ACCESS_LOADER = new PropertiesLoader("classpath:/Access.properties");
 
-	private static final String ip = TELNET_LOADER.getProperty("TELENT_IP");
-	private static final String username = TELNET_LOADER.getProperty("TELENT_USERNAME");
-	private static final String password = TELNET_LOADER.getProperty("TELENT_PASSWORD");
+	/* 核心交换机 */
+	private static final String CORE_IP = CORE_LOADER.getProperty("CORE_IP");
+	private static final String CORE_USERNAME = CORE_LOADER.getProperty("CORE_USERNAME");
+	private static final String CORE_PASSWORD = CORE_LOADER.getProperty("CORE_PASSWORD");
+
+	/* 接入层交换机,可能有数量不定的接入层交换机,待后续优化 */
+	private static final String ACCESS_IP = ACCESS_LOADER.getProperty("ACCESS_IP");
+	private static final String ACCESS_USERNAME = ACCESS_LOADER.getProperty("ACCESS_USERNAME");
+	private static final String ACCESS_PASSWORD = ACCESS_LOADER.getProperty("ACCESS_PASSWORD");
 
 	@Override
 	public WSResult createVlanBySwtich(@WebParam(name = "vlanParameter") VlanParameter vlanParameter) {
 
-		String command = GenerateScript.generateCreateVlanScript(vlanParameter.getVlanId(), vlanParameter.getGateway(),
-				vlanParameter.getNetMask());
+		/*
+		 * Vlan创建的顺序是先在若干个交换机上执行脚本,然后在一个核心交换机上执行脚本.
+		 */
 
-		System.err.println(command);
+		String accessCommand = GenerateScript.generateCreateVlanScriptOnAccessLayer(vlanParameter.getVlanId(),
+				vlanParameter.getGateway(), vlanParameter.getNetMask());
+		TelnetUtil.execCommand(ACCESS_IP, ACCESS_USERNAME, ACCESS_PASSWORD, accessCommand);
 
-		TelnetUtil.execCommand(ip, username, password, command);
+		String coreCommand = GenerateScript.generateCreateVlanScriptOnCoreLayer(vlanParameter.getVlanId(),
+				vlanParameter.getGateway(), vlanParameter.getNetMask());
+		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, coreCommand);
 
 		// TODO 缺少针对返回字符串解析是否执行成功的判断.
 
@@ -41,11 +53,15 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 	@Override
 	public WSResult deleteVlanBySwtich(@WebParam(name = "vlanId") Integer vlanId) {
 
-		String command = GenerateScript.generateDeleteVlanScript(vlanId);
+		/*
+		 * Vlan删除的顺序是先在若干个交换机上执行脚本,然后在一个核心交换机上执行脚本.
+		 */
 
-		System.err.println(command);
+		String accessCommand = GenerateScript.generateDeleteVlanScriptOnAccessLayer(vlanId);
+		TelnetUtil.execCommand(ACCESS_IP, ACCESS_USERNAME, ACCESS_PASSWORD, accessCommand);
 
-		TelnetUtil.execCommand(ip, username, password, command);
+		String coreCommand = GenerateScript.generateDeleteVlanScriptOnCoreLayer(vlanId);
+		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, coreCommand);
 
 		// TODO 缺少针对返回字符串解析是否执行成功的判断.
 
