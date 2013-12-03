@@ -19,6 +19,108 @@ public class FirewallDTO {
 	private Integer id;
 	private String remark;
 
+	private String sn;
+	private String gdzcsn;
+	private String site;
+
+	private Integer idc;
+	private Integer rack;
+	private Integer ipaddress;
+	private Integer deviceSpec;
+
+	private IdcDTO idcDTO;
+	private RackDTO rackDTO;
+	private IpaddressDTO ipaddressDTO;
+	private DeviceSpecDTO deviceSpecDTO;
+
+	public String getSn() {
+		return sn;
+	}
+
+	public void setSn(String sn) {
+		this.sn = sn;
+	}
+
+	public String getGdzcsn() {
+		return gdzcsn;
+	}
+
+	public void setGdzcsn(String gdzcsn) {
+		this.gdzcsn = gdzcsn;
+	}
+
+	public String getSite() {
+		return site;
+	}
+
+	public void setSite(String site) {
+		this.site = site;
+	}
+
+	public Integer getIdc() {
+		return idc;
+	}
+
+	public void setIdc(Integer idc) {
+		this.idc = idc;
+	}
+
+	public Integer getRack() {
+		return rack;
+	}
+
+	public void setRack(Integer rack) {
+		this.rack = rack;
+	}
+
+	public Integer getIpaddress() {
+		return ipaddress;
+	}
+
+	public void setIpaddress(Integer ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public Integer getDeviceSpec() {
+		return deviceSpec;
+	}
+
+	public void setDeviceSpec(Integer deviceSpec) {
+		this.deviceSpec = deviceSpec;
+	}
+
+	public IdcDTO getIdcDTO() {
+		return idcDTO;
+	}
+
+	public void setIdcDTO(IdcDTO idcDTO) {
+		this.idcDTO = idcDTO;
+	}
+
+	public RackDTO getRackDTO() {
+		return rackDTO;
+	}
+
+	public void setRackDTO(RackDTO rackDTO) {
+		this.rackDTO = rackDTO;
+	}
+
+	public IpaddressDTO getIpaddressDTO() {
+		return ipaddressDTO;
+	}
+
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
+	}
+
+	public DeviceSpecDTO getDeviceSpecDTO() {
+		return deviceSpecDTO;
+	}
+
+	public void setDeviceSpecDTO(DeviceSpecDTO deviceSpecDTO) {
+		this.deviceSpecDTO = deviceSpecDTO;
+	}
+
 	public Date getBeginDate() {
 		return beginDate;
 	}

@@ -19,9 +19,17 @@ public class GroupPolicyDTO {
 	private Integer id;
 	private String remark;
 
-	// Tenants Integer 租户ID
+	private TenantsDTO tenantsDTO;
 
 	private Integer tenants;
+
+	public TenantsDTO getTenantsDTO() {
+		return tenantsDTO;
+	}
+
+	public void setTenantsDTO(TenantsDTO tenantsDTO) {
+		this.tenantsDTO = tenantsDTO;
+	}
 
 	public Date getBeginDate() {
 		return beginDate;

@@ -19,16 +19,6 @@ public class NetappBoxDTO {
 	private Integer deviceSpec;
 	private Integer diskNumber;
 
-	// IDC Integer IDC ID
-	// Rack Integer Rack ID
-	// DeviceSpec Integer 规格ID
-	// Ipaddress Integer Ipaddress
-	// DiskType Integer 磁盘类型
-	// Site String 位置
-	// DiskNumber Integer 磁盘数量
-	// SN Stirng SN
-	// GdzcSn String Sobey SN编号
-
 	private Integer diskType;
 	private String gdzcSn;
 	private Integer id;
@@ -38,6 +28,52 @@ public class NetappBoxDTO {
 	private String remark;
 	private String site;
 	private String sn;
+
+	private IdcDTO idcDTO;
+	private RackDTO rackDTO;
+	private DeviceSpecDTO deviceSpecDTO;
+	private IpaddressDTO ipaddressDTO;
+	private String diskTypeText;
+
+	public IdcDTO getIdcDTO() {
+		return idcDTO;
+	}
+
+	public void setIdcDTO(IdcDTO idcDTO) {
+		this.idcDTO = idcDTO;
+	}
+
+	public RackDTO getRackDTO() {
+		return rackDTO;
+	}
+
+	public void setRackDTO(RackDTO rackDTO) {
+		this.rackDTO = rackDTO;
+	}
+
+	public DeviceSpecDTO getDeviceSpecDTO() {
+		return deviceSpecDTO;
+	}
+
+	public void setDeviceSpecDTO(DeviceSpecDTO deviceSpecDTO) {
+		this.deviceSpecDTO = deviceSpecDTO;
+	}
+
+	public IpaddressDTO getIpaddressDTO() {
+		return ipaddressDTO;
+	}
+
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
+	}
+
+	public String getDiskTypeText() {
+		return diskTypeText;
+	}
+
+	public void setDiskTypeText(String diskTypeText) {
+		this.diskTypeText = diskTypeText;
+	}
 
 	public Date getBeginDate() {
 		return beginDate;

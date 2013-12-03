@@ -18,20 +18,58 @@ public class HardDiskDTO {
 	private String code;
 	private String description;
 	private Integer fimas;
-
-	// IDC Integer IDC ID
-	// Server Integer Server ID
-	// Fimas Integer Fimas ID
-	// Brand Integer Brand ID
-	// RotationalSpeed Integer RotationalSpeed ID
-	// HardDisk Size Integer 磁盘大小(GB)
-
 	private Integer hardDiskSize;
 	private Integer id;
 	private Integer idc;
 	private String remark;
 	private Integer rotationalSpeed;
 	private Integer server;
+
+	private IdcDTO idcDTO;
+	private ServerDTO serverDTO;
+	private FimasDTO fimasDTO;
+	private String rotationalSpeedText;
+	private String brandText;
+	
+	public IdcDTO getIdcDTO() {
+		return idcDTO;
+	}
+
+	public void setIdcDTO(IdcDTO idcDTO) {
+		this.idcDTO = idcDTO;
+	}
+
+	public ServerDTO getServerDTO() {
+		return serverDTO;
+	}
+
+	public void setServerDTO(ServerDTO serverDTO) {
+		this.serverDTO = serverDTO;
+	}
+
+	public FimasDTO getFimasDTO() {
+		return fimasDTO;
+	}
+
+	public void setFimasDTO(FimasDTO fimasDTO) {
+		this.fimasDTO = fimasDTO;
+	}
+
+	public String getRotationalSpeedText() {
+		return rotationalSpeedText;
+	}
+
+	public void setRotationalSpeedText(String rotationalSpeedText) {
+		this.rotationalSpeedText = rotationalSpeedText;
+	}
+
+	public String getBrandText() {
+		return brandText;
+	}
+
+	public void setBrandText(String brandText) {
+		this.brandText = brandText;
+	}
 
 	public Date getBeginDate() {
 		return beginDate;
