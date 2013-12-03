@@ -19,15 +19,38 @@ public class ElbDTO {
 	private Integer id;
 	private Integer ipaddress;
 
-	// Tag Integer 标签ID
-	// Tenants Integer 租户ID
-	// Ipaddress Integer Ipaddress ID(VIP)
-	// isSession Boolean 是否保持会话
-
 	private Boolean isSession;
 	private String remark;
 	private Integer tag;
 	private Integer tenants;
+
+	private IpaddressDTO ipaddressDTO;
+	private TenantsDTO tenantsDTO;
+	private TagDTO tagDTO;
+
+	public IpaddressDTO getIpaddressDTO() {
+		return ipaddressDTO;
+	}
+
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
+	}
+
+	public TenantsDTO getTenantsDTO() {
+		return tenantsDTO;
+	}
+
+	public void setTenantsDTO(TenantsDTO tenantsDTO) {
+		this.tenantsDTO = tenantsDTO;
+	}
+
+	public TagDTO getTagDTO() {
+		return tagDTO;
+	}
+
+	public void setTagDTO(TagDTO tagDTO) {
+		this.tagDTO = tagDTO;
+	}
 
 	public Date getBeginDate() {
 		return beginDate;

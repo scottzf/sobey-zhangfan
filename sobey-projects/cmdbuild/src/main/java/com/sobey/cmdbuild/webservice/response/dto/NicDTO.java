@@ -19,19 +19,58 @@ public class NicDTO {
 	private String description;
 	private Integer fimas;
 
-	// IDC Integer IDC ID
-	// Server Integer Server ID
-	// Fimas Integer Fimas ID
-	// Brand Integer Brand ID
-	// NICRate Integer NICRate ID
-	// PortNumber Integer 端口数量
-
 	private Integer id;
 	private Integer idc;
 	private Integer nicRate;
 	private Integer portNumber;
 	private String remark;
 	private Integer server;
+
+	private IdcDTO idcDTO;
+	private RackDTO rackDTO;
+	private ServerDTO serverDTO;
+	private String brandText;
+	private String nicRateText;
+
+	public IdcDTO getIdcDTO() {
+		return idcDTO;
+	}
+
+	public void setIdcDTO(IdcDTO idcDTO) {
+		this.idcDTO = idcDTO;
+	}
+
+	public RackDTO getRackDTO() {
+		return rackDTO;
+	}
+
+	public void setRackDTO(RackDTO rackDTO) {
+		this.rackDTO = rackDTO;
+	}
+
+	public ServerDTO getServerDTO() {
+		return serverDTO;
+	}
+
+	public void setServerDTO(ServerDTO serverDTO) {
+		this.serverDTO = serverDTO;
+	}
+
+	public String getBrandText() {
+		return brandText;
+	}
+
+	public void setBrandText(String brandText) {
+		this.brandText = brandText;
+	}
+
+	public String getNicRateText() {
+		return nicRateText;
+	}
+
+	public void setNicRateText(String nicRateText) {
+		this.nicRateText = nicRateText;
+	}
 
 	public Date getBeginDate() {
 		return beginDate;

@@ -19,6 +19,79 @@ public class NicPortDTO {
 	private Integer id;
 	private String remark;
 
+	private Integer ipaddress;
+	private IpaddressDTO ipaddressDTO;
+	private Integer connectedTo;
+	private SwitchPortDTO switchPortDTO;
+	private String macAddress;
+	private String site;
+	private NicDTO nicDTO;
+	private Integer nic;
+
+	public Integer getIpaddress() {
+		return ipaddress;
+	}
+
+	public void setIpaddress(Integer ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public IpaddressDTO getIpaddressDTO() {
+		return ipaddressDTO;
+	}
+
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
+	}
+
+	public Integer getConnectedTo() {
+		return connectedTo;
+	}
+
+	public void setConnectedTo(Integer connectedTo) {
+		this.connectedTo = connectedTo;
+	}
+
+	public SwitchPortDTO getSwitchPortDTO() {
+		return switchPortDTO;
+	}
+
+	public void setSwitchPortDTO(SwitchPortDTO switchPortDTO) {
+		this.switchPortDTO = switchPortDTO;
+	}
+
+	public String getMacAddress() {
+		return macAddress;
+	}
+
+	public void setMacAddress(String macAddress) {
+		this.macAddress = macAddress;
+	}
+
+	public String getSite() {
+		return site;
+	}
+
+	public void setSite(String site) {
+		this.site = site;
+	}
+
+	public NicDTO getNicDTO() {
+		return nicDTO;
+	}
+
+	public void setNicDTO(NicDTO nicDTO) {
+		this.nicDTO = nicDTO;
+	}
+
+	public Integer getNic() {
+		return nic;
+	}
+
+	public void setNic(Integer nic) {
+		this.nic = nic;
+	}
+
 	public Date getBeginDate() {
 		return beginDate;
 	}

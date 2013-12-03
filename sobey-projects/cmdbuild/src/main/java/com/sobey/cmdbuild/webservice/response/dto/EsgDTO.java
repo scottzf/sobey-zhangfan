@@ -19,15 +19,29 @@ public class EsgDTO {
 	private String description;
 	private Integer id;
 
-	// Tag Integer 标签ID
-	// Tenants Integer 租户ID
-	// ACLNumber Integer 用于安全组脚本的参数
-	// IsPublic Boolean 是否公用
-
 	private Integer isPublic;
 	private String remark;
 	private Integer tag;
 	private Integer tenants;
+
+	private TagDTO tagDTO;
+	private TenantsDTO tenantsDTO;
+
+	public TagDTO getTagDTO() {
+		return tagDTO;
+	}
+
+	public void setTagDTO(TagDTO tagDTO) {
+		this.tagDTO = tagDTO;
+	}
+
+	public TenantsDTO getTenantsDTO() {
+		return tenantsDTO;
+	}
+
+	public void setTenantsDTO(TenantsDTO tenantsDTO) {
+		this.tenantsDTO = tenantsDTO;
+	}
 
 	public Integer getAclNumber() {
 		return aclNumber;

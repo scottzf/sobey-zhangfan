@@ -18,20 +18,66 @@ public class Cs2DTO {
 	private String description;
 	private Double diskSize;
 	private Integer fimas;
-
-	// Ipaddress Integer Ipaddress ID
-	// Tag Integer 标签ID
-	// Tenants Integer 租户ID
-	// Fimas Integer fimasID
-	// DiskSize Double 存储大小(单位:GB)
-
 	private Integer id;
 	private Integer ipaddress;
 	private String remark;
-
 	private Integer tag;
-
 	private Integer tenants;
+
+	private Integer es3Spec;
+	private IpaddressDTO ipaddressDTO;
+	private Es3SpecDTO es3SpecDTO;
+	private TenantsDTO tenantsDTO;
+	private FimasDTO fimasDTO;
+	private TagDTO tagDTO;
+
+	public Integer getEs3Spec() {
+		return es3Spec;
+	}
+
+	public void setEs3Spec(Integer es3Spec) {
+		this.es3Spec = es3Spec;
+	}
+
+	public IpaddressDTO getIpaddressDTO() {
+		return ipaddressDTO;
+	}
+
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
+	}
+
+	public Es3SpecDTO getEs3SpecDTO() {
+		return es3SpecDTO;
+	}
+
+	public void setEs3SpecDTO(Es3SpecDTO es3SpecDTO) {
+		this.es3SpecDTO = es3SpecDTO;
+	}
+
+	public TenantsDTO getTenantsDTO() {
+		return tenantsDTO;
+	}
+
+	public void setTenantsDTO(TenantsDTO tenantsDTO) {
+		this.tenantsDTO = tenantsDTO;
+	}
+
+	public FimasDTO getFimasDTO() {
+		return fimasDTO;
+	}
+
+	public void setFimasDTO(FimasDTO fimasDTO) {
+		this.fimasDTO = fimasDTO;
+	}
+
+	public TagDTO getTagDTO() {
+		return tagDTO;
+	}
+
+	public void setTagDTO(TagDTO tagDTO) {
+		this.tagDTO = tagDTO;
+	}
 
 	public Date getBeginDate() {
 		return beginDate;
