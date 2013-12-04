@@ -3961,7 +3961,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 				insertSuccessCount++;
 			}
 
-			String message = insertSuccessCount.equals("0") ? "Ipaddress已存在" : "插入Ipaddress " + insertCount
+			String message = "0".equals(insertSuccessCount.toString()) ? "Ipaddress已存在" : "插入Ipaddress " + insertCount
 					+ " 条,成功创建Ipaddress " + insertSuccessCount + " 条";
 
 			result.setMessage(message);
@@ -4058,8 +4058,8 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 				insertSuccessCount++;
 			}
 
-			String message = insertSuccessCount.equals("0") ? "Vlan已存在" : "插入Vlan " + insertCount + " 条,成功创建Vlan "
-					+ insertSuccessCount + " 条";
+			String message = "0".equals(insertSuccessCount.toString()) ? "Vlan已存在" : "插入Vlan " + insertCount
+					+ " 条,成功创建Vlan " + insertSuccessCount + " 条";
 
 			result.setMessage(message);
 			result.setId(0);

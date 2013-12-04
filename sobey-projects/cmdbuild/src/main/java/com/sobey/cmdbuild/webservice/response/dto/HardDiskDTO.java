@@ -30,7 +30,7 @@ public class HardDiskDTO {
 	private FimasDTO fimasDTO;
 	private String rotationalSpeedText;
 	private String brandText;
-	
+
 	public IdcDTO getIdcDTO() {
 		return idcDTO;
 	}
