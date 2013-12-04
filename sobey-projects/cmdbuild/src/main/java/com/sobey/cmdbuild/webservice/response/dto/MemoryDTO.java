@@ -18,20 +18,58 @@ public class MemoryDTO {
 	private String code;
 	private String description;
 	private Integer fimas;
-
-	// IDC Integer IDC ID
-	// Server Integer Server ID
-	// Fimas Integer Fimas ID
-	// Brand Integer Brand ID
-	// Frequency Integer Frequency ID
-	// ram Integer 内存大小(G)
-
 	private Integer frequency;
 	private Integer id;
 	private Integer idc;
 	private Integer ram;
 	private String remark;
 	private Integer server;
+
+	private FimasDTO fimasDTO;
+	private IpaddressDTO ipaddressDTO;
+	private ServerDTO serverDTO;
+	private String brandText;
+	private Integer frequencyText;
+
+	public FimasDTO getFimasDTO() {
+		return fimasDTO;
+	}
+
+	public void setFimasDTO(FimasDTO fimasDTO) {
+		this.fimasDTO = fimasDTO;
+	}
+
+	public IpaddressDTO getIpaddressDTO() {
+		return ipaddressDTO;
+	}
+
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
+	}
+
+	public ServerDTO getServerDTO() {
+		return serverDTO;
+	}
+
+	public void setServerDTO(ServerDTO serverDTO) {
+		this.serverDTO = serverDTO;
+	}
+
+	public String getBrandText() {
+		return brandText;
+	}
+
+	public void setBrandText(String brandText) {
+		this.brandText = brandText;
+	}
+
+	public Integer getFrequencyText() {
+		return frequencyText;
+	}
+
+	public void setFrequencyText(Integer frequencyText) {
+		this.frequencyText = frequencyText;
+	}
 
 	public Date getBeginDate() {
 		return beginDate;

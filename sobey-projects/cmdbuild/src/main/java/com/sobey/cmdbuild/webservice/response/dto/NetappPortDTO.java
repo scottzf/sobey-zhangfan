@@ -19,6 +19,81 @@ public class NetappPortDTO {
 	private Integer id;
 	private String remark;
 
+	private String site;
+	private String macAddress;
+
+	private Integer ipaddress;
+	private Integer netappBox;
+	private Integer connectedTo;
+
+	private SwitchPortDTO switchPortDTO;
+	private IpaddressDTO ipaddressDTO;
+	private NetappBoxDTO netappBoxDTO;
+
+	public String getSite() {
+		return site;
+	}
+
+	public void setSite(String site) {
+		this.site = site;
+	}
+
+	public String getMacAddress() {
+		return macAddress;
+	}
+
+	public void setMacAddress(String macAddress) {
+		this.macAddress = macAddress;
+	}
+
+	public Integer getIpaddress() {
+		return ipaddress;
+	}
+
+	public void setIpaddress(Integer ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public Integer getNetappBox() {
+		return netappBox;
+	}
+
+	public void setNetappBox(Integer netappBox) {
+		this.netappBox = netappBox;
+	}
+
+	public Integer getConnectedTo() {
+		return connectedTo;
+	}
+
+	public void setConnectedTo(Integer connectedTo) {
+		this.connectedTo = connectedTo;
+	}
+
+	public SwitchPortDTO getSwitchPortDTO() {
+		return switchPortDTO;
+	}
+
+	public void setSwitchPortDTO(SwitchPortDTO switchPortDTO) {
+		this.switchPortDTO = switchPortDTO;
+	}
+
+	public IpaddressDTO getIpaddressDTO() {
+		return ipaddressDTO;
+	}
+
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
+	}
+
+	public NetappBoxDTO getNetappBoxDTO() {
+		return netappBoxDTO;
+	}
+
+	public void setNetappBoxDTO(NetappBoxDTO netappBoxDTO) {
+		this.netappBoxDTO = netappBoxDTO;
+	}
+
 	public Date getBeginDate() {
 		return beginDate;
 	}

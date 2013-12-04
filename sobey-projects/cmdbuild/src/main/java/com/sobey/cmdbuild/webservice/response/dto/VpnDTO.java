@@ -19,15 +19,29 @@ public class VpnDTO {
 	private Integer id;
 	private String remark;
 
-	// Tag Integer 标签ID
-	// Tenants Integer 租户ID
-	// VPNName String VPN用户名称
-	// VPNPassword String VPN用户密码
-
 	private Integer tag;
 	private Integer tenants;
 	private String vpnName;
 	private String vpnPassword;
+
+	private TagDTO tagDTO;
+	private TenantsDTO tenantsDTO;
+
+	public TagDTO getTagDTO() {
+		return tagDTO;
+	}
+
+	public void setTagDTO(TagDTO tagDTO) {
+		this.tagDTO = tagDTO;
+	}
+
+	public TenantsDTO getTenantsDTO() {
+		return tenantsDTO;
+	}
+
+	public void setTenantsDTO(TenantsDTO tenantsDTO) {
+		this.tenantsDTO = tenantsDTO;
+	}
 
 	public Date getBeginDate() {
 		return beginDate;

@@ -19,20 +19,6 @@ public class EcsDTO {
 	private Integer ecsAgent;
 	private Integer ecsStatus;
 
-	// Tag Integer 标签ID
-	// Ipaddress Integer Ipaddress ID
-	// ServiceSpec Integer 服务规格ID
-	// Tenants Integer 租户ID
-	// Server Integer 宿主机ID
-	// Image Integer 镜像ID（操作系统+位数）
-	// ECSAgent Integer 虚拟机所属agent
-	// ECSStatus Integer ① Pending ： 等待被创建
-	// ② Running ： 运行中
-	// ③ Stopped ： 已关机
-	// ④ Suspended ： 由于欠费, 暂停使用
-	// ⑤ Deleted： 已被删除
-	// 需要考虑到不同ECS Agent提供的状态可能不同。
-
 	private Integer id;
 	private Integer image;
 	private Integer ipaddress;
@@ -41,6 +27,89 @@ public class EcsDTO {
 	private Integer serviceSpec;
 	private Integer tag;
 	private Integer tenants;
+
+	private Integer ecsSpec;
+	private String imageText;
+	private String ecsAgentText;
+	private String ecsStatusText;
+
+	private IpaddressDTO ipaddressDTO;
+	private EcsSpecDTO ecsSpecDTO;
+	private ServerDTO ServerDTO;
+	private TenantsDTO tenantsDTO;
+	private TagDTO tagDTO;
+
+	public Integer getEcsSpec() {
+		return ecsSpec;
+	}
+
+	public void setEcsSpec(Integer ecsSpec) {
+		this.ecsSpec = ecsSpec;
+	}
+
+	public String getImageText() {
+		return imageText;
+	}
+
+	public void setImageText(String imageText) {
+		this.imageText = imageText;
+	}
+
+	public String getEcsAgentText() {
+		return ecsAgentText;
+	}
+
+	public void setEcsAgentText(String ecsAgentText) {
+		this.ecsAgentText = ecsAgentText;
+	}
+
+	public String getEcsStatusText() {
+		return ecsStatusText;
+	}
+
+	public void setEcsStatusText(String ecsStatusText) {
+		this.ecsStatusText = ecsStatusText;
+	}
+
+	public IpaddressDTO getIpaddressDTO() {
+		return ipaddressDTO;
+	}
+
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
+	}
+
+	public EcsSpecDTO getEcsSpecDTO() {
+		return ecsSpecDTO;
+	}
+
+	public void setEcsSpecDTO(EcsSpecDTO ecsSpecDTO) {
+		this.ecsSpecDTO = ecsSpecDTO;
+	}
+
+	public ServerDTO getServerDTO() {
+		return ServerDTO;
+	}
+
+	public void setServerDTO(ServerDTO serverDTO) {
+		ServerDTO = serverDTO;
+	}
+
+	public TenantsDTO getTenantsDTO() {
+		return tenantsDTO;
+	}
+
+	public void setTenantsDTO(TenantsDTO tenantsDTO) {
+		this.tenantsDTO = tenantsDTO;
+	}
+
+	public TagDTO getTagDTO() {
+		return tagDTO;
+	}
+
+	public void setTagDTO(TagDTO tagDTO) {
+		this.tagDTO = tagDTO;
+	}
 
 	public Date getBeginDate() {
 		return beginDate;

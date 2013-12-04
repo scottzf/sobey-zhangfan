@@ -22,13 +22,36 @@ public class DnsDTO {
 	private Integer domainType;
 	private Integer id;
 	private String remark;
-	// Tag Integer 标签ID
-	// Tenants Integer 租户ID
-	// DomainType Integer 域名类型 (GSLB,A,CNAME)
-	// DomainName String 域名
-	// CnameDomain String CNAME 域名
 	private Integer tag;
 	private Integer tenants;
+
+	private String domainTypeText;
+	private TenantsDTO tenantsDTO;
+	private TagDTO tagDTO;
+
+	public String getDomainTypeText() {
+		return domainTypeText;
+	}
+
+	public void setDomainTypeText(String domainTypeText) {
+		this.domainTypeText = domainTypeText;
+	}
+
+	public TenantsDTO getTenantsDTO() {
+		return tenantsDTO;
+	}
+
+	public void setTenantsDTO(TenantsDTO tenantsDTO) {
+		this.tenantsDTO = tenantsDTO;
+	}
+
+	public TagDTO getTagDTO() {
+		return tagDTO;
+	}
+
+	public void setTagDTO(TagDTO tagDTO) {
+		this.tagDTO = tagDTO;
+	}
 
 	public Date getBeginDate() {
 		return beginDate;

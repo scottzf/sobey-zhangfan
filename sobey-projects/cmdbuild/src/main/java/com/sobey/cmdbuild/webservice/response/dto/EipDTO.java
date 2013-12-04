@@ -23,14 +23,54 @@ public class EipDTO {
 	private Integer id;
 	private Integer ipaddress;
 	private String remark;
-	// Tag Integer 标签ID
-	// Tenants Integer 租户ID
-	// Bandwidth Integer 公网IP带宽，单位为Mpbs(默认1M)
-	// EIPSpec Integer EIP规格
-	// Ipaddress Integer IP池中ipaddress的ID
-	// EIPStatus Integer EIP状态（可用、绑定中）
 	private Integer tag;
 	private Integer tenants;
+
+	private TenantsDTO tenantsDTO;
+	private EipSpecDTO eipSpecDTO;
+	private TagDTO tagDTO;
+	private IpaddressDTO ipaddressDTO;
+	private String eipStatusText;
+
+	public TenantsDTO getTenantsDTO() {
+		return tenantsDTO;
+	}
+
+	public void setTenantsDTO(TenantsDTO tenantsDTO) {
+		this.tenantsDTO = tenantsDTO;
+	}
+
+	public EipSpecDTO getEipSpecDTO() {
+		return eipSpecDTO;
+	}
+
+	public void setEipSpecDTO(EipSpecDTO eipSpecDTO) {
+		this.eipSpecDTO = eipSpecDTO;
+	}
+
+	public TagDTO getTagDTO() {
+		return tagDTO;
+	}
+
+	public void setTagDTO(TagDTO tagDTO) {
+		this.tagDTO = tagDTO;
+	}
+
+	public IpaddressDTO getIpaddressDTO() {
+		return ipaddressDTO;
+	}
+
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
+	}
+
+	public String getEipStatusText() {
+		return eipStatusText;
+	}
+
+	public void setEipStatusText(String eipStatusText) {
+		this.eipStatusText = eipStatusText;
+	}
 
 	public Integer getBandwidth() {
 		return bandwidth;

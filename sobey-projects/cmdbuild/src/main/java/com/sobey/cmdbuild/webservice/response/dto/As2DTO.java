@@ -26,6 +26,70 @@ public class As2DTO {
 	private String volumePath;
 	private Integer volumeType;
 
+	private Integer es3Spec;
+	private Integer netappController;
+	private IpaddressDTO ipaddressDTO;
+	private Es3SpecDTO es3SpecDTO;
+	private TenantsDTO tenantsDTO;
+	private TagDTO tagDTO;
+	private NetappControllerDTO netappControllerDTO;
+
+	public Integer getEs3Spec() {
+		return es3Spec;
+	}
+
+	public void setEs3Spec(Integer es3Spec) {
+		this.es3Spec = es3Spec;
+	}
+
+	public Integer getNetappController() {
+		return netappController;
+	}
+
+	public void setNetappController(Integer netappController) {
+		this.netappController = netappController;
+	}
+
+	public IpaddressDTO getIpaddressDTO() {
+		return ipaddressDTO;
+	}
+
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
+	}
+
+	public Es3SpecDTO getEs3SpecDTO() {
+		return es3SpecDTO;
+	}
+
+	public void setEs3SpecDTO(Es3SpecDTO es3SpecDTO) {
+		this.es3SpecDTO = es3SpecDTO;
+	}
+
+	public TenantsDTO getTenantsDTO() {
+		return tenantsDTO;
+	}
+
+	public void setTenantsDTO(TenantsDTO tenantsDTO) {
+		this.tenantsDTO = tenantsDTO;
+	}
+
+	public TagDTO getTagDTO() {
+		return tagDTO;
+	}
+
+	public void setTagDTO(TagDTO tagDTO) {
+		this.tagDTO = tagDTO;
+	}
+
+	public NetappControllerDTO getNetappControllerDTO() {
+		return netappControllerDTO;
+	}
+
+	public void setNetappControllerDTO(NetappControllerDTO netappControllerDTO) {
+		this.netappControllerDTO = netappControllerDTO;
+	}
+
 	public Date getBeginDate() {
 		return beginDate;
 	}
