@@ -6,10 +6,10 @@ import javax.jws.WebService;
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.core.utils.TelnetUtil;
 import com.sobey.switches.constans.WsConstants;
+import com.sobey.switches.script.GenerateScript;
 import com.sobey.switches.webservice.response.dto.ESGParameter;
 import com.sobey.switches.webservice.response.dto.VlanParameter;
 import com.sobey.switches.webservice.response.result.WSResult;
-import com.sobey.switches.webservice.script.GenerateScript;
 
 @WebService(serviceName = "SwitchesService", endpointInterface = "com.sobey.switches.webservice.SwitchesSoapService", targetNamespace = WsConstants.NS)
 public class SwitchesSoapServiceImpl implements SwitchesSoapService {
