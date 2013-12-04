@@ -1,4 +1,4 @@
-package com.sobey.switches.webservice.script;
+package com.sobey.switches.script;
 
 import com.sobey.switches.constans.SymbolEnum;
 
