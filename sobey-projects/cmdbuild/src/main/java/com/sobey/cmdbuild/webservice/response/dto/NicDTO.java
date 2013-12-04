@@ -27,7 +27,6 @@ public class NicDTO {
 	private Integer server;
 
 	private IdcDTO idcDTO;
-	private RackDTO rackDTO;
 	private ServerDTO serverDTO;
 	private String brandText;
 	private String nicRateText;
@@ -38,14 +37,6 @@ public class NicDTO {
 
 	public void setIdcDTO(IdcDTO idcDTO) {
 		this.idcDTO = idcDTO;
-	}
-
-	public RackDTO getRackDTO() {
-		return rackDTO;
-	}
-
-	public void setRackDTO(RackDTO rackDTO) {
-		this.rackDTO = rackDTO;
 	}
 
 	public ServerDTO getServerDTO() {

@@ -26,7 +26,7 @@ public class ServerPortDTO {
 	private String macAddress;
 	private String site;
 	private ServerDTO serverDTO;
-	private String server;
+	private Integer server;
 
 	public Integer getIpaddress() {
 		return ipaddress;
@@ -84,11 +84,11 @@ public class ServerPortDTO {
 		this.serverDTO = serverDTO;
 	}
 
-	public String getServer() {
+	public Integer getServer() {
 		return server;
 	}
 
-	public void setServer(String server) {
+	public void setServer(Integer server) {
 		this.server = server;
 	}
 
