@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://switches.sobey.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="SwitchesService" targetNamespace="http://switches.sobey.com">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://switches.sobey.com" elementFormDefault="unqualified" targetNamespace="http://switches.sobey.com" version="1.0">
+
+  <xs:element name="createESGBySwtich" type="tns:createESGBySwtich"/>
+
+  <xs:element name="createESGBySwtichResponse" type="tns:createESGBySwtichResponse"/>
+
+  <xs:element name="createVlanBySwtich" type="tns:createVlanBySwtich"/>
+
+  <xs:element name="createVlanBySwtichResponse" type="tns:createVlanBySwtichResponse"/>
+
+  <xs:element name="deleteESGBySwtich" type="tns:deleteESGBySwtich"/>
+
+  <xs:element name="deleteESGBySwtichResponse" type="tns:deleteESGBySwtichResponse"/>
+
+  <xs:element name="deleteVlanBySwtich" type="tns:deleteVlanBySwtich"/>
+
+  <xs:element name="deleteVlanBySwtichResponse" type="tns:deleteVlanBySwtichResponse"/>
+
+  <xs:element name="esgParameter" type="tns:ESGParameter"/>
+
+  <xs:element name="ruleParameter" type="tns:RuleParameter"/>
+
+  <xs:element name="vlanParameter" type="tns:VlanParameter"/>
+
+  <xs:complexType name="deleteESGBySwtich">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="aclNumber" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteESGBySwtichResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="WSResult">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="code" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createVlanBySwtich">
+    <xs:sequence>
+      <xs:element minOccurs="0" ref="tns:vlanParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="VlanParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="gateway" type="xs:string"/>
+      <xs:element minOccurs="0" name="netMask" type="xs:string"/>
+      <xs:element minOccurs="0" name="vlanId" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createVlanBySwtichResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteVlanBySwtich">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="vlanId" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteVlanBySwtichResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createESGBySwtich">
+    <xs:sequence>
+      <xs:element minOccurs="0" ref="tns:esgParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ESGParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="aclNumber" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="denys" nillable="true" type="tns:RuleParameter"/>
+      <xs:element minOccurs="0" name="desc" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="permits" nillable="true" type="tns:RuleParameter"/>
+      <xs:element minOccurs="0" name="vlanId" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RuleParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="destination" type="xs:string"/>
+      <xs:element minOccurs="0" name="destinationNetMask" type="xs:string"/>
+      <xs:element minOccurs="0" name="source" type="xs:string"/>
+      <xs:element minOccurs="0" name="sourceNetMask" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createESGBySwtichResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="createVlanBySwtichResponse">
+    <wsdl:part element="tns:createVlanBySwtichResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteVlanBySwtich">
+    <wsdl:part element="tns:deleteVlanBySwtich" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createESGBySwtichResponse">
+    <wsdl:part element="tns:createESGBySwtichResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createVlanBySwtich">
+    <wsdl:part element="tns:createVlanBySwtich" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteESGBySwtich">
+    <wsdl:part element="tns:deleteESGBySwtich" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createESGBySwtich">
+    <wsdl:part element="tns:createESGBySwtich" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteESGBySwtichResponse">
+    <wsdl:part element="tns:deleteESGBySwtichResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteVlanBySwtichResponse">
+    <wsdl:part element="tns:deleteVlanBySwtichResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="SwitchesService">
+    <wsdl:operation name="deleteESGBySwtich">
+      <wsdl:input message="tns:deleteESGBySwtich" name="deleteESGBySwtich">
+    </wsdl:input>
+      <wsdl:output message="tns:deleteESGBySwtichResponse" name="deleteESGBySwtichResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createVlanBySwtich">
+      <wsdl:input message="tns:createVlanBySwtich" name="createVlanBySwtich">
+    </wsdl:input>
+      <wsdl:output message="tns:createVlanBySwtichResponse" name="createVlanBySwtichResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteVlanBySwtich">
+      <wsdl:input message="tns:deleteVlanBySwtich" name="deleteVlanBySwtich">
+    </wsdl:input>
+      <wsdl:output message="tns:deleteVlanBySwtichResponse" name="deleteVlanBySwtichResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createESGBySwtich">
+      <wsdl:input message="tns:createESGBySwtich" name="createESGBySwtich">
+    </wsdl:input>
+      <wsdl:output message="tns:createESGBySwtichResponse" name="createESGBySwtichResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SwitchesServiceSoapBinding" type="tns:SwitchesService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="createVlanBySwtich">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createVlanBySwtich">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createVlanBySwtichResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteESGBySwtich">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteESGBySwtich">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteESGBySwtichResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteVlanBySwtich">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteVlanBySwtich">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteVlanBySwtichResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createESGBySwtich">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createESGBySwtich">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createESGBySwtichResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SwitchesService">
+    <wsdl:port binding="tns:SwitchesServiceSoapBinding" name="SwitchesSoapServiceImplPort">
+      <soap:address location="http://localhost:8082/switch/cxf/soap/switchesSoapService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
