@@ -20,13 +20,21 @@ public class SwitchPortDTO {
 	private String remark;
 
 	private Integer ipaddress;
+	private Integer switches;
 	private IpaddressDTO ipaddressDTO;
 	private Integer connectedTo;
 	private SwitchPortDTO switchPortDTO;
 	private String macAddress;
 	private String site;
-	private ServerDTO serverDTO;
-	private String server;
+	private SwitchesDTO switchesDTO;
+
+	public Integer getSwitches() {
+		return switches;
+	}
+
+	public void setSwitches(Integer switches) {
+		this.switches = switches;
+	}
 
 	public Integer getIpaddress() {
 		return ipaddress;
@@ -76,20 +84,12 @@ public class SwitchPortDTO {
 		this.site = site;
 	}
 
-	public ServerDTO getServerDTO() {
-		return serverDTO;
+	public SwitchesDTO getSwitchesDTO() {
+		return switchesDTO;
 	}
 
-	public void setServerDTO(ServerDTO serverDTO) {
-		this.serverDTO = serverDTO;
-	}
-
-	public String getServer() {
-		return server;
-	}
-
-	public void setServer(String server) {
-		this.server = server;
+	public void setSwitchesDTO(SwitchesDTO switchesDTO) {
+		this.switchesDTO = switchesDTO;
 	}
 
 	public Date getBeginDate() {
