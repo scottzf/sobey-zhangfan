@@ -20,11 +20,6 @@
 			<groupId>com.sobey</groupId>
 			<artifactId>sobey-core</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>com.sobey</groupId>
-			<artifactId>sobey-extension</artifactId>
-		</dependency>
 		<!-- SPRINGSIDE end -->
 
 		<!-- SPRING basic begin -->
@@ -142,19 +137,6 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<scope>compile</scope>
-		</dependency>
-
-		<!-- jetty for functional test and executable war -->
-		<dependency>
-			<groupId>org.eclipse.jetty.aggregate</groupId>
-			<artifactId>jetty-webapp</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-jsp</artifactId>
-			<scope>provided</scope>
 		</dependency>
 
 	</dependencies>
