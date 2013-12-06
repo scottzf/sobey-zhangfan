@@ -30,8 +30,14 @@ public class FimasBoxHistory extends BasicEntity {
 	private String remark;
 	private Integer site;
 	private String sn;
+	private Integer fimas;
 
 	public FimasBoxHistory() {
+	}
+
+	@Column(name = "fimas")
+	public Integer getFimas() {
+		return fimas;
 	}
 
 	@Column(name = "device_spec")
@@ -94,6 +100,10 @@ public class FimasBoxHistory extends BasicEntity {
 	@Column(name = "\"SN\"", length = 50)
 	public String getSn() {
 		return this.sn;
+	}
+
+	public void setFimas(Integer fimas) {
+		this.fimas = fimas;
 	}
 
 	public void setDeviceSpec(Integer deviceSpec) {

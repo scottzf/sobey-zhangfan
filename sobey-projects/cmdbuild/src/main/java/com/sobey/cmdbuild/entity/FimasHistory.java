@@ -21,7 +21,6 @@ public class FimasHistory extends BasicEntity {
 	private Integer deviceSpec;
 	private Date endDate;
 	private Fimas fimas;
-	private Integer fimasBox;
 	private String gdzcSn;
 	private Integer idc;
 	private Integer ipaddress;
@@ -48,11 +47,6 @@ public class FimasHistory extends BasicEntity {
 	@JoinColumn(name = "\"CurrentId\"", nullable = false)
 	public Fimas getFimas() {
 		return this.fimas;
-	}
-
-	@Column(name = "fimas_box")
-	public Integer getFimasBox() {
-		return this.fimasBox;
 	}
 
 	@Column(name = "\"GdzcSn\"", length = 50)
@@ -100,10 +94,6 @@ public class FimasHistory extends BasicEntity {
 
 	public void setFimas(Fimas fimas) {
 		this.fimas = fimas;
-	}
-
-	public void setFimasBox(Integer fimasBox) {
-		this.fimasBox = fimasBox;
 	}
 
 	public void setGdzcSn(String gdzcSn) {

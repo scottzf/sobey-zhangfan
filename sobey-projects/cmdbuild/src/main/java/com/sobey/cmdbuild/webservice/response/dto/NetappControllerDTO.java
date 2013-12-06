@@ -27,13 +27,11 @@ public class NetappControllerDTO {
 	private Integer ipaddress;
 	private Integer rack;
 	private Integer deviceSpec;
-	private Integer netappBox;
 
 	private IdcDTO idcDTO;
 	private RackDTO rackDTO;
 	private IpaddressDTO ipaddressDTO;
 	private DeviceSpecDTO deviceSpecDTO;
-	private NetappBoxDTO netappBoxDTO;
 
 	public String getSite() {
 		return site;
@@ -91,14 +89,6 @@ public class NetappControllerDTO {
 		this.deviceSpec = deviceSpec;
 	}
 
-	public Integer getNetappBox() {
-		return netappBox;
-	}
-
-	public void setNetappBox(Integer netappBox) {
-		this.netappBox = netappBox;
-	}
-
 	public IdcDTO getIdcDTO() {
 		return idcDTO;
 	}
@@ -129,14 +119,6 @@ public class NetappControllerDTO {
 
 	public void setDeviceSpecDTO(DeviceSpecDTO deviceSpecDTO) {
 		this.deviceSpecDTO = deviceSpecDTO;
-	}
-
-	public NetappBoxDTO getNetappBoxDTO() {
-		return netappBoxDTO;
-	}
-
-	public void setNetappBoxDTO(NetappBoxDTO netappBoxDTO) {
-		this.netappBoxDTO = netappBoxDTO;
 	}
 
 	public Date getBeginDate() {

@@ -41,9 +41,10 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 				vlanParameter.getGateway(), vlanParameter.getNetMask());
 		TelnetUtil.execCommand(ACCESS_IP, ACCESS_USERNAME, ACCESS_PASSWORD, accessCommand);
 
-		String coreCommand = GenerateScript.generateCreateVlanScriptOnCoreLayer(vlanParameter.getVlanId(),
-				vlanParameter.getGateway(), vlanParameter.getNetMask());
-		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, coreCommand);
+		// TODO 测试环境没有区分核心和接入层,目前Vlan暂时将设备当成接入层交换机
+		// String coreCommand = GenerateScript.generateCreateVlanScriptOnCoreLayer(vlanParameter.getVlanId(),
+		// vlanParameter.getGateway(), vlanParameter.getNetMask());
+		// telnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, coreCommand);
 
 		// TODO 缺少针对返回字符串解析是否执行成功的判断.
 
@@ -60,8 +61,9 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 		String accessCommand = GenerateScript.generateDeleteVlanScriptOnAccessLayer(vlanId);
 		TelnetUtil.execCommand(ACCESS_IP, ACCESS_USERNAME, ACCESS_PASSWORD, accessCommand);
 
-		String coreCommand = GenerateScript.generateDeleteVlanScriptOnCoreLayer(vlanId);
-		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, coreCommand);
+		// TODO 测试环境没有区分核心和接入层,目前Vlan暂时将设备当成接入层交换机
+		// String coreCommand = GenerateScript.generateDeleteVlanScriptOnCoreLayer(vlanId);
+		// telnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, coreCommand);
 
 		// TODO 缺少针对返回字符串解析是否执行成功的判断.
 
@@ -70,14 +72,33 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 
 	@Override
 	public WSResult createESGBySwtich(@WebParam(name = "esgParameter") ESGParameter esgParameter) {
-		// TODO Auto-generated method stub
-		return null;
+
+		/*
+		 * 在核心交换机上执行脚本.
+		 */
+
+		String command = GenerateScript.generateCreateESGScript(esgParameter.getAclNumber(), esgParameter.getVlanId(),
+				esgParameter.getDesc(), esgParameter.getPermits(), esgParameter.getDenys());
+		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, command);
+
+		// TODO 缺少针对返回字符串解析是否执行成功的判断.
+
+		return new WSResult();
 	}
 
 	@Override
 	public WSResult deleteESGBySwtich(@WebParam(name = "aclNumber") Integer aclNumber) {
-		// TODO Auto-generated method stub
-		return null;
+
+		/*
+		 * 在核心交换机上执行脚本.
+		 */
+
+		String command = GenerateScript.generateDeleteESGScript(aclNumber);
+		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, command);
+
+		// TODO 缺少针对返回字符串解析是否执行成功的判断.
+
+		return new WSResult();
 	}
 
 }

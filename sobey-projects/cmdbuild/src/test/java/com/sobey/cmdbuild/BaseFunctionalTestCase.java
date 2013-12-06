@@ -15,7 +15,6 @@ import com.sobey.cmdbuild.webservice.FinancialSoapService;
 import com.sobey.cmdbuild.webservice.IaasSoapService;
 import com.sobey.cmdbuild.webservice.InfrastructureSoapService;
 import com.sobey.core.utils.PropertiesLoader;
-import com.sobey.test.data.DataFixtures;
 import com.sobey.test.jetty.JettyFactory;
 import com.sobey.test.spring.Profiles;
 
@@ -64,7 +63,6 @@ public class BaseFunctionalTestCase {
 
 		buildDataSourceOnce();
 
-		// reloadSampleData();
 	}
 
 	/**
@@ -101,12 +99,4 @@ public class BaseFunctionalTestCase {
 		}
 	}
 
-	/**
-	 * 载入默认数据.
-	 */
-	protected static void reloadSampleData() throws Exception {
-		String dbType = propertiesLoader.getProperty("db.type", "h2");
-		DataFixtures.executeScript(dataSource, "classpath:data/" + dbType + "/cleanup-data.sql", "classpath:data/"
-				+ dbType + "/import-data.sql");
-	}
 }

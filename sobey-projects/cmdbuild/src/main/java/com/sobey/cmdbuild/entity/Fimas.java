@@ -17,7 +17,6 @@ import javax.persistence.Table;
 public class Fimas extends BasicEntity {
 
 	private Integer deviceSpec;
-	private Integer fimasBox;
 	private Set<FimasHistory> fimasHistories = new HashSet<FimasHistory>(0);
 	private String gdzcSn;
 	private Integer idc;
@@ -33,11 +32,6 @@ public class Fimas extends BasicEntity {
 	@Column(name = "device_spec")
 	public Integer getDeviceSpec() {
 		return this.deviceSpec;
-	}
-
-	@Column(name = "fimas_box")
-	public Integer getFimasBox() {
-		return this.fimasBox;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fimas")
@@ -82,10 +76,6 @@ public class Fimas extends BasicEntity {
 
 	public void setDeviceSpec(Integer deviceSpec) {
 		this.deviceSpec = deviceSpec;
-	}
-
-	public void setFimasBox(Integer fimasBox) {
-		this.fimasBox = fimasBox;
 	}
 
 	public void setFimasHistories(Set<FimasHistory> fimasHistories) {

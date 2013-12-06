@@ -27,8 +27,14 @@ public class NetappBox extends BasicEntity {
 	private String remark;
 	private String site;
 	private String sn;
+	private Integer netappController;
 
 	public NetappBox() {
+	}
+
+	@Column(name = "net_app_controller")
+	public Integer getNetappController() {
+		return netappController;
 	}
 
 	@Column(name = "device_spec")
@@ -84,6 +90,10 @@ public class NetappBox extends BasicEntity {
 	@Column(name = "\"SN\"", length = 50)
 	public String getSn() {
 		return this.sn;
+	}
+
+	public void setNetappController(Integer netappController) {
+		this.netappController = netappController;
 	}
 
 	public void setDeviceSpec(Integer deviceSpec) {

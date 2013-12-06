@@ -99,7 +99,6 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
-			dto.setFimasBoxDTO(findFimasBox(dto.getFimasBox()).getDto());
 
 			result.setDto(dto);
 
@@ -132,7 +131,6 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
-			dto.setFimasBoxDTO(findFimasBox(dto.getFimasBox()).getDto());
 
 			result.setDto(dto);
 
@@ -294,9 +292,16 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(fimasBox, ERROR.OBJECT_NULL);
 
-			FimasBoxDTO fimasBoxDTO = BeanMapper.map(fimasBox, FimasBoxDTO.class);
+			FimasBoxDTO dto = BeanMapper.map(fimasBox, FimasBoxDTO.class);
 
-			result.setDto(fimasBoxDTO);
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
+			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
+			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
+
+			dto.setDiskTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getDiskType()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -319,9 +324,16 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(fimasBox, ERROR.OBJECT_NULL);
 
-			FimasBoxDTO fimasBoxDTO = BeanMapper.map(fimasBox, FimasBoxDTO.class);
+			FimasBoxDTO dto = BeanMapper.map(fimasBox, FimasBoxDTO.class);
 
-			result.setDto(fimasBoxDTO);
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
+			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
+			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
+
+			dto.setDiskTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getDiskType()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -485,9 +497,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(fimasPort, ERROR.OBJECT_NULL);
 
-			FimasPortDTO fimasPortDTO = BeanMapper.map(fimasPort, FimasPortDTO.class);
+			FimasPortDTO dto = BeanMapper.map(fimasPort, FimasPortDTO.class);
 
-			result.setDto(fimasPortDTO);
+			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -511,9 +527,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(fimasPort, ERROR.OBJECT_NULL);
 
-			FimasPortDTO fimasPortDTO = BeanMapper.map(fimasPort, FimasPortDTO.class);
+			FimasPortDTO dto = BeanMapper.map(fimasPort, FimasPortDTO.class);
 
-			result.setDto(fimasPortDTO);
+			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -542,6 +562,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			FimasPort fimasPort = BeanMapper.map(fimasPortDTO, FimasPort.class);
 
+			fimasPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			fimasPort.setUser(DEFAULT_USER);
 			fimasPort.setIdClass(TableNameUtil.getTableName(FimasPort.class));
 
@@ -582,6 +603,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			fimasPort.setIdClass(TableNameUtil.getTableName(FimasPort.class));
 
 			fimasPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			fimasPort.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, fimasPort);
@@ -675,9 +697,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(firewall, ERROR.OBJECT_NULL);
 
-			FirewallDTO firewallDTO = BeanMapper.map(firewall, FirewallDTO.class);
+			FirewallDTO dto = BeanMapper.map(firewall, FirewallDTO.class);
 
-			result.setDto(firewallDTO);
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -700,9 +727,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(firewall, ERROR.OBJECT_NULL);
 
-			FirewallDTO firewallDTO = BeanMapper.map(firewall, FirewallDTO.class);
+			FirewallDTO dto = BeanMapper.map(firewall, FirewallDTO.class);
 
-			result.setDto(firewallDTO);
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -731,6 +763,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Firewall firewall = BeanMapper.map(firewallDTO, Firewall.class);
 
+			firewall.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			firewall.setUser(DEFAULT_USER);
 			firewall.setIdClass(TableNameUtil.getTableName(Firewall.class));
 
@@ -920,6 +953,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			FirewallPort firewallPort = BeanMapper.map(firewallPortDTO, FirewallPort.class);
 
+			firewallPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			firewallPort.setUser(DEFAULT_USER);
 			firewallPort.setIdClass(TableNameUtil.getTableName(FirewallPort.class));
 
@@ -960,6 +994,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			firewallPort.setIdClass(TableNameUtil.getTableName(FirewallPort.class));
 
 			firewallPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			firewallPort.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, firewallPort);
@@ -1053,9 +1088,17 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(hardDisk, ERROR.OBJECT_NULL);
 
-			HardDiskDTO hardDiskDTO = BeanMapper.map(hardDisk, HardDiskDTO.class);
+			HardDiskDTO dto = BeanMapper.map(hardDisk, HardDiskDTO.class);
 
-			result.setDto(hardDiskDTO);
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
+			dto.setServerDTO(findServer(dto.getServer()).getDto());
+
+			dto.setRotationalSpeedText(cmdbuildSoapServiceImpl.findLookUp(dto.getRotationalSpeed()).getDto()
+					.getDescription());
+			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -1078,9 +1121,17 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(hardDisk, ERROR.OBJECT_NULL);
 
-			HardDiskDTO hardDiskDTO = BeanMapper.map(hardDisk, HardDiskDTO.class);
+			HardDiskDTO dto = BeanMapper.map(hardDisk, HardDiskDTO.class);
 
-			result.setDto(hardDiskDTO);
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
+			dto.setServerDTO(findServer(dto.getServer()).getDto());
+
+			dto.setRotationalSpeedText(cmdbuildSoapServiceImpl.findLookUp(dto.getRotationalSpeed()).getDto()
+					.getDescription());
+			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -1109,6 +1160,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			HardDisk hardDisk = BeanMapper.map(hardDiskDTO, HardDisk.class);
 
+			hardDisk.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			hardDisk.setUser(DEFAULT_USER);
 			hardDisk.setIdClass(TableNameUtil.getTableName(HardDisk.class));
 
@@ -1140,6 +1192,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			searchParams.put("EQ_code", hardDiskDTO.getCode());
 
+			System.out.println(comm.hardDiskService.findHardDisk(searchParams)
+					+ "....................................." + hardDiskDTO.getCode());
+
 			// 验证code是否唯一.如果不为null,则弹出错误.
 			Validate.isTrue(comm.hardDiskService.findHardDisk(searchParams) == null, ERROR.OBJECT_DUPLICATE);
 
@@ -1149,6 +1204,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			hardDisk.setIdClass(TableNameUtil.getTableName(HardDisk.class));
 
 			hardDisk.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			hardDisk.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, hardDisk);
@@ -1456,9 +1512,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(loadBalancer, ERROR.OBJECT_NULL);
 
-			LoadBalancerDTO loadBalancerDTO = BeanMapper.map(loadBalancer, LoadBalancerDTO.class);
+			LoadBalancerDTO dto = BeanMapper.map(loadBalancer, LoadBalancerDTO.class);
 
-			result.setDto(loadBalancerDTO);
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -1482,9 +1543,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(loadBalancer, ERROR.OBJECT_NULL);
 
-			LoadBalancerDTO loadBalancerDTO = BeanMapper.map(loadBalancer, LoadBalancerDTO.class);
+			LoadBalancerDTO dto = BeanMapper.map(loadBalancer, LoadBalancerDTO.class);
 
-			result.setDto(loadBalancerDTO);
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -1513,6 +1579,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			LoadBalancer loadBalancer = BeanMapper.map(loadBalancerDTO, LoadBalancer.class);
 
+			loadBalancer.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			loadBalancer.setUser(DEFAULT_USER);
 			loadBalancer.setIdClass(TableNameUtil.getTableName(LoadBalancer.class));
 
@@ -1553,6 +1620,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			loadBalancer.setIdClass(TableNameUtil.getTableName(LoadBalancer.class));
 
 			loadBalancer.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			loadBalancer.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, loadBalancer);
@@ -1646,9 +1714,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(loadBalancerPort, ERROR.OBJECT_NULL);
 
-			LoadBalancerPortDTO loadBalancerPortDTO = BeanMapper.map(loadBalancerPort, LoadBalancerPortDTO.class);
+			LoadBalancerPortDTO dto = BeanMapper.map(loadBalancerPort, LoadBalancerPortDTO.class);
 
-			result.setDto(loadBalancerPortDTO);
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			dto.setLoadBalancerDTO(findLoadBalancer(dto.getLoadBalancer()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -1672,9 +1744,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(loadBalancerPort, ERROR.OBJECT_NULL);
 
-			LoadBalancerPortDTO loadBalancerPortDTO = BeanMapper.map(loadBalancerPort, LoadBalancerPortDTO.class);
+			LoadBalancerPortDTO dto = BeanMapper.map(loadBalancerPort, LoadBalancerPortDTO.class);
 
-			result.setDto(loadBalancerPortDTO);
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			dto.setLoadBalancerDTO(findLoadBalancer(dto.getLoadBalancer()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -1704,6 +1780,10 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 					ERROR.OBJECT_DUPLICATE);
 
 			LoadBalancerPort loadBalancerPort = BeanMapper.map(loadBalancerPortDTO, LoadBalancerPort.class);
+
+			loadBalancerPort.setIdClass(TableNameUtil.getTableName(LoadBalancerPort.class));
+			loadBalancerPort.setUser(DEFAULT_USER);
+			loadBalancerPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 
 			BeanValidators.validateWithException(validator, loadBalancerPort);
 
@@ -1743,6 +1823,8 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			loadBalancerPort.setIdClass(TableNameUtil.getTableName(LoadBalancerPort.class));
 
 			loadBalancerPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+
+			loadBalancerPort.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, loadBalancerPort);
@@ -1837,9 +1919,16 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(memory, ERROR.OBJECT_NULL);
 
-			MemoryDTO memoryDTO = BeanMapper.map(memory, MemoryDTO.class);
+			MemoryDTO dto = BeanMapper.map(memory, MemoryDTO.class);
 
-			result.setDto(memoryDTO);
+			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
+			dto.setServerDTO(findServer(dto.getServer()).getDto());
+
+			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+			dto.setFrequencyText(Integer.parseInt(cmdbuildSoapServiceImpl.findLookUp(dto.getFrequency()).getDto()
+					.getDescription()));
+
+			result.setDto(dto);
 
 			return result;
 
@@ -1862,9 +1951,16 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(memory, ERROR.OBJECT_NULL);
 
-			MemoryDTO memoryDTO = BeanMapper.map(memory, MemoryDTO.class);
+			MemoryDTO dto = BeanMapper.map(memory, MemoryDTO.class);
 
-			result.setDto(memoryDTO);
+			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
+			dto.setServerDTO(findServer(dto.getServer()).getDto());
+
+			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+			dto.setFrequencyText(Integer.parseInt(cmdbuildSoapServiceImpl.findLookUp(dto.getFrequency()).getDto()
+					.getDescription()));
+
+			result.setDto(dto);
 
 			return result;
 
@@ -1893,6 +1989,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Memory memory = BeanMapper.map(memoryDTO, Memory.class);
 
+			memory.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			memory.setUser(DEFAULT_USER);
 			memory.setIdClass(TableNameUtil.getTableName(Memory.class));
 
@@ -1932,6 +2029,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			memory.setIdClass(TableNameUtil.getTableName(Memory.class));
 
 			memory.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			memory.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, memory);
@@ -2024,9 +2122,17 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(netappBox, ERROR.OBJECT_NULL);
 
-			NetappBoxDTO netappBoxDTO = BeanMapper.map(netappBox, NetappBoxDTO.class);
+			NetappBoxDTO dto = BeanMapper.map(netappBox, NetappBoxDTO.class);
 
-			result.setDto(netappBoxDTO);
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
+			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setNetappControllerDTO(findNetappController(dto.getNetappController()).getDto());
+
+			dto.setDiskTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getDiskType()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -2050,9 +2156,17 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(netappBox, ERROR.OBJECT_NULL);
 
-			NetappBoxDTO netappBoxDTO = BeanMapper.map(netappBox, NetappBoxDTO.class);
+			NetappBoxDTO dto = BeanMapper.map(netappBox, NetappBoxDTO.class);
 
-			result.setDto(netappBoxDTO);
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
+			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setNetappControllerDTO(findNetappController(dto.getNetappController()).getDto());
+
+			dto.setDiskTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getDiskType()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -2122,6 +2236,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			netappBox.setIdClass(TableNameUtil.getTableName(NetappBox.class));
 
 			netappBox.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			netappBox.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, netappBox);
@@ -2215,9 +2330,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(netappController, ERROR.OBJECT_NULL);
 
-			NetappControllerDTO netappControllerDTO = BeanMapper.map(netappController, NetappControllerDTO.class);
+			NetappControllerDTO dto = BeanMapper.map(netappController, NetappControllerDTO.class);
 
-			result.setDto(netappControllerDTO);
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -2241,9 +2361,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(netappController, ERROR.OBJECT_NULL);
 
-			NetappControllerDTO netappControllerDTO = BeanMapper.map(netappController, NetappControllerDTO.class);
+			NetappControllerDTO dto = BeanMapper.map(netappController, NetappControllerDTO.class);
 
-			result.setDto(netappControllerDTO);
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -2274,6 +2399,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NetappController netappController = BeanMapper.map(netappControllerDTO, NetappController.class);
 
+			netappController.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			netappController.setUser(DEFAULT_USER);
 			netappController.setIdClass(TableNameUtil.getTableName(NetappController.class));
 
@@ -2315,6 +2441,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			netappController.setIdClass(TableNameUtil.getTableName(NetappController.class));
 
 			netappController.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			netappController.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, netappController);
@@ -2409,9 +2536,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(netappPort, ERROR.OBJECT_NULL);
 
-			NetappPortDTO netappPortDTO = BeanMapper.map(netappPort, NetappPortDTO.class);
+			NetappPortDTO dto = BeanMapper.map(netappPort, NetappPortDTO.class);
 
-			result.setDto(netappPortDTO);
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setNetappBoxDTO(findNetappBox(dto.getNetappBox()).getDto());
+			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -2435,9 +2566,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(netappPort, ERROR.OBJECT_NULL);
 
-			NetappPortDTO netappPortDTO = BeanMapper.map(netappPort, NetappPortDTO.class);
+			NetappPortDTO dto = BeanMapper.map(netappPort, NetappPortDTO.class);
 
-			result.setDto(netappPortDTO);
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setNetappBoxDTO(findNetappBox(dto.getNetappBox()).getDto());
+			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -2466,6 +2601,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NetappPort netappPort = BeanMapper.map(netappPortDTO, NetappPort.class);
 
+			netappPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			netappPort.setUser(DEFAULT_USER);
 			netappPort.setIdClass(TableNameUtil.getTableName(NetappPort.class));
 
@@ -2506,6 +2642,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			netappPort.setIdClass(TableNameUtil.getTableName(NetappPort.class));
 
 			netappPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			netappPort.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, netappPort);
@@ -2599,9 +2736,15 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(nic, ERROR.OBJECT_NULL);
 
-			NicDTO nicDTO = BeanMapper.map(nic, NicDTO.class);
+			NicDTO dto = BeanMapper.map(nic, NicDTO.class);
 
-			result.setDto(nicDTO);
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setServerDTO(findServer(dto.getServer()).getDto());
+
+			dto.setNicRateText(cmdbuildSoapServiceImpl.findLookUp(dto.getNicRate()).getDto().getDescription());
+			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -2624,9 +2767,15 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(nic, ERROR.OBJECT_NULL);
 
-			NicDTO nicDTO = BeanMapper.map(nic, NicDTO.class);
+			NicDTO dto = BeanMapper.map(nic, NicDTO.class);
 
-			result.setDto(nicDTO);
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setServerDTO(findServer(dto.getServer()).getDto());
+
+			dto.setNicRateText(cmdbuildSoapServiceImpl.findLookUp(dto.getNicRate()).getDto().getDescription());
+			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -2655,6 +2804,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Nic nic = BeanMapper.map(nicDTO, Nic.class);
 
+			nic.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			nic.setUser(DEFAULT_USER);
 			nic.setIdClass(TableNameUtil.getTableName(Nic.class));
 
@@ -2694,6 +2844,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			nic.setIdClass(TableNameUtil.getTableName(Nic.class));
 
 			nic.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			nic.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, nic);
@@ -2785,9 +2936,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(nicPort, ERROR.OBJECT_NULL);
 
-			NicPortDTO nicPortDTO = BeanMapper.map(nicPort, NicPortDTO.class);
+			NicPortDTO dto = BeanMapper.map(nicPort, NicPortDTO.class);
 
-			result.setDto(nicPortDTO);
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			dto.setNicDTO(findNic(dto.getNic()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -2810,9 +2965,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(nicPort, ERROR.OBJECT_NULL);
 
-			NicPortDTO nicPortDTO = BeanMapper.map(nicPort, NicPortDTO.class);
+			NicPortDTO dto = BeanMapper.map(nicPort, NicPortDTO.class);
 
-			result.setDto(nicPortDTO);
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			dto.setNicDTO(findNic(dto.getNic()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -2841,6 +3000,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NicPort nicPort = BeanMapper.map(nicPortDTO, NicPort.class);
 
+			nicPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			nicPort.setUser(DEFAULT_USER);
 			nicPort.setIdClass(TableNameUtil.getTableName(NicPort.class));
 
@@ -2881,6 +3041,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			nicPort.setIdClass(TableNameUtil.getTableName(NicPort.class));
 
 			nicPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			nicPort.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, nicPort);
@@ -2973,9 +3134,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(server, ERROR.OBJECT_NULL);
 
-			ServerDTO serverDTO = BeanMapper.map(server, ServerDTO.class);
+			ServerDTO dto = BeanMapper.map(server, ServerDTO.class);
 
-			result.setDto(serverDTO);
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -2998,9 +3164,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(server, ERROR.OBJECT_NULL);
 
-			ServerDTO serverDTO = BeanMapper.map(server, ServerDTO.class);
+			ServerDTO dto = BeanMapper.map(server, ServerDTO.class);
 
-			result.setDto(serverDTO);
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -3029,6 +3200,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Server server = BeanMapper.map(serverDTO, Server.class);
 
+			server.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			server.setUser(DEFAULT_USER);
 			server.setIdClass(TableNameUtil.getTableName(Server.class));
 
@@ -3068,6 +3240,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			server.setIdClass(TableNameUtil.getTableName(Server.class));
 
 			server.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			server.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, server);
@@ -3160,9 +3333,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(serverPort, ERROR.OBJECT_NULL);
 
-			ServerPortDTO serverPortDTO = BeanMapper.map(serverPort, ServerPortDTO.class);
+			ServerPortDTO dto = BeanMapper.map(serverPort, ServerPortDTO.class);
 
-			result.setDto(serverPortDTO);
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			dto.setServerDTO(findServer(dto.getServer()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -3186,9 +3363,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(serverPort, ERROR.OBJECT_NULL);
 
-			ServerPortDTO serverPortDTO = BeanMapper.map(serverPort, ServerPortDTO.class);
+			ServerPortDTO dto = BeanMapper.map(serverPort, ServerPortDTO.class);
 
-			result.setDto(serverPortDTO);
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			dto.setServerDTO(findServer(dto.getServer()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -3217,6 +3398,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			ServerPort serverPort = BeanMapper.map(serverPortDTO, ServerPort.class);
 
+			serverPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			serverPort.setUser(DEFAULT_USER);
 			serverPort.setIdClass(TableNameUtil.getTableName(ServerPort.class));
 
@@ -3257,6 +3439,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			serverPort.setIdClass(TableNameUtil.getTableName(ServerPort.class));
 
 			serverPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			serverPort.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, serverPort);
@@ -3350,9 +3533,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(switches, ERROR.OBJECT_NULL);
 
-			SwitchesDTO switchesDTO = BeanMapper.map(switches, SwitchesDTO.class);
+			SwitchesDTO dto = BeanMapper.map(switches, SwitchesDTO.class);
 
-			result.setDto(switchesDTO);
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -3375,9 +3563,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(switches, ERROR.OBJECT_NULL);
 
-			SwitchesDTO switchesDTO = BeanMapper.map(switches, SwitchesDTO.class);
+			SwitchesDTO dto = BeanMapper.map(switches, SwitchesDTO.class);
 
-			result.setDto(switchesDTO);
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -3406,6 +3599,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Switches switches = BeanMapper.map(switchesDTO, Switches.class);
 
+			switches.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			switches.setUser(DEFAULT_USER);
 			switches.setIdClass(TableNameUtil.getTableName(Switches.class));
 
@@ -3446,6 +3640,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			switches.setIdClass(TableNameUtil.getTableName(Switches.class));
 
 			switches.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			switches.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, switches);
@@ -3538,9 +3733,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(switchPort, ERROR.OBJECT_NULL);
 
-			SwitchPortDTO switchPortDTO = BeanMapper.map(switchPort, SwitchPortDTO.class);
+			SwitchPortDTO dto = BeanMapper.map(switchPort, SwitchPortDTO.class);
 
-			result.setDto(switchPortDTO);
+			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setSwitchesDTO(findSwitches(dto.getSwitches()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -3564,9 +3763,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(switchPort, ERROR.OBJECT_NULL);
 
-			SwitchPortDTO switchPortDTO = BeanMapper.map(switchPort, SwitchPortDTO.class);
+			SwitchPortDTO dto = BeanMapper.map(switchPort, SwitchPortDTO.class);
 
-			result.setDto(switchPortDTO);
+			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setSwitchesDTO(findSwitches(dto.getSwitches()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -3595,6 +3798,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			SwitchPort switchPort = BeanMapper.map(switchPortDTO, SwitchPort.class);
 
+			switchPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			switchPort.setUser(DEFAULT_USER);
 			switchPort.setIdClass(TableNameUtil.getTableName(SwitchPort.class));
 
@@ -3635,6 +3839,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			switchPort.setIdClass(TableNameUtil.getTableName(SwitchPort.class));
 
 			switchPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			switchPort.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, switchPort);
@@ -3794,6 +3999,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Vlan vlan = BeanMapper.map(vlanDTO, Vlan.class);
 
+			vlan.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			vlan.setIdClass(TableNameUtil.getTableName(Vlan.class));
 			vlan.setUser(DEFAULT_USER);
 
@@ -3835,7 +4041,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			BeanMapper.copy(BeanMapper.map(vlanDTO, Vlan.class), vlan);
 
 			vlan.setIdClass(TableNameUtil.getTableName(Vlan.class));
-			vlan.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			vlan.setStatus(CMDBuildConstants.STATUS_UPDATE);
 			vlan.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
@@ -3961,7 +4167,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 				insertSuccessCount++;
 			}
 
-			String message = insertSuccessCount.equals("0") ? "Ipaddress已存在" : "插入Ipaddress " + insertCount
+			String message = "0".equals(insertSuccessCount.toString()) ? "Ipaddress已存在" : "插入Ipaddress " + insertCount
 					+ " 条,成功创建Ipaddress " + insertSuccessCount + " 条";
 
 			result.setMessage(message);
@@ -4058,8 +4264,8 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 				insertSuccessCount++;
 			}
 
-			String message = insertSuccessCount.equals("0") ? "Vlan已存在" : "插入Vlan " + insertCount + " 条,成功创建Vlan "
-					+ insertSuccessCount + " 条";
+			String message = "0".equals(insertSuccessCount.toString()) ? "Vlan已存在" : "插入Vlan " + insertCount
+					+ " 条,成功创建Vlan " + insertSuccessCount + " 条";
 
 			result.setMessage(message);
 			result.setId(0);

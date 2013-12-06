@@ -25,6 +25,7 @@ public class NetappBoxDTO {
 	private Integer idc;
 	private Integer ipaddress;
 	private Integer rack;
+	private Integer netappController;
 	private String remark;
 	private String site;
 	private String sn;
@@ -33,7 +34,24 @@ public class NetappBoxDTO {
 	private RackDTO rackDTO;
 	private DeviceSpecDTO deviceSpecDTO;
 	private IpaddressDTO ipaddressDTO;
+	private NetappControllerDTO netappControllerDTO;
 	private String diskTypeText;
+
+	public Integer getNetappController() {
+		return netappController;
+	}
+
+	public void setNetappController(Integer netappController) {
+		this.netappController = netappController;
+	}
+
+	public NetappControllerDTO getNetappControllerDTO() {
+		return netappControllerDTO;
+	}
+
+	public void setNetappControllerDTO(NetappControllerDTO netappControllerDTO) {
+		this.netappControllerDTO = netappControllerDTO;
+	}
 
 	public IdcDTO getIdcDTO() {
 		return idcDTO;

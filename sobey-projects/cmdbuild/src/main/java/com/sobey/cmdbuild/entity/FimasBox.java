@@ -23,12 +23,18 @@ public class FimasBox extends BasicEntity {
 	private String gdzcSn;
 	private Integer idc;
 	private Integer ipaddress;
+	private Integer fimas;
 	private Integer rack;
 	private String remark;
 	private Integer site;
 	private String sn;
 
 	public FimasBox() {
+	}
+
+	@Column(name = "fimas")
+	public Integer getFimas() {
+		return fimas;
 	}
 
 	@Column(name = "device_spec")
@@ -84,6 +90,10 @@ public class FimasBox extends BasicEntity {
 	@Column(name = "\"SN\"", length = 50)
 	public String getSn() {
 		return this.sn;
+	}
+
+	public void setFimas(Integer fimas) {
+		this.fimas = fimas;
 	}
 
 	public void setDeviceSpec(Integer deviceSpec) {

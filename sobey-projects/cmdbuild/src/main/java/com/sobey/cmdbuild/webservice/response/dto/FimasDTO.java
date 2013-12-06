@@ -27,13 +27,11 @@ public class FimasDTO {
 	private Integer rack;
 	private Integer ipaddress;
 	private Integer deviceSpec;
-	private Integer fimasBox;
 
 	private IdcDTO idcDTO;
 	private RackDTO rackDTO;
 	private IpaddressDTO ipaddressDTO;
 	private DeviceSpecDTO deviceSpecDTO;
-	private FimasBoxDTO fimasBoxDTO;
 
 	public Date getBeginDate() {
 		return beginDate;
@@ -131,14 +129,6 @@ public class FimasDTO {
 		this.deviceSpec = deviceSpec;
 	}
 
-	public Integer getFimasBox() {
-		return fimasBox;
-	}
-
-	public void setFimasBox(Integer fimasBox) {
-		this.fimasBox = fimasBox;
-	}
-
 	public RackDTO getRackDTO() {
 		return rackDTO;
 	}
@@ -161,14 +151,6 @@ public class FimasDTO {
 
 	public void setDeviceSpecDTO(DeviceSpecDTO deviceSpecDTO) {
 		this.deviceSpecDTO = deviceSpecDTO;
-	}
-
-	public FimasBoxDTO getFimasBoxDTO() {
-		return fimasBoxDTO;
-	}
-
-	public void setFimasBoxDTO(FimasBoxDTO fimasBoxDTO) {
-		this.fimasBoxDTO = fimasBoxDTO;
 	}
 
 	public IdcDTO getIdcDTO() {
