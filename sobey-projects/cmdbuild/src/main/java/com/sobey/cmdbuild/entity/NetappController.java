@@ -20,7 +20,6 @@ public class NetappController extends BasicEntity {
 	private String gdzcSn;
 	private Integer idc;
 	private Integer ipaddress;
-	private Integer netAppBox;
 	private Set<NetappControllerHistory> netappControllerHistories = new HashSet<NetappControllerHistory>(0);
 	private Integer rack;
 	private String remark;
@@ -48,11 +47,6 @@ public class NetappController extends BasicEntity {
 	@Column(name = "\"IPAddress\"")
 	public Integer getIpaddress() {
 		return this.ipaddress;
-	}
-
-	@Column(name = "\"netApp_box\"")
-	public Integer getNetAppBox() {
-		return this.netAppBox;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "netappController")
@@ -94,10 +88,6 @@ public class NetappController extends BasicEntity {
 
 	public void setIpaddress(Integer ipaddress) {
 		this.ipaddress = ipaddress;
-	}
-
-	public void setNetAppBox(Integer netAppBox) {
-		this.netAppBox = netAppBox;
 	}
 
 	public void setNetappControllerHistories(Set<NetappControllerHistory> netappControllerHistories) {
