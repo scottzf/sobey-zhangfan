@@ -22,6 +22,7 @@ public class FimasBoxDTO {
 	private String gdzcSn;
 	private Integer id;
 	private Integer idc;
+	private Integer fimas;
 	private Integer ipaddress;
 	private Integer rack;
 	private String remark;
@@ -32,6 +33,23 @@ public class FimasBoxDTO {
 	private DeviceSpecDTO deviceSpecDTO;
 	private String DiskTypeText;
 	private IdcDTO idcDTO;
+	private FimasDTO fimasDTO;
+
+	public Integer getFimas() {
+		return fimas;
+	}
+
+	public void setFimas(Integer fimas) {
+		this.fimas = fimas;
+	}
+
+	public FimasDTO getFimasDTO() {
+		return fimasDTO;
+	}
+
+	public void setFimasDTO(FimasDTO fimasDTO) {
+		this.fimasDTO = fimasDTO;
+	}
 
 	public Date getBeginDate() {
 		return beginDate;

@@ -99,7 +99,6 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
-			dto.setFimasBoxDTO(findFimasBox(dto.getFimasBox()).getDto());
 
 			result.setDto(dto);
 
@@ -132,7 +131,6 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
-			dto.setFimasBoxDTO(findFimasBox(dto.getFimasBox()).getDto());
 
 			result.setDto(dto);
 
@@ -299,6 +297,8 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
+			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
+
 			dto.setDiskTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getDiskType()).getDto().getDescription());
 
 			result.setDto(dto);
@@ -329,6 +329,8 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
+			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
+
 			dto.setDiskTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getDiskType()).getDto().getDescription());
 
 			result.setDto(dto);
@@ -2126,6 +2128,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setNetappControllerDTO(findNetappController(dto.getNetappController()).getDto());
 
 			dto.setDiskTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getDiskType()).getDto().getDescription());
 
@@ -2159,6 +2162,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setNetappControllerDTO(findNetappController(dto.getNetappController()).getDto());
 
 			dto.setDiskTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getDiskType()).getDto().getDescription());
 
