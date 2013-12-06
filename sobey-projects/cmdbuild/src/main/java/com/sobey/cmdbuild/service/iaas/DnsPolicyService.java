@@ -11,33 +11,33 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
-import com.sobey.cmdbuild.entity.EipPolicy;
-import com.sobey.cmdbuild.repository.EipPolicyDao;
+import com.sobey.cmdbuild.entity.DnsPolicy;
+import com.sobey.cmdbuild.repository.DnsPolicyDao;
 import com.sobey.cmdbuild.service.BasicSevcie;
-import com.sobey.cmdbuild.webservice.response.dto.EipPolicyDTO;
+import com.sobey.cmdbuild.webservice.response.dto.DnsPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.core.mapper.BeanMapper;
 import com.sobey.core.persistence.DynamicSpecifications;
 import com.sobey.core.persistence.SearchFilter;
 
 /**
- * EipPolicy的service类.
+ * DnsPolicy的service类.
  */
 @Service
 @Transactional
-public class EipPolicyService extends BasicSevcie {
+public class DnsPolicyService extends BasicSevcie {
 
 	@Autowired
-	private EipPolicyDao eipPolicyDao;
+	private DnsPolicyDao dnsPolicyDao;
 
 	/**
 	 * 根据ID获得对象
 	 * 
 	 * @param id
-	 * @return EipPolicy
+	 * @return DnsPolicy
 	 */
-	public EipPolicy findEipPolicy(Integer id) {
-		return eipPolicyDao.findOne(id);
+	public DnsPolicy findDnsPolicy(Integer id) {
+		return dnsPolicyDao.findOne(id);
 	}
 
 	/**
@@ -51,20 +51,20 @@ public class EipPolicyService extends BasicSevcie {
 	 * 
 	 * @param searchParams
 	 *            动态查询条件Map
-	 * @return EipPolicy
+	 * @return DnsPolicy
 	 */
-	public EipPolicy findEipPolicy(Map<String, Object> searchParams) {
-		return eipPolicyDao.findOne(buildSpecification(searchParams));
+	public DnsPolicy findDnsPolicy(Map<String, Object> searchParams) {
+		return dnsPolicyDao.findOne(buildSpecification(searchParams));
 	}
 
 	/**
 	 * 新增、保存对象
 	 * 
-	 * @param EipPolicy
-	 * @return EipPolicy
+	 * @param dnsPolicy
+	 * @return DnsPolicy
 	 */
-	public EipPolicy saveOrUpdate(EipPolicy eipPolicy) {
-		return eipPolicyDao.save(eipPolicy);
+	public DnsPolicy saveOrUpdate(DnsPolicy dnsPolicy) {
+		return dnsPolicyDao.save(dnsPolicy);
 	}
 
 	/**
@@ -72,8 +72,8 @@ public class EipPolicyService extends BasicSevcie {
 	 * 
 	 * @param id
 	 */
-	public void deleteEipPolicy(Integer id) {
-		eipPolicyDao.delete(id);
+	public void deleteDnsPolicy(Integer id) {
+		dnsPolicyDao.delete(id);
 	}
 
 	/**
@@ -86,10 +86,10 @@ public class EipPolicyService extends BasicSevcie {
 	 * </pre>
 	 * 
 	 * @param searchParams
-	 *            动态查询条件Map * @return List<EipPolicy>
+	 *            动态查询条件Map * @return List<DnsPolicy>
 	 */
-	public List<EipPolicy> getEipPolicyList(Map<String, Object> searchParams) {
-		return eipPolicyDao.findAll(buildSpecification(searchParams));
+	public List<DnsPolicy> getDnsPolicyList(Map<String, Object> searchParams) {
+		return dnsPolicyDao.findAll(buildSpecification(searchParams));
 	}
 
 	/**
@@ -98,15 +98,15 @@ public class EipPolicyService extends BasicSevcie {
 	 * @param searchParams
 	 * @param pageNumber
 	 * @param pageSize
-	 * @return Page<EipPolicy>
+	 * @return Page<DnsPolicy>
 	 */
-	private Page<EipPolicy> getEipPolicyPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
+	private Page<DnsPolicy> getDnsPolicyPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
 
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
-		Specification<EipPolicy> spec = buildSpecification(searchParams);
+		Specification<DnsPolicy> spec = buildSpecification(searchParams);
 
-		return eipPolicyDao.findAll(spec, pageRequest);
+		return dnsPolicyDao.findAll(spec, pageRequest);
 	}
 
 	/**
@@ -115,19 +115,19 @@ public class EipPolicyService extends BasicSevcie {
 	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
 	 * 
 	 * @param searchParams
-	 * @return Specification<EipPolicy>
+	 * @return Specification<DnsPolicy>
 	 */
-	private Specification<EipPolicy> buildSpecification(Map<String, Object> searchParams) {
+	private Specification<DnsPolicy> buildSpecification(Map<String, Object> searchParams) {
 
 		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
 
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 
-		return DynamicSpecifications.bySearchFilter(filters.values(), EipPolicy.class);
+		return DynamicSpecifications.bySearchFilter(filters.values(), DnsPolicy.class);
 	}
 
 	/**
-	 * EipPolicyDTO webservice分页查询.
+	 * DnsPolicyDTO webservice分页查询.
 	 * 
 	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
 	 * 
@@ -137,14 +137,14 @@ public class EipPolicyService extends BasicSevcie {
 	 *            当前页数,最小为1.
 	 * @param pageSize
 	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<EipPolicyDTO>
+	 * @return PaginationResult<DnsPolicyDTO>
 	 */
-	public PaginationResult<EipPolicyDTO> getEipPolicyDTOPagination(Map<String, Object> searchParams, int pageNumber,
+	public PaginationResult<DnsPolicyDTO> getDnsPolicyDTOPagination(Map<String, Object> searchParams, int pageNumber,
 			int pageSize) {
 
-		Page<EipPolicy> page = getEipPolicyPage(searchParams, pageNumber, pageSize);
+		Page<DnsPolicy> page = getDnsPolicyPage(searchParams, pageNumber, pageSize);
 
-		List<EipPolicyDTO> dtos = BeanMapper.mapList(page.getContent(), EipPolicyDTO.class);
+		List<DnsPolicyDTO> dtos = BeanMapper.mapList(page.getContent(), DnsPolicyDTO.class);
 
 		return fillPaginationResult(page, dtos);
 	}
