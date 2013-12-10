@@ -20,7 +20,7 @@ import com.sobey.switches.constans.WsConstants;
  * @author Administrator
  * 
  */
-@XmlRootElement
+@XmlRootElement(name = "RuleParameter")
 @XmlType(name = "RuleParameter", namespace = WsConstants.NS)
 public class RuleParameter {
 

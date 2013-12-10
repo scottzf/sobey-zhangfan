@@ -26,10 +26,16 @@ start "Switch" %MVN% clean tomcat:run -Dmaven.tomcat.port=8082
 if errorlevel 1 goto error
 cd ..\..\
 
+cd ..\firewal
+start "Firewal" %MVN% clean tomcat:run -Dmaven.tomcat.port=8083
+if errorlevel 1 goto error
+cd ..\..\
+
 echo [INFO] Please wait a moment. When you see "[INFO] Started Jetty Server" in consoles, you can access below demo sites:
 echo [INFO] http://localhost:8080/cmdbuild
 echo [INFO] http://localhost:8081/instance
 echo [INFO] http://localhost:8082/switch
+echo [INFO] http://localhost:8083/firewall
 
 goto end
 :error

@@ -9,12 +9,12 @@ import com.sobey.switches.webservice.response.dto.VlanParameter;
 import com.sobey.switches.webservice.response.result.WSResult;
 
 /**
- * 交换机的webservice接口
+ * 交换机对外暴露的唯一的webservice接口.
  * 
  * @author Administrator
  * 
  */
-@WebService(name = "SwitchesService", targetNamespace = WsConstants.NS)
+@WebService(name = "SwitchesSoapService", targetNamespace = WsConstants.NS)
 public interface SwitchesSoapService {
 
 	/**

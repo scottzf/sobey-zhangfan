@@ -1,4 +1,4 @@
-package com.sobey.switches.constans;
+package com.sobey.firewall.constans;
 
 /**
  * WebService常量定义.
@@ -11,5 +11,5 @@ public class WsConstants {
 	/**
 	 * 项目内统一的NameSpace定义.
 	 */
-	public static final String NS = "http://switches.generate.sobey.com";
+	public static final String NS = "http://firewall.generate.sobey.com";
 }

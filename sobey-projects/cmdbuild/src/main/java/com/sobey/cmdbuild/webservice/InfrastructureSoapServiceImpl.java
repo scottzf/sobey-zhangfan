@@ -62,6 +62,8 @@ import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.core.beanvalidator.BeanValidators;
 import com.sobey.core.mapper.BeanMapper;
 import com.sobey.core.utils.TableNameUtil;
+import com.sobey.generate.switches.SwitchesSoapService;
+import com.sobey.generate.switches.VlanParameter;
 
 @WebService(serviceName = "InfrastructureService", endpointInterface = "com.sobey.cmdbuild.webservice.InfrastructureSoapService", targetNamespace = WsConstants.NS)
 // 查看webservice的日志.
@@ -73,6 +75,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Autowired
 	private FinancialSoapServiceImpl financialSoapServiceImpl;
+
+	@Autowired
+	private SwitchesSoapService switchesSoapService;
 
 	/**
 	 * CMDBuild的默认超级用户名
@@ -4007,6 +4012,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.vlanService.saveOrUpdate(vlan);
 
+			// 在交换机上创建Vlan
+			createVlanByAgent(vlan);
+
 			return new IdResult(vlan.getId());
 
 		} catch (IllegalArgumentException e) {
@@ -4049,6 +4057,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.vlanService.saveOrUpdate(vlan);
 
+			// 在交换机上更新Vlan
+			updateVlanByAgent(vlan);
+
 			return new IdResult(vlan.getId());
 
 		} catch (IllegalArgumentException e) {
@@ -4074,6 +4085,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			vlan.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.vlanService.saveOrUpdate(vlan);
+
+			// 在交换机上删除Vlan
+			deleteVlanByAgent(vlan);
 
 			return new IdResult(vlan.getId());
 
@@ -4118,6 +4132,42 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 		} catch (RuntimeException e) {
 			return handleGeneralError(result, e);
 		}
+	}
+
+	/**
+	 * 调用Switch Agent的createVlanBySwtich的webservice接口
+	 * 
+	 * @param vlan
+	 */
+	private void createVlanByAgent(Vlan vlan) {
+
+		VlanParameter vlanParameter = new VlanParameter();
+
+		vlanParameter.setVlanId(Integer.valueOf(vlan.getCode()));
+		vlanParameter.setGateway(vlan.getGateway());
+		vlanParameter.setNetMask(vlan.getNetMask());
+
+		switchesSoapService.createVlanBySwtich(vlanParameter);
+	}
+
+	/**
+	 * 调用Switch Agent的deleteVlanBySwtich的webservice接口
+	 * 
+	 * @param vlanId
+	 */
+	private void deleteVlanByAgent(Vlan vlan) {
+		switchesSoapService.deleteVlanBySwtich(Integer.valueOf(vlan.getCode()));
+	}
+
+	/**
+	 * 调用Switch Agent的createVlanBySwtich和deleteVlanBySwtich的webservice接口组成一个update方法.<br>
+	 * 先将交换机中的vlan删除,在创建一个新的vlan.
+	 * 
+	 * @param vlanId
+	 */
+	private void updateVlanByAgent(Vlan vlan) {
+		deleteVlanByAgent(vlan);
+		createVlanByAgent(vlan);
 	}
 
 	@Override

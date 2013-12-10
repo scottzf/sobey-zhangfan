@@ -11,7 +11,7 @@ import com.sobey.switches.webservice.response.dto.ESGParameter;
 import com.sobey.switches.webservice.response.dto.VlanParameter;
 import com.sobey.switches.webservice.response.result.WSResult;
 
-@WebService(serviceName = "SwitchesService", endpointInterface = "com.sobey.switches.webservice.SwitchesSoapService", targetNamespace = WsConstants.NS)
+@WebService(serviceName = "SwitchesSoapService", endpointInterface = "com.sobey.switches.webservice.SwitchesSoapService", targetNamespace = WsConstants.NS)
 public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 
 	/**
