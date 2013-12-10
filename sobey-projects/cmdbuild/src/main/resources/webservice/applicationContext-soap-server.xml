@@ -33,5 +33,10 @@
 	<bean id="financialSoapService" class="com.sobey.cmdbuild.webservice.FinancialSoapServiceImpl" />
 
 	<bean id="iaasSoapService" class="com.sobey.cmdbuild.webservice.IaasSoapServiceImpl" />
+	
+	
+	  <jaxws:client id="switchesSoapService"
+		serviceClass="com.sobey.generate.switches.SwitchesSoapService"
+		address="http://localhost:8082/switch/cxf/soap/switchesSoapService?wsdl" />  
 
 </beans>
