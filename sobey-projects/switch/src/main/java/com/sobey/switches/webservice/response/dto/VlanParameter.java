@@ -19,7 +19,7 @@ import com.sobey.switches.constans.WsConstants;
  * @author Administrator
  * 
  */
-@XmlRootElement
+@XmlRootElement(name = "VlanParameter")
 @XmlType(name = "VlanParameter", namespace = WsConstants.NS)
 public class VlanParameter {
 

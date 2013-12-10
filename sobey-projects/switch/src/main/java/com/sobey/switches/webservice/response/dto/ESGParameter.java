@@ -24,7 +24,7 @@ import com.sobey.switches.constans.WsConstants;
  * @author Administrator
  * 
  */
-@XmlRootElement
+@XmlRootElement(name = "ESGParameter")
 @XmlType(name = "ESGParameter", namespace = WsConstants.NS)
 public class ESGParameter {
 
