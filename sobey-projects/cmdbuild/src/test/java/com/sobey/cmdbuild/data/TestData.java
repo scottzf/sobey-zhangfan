@@ -477,11 +477,12 @@ public class TestData {
 		Vlan vlan = new Vlan();
 
 		vlan.setId(0);
-		vlan.setCode(RandomData.randomName("code"));
+		vlan.setCode(String.valueOf(RandomData.randomInt()));
+		// vlan.setCode(String.valueOf(80));
 		vlan.setDescription(RandomData.randomName("description"));
 		vlan.setBeginDate(startDate);
-		vlan.setTenants(87);
-		vlan.setIdc(90);
+		vlan.setTenants(86);
+		vlan.setIdc(88);
 
 		vlan.setRemark(RandomData.randomName("remark"));
 		vlan.setSegment(RandomData.randomName("segment"));
