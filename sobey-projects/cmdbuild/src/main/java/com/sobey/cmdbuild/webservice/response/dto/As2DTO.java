@@ -19,7 +19,6 @@ public class As2DTO {
 	private Double diskSize;
 	private Integer id;
 	private Integer ipaddress;
-	private Integer netAppController;
 	private String remark;
 	private Integer tag;
 	private Integer tenants;
@@ -114,10 +113,6 @@ public class As2DTO {
 		return ipaddress;
 	}
 
-	public Integer getNetAppController() {
-		return netAppController;
-	}
-
 	public String getRemark() {
 		return remark;
 	}
@@ -160,10 +155,6 @@ public class As2DTO {
 
 	public void setIpaddress(Integer ipaddress) {
 		this.ipaddress = ipaddress;
-	}
-
-	public void setNetAppController(Integer netAppController) {
-		this.netAppController = netAppController;
 	}
 
 	public void setRemark(String remark) {
