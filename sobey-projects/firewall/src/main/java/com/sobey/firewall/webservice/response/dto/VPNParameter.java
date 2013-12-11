@@ -13,7 +13,7 @@ import com.sobey.firewall.constans.WsConstants;
  * <pre>
  * firewallPolicyId	防火墙中的策略ID,从2000起递增.
  * VlanId		Vlan编号(code)
- * VPNIpaddress	IP或IP段
+ * ipaddress	单个IP
  * segment		网段
  * netMask		子网掩码
  * vpnUser		VPN用户名
@@ -40,7 +40,7 @@ public class VPNParameter {
 	/**
 	 * IP或IP段
 	 */
-	private String VPNIpaddress;
+	private String ipaddress;
 
 	/**
 	 * 网段
@@ -78,12 +78,12 @@ public class VPNParameter {
 		VlanId = vlanId;
 	}
 
-	public String getVPNIpaddress() {
-		return VPNIpaddress;
+	public String getIpaddress() {
+		return ipaddress;
 	}
 
-	public void setVPNIpaddress(String vPNIpaddress) {
-		VPNIpaddress = vPNIpaddress;
+	public void setIpaddress(String ipaddress) {
+		this.ipaddress = ipaddress;
 	}
 
 	public String getSegment() {
