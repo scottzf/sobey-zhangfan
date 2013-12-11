@@ -62,16 +62,16 @@ public class GenerateScript {
 	}
 
 	/**
-	 * 将映射策略名进行组合,生成字符串.<br>
+	 * 对集合里的对象进行组合,生成指定格式的字符串.<br>
 	 * 
 	 * Example:<b> "119.6.200.219-tcp-8080" "119.6.200.219-tcp-80" </b>
 	 * 
-	 * @param memberList
-	 *            映射策略名集合
+	 * @param list
+	 *            集合
 	 * @return
 	 */
-	private static String generateMemberString(List<String> memberList) {
-		return Collections3.convertToString(memberList, "\"", "\" ");
+	private static String generateFormatString(List<String> list) {
+		return Collections3.convertToString(list, "\"", "\" ");
 	}
 
 	/**
@@ -166,7 +166,7 @@ public class GenerateScript {
 		sb.append("config firewall vipgrp").append(symbol);
 		sb.append("edit").append(" ").append("\"").append(getVipgrpByISP(parameter)).append("\"").append(symbol);
 		sb.append("set interface").append(" ").append("\"").append(FIREWALL_EXTINTF).append("\"").append(symbol);
-		sb.append("set member").append(" ").append(generateMemberString(allPolicies)).append(symbol);
+		sb.append("set member").append(" ").append(generateFormatString(allPolicies)).append(symbol);
 		sb.append("end").append(symbol);
 
 		return sb.toString();
@@ -278,7 +278,7 @@ public class GenerateScript {
 		sb.append("config firewall vipgrp").append(symbol);
 		sb.append("edit").append(" ").append("\"").append(getVipgrpByISP(parameter)).append("\"").append(symbol);
 		sb.append("set interface").append(" ").append("\"").append(FIREWALL_EXTINTF).append("\"").append(symbol);
-		sb.append("set member").append(" ").append(generateMemberString(allPolicies)).append(symbol);
+		sb.append("set member").append(" ").append(generateFormatString(allPolicies)).append(symbol);
 		sb.append("end").append(symbol);
 		sb.append(symbol);
 
