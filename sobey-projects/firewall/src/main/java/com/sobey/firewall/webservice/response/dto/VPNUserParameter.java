@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.sobey.firewall.constans.WsConstants;
 
 /**
- * 防火墙上,执行脚本所需参数的VPNParameter对象:
+ * 防火墙上,执行脚本所需参数的VPNUserParameter对象:
  * 
  * <pre>
  * firewallPolicyId	防火墙中的策略ID,从2000起递增.
@@ -23,9 +23,9 @@ import com.sobey.firewall.constans.WsConstants;
  * @author Administrator
  * 
  */
-@XmlRootElement(name = "VPNParameter")
-@XmlType(name = "VPNParameter", namespace = WsConstants.NS)
-public class VPNParameter {
+@XmlRootElement(name = "VPNUserParameter")
+@XmlType(name = "VPNUserParameter", namespace = WsConstants.NS)
+public class VPNUserParameter {
 
 	/**
 	 * 防火墙中的策略ID,从2000起递增.

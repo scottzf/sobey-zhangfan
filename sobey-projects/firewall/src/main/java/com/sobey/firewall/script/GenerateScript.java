@@ -10,7 +10,7 @@ import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.firewall.constans.SymbolEnum;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
 import com.sobey.firewall.webservice.response.dto.EIPPolicyParameter;
-import com.sobey.firewall.webservice.response.dto.VPNParameter;
+import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
 
 /**
  * Firewall 脚本模板生成类.
@@ -130,10 +130,10 @@ public class GenerateScript {
 	 * 
 	 * 
 	 * @param parameter
-	 *            {@link VPNParameter}
+	 *            {@link VPNUserParameter}
 	 * @return
 	 */
-	private static String generateAccessAddressName(VPNParameter parameter) {
+	private static String generateAccessAddressName(VPNUserParameter parameter) {
 		return StringUtils.isNotBlank(parameter.getIpaddress()) ? parameter.getIpaddress() + "/32" : parameter
 				.getSegment() + "/24";
 	}
@@ -144,10 +144,10 @@ public class GenerateScript {
 	 * Example: <b>vlan80-gr</b>
 	 * 
 	 * @param parameter
-	 *            {@link VPNParameter}
+	 *            {@link VPNUserParameter}
 	 * @return
 	 */
-	private static String generateVlanGroupName(VPNParameter parameter) {
+	private static String generateVlanGroupName(VPNUserParameter parameter) {
 		return "vlan" + parameter.getVlanId() + "-gr";
 	}
 
@@ -439,7 +439,7 @@ public class GenerateScript {
 	 * @param symbol
 	 * @return
 	 */
-	public static String generateCreateVPNScript(VPNParameter parameter, String symbol) {
+	public static String generateCreateVPNUserScript(VPNUserParameter parameter, String symbol) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -550,8 +550,8 @@ public class GenerateScript {
 	 * @param symbol
 	 * @return
 	 */
-	public static String generateCreateVPNScript(VPNParameter parameter) {
-		return generateCreateVPNScript(parameter, SymbolEnum.DEFAULT_SYMBOL.getName());
+	public static String generateCreateVPNUserScript(VPNUserParameter parameter) {
+		return generateCreateVPNUserScript(parameter, SymbolEnum.DEFAULT_SYMBOL.getName());
 	}
 
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
 import com.sobey.firewall.webservice.response.dto.EIPPolicyParameter;
-import com.sobey.firewall.webservice.response.dto.VPNParameter;
+import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
 
 public class TestData {
 
@@ -37,9 +37,9 @@ public class TestData {
 		return parameter;
 	}
 
-	public static VPNParameter randomVPNParameter() {
+	public static VPNUserParameter randomVPNParameter() {
 
-		VPNParameter parameter = new VPNParameter();
+		VPNUserParameter parameter = new VPNUserParameter();
 
 		parameter.setFirewallPolicyId(2000);
 		parameter.setIpaddress(null);
@@ -57,9 +57,9 @@ public class TestData {
 	 * 
 	 * @return
 	 */
-	public static VPNParameter randomVPNParameterSingletonIP() {
+	public static VPNUserParameter randomVPNParameterSingletonIP() {
 
-		VPNParameter parameter = new VPNParameter();
+		VPNUserParameter parameter = new VPNUserParameter();
 
 		parameter.setFirewallPolicyId(2000);
 		parameter.setIpaddress("172.20.17.5");
