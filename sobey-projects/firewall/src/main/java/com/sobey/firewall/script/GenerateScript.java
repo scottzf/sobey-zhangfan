@@ -431,12 +431,15 @@ public class GenerateScript {
 	 * set service "ANY"
 	 * next
 	 * end
+	 * 
 	 * next
 	 * end
 	 * </pre>
 	 * 
 	 * @param parameter
+	 *            {@link VPNUserParameter}
 	 * @param symbol
+	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
 	public static String generateCreateVPNUserScript(VPNUserParameter parameter, String symbol) {
@@ -542,6 +545,48 @@ public class GenerateScript {
 	 * set service "ANY"
 	 * next
 	 * end
+	 * 
+	 * next
+	 * end
+	 * </pre>
+	 * 
+	 * @param parameter
+	 *            {@link VPNUserParameter}
+	 * @return
+	 */
+	public static String generateCreateVPNUserScript(VPNUserParameter parameter) {
+		return generateCreateVPNUserScript(parameter, SymbolEnum.DEFAULT_SYMBOL.getName());
+	}
+
+	/**
+	 * 
+	 * 生成在<b>防火墙</b>执行的创建VPN脚本.<br>
+	 * 
+	 * Example:
+	 * 
+	 * <pre>
+	 * config firewall address
+	 * edit  "172.20.18.0/24"
+	 * set subnet 172.20.18.0 255.255.255.0
+	 * next
+	 * end
+	 * 
+	 * config firewall policy
+	 * edit 2000
+	 * set srcintf "wan1"
+	 * set dstintf "internal"
+	 * set srcaddr "all"
+	 * set dstaddr "172.20.17.0/24" "172.20.18.0/24"
+	 * set action ssl-vpn
+	 * 
+	 * config identity-based-policy
+	 * edit 1
+	 * set schedule "always"
+	 * set groups "vlan80-gr"
+	 * set service "ANY"
+	 * next
+	 * end
+	 * 
 	 * next
 	 * end
 	 * </pre>
@@ -550,8 +595,51 @@ public class GenerateScript {
 	 * @param symbol
 	 * @return
 	 */
-	public static String generateCreateVPNUserScript(VPNUserParameter parameter) {
-		return generateCreateVPNUserScript(parameter, SymbolEnum.DEFAULT_SYMBOL.getName());
-	}
+	public static String generateAddIPAddressIntoVPNUserScript(VPNUserParameter parameter, String symbol) {
+		
+		StringBuilder sb = new StringBuilder();
 
+		sb.append("config firewall address").append(symbol);
+		sb.append("edit ").append("\"").append(generateAccessAddressName(parameter)).append("\"").append(symbol);
+		/*
+		 * 如果是单IP,则接下来的两个参数应该为: 单IP 和 255.255.255.255
+		 * 
+		 * 如果是IP段,则接下来的两个参数应该为: 网关 和 255.255.255.0
+		 */
+		if (StringUtils.isNotBlank(parameter.getIpaddress())) {
+			sb.append("set subnet ").append(parameter.getIpaddress()).append(" 255.255.255.2555").append(symbol);
+		} else {
+			sb.append("set subnet ").append(parameter.getSegment()).append(" 255.255.255.0").append(symbol);
+		}
+		sb.append("next").append(symbol);
+		sb.append("end").append(symbol);
+		sb.append(symbol);
+
+		sb.append("config firewall policy").append(symbol);
+		sb.append("edit ").append(parameter.getFirewallPolicyId()).append(symbol);
+		sb.append("set srcintf ").append("\"").append(FIREWALL_SRCINTF).append("\"").append(symbol);
+		sb.append("set dstintf ").append("\"").append(FIREWALL_DSTINTF).append("\"").append(symbol);
+		sb.append("set srcaddr ").append("\"").append(FIREWALL_SRCADDR).append("\"").append(symbol);
+		
+		//TODO
+		sb.append("set dstaddr ").append("\"").append(generateAccessAddressName(parameter)).append("\"").append(symbol);
+		
+		sb.append("set action ssl-vpn").append(symbol);
+		sb.append(symbol);
+
+		sb.append("config identity-based-policy").append(symbol);
+		sb.append("edit ").append("1").append(symbol);
+		sb.append("set schedule ").append("\"").append(FIREWALL_SCHEDULE).append("\"").append(symbol);
+		sb.append("set groups ").append("\"").append(generateVlanGroupName(parameter)).append("\"").append(symbol);
+		sb.append("set service ").append("\"").append(FIREWALL_SERVICE).append("\"").append(symbol);
+		sb.append("next").append(symbol);
+		sb.append("end").append(symbol);
+		sb.append(symbol);
+
+		sb.append("next").append(symbol);
+		sb.append("end").append(symbol);
+		sb.append(symbol);
+
+		return sb.toString();
+	}
 }
