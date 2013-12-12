@@ -117,7 +117,7 @@ public class GenerateScript {
 	 * @return
 	 */
 	private static String getVipgrpByISP(EIPParameter parameter) {
-		return "0".equals(parameter.getIsp()) ? FIREWALL_CTC : FIREWALL_CNC;
+		return "0".equals(parameter.getIsp().toString()) ? FIREWALL_CTC : FIREWALL_CNC;
 	}
 
 	/**
@@ -457,6 +457,7 @@ public class GenerateScript {
 		}
 		sb.append("next").append(symbol);
 		sb.append("end").append(symbol);
+		sb.append(symbol);
 
 		sb.append("config user local").append(symbol);
 		sb.append("edit ").append("\"").append(parameter.getVpnUser()).append("\"").append(symbol);
@@ -464,6 +465,7 @@ public class GenerateScript {
 		sb.append("edit passwd ").append("\"").append(parameter.getVpnPassword()).append("\"").append(symbol);
 		sb.append("next").append(symbol);
 		sb.append("end").append(symbol);
+		sb.append(symbol);
 
 		sb.append("config user group").append(symbol);
 		sb.append("edit ").append("\"").append(generateVlanGroupName(parameter)).append("\"").append(symbol);
@@ -471,6 +473,7 @@ public class GenerateScript {
 		sb.append("set member ").append("\"").append(parameter.getVpnUser()).append("\"").append(symbol);
 		sb.append("next").append(symbol);
 		sb.append("end").append(symbol);
+		sb.append(symbol);
 
 		sb.append("config firewall policy").append(symbol);
 		sb.append("edit ").append(parameter.getFirewallPolicyId()).append(symbol);
@@ -479,6 +482,7 @@ public class GenerateScript {
 		sb.append("set srcaddr ").append("\"").append(FIREWALL_SRCADDR).append("\"").append(symbol);
 		sb.append("set dstaddr ").append("\"").append(generateAccessAddressName(parameter)).append("\"").append(symbol);
 		sb.append("set action ssl-vpn").append(symbol);
+		sb.append(symbol);
 
 		sb.append("config identity-based-policy").append(symbol);
 		sb.append("edit ").append("1").append(symbol);
@@ -487,6 +491,7 @@ public class GenerateScript {
 		sb.append("set service ").append("\"").append(FIREWALL_SERVICE).append("\"").append(symbol);
 		sb.append("next").append(symbol);
 		sb.append("end").append(symbol);
+		sb.append(symbol);
 
 		sb.append("next").append(symbol);
 		sb.append("end").append(symbol);
