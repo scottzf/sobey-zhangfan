@@ -623,7 +623,9 @@ public class GenerateScript {
 	 * <b>注:segments 和 ipaddress 集合中,包含的应该是用户所有的segment和ip.<br>
 	 * 调用接口前,如果想执行新增操作,需要查询出用户所有的可访问段集合,再将新增的访问段add至集合.<br>
 	 * 如果想执行删除操作,需要查询出用户所有的可访问段集合,再将需要删除的的访问段remove出集合.<br>
-	 * </b> Example:
+	 * </b>
+	 * 
+	 * Example:
 	 * 
 	 * <pre>
 	 * config firewall address
@@ -745,7 +747,7 @@ public class GenerateScript {
 	 * <b>注:segments 和 ipaddress 集合中,包含的应该是用户所有的segment和ip.<br>
 	 * 调用接口前,如果想执行新增操作,需要查询出用户所有的可访问段集合,再将新增的访问段add至集合.<br>
 	 * 如果想执行删除操作,需要查询出用户所有的可访问段集合,再将需要删除的的访问段remove出集合.<br>
-	 * </b> Example:
+	 * </b>
 	 * 
 	 * Example:
 	 * 
@@ -794,6 +796,144 @@ public class GenerateScript {
 	 */
 	public static String generateChangeAccesssAddressIntoVPNUserScript(VPNUserParameter parameter) {
 		return generateChangeAccesssAddressIntoVPNUserScript(parameter, SymbolEnum.DEFAULT_SYMBOL.getName());
+	}
+
+	/**
+	 * 生成在<b>防火墙</b>执行的删除VPNUser的脚本.<br>
+	 * 
+	 * Example:
+	 * 
+	 * <pre>
+	 * config firewall policy
+	 * delete 2000
+	 * end
+	 * 
+	 * config user group
+	 * delete vlan80-gr
+	 * end
+	 * 
+	 * config user local
+	 * delete liukai
+	 * end
+	 * 
+	 * config firewall address
+	 * delete 172.20.19.1/32
+	 * end
+	 * 
+	 * config firewall address
+	 * delete 172.20.17.0/24
+	 * end
+	 * 
+	 * config firewall address
+	 * delete 172.20.18.0/24
+	 * end
+	 * </pre>
+	 * 
+	 * @param parameter
+	 *            {@link VPNUserParameter}
+	 * @param symbol
+	 *            换行符号(用于区分在scrip或web中的显示效果)
+	 * @return
+	 */
+	public static String generateDeleteVPNUserScript(VPNUserParameter parameter, String symbol) {
+
+		/*
+		 * 1.删除租户VPN策略
+		 * 
+		 * 2.删除租户VPN用户组
+		 * 
+		 * 3.删除VPN用户名和VPN密码
+		 * 
+		 * 4.删除VPN要访问IP地址池
+		 */
+
+		StringBuilder sb = new StringBuilder();
+
+		List<String> addressList = Lists.newArrayList();
+
+		// Step.1
+
+		/*
+		 * 如果是单IP,则接下来的两个参数应该为: 单IP 和 255.255.255.255
+		 * 
+		 * 如果是网关,则接下来的两个参数应该为: 网关 和 255.255.255.0
+		 */
+		for (String ipaddress : parameter.getIpaddress()) {
+			addressList.add(generateAddressNameByIP(ipaddress));
+		}
+
+		for (String segment : parameter.getSegments()) {
+			addressList.add(generateAddressNameBySegment(segment));
+		}
+
+		// Step.1
+		sb.append("config firewall policy").append(symbol);
+		sb.append("delete ").append(parameter.getFirewallPolicyId()).append(symbol);
+		sb.append("end").append(symbol);
+		sb.append(symbol);
+
+		// Step.2
+		sb.append("config user group").append(symbol);
+		sb.append("delete ").append(generateVlanGroupName(parameter)).append(symbol);
+		sb.append("end").append(symbol);
+		sb.append(symbol);
+
+		// Step.3
+		sb.append("config user local").append(symbol);
+		sb.append("delete ").append(parameter.getVpnUser()).append(symbol);
+		sb.append("end").append(symbol);
+		sb.append(symbol);
+
+		// step.4
+		for (String address : addressList) {
+			sb.append("config firewall address").append(symbol);
+			sb.append("delete ").append(address).append(symbol);
+			sb.append("end").append(symbol);
+			sb.append(symbol);
+		}
+
+		return sb.toString();
+	}
+
+	/**
+	 * 生成在<b>防火墙</b>执行的删除VPNUser的脚本,默认换行符号<br>
+	 * 
+	 * Example:
+	 * 
+	 * <pre>
+	 * config firewall policy
+	 * delete 2000
+	 * end
+	 * 
+	 * config user group
+	 * delete vlan80-gr
+	 * end
+	 * 
+	 * config user local
+	 * delete liukai
+	 * end
+	 * 
+	 * config firewall address
+	 * delete 172.20.19.1/32
+	 * end
+	 * 
+	 * config firewall address
+	 * delete 172.20.17.0/24
+	 * end
+	 * 
+	 * config firewall address
+	 * delete 172.20.18.0/24
+	 * end
+	 * </pre>
+	 * 
+	 * @param parameter
+	 *            {@link VPNUserParameter}
+	 * @param symbol
+	 *            换行符号(用于区分在scrip或web中的显示效果)
+	 * @return
+	 */
+	public static String generateDeleteVPNUserScript(VPNUserParameter parameter) {
+		return generateDeleteVPNUserScript(parameter, SymbolEnum.DEFAULT_SYMBOL.getName());
 	}
 
 }
