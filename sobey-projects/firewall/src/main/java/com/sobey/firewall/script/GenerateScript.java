@@ -411,7 +411,7 @@ public class GenerateScript {
 
 	/**
 	 * 
-	 * 生成在<b>防火墙</b>执行的创建VPN脚本.<br>
+	 * 生成在<b>防火墙</b>执行的创建VPN User脚本.<br>
 	 * 
 	 * Example:
 	 * 
@@ -551,7 +551,7 @@ public class GenerateScript {
 
 	/**
 	 * 
-	 * 生成在<b>防火墙</b>执行的创建VPN脚本,默认换行符号<br>
+	 * 生成在<b>防火墙</b>执行的创建VPN User脚本,默认换行符号<br>
 	 * 
 	 * Example:
 	 * 

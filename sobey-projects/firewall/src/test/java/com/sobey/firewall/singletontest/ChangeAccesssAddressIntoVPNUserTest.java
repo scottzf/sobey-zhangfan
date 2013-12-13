@@ -1,6 +1,5 @@
 package com.sobey.firewall.singletontest;
 
-import com.sobey.firewall.constans.SymbolEnum;
 import com.sobey.firewall.data.TestData;
 import com.sobey.firewall.script.GenerateScript;
 import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
@@ -17,8 +16,7 @@ public class ChangeAccesssAddressIntoVPNUserTest extends PropertiesAbstract {
 
 		VPNUserParameter parameter = TestData.randomVPNParameter();
 
-		String command = GenerateScript.generateChangeAccesssAddressIntoVPNUserScript(parameter,
-				SymbolEnum.DEFAULT_SYMBOL.getName());
+		String command = GenerateScript.generateChangeAccesssAddressIntoVPNUserScript(parameter);
 		System.out.println(command);
 
 		// TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command);
