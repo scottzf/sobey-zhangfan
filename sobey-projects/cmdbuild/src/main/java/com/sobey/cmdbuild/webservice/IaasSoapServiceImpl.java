@@ -521,19 +521,19 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 		IdResult result = new IdResult();
 
 		try {
-			
+
 			// TODO 选择存储,判断是否是是加载的。如果是加载状态，返回错误信息。
 			// 调用 Storage Agent 中的 deleteVolumes 接口。存储删除成功，将数据保存至CMDBuild 中；销毁失败，返回错误提示至页面。
-			
+
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
 			As2 as2 = comm.as2Service.findAs2(id);
 
 			Validate.isTrue(as2 != null, ERROR.OBJECT_NULL);
-			
+
 			// TODO 结算订单
 			financialSoapServiceImpl.settleConsumptions(0, as2.getTenants());
-			
+
 			as2.setIdClass(TableNameUtil.getTableName(As2.class));
 
 			as2.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);

@@ -67,8 +67,8 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			// Reference
 			DTOResult<TenantsDTO> tenantsDTO = cmdbuildSoapServiceImpl.findTenants(dto.getTenants());
-			if (tenantsDTO!=null)
-			dto.setTenantsDTO(tenantsDTO.getDto());
+			if (tenantsDTO != null)
+				dto.setTenantsDTO(tenantsDTO.getDto());
 
 			// LookUp
 			dto.setServiceTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getServiceType()).getDto().getDescription());
