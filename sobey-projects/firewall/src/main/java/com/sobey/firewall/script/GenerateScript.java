@@ -618,13 +618,28 @@ public class GenerateScript {
 
 	/**
 	 * 
-	 * 生成在<b>防火墙</b>执行的创建VPN脚本.<br>
+	 * 生成在<b>防火墙</b>执行的在VPN用户组增加一个IP或网段的脚本.<br>
+	 * 
+	 * <b>注:segments 和 ipaddress 集合中,包含的应该是用户所有的segment和ip,而不仅仅是新增的.<br>
+	 * 调用接口前,需要查询出用户所有的可访问段,再将新增的访问段新增至{@link VPNUserParameter}中的集合.</b><br>
 	 * 
 	 * Example:
 	 * 
 	 * <pre>
 	 * config firewall address
-	 * edit  "172.20.18.0/24"
+	 * edit "172.20.19.1/32"
+	 * set subnet 172.20.19.1 255.255.255.255
+	 * next
+	 * end
+	 * 
+	 * config firewall address
+	 * edit "172.20.17.0/24"
+	 * set subnet 172.20.17.0 255.255.255.0
+	 * next
+	 * end
+	 * 
+	 * config firewall address
+	 * edit "172.20.18.0/24"
 	 * set subnet 172.20.18.0 255.255.255.0
 	 * next
 	 * end
@@ -634,7 +649,7 @@ public class GenerateScript {
 	 * set srcintf "wan1"
 	 * set dstintf "internal"
 	 * set srcaddr "all"
-	 * set dstaddr "172.20.17.0/24" "172.20.18.0/24"
+	 * set dstaddr "172.20.19.1/32" "172.20.17.0/24" "172.20.18.0/24"
 	 * set action ssl-vpn
 	 * 
 	 * config identity-based-policy
@@ -650,21 +665,30 @@ public class GenerateScript {
 	 * </pre>
 	 * 
 	 * @param parameter
+	 *            {@link VPNUserParameter}
 	 * @param symbol
+	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
 	public static String generateAddIPAddressIntoVPNUserScript(VPNUserParameter parameter, String symbol) {
 
+		/*
+		 * 1.增加要访问的地址段
+		 * 
+		 * 2.在编辑原来用户组的策略，在要访问的目的地址，增加要访问地址段
+		 */
+
 		StringBuilder sb = new StringBuilder();
 
 		List<String> dstaddrs = Lists.newArrayList();
+
+		// Step.1
 
 		/*
 		 * 如果是单IP,则接下来的两个参数应该为: 单IP 和 255.255.255.255
 		 * 
 		 * 如果是网关,则接下来的两个参数应该为: 网关 和 255.255.255.0
 		 */
-
 		for (String ipaddress : parameter.getIpaddress()) {
 			sb.append("config firewall address").append(symbol);
 			sb.append("edit ").append("\"").append(generateAddressNameByIP(ipaddress)).append("\"").append(symbol);
@@ -687,12 +711,13 @@ public class GenerateScript {
 			dstaddrs.add(generateAddressNameBySegment(segment));
 		}
 
+		// Step.2
 		sb.append("config firewall policy").append(symbol);
 		sb.append("edit ").append(parameter.getFirewallPolicyId()).append(symbol);
 		sb.append("set srcintf ").append("\"").append(FIREWALL_SRCINTF).append("\"").append(symbol);
 		sb.append("set dstintf ").append("\"").append(FIREWALL_DSTINTF).append("\"").append(symbol);
 		sb.append("set srcaddr ").append("\"").append(FIREWALL_SRCADDR).append("\"").append(symbol);
-		sb.append("set dstaddr ").append("\"").append(generateFormatString(dstaddrs)).append("\"").append(symbol);
+		sb.append("set dstaddr ").append(generateFormatString(dstaddrs)).append(symbol);
 
 		sb.append("set action ssl-vpn").append(symbol);
 		sb.append(symbol);
@@ -712,4 +737,61 @@ public class GenerateScript {
 
 		return sb.toString();
 	}
+
+	/**
+	 * 
+	 * 生成在<b>防火墙</b>执行的在VPN用户组增加一个IP或网段的脚本,默认换行符号<br>
+	 * 
+	 * <b>注:segments 和 ipaddress 集合中,包含的应该是用户所有的segment和ip,而不仅仅是新增的.<br>
+	 * 调用接口前,需要查询出用户所有的可访问段,再将新增的访问段新增至{@link VPNUserParameter}中的集合.</b><br>
+	 * 
+	 * Example:
+	 * 
+	 * <pre>
+	 * config firewall address
+	 * edit "172.20.19.1/32"
+	 * set subnet 172.20.19.1 255.255.255.255
+	 * next
+	 * end
+	 * 
+	 * config firewall address
+	 * edit "172.20.17.0/24"
+	 * set subnet 172.20.17.0 255.255.255.0
+	 * next
+	 * end
+	 * 
+	 * config firewall address
+	 * edit "172.20.18.0/24"
+	 * set subnet 172.20.18.0 255.255.255.0
+	 * next
+	 * end
+	 * 
+	 * config firewall policy
+	 * edit 2000
+	 * set srcintf "wan1"
+	 * set dstintf "internal"
+	 * set srcaddr "all"
+	 * set dstaddr "172.20.19.1/32" "172.20.17.0/24" "172.20.18.0/24"
+	 * set action ssl-vpn
+	 * 
+	 * config identity-based-policy
+	 * edit 1
+	 * set schedule "always"
+	 * set groups "vlan80-gr"
+	 * set service "ANY"
+	 * next
+	 * end
+	 * 
+	 * next
+	 * end
+	 * </pre>
+	 * 
+	 * @param parameter
+	 *            {@link VPNUserParameter}
+	 * @return
+	 */
+	public static String generateAddIPAddressIntoVPNUserScript(VPNUserParameter parameter) {
+		return generateAddIPAddressIntoVPNUserScript(parameter, SymbolEnum.DEFAULT_SYMBOL.getName());
+	}
+
 }
