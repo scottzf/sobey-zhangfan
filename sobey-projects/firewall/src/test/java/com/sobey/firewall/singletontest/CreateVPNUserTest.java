@@ -5,12 +5,12 @@ import com.sobey.firewall.script.GenerateScript;
 import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
 
 /**
- * junit貌似无法启动,故考虑在main中启动CreateVPN的测试方法.
+ * junit貌似无法启动,故考虑在main中启动CreateVPNUser的测试方法.
  * 
  * @author Administrator
  * 
  */
-public class CreateVPNTest extends PropertiesAbstract {
+public class CreateVPNUserTest extends PropertiesAbstract {
 
 	public static void main(String[] args) {
 
