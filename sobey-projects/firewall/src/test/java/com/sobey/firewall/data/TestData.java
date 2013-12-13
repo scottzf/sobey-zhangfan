@@ -44,8 +44,8 @@ public class TestData {
 		parameter.setFirewallPolicyId(2000);
 		parameter.setNetMask("255.255.255.0");
 		parameter.setVlanId(80);
-		parameter.setVpnUser("liukai");
-		parameter.setVpnPassword("liukai@sobey");
+		parameter.setVpnUser("liukai01");
+		parameter.setVpnPassword("liukai01@sobey");
 
 		List<String> segments = Lists.newArrayList();
 		String segment = "172.20.17.0";

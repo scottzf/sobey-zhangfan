@@ -1,5 +1,6 @@
 package com.sobey.firewall.singletontest;
 
+import com.sobey.core.utils.TelnetUtil;
 import com.sobey.firewall.data.TestData;
 import com.sobey.firewall.script.GenerateScript;
 import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
@@ -19,7 +20,7 @@ public class DeleteVPNUserTest extends PropertiesAbstract {
 		String command = GenerateScript.generateDeleteVPNUserScript(parameter);
 		System.out.println(command);
 
-		// TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command);
+		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command);
 	}
 
 }

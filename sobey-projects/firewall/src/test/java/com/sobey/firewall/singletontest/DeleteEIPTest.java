@@ -3,6 +3,7 @@ package com.sobey.firewall.singletontest;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+import com.sobey.core.utils.TelnetUtil;
 import com.sobey.firewall.data.TestData;
 import com.sobey.firewall.script.GenerateScript;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
@@ -24,7 +25,7 @@ public class DeleteEIPTest extends PropertiesAbstract {
 		String command = GenerateScript.generateDeleteEIPScript(parameter, memberList);
 		System.out.println(command);
 
-		// TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command);
+		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command);
 	}
 
 }
