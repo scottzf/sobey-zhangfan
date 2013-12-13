@@ -6,18 +6,18 @@ import com.sobey.firewall.script.GenerateScript;
 import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
 
 /**
- * junit貌似无法启动,故考虑在main中启动AddIPAddressIntoVPNUser的测试方法.
+ * junit貌似无法启动,故考虑在main中启动ChangeAccesssAddressIntoVPNUser的测试方法.
  * 
  * @author Administrator
  * 
  */
-public class AddIPAddressIntoVPNUserTest extends PropertiesAbstract {
+public class ChangeAccesssAddressIntoVPNUserTest extends PropertiesAbstract {
 
 	public static void main(String[] args) {
 
 		VPNUserParameter parameter = TestData.randomVPNParameter();
 
-		String command = GenerateScript.generateAddIPAddressIntoVPNUserScript(parameter,
+		String command = GenerateScript.generateChangeAccesssAddressIntoVPNUserScript(parameter,
 				SymbolEnum.DEFAULT_SYMBOL.getName());
 		System.out.println(command);
 

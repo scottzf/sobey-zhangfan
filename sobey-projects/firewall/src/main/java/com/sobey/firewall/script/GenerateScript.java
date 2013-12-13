@@ -618,12 +618,12 @@ public class GenerateScript {
 
 	/**
 	 * 
-	 * 生成在<b>防火墙</b>执行的在VPN用户组增加一个IP或网段的脚本.<br>
+	 * 生成在<b>防火墙</b>执行的在VPN用户组增加或删除一个IP或网段的脚本.<br>
 	 * 
-	 * <b>注:segments 和 ipaddress 集合中,包含的应该是用户所有的segment和ip,而不仅仅是新增的.<br>
-	 * 调用接口前,需要查询出用户所有的可访问段,再将新增的访问段新增至{@link VPNUserParameter}中的集合.</b><br>
-	 * 
-	 * Example:
+	 * <b>注:segments 和 ipaddress 集合中,包含的应该是用户所有的segment和ip.<br>
+	 * 调用接口前,如果想执行新增操作,需要查询出用户所有的可访问段集合,再将新增的访问段add至集合.<br>
+	 * 如果想执行删除操作,需要查询出用户所有的可访问段集合,再将需要删除的的访问段remove出集合.<br>
+	 * </b> Example:
 	 * 
 	 * <pre>
 	 * config firewall address
@@ -670,7 +670,7 @@ public class GenerateScript {
 	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public static String generateAddIPAddressIntoVPNUserScript(VPNUserParameter parameter, String symbol) {
+	public static String generateChangeAccesssAddressIntoVPNUserScript(VPNUserParameter parameter, String symbol) {
 
 		/*
 		 * 1.增加要访问的地址段
@@ -742,8 +742,10 @@ public class GenerateScript {
 	 * 
 	 * 生成在<b>防火墙</b>执行的在VPN用户组增加一个IP或网段的脚本,默认换行符号<br>
 	 * 
-	 * <b>注:segments 和 ipaddress 集合中,包含的应该是用户所有的segment和ip,而不仅仅是新增的.<br>
-	 * 调用接口前,需要查询出用户所有的可访问段,再将新增的访问段新增至{@link VPNUserParameter}中的集合.</b><br>
+	 * <b>注:segments 和 ipaddress 集合中,包含的应该是用户所有的segment和ip.<br>
+	 * 调用接口前,如果想执行新增操作,需要查询出用户所有的可访问段集合,再将新增的访问段add至集合.<br>
+	 * 如果想执行删除操作,需要查询出用户所有的可访问段集合,再将需要删除的的访问段remove出集合.<br>
+	 * </b> Example:
 	 * 
 	 * Example:
 	 * 
@@ -790,8 +792,8 @@ public class GenerateScript {
 	 *            {@link VPNUserParameter}
 	 * @return
 	 */
-	public static String generateAddIPAddressIntoVPNUserScript(VPNUserParameter parameter) {
-		return generateAddIPAddressIntoVPNUserScript(parameter, SymbolEnum.DEFAULT_SYMBOL.getName());
+	public static String generateChangeAccesssAddressIntoVPNUserScript(VPNUserParameter parameter) {
+		return generateChangeAccesssAddressIntoVPNUserScript(parameter, SymbolEnum.DEFAULT_SYMBOL.getName());
 	}
 
 }
