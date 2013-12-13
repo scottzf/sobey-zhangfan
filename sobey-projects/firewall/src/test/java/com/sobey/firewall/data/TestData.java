@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
 import com.sobey.firewall.webservice.response.dto.EIPPolicyParameter;
+import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
 
 public class TestData {
 
@@ -33,6 +34,31 @@ public class TestData {
 
 		parameter.setPolicies(policies);
 
+		return parameter;
+	}
+
+	public static VPNUserParameter randomVPNParameter() {
+
+		VPNUserParameter parameter = new VPNUserParameter();
+
+		parameter.setFirewallPolicyId(2000);
+		parameter.setNetMask("255.255.255.0");
+		parameter.setVlanId(80);
+		parameter.setVpnUser("liukai01");
+		parameter.setVpnPassword("liukai01@sobey");
+
+		List<String> segments = Lists.newArrayList();
+		String segment = "172.20.17.0";
+		String segment2 = "172.20.18.0";
+		segments.add(segment);
+		segments.add(segment2);
+
+		List<String> ipaddress = Lists.newArrayList();
+		String ip = "172.20.19.1";
+		ipaddress.add(ip);
+
+		parameter.setSegments(segments);
+		parameter.setIpaddress(ipaddress);
 		return parameter;
 	}
 

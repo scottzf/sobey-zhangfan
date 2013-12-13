@@ -7,10 +7,12 @@ import javax.jws.WebParam;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.cxf.feature.Features;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
 import com.sobey.cmdbuild.constants.ERROR;
+import com.sobey.cmdbuild.constants.LookUpConstants;
 import com.sobey.cmdbuild.entity.As2;
 import com.sobey.cmdbuild.entity.Cs2;
 import com.sobey.cmdbuild.entity.Dns;
@@ -21,6 +23,7 @@ import com.sobey.cmdbuild.entity.Esg;
 import com.sobey.cmdbuild.entity.GroupPolicy;
 import com.sobey.cmdbuild.entity.Vpn;
 import com.sobey.cmdbuild.webservice.response.dto.As2DTO;
+import com.sobey.cmdbuild.webservice.response.dto.ConsumptionsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.Cs2DTO;
 import com.sobey.cmdbuild.webservice.response.dto.DnsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EcsDTO;
@@ -42,6 +45,20 @@ import com.sobey.core.utils.TableNameUtil;
 @Features(features = "org.apache.cxf.feature.LoggingFeature")
 public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapService {
 
+	@Autowired
+	private CmdbuildSoapServiceImpl cmdbuildSoapServiceImpl;
+
+	@Autowired
+	private FinancialSoapServiceImpl financialSoapServiceImpl;
+
+	@Autowired
+	private InfrastructureSoapServiceImpl infrastructureSoapServiceImpl;
+
+	/**
+	 * CMDBuild的默认超级用户名
+	 */
+	private static final String DEFAULT_USER = "admin";
+
 	@Override
 	public DTOResult<Cs2DTO> findCs2(@WebParam(name = "id") Integer id) {
 		DTOResult<Cs2DTO> result = new DTOResult<Cs2DTO>();
@@ -54,9 +71,15 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.notNull(cs2, ERROR.OBJECT_NULL);
 
-			Cs2DTO cs2DTO = BeanMapper.map(cs2, Cs2DTO.class);
+			Cs2DTO dto = BeanMapper.map(cs2, Cs2DTO.class);
 
-			result.setDto(cs2DTO);
+			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
+			dto.setFimasDTO(infrastructureSoapServiceImpl.findFimas(dto.getFimas()).getDto());
+			dto.setEs3SpecDTO(financialSoapServiceImpl.findEs3Spec(dto.getEs3Spec()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -79,9 +102,15 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.notNull(cs2, ERROR.OBJECT_NULL);
 
-			Cs2DTO cs2DTO = BeanMapper.map(cs2, Cs2DTO.class);
+			Cs2DTO dto = BeanMapper.map(cs2, Cs2DTO.class);
 
-			result.setDto(cs2DTO);
+			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
+			dto.setFimasDTO(infrastructureSoapServiceImpl.findFimas(dto.getFimas()).getDto());
+			dto.setEs3SpecDTO(financialSoapServiceImpl.findEs3Spec(dto.getEs3Spec()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -109,6 +138,9 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			Validate.isTrue(comm.cs2Service.findCs2(searchParams) == null, ERROR.OBJECT_DUPLICATE);
 
 			Cs2 cs2 = BeanMapper.map(cs2DTO, Cs2.class);
+
+			cs2.setUser(DEFAULT_USER);
+			cs2.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 
 			BeanValidators.validateWithException(validator, cs2);
 
@@ -227,21 +259,107 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult resizeCS2(@WebParam(name = "cs2DTO") Cs2DTO cs2DTO) {
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			// 填写新增 CS2 的基本信息。创建CS2
+			result = createCs2(cs2DTO);
+
+			// 判断CS2是否创建成功，该判断有待验证
+			if (result.getCode().equals("0")) {
+
+				// TODO 调用 storage Agent 中的 createVolumes 接口。CS2 创建成功，将数据保存至 CMDBuild 中；创建失败，返回错误提示至页面。
+
+				// 创建订单(订单开始时间和服务时间和CS2的创建时间相同)
+				ConsumptionsDTO consumptionsDTO = new ConsumptionsDTO();
+
+				consumptionsDTO.setId(0);
+				consumptionsDTO.setTenants(cs2DTO.getTenants());
+				consumptionsDTO.setBeginDate(cs2DTO.getBeginDate());
+				consumptionsDTO.setServiceEnd(cs2DTO.getBeginDate());
+				// consumptionsDTO.setIdentifier("??");
+				// consumptionsDTO.setServiceType(LookUpConstants.ServiceType.);//没有找到cs3
+				consumptionsDTO.setConsumptionsStatus(LookUpConstants.ConsumptionsStatus.Execution.getValue());
+
+				result = financialSoapServiceImpl.createConsumptions(consumptionsDTO);
+
+			}
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
 	}
 
 	@Override
 	public IdResult operateCS2(@WebParam(name = "cs2DTO") Cs2DTO cs2DTO) {
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			// TODO 修改 storage 的配置。
+			// TODO 调用 Storage Agent 中的 resizeVolumes 接口。存储修改成功，将数据保存至CMDBuild 中；修改失败，返回错误提示至页面。
+
+			// 结算订单。consumptionsId没有找到
+			financialSoapServiceImpl.settleConsumptions(0, cs2DTO.getTenants());
+
+			// 新建订单
+
+			// TODO 调用 storage Agent 中的 createVolumes 接口。CS2 创建成功，将数据保存至 CMDBuild 中；创建失败，返回错误提示至页面。
+
+			// 创建订单(订单开始时间和服务时间和CS2的创建时间相同)
+			ConsumptionsDTO consumptionsDTO = new ConsumptionsDTO();
+
+			consumptionsDTO.setId(0);
+			consumptionsDTO.setTenants(cs2DTO.getTenants());
+			consumptionsDTO.setBeginDate(cs2DTO.getBeginDate());
+			consumptionsDTO.setServiceEnd(cs2DTO.getBeginDate());
+			// consumptionsDTO.setIdentifier("??");
+			// consumptionsDTO.setServiceType(LookUpConstants.ServiceType.);//没有找到cs3
+			consumptionsDTO.setConsumptionsStatus(LookUpConstants.ConsumptionsStatus.Execution.getValue());
+
+			result = financialSoapServiceImpl.createConsumptions(consumptionsDTO);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult ModifyCS2Attributes(@WebParam(name = "cs2DTO") Cs2DTO cs2DTO) {
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			// 修改存储的基本信息。 如服务标签、存储说明等不需要关联 Storage Agent 的操作
+			result = updateCs2(cs2DTO.getId(), cs2DTO);
+
+			return result;
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
 	}
 
 	@Override
 	public DTOListResult<Cs2DTO> reportCS2(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
+		// 多条件获取对象集合，并导出列表的信息为 Excel 文件
+
 		return null;
 	}
 
@@ -257,9 +375,16 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.notNull(as2, ERROR.OBJECT_NULL);
 
-			As2DTO as2DTO = BeanMapper.map(as2, As2DTO.class);
+			As2DTO dto = BeanMapper.map(as2, As2DTO.class);
 
-			result.setDto(as2DTO);
+			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
+			dto.setEs3SpecDTO(financialSoapServiceImpl.findEs3Spec(dto.getEs3Spec()).getDto());
+			dto.setNetappControllerDTO(infrastructureSoapServiceImpl.findNetappController(dto.getNetappController())
+					.getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -282,9 +407,16 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.notNull(as2, ERROR.OBJECT_NULL);
 
-			As2DTO as2DTO = BeanMapper.map(as2, As2DTO.class);
+			As2DTO dto = BeanMapper.map(as2, As2DTO.class);
 
-			result.setDto(as2DTO);
+			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
+			dto.setEs3SpecDTO(financialSoapServiceImpl.findEs3Spec(dto.getEs3Spec()).getDto());
+			dto.setNetappControllerDTO(infrastructureSoapServiceImpl.findNetappController(dto.getNetappController())
+					.getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -301,6 +433,8 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 		try {
 
+			// TODO 调用 storage Agent 中的 createVolumes 接口。AS2 创建成功，将数据保存至CMDBuild 中；创建失败，返回错误提示至页面。
+
 			Validate.notNull(as2DTO, ERROR.INPUT_NULL);
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
@@ -313,11 +447,28 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			As2 as2 = BeanMapper.map(as2DTO, As2.class);
 
+			as2.setIdClass(TableNameUtil.getTableName(As2.class));
+			as2.setUser(DEFAULT_USER);
+			as2.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+
 			BeanValidators.validateWithException(validator, as2);
 
 			comm.as2Service.saveOrUpdate(as2);
 
-			return new IdResult(as2.getId());
+			// TODO 创建订单(订单开始时间和服务时间和AS2的创建时间相同)
+			ConsumptionsDTO consumptionsDTO = new ConsumptionsDTO();
+
+			consumptionsDTO.setId(0);
+			consumptionsDTO.setTenants(as2DTO.getTenants());
+			consumptionsDTO.setBeginDate(as2DTO.getBeginDate());
+			consumptionsDTO.setServiceEnd(as2DTO.getBeginDate());
+			// consumptionsDTO.setIdentifier("??");
+			// consumptionsDTO.setServiceType(LookUpConstants.ServiceType.);//没有找到cs3
+			consumptionsDTO.setConsumptionsStatus(LookUpConstants.ConsumptionsStatus.Execution.getValue());
+
+			result = financialSoapServiceImpl.createConsumptions(consumptionsDTO);
+
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -349,6 +500,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			as2.setIdClass(TableNameUtil.getTableName(As2.class));
 
 			as2.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			as2.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, as2);
@@ -370,11 +522,17 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 		try {
 
+			// TODO 选择存储,判断是否是是加载的。如果是加载状态，返回错误信息。
+			// 调用 Storage Agent 中的 deleteVolumes 接口。存储删除成功，将数据保存至CMDBuild 中；销毁失败，返回错误提示至页面。
+
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
 			As2 as2 = comm.as2Service.findAs2(id);
 
 			Validate.isTrue(as2 != null, ERROR.OBJECT_NULL);
+
+			// TODO 结算订单
+			financialSoapServiceImpl.settleConsumptions(0, as2.getTenants());
 
 			as2.setIdClass(TableNameUtil.getTableName(As2.class));
 
@@ -382,7 +540,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.as2Service.saveOrUpdate(as2);
 
-			return new IdResult(as2.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -430,7 +588,41 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult resizeAS2(@WebParam(name = "as2DTO") As2DTO as2DTO) {
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			// TODO 修改 storage 的配置。
+
+			// 结算订单。consumptionsId没有找到
+			result = financialSoapServiceImpl.settleConsumptions(0, as2DTO.getTenants());
+
+			// 新建订单
+
+			// TODO 调用 Storage Agent 中的 resizeStorage 接口。存储修改成功，将数据保存至CMDBuild 中；修改失败，返回错误提示至页面
+
+			// 创建订单(订单开始时间和服务时间和CS2的创建时间相同)
+			ConsumptionsDTO consumptionsDTO = new ConsumptionsDTO();
+
+			consumptionsDTO.setId(0);
+			consumptionsDTO.setTenants(as2DTO.getTenants());
+			consumptionsDTO.setBeginDate(as2DTO.getBeginDate());
+			consumptionsDTO.setServiceEnd(as2DTO.getBeginDate());
+			// consumptionsDTO.setIdentifier("??");
+			// consumptionsDTO.setServiceType(LookUpConstants.ServiceType.);//没有找到as3
+			consumptionsDTO.setConsumptionsStatus(LookUpConstants.ConsumptionsStatus.Execution.getValue());
+
+			result = financialSoapServiceImpl.createConsumptions(consumptionsDTO);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
 	}
 
 	@Override
@@ -460,9 +652,19 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.notNull(ecs, ERROR.OBJECT_NULL);
 
-			EcsDTO ecsDTO = BeanMapper.map(ecs, EcsDTO.class);
+			EcsDTO dto = BeanMapper.map(ecs, EcsDTO.class);
 
-			result.setDto(ecsDTO);
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
+			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
+			dto.setEcsSpecDTO(financialSoapServiceImpl.findEcsSpec(dto.getEcsSpec()).getDto());
+			dto.setServerDTO(infrastructureSoapServiceImpl.findServer(dto.getServer()).getDto());
+
+			dto.setEcsAgentText(cmdbuildSoapServiceImpl.findLookUp(dto.getEcsAgent()).getDto().getDescription());
+			dto.setEcsStatusText(cmdbuildSoapServiceImpl.findLookUp(dto.getEcsStatus()).getDto().getDescription());
+			dto.setImageText(cmdbuildSoapServiceImpl.findLookUp(dto.getImage()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -485,10 +687,19 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.notNull(ecs, ERROR.OBJECT_NULL);
 
-			EcsDTO ecsDTO = BeanMapper.map(ecs, EcsDTO.class);
+			EcsDTO dto = BeanMapper.map(ecs, EcsDTO.class);
 
-			result.setDto(ecsDTO);
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
+			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
+			dto.setEcsSpecDTO(financialSoapServiceImpl.findEcsSpec(dto.getEcsSpec()).getDto());
+			dto.setServerDTO(infrastructureSoapServiceImpl.findServer(dto.getServer()).getDto());
 
+			dto.setEcsAgentText(cmdbuildSoapServiceImpl.findLookUp(dto.getEcsAgent()).getDto().getDescription());
+			dto.setEcsStatusText(cmdbuildSoapServiceImpl.findLookUp(dto.getEcsStatus()).getDto().getDescription());
+			dto.setImageText(cmdbuildSoapServiceImpl.findLookUp(dto.getImage()).getDto().getDescription());
+
+			result.setDto(dto);
 			return result;
 
 		} catch (IllegalArgumentException e) {
@@ -515,6 +726,10 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			Validate.isTrue(comm.ecsService.findEcs(searchParams) == null, ERROR.OBJECT_DUPLICATE);
 
 			Ecs ecs = BeanMapper.map(ecsDTO, Ecs.class);
+
+			ecs.setIdClass(TableNameUtil.getTableName(Ecs.class));
+			ecs.setUser(DEFAULT_USER);
+			ecs.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 
 			BeanValidators.validateWithException(validator, ecs);
 
@@ -610,9 +825,16 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.notNull(eip, ERROR.OBJECT_NULL);
 
-			EipDTO eipDTO = BeanMapper.map(eip, EipDTO.class);
+			EipDTO dto = BeanMapper.map(eip, EipDTO.class);
 
-			result.setDto(eipDTO);
+			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
+			dto.setEipSpecDTO(financialSoapServiceImpl.findEipSpec(dto.getEipSpec()).getDto());
+
+			dto.setEipStatusText(cmdbuildSoapServiceImpl.findLookUp(dto.getEipStatus()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -635,9 +857,16 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.notNull(eip, ERROR.OBJECT_NULL);
 
-			EipDTO eipDTO = BeanMapper.map(eip, EipDTO.class);
+			EipDTO dto = BeanMapper.map(eip, EipDTO.class);
 
-			result.setDto(eipDTO);
+			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
+			dto.setEipSpecDTO(financialSoapServiceImpl.findEipSpec(dto.getEipSpec()).getDto());
+
+			dto.setEipStatusText(cmdbuildSoapServiceImpl.findLookUp(dto.getEipStatus()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -665,6 +894,10 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			Validate.isTrue(comm.eipService.findEip(searchParams) == null, ERROR.OBJECT_DUPLICATE);
 
 			Eip eip = BeanMapper.map(eipDTO, Eip.class);
+
+			eip.setIdClass(TableNameUtil.getTableName(Eip.class));
+			eip.setUser(DEFAULT_USER);
+			eip.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 
 			BeanValidators.validateWithException(validator, eip);
 
@@ -702,6 +935,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			eip.setIdClass(TableNameUtil.getTableName(Eip.class));
 
 			eip.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			eip.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, eip);
@@ -833,9 +1067,13 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.notNull(elb, ERROR.OBJECT_NULL);
 
-			ElbDTO elbDTO = BeanMapper.map(elb, ElbDTO.class);
+			ElbDTO dto = BeanMapper.map(elb, ElbDTO.class);
 
-			result.setDto(elbDTO);
+			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -858,9 +1096,13 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.notNull(elb, ERROR.OBJECT_NULL);
 
-			ElbDTO elbDTO = BeanMapper.map(elb, ElbDTO.class);
+			ElbDTO dto = BeanMapper.map(elb, ElbDTO.class);
 
-			result.setDto(elbDTO);
+			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -888,6 +1130,10 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			Validate.isTrue(comm.elbService.findElb(searchParams) == null, ERROR.OBJECT_DUPLICATE);
 
 			Elb elb = BeanMapper.map(elbDTO, Elb.class);
+
+			elb.setIdClass(TableNameUtil.getTableName(Elb.class));
+			elb.setUser(DEFAULT_USER);
+			elb.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 
 			BeanValidators.validateWithException(validator, elb);
 
@@ -925,6 +1171,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			elb.setIdClass(TableNameUtil.getTableName(Elb.class));
 
 			elb.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			elb.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, elb);
@@ -1031,9 +1278,14 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.notNull(dns, ERROR.OBJECT_NULL);
 
-			DnsDTO dnsDTO = BeanMapper.map(dns, DnsDTO.class);
+			DnsDTO dto = BeanMapper.map(dns, DnsDTO.class);
 
-			result.setDto(dnsDTO);
+			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+
+			dto.setDomainTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getDomainType()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -1056,9 +1308,14 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.notNull(dns, ERROR.OBJECT_NULL);
 
-			DnsDTO dnsDTO = BeanMapper.map(dns, DnsDTO.class);
+			DnsDTO dto = BeanMapper.map(dns, DnsDTO.class);
 
-			result.setDto(dnsDTO);
+			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+
+			dto.setDomainTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getDomainType()).getDto().getDescription());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -1086,6 +1343,10 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			Validate.isTrue(comm.dnsService.findDns(searchParams) == null, ERROR.OBJECT_DUPLICATE);
 
 			Dns dns = BeanMapper.map(dnsDTO, Dns.class);
+
+			dns.setIdClass(TableNameUtil.getTableName(Dns.class));
+			dns.setUser(DEFAULT_USER);
+			dns.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 
 			BeanValidators.validateWithException(validator, dns);
 
@@ -1123,6 +1384,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			dns.setIdClass(TableNameUtil.getTableName(Dns.class));
 
 			dns.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			dns.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, dns);
@@ -1224,9 +1486,12 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.notNull(esg, ERROR.OBJECT_NULL);
 
-			EsgDTO esgDTO = BeanMapper.map(esg, EsgDTO.class);
+			EsgDTO dto = BeanMapper.map(esg, EsgDTO.class);
 
-			result.setDto(esgDTO);
+			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -1249,9 +1514,12 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.notNull(esg, ERROR.OBJECT_NULL);
 
-			EsgDTO esgDTO = BeanMapper.map(esg, EsgDTO.class);
+			EsgDTO dto = BeanMapper.map(esg, EsgDTO.class);
 
-			result.setDto(esgDTO);
+			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -1279,6 +1547,10 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			Validate.isTrue(comm.esgService.findEsg(searchParams) == null, ERROR.OBJECT_DUPLICATE);
 
 			Esg esg = BeanMapper.map(esgDTO, Esg.class);
+
+			esg.setIdClass(TableNameUtil.getTableName(Esg.class));
+			esg.setUser(DEFAULT_USER);
+			esg.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 
 			BeanValidators.validateWithException(validator, esg);
 
@@ -1316,6 +1588,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			esg.setIdClass(TableNameUtil.getTableName(Esg.class));
 
 			esg.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			esg.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, esg);
@@ -1416,9 +1689,12 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.notNull(vpn, ERROR.OBJECT_NULL);
 
-			VpnDTO vpnDTO = BeanMapper.map(vpn, VpnDTO.class);
+			VpnDTO dto = BeanMapper.map(vpn, VpnDTO.class);
 
-			result.setDto(vpnDTO);
+			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -1441,9 +1717,12 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.notNull(vpn, ERROR.OBJECT_NULL);
 
-			VpnDTO vpnDTO = BeanMapper.map(vpn, VpnDTO.class);
+			VpnDTO dto = BeanMapper.map(vpn, VpnDTO.class);
 
-			result.setDto(vpnDTO);
+			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -1471,6 +1750,10 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			Validate.isTrue(comm.vpnService.findVpn(searchParams) == null, ERROR.OBJECT_DUPLICATE);
 
 			Vpn vpn = BeanMapper.map(vpnDTO, Vpn.class);
+
+			vpn.setIdClass(TableNameUtil.getTableName(Vpn.class));
+			vpn.setUser(DEFAULT_USER);
+			vpn.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 
 			BeanValidators.validateWithException(validator, vpn);
 
@@ -1508,6 +1791,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			vpn.setIdClass(TableNameUtil.getTableName(Vpn.class));
 
 			vpn.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			vpn.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, vpn);
@@ -1614,9 +1898,11 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.notNull(groupPolicy, ERROR.OBJECT_NULL);
 
-			GroupPolicyDTO groupPolicyDTO = BeanMapper.map(groupPolicy, GroupPolicyDTO.class);
+			GroupPolicyDTO dto = BeanMapper.map(groupPolicy, GroupPolicyDTO.class);
 
-			result.setDto(groupPolicyDTO);
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -1640,9 +1926,11 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.notNull(groupPolicy, ERROR.OBJECT_NULL);
 
-			GroupPolicyDTO groupPolicyDTO = BeanMapper.map(groupPolicy, GroupPolicyDTO.class);
+			GroupPolicyDTO dto = BeanMapper.map(groupPolicy, GroupPolicyDTO.class);
 
-			result.setDto(groupPolicyDTO);
+			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -1670,6 +1958,10 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			Validate.isTrue(comm.groupPolicyService.findGroupPolicy(searchParams) == null, ERROR.OBJECT_DUPLICATE);
 
 			GroupPolicy groupPolicy = BeanMapper.map(groupPolicyDTO, GroupPolicy.class);
+
+			groupPolicy.setIdClass(TableNameUtil.getTableName(GroupPolicy.class));
+			groupPolicy.setUser(DEFAULT_USER);
+			groupPolicy.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 
 			BeanValidators.validateWithException(validator, groupPolicy);
 
@@ -1708,6 +2000,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			groupPolicy.setIdClass(TableNameUtil.getTableName(GroupPolicy.class));
 
 			groupPolicy.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			groupPolicy.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, groupPolicy);

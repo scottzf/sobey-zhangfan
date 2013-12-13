@@ -27,6 +27,7 @@ import com.sobey.cmdbuild.webservice.response.dto.DeviceSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EcsSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EipSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.Es3SpecDTO;
+import com.sobey.cmdbuild.webservice.response.dto.TenantsDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
@@ -65,7 +66,9 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 			ConsumptionsDTO dto = BeanMapper.map(consumptions, ConsumptionsDTO.class);
 
 			// Reference
-			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
+			DTOResult<TenantsDTO> tenantsDTO = cmdbuildSoapServiceImpl.findTenants(dto.getTenants());
+			if (tenantsDTO != null)
+				dto.setTenantsDTO(tenantsDTO.getDto());
 
 			// LookUp
 			dto.setServiceTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getServiceType()).getDto().getDescription());

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
 	xsi:schemaLocation="http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd"
 	default-lazy-init="true">
 
@@ -27,16 +27,18 @@
 
 	<bean id="cmdbuildSoapService" class="com.sobey.cmdbuild.webservice.CmdbuildSoapServiceImpl" />
 
-	<bean id="infrastructureSoapService"
-		class="com.sobey.cmdbuild.webservice.InfrastructureSoapServiceImpl" />
+	<bean id="infrastructureSoapService" class="com.sobey.cmdbuild.webservice.InfrastructureSoapServiceImpl" />
 
 	<bean id="financialSoapService" class="com.sobey.cmdbuild.webservice.FinancialSoapServiceImpl" />
 
 	<bean id="iaasSoapService" class="com.sobey.cmdbuild.webservice.IaasSoapServiceImpl" />
-	
-	
-	  <jaxws:client id="switchesSoapService"
-		serviceClass="com.sobey.generate.switches.SwitchesSoapService"
-		address="http://localhost:8082/switch/cxf/soap/switchesSoapService?wsdl" />  
+
+	<!-- inject WebService Client -->
+
+	<jaxws:client id="switchesSoapService" serviceClass="com.sobey.generate.switches.SwitchesSoapService"
+		address="http://localhost:8082/switch/cxf/soap/switchesSoapService?wsdl" />
+
+	<jaxws:client id="firewallSoapService" serviceClass="com.sobey.generate.firewall.FirewallSoapService"
+		address="http://localhost:8083/firewall/cxf/soap/firewallSoapService?wsdl" />
 
 </beans>

@@ -62,6 +62,7 @@ import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.core.beanvalidator.BeanValidators;
 import com.sobey.core.mapper.BeanMapper;
 import com.sobey.core.utils.TableNameUtil;
+import com.sobey.generate.firewall.FirewallSoapService;
 import com.sobey.generate.switches.SwitchesSoapService;
 import com.sobey.generate.switches.VlanParameter;
 
@@ -78,6 +79,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Autowired
 	private SwitchesSoapService switchesSoapService;
+
+	@Autowired
+	private FirewallSoapService firewallSoapService;
 
 	/**
 	 * CMDBuild的默认超级用户名
