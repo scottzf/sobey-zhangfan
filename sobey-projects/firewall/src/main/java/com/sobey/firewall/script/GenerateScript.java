@@ -2,8 +2,6 @@ package com.sobey.firewall.script;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.google.common.collect.Lists;
 import com.sobey.core.utils.Collections3;
 import com.sobey.core.utils.PropertiesLoader;
@@ -23,59 +21,65 @@ public class GenerateScript {
 	/**
 	 * 加载applicationContext.propertie文件
 	 */
-	protected static PropertiesLoader FIREWALL_LOADER = new PropertiesLoader("classpath:/firewall.properties");
+	private static PropertiesLoader FIREWALL_LOADER = new PropertiesLoader("classpath:/firewall.properties");
 
 	/* 脚本参数 */
 
 	/**
 	 * extintf
 	 */
-	protected static final String FIREWALL_EXTINTF = FIREWALL_LOADER.getProperty("FIREWALL_EXTINTF");
+	private static final String FIREWALL_EXTINTF = FIREWALL_LOADER.getProperty("FIREWALL_EXTINTF");
 
 	/**
 	 * portforward
 	 */
-	protected static final String FIREWALL_PORTFORWARD = FIREWALL_LOADER.getProperty("FIREWALL_PORTFORWARD");
+	private static final String FIREWALL_PORTFORWARD = FIREWALL_LOADER.getProperty("FIREWALL_PORTFORWARD");
 
 	/**
 	 * 联通
 	 */
-	protected static final String FIREWALL_CNC = FIREWALL_LOADER.getProperty("FIREWALL_CNC");
+	private static final String FIREWALL_CNC = FIREWALL_LOADER.getProperty("FIREWALL_CNC");
 
 	/**
 	 * 电信
 	 */
-	protected static final String FIREWALL_CTC = FIREWALL_LOADER.getProperty("FIREWALL_CTC");
+	private static final String FIREWALL_CTC = FIREWALL_LOADER.getProperty("FIREWALL_CTC");
 
 	/**
 	 * sslvpn-portal
 	 */
-	protected static final String FIREWALL_SSLVPN_PORTAL = FIREWALL_LOADER.getProperty("FIREWALL_SSLVPN_PORTAL");
+	private static final String FIREWALL_SSLVPN_PORTAL = FIREWALL_LOADER.getProperty("FIREWALL_SSLVPN_PORTAL");
 
 	/**
 	 * srcintf
 	 */
-	protected static final String FIREWALL_SRCINTF = FIREWALL_LOADER.getProperty("FIREWALL_SRCINTF");
+	private static final String FIREWALL_SRCINTF = FIREWALL_LOADER.getProperty("FIREWALL_SRCINTF");
 
 	/**
 	 * dstintf
 	 */
-	protected static final String FIREWALL_DSTINTF = FIREWALL_LOADER.getProperty("FIREWALL_DSTINTF");
+	private static final String FIREWALL_DSTINTF = FIREWALL_LOADER.getProperty("FIREWALL_DSTINTF");
 
 	/**
 	 * srcaddr
 	 */
-	protected static final String FIREWALL_SRCADDR = FIREWALL_LOADER.getProperty("FIREWALL_SRCADDR");
+	private static final String FIREWALL_SRCADDR = FIREWALL_LOADER.getProperty("FIREWALL_SRCADDR");
 
 	/**
 	 * schedule
 	 */
-	protected static final String FIREWALL_SCHEDULE = FIREWALL_LOADER.getProperty("FIREWALL_SCHEDULE");
+	private static final String FIREWALL_SCHEDULE = FIREWALL_LOADER.getProperty("FIREWALL_SCHEDULE");
 
 	/**
 	 * service
 	 */
-	protected static final String FIREWALL_SERVICE = FIREWALL_LOADER.getProperty("FIREWALL_SERVICE");
+	private static final String FIREWALL_SERVICE = FIREWALL_LOADER.getProperty("FIREWALL_SERVICE");
+
+	/**
+	 * identity-based-policy
+	 */
+	private static final String FIREWALL_IDENTITY_BASED_POLICY_ID = FIREWALL_LOADER
+			.getProperty("FIREWALL_IDENTITY_BASED_POLICY_ID");
 
 	/**
 	 * 生成VIP映射名称.<br>
@@ -95,12 +99,12 @@ public class GenerateScript {
 	}
 
 	/**
-	 * 对集合里的对象进行组合,生成指定格式的字符串.<br>
+	 * 对集合里的字符串进行组合,生成指定格式的字符串.<br>
 	 * 
 	 * Example:<b> "119.6.200.219-tcp-8080" "119.6.200.219-tcp-80" </b>
 	 * 
 	 * @param list
-	 *            集合
+	 *            字符串集合
 	 * @return
 	 */
 	private static String generateFormatString(List<String> list) {
@@ -108,9 +112,9 @@ public class GenerateScript {
 	}
 
 	/**
-	 * 根据EIPParameter中的ISP属性获得VIP组.
+	 * 根据EIPParameter中的ISP属性获得VIP组.<br>
 	 * 
-	 * ISP运营商 0: 中国电信 1:中国联通
+	 * <b>ISP运营商 0: 中国电信 1:中国联通</b>
 	 * 
 	 * @param parameter
 	 *            {@link EIPParameter}
@@ -121,21 +125,37 @@ public class GenerateScript {
 	}
 
 	/**
-	 * 生成访问address name,address name结尾的数字是由算法得到的.<br>
+	 * 生成IP的address name.<br>
 	 * 
-	 * 为简单实现功能,直接的默认只会指定一个网段或单个IP<br>
+	 * 生成的名称以0/32结尾.<br>
 	 * 
-	 * <b> IP段,生成的名称以 0/24结尾.如172.20.18.0/24<br>
-	 * 单IP,生成的名称以 x/32结尾.如172.20.18.5/32 <b>
+	 * <b>eg.172.20.18.5/32<b><br>
 	 * 
+	 * <em>address name结尾的数字是由算法得到的,为简单实现功能,直接的默认IP以/32结尾</em>
 	 * 
-	 * @param parameter
-	 *            {@link VPNUserParameter}
+	 * @param ipaddress
+	 *            ipaddress
 	 * @return
 	 */
-	private static String generateAccessAddressName(VPNUserParameter parameter) {
-		return StringUtils.isNotBlank(parameter.getIpaddress()) ? parameter.getIpaddress() + "/32" : parameter
-				.getSegment() + "/24";
+	private static String generateAddressNameByIP(String ipaddress) {
+		return ipaddress + "/32";
+	}
+
+	/**
+	 * 生成网关的address name.<br>
+	 * 
+	 * 生成的名称以0/24结尾.<br>
+	 * 
+	 * <b>eg.172.20.18.0/24<b><br>
+	 * 
+	 * <em>address name结尾的数字是由算法得到的,为简单实现功能,直接的默认网关以/24结尾</em>
+	 * 
+	 * @param segment
+	 *            网关
+	 * @return
+	 */
+	private static String generateAddressNameBySegment(String segment) {
+		return segment + "/24";
 	}
 
 	/**
@@ -397,22 +417,34 @@ public class GenerateScript {
 	 * 
 	 * <pre>
 	 * config firewall address
-	 * edit  "172.20.17.0/24"
+	 * edit "172.20.19.1/32"
+	 * set subnet 172.20.19.1 255.255.255.255
+	 * next
+	 * end
+	 * 
+	 * config firewall address
+	 * edit "172.20.17.0/24"
 	 * set subnet 172.20.17.0 255.255.255.0
+	 * next
+	 * end
+	 * 
+	 * config firewall address
+	 * edit "172.20.18.0/24"
+	 * set subnet 172.20.18.0 255.255.255.0
 	 * next
 	 * end
 	 * 
 	 * config user local
 	 * edit "liukai"
-	 * set type password
-	 * set passwd  liukai@sobey
+	 * set type password 
+	 * edit passwd liukai@sobey
 	 * next
 	 * end
 	 * 
 	 * config user group
-	 * edit "vlan80-gr" 
+	 * edit "vlan80-gr"
 	 * set sslvpn-portal "full-access"
-	 * set member "liukai" 
+	 * set member "liukai"
 	 * next
 	 * end
 	 * 
@@ -421,7 +453,7 @@ public class GenerateScript {
 	 * set srcintf "wan1"
 	 * set dstintf "internal"
 	 * set srcaddr "all"
-	 * set dstaddr "172.20.17.0/24" 
+	 * set dstaddr "172.20.19.1/32" "172.20.17.0/24" "172.20.18.0/24" 
 	 * set action ssl-vpn
 	 * 
 	 * config identity-based-policy
@@ -446,26 +478,40 @@ public class GenerateScript {
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("config firewall address").append(symbol);
-		sb.append("edit ").append("\"").append(generateAccessAddressName(parameter)).append("\"").append(symbol);
+		List<String> dstaddrs = Lists.newArrayList();
+
 		/*
 		 * 如果是单IP,则接下来的两个参数应该为: 单IP 和 255.255.255.255
 		 * 
-		 * 如果是IP段,则接下来的两个参数应该为: 网关 和 255.255.255.0
+		 * 如果是网关,则接下来的两个参数应该为: 网关 和 255.255.255.0
 		 */
-		if (StringUtils.isNotBlank(parameter.getIpaddress())) {
-			sb.append("set subnet ").append(parameter.getIpaddress()).append(" 255.255.255.2555").append(symbol);
-		} else {
-			sb.append("set subnet ").append(parameter.getSegment()).append(" 255.255.255.0").append(symbol);
+
+		for (String ipaddress : parameter.getIpaddress()) {
+			sb.append("config firewall address").append(symbol);
+			sb.append("edit ").append("\"").append(generateAddressNameByIP(ipaddress)).append("\"").append(symbol);
+			sb.append("set subnet ").append(ipaddress).append(" 255.255.255.255").append(symbol);
+			sb.append("next").append(symbol);
+			sb.append("end").append(symbol);
+			sb.append(symbol);
+
+			dstaddrs.add(generateAddressNameByIP(ipaddress));
 		}
-		sb.append("next").append(symbol);
-		sb.append("end").append(symbol);
-		sb.append(symbol);
+
+		for (String segment : parameter.getSegments()) {
+			sb.append("config firewall address").append(symbol);
+			sb.append("edit ").append("\"").append(generateAddressNameBySegment(segment)).append("\"").append(symbol);
+			sb.append("set subnet ").append(segment).append(" 255.255.255.0").append(symbol);
+			sb.append("next").append(symbol);
+			sb.append("end").append(symbol);
+			sb.append(symbol);
+
+			dstaddrs.add(generateAddressNameBySegment(segment));
+		}
 
 		sb.append("config user local").append(symbol);
 		sb.append("edit ").append("\"").append(parameter.getVpnUser()).append("\"").append(symbol);
 		sb.append("set type password ").append(symbol);
-		sb.append("edit passwd ").append("\"").append(parameter.getVpnPassword()).append("\"").append(symbol);
+		sb.append("edit passwd ").append(parameter.getVpnPassword()).append(symbol);
 		sb.append("next").append(symbol);
 		sb.append("end").append(symbol);
 		sb.append(symbol);
@@ -483,12 +529,12 @@ public class GenerateScript {
 		sb.append("set srcintf ").append("\"").append(FIREWALL_SRCINTF).append("\"").append(symbol);
 		sb.append("set dstintf ").append("\"").append(FIREWALL_DSTINTF).append("\"").append(symbol);
 		sb.append("set srcaddr ").append("\"").append(FIREWALL_SRCADDR).append("\"").append(symbol);
-		sb.append("set dstaddr ").append("\"").append(generateAccessAddressName(parameter)).append("\"").append(symbol);
+		sb.append("set dstaddr ").append(generateFormatString(dstaddrs)).append(symbol);
 		sb.append("set action ssl-vpn").append(symbol);
 		sb.append(symbol);
 
 		sb.append("config identity-based-policy").append(symbol);
-		sb.append("edit ").append("1").append(symbol);
+		sb.append("edit ").append(FIREWALL_IDENTITY_BASED_POLICY_ID).append(symbol);
 		sb.append("set schedule ").append("\"").append(FIREWALL_SCHEDULE).append("\"").append(symbol);
 		sb.append("set groups ").append("\"").append(generateVlanGroupName(parameter)).append("\"").append(symbol);
 		sb.append("set service ").append("\"").append(FIREWALL_SERVICE).append("\"").append(symbol);
@@ -511,22 +557,34 @@ public class GenerateScript {
 	 * 
 	 * <pre>
 	 * config firewall address
-	 * edit  "172.20.17.0/24"
+	 * edit "172.20.19.1/32"
+	 * set subnet 172.20.19.1 255.255.255.255
+	 * next
+	 * end
+	 * 
+	 * config firewall address
+	 * edit "172.20.17.0/24"
 	 * set subnet 172.20.17.0 255.255.255.0
+	 * next
+	 * end
+	 * 
+	 * config firewall address
+	 * edit "172.20.18.0/24"
+	 * set subnet 172.20.18.0 255.255.255.0
 	 * next
 	 * end
 	 * 
 	 * config user local
 	 * edit "liukai"
-	 * set type password
-	 * set passwd  liukai@sobey
+	 * set type password 
+	 * edit passwd liukai@sobey
 	 * next
 	 * end
 	 * 
 	 * config user group
-	 * edit "vlan80-gr" 
+	 * edit "vlan80-gr"
 	 * set sslvpn-portal "full-access"
-	 * set member "liukai" 
+	 * set member "liukai"
 	 * next
 	 * end
 	 * 
@@ -535,7 +593,7 @@ public class GenerateScript {
 	 * set srcintf "wan1"
 	 * set dstintf "internal"
 	 * set srcaddr "all"
-	 * set dstaddr "172.20.17.0/24" 
+	 * set dstaddr "172.20.19.1/32" "172.20.17.0/24" "172.20.18.0/24" 
 	 * set action ssl-vpn
 	 * 
 	 * config identity-based-policy
@@ -596,39 +654,51 @@ public class GenerateScript {
 	 * @return
 	 */
 	public static String generateAddIPAddressIntoVPNUserScript(VPNUserParameter parameter, String symbol) {
-		
+
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("config firewall address").append(symbol);
-		sb.append("edit ").append("\"").append(generateAccessAddressName(parameter)).append("\"").append(symbol);
+		List<String> dstaddrs = Lists.newArrayList();
+
 		/*
 		 * 如果是单IP,则接下来的两个参数应该为: 单IP 和 255.255.255.255
 		 * 
-		 * 如果是IP段,则接下来的两个参数应该为: 网关 和 255.255.255.0
+		 * 如果是网关,则接下来的两个参数应该为: 网关 和 255.255.255.0
 		 */
-		if (StringUtils.isNotBlank(parameter.getIpaddress())) {
-			sb.append("set subnet ").append(parameter.getIpaddress()).append(" 255.255.255.2555").append(symbol);
-		} else {
-			sb.append("set subnet ").append(parameter.getSegment()).append(" 255.255.255.0").append(symbol);
+
+		for (String ipaddress : parameter.getIpaddress()) {
+			sb.append("config firewall address").append(symbol);
+			sb.append("edit ").append("\"").append(generateAddressNameByIP(ipaddress)).append("\"").append(symbol);
+			sb.append("set subnet ").append(ipaddress).append(" 255.255.255.255").append(symbol);
+			sb.append("next").append(symbol);
+			sb.append("end").append(symbol);
+			sb.append(symbol);
+
+			dstaddrs.add(generateAddressNameByIP(ipaddress));
 		}
-		sb.append("next").append(symbol);
-		sb.append("end").append(symbol);
-		sb.append(symbol);
+
+		for (String segment : parameter.getSegments()) {
+			sb.append("config firewall address").append(symbol);
+			sb.append("edit ").append("\"").append(generateAddressNameBySegment(segment)).append("\"").append(symbol);
+			sb.append("set subnet ").append(segment).append(" 255.255.255.0").append(symbol);
+			sb.append("next").append(symbol);
+			sb.append("end").append(symbol);
+			sb.append(symbol);
+
+			dstaddrs.add(generateAddressNameBySegment(segment));
+		}
 
 		sb.append("config firewall policy").append(symbol);
 		sb.append("edit ").append(parameter.getFirewallPolicyId()).append(symbol);
 		sb.append("set srcintf ").append("\"").append(FIREWALL_SRCINTF).append("\"").append(symbol);
 		sb.append("set dstintf ").append("\"").append(FIREWALL_DSTINTF).append("\"").append(symbol);
 		sb.append("set srcaddr ").append("\"").append(FIREWALL_SRCADDR).append("\"").append(symbol);
-		
-		//TODO
-		sb.append("set dstaddr ").append("\"").append(generateAccessAddressName(parameter)).append("\"").append(symbol);
-		
+		sb.append("set dstaddr ").append("\"").append(generateFormatString(dstaddrs)).append("\"").append(symbol);
+
 		sb.append("set action ssl-vpn").append(symbol);
 		sb.append(symbol);
 
 		sb.append("config identity-based-policy").append(symbol);
-		sb.append("edit ").append("1").append(symbol);
+		sb.append("edit ").append(FIREWALL_IDENTITY_BASED_POLICY_ID).append(symbol);
 		sb.append("set schedule ").append("\"").append(FIREWALL_SCHEDULE).append("\"").append(symbol);
 		sb.append("set groups ").append("\"").append(generateVlanGroupName(parameter)).append("\"").append(symbol);
 		sb.append("set service ").append("\"").append(FIREWALL_SERVICE).append("\"").append(symbol);

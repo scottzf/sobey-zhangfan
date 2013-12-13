@@ -42,33 +42,23 @@ public class TestData {
 		VPNUserParameter parameter = new VPNUserParameter();
 
 		parameter.setFirewallPolicyId(2000);
-		parameter.setIpaddress(null);
 		parameter.setNetMask("255.255.255.0");
-		parameter.setSegment("172.20.17.0");
 		parameter.setVlanId(80);
 		parameter.setVpnUser("liukai");
 		parameter.setVpnPassword("liukai@sobey");
 
-		return parameter;
-	}
+		List<String> segments = Lists.newArrayList();
+		String segment = "172.20.17.0";
+		String segment2 = "172.20.18.0";
+		segments.add(segment);
+		segments.add(segment2);
 
-	/**
-	 * 单IP测试数据
-	 * 
-	 * @return
-	 */
-	public static VPNUserParameter randomVPNParameterSingletonIP() {
+		List<String> ipaddress = Lists.newArrayList();
+		String ip = "172.20.19.1";
+		ipaddress.add(ip);
 
-		VPNUserParameter parameter = new VPNUserParameter();
-
-		parameter.setFirewallPolicyId(2000);
-		parameter.setIpaddress("172.20.17.5");
-		parameter.setNetMask("255.255.255.0");
-		parameter.setSegment("172.20.17.0");
-		parameter.setVlanId(80);
-		parameter.setVpnUser("liukai");
-		parameter.setVpnPassword("liukai@sobey");
-
+		parameter.setSegments(segments);
+		parameter.setIpaddress(ipaddress);
 		return parameter;
 	}
 

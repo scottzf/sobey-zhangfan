@@ -1,10 +1,13 @@
 package com.sobey.firewall.webservice.response.dto;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.google.common.collect.Lists;
 import com.sobey.firewall.constans.WsConstants;
 
 /**
@@ -13,8 +16,8 @@ import com.sobey.firewall.constans.WsConstants;
  * <pre>
  * firewallPolicyId	防火墙中的策略ID,从2000起递增.
  * VlanId		Vlan编号(code)
- * ipaddress	单个IP
- * segment		网段
+ * ipaddress	单个IP集合
+ * segments		网段集合
  * netMask		子网掩码
  * vpnUser		VPN用户名
  * vpnPassword	VPN密码
@@ -38,14 +41,14 @@ public class VPNUserParameter {
 	private Integer VlanId;
 
 	/**
-	 * IP或IP段
+	 * IP
 	 */
-	private String ipaddress;
+	private List<String> ipaddress = Lists.newArrayList();
 
 	/**
 	 * 网段
 	 */
-	private String segment;
+	private List<String> segments = Lists.newArrayList();
 
 	/**
 	 * 子网掩码
@@ -78,20 +81,20 @@ public class VPNUserParameter {
 		VlanId = vlanId;
 	}
 
-	public String getIpaddress() {
+	public List<String> getIpaddress() {
 		return ipaddress;
 	}
 
-	public void setIpaddress(String ipaddress) {
+	public void setIpaddress(List<String> ipaddress) {
 		this.ipaddress = ipaddress;
 	}
 
-	public String getSegment() {
-		return segment;
+	public List<String> getSegments() {
+		return segments;
 	}
 
-	public void setSegment(String segment) {
-		this.segment = segment;
+	public void setSegments(List<String> segments) {
+		this.segments = segments;
 	}
 
 	public String getNetMask() {
