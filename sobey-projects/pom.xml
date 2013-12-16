@@ -20,5 +20,6 @@
 		<module>firewall</module>
 		<module>loadbalancer</module>
 		<module>storage</module>
+		<module>dns</module>
 	</modules>
 </project>
