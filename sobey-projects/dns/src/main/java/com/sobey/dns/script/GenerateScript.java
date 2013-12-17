@@ -122,8 +122,8 @@ public class GenerateScript {
 	 * 
 	 * bind gslb vserver mdnftp.sobeycache.com -domainName mdnftp.sobeycache.com -TTL 5
 	 * 
-	 * add gslb vserver mdnftp.sobeycache.com HTTP -lbMethod STATICPROXIMITY  -backup LBMethodROUNDROBIN -tolerance 0 -appflowLog DISABLED
-	 * set gslb vserver mdnftp.sobeycache.com HTTP -lbMethod STATICPROXIMITY  -backup LBMethodROUNDROBIN -appflowLog DISABLED
+	 * add gslb vserver mdnftp.sobeycache.com HTTP -lbMethod STATICPROXIMITY  -backupLBMethod ROUNDROBIN -tolerance 0 -appflowLog DISABLED
+	 * set gslb vserver mdnftp.sobeycache.com HTTP -lbMethod STATICPROXIMITY  -backupLBMethod ROUNDROBIN -appflowLog DISABLED
 	 * </pre>
 	 * 
 	 * @param dnsParameter
@@ -158,8 +158,9 @@ public class GenerateScript {
 			for (DNSPolicyParameter dnsPolicyParameter : ipParameter.getPolicyParameters()) {
 				sb.append("add ").append(dnsParameter.getDomianType()).append(" service ")
 						.append(generateServiceName(ipParameter, dnsPolicyParameter)).append(" ")
-						.append(ipParameter.getIpaddress()).append(" HTTP ").append(dnsPolicyParameter.getSourcePort())
-						.append(" -publicIP ").append(ipParameter.getIpaddress()).append(" -publicPort ")
+						.append(ipParameter.getIpaddress()).append(" ").append(dnsPolicyParameter.getProtocolText())
+						.append(" ").append(dnsPolicyParameter.getSourcePort()).append(" -publicIP ")
+						.append(ipParameter.getIpaddress()).append(" -publicPort ")
 						.append(dnsPolicyParameter.getTargetPort()).append(" -maxClient ").append(DNS_MAXCLIENT)
 						.append(" -siteName ").append(generateSiteName(ipParameter)).append(" -cltTimeout ")
 						.append(DNS_CLTTIMEOUT).append(" -svrTimeout ").append(DNS_SVRTIMEOUT)
@@ -180,13 +181,13 @@ public class GenerateScript {
 
 		// Step.5
 		sb.append("add ").append(dnsParameter.getDomianType()).append(" vserver ").append(dnsParameter.getDomianName())
-				.append(" HTTP").append(" -lbMethod ").append(DNS_LBMETHOD).append(" -backup ").append(DNS_BACKUP)
-				.append(" -tolerance ").append(DNS_TOLERANCE).append(" -appflowLog ").append(DNS_APPFLOWLOG)
-				.append(symbol);
+				.append(" HTTP").append(" -lbMethod ").append(DNS_LBMETHOD).append(" -backupLBMethod ")
+				.append(DNS_BACKUP).append(" -tolerance ").append(DNS_TOLERANCE).append(" -appflowLog ")
+				.append(DNS_APPFLOWLOG).append(symbol);
 
 		sb.append("set ").append(dnsParameter.getDomianType()).append(" vserver ").append(dnsParameter.getDomianName())
-				.append(" HTTP").append(" -lbMethod ").append(DNS_LBMETHOD).append(" -backup ").append(DNS_BACKUP)
-				.append(" -appflowLog ").append(DNS_APPFLOWLOG).append(symbol);
+				.append(" HTTP").append(" -lbMethod ").append(DNS_LBMETHOD).append(" -backupLBMethod ")
+				.append(DNS_BACKUP).append(" -appflowLog ").append(DNS_APPFLOWLOG).append(symbol);
 
 		return sb.toString();
 	}
@@ -210,8 +211,8 @@ public class GenerateScript {
 	 * 
 	 * bind gslb vserver mdnftp.sobeycache.com -domainName mdnftp.sobeycache.com -TTL 5
 	 * 
-	 * add gslb vserver mdnftp.sobeycache.com HTTP -lbMethod STATICPROXIMITY  -backup LBMethodROUNDROBIN -tolerance 0 -appflowLog DISABLED
-	 * set gslb vserver mdnftp.sobeycache.com HTTP -lbMethod STATICPROXIMITY  -backup LBMethodROUNDROBIN -appflowLog DISABLED
+	 * add gslb vserver mdnftp.sobeycache.com HTTP -lbMethod STATICPROXIMITY  -backupLBMethod ROUNDROBIN -tolerance 0 -appflowLog DISABLED
+	 * set gslb vserver mdnftp.sobeycache.com HTTP -lbMethod STATICPROXIMITY  -backupLBMethod ROUNDROBIN -appflowLog DISABLED
 	 * </pre>
 	 * 
 	 * @param dnsParameter
