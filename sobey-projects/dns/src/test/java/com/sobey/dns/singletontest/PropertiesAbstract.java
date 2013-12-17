@@ -15,7 +15,7 @@ public abstract class PropertiesAbstract {
 	 */
 	protected static PropertiesLoader DNS_LOADER = new PropertiesLoader("classpath:/dns.properties");
 
-	/* 防火墙登录 */
+	/* DNS登录 */
 	protected static final String DNS_IP = DNS_LOADER.getProperty("DNS_IP");
 	protected static final String DNS_USERNAME = DNS_LOADER.getProperty("DNS_USERNAME");
 	protected static final String DNS_PASSWORD = DNS_LOADER.getProperty("DNS_PASSWORD");
