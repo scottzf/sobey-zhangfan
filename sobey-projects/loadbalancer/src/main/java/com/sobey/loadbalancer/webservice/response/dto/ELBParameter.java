@@ -14,8 +14,7 @@ import com.sobey.loadbalancer.constans.WsConstants;
  * Loadbalancer上,执行脚本所需参数的ELBParameter对象:
  * 
  * <pre>
- * domianName	域名
- * domianType	域名类型: GSLB,A,CNAME
+ * vip		虚拟IP
  * publicIPs	公网IP集合
  * </pre>
  * 
