@@ -21,5 +21,6 @@
 		<module>loadbalancer</module>
 		<module>storage</module>
 		<module>dns</module>
+		<module>portal</module>
 	</modules>
 </project>
