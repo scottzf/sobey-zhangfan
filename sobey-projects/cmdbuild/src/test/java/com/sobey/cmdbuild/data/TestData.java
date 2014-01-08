@@ -48,7 +48,8 @@ import com.sobey.test.data.RandomData;
 public class TestData {
 
 	private static Date startDate = new Date(System.currentTimeMillis());
-	private static Date endDate = new Date(System.currentTimeMillis() + (60 * 60 * 24 * 7 * 1000));
+
+	// private static Date endDate = new Date(System.currentTimeMillis() + (60 * 60 * 24 * 7 * 1000));
 
 	public static Company randomCompany() {
 		Company company = new Company();
