@@ -9,6 +9,7 @@ import com.sobey.cmdbuild.service.financial.EipSpecService;
 import com.sobey.cmdbuild.service.financial.Es3SpecService;
 import com.sobey.cmdbuild.service.iaas.As2Service;
 import com.sobey.cmdbuild.service.iaas.Cs2Service;
+import com.sobey.cmdbuild.service.iaas.DnsPolicyService;
 import com.sobey.cmdbuild.service.iaas.DnsService;
 import com.sobey.cmdbuild.service.iaas.EcsService;
 import com.sobey.cmdbuild.service.iaas.EipPolicyService;
@@ -69,6 +70,9 @@ public class CommonService {
 
 	@Autowired
 	public DnsService dnsService;
+
+	@Autowired
+	public DnsPolicyService dnsPolicyService;
 
 	@Autowired
 	public EcsService ecsService;
