@@ -128,15 +128,15 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			// 将DTO对象转换至Entity对象
 			DeviceSpec deviceSpec = BeanMapper.map(deviceSpecDTO, DeviceSpec.class);
-			deviceSpec.setUser(DEFAULT_USER);
 			deviceSpec.setIdClass(TableNameUtil.getTableName(DeviceSpec.class));
+			deviceSpec.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, deviceSpec);
 
 			comm.deviceSpecService.saveOrUpdate(deviceSpec);
 
-			return new IdResult(deviceSpec.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -183,7 +183,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			comm.deviceSpecService.saveOrUpdate(deviceSpec);
 
-			return new IdResult(deviceSpec.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -208,11 +208,13 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			Validate.notNull(deviceSpec, ERROR.OBJECT_NULL);
 
+			deviceSpec.setUser(DEFAULT_USER);
 			deviceSpec.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+			deviceSpec.setIdClass(TableNameUtil.getTableName(DeviceSpec.class));
 
 			comm.deviceSpecService.saveOrUpdate(deviceSpec);
 
-			return new IdResult(deviceSpec.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -225,9 +227,13 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 	public PaginationResult<DeviceSpecDTO> getDeviceSpecPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<DeviceSpecDTO> result = new PaginationResult<DeviceSpecDTO>();
+
 		try {
+
 			return comm.deviceSpecService.getDeviceSpecDTOPagination(searchParams, pageNumber, pageSize);
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -238,11 +244,16 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 	@Override
 	public DTOListResult<DeviceSpecDTO> getDeviceSpecList(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<DeviceSpecDTO> result = new DTOListResult<DeviceSpecDTO>();
+
 		try {
+
 			result.setDtos(BeanMapper.mapList(comm.deviceSpecService.getDeviceSpecList(searchParams),
 					DeviceSpecDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -298,6 +309,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
 
 			result.setDto(dto);
+
 			return result;
 
 		} catch (IllegalArgumentException e) {
@@ -324,14 +336,16 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			// 将DTO对象转换至Entity对象
 			EcsSpec ecsSpec = BeanMapper.map(ecsSpecDTO, EcsSpec.class);
+
 			ecsSpec.setUser(DEFAULT_USER);
+			ecsSpec.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			ecsSpec.setIdClass(TableNameUtil.getTableName(EcsSpec.class));
 
 			BeanValidators.validateWithException(validator, ecsSpec);
 
 			comm.ecsSpecService.saveOrUpdate(ecsSpec);
 
-			return new IdResult(ecsSpec.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -376,7 +390,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			comm.ecsSpecService.saveOrUpdate(ecsSpec);
 
-			return new IdResult(ecsSpec.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -405,7 +419,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			comm.ecsSpecService.saveOrUpdate(ecsSpec);
 
-			return new IdResult(ecsSpec.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -418,9 +432,13 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 	public PaginationResult<EcsSpecDTO> getEcsSpecPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<EcsSpecDTO> result = new PaginationResult<EcsSpecDTO>();
+
 		try {
+
 			return comm.ecsSpecService.getEcsSpecDTOPagination(searchParams, pageNumber, pageSize);
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -430,10 +448,15 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 	@Override
 	public DTOListResult<EcsSpecDTO> getEcsSpecList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<EcsSpecDTO> result = new DTOListResult<EcsSpecDTO>();
+
 		try {
+
 			result.setDtos(BeanMapper.mapList(comm.ecsSpecService.getEcsSpecList(searchParams), EcsSpecDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -458,6 +481,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			// LookUp
 			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+			dto.setIspText(cmdbuildSoapServiceImpl.findLookUp(dto.getIsp()).getDto().getDescription());
 
 			result.setDto(dto);
 
@@ -487,6 +511,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			// LookUp
 			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+			dto.setIspText(cmdbuildSoapServiceImpl.findLookUp(dto.getIsp()).getDto().getDescription());
 
 			result.setDto(dto);
 
@@ -523,7 +548,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			comm.eipSpecService.saveOrUpdate(eipSpec);
 
-			return new IdResult(eipSpec.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -568,7 +593,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			comm.eipSpecService.saveOrUpdate(eipSpec);
 
-			return new IdResult(eipSpec.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -597,7 +622,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			comm.eipSpecService.saveOrUpdate(eipSpec);
 
-			return new IdResult(eipSpec.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -610,9 +635,13 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 	public PaginationResult<EipSpecDTO> getEipSpecPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<EipSpecDTO> result = new PaginationResult<EipSpecDTO>();
+
 		try {
+
 			return comm.eipSpecService.getEipSpecDTOPagination(searchParams, pageNumber, pageSize);
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -622,10 +651,15 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 	@Override
 	public DTOListResult<EipSpecDTO> getEipSpecList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<EipSpecDTO> result = new DTOListResult<EipSpecDTO>();
+
 		try {
+
 			result.setDtos(BeanMapper.mapList(comm.eipSpecService.getEipSpecList(searchParams), EipSpecDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -650,6 +684,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			// LookUp
 			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+			dto.setIopsText(cmdbuildSoapServiceImpl.findLookUp(dto.getIops()).getDto().getDescription());
 
 			result.setDto(dto);
 
@@ -679,6 +714,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			// LookUp
 			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+			dto.setIopsText(cmdbuildSoapServiceImpl.findLookUp(dto.getIops()).getDto().getDescription());
 
 			result.setDto(dto);
 
@@ -715,7 +751,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			comm.es3SpecService.saveOrUpdate(es3Spec);
 
-			return new IdResult(es3Spec.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -761,7 +797,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			comm.es3SpecService.saveOrUpdate(es3Spec);
 
-			return new IdResult(es3Spec.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -790,7 +826,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			comm.es3SpecService.saveOrUpdate(es3Spec);
 
-			return new IdResult(es3Spec.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -805,6 +841,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
 
 		PaginationResult<Es3SpecDTO> result = new PaginationResult<Es3SpecDTO>();
+
 		try {
 
 			return comm.es3SpecService.getEs3SpecDTOPagination(searchParams, pageNumber, pageSize);

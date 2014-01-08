@@ -1,10 +1,11 @@
 package com.sobey.cmdbuild.webservice;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.jws.WebParam;
+import javax.validation.ConstraintViolationException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.cxf.feature.Features;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public DTOResult<Cs2DTO> findCs2(@WebParam(name = "id") Integer id) {
+
 		DTOResult<Cs2DTO> result = new DTOResult<Cs2DTO>();
 
 		try {
@@ -71,6 +73,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Cs2DTO dto = BeanMapper.map(cs2, Cs2DTO.class);
 
+			// Reference
 			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
 			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
 			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
@@ -90,6 +93,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public DTOResult<Cs2DTO> findCs2ByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<Cs2DTO> result = new DTOResult<Cs2DTO>();
 
 		try {
@@ -102,6 +106,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Cs2DTO dto = BeanMapper.map(cs2, Cs2DTO.class);
 
+			// Reference
 			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
 			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
 			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
@@ -121,6 +126,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult createCs2(@WebParam(name = "cs2DTO") Cs2DTO cs2DTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -135,6 +141,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.isTrue(comm.cs2Service.findCs2(searchParams) == null, ERROR.OBJECT_DUPLICATE);
 
+			// 将DTO对象转换至Entity对象
 			Cs2 cs2 = BeanMapper.map(cs2DTO, Cs2.class);
 
 			cs2.setUser(DEFAULT_USER);
@@ -144,7 +151,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.cs2Service.saveOrUpdate(cs2);
 
-			return new IdResult(cs2.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -155,6 +162,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult updateCs2(@WebParam(name = "id") Integer id, @WebParam(name = "cs2DTO") Cs2DTO cs2DTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -168,13 +176,13 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			searchParams.put("EQ_code", cs2DTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.cs2Service.findCs2(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(comm.cs2Service.findCs2(searchParams) == null || cs2.getCode().equals(cs2DTO.getCode()),
+					ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(cs2DTO, Cs2.class), cs2);
 
 			cs2.setIdClass(TableNameUtil.getTableName(Cs2.class));
-
 			cs2.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
@@ -182,7 +190,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.cs2Service.saveOrUpdate(cs2);
 
-			return new IdResult(cs2.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -193,6 +201,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult deleteCs2(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -201,15 +210,14 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Cs2 cs2 = comm.cs2Service.findCs2(id);
 
-			Validate.isTrue(cs2 != null, ERROR.OBJECT_NULL);
+			Validate.notNull(cs2, ERROR.INPUT_NULL);
 
 			cs2.setIdClass(TableNameUtil.getTableName(Cs2.class));
-
 			cs2.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.cs2Service.saveOrUpdate(cs2);
 
-			return new IdResult(cs2.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -221,6 +229,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	@Override
 	public PaginationResult<Cs2DTO> getCs2Pagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<Cs2DTO> result = new PaginationResult<Cs2DTO>();
 
 		try {
@@ -240,11 +249,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 		try {
 
-			List<Cs2> cs2 = comm.cs2Service.getCs2List(searchParams);
-
-			List<Cs2DTO> list = BeanMapper.mapList(cs2, Cs2DTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.cs2Service.getCs2List(searchParams), Cs2DTO.class));
 
 			return result;
 
@@ -253,40 +258,11 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 		} catch (RuntimeException e) {
 			return handleGeneralError(result, e);
 		}
-	}
-
-	 
- 
-
-	@Override
-	public IdResult ModifyCS2Attributes(@WebParam(name = "cs2DTO") Cs2DTO cs2DTO) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			// 修改存储的基本信息。 如服务标签、存储说明等不需要关联 Storage Agent 的操作
-			result = updateCs2(cs2DTO.getId(), cs2DTO);
-
-			return result;
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-
-	}
-
-	@Override
-	public DTOListResult<Cs2DTO> reportCS2(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
-
-		// 多条件获取对象集合，并导出列表的信息为 Excel 文件
-
-		return null;
 	}
 
 	@Override
 	public DTOResult<As2DTO> findAs2(@WebParam(name = "id") Integer id) {
+
 		DTOResult<As2DTO> result = new DTOResult<As2DTO>();
 
 		try {
@@ -299,12 +275,16 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			As2DTO dto = BeanMapper.map(as2, As2DTO.class);
 
+			// Reference
 			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
 			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
 			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
 			dto.setEs3SpecDTO(financialSoapServiceImpl.findEs3Spec(dto.getEs3Spec()).getDto());
 			dto.setNetappControllerDTO(infrastructureSoapServiceImpl.findNetappController(dto.getNetappController())
 					.getDto());
+
+			// LookUp
+			dto.setVolumeTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getVolumeType()).getDto().getDescription());
 
 			result.setDto(dto);
 
@@ -319,6 +299,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public DTOResult<As2DTO> findAs2ByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<As2DTO> result = new DTOResult<As2DTO>();
 
 		try {
@@ -331,12 +312,16 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			As2DTO dto = BeanMapper.map(as2, As2DTO.class);
 
+			// Reference
 			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
 			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
 			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
 			dto.setEs3SpecDTO(financialSoapServiceImpl.findEs3Spec(dto.getEs3Spec()).getDto());
 			dto.setNetappControllerDTO(infrastructureSoapServiceImpl.findNetappController(dto.getNetappController())
 					.getDto());
+
+			// LookUp
+			dto.setVolumeTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getVolumeType()).getDto().getDescription());
 
 			result.setDto(dto);
 
@@ -351,11 +336,10 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult createAs2(@WebParam(name = "as2DTO") As2DTO as2DTO) {
+
 		IdResult result = new IdResult();
 
 		try {
-
-			// TODO 调用 storage Agent 中的 createVolumes 接口。AS2 创建成功，将数据保存至CMDBuild 中；创建失败，返回错误提示至页面。
 
 			Validate.notNull(as2DTO, ERROR.INPUT_NULL);
 
@@ -377,7 +361,6 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.as2Service.saveOrUpdate(as2);
 
-
 			return result;
 
 		} catch (IllegalArgumentException e) {
@@ -389,6 +372,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult updateAs2(@WebParam(name = "id") Integer id, @WebParam(name = "as2DTO") As2DTO as2DTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -402,13 +386,13 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			searchParams.put("EQ_code", as2DTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.as2Service.findAs2(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(comm.as2Service.findAs2(searchParams) == null || as2.getCode().equals(as2DTO.getCode()),
+					ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(as2DTO, As2.class), as2);
 
 			as2.setIdClass(TableNameUtil.getTableName(As2.class));
-
 			as2.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			as2.setUser(DEFAULT_USER);
 
@@ -417,7 +401,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.as2Service.saveOrUpdate(as2);
 
-			return new IdResult(as2.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -428,22 +412,18 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult deleteAs2(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
-
-			// TODO 选择存储,判断是否是是加载的。如果是加载状态，返回错误信息。
-			// 调用 Storage Agent 中的 deleteVolumes 接口。存储删除成功，将数据保存至CMDBuild 中；销毁失败，返回错误提示至页面。
 
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
 			As2 as2 = comm.as2Service.findAs2(id);
 
-			Validate.isTrue(as2 != null, ERROR.OBJECT_NULL);
-
+			Validate.notNull(as2, ERROR.OBJECT_NULL);
 
 			as2.setIdClass(TableNameUtil.getTableName(As2.class));
-
 			as2.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.as2Service.saveOrUpdate(as2);
@@ -460,6 +440,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	@Override
 	public PaginationResult<As2DTO> getAs2Pagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<As2DTO> result = new PaginationResult<As2DTO>();
 
 		try {
@@ -475,15 +456,12 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public DTOListResult<As2DTO> getAs2List(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<As2DTO> result = new DTOListResult<As2DTO>();
 
 		try {
 
-			List<As2> as2 = comm.as2Service.getAs2List(searchParams);
-
-			List<As2DTO> list = BeanMapper.mapList(as2, As2DTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.as2Service.getAs2List(searchParams), As2DTO.class));
 
 			return result;
 
@@ -494,15 +472,8 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 		}
 	}
 
- 
-
 	@Override
-	public DTOListResult<As2DTO> reportAS2(Map<String, Object> searchParams) {
-		return null;
-	}
-
-	@Override
-	public DTOResult<EcsDTO> findECS(@WebParam(name = "id") Integer id) {
+	public DTOResult<EcsDTO> findEcs(@WebParam(name = "id") Integer id) {
 		DTOResult<EcsDTO> result = new DTOResult<EcsDTO>();
 
 		try {
@@ -515,12 +486,14 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			EcsDTO dto = BeanMapper.map(ecs, EcsDTO.class);
 
+			// Reference
 			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
 			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
 			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
 			dto.setEcsSpecDTO(financialSoapServiceImpl.findEcsSpec(dto.getEcsSpec()).getDto());
 			dto.setServerDTO(infrastructureSoapServiceImpl.findServer(dto.getServer()).getDto());
 
+			// LookUp
 			dto.setEcsAgentText(cmdbuildSoapServiceImpl.findLookUp(dto.getEcsAgent()).getDto().getDescription());
 			dto.setEcsStatusText(cmdbuildSoapServiceImpl.findLookUp(dto.getEcsStatus()).getDto().getDescription());
 			dto.setImageText(cmdbuildSoapServiceImpl.findLookUp(dto.getImage()).getDto().getDescription());
@@ -537,7 +510,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	}
 
 	@Override
-	public DTOResult<EcsDTO> findECSByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+	public DTOResult<EcsDTO> findEcsByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
 		DTOResult<EcsDTO> result = new DTOResult<EcsDTO>();
 
 		try {
@@ -550,17 +523,20 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			EcsDTO dto = BeanMapper.map(ecs, EcsDTO.class);
 
+			// Reference
 			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
 			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
 			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
 			dto.setEcsSpecDTO(financialSoapServiceImpl.findEcsSpec(dto.getEcsSpec()).getDto());
 			dto.setServerDTO(infrastructureSoapServiceImpl.findServer(dto.getServer()).getDto());
 
+			// LookUp
 			dto.setEcsAgentText(cmdbuildSoapServiceImpl.findLookUp(dto.getEcsAgent()).getDto().getDescription());
 			dto.setEcsStatusText(cmdbuildSoapServiceImpl.findLookUp(dto.getEcsStatus()).getDto().getDescription());
 			dto.setImageText(cmdbuildSoapServiceImpl.findLookUp(dto.getImage()).getDto().getDescription());
 
 			result.setDto(dto);
+
 			return result;
 
 		} catch (IllegalArgumentException e) {
@@ -571,7 +547,8 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	}
 
 	@Override
-	public IdResult createECS(@WebParam(name = "ecsDTO") EcsDTO ecsDTO) {
+	public IdResult createEcs(@WebParam(name = "ecsDTO") EcsDTO ecsDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -596,14 +573,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.ecsService.saveOrUpdate(ecs);
 
-			// 调用 ECS Agent 中的 cloneVM 接口。虚拟机创建成功，将数据保存至 CMDBuild 中；
-			// 创建失败，返回错误提示至页面。
-
-			// 分配 IP。
-			// 创建订单。
-			// 为虚拟机创建监控。
-
-			return new IdResult(ecs.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -613,16 +583,83 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	}
 
 	@Override
-	public DTOListResult<EcsDTO> getECSList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+	public IdResult updateEcs(@WebParam(name = "id") Integer id, @WebParam(name = "ecsDTO") EcsDTO ecsDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(ecsDTO, ERROR.INPUT_NULL);
+
+			Ecs ecs = comm.ecsService.findEcs(id);
+
+			Validate.notNull(ecs, ERROR.INPUT_NULL);
+
+			// 验证code是否唯一.如果不为null,则弹出错误.
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_code", ecsDTO.getCode());
+
+			Validate.isTrue(comm.ecsService.findEcs(searchParams) == null || ecs.getCode().equals(ecsDTO.getCode()),
+					ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(ecsDTO, Ecs.class), ecs);
+
+			ecs.setUser(DEFAULT_USER);
+			ecs.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			ecs.setIdClass(TableNameUtil.getTableName(Ecs.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, ecs);
+
+			comm.ecsService.saveOrUpdate(ecs);
+
+			return result;
+
+		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteEcs(@WebParam(name = "id") Integer id) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Ecs ecs = comm.ecsService.findEcs(id);
+
+			Validate.notNull(ecs, ERROR.INPUT_NULL);
+
+			ecs.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.ecsService.saveOrUpdate(ecs);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOListResult<EcsDTO> getEcsList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<EcsDTO> result = new DTOListResult<EcsDTO>();
 
 		try {
 
-			List<Ecs> ecs = comm.ecsService.getEcsList(searchParams);
-
-			List<EcsDTO> list = BeanMapper.mapList(ecs, EcsDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.ecsService.getEcsList(searchParams), EcsDTO.class));
 
 			return result;
 
@@ -636,6 +673,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	@Override
 	public PaginationResult<EcsDTO> getEcsPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<EcsDTO> result = new PaginationResult<EcsDTO>();
 
 		try {
@@ -650,32 +688,8 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	}
 
 	@Override
-	public IdResult resizeECSs(@WebParam(name = "ecsDTO") EcsDTO ecsDTO) {
-		return null;
-	}
-
-	@Override
-	public IdResult DestroyECSs(@WebParam(name = "ecsDTO") EcsDTO ecsDTO) {
-		return null;
-	}
-
-	@Override
-	public IdResult powerOpsECS(@WebParam(name = "ecsDTO") EcsDTO ecsDTO) {
-		return null;
-	}
-
-	@Override
-	public IdResult ModifyECSAttributes(@WebParam(name = "ecsDTO") EcsDTO ecsDTO) {
-		return null;
-	}
-
-	@Override
-	public DTOListResult<EcsDTO> reportECS(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
-		return null;
-	}
-
-	@Override
 	public DTOResult<EipDTO> findEip(@WebParam(name = "id") Integer id) {
+
 		DTOResult<EipDTO> result = new DTOResult<EipDTO>();
 
 		try {
@@ -688,11 +702,13 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			EipDTO dto = BeanMapper.map(eip, EipDTO.class);
 
+			// Reference
 			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
 			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
 			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
 			dto.setEipSpecDTO(financialSoapServiceImpl.findEipSpec(dto.getEipSpec()).getDto());
 
+			// LookUp
 			dto.setEipStatusText(cmdbuildSoapServiceImpl.findLookUp(dto.getEipStatus()).getDto().getDescription());
 
 			result.setDto(dto);
@@ -720,11 +736,13 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			EipDTO dto = BeanMapper.map(eip, EipDTO.class);
 
+			// Reference
 			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
 			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
 			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
 			dto.setEipSpecDTO(financialSoapServiceImpl.findEipSpec(dto.getEipSpec()).getDto());
 
+			// LookUp
 			dto.setEipStatusText(cmdbuildSoapServiceImpl.findLookUp(dto.getEipStatus()).getDto().getDescription());
 
 			result.setDto(dto);
@@ -740,6 +758,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult createEip(@WebParam(name = "eipDTO") EipDTO eipDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -764,7 +783,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.eipService.saveOrUpdate(eip);
 
-			return new IdResult(eip.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -775,6 +794,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult updateEip(@WebParam(name = "id") Integer id, @WebParam(name = "eipDTO") EipDTO eipDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -788,7 +808,8 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			searchParams.put("EQ_code", eipDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.eipService.findEip(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(comm.eipService.findEip(searchParams) == null || eip.getCode().equals(eipDTO.getCode()),
+					ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(eipDTO, Eip.class), eip);
@@ -803,7 +824,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.eipService.saveOrUpdate(eip);
 
-			return new IdResult(eip.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -814,6 +835,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult deleteEip(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -822,7 +844,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Eip eip = comm.eipService.findEip(id);
 
-			Validate.isTrue(eip != null, ERROR.OBJECT_NULL);
+			Validate.notNull(eip, ERROR.OBJECT_NULL);
 
 			eip.setIdClass(TableNameUtil.getTableName(Eip.class));
 
@@ -830,7 +852,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.eipService.saveOrUpdate(eip);
 
-			return new IdResult(eip.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -842,6 +864,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	@Override
 	public PaginationResult<EipDTO> getEipPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<EipDTO> result = new PaginationResult<EipDTO>();
 
 		try {
@@ -857,15 +880,12 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public DTOListResult<EipDTO> getEipList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<EipDTO> result = new DTOListResult<EipDTO>();
 
 		try {
 
-			List<Eip> eip = comm.eipService.getEipList(searchParams);
-
-			List<EipDTO> list = BeanMapper.mapList(eip, EipDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.eipService.getEipList(searchParams), EipDTO.class));
 
 			return result;
 
@@ -877,47 +897,8 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	}
 
 	@Override
-	public IdResult resizeEIP(@WebParam(name = "eipDTO") EipDTO eipDTO) {
-		return null;
-	}
-
-	@Override
-	public IdResult allocateEIP(@WebParam(name = "eipDTO") EipDTO eipDTO) {
-		return null;
-	}
-
-	@Override
-	public IdResult associateEIP(@WebParam(name = "eipDTO") EipDTO eipDTO) {
-		return null;
-	}
-
-	@Override
-	public IdResult dissociateEIP(@WebParam(name = "eipDTO") EipDTO eipDTO) {
-		return null;
-	}
-
-	@Override
-	public IdResult changeEIPBandwidth(@WebParam(name = "eipDTO") EipDTO eipDTO) {
-		return null;
-	}
-
-	@Override
-	public IdResult operateEIP(@WebParam(name = "eipDTO") EipDTO eipDTO) {
-		return null;
-	}
-
-	@Override
-	public IdResult ModifyEIPAttributes(@WebParam(name = "eipDTO") EipDTO eipDTO) {
-		return null;
-	}
-
-	@Override
-	public DTOListResult<EipDTO> reportEIP(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
-		return null;
-	}
-
-	@Override
 	public DTOResult<ElbDTO> findElb(@WebParam(name = "id") Integer id) {
+
 		DTOResult<ElbDTO> result = new DTOResult<ElbDTO>();
 
 		try {
@@ -930,6 +911,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			ElbDTO dto = BeanMapper.map(elb, ElbDTO.class);
 
+			// Reference
 			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
 			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
 			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
@@ -947,6 +929,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public DTOResult<ElbDTO> findElbByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<ElbDTO> result = new DTOResult<ElbDTO>();
 
 		try {
@@ -959,6 +942,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			ElbDTO dto = BeanMapper.map(elb, ElbDTO.class);
 
+			// Reference
 			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
 			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
 			dto.setIpaddressDTO(infrastructureSoapServiceImpl.findIpaddress(dto.getIpaddress()).getDto());
@@ -976,6 +960,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult createElb(@WebParam(name = "elbDTO") ElbDTO elbDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1000,7 +985,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.elbService.saveOrUpdate(elb);
 
-			return new IdResult(elb.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1011,6 +996,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult updateElb(@WebParam(name = "id") Integer id, @WebParam(name = "elbDTO") ElbDTO elbDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1024,7 +1010,8 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			searchParams.put("EQ_code", elbDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.elbService.findElb(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(comm.elbService.findElb(searchParams) == null || elb.getCode().equals(elbDTO.getCode()),
+					ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(elbDTO, Elb.class), elb);
@@ -1039,7 +1026,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.elbService.saveOrUpdate(elb);
 
-			return new IdResult(elb.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1050,6 +1037,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult deleteElb(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1058,15 +1046,14 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Elb elb = comm.elbService.findElb(id);
 
-			Validate.isTrue(elb != null, ERROR.OBJECT_NULL);
+			Validate.notNull(elb, ERROR.OBJECT_NULL);
 
 			elb.setIdClass(TableNameUtil.getTableName(Elb.class));
-
 			elb.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.elbService.saveOrUpdate(elb);
 
-			return new IdResult(elb.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1078,6 +1065,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	@Override
 	public PaginationResult<ElbDTO> getElbPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<ElbDTO> result = new PaginationResult<ElbDTO>();
 
 		try {
@@ -1093,15 +1081,12 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public DTOListResult<ElbDTO> getElbList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<ElbDTO> result = new DTOListResult<ElbDTO>();
 
 		try {
 
-			List<Elb> elb = comm.elbService.getElbList(searchParams);
-
-			List<ElbDTO> list = BeanMapper.mapList(elb, ElbDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.elbService.getElbList(searchParams), ElbDTO.class));
 
 			return result;
 
@@ -1113,22 +1098,8 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	}
 
 	@Override
-	public IdResult allocateELB(@WebParam(name = "elbDTO") ElbDTO elbDTO) {
-		return null;
-	}
-
-	@Override
-	public IdResult modifyELBAttributes(@WebParam(name = "elbDTO") ElbDTO elbDTO) {
-		return null;
-	}
-
-	@Override
-	public DTOListResult<ElbDTO> reportELB(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
-		return null;
-	}
-
-	@Override
 	public DTOResult<DnsDTO> findDns(@WebParam(name = "id") Integer id) {
+
 		DTOResult<DnsDTO> result = new DTOResult<DnsDTO>();
 
 		try {
@@ -1141,9 +1112,11 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			DnsDTO dto = BeanMapper.map(dns, DnsDTO.class);
 
+			// Reference
 			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
 			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
 
+			// LookUp
 			dto.setDomainTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getDomainType()).getDto().getDescription());
 
 			result.setDto(dto);
@@ -1159,6 +1132,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public DTOResult<DnsDTO> findDnsByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<DnsDTO> result = new DTOResult<DnsDTO>();
 
 		try {
@@ -1171,9 +1145,11 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			DnsDTO dto = BeanMapper.map(dns, DnsDTO.class);
 
+			// Reference
 			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
 			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
 
+			// LookUp
 			dto.setDomainTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getDomainType()).getDto().getDescription());
 
 			result.setDto(dto);
@@ -1189,6 +1165,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult createDns(@WebParam(name = "dnsDTO") DnsDTO dnsDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1213,7 +1190,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.dnsService.saveOrUpdate(dns);
 
-			return new IdResult(dns.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1224,6 +1201,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult updateDns(@WebParam(name = "id") Integer id, @WebParam(name = "dnsDTO") DnsDTO dnsDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1237,13 +1215,13 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			searchParams.put("EQ_code", dnsDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.dnsService.findDns(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(comm.dnsService.findDns(searchParams) == null || dns.getCode().equals(dnsDTO.getCode()),
+					ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(dnsDTO, Dns.class), dns);
 
 			dns.setIdClass(TableNameUtil.getTableName(Dns.class));
-
 			dns.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			dns.setUser(DEFAULT_USER);
 
@@ -1252,7 +1230,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.dnsService.saveOrUpdate(dns);
 
-			return new IdResult(dns.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1263,6 +1241,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult deleteDns(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1271,15 +1250,14 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Dns dns = comm.dnsService.findDns(id);
 
-			Validate.isTrue(dns != null, ERROR.OBJECT_NULL);
+			Validate.notNull(dns, ERROR.OBJECT_NULL);
 
 			dns.setIdClass(TableNameUtil.getTableName(Dns.class));
-
 			dns.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.dnsService.saveOrUpdate(dns);
 
-			return new IdResult(dns.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1291,6 +1269,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	@Override
 	public PaginationResult<DnsDTO> getDnsPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<DnsDTO> result = new PaginationResult<DnsDTO>();
 
 		try {
@@ -1306,15 +1285,12 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public DTOListResult<DnsDTO> getDnsList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<DnsDTO> result = new DTOListResult<DnsDTO>();
 
 		try {
 
-			List<Dns> dns = comm.dnsService.getDnsList(searchParams);
-
-			List<DnsDTO> list = BeanMapper.mapList(dns, DnsDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.dnsService.getDnsList(searchParams), DnsDTO.class));
 
 			return result;
 
@@ -1326,17 +1302,8 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	}
 
 	@Override
-	public IdResult modifyDNSAttributes(@WebParam(name = "DnsDTO") DnsDTO DnsDTO) {
-		return null;
-	}
-
-	@Override
-	public DTOListResult<DnsDTO> reportDNS(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
-		return null;
-	}
-
-	@Override
 	public DTOResult<EsgDTO> findEsg(@WebParam(name = "id") Integer id) {
+
 		DTOResult<EsgDTO> result = new DTOResult<EsgDTO>();
 
 		try {
@@ -1349,6 +1316,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			EsgDTO dto = BeanMapper.map(esg, EsgDTO.class);
 
+			// Reference
 			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
 			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
 
@@ -1365,6 +1333,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public DTOResult<EsgDTO> findEsgByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<EsgDTO> result = new DTOResult<EsgDTO>();
 
 		try {
@@ -1377,6 +1346,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			EsgDTO dto = BeanMapper.map(esg, EsgDTO.class);
 
+			// Reference
 			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
 			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
 
@@ -1393,6 +1363,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult createEsg(@WebParam(name = "esgDTO") EsgDTO esgDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1417,7 +1388,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.esgService.saveOrUpdate(esg);
 
-			return new IdResult(esg.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1428,6 +1399,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult updateEsg(@WebParam(name = "id") Integer id, @WebParam(name = "esgDTO") EsgDTO esgDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1441,13 +1413,13 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			searchParams.put("EQ_code", esgDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.esgService.findEsg(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(comm.esgService.findEsg(searchParams) == null || esg.getCode().equals(esgDTO.getCode()),
+					ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(esgDTO, Esg.class), esg);
 
 			esg.setIdClass(TableNameUtil.getTableName(Esg.class));
-
 			esg.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			esg.setUser(DEFAULT_USER);
 
@@ -1456,7 +1428,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.esgService.saveOrUpdate(esg);
 
-			return new IdResult(esg.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1467,6 +1439,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult deleteEsg(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1475,15 +1448,14 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Esg esg = comm.esgService.findEsg(id);
 
-			Validate.isTrue(esg != null, ERROR.OBJECT_NULL);
+			Validate.notNull(esg, ERROR.OBJECT_NULL);
 
 			esg.setIdClass(TableNameUtil.getTableName(Esg.class));
-
 			esg.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.esgService.saveOrUpdate(esg);
 
-			return new IdResult(esg.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1495,6 +1467,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	@Override
 	public PaginationResult<EsgDTO> getEsgPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<EsgDTO> result = new PaginationResult<EsgDTO>();
 
 		try {
@@ -1510,15 +1483,12 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public DTOListResult<EsgDTO> getEsgList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<EsgDTO> result = new DTOListResult<EsgDTO>();
 
 		try {
 
-			List<Esg> esg = comm.esgService.getEsgList(searchParams);
-
-			List<EsgDTO> list = BeanMapper.mapList(esg, EsgDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.esgService.getEsgList(searchParams), EsgDTO.class));
 
 			return result;
 
@@ -1529,17 +1499,8 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 		}
 	}
 
-	@Override
-	public IdResult ModifyESGAttributes(@WebParam(name = "esgDTO") EsgDTO esgDTO) {
-		return null;
-	}
-
-	@Override
-	public DTOListResult<EsgDTO> reportESG(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
-		return null;
-	}
-
 	public DTOResult<VpnDTO> findVpn(@WebParam(name = "id") Integer id) {
+
 		DTOResult<VpnDTO> result = new DTOResult<VpnDTO>();
 
 		try {
@@ -1552,6 +1513,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			VpnDTO dto = BeanMapper.map(vpn, VpnDTO.class);
 
+			// Reference
 			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
 			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
 
@@ -1568,6 +1530,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public DTOResult<VpnDTO> findVpnByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<VpnDTO> result = new DTOResult<VpnDTO>();
 
 		try {
@@ -1580,6 +1543,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			VpnDTO dto = BeanMapper.map(vpn, VpnDTO.class);
 
+			// Reference
 			dto.setTagDTO(cmdbuildSoapServiceImpl.findTag(dto.getTag()).getDto());
 			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
 
@@ -1596,6 +1560,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult createVpn(@WebParam(name = "vpnDTO") VpnDTO vpnDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1620,7 +1585,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.vpnService.saveOrUpdate(vpn);
 
-			return new IdResult(vpn.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1631,6 +1596,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult updateVpn(@WebParam(name = "id") Integer id, @WebParam(name = "vpnDTO") VpnDTO vpnDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1644,13 +1610,13 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			searchParams.put("EQ_code", vpnDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.vpnService.findVpn(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(comm.vpnService.findVpn(searchParams) == null || vpn.getCode().equals(vpnDTO.getCode()),
+					ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(vpnDTO, Vpn.class), vpn);
 
 			vpn.setIdClass(TableNameUtil.getTableName(Vpn.class));
-
 			vpn.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			vpn.setUser(DEFAULT_USER);
 
@@ -1659,7 +1625,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.vpnService.saveOrUpdate(vpn);
 
-			return new IdResult(vpn.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1670,6 +1636,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult deleteVpn(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1678,7 +1645,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Vpn vpn = comm.vpnService.findVpn(id);
 
-			Validate.isTrue(vpn != null, ERROR.OBJECT_NULL);
+			Validate.notNull(vpn, ERROR.OBJECT_NULL);
 
 			vpn.setIdClass(TableNameUtil.getTableName(Vpn.class));
 
@@ -1686,7 +1653,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.vpnService.saveOrUpdate(vpn);
 
-			return new IdResult(vpn.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1698,6 +1665,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	@Override
 	public PaginationResult<VpnDTO> getVpnPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<VpnDTO> result = new PaginationResult<VpnDTO>();
 
 		try {
@@ -1713,15 +1681,12 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public DTOListResult<VpnDTO> getVpnList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<VpnDTO> result = new DTOListResult<VpnDTO>();
 
 		try {
 
-			List<Vpn> vpn = comm.vpnService.getVpnList(searchParams);
-
-			List<VpnDTO> list = BeanMapper.mapList(vpn, VpnDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.vpnService.getVpnList(searchParams), VpnDTO.class));
 
 			return result;
 
@@ -1733,22 +1698,8 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	}
 
 	@Override
-	public IdResult ModifyESGAttributes(@WebParam(name = "vpnDTO") VpnDTO vpnDTO) {
-		return null;
-	}
-
-	@Override
-	public IdResult changeVPNPassword(@WebParam(name = "id") Integer id) {
-		return null;
-	}
-
-	@Override
-	public DTOListResult<VpnDTO> reportVPN(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
-		return null;
-	}
-
-	@Override
 	public DTOResult<GroupPolicyDTO> findGroupPolicy(@WebParam(name = "id") Integer id) {
+
 		DTOResult<GroupPolicyDTO> result = new DTOResult<GroupPolicyDTO>();
 
 		try {
@@ -1761,6 +1712,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			GroupPolicyDTO dto = BeanMapper.map(groupPolicy, GroupPolicyDTO.class);
 
+			// Reference
 			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
 
 			result.setDto(dto);
@@ -1789,6 +1741,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			GroupPolicyDTO dto = BeanMapper.map(groupPolicy, GroupPolicyDTO.class);
 
+			// Reference
 			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
 
 			result.setDto(dto);
@@ -1804,6 +1757,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult createGroupPolicy(@WebParam(name = "groupPolicyDTO") GroupPolicyDTO groupPolicyDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1828,7 +1782,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.groupPolicyService.saveOrUpdate(groupPolicy);
 
-			return new IdResult(groupPolicy.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1840,6 +1794,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	@Override
 	public IdResult updateGroupPolicy(@WebParam(name = "id") Integer id,
 			@WebParam(name = "groupPolicyDTO") GroupPolicyDTO groupPolicyDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1853,13 +1808,13 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			searchParams.put("EQ_code", groupPolicyDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.groupPolicyService.findGroupPolicy(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(comm.groupPolicyService.findGroupPolicy(searchParams) == null
+					|| groupPolicy.getCode().equals(groupPolicyDTO.getCode()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(groupPolicyDTO, GroupPolicy.class), groupPolicy);
 
 			groupPolicy.setIdClass(TableNameUtil.getTableName(GroupPolicy.class));
-
 			groupPolicy.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			groupPolicy.setUser(DEFAULT_USER);
 
@@ -1868,7 +1823,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.groupPolicyService.saveOrUpdate(groupPolicy);
 
-			return new IdResult(groupPolicy.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1879,6 +1834,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 	@Override
 	public IdResult deleteGroupPolicy(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1887,7 +1843,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			GroupPolicy groupPolicy = comm.groupPolicyService.findGroupPolicy(id);
 
-			Validate.isTrue(groupPolicy != null, ERROR.OBJECT_NULL);
+			Validate.notNull(groupPolicy, ERROR.OBJECT_NULL);
 
 			groupPolicy.setIdClass(TableNameUtil.getTableName(GroupPolicy.class));
 
@@ -1895,7 +1851,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.groupPolicyService.saveOrUpdate(groupPolicy);
 
-			return new IdResult(groupPolicy.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1908,6 +1864,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	public PaginationResult<GroupPolicyDTO> getGroupPolicyPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<GroupPolicyDTO> result = new PaginationResult<GroupPolicyDTO>();
 
 		try {
@@ -1924,15 +1881,13 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	@Override
 	public DTOListResult<GroupPolicyDTO> getGroupPolicyList(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<GroupPolicyDTO> result = new DTOListResult<GroupPolicyDTO>();
 
 		try {
 
-			List<GroupPolicy> groupPolicy = comm.groupPolicyService.getGroupPolicyList(searchParams);
-
-			List<GroupPolicyDTO> list = BeanMapper.mapList(groupPolicy, GroupPolicyDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.groupPolicyService.getGroupPolicyList(searchParams),
+					GroupPolicyDTO.class));
 
 			return result;
 
@@ -1941,11 +1896,6 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 		} catch (RuntimeException e) {
 			return handleGeneralError(result, e);
 		}
-	}
-
-	@Override
-	public IdResult ModifyGroupPolicyAttributes(@WebParam(name = "groupPolicyDTO") GroupPolicyDTO groupPolicyDTO) {
-		return null;
 	}
 
 }

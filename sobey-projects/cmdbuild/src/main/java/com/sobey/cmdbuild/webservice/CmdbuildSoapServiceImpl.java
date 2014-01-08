@@ -1,6 +1,5 @@
 package com.sobey.cmdbuild.webservice;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.jws.WebParam;
@@ -95,10 +94,15 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public DTOListResult<LookUpDTO> getLookUpList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<LookUpDTO> result = new DTOListResult<LookUpDTO>();
+
 		try {
+
 			result.setDtos(BeanMapper.mapList(comm.lookUpService.getLookUpList(searchParams), LookUpDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -110,9 +114,13 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	public PaginationResult<LookUpDTO> getLookUpPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<LookUpDTO> result = new PaginationResult<LookUpDTO>();
+
 		try {
+
 			return comm.lookUpService.getLookUpDTOPagination(searchParams, pageNumber, pageSize);
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -192,7 +200,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			comm.companyService.saveOrUpdate(company);
 
-			return new IdResult(company.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -238,7 +246,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			comm.companyService.saveOrUpdate(company);
 
-			return new IdResult(company.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -267,7 +275,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			comm.companyService.saveOrUpdate(company);
 
-			return new IdResult(company.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -280,9 +288,13 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	public PaginationResult<CompanyDTO> getCompanyPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<CompanyDTO> result = new PaginationResult<CompanyDTO>();
+
 		try {
+
 			return comm.companyService.getCompanyDTOPagination(searchParams, pageNumber, pageSize);
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -292,10 +304,15 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public DTOListResult<CompanyDTO> getCompanyList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<CompanyDTO> result = new DTOListResult<CompanyDTO>();
+
 		try {
+
 			result.setDtos(BeanMapper.mapList(comm.companyService.getCompanyList(searchParams), CompanyDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -384,7 +401,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			comm.tenantsService.saveOrUpdate(tenants);
 
-			return new IdResult(tenants.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -430,7 +447,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			comm.tenantsService.saveOrUpdate(tenants);
 
-			return new IdResult(tenants.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -459,7 +476,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			comm.tenantsService.saveOrUpdate(tenants);
 
-			return new IdResult(tenants.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -472,9 +489,13 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	public PaginationResult<TenantsDTO> getTenantsPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<TenantsDTO> result = new PaginationResult<TenantsDTO>();
+
 		try {
+
 			return comm.tenantsService.getTenantsDTOPagination(searchParams, pageNumber, pageSize);
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -486,11 +507,13 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	public DTOListResult<TenantsDTO> getTenantsList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
 
 		DTOListResult<TenantsDTO> result = new DTOListResult<TenantsDTO>();
+
 		try {
-			List<TenantsDTO> list = BeanMapper.mapList(comm.tenantsService.getTenantsList(searchParams),
-					TenantsDTO.class);
-			result.setDtos(list);
+
+			result.setDtos(BeanMapper.mapList(comm.tenantsService.getTenantsList(searchParams), TenantsDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -581,7 +604,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			comm.tagService.saveOrUpdate(tag);
 
-			return new IdResult(tag.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -627,7 +650,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			comm.tagService.saveOrUpdate(tag);
 
-			return new IdResult(tag.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -656,7 +679,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			comm.tagService.saveOrUpdate(tag);
 
-			return new IdResult(tag.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -668,9 +691,13 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	@Override
 	public PaginationResult<TagDTO> getTagPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<TagDTO> result = new PaginationResult<TagDTO>();
+
 		try {
+
 			return comm.tagService.getTagDTOPagination(searchParams, pageNumber, pageSize);
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -681,9 +708,13 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	@Override
 	public DTOListResult<TagDTO> getTagList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
 		DTOListResult<TagDTO> result = new DTOListResult<TagDTO>();
+
 		try {
+
 			result.setDtos(BeanMapper.mapList(comm.tagService.getTagList(searchParams), TagDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -763,7 +794,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			comm.idcService.saveOrUpdate(idc);
 
-			return new IdResult(idc.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -806,7 +837,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			comm.idcService.saveOrUpdate(idc);
 
-			return new IdResult(idc.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -835,7 +866,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			comm.idcService.saveOrUpdate(idc);
 
-			return new IdResult(idc.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -847,9 +878,13 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	@Override
 	public PaginationResult<IdcDTO> getIdcPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<IdcDTO> result = new PaginationResult<IdcDTO>();
+
 		try {
+
 			return comm.idcService.getIdcDTOPagination(searchParams, pageNumber, pageSize);
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -859,10 +894,15 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public DTOListResult<IdcDTO> getIdcList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<IdcDTO> result = new DTOListResult<IdcDTO>();
+
 		try {
+
 			result.setDtos(BeanMapper.mapList(comm.idcService.getIdcList(searchParams), IdcDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -961,7 +1001,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			comm.rackService.saveOrUpdate(rack);
 
-			return new IdResult(rack.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -1005,7 +1045,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			comm.rackService.saveOrUpdate(rack);
 
-			return new IdResult(rack.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -1034,7 +1074,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			comm.rackService.saveOrUpdate(rack);
 
-			return new IdResult(rack.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1047,9 +1087,13 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	public PaginationResult<RackDTO> getRackPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<RackDTO> result = new PaginationResult<RackDTO>();
+
 		try {
+
 			return comm.rackService.getRackDTOPagination(searchParams, pageNumber, pageSize);
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -1059,10 +1103,15 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public DTOListResult<RackDTO> getRackList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<RackDTO> result = new DTOListResult<RackDTO>();
+
 		try {
+
 			result.setDtos(BeanMapper.mapList(comm.rackService.getRackList(searchParams), RackDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {

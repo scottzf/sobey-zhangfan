@@ -62,9 +62,6 @@ import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.core.beanvalidator.BeanValidators;
 import com.sobey.core.mapper.BeanMapper;
 import com.sobey.core.utils.TableNameUtil;
-import com.sobey.generate.firewall.FirewallSoapService;
-import com.sobey.generate.switches.SwitchesSoapService;
-import com.sobey.generate.switches.VlanParameter;
 
 @WebService(serviceName = "InfrastructureService", endpointInterface = "com.sobey.cmdbuild.webservice.InfrastructureSoapService", targetNamespace = WsConstants.NS)
 // 查看webservice的日志.
@@ -76,12 +73,6 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Autowired
 	private FinancialSoapServiceImpl financialSoapServiceImpl;
-
-	@Autowired
-	private SwitchesSoapService switchesSoapService;
-
-	@Autowired
-	private FirewallSoapService firewallSoapService;
 
 	/**
 	 * CMDBuild的默认超级用户名
@@ -176,7 +167,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.fimasService.saveOrUpdate(fimas);
 
-			return new IdResult(fimas.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -219,7 +210,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.fimasService.saveOrUpdate(fimas);
 
-			return new IdResult(fimas.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -246,7 +237,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.fimasService.saveOrUpdate(fimas);
 
-			return new IdResult(fimas.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -259,6 +250,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	public PaginationResult<FimasDTO> getFimasPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<FimasDTO> result = new PaginationResult<FimasDTO>();
 
 		try {
@@ -274,6 +266,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOListResult<FimasDTO> getFimasList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<FimasDTO> result = new DTOListResult<FimasDTO>();
 
 		try {
@@ -291,6 +284,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<FimasBoxDTO> findFimasBox(@WebParam(name = "id") Integer id) {
+
 		DTOResult<FimasBoxDTO> result = new DTOResult<FimasBoxDTO>();
 
 		try {
@@ -303,11 +297,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			FimasBoxDTO dto = BeanMapper.map(fimasBox, FimasBoxDTO.class);
 
+			// Reference
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
 			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 
+			// LookUp
 			dto.setDiskTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getDiskType()).getDto().getDescription());
 
 			result.setDto(dto);
@@ -323,6 +320,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<FimasBoxDTO> findFimasBoxByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<FimasBoxDTO> result = new DTOResult<FimasBoxDTO>();
 
 		try {
@@ -335,11 +333,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			FimasBoxDTO dto = BeanMapper.map(fimasBox, FimasBoxDTO.class);
 
+			// Reference
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
 			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 
+			// LookUp
 			dto.setDiskTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getDiskType()).getDto().getDescription());
 
 			result.setDto(dto);
@@ -355,6 +356,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult createFimasBox(@WebParam(name = "fimasBoxDTO") FimasBoxDTO fimasBoxDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -379,7 +381,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.fimasBoxService.saveOrUpdate(fimasBox);
 
-			return new IdResult(fimasBox.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -391,6 +393,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public IdResult updateFimasBox(@WebParam(name = "id") Integer id,
 			@WebParam(name = "fimasBoxDTO") FimasBoxDTO fimasBoxDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -404,13 +407,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			searchParams.put("EQ_code", fimasBoxDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.fimasBoxService.findFimasBox(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(
+					comm.fimasBoxService.findFimasBox(searchParams) == null
+							|| fimasBox.getCode().equals(fimasBoxDTO.getCode()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(fimasBoxDTO, FimasBox.class), fimasBox);
 
 			fimasBox.setIdClass(TableNameUtil.getTableName(FimasBox.class));
-
 			fimasBox.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			fimasBox.setUser(DEFAULT_USER);
 
@@ -419,7 +423,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.fimasBoxService.saveOrUpdate(fimasBox);
 
-			return new IdResult(fimasBox.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -430,6 +434,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteFimasBox(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -438,16 +443,15 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			FimasBox fimasBox = comm.fimasBoxService.findFimasBox(id);
 
-			Validate.isTrue(fimasBox != null, ERROR.OBJECT_NULL);
+			Validate.notNull(fimasBox, ERROR.OBJECT_NULL);
 
 			fimasBox.setIdClass(TableNameUtil.getTableName(FimasBox.class));
-
 			fimasBox.setUser(DEFAULT_USER);
 			fimasBox.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.fimasBoxService.saveOrUpdate(fimasBox);
 
-			return new IdResult(fimasBox.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -460,6 +464,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	public PaginationResult<FimasBoxDTO> getFimasBoxPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<FimasBoxDTO> result = new PaginationResult<FimasBoxDTO>();
 
 		try {
@@ -475,15 +480,12 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOListResult<FimasBoxDTO> getFimasBoxList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<FimasBoxDTO> result = new DTOListResult<FimasBoxDTO>();
 
 		try {
 
-			List<FimasBox> fimasBox = comm.fimasBoxService.getFimasBoxList(searchParams);
-
-			List<FimasBoxDTO> list = BeanMapper.mapList(fimasBox, FimasBoxDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.fimasBoxService.getFimasBoxList(searchParams), FimasBoxDTO.class));
 
 			return result;
 
@@ -496,6 +498,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<FimasPortDTO> findFimasPort(@WebParam(name = "id") Integer id) {
+
 		DTOResult<FimasPortDTO> result = new DTOResult<FimasPortDTO>();
 
 		try {
@@ -508,6 +511,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			FimasPortDTO dto = BeanMapper.map(fimasPort, FimasPortDTO.class);
 
+			// Reference
 			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
@@ -526,6 +530,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public DTOResult<FimasPortDTO> findFimasPortByParams(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<FimasPortDTO> result = new DTOResult<FimasPortDTO>();
 
 		try {
@@ -538,6 +543,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			FimasPortDTO dto = BeanMapper.map(fimasPort, FimasPortDTO.class);
 
+			// Reference
 			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
@@ -555,6 +561,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult createFimasPort(@WebParam(name = "fimasPortDTO") FimasPortDTO fimasPortDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -579,7 +586,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.fimasPortService.saveOrUpdate(fimasPort);
 
-			return new IdResult(fimasPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -591,6 +598,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public IdResult updateFimasPort(@WebParam(name = "id") Integer id,
 			@WebParam(name = "fimasPortDTO") FimasPortDTO fimasPortDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -604,13 +612,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			searchParams.put("EQ_code", fimasPortDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.fimasPortService.findFimasPort(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(
+					comm.fimasPortService.findFimasPort(searchParams) == null
+							|| fimasPort.getCode().equals(fimasPortDTO.getCode()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(fimasPortDTO, FimasPort.class), fimasPort);
 
 			fimasPort.setIdClass(TableNameUtil.getTableName(FimasPort.class));
-
 			fimasPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			fimasPort.setUser(DEFAULT_USER);
 
@@ -619,7 +628,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.fimasPortService.saveOrUpdate(fimasPort);
 
-			return new IdResult(fimasPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -630,6 +639,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteFimasPort(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -638,7 +648,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			FimasPort fimasPort = comm.fimasPortService.findFimasPort(id);
 
-			Validate.isTrue(fimasPort != null, ERROR.OBJECT_NULL);
+			Validate.notNull(fimasPort, ERROR.OBJECT_NULL);
 
 			fimasPort.setIdClass(TableNameUtil.getTableName(FimasPort.class));
 
@@ -646,7 +656,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.fimasPortService.saveOrUpdate(fimasPort);
 
-			return new IdResult(fimasPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -659,6 +669,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	public PaginationResult<FimasPortDTO> getFimasPortPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<FimasPortDTO> result = new PaginationResult<FimasPortDTO>();
 
 		try {
@@ -675,15 +686,12 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public DTOListResult<FimasPortDTO> getFimasPortList(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<FimasPortDTO> result = new DTOListResult<FimasPortDTO>();
 
 		try {
 
-			List<FimasPort> fimasPort = comm.fimasPortService.getFimasPortList(searchParams);
-
-			List<FimasPortDTO> list = BeanMapper.mapList(fimasPort, FimasPortDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.fimasPortService.getFimasPortList(searchParams), FimasPortDTO.class));
 
 			return result;
 
@@ -696,6 +704,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<FirewallDTO> findFirewall(@WebParam(name = "id") Integer id) {
+
 		DTOResult<FirewallDTO> result = new DTOResult<FirewallDTO>();
 
 		try {
@@ -708,6 +717,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			FirewallDTO dto = BeanMapper.map(firewall, FirewallDTO.class);
 
+			// Reference
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
@@ -726,6 +736,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<FirewallDTO> findFirewallByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<FirewallDTO> result = new DTOResult<FirewallDTO>();
 
 		try {
@@ -738,6 +749,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			FirewallDTO dto = BeanMapper.map(firewall, FirewallDTO.class);
 
+			// Reference
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
@@ -756,6 +768,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult createFirewall(@WebParam(name = "firewallDTO") FirewallDTO firewallDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -780,7 +793,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.firewallService.saveOrUpdate(firewall);
 
-			return new IdResult(firewall.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -792,6 +805,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public IdResult updateFirewall(@WebParam(name = "id") Integer id,
 			@WebParam(name = "firewallDTO") FirewallDTO firewallDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -805,13 +819,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			searchParams.put("EQ_code", firewallDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.firewallService.findFirewall(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(
+					comm.firewallService.findFirewall(searchParams) == null
+							|| firewall.getCode().equals(firewallDTO.getCode()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(firewallDTO, Firewall.class), firewall);
 
 			firewall.setIdClass(TableNameUtil.getTableName(Firewall.class));
-
 			firewall.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
@@ -819,7 +834,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.firewallService.saveOrUpdate(firewall);
 
-			return new IdResult(firewall.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -830,6 +845,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteFirewall(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -838,7 +854,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Firewall firewall = comm.firewallService.findFirewall(id);
 
-			Validate.isTrue(firewall != null, ERROR.OBJECT_NULL);
+			Validate.notNull(firewall, ERROR.OBJECT_NULL);
 
 			firewall.setIdClass(TableNameUtil.getTableName(Firewall.class));
 
@@ -846,7 +862,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.firewallService.saveOrUpdate(firewall);
 
-			return new IdResult(firewall.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -859,6 +875,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	public PaginationResult<FirewallDTO> getFirewallPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<FirewallDTO> result = new PaginationResult<FirewallDTO>();
 
 		try {
@@ -874,15 +891,12 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOListResult<FirewallDTO> getFirewallList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<FirewallDTO> result = new DTOListResult<FirewallDTO>();
 
 		try {
 
-			List<Firewall> firewall = comm.firewallService.getFirewallList(searchParams);
-
-			List<FirewallDTO> list = BeanMapper.mapList(firewall, FirewallDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.firewallService.getFirewallList(searchParams), FirewallDTO.class));
 
 			return result;
 
@@ -895,6 +909,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<FirewallPortDTO> findFirewallPort(@WebParam(name = "id") Integer id) {
+
 		DTOResult<FirewallPortDTO> result = new DTOResult<FirewallPortDTO>();
 
 		try {
@@ -905,9 +920,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(firewallPort, ERROR.OBJECT_NULL);
 
-			FirewallPortDTO firewallPortDTO = BeanMapper.map(firewallPort, FirewallPortDTO.class);
+			FirewallPortDTO dto = BeanMapper.map(firewallPort, FirewallPortDTO.class);
 
-			result.setDto(firewallPortDTO);
+			// Reference
+			dto.setFirewallDTO(findFirewall(dto.getFirewall()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -921,6 +941,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public DTOResult<FirewallPortDTO> findFirewallPortByParams(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<FirewallPortDTO> result = new DTOResult<FirewallPortDTO>();
 
 		try {
@@ -931,9 +952,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Validate.notNull(firewallPort, ERROR.OBJECT_NULL);
 
-			FirewallPortDTO firewallPortDTO = BeanMapper.map(firewallPort, FirewallPortDTO.class);
+			FirewallPortDTO dto = BeanMapper.map(firewallPort, FirewallPortDTO.class);
 
-			result.setDto(firewallPortDTO);
+			// Reference
+			dto.setFirewallDTO(findFirewall(dto.getFirewall()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+
+			result.setDto(dto);
 
 			return result;
 
@@ -946,6 +972,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult createFirewallPort(@WebParam(name = "firewallPortDTO") FirewallPortDTO firewallPortDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -970,7 +997,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.firewallPortService.saveOrUpdate(firewallPort);
 
-			return new IdResult(firewallPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -982,6 +1009,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public IdResult updateFirewallPort(@WebParam(name = "id") Integer id,
 			@WebParam(name = "firewallPortDTO") FirewallPortDTO firewallPortDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -995,13 +1023,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			searchParams.put("EQ_code", firewallPortDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.firewallPortService.findFirewallPort(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(comm.firewallPortService.findFirewallPort(searchParams) == null
+					|| firewallPort.getCode().equals(firewallPortDTO.getCode()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(firewallPortDTO, FirewallPort.class), firewallPort);
 
 			firewallPort.setIdClass(TableNameUtil.getTableName(FirewallPort.class));
-
 			firewallPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			firewallPort.setUser(DEFAULT_USER);
 
@@ -1010,7 +1038,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.firewallPortService.saveOrUpdate(firewallPort);
 
-			return new IdResult(firewallPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1021,6 +1049,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteFirewallPort(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1029,7 +1058,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			FirewallPort firewallPort = comm.firewallPortService.findFirewallPort(id);
 
-			Validate.isTrue(firewallPort != null, ERROR.OBJECT_NULL);
+			Validate.notNull(firewallPort, ERROR.OBJECT_NULL);
 
 			firewallPort.setIdClass(TableNameUtil.getTableName(FirewallPort.class));
 
@@ -1037,7 +1066,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.firewallPortService.saveOrUpdate(firewallPort);
 
-			return new IdResult(firewallPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1050,6 +1079,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	public PaginationResult<FirewallPortDTO> getFirewallPortPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<FirewallPortDTO> result = new PaginationResult<FirewallPortDTO>();
 
 		try {
@@ -1066,15 +1096,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public DTOListResult<FirewallPortDTO> getFirewallPortList(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<FirewallPortDTO> result = new DTOListResult<FirewallPortDTO>();
 
 		try {
 
-			List<FirewallPort> firewallPort = comm.firewallPortService.getFirewallPortList(searchParams);
-
-			List<FirewallPortDTO> list = BeanMapper.mapList(firewallPort, FirewallPortDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.firewallPortService.getFirewallPortList(searchParams),
+					FirewallPortDTO.class));
 
 			return result;
 
@@ -1087,6 +1115,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<HardDiskDTO> findHardDisk(@WebParam(name = "id") Integer id) {
+
 		DTOResult<HardDiskDTO> result = new DTOResult<HardDiskDTO>();
 
 		try {
@@ -1099,10 +1128,12 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			HardDiskDTO dto = BeanMapper.map(hardDisk, HardDiskDTO.class);
 
+			// Reference
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
 			dto.setServerDTO(findServer(dto.getServer()).getDto());
 
+			// LookUp
 			dto.setRotationalSpeedText(cmdbuildSoapServiceImpl.findLookUp(dto.getRotationalSpeed()).getDto()
 					.getDescription());
 			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
@@ -1120,6 +1151,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<HardDiskDTO> findHardDiskByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<HardDiskDTO> result = new DTOResult<HardDiskDTO>();
 
 		try {
@@ -1132,10 +1164,12 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			HardDiskDTO dto = BeanMapper.map(hardDisk, HardDiskDTO.class);
 
+			// Reference
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
 			dto.setServerDTO(findServer(dto.getServer()).getDto());
 
+			// LookUp
 			dto.setRotationalSpeedText(cmdbuildSoapServiceImpl.findLookUp(dto.getRotationalSpeed()).getDto()
 					.getDescription());
 			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
@@ -1153,6 +1187,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult createHardDisk(@WebParam(name = "hardDiskDTO") HardDiskDTO hardDiskDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1177,7 +1212,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.hardDiskService.saveOrUpdate(hardDisk);
 
-			return new IdResult(hardDisk.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1189,6 +1224,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public IdResult updateHardDisk(@WebParam(name = "id") Integer id,
 			@WebParam(name = "hardDiskDTO") HardDiskDTO hardDiskDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1201,17 +1237,15 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			searchParams.put("EQ_code", hardDiskDTO.getCode());
 
-			System.out.println(comm.hardDiskService.findHardDisk(searchParams)
-					+ "....................................." + hardDiskDTO.getCode());
-
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.hardDiskService.findHardDisk(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(
+					comm.hardDiskService.findHardDisk(searchParams) == null
+							|| hardDisk.getCode().equals(hardDiskDTO.getCode()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(hardDiskDTO, HardDisk.class), hardDisk);
 
 			hardDisk.setIdClass(TableNameUtil.getTableName(HardDisk.class));
-
 			hardDisk.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			hardDisk.setUser(DEFAULT_USER);
 
@@ -1220,7 +1254,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.hardDiskService.saveOrUpdate(hardDisk);
 
-			return new IdResult(hardDisk.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1231,6 +1265,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteHardDisk(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1239,7 +1274,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			HardDisk hardDisk = comm.hardDiskService.findHardDisk(id);
 
-			Validate.isTrue(hardDisk != null, ERROR.OBJECT_NULL);
+			Validate.notNull(hardDisk, ERROR.OBJECT_NULL);
 
 			hardDisk.setIdClass(TableNameUtil.getTableName(HardDisk.class));
 
@@ -1247,7 +1282,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.hardDiskService.saveOrUpdate(hardDisk);
 
-			return new IdResult(hardDisk.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1260,6 +1295,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	public PaginationResult<HardDiskDTO> getHardDiskPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<HardDiskDTO> result = new PaginationResult<HardDiskDTO>();
 
 		try {
@@ -1275,15 +1311,12 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOListResult<HardDiskDTO> getHardDiskList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<HardDiskDTO> result = new DTOListResult<HardDiskDTO>();
 
 		try {
 
-			List<HardDisk> hardDisk = comm.hardDiskService.getHardDiskList(searchParams);
-
-			List<HardDiskDTO> list = BeanMapper.mapList(hardDisk, HardDiskDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.hardDiskService.getHardDiskList(searchParams), HardDiskDTO.class));
 
 			return result;
 
@@ -1394,7 +1427,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.ipaddressService.saveOrUpdate(ipaddress);
 
-			return new IdResult(ipaddress.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1438,7 +1471,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.ipaddressService.saveOrUpdate(ipaddress);
 
-			return new IdResult(ipaddress.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1465,7 +1498,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.ipaddressService.saveOrUpdate(ipaddress);
 
-			return new IdResult(ipaddress.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1478,6 +1511,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	public PaginationResult<IpaddressDTO> getIpaddressPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<IpaddressDTO> result = new PaginationResult<IpaddressDTO>();
 
 		try {
@@ -1510,7 +1544,110 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	}
 
 	@Override
+	public IdResult allocateIPAddress(@WebParam(name = "id") Integer id) {
+		return changeIpaddressStatus(id, LookUpConstants.IPAddressStatus.使用中.getValue());
+	}
+
+	@Override
+	public IdResult insertIPAddress(@WebParam(name = "ipaddressDTOList") List<IpaddressDTO> ipaddressDTOList) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			// 先判断对象是否为空
+			Validate.notNull(ipaddressDTOList, ERROR.INPUT_NULL);
+
+			Integer tempId = 0;
+			Integer insertCount = ipaddressDTOList.size(); // 插入Ipaddress的数量
+			Integer insertSuccessCount = 0; // 成功插入Ipaddress的数量
+
+			for (IpaddressDTO ipaddressDTO : ipaddressDTOList) {
+
+				Map<String, Object> searchParams = Maps.newHashMap();
+
+				searchParams.put("EQ_code", ipaddressDTO.getCode());
+
+				// 如果code重复,跳过本次loop
+				if (comm.ipaddressService.findIpaddress(searchParams) != null) {
+					continue;
+				}
+
+				Ipaddress ipaddress = BeanMapper.map(ipaddressDTO, Ipaddress.class);
+
+				BeanValidators.validateWithException(validator, ipaddress);
+
+				ipaddress.setIdClass(TableNameUtil.getTableName(Ipaddress.class));
+				ipaddress.setIpaddressStatus(LookUpConstants.IPAddressStatus.未使用.getValue());// 设置状态为未使用
+				ipaddress.setUser(DEFAULT_USER);
+
+				/* 使用spring-data-jap,在postgresql中,id不能重复,mysql则无此问题.不知道是否和主键策略有关系! */
+				ipaddress.setId(tempId);
+
+				comm.ipaddressService.saveOrUpdate(ipaddress);
+
+				tempId--;
+				insertSuccessCount++;
+			}
+
+			String message = "0".equals(insertSuccessCount.toString()) ? "Ipaddress已存在" : "插入Ipaddress " + insertCount
+					+ " 条,成功创建Ipaddress " + insertSuccessCount + " 条";
+
+			result.setMessage(message);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public IdResult initIPAddress(Integer id) {
+		return changeIpaddressStatus(id, LookUpConstants.IPAddressStatus.未使用.getValue());
+	}
+
+	/**
+	 * 修改Ipaddress对象的ipaddressStatus.
+	 * 
+	 * @param id
+	 *            ipaddress Id
+	 * @param ipaddressStatus
+	 *            ipaddress状态 {@link LookUpConstants.IPAddressStatus}
+	 * @return
+	 */
+	private IdResult changeIpaddressStatus(Integer id, Integer ipaddressStatus) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Ipaddress ipaddress = comm.ipaddressService.findIpaddress(id);
+
+			Validate.notNull(ipaddress, ERROR.OBJECT_NULL);
+
+			ipaddress.setIpaddressStatus(ipaddressStatus);
+
+			comm.ipaddressService.saveOrUpdate(ipaddress);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
 	public DTOResult<LoadBalancerDTO> findLoadBalancer(@WebParam(name = "id") Integer id) {
+
 		DTOResult<LoadBalancerDTO> result = new DTOResult<LoadBalancerDTO>();
 
 		try {
@@ -1523,6 +1660,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			LoadBalancerDTO dto = BeanMapper.map(loadBalancer, LoadBalancerDTO.class);
 
+			// Reference
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
@@ -1542,6 +1680,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public DTOResult<LoadBalancerDTO> findLoadBalancerByParams(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<LoadBalancerDTO> result = new DTOResult<LoadBalancerDTO>();
 
 		try {
@@ -1554,6 +1693,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			LoadBalancerDTO dto = BeanMapper.map(loadBalancer, LoadBalancerDTO.class);
 
+			// Reference
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
@@ -1572,6 +1712,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult createLoadBalancer(@WebParam(name = "loadBalancerDTO") LoadBalancerDTO loadBalancerDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1596,7 +1737,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.loadBalancerService.saveOrUpdate(loadBalancer);
 
-			return new IdResult(loadBalancer.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1608,6 +1749,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public IdResult updateLoadBalancer(@WebParam(name = "id") Integer id,
 			@WebParam(name = "loadBalancerDTO") LoadBalancerDTO loadBalancerDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1621,13 +1763,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			searchParams.put("EQ_code", loadBalancerDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.loadBalancerService.findLoadBalancer(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(comm.loadBalancerService.findLoadBalancer(searchParams) == null
+					|| loadBalancer.getCode().equals(loadBalancerDTO.getCode()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(loadBalancerDTO, LoadBalancer.class), loadBalancer);
 
 			loadBalancer.setIdClass(TableNameUtil.getTableName(LoadBalancer.class));
-
 			loadBalancer.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			loadBalancer.setUser(DEFAULT_USER);
 
@@ -1636,7 +1778,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.loadBalancerService.saveOrUpdate(loadBalancer);
 
-			return new IdResult(loadBalancer.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1647,6 +1789,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteLoadBalancer(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1655,7 +1798,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			LoadBalancer loadBalancer = comm.loadBalancerService.findLoadBalancer(id);
 
-			Validate.isTrue(loadBalancer != null, ERROR.OBJECT_NULL);
+			Validate.notNull(id, ERROR.OBJECT_NULL);
 
 			loadBalancer.setIdClass(TableNameUtil.getTableName(LoadBalancer.class));
 
@@ -1663,7 +1806,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.loadBalancerService.saveOrUpdate(loadBalancer);
 
-			return new IdResult(loadBalancer.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1676,6 +1819,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	public PaginationResult<LoadBalancerDTO> getLoadBalancerPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<LoadBalancerDTO> result = new PaginationResult<LoadBalancerDTO>();
 
 		try {
@@ -1692,15 +1836,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public DTOListResult<LoadBalancerDTO> getLoadBalancerList(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<LoadBalancerDTO> result = new DTOListResult<LoadBalancerDTO>();
 
 		try {
 
-			List<LoadBalancer> loadBalancer = comm.loadBalancerService.getLoadBalancerList(searchParams);
-
-			List<LoadBalancerDTO> list = BeanMapper.mapList(loadBalancer, LoadBalancerDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.loadBalancerService.getLoadBalancerList(searchParams),
+					LoadBalancerDTO.class));
 
 			return result;
 
@@ -1713,6 +1855,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<LoadBalancerPortDTO> findLoadBalancerPort(@WebParam(name = "id") Integer id) {
+
 		DTOResult<LoadBalancerPortDTO> result = new DTOResult<LoadBalancerPortDTO>();
 
 		try {
@@ -1725,6 +1868,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			LoadBalancerPortDTO dto = BeanMapper.map(loadBalancerPort, LoadBalancerPortDTO.class);
 
+			// Reference
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
 			dto.setLoadBalancerDTO(findLoadBalancer(dto.getLoadBalancer()).getDto());
@@ -1743,6 +1887,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public DTOResult<LoadBalancerPortDTO> findLoadBalancerPortByParams(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<LoadBalancerPortDTO> result = new DTOResult<LoadBalancerPortDTO>();
 
 		try {
@@ -1755,6 +1900,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			LoadBalancerPortDTO dto = BeanMapper.map(loadBalancerPort, LoadBalancerPortDTO.class);
 
+			// Reference
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
 			dto.setLoadBalancerDTO(findLoadBalancer(dto.getLoadBalancer()).getDto());
@@ -1773,6 +1919,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public IdResult createLoadBalancerPort(
 			@WebParam(name = "loadBalancerPortDTO") LoadBalancerPortDTO loadBalancerPortDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1798,7 +1945,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.loadBalancerPortService.saveOrUpdate(loadBalancerPort);
 
-			return new IdResult(loadBalancerPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1810,6 +1957,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public IdResult updateLoadBalancerPort(@WebParam(name = "id") Integer id,
 			@WebParam(name = "loadBalancerPortDTO") LoadBalancerPortDTO loadBalancerPortDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1823,16 +1971,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			searchParams.put("EQ_code", loadBalancerPortDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.loadBalancerPortService.findLoadBalancerPort(searchParams) == null,
-					ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(comm.loadBalancerPortService.findLoadBalancerPort(searchParams) == null
+					|| loadBalancerPort.getCode().equals(loadBalancerPortDTO.getCode()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(loadBalancerPortDTO, LoadBalancerPort.class), loadBalancerPort);
 
 			loadBalancerPort.setIdClass(TableNameUtil.getTableName(LoadBalancerPort.class));
-
 			loadBalancerPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-
 			loadBalancerPort.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
@@ -1840,7 +1986,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.loadBalancerPortService.saveOrUpdate(loadBalancerPort);
 
-			return new IdResult(loadBalancerPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1851,6 +1997,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteLoadBalancerPort(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -1859,7 +2006,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			LoadBalancerPort loadBalancerPort = comm.loadBalancerPortService.findLoadBalancerPort(id);
 
-			Validate.isTrue(loadBalancerPort != null, ERROR.OBJECT_NULL);
+			Validate.notNull(loadBalancerPort, ERROR.OBJECT_NULL);
 
 			loadBalancerPort.setIdClass(TableNameUtil.getTableName(LoadBalancerPort.class));
 
@@ -1867,7 +2014,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.loadBalancerPortService.saveOrUpdate(loadBalancerPort);
 
-			return new IdResult(loadBalancerPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1880,6 +2027,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	public PaginationResult<LoadBalancerPortDTO> getLoadBalancerPortPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<LoadBalancerPortDTO> result = new PaginationResult<LoadBalancerPortDTO>();
 
 		try {
@@ -1896,16 +2044,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public DTOListResult<LoadBalancerPortDTO> getLoadBalancerPortList(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<LoadBalancerPortDTO> result = new DTOListResult<LoadBalancerPortDTO>();
 
 		try {
 
-			List<LoadBalancerPort> loadBalancerPort = comm.loadBalancerPortService
-					.getLoadBalancerPortList(searchParams);
-
-			List<LoadBalancerPortDTO> list = BeanMapper.mapList(loadBalancerPort, LoadBalancerPortDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.loadBalancerPortService.getLoadBalancerPortList(searchParams),
+					LoadBalancerPortDTO.class));
 
 			return result;
 
@@ -1918,6 +2063,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<MemoryDTO> findMemory(@WebParam(name = "id") Integer id) {
+
 		DTOResult<MemoryDTO> result = new DTOResult<MemoryDTO>();
 
 		try {
@@ -1930,9 +2076,12 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			MemoryDTO dto = BeanMapper.map(memory, MemoryDTO.class);
 
+			// Reference
 			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
 			dto.setServerDTO(findServer(dto.getServer()).getDto());
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 
+			// LookUp
 			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
 			dto.setFrequencyText(Integer.parseInt(cmdbuildSoapServiceImpl.findLookUp(dto.getFrequency()).getDto()
 					.getDescription()));
@@ -1950,6 +2099,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<MemoryDTO> findMemoryByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<MemoryDTO> result = new DTOResult<MemoryDTO>();
 
 		try {
@@ -1962,9 +2112,12 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			MemoryDTO dto = BeanMapper.map(memory, MemoryDTO.class);
 
+			// Reference
 			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
 			dto.setServerDTO(findServer(dto.getServer()).getDto());
+			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 
+			// LookUp
 			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
 			dto.setFrequencyText(Integer.parseInt(cmdbuildSoapServiceImpl.findLookUp(dto.getFrequency()).getDto()
 					.getDescription()));
@@ -1982,6 +2135,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult createMemory(@WebParam(name = "memoryDTO") MemoryDTO memoryDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -2006,7 +2160,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.memoryService.saveOrUpdate(memory);
 
-			return new IdResult(memory.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -2017,6 +2171,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult updateMemory(@WebParam(name = "id") Integer id, @WebParam(name = "memoryDTO") MemoryDTO memoryDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -2030,13 +2185,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			searchParams.put("EQ_code", memoryDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.memoryService.findMemory(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(
+					comm.memoryService.findMemory(searchParams) == null || memory.getCode().equals(memoryDTO.getCode()),
+					ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(memoryDTO, Memory.class), memory);
 
 			memory.setIdClass(TableNameUtil.getTableName(Memory.class));
-
 			memory.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			memory.setUser(DEFAULT_USER);
 
@@ -2045,7 +2201,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.memoryService.saveOrUpdate(memory);
 
-			return new IdResult(memory.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -2056,6 +2212,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteMemory(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -2064,7 +2221,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Memory memory = comm.memoryService.findMemory(id);
 
-			Validate.isTrue(memory != null, ERROR.OBJECT_NULL);
+			Validate.notNull(memory, ERROR.OBJECT_NULL);
 
 			memory.setIdClass(TableNameUtil.getTableName(Memory.class));
 
@@ -2072,7 +2229,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.memoryService.saveOrUpdate(memory);
 
-			return new IdResult(memory.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -2085,6 +2242,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	public PaginationResult<MemoryDTO> getMemoryPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<MemoryDTO> result = new PaginationResult<MemoryDTO>();
 
 		try {
@@ -2100,15 +2258,12 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOListResult<MemoryDTO> getMemoryList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<MemoryDTO> result = new DTOListResult<MemoryDTO>();
 
 		try {
 
-			List<Memory> memory = comm.memoryService.getMemoryList(searchParams);
-
-			List<MemoryDTO> list = BeanMapper.mapList(memory, MemoryDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.memoryService.getMemoryList(searchParams), MemoryDTO.class));
 
 			return result;
 
@@ -2121,6 +2276,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<NetappBoxDTO> findNetappBox(@WebParam(name = "id") Integer id) {
+
 		DTOResult<NetappBoxDTO> result = new DTOResult<NetappBoxDTO>();
 
 		try {
@@ -2133,12 +2289,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NetappBoxDTO dto = BeanMapper.map(netappBox, NetappBoxDTO.class);
 
+			// Reference
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 			dto.setNetappControllerDTO(findNetappController(dto.getNetappController()).getDto());
 
+			// LookUp
 			dto.setDiskTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getDiskType()).getDto().getDescription());
 
 			result.setDto(dto);
@@ -2155,6 +2313,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public DTOResult<NetappBoxDTO> findNetappBoxByParams(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<NetappBoxDTO> result = new DTOResult<NetappBoxDTO>();
 
 		try {
@@ -2167,12 +2326,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NetappBoxDTO dto = BeanMapper.map(netappBox, NetappBoxDTO.class);
 
+			// Reference
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setDeviceSpecDTO(financialSoapServiceImpl.findDeviceSpec(dto.getDeviceSpec()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 			dto.setNetappControllerDTO(findNetappController(dto.getNetappController()).getDto());
 
+			// LookUp
 			dto.setDiskTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getDiskType()).getDto().getDescription());
 
 			result.setDto(dto);
@@ -2188,6 +2349,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult createNetappBox(@WebParam(name = "netappBoxDTO") NetappBoxDTO netappBoxDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -2212,7 +2374,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.netappBoxService.saveOrUpdate(netappBox);
 
-			return new IdResult(netappBox.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -2224,6 +2386,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public IdResult updateNetappBox(@WebParam(name = "id") Integer id,
 			@WebParam(name = "netappBoxDTO") NetappBoxDTO netappBoxDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -2237,13 +2400,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			searchParams.put("EQ_code", netappBoxDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.netappBoxService.findNetappBox(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(
+					comm.netappBoxService.findNetappBox(searchParams) == null
+							|| netappBox.getCode().equals(netappBoxDTO.getCode()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(netappBoxDTO, NetappBox.class), netappBox);
 
 			netappBox.setIdClass(TableNameUtil.getTableName(NetappBox.class));
-
 			netappBox.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			netappBox.setUser(DEFAULT_USER);
 
@@ -2252,7 +2416,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.netappBoxService.saveOrUpdate(netappBox);
 
-			return new IdResult(netappBox.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -2263,6 +2427,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteNetappBox(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -2271,15 +2436,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NetappBox netappBox = comm.netappBoxService.findNetappBox(id);
 
-			Validate.isTrue(netappBox != null, ERROR.OBJECT_NULL);
+			Validate.notNull(netappBox, ERROR.OBJECT_NULL);
 
 			netappBox.setIdClass(TableNameUtil.getTableName(NetappBox.class));
-
 			netappBox.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.netappBoxService.saveOrUpdate(netappBox);
 
-			return new IdResult(netappBox.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -2292,6 +2456,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	public PaginationResult<NetappBoxDTO> getNetappBoxPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<NetappBoxDTO> result = new PaginationResult<NetappBoxDTO>();
 
 		try {
@@ -2308,15 +2473,12 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public DTOListResult<NetappBoxDTO> getNetappBoxList(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<NetappBoxDTO> result = new DTOListResult<NetappBoxDTO>();
 
 		try {
 
-			List<NetappBox> netappBox = comm.netappBoxService.getNetappBoxList(searchParams);
-
-			List<NetappBoxDTO> list = BeanMapper.mapList(netappBox, NetappBoxDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.netappBoxService.getNetappBoxList(searchParams), NetappBoxDTO.class));
 
 			return result;
 
@@ -2329,6 +2491,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<NetappControllerDTO> findNetappController(@WebParam(name = "id") Integer id) {
+
 		DTOResult<NetappControllerDTO> result = new DTOResult<NetappControllerDTO>();
 
 		try {
@@ -2341,6 +2504,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NetappControllerDTO dto = BeanMapper.map(netappController, NetappControllerDTO.class);
 
+			// Reference
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
@@ -2360,6 +2524,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public DTOResult<NetappControllerDTO> findNetappControllerByParams(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<NetappControllerDTO> result = new DTOResult<NetappControllerDTO>();
 
 		try {
@@ -2372,6 +2537,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NetappControllerDTO dto = BeanMapper.map(netappController, NetappControllerDTO.class);
 
+			// Reference
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
@@ -2391,6 +2557,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public IdResult createNetappController(
 			@WebParam(name = "netappControllerDTO") NetappControllerDTO netappControllerDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -2416,7 +2583,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.netappControllerService.saveOrUpdate(netappController);
 
-			return new IdResult(netappController.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -2428,6 +2595,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public IdResult updateNetappController(@WebParam(name = "id") Integer id,
 			@WebParam(name = "netappControllerDTO") NetappControllerDTO netappControllerDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -2441,14 +2609,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			searchParams.put("EQ_code", netappControllerDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.netappControllerService.findNetappController(searchParams) == null,
-					ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(comm.netappControllerService.findNetappController(searchParams) == null
+					|| netappController.getCode().equals(netappControllerDTO.getCode()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(netappControllerDTO, NetappController.class), netappController);
 
 			netappController.setIdClass(TableNameUtil.getTableName(NetappController.class));
-
 			netappController.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			netappController.setUser(DEFAULT_USER);
 
@@ -2457,7 +2624,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.netappControllerService.saveOrUpdate(netappController);
 
-			return new IdResult(netappController.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -2468,6 +2635,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteNetappController(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -2476,7 +2644,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NetappController netappController = comm.netappControllerService.findNetappController(id);
 
-			Validate.isTrue(netappController != null, ERROR.OBJECT_NULL);
+			Validate.notNull(netappController, ERROR.OBJECT_NULL);
 
 			netappController.setIdClass(TableNameUtil.getTableName(NetappController.class));
 
@@ -2484,7 +2652,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.netappControllerService.saveOrUpdate(netappController);
 
-			return new IdResult(netappController.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -2497,6 +2665,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	public PaginationResult<NetappControllerDTO> getNetappControllerPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<NetappControllerDTO> result = new PaginationResult<NetappControllerDTO>();
 
 		try {
@@ -2513,16 +2682,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public DTOListResult<NetappControllerDTO> getNetappControllerList(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<NetappControllerDTO> result = new DTOListResult<NetappControllerDTO>();
 
 		try {
 
-			List<NetappController> netappController = comm.netappControllerService
-					.getNetappControllerList(searchParams);
-
-			List<NetappControllerDTO> list = BeanMapper.mapList(netappController, NetappControllerDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.netappControllerService.getNetappControllerList(searchParams),
+					NetappControllerDTO.class));
 
 			return result;
 
@@ -2535,6 +2701,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<NetappPortDTO> findNetappPort(@WebParam(name = "id") Integer id) {
+
 		DTOResult<NetappPortDTO> result = new DTOResult<NetappPortDTO>();
 
 		try {
@@ -2547,6 +2714,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NetappPortDTO dto = BeanMapper.map(netappPort, NetappPortDTO.class);
 
+			// Reference
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 			dto.setNetappBoxDTO(findNetappBox(dto.getNetappBox()).getDto());
 			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
@@ -2565,6 +2733,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public DTOResult<NetappPortDTO> findNetappPortByParams(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<NetappPortDTO> result = new DTOResult<NetappPortDTO>();
 
 		try {
@@ -2577,6 +2746,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NetappPortDTO dto = BeanMapper.map(netappPort, NetappPortDTO.class);
 
+			// Reference
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 			dto.setNetappBoxDTO(findNetappBox(dto.getNetappBox()).getDto());
 			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
@@ -2594,6 +2764,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult createNetappPort(@WebParam(name = "netappPortDTO") NetappPortDTO netappPortDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -2618,7 +2789,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.netappPortService.saveOrUpdate(netappPort);
 
-			return new IdResult(netappPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -2630,6 +2801,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public IdResult updateNetappPort(@WebParam(name = "id") Integer id,
 			@WebParam(name = "netappPortDTO") NetappPortDTO netappPortDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -2643,13 +2815,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			searchParams.put("EQ_code", netappPortDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.netappPortService.findNetappPort(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(
+					comm.netappPortService.findNetappPort(searchParams) == null
+							|| netappPort.getCode().equals(netappPortDTO.getCode()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(netappPortDTO, NetappPort.class), netappPort);
 
 			netappPort.setIdClass(TableNameUtil.getTableName(NetappPort.class));
-
 			netappPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			netappPort.setUser(DEFAULT_USER);
 
@@ -2658,7 +2831,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.netappPortService.saveOrUpdate(netappPort);
 
-			return new IdResult(netappPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -2669,6 +2842,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteNetappPort(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -2677,7 +2851,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NetappPort netappPort = comm.netappPortService.findNetappPort(id);
 
-			Validate.isTrue(netappPort != null, ERROR.OBJECT_NULL);
+			Validate.notNull(netappPort, ERROR.OBJECT_NULL);
 
 			netappPort.setIdClass(TableNameUtil.getTableName(NetappPort.class));
 
@@ -2685,7 +2859,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.netappPortService.saveOrUpdate(netappPort);
 
-			return new IdResult(netappPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -2698,6 +2872,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	public PaginationResult<NetappPortDTO> getNetappPortPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<NetappPortDTO> result = new PaginationResult<NetappPortDTO>();
 
 		try {
@@ -2714,15 +2889,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public DTOListResult<NetappPortDTO> getNetappPortList(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<NetappPortDTO> result = new DTOListResult<NetappPortDTO>();
 
 		try {
 
-			List<NetappPort> netappPort = comm.netappPortService.getNetappPortList(searchParams);
-
-			List<NetappPortDTO> list = BeanMapper.mapList(netappPort, NetappPortDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.netappPortService.getNetappPortList(searchParams),
+					NetappPortDTO.class));
 
 			return result;
 
@@ -2735,6 +2908,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<NicDTO> findNic(@WebParam(name = "id") Integer id) {
+
 		DTOResult<NicDTO> result = new DTOResult<NicDTO>();
 
 		try {
@@ -2747,9 +2921,12 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NicDTO dto = BeanMapper.map(nic, NicDTO.class);
 
+			// Reference
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setServerDTO(findServer(dto.getServer()).getDto());
+			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
 
+			// LookUp
 			dto.setNicRateText(cmdbuildSoapServiceImpl.findLookUp(dto.getNicRate()).getDto().getDescription());
 			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
 
@@ -2766,6 +2943,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<NicDTO> findNicByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<NicDTO> result = new DTOResult<NicDTO>();
 
 		try {
@@ -2778,12 +2956,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NicDTO dto = BeanMapper.map(nic, NicDTO.class);
 
+			// Reference
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setServerDTO(findServer(dto.getServer()).getDto());
+			dto.setFimasDTO(findFimas(dto.getFimas()).getDto());
 
+			// LookUp
 			dto.setNicRateText(cmdbuildSoapServiceImpl.findLookUp(dto.getNicRate()).getDto().getDescription());
 			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
-
 			result.setDto(dto);
 
 			return result;
@@ -2797,6 +2977,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult createNic(@WebParam(name = "nicDTO") NicDTO nicDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -2821,7 +3002,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.nicService.saveOrUpdate(nic);
 
-			return new IdResult(nic.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -2832,6 +3013,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult updateNic(@WebParam(name = "id") Integer id, @WebParam(name = "nicDTO") NicDTO nicDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -2845,13 +3027,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			searchParams.put("EQ_code", nicDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.nicService.findNic(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(comm.nicService.findNic(searchParams) == null || nic.getCode().equals(nicDTO.getCode()),
+					ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(nicDTO, Nic.class), nic);
 
 			nic.setIdClass(TableNameUtil.getTableName(Nic.class));
-
 			nic.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			nic.setUser(DEFAULT_USER);
 
@@ -2860,7 +3042,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.nicService.saveOrUpdate(nic);
 
-			return new IdResult(nic.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -2871,6 +3053,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteNic(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -2879,7 +3062,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Nic nic = comm.nicService.findNic(id);
 
-			Validate.isTrue(nic != null, ERROR.OBJECT_NULL);
+			Validate.notNull(nic, ERROR.OBJECT_NULL);
 
 			nic.setIdClass(TableNameUtil.getTableName(Nic.class));
 
@@ -2887,7 +3070,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.nicService.saveOrUpdate(nic);
 
-			return new IdResult(nic.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -2899,6 +3082,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public PaginationResult<NicDTO> getNicPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<NicDTO> result = new PaginationResult<NicDTO>();
 
 		try {
@@ -2914,15 +3098,12 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOListResult<NicDTO> getNicList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<NicDTO> result = new DTOListResult<NicDTO>();
 
 		try {
 
-			List<Nic> nic = comm.nicService.getNicList(searchParams);
-
-			List<NicDTO> list = BeanMapper.mapList(nic, NicDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.nicService.getNicList(searchParams), NicDTO.class));
 
 			return result;
 
@@ -2935,6 +3116,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<NicPortDTO> findNicPort(@WebParam(name = "id") Integer id) {
+
 		DTOResult<NicPortDTO> result = new DTOResult<NicPortDTO>();
 
 		try {
@@ -2947,6 +3129,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NicPortDTO dto = BeanMapper.map(nicPort, NicPortDTO.class);
 
+			// Reference
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
 			dto.setNicDTO(findNic(dto.getNic()).getDto());
@@ -2964,6 +3147,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<NicPortDTO> findNicPortByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<NicPortDTO> result = new DTOResult<NicPortDTO>();
 
 		try {
@@ -2976,6 +3160,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NicPortDTO dto = BeanMapper.map(nicPort, NicPortDTO.class);
 
+			// Reference
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
 			dto.setNicDTO(findNic(dto.getNic()).getDto());
@@ -2993,6 +3178,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult createNicPort(@WebParam(name = "nicPortDTO") NicPortDTO nicPortDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -3017,7 +3203,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.nicPortService.saveOrUpdate(nicPort);
 
-			return new IdResult(nicPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -3029,6 +3215,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public IdResult updateNicPort(@WebParam(name = "id") Integer id,
 			@WebParam(name = "nicPortDTO") NicPortDTO nicPortDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -3042,13 +3229,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			searchParams.put("EQ_code", nicPortDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.nicPortService.findNicPort(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(
+					comm.nicPortService.findNicPort(searchParams) == null
+							|| nicPort.getCode().equals(nicPortDTO.getCode()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(nicPortDTO, NicPort.class), nicPort);
 
 			nicPort.setIdClass(TableNameUtil.getTableName(NicPort.class));
-
 			nicPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			nicPort.setUser(DEFAULT_USER);
 
@@ -3057,7 +3245,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.nicPortService.saveOrUpdate(nicPort);
 
-			return new IdResult(nicPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -3068,6 +3256,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteNicPort(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -3076,7 +3265,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			NicPort nicPort = comm.nicPortService.findNicPort(id);
 
-			Validate.isTrue(nicPort != null, ERROR.OBJECT_NULL);
+			Validate.notNull(nicPort, ERROR.OBJECT_NULL);
 
 			nicPort.setIdClass(TableNameUtil.getTableName(NicPort.class));
 
@@ -3084,7 +3273,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.nicPortService.saveOrUpdate(nicPort);
 
-			return new IdResult(nicPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -3097,6 +3286,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	public PaginationResult<NicPortDTO> getNicPortPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<NicPortDTO> result = new PaginationResult<NicPortDTO>();
 
 		try {
@@ -3112,15 +3302,12 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOListResult<NicPortDTO> getNicPortList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<NicPortDTO> result = new DTOListResult<NicPortDTO>();
 
 		try {
 
-			List<NicPort> nicPort = comm.nicPortService.getNicPortList(searchParams);
-
-			List<NicPortDTO> list = BeanMapper.mapList(nicPort, NicPortDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.nicPortService.getNicPortList(searchParams), NicPortDTO.class));
 
 			return result;
 
@@ -3133,6 +3320,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<ServerDTO> findServer(@WebParam(name = "id") Integer id) {
+
 		DTOResult<ServerDTO> result = new DTOResult<ServerDTO>();
 
 		try {
@@ -3145,6 +3333,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			ServerDTO dto = BeanMapper.map(server, ServerDTO.class);
 
+			// Reference
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
@@ -3163,6 +3352,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<ServerDTO> findServerByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<ServerDTO> result = new DTOResult<ServerDTO>();
 
 		try {
@@ -3175,6 +3365,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			ServerDTO dto = BeanMapper.map(server, ServerDTO.class);
 
+			// Reference
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
@@ -3193,6 +3384,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult createServer(@WebParam(name = "serverDTO") ServerDTO serverDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -3217,7 +3409,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.serverService.saveOrUpdate(server);
 
-			return new IdResult(server.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -3228,6 +3420,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult updateServer(@WebParam(name = "id") Integer id, @WebParam(name = "serverDTO") ServerDTO serverDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -3241,13 +3434,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			searchParams.put("EQ_code", serverDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.serverService.findServer(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(
+					comm.serverService.findServer(searchParams) == null || server.getCode().equals(serverDTO.getCode()),
+					ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(serverDTO, Server.class), server);
 
 			server.setIdClass(TableNameUtil.getTableName(Server.class));
-
 			server.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			server.setUser(DEFAULT_USER);
 
@@ -3256,7 +3450,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.serverService.saveOrUpdate(server);
 
-			return new IdResult(server.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -3267,6 +3461,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteServer(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -3275,7 +3470,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Server server = comm.serverService.findServer(id);
 
-			Validate.isTrue(server != null, ERROR.OBJECT_NULL);
+			Validate.notNull(server, ERROR.OBJECT_NULL);
 
 			server.setIdClass(TableNameUtil.getTableName(Server.class));
 
@@ -3283,7 +3478,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.serverService.saveOrUpdate(server);
 
-			return new IdResult(server.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -3296,6 +3491,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	public PaginationResult<ServerDTO> getServerPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<ServerDTO> result = new PaginationResult<ServerDTO>();
 
 		try {
@@ -3311,15 +3507,12 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOListResult<ServerDTO> getServerList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<ServerDTO> result = new DTOListResult<ServerDTO>();
 
 		try {
 
-			List<Server> server = comm.serverService.getServerList(searchParams);
-
-			List<ServerDTO> list = BeanMapper.mapList(server, ServerDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.serverService.getServerList(searchParams), ServerDTO.class));
 
 			return result;
 
@@ -3332,6 +3525,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<ServerPortDTO> findServerPort(@WebParam(name = "id") Integer id) {
+
 		DTOResult<ServerPortDTO> result = new DTOResult<ServerPortDTO>();
 
 		try {
@@ -3344,6 +3538,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			ServerPortDTO dto = BeanMapper.map(serverPort, ServerPortDTO.class);
 
+			// Reference
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
 			dto.setServerDTO(findServer(dto.getServer()).getDto());
@@ -3362,6 +3557,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public DTOResult<ServerPortDTO> findServerPortByParams(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<ServerPortDTO> result = new DTOResult<ServerPortDTO>();
 
 		try {
@@ -3374,6 +3570,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			ServerPortDTO dto = BeanMapper.map(serverPort, ServerPortDTO.class);
 
+			// Reference
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
 			dto.setServerDTO(findServer(dto.getServer()).getDto());
@@ -3391,6 +3588,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult createServerPort(@WebParam(name = "serverPortDTO") ServerPortDTO serverPortDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -3415,7 +3613,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.serverPortService.saveOrUpdate(serverPort);
 
-			return new IdResult(serverPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -3427,6 +3625,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public IdResult updateServerPort(@WebParam(name = "id") Integer id,
 			@WebParam(name = "serverPortDTO") ServerPortDTO serverPortDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -3440,13 +3639,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			searchParams.put("EQ_code", serverPortDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.serverPortService.findServerPort(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(
+					comm.serverPortService.findServerPort(searchParams) == null
+							|| serverPort.getCode().equals(serverPortDTO.getCode()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(serverPortDTO, ServerPort.class), serverPort);
 
 			serverPort.setIdClass(TableNameUtil.getTableName(ServerPort.class));
-
 			serverPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			serverPort.setUser(DEFAULT_USER);
 
@@ -3455,7 +3655,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.serverPortService.saveOrUpdate(serverPort);
 
-			return new IdResult(serverPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -3466,6 +3666,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteServerPort(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -3474,7 +3675,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			ServerPort serverPort = comm.serverPortService.findServerPort(id);
 
-			Validate.isTrue(serverPort != null, ERROR.OBJECT_NULL);
+			Validate.notNull(serverPort, ERROR.OBJECT_NULL);
 
 			serverPort.setIdClass(TableNameUtil.getTableName(ServerPort.class));
 
@@ -3482,7 +3683,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.serverPortService.saveOrUpdate(serverPort);
 
-			return new IdResult(serverPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -3495,6 +3696,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	public PaginationResult<ServerPortDTO> getServerPortPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<ServerPortDTO> result = new PaginationResult<ServerPortDTO>();
 
 		try {
@@ -3511,15 +3713,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public DTOListResult<ServerPortDTO> getServerPortList(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<ServerPortDTO> result = new DTOListResult<ServerPortDTO>();
 
 		try {
 
-			List<ServerPort> serverPort = comm.serverPortService.getServerPortList(searchParams);
-
-			List<ServerPortDTO> list = BeanMapper.mapList(serverPort, ServerPortDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.serverPortService.getServerPortList(searchParams),
+					ServerPortDTO.class));
 
 			return result;
 
@@ -3532,6 +3732,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<SwitchesDTO> findSwitches(@WebParam(name = "id") Integer id) {
+
 		DTOResult<SwitchesDTO> result = new DTOResult<SwitchesDTO>();
 
 		try {
@@ -3544,6 +3745,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			SwitchesDTO dto = BeanMapper.map(switches, SwitchesDTO.class);
 
+			// Reference
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
@@ -3562,6 +3764,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<SwitchesDTO> findSwitchesByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<SwitchesDTO> result = new DTOResult<SwitchesDTO>();
 
 		try {
@@ -3574,6 +3777,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			SwitchesDTO dto = BeanMapper.map(switches, SwitchesDTO.class);
 
+			// Reference
 			dto.setIdcDTO(cmdbuildSoapServiceImpl.findIdc(dto.getIdc()).getDto());
 			dto.setRackDTO(cmdbuildSoapServiceImpl.findRack(dto.getRack()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
@@ -3592,6 +3796,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult createSwitches(@WebParam(name = "switchesDTO") SwitchesDTO switchesDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -3616,7 +3821,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.switchesService.saveOrUpdate(switches);
 
-			return new IdResult(switches.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -3628,6 +3833,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public IdResult updateSwitches(@WebParam(name = "id") Integer id,
 			@WebParam(name = "switchesDTO") SwitchesDTO switchesDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -3641,7 +3847,9 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			searchParams.put("EQ_code", switchesDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.switchesService.findSwitches(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(
+					comm.switchesService.findSwitches(searchParams) == null
+							|| switches.getCode().equals(switchesDTO.getCode()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(switchesDTO, Switches.class), switches);
@@ -3656,7 +3864,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.switchesService.saveOrUpdate(switches);
 
-			return new IdResult(switches.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -3667,6 +3875,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteSwitches(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -3675,7 +3884,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			Switches switches = comm.switchesService.findSwitches(id);
 
-			Validate.isTrue(switches != null, ERROR.OBJECT_NULL);
+			Validate.notNull(switches, ERROR.OBJECT_NULL);
 
 			switches.setIdClass(TableNameUtil.getTableName(Switches.class));
 
@@ -3683,7 +3892,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.switchesService.saveOrUpdate(switches);
 
-			return new IdResult(switches.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -3696,6 +3905,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	public PaginationResult<SwitchesDTO> getSwitchesPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<SwitchesDTO> result = new PaginationResult<SwitchesDTO>();
 
 		try {
@@ -3711,15 +3921,12 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOListResult<SwitchesDTO> getSwitchesList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<SwitchesDTO> result = new DTOListResult<SwitchesDTO>();
 
 		try {
 
-			List<Switches> switches = comm.switchesService.getSwitchesList(searchParams);
-
-			List<SwitchesDTO> list = BeanMapper.mapList(switches, SwitchesDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.switchesService.getSwitchesList(searchParams), SwitchesDTO.class));
 
 			return result;
 
@@ -3732,6 +3939,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public DTOResult<SwitchPortDTO> findSwitchPort(@WebParam(name = "id") Integer id) {
+
 		DTOResult<SwitchPortDTO> result = new DTOResult<SwitchPortDTO>();
 
 		try {
@@ -3744,6 +3952,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			SwitchPortDTO dto = BeanMapper.map(switchPort, SwitchPortDTO.class);
 
+			// Reference
 			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 			dto.setSwitchesDTO(findSwitches(dto.getSwitches()).getDto());
@@ -3762,6 +3971,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public DTOResult<SwitchPortDTO> findSwitchPortByParams(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOResult<SwitchPortDTO> result = new DTOResult<SwitchPortDTO>();
 
 		try {
@@ -3774,6 +3984,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			SwitchPortDTO dto = BeanMapper.map(switchPort, SwitchPortDTO.class);
 
+			// Reference
 			dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
 			dto.setSwitchesDTO(findSwitches(dto.getSwitches()).getDto());
@@ -3791,6 +4002,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult createSwitchPort(@WebParam(name = "switchPortDTO") SwitchPortDTO switchPortDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -3815,7 +4027,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.switchPortService.saveOrUpdate(switchPort);
 
-			return new IdResult(switchPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -3827,6 +4039,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public IdResult updateSwitchPort(@WebParam(name = "id") Integer id,
 			@WebParam(name = "switchPortDTO") SwitchPortDTO switchPortDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -3840,13 +4053,14 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 			searchParams.put("EQ_code", switchPortDTO.getCode());
 
 			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.switchPortService.findSwitchPort(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+			Validate.isTrue(
+					comm.switchPortService.findSwitchPort(searchParams) == null
+							|| switchPort.getCode().equals(switchPortDTO.getCode()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(switchPortDTO, SwitchPort.class), switchPort);
 
 			switchPort.setIdClass(TableNameUtil.getTableName(SwitchPort.class));
-
 			switchPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			switchPort.setUser(DEFAULT_USER);
 
@@ -3855,7 +4069,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.switchPortService.saveOrUpdate(switchPort);
 
-			return new IdResult(switchPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -3866,6 +4080,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteSwitchPort(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -3874,7 +4089,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			SwitchPort switchPort = comm.switchPortService.findSwitchPort(id);
 
-			Validate.isTrue(switchPort != null, ERROR.OBJECT_NULL);
+			Validate.notNull(switchPort, ERROR.OBJECT_NULL);
 
 			switchPort.setIdClass(TableNameUtil.getTableName(SwitchPort.class));
 
@@ -3882,7 +4097,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.switchPortService.saveOrUpdate(switchPort);
 
-			return new IdResult(switchPort.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -3895,6 +4110,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	public PaginationResult<SwitchPortDTO> getSwitchPortPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<SwitchPortDTO> result = new PaginationResult<SwitchPortDTO>();
 
 		try {
@@ -3911,15 +4127,13 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	@Override
 	public DTOListResult<SwitchPortDTO> getSwitchPortList(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<SwitchPortDTO> result = new DTOListResult<SwitchPortDTO>();
 
 		try {
 
-			List<SwitchPort> switchPort = comm.switchPortService.getSwitchPortList(searchParams);
-
-			List<SwitchPortDTO> list = BeanMapper.mapList(switchPort, SwitchPortDTO.class);
-
-			result.setDtos(list);
+			result.setDtos(BeanMapper.mapList(comm.switchPortService.getSwitchPortList(searchParams),
+					SwitchPortDTO.class));
 
 			return result;
 
@@ -3992,6 +4206,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult createVlan(@WebParam(name = "vlanDTO") VlanDTO vlanDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -4016,10 +4231,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.vlanService.saveOrUpdate(vlan);
 
-			// 在交换机上创建Vlan
-			createVlanByAgent(vlan);
-
-			return new IdResult(vlan.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -4030,6 +4242,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult updateVlan(@WebParam(name = "id") Integer id, @WebParam(name = "vlanDTO") VlanDTO vlanDTO) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -4061,10 +4274,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.vlanService.saveOrUpdate(vlan);
 
-			// 在交换机上更新Vlan
-			updateVlanByAgent(vlan);
-
-			return new IdResult(vlan.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -4075,6 +4285,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 	@Override
 	public IdResult deleteVlan(@WebParam(name = "id") Integer id) {
+
 		IdResult result = new IdResult();
 
 		try {
@@ -4090,10 +4301,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 
 			comm.vlanService.saveOrUpdate(vlan);
 
-			// 在交换机上删除Vlan
-			deleteVlanByAgent(vlan);
-
-			return new IdResult(vlan.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -4136,147 +4344,6 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 		} catch (RuntimeException e) {
 			return handleGeneralError(result, e);
 		}
-	}
-
-	/**
-	 * 调用Switch Agent的createVlanBySwtich的webservice接口
-	 * 
-	 * @param vlan
-	 */
-	private void createVlanByAgent(Vlan vlan) {
-
-		VlanParameter vlanParameter = new VlanParameter();
-
-		vlanParameter.setVlanId(Integer.valueOf(vlan.getCode()));
-		vlanParameter.setGateway(vlan.getGateway());
-		vlanParameter.setNetMask(vlan.getNetMask());
-
-		switchesSoapService.createVlanBySwtich(vlanParameter);
-	}
-
-	/**
-	 * 调用Switch Agent的deleteVlanBySwtich的webservice接口
-	 * 
-	 * @param vlanId
-	 */
-	private void deleteVlanByAgent(Vlan vlan) {
-		switchesSoapService.deleteVlanBySwtich(Integer.valueOf(vlan.getCode()));
-	}
-
-	/**
-	 * 调用Switch Agent的createVlanBySwtich和deleteVlanBySwtich的webservice接口组成一个update方法.<br>
-	 * 先将交换机中的vlan删除,在创建一个新的vlan.
-	 * 
-	 * @param vlanId
-	 */
-	private void updateVlanByAgent(Vlan vlan) {
-		deleteVlanByAgent(vlan);
-		createVlanByAgent(vlan);
-	}
-
-	@Override
-	public IdResult allocateIPAddress(@WebParam(name = "id") Integer id) {
-		return changeIpaddressStatus(id, LookUpConstants.IPAddressStatus.使用中.getValue());
-	}
-
-	@Override
-	public IdResult insertIPAddress(@WebParam(name = "ipaddressDTOList") List<IpaddressDTO> ipaddressDTOList) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			// 先判断对象是否为空
-			Validate.notNull(ipaddressDTOList, ERROR.INPUT_NULL);
-
-			Integer tempId = 0;
-			Integer insertCount = ipaddressDTOList.size(); // 插入Ipaddress的数量
-			Integer insertSuccessCount = 0; // 成功插入Ipaddress的数量
-
-			for (IpaddressDTO ipaddressDTO : ipaddressDTOList) {
-
-				Map<String, Object> searchParams = Maps.newHashMap();
-
-				searchParams.put("EQ_code", ipaddressDTO.getCode());
-
-				// 如果code重复,跳过本次loop
-				if (comm.ipaddressService.findIpaddress(searchParams) != null) {
-					continue;
-				}
-
-				Ipaddress ipaddress = BeanMapper.map(ipaddressDTO, Ipaddress.class);
-
-				BeanValidators.validateWithException(validator, ipaddress);
-
-				ipaddress.setIdClass(TableNameUtil.getTableName(Ipaddress.class));
-				ipaddress.setIpaddressStatus(LookUpConstants.IPAddressStatus.未使用.getValue());// 设置状态为未使用
-				ipaddress.setUser(DEFAULT_USER);
-
-				/* 使用spring-data-jap,在postgresql中,id不能重复,mysql则无此问题.不知道是否和主键策略有关系! */
-				ipaddress.setId(tempId);
-
-				comm.ipaddressService.saveOrUpdate(ipaddress);
-
-				tempId--;
-				insertSuccessCount++;
-			}
-
-			String message = "0".equals(insertSuccessCount.toString()) ? "Ipaddress已存在" : "插入Ipaddress " + insertCount
-					+ " 条,成功创建Ipaddress " + insertSuccessCount + " 条";
-
-			result.setMessage(message);
-			result.setId(0);
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-
-	}
-
-	@Override
-	public IdResult initIPAddress(Integer id) {
-		return changeIpaddressStatus(id, LookUpConstants.IPAddressStatus.未使用.getValue());
-	}
-
-	/**
-	 * 修改Ipaddress对象的ipaddressStatus.
-	 * 
-	 * @param id
-	 *            ipaddress Id
-	 * @param ipaddressStatus
-	 *            ipaddress状态 {@link LookUpConstants.IPAddressStatus}
-	 * @return
-	 */
-	private IdResult changeIpaddressStatus(Integer id, Integer ipaddressStatus) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			Validate.notNull(id, ERROR.INPUT_NULL);
-
-			Ipaddress ipaddress = comm.ipaddressService.findIpaddress(id);
-
-			Validate.notNull(ipaddress, ERROR.OBJECT_NULL);
-
-			ipaddress.setIpaddressStatus(ipaddressStatus);
-
-			comm.ipaddressService.saveOrUpdate(ipaddress);
-
-			result.setId(ipaddress.getId());
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-
 	}
 
 	@Override
@@ -4322,7 +4389,6 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 					+ " 条,成功创建Vlan " + insertSuccessCount + " 条";
 
 			result.setMessage(message);
-			result.setId(0);
 
 			return result;
 
