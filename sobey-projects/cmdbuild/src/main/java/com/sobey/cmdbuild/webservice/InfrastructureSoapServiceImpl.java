@@ -1544,12 +1544,12 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	}
 
 	@Override
-	public IdResult allocateIPAddress(@WebParam(name = "id") Integer id) {
+	public IdResult allocateIpaddress(@WebParam(name = "id") Integer id) {
 		return changeIpaddressStatus(id, LookUpConstants.IPAddressStatus.使用中.getValue());
 	}
 
 	@Override
-	public IdResult insertIPAddress(@WebParam(name = "ipaddressDTOList") List<IpaddressDTO> ipaddressDTOList) {
+	public IdResult insertIpaddress(@WebParam(name = "ipaddressDTOList") List<IpaddressDTO> ipaddressDTOList) {
 
 		IdResult result = new IdResult();
 
@@ -1606,7 +1606,7 @@ public class InfrastructureSoapServiceImpl extends BasicSoapSevcie implements In
 	}
 
 	@Override
-	public IdResult initIPAddress(Integer id) {
+	public IdResult initIpaddress(Integer id) {
 		return changeIpaddressStatus(id, LookUpConstants.IPAddressStatus.未使用.getValue());
 	}
 
