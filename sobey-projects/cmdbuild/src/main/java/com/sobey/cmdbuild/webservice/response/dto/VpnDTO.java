@@ -9,30 +9,68 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
 
-@XmlRootElement
+@XmlRootElement(name = "VpnDTO")
 @XmlType(name = "VpnDTO", namespace = WsConstants.NS)
 public class VpnDTO {
 
-	private Date beginDate;
+	private Integer id;
 	private String code;
 	private String description;
-	private Integer id;
+	private Date beginDate;
 	private String remark;
-
-	private Integer tag;
 	private Integer tenants;
+	private TenantsDTO tenantsDTO;
+	private Integer tag;
+	private TagDTO tagDTO;
 	private String vpnName;
 	private String vpnPassword;
 
-	private TagDTO tagDTO;
-	private TenantsDTO tenantsDTO;
-
-	public TagDTO getTagDTO() {
-		return tagDTO;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setTagDTO(TagDTO tagDTO) {
-		this.tagDTO = tagDTO;
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public Integer getTenants() {
+		return tenants;
+	}
+
+	public void setTenants(Integer tenants) {
+		this.tenants = tenants;
 	}
 
 	public TenantsDTO getTenantsDTO() {
@@ -43,72 +81,32 @@ public class VpnDTO {
 		this.tenantsDTO = tenantsDTO;
 	}
 
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
 	public Integer getTag() {
 		return tag;
-	}
-
-	public Integer getTenants() {
-		return tenants;
-	}
-
-	public String getVpnName() {
-		return vpnName;
-	}
-
-	public String getVpnPassword() {
-		return vpnPassword;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
 	}
 
 	public void setTag(Integer tag) {
 		this.tag = tag;
 	}
 
-	public void setTenants(Integer tenants) {
-		this.tenants = tenants;
+	public TagDTO getTagDTO() {
+		return tagDTO;
+	}
+
+	public void setTagDTO(TagDTO tagDTO) {
+		this.tagDTO = tagDTO;
+	}
+
+	public String getVpnName() {
+		return vpnName;
 	}
 
 	public void setVpnName(String vpnName) {
 		this.vpnName = vpnName;
+	}
+
+	public String getVpnPassword() {
+		return vpnPassword;
 	}
 
 	public void setVpnPassword(String vpnPassword) {

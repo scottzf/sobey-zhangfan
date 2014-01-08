@@ -9,31 +9,135 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
 
-@XmlRootElement
+@XmlRootElement(name = "FimasBoxDTO")
 @XmlType(name = "FimasBoxDTO", namespace = WsConstants.NS)
 public class FimasBoxDTO {
 
-	private Date beginDate;
+	private Integer id;
 	private String code;
 	private String description;
-	private Integer deviceSpec;
-	private Integer diskNumber;
-	private Integer diskType;
-	private String gdzcSn;
-	private Integer id;
-	private Integer idc;
-	private Integer fimas;
-	private Integer ipaddress;
-	private Integer rack;
+	private Date beginDate;
 	private String remark;
-	private String site;
-	private String sn;
-
-	private RackDTO rackDTO;
-	private DeviceSpecDTO deviceSpecDTO;
-	private String DiskTypeText;
+	private Integer idc;
 	private IdcDTO idcDTO;
+	private Integer rack;
+	private RackDTO rackDTO;
+	private Integer deviceSpec;
+	private DeviceSpecDTO deviceSpecDTO;
+	private Integer ipaddress;
+	private IpaddressDTO ipaddressDTO;
+	private Integer fimas;
 	private FimasDTO fimasDTO;
+	private Integer diskType;
+	private String DiskTypeText;
+	private String site;
+	private Integer diskNumber;
+	private String sn;
+	private String gdzcSn;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public Integer getIdc() {
+		return idc;
+	}
+
+	public void setIdc(Integer idc) {
+		this.idc = idc;
+	}
+
+	public IdcDTO getIdcDTO() {
+		return idcDTO;
+	}
+
+	public void setIdcDTO(IdcDTO idcDTO) {
+		this.idcDTO = idcDTO;
+	}
+
+	public Integer getRack() {
+		return rack;
+	}
+
+	public void setRack(Integer rack) {
+		this.rack = rack;
+	}
+
+	public RackDTO getRackDTO() {
+		return rackDTO;
+	}
+
+	public void setRackDTO(RackDTO rackDTO) {
+		this.rackDTO = rackDTO;
+	}
+
+	public Integer getDeviceSpec() {
+		return deviceSpec;
+	}
+
+	public void setDeviceSpec(Integer deviceSpec) {
+		this.deviceSpec = deviceSpec;
+	}
+
+	public DeviceSpecDTO getDeviceSpecDTO() {
+		return deviceSpecDTO;
+	}
+
+	public void setDeviceSpecDTO(DeviceSpecDTO deviceSpecDTO) {
+		this.deviceSpecDTO = deviceSpecDTO;
+	}
+
+	public Integer getIpaddress() {
+		return ipaddress;
+	}
+
+	public void setIpaddress(Integer ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public IpaddressDTO getIpaddressDTO() {
+		return ipaddressDTO;
+	}
+
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
+	}
 
 	public Integer getFimas() {
 		return fimas;
@@ -51,24 +155,12 @@ public class FimasBoxDTO {
 		this.fimasDTO = fimasDTO;
 	}
 
-	public Date getBeginDate() {
-		return beginDate;
+	public Integer getDiskType() {
+		return diskType;
 	}
 
-	public RackDTO getRackDTO() {
-		return rackDTO;
-	}
-
-	public void setRackDTO(RackDTO rackDTO) {
-		this.rackDTO = rackDTO;
-	}
-
-	public DeviceSpecDTO getDeviceSpecDTO() {
-		return deviceSpecDTO;
-	}
-
-	public void setDeviceSpecDTO(DeviceSpecDTO deviceSpecDTO) {
-		this.deviceSpecDTO = deviceSpecDTO;
+	public void setDiskType(Integer diskType) {
+		this.diskType = diskType;
 	}
 
 	public String getDiskTypeText() {
@@ -79,120 +171,36 @@ public class FimasBoxDTO {
 		DiskTypeText = diskTypeText;
 	}
 
-	public IdcDTO getIdcDTO() {
-		return idcDTO;
-	}
-
-	public void setIdcDTO(IdcDTO idcDTO) {
-		this.idcDTO = idcDTO;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public Integer getDeviceSpec() {
-		return deviceSpec;
-	}
-
-	public Integer getDiskNumber() {
-		return diskNumber;
-	}
-
-	public Integer getDiskType() {
-		return diskType;
-	}
-
-	public String getGdzcSn() {
-		return gdzcSn;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public Integer getIdc() {
-		return idc;
-	}
-
-	public Integer getIpaddress() {
-		return ipaddress;
-	}
-
-	public Integer getRack() {
-		return rack;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
 	public String getSite() {
 		return site;
-	}
-
-	public String getSn() {
-		return sn;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setDeviceSpec(Integer deviceSpec) {
-		this.deviceSpec = deviceSpec;
-	}
-
-	public void setDiskNumber(Integer diskNumber) {
-		this.diskNumber = diskNumber;
-	}
-
-	public void setDiskType(Integer diskType) {
-		this.diskType = diskType;
-	}
-
-	public void setGdzcSn(String gdzcSn) {
-		this.gdzcSn = gdzcSn;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public void setIdc(Integer idc) {
-		this.idc = idc;
-	}
-
-	public void setIpaddress(Integer ipaddress) {
-		this.ipaddress = ipaddress;
-	}
-
-	public void setRack(Integer rack) {
-		this.rack = rack;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
 	}
 
 	public void setSite(String site) {
 		this.site = site;
 	}
 
+	public Integer getDiskNumber() {
+		return diskNumber;
+	}
+
+	public void setDiskNumber(Integer diskNumber) {
+		this.diskNumber = diskNumber;
+	}
+
+	public String getSn() {
+		return sn;
+	}
+
 	public void setSn(String sn) {
 		this.sn = sn;
+	}
+
+	public String getGdzcSn() {
+		return gdzcSn;
+	}
+
+	public void setGdzcSn(String gdzcSn) {
+		this.gdzcSn = gdzcSn;
 	}
 
 	/**

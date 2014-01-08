@@ -9,23 +9,69 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
 
-@XmlRootElement
+@XmlRootElement(name = "EsgDTO")
 @XmlType(name = "EsgDTO", namespace = WsConstants.NS)
 public class EsgDTO {
 
-	private Integer aclNumber;
-	private Date beginDate;
+	private Integer id;
 	private String code;
 	private String description;
-	private Integer id;
-
-	private Integer isPublic;
+	private Date beginDate;
 	private String remark;
 	private Integer tag;
-	private Integer tenants;
-
 	private TagDTO tagDTO;
+	private Integer tenants;
 	private TenantsDTO tenantsDTO;
+	private Integer aclNumber;
+	private Integer isPublic;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public Integer getTag() {
+		return tag;
+	}
+
+	public void setTag(Integer tag) {
+		this.tag = tag;
+	}
 
 	public TagDTO getTagDTO() {
 		return tagDTO;
@@ -33,6 +79,14 @@ public class EsgDTO {
 
 	public void setTagDTO(TagDTO tagDTO) {
 		this.tagDTO = tagDTO;
+	}
+
+	public Integer getTenants() {
+		return tenants;
+	}
+
+	public void setTenants(Integer tenants) {
+		this.tenants = tenants;
 	}
 
 	public TenantsDTO getTenantsDTO() {
@@ -47,72 +101,16 @@ public class EsgDTO {
 		return aclNumber;
 	}
 
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public Integer getId() {
-		return id;
+	public void setAclNumber(Integer aclNumber) {
+		this.aclNumber = aclNumber;
 	}
 
 	public Integer getIsPublic() {
 		return isPublic;
 	}
 
-	public String getRemark() {
-		return remark;
-	}
-
-	public Integer getTag() {
-		return tag;
-	}
-
-	public Integer getTenants() {
-		return tenants;
-	}
-
-	public void setAclNumber(Integer aclNumber) {
-		this.aclNumber = aclNumber;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	public void setIsPublic(Integer isPublic) {
 		this.isPublic = isPublic;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public void setTag(Integer tag) {
-		this.tag = tag;
-	}
-
-	public void setTenants(Integer tenants) {
-		this.tenants = tenants;
 	}
 
 	/**

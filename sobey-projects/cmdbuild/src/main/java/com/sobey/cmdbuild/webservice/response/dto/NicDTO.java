@@ -9,27 +9,65 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
 
-@XmlRootElement
+@XmlRootElement(name = "NicDTO")
 @XmlType(name = "NicDTO", namespace = WsConstants.NS)
 public class NicDTO {
 
-	private Date beginDate;
-	private Integer brand;
+	private Integer id;
 	private String code;
 	private String description;
-	private Integer fimas;
-
-	private Integer id;
+	private Date beginDate;
 	private Integer idc;
-	private Integer nicRate;
-	private Integer portNumber;
-	private String remark;
-	private Integer server;
-
 	private IdcDTO idcDTO;
+	private Integer server;
 	private ServerDTO serverDTO;
+	private Integer fimas;
+	private FimasDTO fimasDTO;
+	private Integer brand;
+	private Integer nicRate;
 	private String brandText;
 	private String nicRateText;
+	private Integer portNumber;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public Integer getIdc() {
+		return idc;
+	}
+
+	public void setIdc(Integer idc) {
+		this.idc = idc;
+	}
 
 	public IdcDTO getIdcDTO() {
 		return idcDTO;
@@ -39,12 +77,52 @@ public class NicDTO {
 		this.idcDTO = idcDTO;
 	}
 
+	public Integer getServer() {
+		return server;
+	}
+
+	public void setServer(Integer server) {
+		this.server = server;
+	}
+
 	public ServerDTO getServerDTO() {
 		return serverDTO;
 	}
 
 	public void setServerDTO(ServerDTO serverDTO) {
 		this.serverDTO = serverDTO;
+	}
+
+	public Integer getFimas() {
+		return fimas;
+	}
+
+	public void setFimas(Integer fimas) {
+		this.fimas = fimas;
+	}
+
+	public FimasDTO getFimasDTO() {
+		return fimasDTO;
+	}
+
+	public void setFimasDTO(FimasDTO fimasDTO) {
+		this.fimasDTO = fimasDTO;
+	}
+
+	public Integer getBrand() {
+		return brand;
+	}
+
+	public void setBrand(Integer brand) {
+		this.brand = brand;
+	}
+
+	public Integer getNicRate() {
+		return nicRate;
+	}
+
+	public void setNicRate(Integer nicRate) {
+		this.nicRate = nicRate;
 	}
 
 	public String getBrandText() {
@@ -63,92 +141,12 @@ public class NicDTO {
 		this.nicRateText = nicRateText;
 	}
 
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public Integer getBrand() {
-		return brand;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public Integer getFimas() {
-		return fimas;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public Integer getIdc() {
-		return idc;
-	}
-
-	public Integer getNicRate() {
-		return nicRate;
-	}
-
 	public Integer getPortNumber() {
 		return portNumber;
 	}
 
-	public String getRemark() {
-		return remark;
-	}
-
-	public Integer getServer() {
-		return server;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public void setBrand(Integer brand) {
-		this.brand = brand;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setFimas(Integer fimas) {
-		this.fimas = fimas;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public void setIdc(Integer idc) {
-		this.idc = idc;
-	}
-
-	public void setNicRate(Integer nicRate) {
-		this.nicRate = nicRate;
-	}
-
 	public void setPortNumber(Integer portNumber) {
 		this.portNumber = portNumber;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public void setServer(Integer server) {
-		this.server = server;
 	}
 
 	/**

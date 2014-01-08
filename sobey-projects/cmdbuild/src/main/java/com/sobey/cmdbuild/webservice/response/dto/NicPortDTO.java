@@ -9,39 +9,78 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
 
-@XmlRootElement
+@XmlRootElement(name = "NicPortDTO")
 @XmlType(name = "NicPortDTO", namespace = WsConstants.NS)
 public class NicPortDTO {
 
-	private Date beginDate;
+	private Integer id;
 	private String code;
 	private String description;
-	private Integer id;
+	private Date beginDate;
 	private String remark;
-
-	private Integer ipaddress;
-	private IpaddressDTO ipaddressDTO;
+	private Integer nic;
+	private NicDTO nicDTO;
 	private Integer connectedTo;
 	private SwitchPortDTO switchPortDTO;
-	private String macAddress;
+	private Integer ipaddress;
+	private IpaddressDTO ipaddressDTO;
 	private String site;
-	private NicDTO nicDTO;
-	private Integer nic;
+	private String macAddress;
 
-	public Integer getIpaddress() {
-		return ipaddress;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setIpaddress(Integer ipaddress) {
-		this.ipaddress = ipaddress;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public IpaddressDTO getIpaddressDTO() {
-		return ipaddressDTO;
+	public String getCode() {
+		return code;
 	}
 
-	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
-		this.ipaddressDTO = ipaddressDTO;
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public Integer getNic() {
+		return nic;
+	}
+
+	public void setNic(Integer nic) {
+		this.nic = nic;
+	}
+
+	public NicDTO getNicDTO() {
+		return nicDTO;
+	}
+
+	public void setNicDTO(NicDTO nicDTO) {
+		this.nicDTO = nicDTO;
 	}
 
 	public Integer getConnectedTo() {
@@ -60,12 +99,20 @@ public class NicPortDTO {
 		this.switchPortDTO = switchPortDTO;
 	}
 
-	public String getMacAddress() {
-		return macAddress;
+	public Integer getIpaddress() {
+		return ipaddress;
 	}
 
-	public void setMacAddress(String macAddress) {
-		this.macAddress = macAddress;
+	public void setIpaddress(Integer ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public IpaddressDTO getIpaddressDTO() {
+		return ipaddressDTO;
+	}
+
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
 	}
 
 	public String getSite() {
@@ -76,60 +123,12 @@ public class NicPortDTO {
 		this.site = site;
 	}
 
-	public NicDTO getNicDTO() {
-		return nicDTO;
+	public String getMacAddress() {
+		return macAddress;
 	}
 
-	public void setNicDTO(NicDTO nicDTO) {
-		this.nicDTO = nicDTO;
-	}
-
-	public Integer getNic() {
-		return nic;
-	}
-
-	public void setNic(Integer nic) {
-		this.nic = nic;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setMacAddress(String macAddress) {
+		this.macAddress = macAddress;
 	}
 
 	/**

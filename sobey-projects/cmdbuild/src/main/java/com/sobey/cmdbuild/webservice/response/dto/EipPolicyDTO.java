@@ -9,96 +9,99 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
 
-@XmlRootElement
+@XmlRootElement(name = "EipPolicyDTO")
 @XmlType(name = "EipPolicyDTO", namespace = WsConstants.NS)
 public class EipPolicyDTO {
 
-	private Date beginDate;
+	private Integer id;
 	private String code;
 	private String description;
-	private Integer eip;
-	private Integer id;
-
-	// EIP Integer EIP ID
-	// SourcePort Integer 源端口
-	// TargetPort Integer 目标端口
-	// Protocol Integer 协议ID
-
-	private Integer protocol;
+	private Date beginDate;
 	private String remark;
+	private Integer eip;
 	private Integer sourcePort;
 	private Integer targetPort;
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public Integer getEip() {
-		return eip;
-	}
+	private Integer protocol;
+	private String protocolText;
 
 	public Integer getId() {
 		return id;
-	}
-
-	public Integer getProtocol() {
-		return protocol;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public Integer getSourcePort() {
-		return sourcePort;
-	}
-
-	public Integer getTargetPort() {
-		return targetPort;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setEip(Integer eip) {
-		this.eip = eip;
 	}
 
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public void setProtocol(Integer protocol) {
-		this.protocol = protocol;
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public String getRemark() {
+		return remark;
 	}
 
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
 
+	public Integer getEip() {
+		return eip;
+	}
+
+	public void setEip(Integer eip) {
+		this.eip = eip;
+	}
+
+	public Integer getSourcePort() {
+		return sourcePort;
+	}
+
 	public void setSourcePort(Integer sourcePort) {
 		this.sourcePort = sourcePort;
 	}
 
+	public Integer getTargetPort() {
+		return targetPort;
+	}
+
 	public void setTargetPort(Integer targetPort) {
 		this.targetPort = targetPort;
+	}
+
+	public Integer getProtocol() {
+		return protocol;
+	}
+
+	public void setProtocol(Integer protocol) {
+		this.protocol = protocol;
+	}
+
+	public String getProtocolText() {
+		return protocolText;
+	}
+
+	public void setProtocolText(String protocolText) {
+		this.protocolText = protocolText;
 	}
 
 	/**

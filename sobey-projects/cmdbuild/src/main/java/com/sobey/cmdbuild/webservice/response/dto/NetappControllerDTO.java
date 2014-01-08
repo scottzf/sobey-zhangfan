@@ -9,52 +9,65 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
 
-@XmlRootElement
+@XmlRootElement(name = "NetappControllerDTO")
 @XmlType(name = "NetappControllerDTO", namespace = WsConstants.NS)
 public class NetappControllerDTO {
 
-	private Date beginDate;
+	private Integer id;
 	private String code;
 	private String description;
-	private Integer id;
+	private Date beginDate;
 	private String remark;
-
-	private String site;
-	private String gdzcSn;
-	private String sn;
-
 	private Integer idc;
-	private Integer ipaddress;
-	private Integer rack;
-	private Integer deviceSpec;
-
 	private IdcDTO idcDTO;
+	private Integer rack;
 	private RackDTO rackDTO;
-	private IpaddressDTO ipaddressDTO;
+	private Integer deviceSpec;
 	private DeviceSpecDTO deviceSpecDTO;
+	private Integer ipaddress;
+	private IpaddressDTO ipaddressDTO;
+	private String site;
+	private String sn;
+	private String gdzcSn;
 
-	public String getSite() {
-		return site;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setSite(String site) {
-		this.site = site;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public String getGdzcSn() {
-		return gdzcSn;
+	public String getCode() {
+		return code;
 	}
 
-	public void setGdzcSn(String gdzcSn) {
-		this.gdzcSn = gdzcSn;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
-	public String getSn() {
-		return sn;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setSn(String sn) {
-		this.sn = sn;
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 	public Integer getIdc() {
@@ -65,12 +78,12 @@ public class NetappControllerDTO {
 		this.idc = idc;
 	}
 
-	public Integer getIpaddress() {
-		return ipaddress;
+	public IdcDTO getIdcDTO() {
+		return idcDTO;
 	}
 
-	public void setIpaddress(Integer ipaddress) {
-		this.ipaddress = ipaddress;
+	public void setIdcDTO(IdcDTO idcDTO) {
+		this.idcDTO = idcDTO;
 	}
 
 	public Integer getRack() {
@@ -81,22 +94,6 @@ public class NetappControllerDTO {
 		this.rack = rack;
 	}
 
-	public Integer getDeviceSpec() {
-		return deviceSpec;
-	}
-
-	public void setDeviceSpec(Integer deviceSpec) {
-		this.deviceSpec = deviceSpec;
-	}
-
-	public IdcDTO getIdcDTO() {
-		return idcDTO;
-	}
-
-	public void setIdcDTO(IdcDTO idcDTO) {
-		this.idcDTO = idcDTO;
-	}
-
 	public RackDTO getRackDTO() {
 		return rackDTO;
 	}
@@ -105,12 +102,12 @@ public class NetappControllerDTO {
 		this.rackDTO = rackDTO;
 	}
 
-	public IpaddressDTO getIpaddressDTO() {
-		return ipaddressDTO;
+	public Integer getDeviceSpec() {
+		return deviceSpec;
 	}
 
-	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
-		this.ipaddressDTO = ipaddressDTO;
+	public void setDeviceSpec(Integer deviceSpec) {
+		this.deviceSpec = deviceSpec;
 	}
 
 	public DeviceSpecDTO getDeviceSpecDTO() {
@@ -121,44 +118,44 @@ public class NetappControllerDTO {
 		this.deviceSpecDTO = deviceSpecDTO;
 	}
 
-	public Date getBeginDate() {
-		return beginDate;
+	public Integer getIpaddress() {
+		return ipaddress;
 	}
 
-	public String getCode() {
-		return code;
+	public void setIpaddress(Integer ipaddress) {
+		this.ipaddress = ipaddress;
 	}
 
-	public String getDescription() {
-		return description;
+	public IpaddressDTO getIpaddressDTO() {
+		return ipaddressDTO;
 	}
 
-	public Integer getId() {
-		return id;
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
 	}
 
-	public String getRemark() {
-		return remark;
+	public String getSite() {
+		return site;
 	}
 
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
+	public void setSite(String site) {
+		this.site = site;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public String getSn() {
+		return sn;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setSn(String sn) {
+		this.sn = sn;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public String getGdzcSn() {
+		return gdzcSn;
 	}
 
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setGdzcSn(String gdzcSn) {
+		this.gdzcSn = gdzcSn;
 	}
 
 	/**

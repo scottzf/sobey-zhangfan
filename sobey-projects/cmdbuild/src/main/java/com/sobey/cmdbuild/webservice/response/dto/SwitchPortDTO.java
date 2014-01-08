@@ -9,24 +9,63 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
 
-@XmlRootElement
+@XmlRootElement(name = "SwitchPortDTO")
 @XmlType(name = "SwitchPortDTO", namespace = WsConstants.NS)
 public class SwitchPortDTO {
 
-	private Date beginDate;
+	private Integer id;
 	private String code;
 	private String description;
-	private Integer id;
+	private Date beginDate;
 	private String remark;
-
-	private Integer ipaddress;
 	private Integer switches;
-	private IpaddressDTO ipaddressDTO;
+	private SwitchesDTO switchesDTO;
 	private Integer connectedTo;
 	private SwitchPortDTO switchPortDTO;
-	private String macAddress;
+	private Integer ipaddress;
+	private IpaddressDTO ipaddressDTO;
 	private String site;
-	private SwitchesDTO switchesDTO;
+	private String macAddress;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 
 	public Integer getSwitches() {
 		return switches;
@@ -36,20 +75,12 @@ public class SwitchPortDTO {
 		this.switches = switches;
 	}
 
-	public Integer getIpaddress() {
-		return ipaddress;
+	public SwitchesDTO getSwitchesDTO() {
+		return switchesDTO;
 	}
 
-	public void setIpaddress(Integer ipaddress) {
-		this.ipaddress = ipaddress;
-	}
-
-	public IpaddressDTO getIpaddressDTO() {
-		return ipaddressDTO;
-	}
-
-	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
-		this.ipaddressDTO = ipaddressDTO;
+	public void setSwitchesDTO(SwitchesDTO switchesDTO) {
+		this.switchesDTO = switchesDTO;
 	}
 
 	public Integer getConnectedTo() {
@@ -68,12 +99,20 @@ public class SwitchPortDTO {
 		this.switchPortDTO = switchPortDTO;
 	}
 
-	public String getMacAddress() {
-		return macAddress;
+	public Integer getIpaddress() {
+		return ipaddress;
 	}
 
-	public void setMacAddress(String macAddress) {
-		this.macAddress = macAddress;
+	public void setIpaddress(Integer ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public IpaddressDTO getIpaddressDTO() {
+		return ipaddressDTO;
+	}
+
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
 	}
 
 	public String getSite() {
@@ -84,52 +123,12 @@ public class SwitchPortDTO {
 		this.site = site;
 	}
 
-	public SwitchesDTO getSwitchesDTO() {
-		return switchesDTO;
+	public String getMacAddress() {
+		return macAddress;
 	}
 
-	public void setSwitchesDTO(SwitchesDTO switchesDTO) {
-		this.switchesDTO = switchesDTO;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setMacAddress(String macAddress) {
+		this.macAddress = macAddress;
 	}
 
 	/**

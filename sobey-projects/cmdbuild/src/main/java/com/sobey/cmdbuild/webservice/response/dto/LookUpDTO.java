@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
 
-@XmlRootElement
+@XmlRootElement(name = "LookUpDTO")
 @XmlType(name = "LookUpDTO", namespace = WsConstants.NS)
 public class LookUpDTO {
 

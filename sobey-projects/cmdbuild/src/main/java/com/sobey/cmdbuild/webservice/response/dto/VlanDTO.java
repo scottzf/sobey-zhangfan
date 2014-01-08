@@ -9,32 +9,61 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
 
-@XmlRootElement
+@XmlRootElement(name = "VlanDTO")
 @XmlType(name = "VlanDTO", namespace = WsConstants.NS)
 public class VlanDTO {
 
 	private Integer id;
-	private Date beginDate;
 	private String code;
 	private String description;
+	private Date beginDate;
 	private String remark;
-
-	private String gateway;
-	private String netMask;
-	private String segment;
-
-	private Integer idc;
-	private IdcDTO idcDTO;
-
 	private Integer tenants;
 	private TenantsDTO tenantsDTO;
+	private Integer idc;
+	private IdcDTO idcDTO;
+	private String segment;
+	private String netMask;
+	private String gateway;
 
-	public IdcDTO getIdcDTO() {
-		return idcDTO;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setIdcDTO(IdcDTO idcDTO) {
-		this.idcDTO = idcDTO;
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 	public Integer getTenants() {
@@ -53,64 +82,24 @@ public class VlanDTO {
 		this.tenantsDTO = tenantsDTO;
 	}
 
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public String getGateway() {
-		return gateway;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
 	public Integer getIdc() {
 		return idc;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public String getSegment() {
-		return segment;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setGateway(String gateway) {
-		this.gateway = gateway;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public void setIdc(Integer idc) {
 		this.idc = idc;
 	}
 
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public IdcDTO getIdcDTO() {
+		return idcDTO;
+	}
+
+	public void setIdcDTO(IdcDTO idcDTO) {
+		this.idcDTO = idcDTO;
+	}
+
+	public String getSegment() {
+		return segment;
 	}
 
 	public void setSegment(String segment) {
@@ -123,6 +112,14 @@ public class VlanDTO {
 
 	public void setNetMask(String netMask) {
 		this.netMask = netMask;
+	}
+
+	public String getGateway() {
+		return gateway;
+	}
+
+	public void setGateway(String gateway) {
+		this.gateway = gateway;
 	}
 
 	/**

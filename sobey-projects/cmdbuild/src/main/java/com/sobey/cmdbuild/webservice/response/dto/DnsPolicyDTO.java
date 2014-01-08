@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
 
-@XmlRootElement
+@XmlRootElement(name = "DnsPolicyDTO")
 @XmlType(name = "DnsPolicyDTO", namespace = WsConstants.NS)
 public class DnsPolicyDTO {
 

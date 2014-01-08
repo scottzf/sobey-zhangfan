@@ -9,66 +9,73 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
 
-@XmlRootElement
+@XmlRootElement(name = "Cs2DTO")
 @XmlType(name = "Cs2DTO", namespace = WsConstants.NS)
 public class Cs2DTO {
 
-	private Date beginDate;
+	private Integer id;
 	private String code;
 	private String description;
-	private Double diskSize;
-	private Integer fimas;
-	private Integer id;
-	private Integer ipaddress;
+	private Date beginDate;
 	private String remark;
 	private Integer tag;
-	private Integer tenants;
-
-	private Integer es3Spec;
-	private IpaddressDTO ipaddressDTO;
-	private Es3SpecDTO es3SpecDTO;
-	private TenantsDTO tenantsDTO;
-	private FimasDTO fimasDTO;
 	private TagDTO tagDTO;
+	private Integer ipaddress;
+	private IpaddressDTO ipaddressDTO;
+	private Integer tenants;
+	private TenantsDTO tenantsDTO;
+	private Integer es3Spec;
+	private Es3SpecDTO es3SpecDTO;
+	private Integer fimas;
+	private FimasDTO fimasDTO;
+	private Double diskSize;
 
-	public Integer getEs3Spec() {
-		return es3Spec;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setEs3Spec(Integer es3Spec) {
-		this.es3Spec = es3Spec;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public IpaddressDTO getIpaddressDTO() {
-		return ipaddressDTO;
+	public String getCode() {
+		return code;
 	}
 
-	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
-		this.ipaddressDTO = ipaddressDTO;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
-	public Es3SpecDTO getEs3SpecDTO() {
-		return es3SpecDTO;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setEs3SpecDTO(Es3SpecDTO es3SpecDTO) {
-		this.es3SpecDTO = es3SpecDTO;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public TenantsDTO getTenantsDTO() {
-		return tenantsDTO;
+	public Date getBeginDate() {
+		return beginDate;
 	}
 
-	public void setTenantsDTO(TenantsDTO tenantsDTO) {
-		this.tenantsDTO = tenantsDTO;
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
 	}
 
-	public FimasDTO getFimasDTO() {
-		return fimasDTO;
+	public String getRemark() {
+		return remark;
 	}
 
-	public void setFimasDTO(FimasDTO fimasDTO) {
-		this.fimasDTO = fimasDTO;
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public Integer getTag() {
+		return tag;
+	}
+
+	public void setTag(Integer tag) {
+		this.tag = tag;
 	}
 
 	public TagDTO getTagDTO() {
@@ -79,84 +86,76 @@ public class Cs2DTO {
 		this.tagDTO = tagDTO;
 	}
 
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public Double getDiskSize() {
-		return diskSize;
-	}
-
-	public Integer getFimas() {
-		return fimas;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
 	public Integer getIpaddress() {
 		return ipaddress;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public Integer getTag() {
-		return tag;
-	}
-
-	public Integer getTenants() {
-		return tenants;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setDiskSize(Double diskSize) {
-		this.diskSize = diskSize;
-	}
-
-	public void setFimas(Integer fimas) {
-		this.fimas = fimas;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public void setIpaddress(Integer ipaddress) {
 		this.ipaddress = ipaddress;
 	}
 
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public IpaddressDTO getIpaddressDTO() {
+		return ipaddressDTO;
 	}
 
-	public void setTag(Integer tag) {
-		this.tag = tag;
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
+	}
+
+	public Integer getTenants() {
+		return tenants;
 	}
 
 	public void setTenants(Integer tenants) {
 		this.tenants = tenants;
+	}
+
+	public TenantsDTO getTenantsDTO() {
+		return tenantsDTO;
+	}
+
+	public void setTenantsDTO(TenantsDTO tenantsDTO) {
+		this.tenantsDTO = tenantsDTO;
+	}
+
+	public Integer getEs3Spec() {
+		return es3Spec;
+	}
+
+	public void setEs3Spec(Integer es3Spec) {
+		this.es3Spec = es3Spec;
+	}
+
+	public Es3SpecDTO getEs3SpecDTO() {
+		return es3SpecDTO;
+	}
+
+	public void setEs3SpecDTO(Es3SpecDTO es3SpecDTO) {
+		this.es3SpecDTO = es3SpecDTO;
+	}
+
+	public Integer getFimas() {
+		return fimas;
+	}
+
+	public void setFimas(Integer fimas) {
+		this.fimas = fimas;
+	}
+
+	public FimasDTO getFimasDTO() {
+		return fimasDTO;
+	}
+
+	public void setFimasDTO(FimasDTO fimasDTO) {
+		this.fimasDTO = fimasDTO;
+	}
+
+	public Double getDiskSize() {
+		return diskSize;
+	}
+
+	public void setDiskSize(Double diskSize) {
+		this.diskSize = diskSize;
 	}
 
 	/**
