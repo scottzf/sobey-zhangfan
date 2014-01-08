@@ -7,7 +7,6 @@ import java.util.List;
 import com.sobey.cmdbuild.constants.LookUpConstants;
 import com.sobey.cmdbuild.entity.As2;
 import com.sobey.cmdbuild.entity.Company;
-import com.sobey.cmdbuild.entity.Consumptions;
 import com.sobey.cmdbuild.entity.Cs2;
 import com.sobey.cmdbuild.entity.DeviceSpec;
 import com.sobey.cmdbuild.entity.Dns;
@@ -119,27 +118,6 @@ public class TestData {
 		rack.setIdc(90);
 
 		return rack;
-	}
-
-	public static Consumptions randomConsumptions() {
-		Consumptions con = new Consumptions();
-
-		con.setId(0);
-		con.setNotes(RandomData.randomName("note"));
-		con.setCode(RandomData.randomName("code10"));
-		con.setConsumptionsStatus(LookUpConstants.ConsumptionsStatus.Execution.getValue());// 执行中
-
-		con.setServiceStart(startDate);
-		con.setServiceEnd(endDate);
-		con.setIdentifier(RandomData.randomName("fuwuid"));
-		con.setTenants(87);
-		con.setServiceType(LookUpConstants.ServiceType.ECS.getValue());
-
-		con.setDescription(RandomData.randomName("description"));
-		con.setRemark(RandomData.randomName("remark"));
-		con.setSpending(RandomData.randomDouble());
-
-		return con;
 	}
 
 	public static DeviceSpec randomDeviceSpec() {

@@ -3,7 +3,6 @@ package com.sobey.cmdbuild.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sobey.cmdbuild.service.financial.ConsumptionsService;
 import com.sobey.cmdbuild.service.financial.DeviceSpecService;
 import com.sobey.cmdbuild.service.financial.EcsSpecService;
 import com.sobey.cmdbuild.service.financial.EipSpecService;
@@ -61,9 +60,6 @@ public class CommonService {
 
 	@Autowired
 	public CompanyService companyService;
-
-	@Autowired
-	public ConsumptionsService consumptionsService;
 
 	@Autowired
 	public Cs2Service cs2Service;

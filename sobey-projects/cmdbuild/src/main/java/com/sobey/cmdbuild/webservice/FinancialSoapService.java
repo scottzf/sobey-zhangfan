@@ -8,7 +8,6 @@ import javax.jws.WebService;
 import org.springframework.stereotype.Component;
 
 import com.sobey.cmdbuild.constants.WsConstants;
-import com.sobey.cmdbuild.webservice.response.dto.ConsumptionsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DeviceSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EcsSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EipSpecDTO;
@@ -25,49 +24,6 @@ public interface FinancialSoapService {
 	/*************************************************
 	 ****************** Financial ********************
 	 *************************************************/
-
-	// ==============================//
-	// ========= Consumptions =======//
-	// ==============================//
-
-	DTOResult<ConsumptionsDTO> findConsumptions(@WebParam(name = "id") Integer id);
-
-	DTOResult<ConsumptionsDTO> findConsumptionsByParams(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams);
-
-	IdResult createConsumptions(@WebParam(name = "ConsumptionsDTO") ConsumptionsDTO consumptionsDTO);
-
-	IdResult updateConsumptions(@WebParam(name = "id") Integer id,
-			@WebParam(name = "ConsumptionsDTO") ConsumptionsDTO consumptionsDTO);
-
-	IdResult deleteConsumptions(@WebParam(name = "id") Integer id);
-
-	DTOListResult<ConsumptionsDTO> getConsumptionsList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
-
-	PaginationResult<ConsumptionsDTO> getConsumptionsPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
-	/**
-	 * Consumptions 结算.<br/>
-	 * 在租户用户的账号余额基础上扣除 Consumptions 的 Spending(消费金额), 并将 Consumptions 状态改为"完成"。<br/>
-	 * 
-	 * @param consumptionsId
-	 *            消费id
-	 * @param tenantsId
-	 *            租户id
-	 * @return IdResult
-	 */
-	IdResult settleConsumptions(@WebParam(name = "consumptionsId") Integer consumptionsId,
-			@WebParam(name = "tenantsId") Integer tenantsId);
-
-	/**
-	 * 多条件获取对象集合，并导出列表的信息为 Excel 文件。
-	 * 
-	 * @param searchParams
-	 * @return DTOListResult<ConsumptionsDTO>
-	 */
-	DTOListResult<ConsumptionsDTO> reportConsumptions(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
 	// ==============================//
 	// ========= DeviceSpec =========//

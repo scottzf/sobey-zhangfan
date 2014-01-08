@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
 import com.sobey.cmdbuild.constants.ERROR;
-import com.sobey.cmdbuild.constants.LookUpConstants;
 import com.sobey.cmdbuild.entity.As2;
 import com.sobey.cmdbuild.entity.Cs2;
 import com.sobey.cmdbuild.entity.Dns;
@@ -23,7 +22,6 @@ import com.sobey.cmdbuild.entity.Esg;
 import com.sobey.cmdbuild.entity.GroupPolicy;
 import com.sobey.cmdbuild.entity.Vpn;
 import com.sobey.cmdbuild.webservice.response.dto.As2DTO;
-import com.sobey.cmdbuild.webservice.response.dto.ConsumptionsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.Cs2DTO;
 import com.sobey.cmdbuild.webservice.response.dto.DnsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EcsDTO;
@@ -257,84 +255,8 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 		}
 	}
 
-	@Override
-	public IdResult resizeCS2(@WebParam(name = "cs2DTO") Cs2DTO cs2DTO) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			// 填写新增 CS2 的基本信息。创建CS2
-			result = createCs2(cs2DTO);
-
-			// 判断CS2是否创建成功，该判断有待验证
-			if (result.getCode().equals("0")) {
-
-				// TODO 调用 storage Agent 中的 createVolumes 接口。CS2 创建成功，将数据保存至 CMDBuild 中；创建失败，返回错误提示至页面。
-
-				// 创建订单(订单开始时间和服务时间和CS2的创建时间相同)
-				ConsumptionsDTO consumptionsDTO = new ConsumptionsDTO();
-
-				consumptionsDTO.setId(0);
-				consumptionsDTO.setTenants(cs2DTO.getTenants());
-				consumptionsDTO.setBeginDate(cs2DTO.getBeginDate());
-				consumptionsDTO.setServiceEnd(cs2DTO.getBeginDate());
-				// consumptionsDTO.setIdentifier("??");
-				// consumptionsDTO.setServiceType(LookUpConstants.ServiceType.);//没有找到cs3
-				consumptionsDTO.setConsumptionsStatus(LookUpConstants.ConsumptionsStatus.Execution.getValue());
-
-				result = financialSoapServiceImpl.createConsumptions(consumptionsDTO);
-
-			}
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-
-	}
-
-	@Override
-	public IdResult operateCS2(@WebParam(name = "cs2DTO") Cs2DTO cs2DTO) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			// TODO 修改 storage 的配置。
-			// TODO 调用 Storage Agent 中的 resizeVolumes 接口。存储修改成功，将数据保存至CMDBuild 中；修改失败，返回错误提示至页面。
-
-			// 结算订单。consumptionsId没有找到
-			financialSoapServiceImpl.settleConsumptions(0, cs2DTO.getTenants());
-
-			// 新建订单
-
-			// TODO 调用 storage Agent 中的 createVolumes 接口。CS2 创建成功，将数据保存至 CMDBuild 中；创建失败，返回错误提示至页面。
-
-			// 创建订单(订单开始时间和服务时间和CS2的创建时间相同)
-			ConsumptionsDTO consumptionsDTO = new ConsumptionsDTO();
-
-			consumptionsDTO.setId(0);
-			consumptionsDTO.setTenants(cs2DTO.getTenants());
-			consumptionsDTO.setBeginDate(cs2DTO.getBeginDate());
-			consumptionsDTO.setServiceEnd(cs2DTO.getBeginDate());
-			// consumptionsDTO.setIdentifier("??");
-			// consumptionsDTO.setServiceType(LookUpConstants.ServiceType.);//没有找到cs3
-			consumptionsDTO.setConsumptionsStatus(LookUpConstants.ConsumptionsStatus.Execution.getValue());
-
-			result = financialSoapServiceImpl.createConsumptions(consumptionsDTO);
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
+	 
+ 
 
 	@Override
 	public IdResult ModifyCS2Attributes(@WebParam(name = "cs2DTO") Cs2DTO cs2DTO) {
@@ -455,18 +377,6 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			comm.as2Service.saveOrUpdate(as2);
 
-			// TODO 创建订单(订单开始时间和服务时间和AS2的创建时间相同)
-			ConsumptionsDTO consumptionsDTO = new ConsumptionsDTO();
-
-			consumptionsDTO.setId(0);
-			consumptionsDTO.setTenants(as2DTO.getTenants());
-			consumptionsDTO.setBeginDate(as2DTO.getBeginDate());
-			consumptionsDTO.setServiceEnd(as2DTO.getBeginDate());
-			// consumptionsDTO.setIdentifier("??");
-			// consumptionsDTO.setServiceType(LookUpConstants.ServiceType.);//没有找到cs3
-			consumptionsDTO.setConsumptionsStatus(LookUpConstants.ConsumptionsStatus.Execution.getValue());
-
-			result = financialSoapServiceImpl.createConsumptions(consumptionsDTO);
 
 			return result;
 
@@ -531,8 +441,6 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 
 			Validate.isTrue(as2 != null, ERROR.OBJECT_NULL);
 
-			// TODO 结算订单
-			financialSoapServiceImpl.settleConsumptions(0, as2.getTenants());
 
 			as2.setIdClass(TableNameUtil.getTableName(As2.class));
 
@@ -586,54 +494,7 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 		}
 	}
 
-	@Override
-	public IdResult resizeAS2(@WebParam(name = "as2DTO") As2DTO as2DTO) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			// TODO 修改 storage 的配置。
-
-			// 结算订单。consumptionsId没有找到
-			result = financialSoapServiceImpl.settleConsumptions(0, as2DTO.getTenants());
-
-			// 新建订单
-
-			// TODO 调用 Storage Agent 中的 resizeStorage 接口。存储修改成功，将数据保存至CMDBuild 中；修改失败，返回错误提示至页面
-
-			// 创建订单(订单开始时间和服务时间和CS2的创建时间相同)
-			ConsumptionsDTO consumptionsDTO = new ConsumptionsDTO();
-
-			consumptionsDTO.setId(0);
-			consumptionsDTO.setTenants(as2DTO.getTenants());
-			consumptionsDTO.setBeginDate(as2DTO.getBeginDate());
-			consumptionsDTO.setServiceEnd(as2DTO.getBeginDate());
-			// consumptionsDTO.setIdentifier("??");
-			// consumptionsDTO.setServiceType(LookUpConstants.ServiceType.);//没有找到as3
-			consumptionsDTO.setConsumptionsStatus(LookUpConstants.ConsumptionsStatus.Execution.getValue());
-
-			result = financialSoapServiceImpl.createConsumptions(consumptionsDTO);
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-
-	}
-
-	@Override
-	public IdResult operateAS2(@WebParam(name = "as2DTO") As2DTO as2DTO) {
-		return null;
-	}
-
-	@Override
-	public IdResult ModifyAS2Attributes(@WebParam(name = "as2DTO") As2DTO as2DTO) {
-		return null;
-	}
+ 
 
 	@Override
 	public DTOListResult<As2DTO> reportAS2(Map<String, Object> searchParams) {

@@ -65,10 +65,6 @@ public interface IaasSoapService {
 	PaginationResult<Cs2DTO> getCs2Pagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
-	IdResult resizeCS2(@WebParam(name = "cs2DTO") Cs2DTO cs2DTO);
-
-	IdResult operateCS2(@WebParam(name = "cs2DTO") Cs2DTO cs2DTO);
-
 	IdResult ModifyCS2Attributes(@WebParam(name = "cs2DTO") Cs2DTO cs2DTO);
 
 	DTOListResult<Cs2DTO> reportCS2(@WebParam(name = "searchParams") Map<String, Object> searchParams);
@@ -91,12 +87,6 @@ public interface IaasSoapService {
 
 	PaginationResult<As2DTO> getAs2Pagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
-	IdResult resizeAS2(@WebParam(name = "as2DTO") As2DTO as2DTO);
-
-	IdResult operateAS2(@WebParam(name = "as2DTO") As2DTO as2DTO);
-
-	IdResult ModifyAS2Attributes(@WebParam(name = "as2DTO") As2DTO as2DTO);
 
 	DTOListResult<As2DTO> reportAS2(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
