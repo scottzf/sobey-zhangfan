@@ -16,12 +16,12 @@ import javax.persistence.Table;
 @Table(name = "es3_spec", schema = "public")
 public class Es3Spec extends BasicEntity {
 
-	private Set<Es3SpecHistory> es3SpecHistories = new HashSet<Es3SpecHistory>(0);
-	private Double price;
 	private String remark;
+	private Integer brand;
 	private Integer maxSpace;
 	private Integer iops;
-	private Integer brand;
+	private Double price;
+	private Set<Es3SpecHistory> es3SpecHistories = new HashSet<Es3SpecHistory>(0);
 
 	public Es3Spec() {
 	}

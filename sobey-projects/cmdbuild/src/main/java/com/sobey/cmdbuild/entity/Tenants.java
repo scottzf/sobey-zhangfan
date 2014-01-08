@@ -16,12 +16,12 @@ import javax.persistence.Table;
 @Table(name = "tenants", schema = "public")
 public class Tenants extends BasicEntity {
 
-	private Double accontBalance;
-	private Integer company;
-	private String email;
-	private String password;
-	private String phone;
 	private String remark;
+	private Integer company;
+	private String password;
+	private String email;
+	private String phone;
+	private Double accontBalance;
 	private Set<TenantsHistory> tenantsHistories = new HashSet<TenantsHistory>(0);
 
 	public Tenants() {

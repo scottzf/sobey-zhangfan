@@ -14,16 +14,16 @@ import javax.persistence.Table;
 @Table(name = "as2", schema = "public")
 public class As2 extends BasicEntity {
 
-	private Set<As2History> as2Histories = new HashSet<As2History>(0);
-	private Integer diskSize;
-	private Integer es3Spec;
-	private Integer ipaddress;
-	private Integer netAppController;
 	private String remark;
 	private Integer tag;
+	private Integer ipaddress;
 	private Integer tenants;
-	private String volumePath;
+	private Integer es3Spec;
+	private Integer netAppController;
 	private Integer volumeType;
+	private Integer diskSize;
+	private String volumePath;
+	private Set<As2History> as2Histories = new HashSet<As2History>(0);
 
 	public As2() {
 	}

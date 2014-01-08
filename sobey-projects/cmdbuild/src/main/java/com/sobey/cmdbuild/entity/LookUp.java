@@ -8,11 +8,11 @@ import javax.persistence.Table;
 @Table(name = "\"LookUp\"", schema = "public")
 public class LookUp extends BasicEntity {
 
-	private String type;
 	private String parentType;
 	private Integer parentId;
 	private Integer number;
 	private Boolean isDefault;
+	private String type;
 
 	@Column(name = "\"Type\"", length = 64)
 	public String getType() {

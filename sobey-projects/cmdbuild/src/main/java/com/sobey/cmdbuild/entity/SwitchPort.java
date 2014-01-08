@@ -16,12 +16,12 @@ import javax.persistence.Table;
 @Table(name = "switch_port", schema = "public")
 public class SwitchPort extends BasicEntity {
 
+	private String remark;
+	private Integer switches;
 	private Integer connectedTo;
 	private Integer ipaddress;
-	private String macAddress;
-	private String remark;
 	private String site;
-	private Integer switches;
+	private String macAddress;
 	private Set<SwitchPortHistory> switchPortHistories = new HashSet<SwitchPortHistory>(0);
 
 	public SwitchPort() {

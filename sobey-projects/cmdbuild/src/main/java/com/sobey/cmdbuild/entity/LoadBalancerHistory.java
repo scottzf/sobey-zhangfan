@@ -18,17 +18,16 @@ import javax.persistence.TemporalType;
 @Table(name = "load_balancer_history", schema = "public")
 public class LoadBalancerHistory extends BasicEntity {
 
-	private Integer deviceSpec;
-
-	private Date endDate;
-	private String gdzcSn;
-	private Integer idc;
-	private Integer ipaddress;
 	private LoadBalancer loadBalancer;
-	private Integer rack;
+	private Date endDate;
 	private String remark;
+	private Integer idc;
+	private Integer rack;
+	private Integer deviceSpec;
+	private Integer ipaddress;
 	private String site;
 	private String sn;
+	private String gdzcSn;
 
 	public LoadBalancerHistory() {
 	}

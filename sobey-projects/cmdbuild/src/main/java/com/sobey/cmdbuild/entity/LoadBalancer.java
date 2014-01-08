@@ -16,15 +16,15 @@ import javax.persistence.Table;
 @Table(name = "load_balancer", schema = "public")
 public class LoadBalancer extends BasicEntity {
 
-	private Integer deviceSpec;
-	private String gdzcSn;
-	private Integer idc;
-	private Integer ipaddress;
-	private Set<LoadBalancerHistory> loadBalancerHistories = new HashSet<LoadBalancerHistory>(0);
-	private Integer rack;
 	private String remark;
+	private Integer idc;
+	private Integer rack;
+	private Integer deviceSpec;
+	private Integer ipaddress;
 	private String site;
 	private String sn;
+	private String gdzcSn;
+	private Set<LoadBalancerHistory> loadBalancerHistories = new HashSet<LoadBalancerHistory>(0);
 
 	public LoadBalancer() {
 	}

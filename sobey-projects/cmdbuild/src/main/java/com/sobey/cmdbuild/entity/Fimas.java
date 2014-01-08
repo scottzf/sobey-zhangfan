@@ -16,15 +16,15 @@ import javax.persistence.Table;
 @Table(name = "fimas", schema = "public")
 public class Fimas extends BasicEntity {
 
-	private Integer deviceSpec;
-	private Set<FimasHistory> fimasHistories = new HashSet<FimasHistory>(0);
-	private String gdzcSn;
-	private Integer idc;
-	private Integer ipaddress;
-	private Integer rack;
 	private String remark;
+	private Integer idc;
+	private Integer rack;
+	private Integer deviceSpec;
+	private Integer ipaddress;
 	private String site;
 	private String sn;
+	private String gdzcSn;
+	private Set<FimasHistory> fimasHistories = new HashSet<FimasHistory>(0);
 
 	public Fimas() {
 	}

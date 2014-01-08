@@ -18,18 +18,18 @@ import javax.persistence.TemporalType;
 @Table(name = "rack_history", schema = "public")
 public class RackHistory extends BasicEntity {
 
-	private Integer brand;
-	private Date endDate;
-	private String gdzcSn;
-	private Integer height;
-	private Integer idc;
-	private String model;
-	private Integer power;
-	private Double price;
 	private Rack rack;
+	private Date endDate;
 	private String remark;
-	private String sn;
+	private Integer idc;
+	private Integer height;
+	private Integer power;
+	private Integer brand;
+	private String model;
 	private Integer unitNumber;
+	private String sn;
+	private String gdzcSn;
+	private Double price;
 
 	public RackHistory() {
 	}

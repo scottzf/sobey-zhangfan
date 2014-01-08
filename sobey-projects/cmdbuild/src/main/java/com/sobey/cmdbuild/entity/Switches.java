@@ -16,14 +16,14 @@ import javax.persistence.Table;
 @Table(name = "switches", schema = "public")
 public class Switches extends BasicEntity {
 
-	private Integer deviceSpec;
-	private String gdzcSn;
-	private Integer idc;
-	private Integer ipaddress;
-	private Integer rack;
 	private String remark;
+	private Integer idc;
+	private Integer rack;
+	private Integer deviceSpec;
+	private Integer ipaddress;
 	private String site;
 	private String sn;
+	private String gdzcSn;
 	private Set<SwitchesHistory> switchesHistories = new HashSet<SwitchesHistory>(0);
 
 	public Switches() {

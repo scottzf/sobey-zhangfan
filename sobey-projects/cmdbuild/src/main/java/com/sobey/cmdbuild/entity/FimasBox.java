@@ -16,18 +16,18 @@ import javax.persistence.Table;
 @Table(name = "fimas_box", schema = "public")
 public class FimasBox extends BasicEntity {
 
-	private Integer deviceSpec;
-	private Integer diskNumber;
-	private Integer diskType;
-	private Set<FimasBoxHistory> fimasBoxHistories = new HashSet<FimasBoxHistory>(0);
-	private String gdzcSn;
+	private String remark;
 	private Integer idc;
+	private Integer rack;
+	private Integer deviceSpec;
 	private Integer ipaddress;
 	private Integer fimas;
-	private Integer rack;
-	private String remark;
+	private Integer diskType;
 	private Integer site;
+	private Integer diskNumber;
 	private String sn;
+	private String gdzcSn;
+	private Set<FimasBoxHistory> fimasBoxHistories = new HashSet<FimasBoxHistory>(0);
 
 	public FimasBox() {
 	}

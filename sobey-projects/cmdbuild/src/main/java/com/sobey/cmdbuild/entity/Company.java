@@ -19,10 +19,10 @@ import javax.persistence.Table;
 @Table(name = "company", schema = "public")
 public class Company extends BasicEntity {
 
+	private String remark;
 	private String zip;
 	private String phone;
 	private String address;
-	private String remark;
 	private Set<CompanyHistory> companyHistories = new HashSet<CompanyHistory>(0);
 
 	public Company() {

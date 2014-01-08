@@ -16,12 +16,12 @@ import javax.persistence.Table;
 @Table(name = "elb", schema = "public")
 public class Elb extends BasicEntity {
 
-	private Set<ElbHistory> elbHistories = new HashSet<ElbHistory>(0);
-	private Integer ipaddress;
-	private Boolean isSession;
 	private String remark;
 	private Integer tag;
 	private Integer tenants;
+	private Integer ipaddress;
+	private Boolean isSession;
+	private Set<ElbHistory> elbHistories = new HashSet<ElbHistory>(0);
 
 	public Elb() {
 	}

@@ -18,14 +18,14 @@ import javax.persistence.TemporalType;
 @Table(name = "switch_port_history", schema = "public")
 public class SwitchPortHistory extends BasicEntity {
 
-	private Integer connectedTo;
-	private Date endDate;
-	private Integer ipaddress;
-	private String macAddress;
-	private String remark;
-	private String site;
-	private Integer switches;
 	private SwitchPort switchPort;
+	private Date endDate;
+	private String remark;
+	private Integer switches;
+	private Integer connectedTo;
+	private Integer ipaddress;
+	private String site;
+	private String macAddress;
 
 	public SwitchPortHistory() {
 	}

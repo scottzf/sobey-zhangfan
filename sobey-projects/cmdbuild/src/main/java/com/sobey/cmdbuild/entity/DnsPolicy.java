@@ -17,8 +17,8 @@ import javax.persistence.Table;
 public class DnsPolicy extends BasicEntity {
 
 	private Integer dns;
-	private Integer esgProtocol;
 	private Integer port;
+	private Integer esgProtocol;
 	private Set<DnsPolicyHistory> dnsPolicyHistories = new HashSet<DnsPolicyHistory>(0);
 
 	public DnsPolicy() {

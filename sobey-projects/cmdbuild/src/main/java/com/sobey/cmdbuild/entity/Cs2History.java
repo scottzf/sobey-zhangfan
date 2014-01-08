@@ -19,14 +19,14 @@ import javax.persistence.TemporalType;
 public class Cs2History extends BasicEntity {
 
 	private Cs2 cs2;
-	private Integer diskSize;
 	private Date endDate;
-	private Integer es3Spec;
-	private Integer fimas;
-	private Integer ipaddress;
 	private String remark;
 	private Integer tag;
+	private Integer ipaddress;
 	private Integer tenants;
+	private Integer es3Spec;
+	private Integer fimas;
+	private Integer diskSize;
 
 	public Cs2History() {
 	}

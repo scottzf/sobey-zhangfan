@@ -13,14 +13,14 @@ import javax.persistence.Table;
 @Table(name = "cs2", schema = "public")
 public class Cs2 extends BasicEntity {
 
-	private Set<Cs2History> cs2Histories = new HashSet<Cs2History>(0);
-	private Integer diskSize;
-	private Integer es3Spec;
-	private Integer fimas;
-	private Integer ipaddress;
 	private String remark;
 	private Integer tag;
+	private Integer ipaddress;
 	private Integer tenants;
+	private Integer es3Spec;
+	private Integer fimas;
+	private Integer diskSize;
+	private Set<Cs2History> cs2Histories = new HashSet<Cs2History>(0);
 
 	public Cs2() {
 	}

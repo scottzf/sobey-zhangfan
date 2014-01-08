@@ -16,13 +16,13 @@ import javax.persistence.Table;
 @Table(name = "fimas_port", schema = "public")
 public class FimasPort extends BasicEntity {
 
-	private Integer connectedTo;
-	private Integer fimas;
-	private Set<FimasPortHistory> fimasPortHistories = new HashSet<FimasPortHistory>(0);
-	private Integer ipaddress;
-	private String macAddress;
 	private String remark;
+	private Integer fimas;
+	private Integer connectedTo;
+	private Integer ipaddress;
 	private String site;
+	private String macAddress;
+	private Set<FimasPortHistory> fimasPortHistories = new HashSet<FimasPortHistory>(0);
 
 	public FimasPort() {
 	}

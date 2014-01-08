@@ -18,14 +18,14 @@ import javax.persistence.TemporalType;
 @Table(name = "nic_history", schema = "public")
 public class NicHistory extends BasicEntity {
 
-	private Integer brand;
-	private Date endDate;
-	private Integer fimas;
-	private Integer idc;
 	private Nic nic;
+	private Date endDate;
+	private Integer idc;
+	private Integer server;
+	private Integer fimas;
+	private Integer brand;
 	private Integer nicRate;
 	private Integer portNumber;
-	private Integer server;
 
 	public NicHistory() {
 	}

@@ -18,16 +18,15 @@ import javax.persistence.TemporalType;
 @Table(name = "eip_history", schema = "public")
 public class EipHistory extends BasicEntity {
 
-	private Integer bandwidth;
-
 	private Eip eip;
-	private Integer eipSpec;
-	private Integer eipStatus;
 	private Date endDate;
-	private Integer ipaddress;
 	private String remark;
 	private Integer tag;
 	private Integer tenants;
+	private Integer eipSpec;
+	private Integer ipaddress;
+	private Integer eipStatus;
+	private Integer bandwidth;
 
 	public EipHistory() {
 	}

@@ -16,12 +16,12 @@ import javax.persistence.Table;
 @Table(name = "esg", schema = "public")
 public class Esg extends BasicEntity {
 
-	private Integer aclNumber;
-	private Set<EsgHistory> esgHistories = new HashSet<EsgHistory>(0);
-	private Boolean isPublic;
 	private String remark;
 	private Integer tag;
 	private Integer tenants;
+	private Integer aclNumber;
+	private Boolean isPublic;
+	private Set<EsgHistory> esgHistories = new HashSet<EsgHistory>(0);
 
 	public Esg() {
 	}

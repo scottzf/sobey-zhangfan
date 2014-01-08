@@ -17,10 +17,10 @@ import javax.persistence.Table;
 public class EipPolicy extends BasicEntity {
 
 	private Integer eip;
-	private Set<EipPolicyHistory> eipPolicyHistories = new HashSet<EipPolicyHistory>(0);
-	private Integer protocol;
 	private Integer sourcePort;
 	private Integer targetPort;
+	private Integer protocol;
+	private Set<EipPolicyHistory> eipPolicyHistories = new HashSet<EipPolicyHistory>(0);
 
 	public EipPolicy() {
 	}

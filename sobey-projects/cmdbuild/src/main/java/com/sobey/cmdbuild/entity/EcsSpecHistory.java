@@ -18,15 +18,14 @@ import javax.persistence.TemporalType;
 @Table(name = "ecs_spec_history", schema = "public")
 public class EcsSpecHistory extends BasicEntity {
 
-	private Integer cpuNumber;
-
-	private Integer diskSize;
 	private EcsSpec ecsSpec;
 	private Date endDate;
-	private Integer memory;
-	private Double price;
-	private Integer brand;
 	private String remark;
+	private Integer brand;
+	private Integer memory;
+	private Integer cpuNumber;
+	private Integer diskSize;
+	private Double price;
 
 	public EcsSpecHistory() {
 	}

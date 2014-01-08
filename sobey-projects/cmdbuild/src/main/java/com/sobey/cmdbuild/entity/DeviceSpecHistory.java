@@ -18,20 +18,20 @@ import javax.persistence.TemporalType;
 @Table(name = "device_spec_history", schema = "public")
 public class DeviceSpecHistory extends BasicEntity {
 
-	private Integer brand;
-	private String cpuModel;
-	private Integer cpuNumber;
 	private DeviceSpec deviceSpec;
-	private Integer deviceType;
 	private Date endDate;
-	private Integer hdNumber;
-	private Integer height;
-	private Integer maintenance;
-	private Integer nicNumber;
-	private Integer power;
-	private Double price;
-	private Integer ramNumber;
 	private String remark;
+	private Integer deviceType;
+	private Integer brand;
+	private Integer power;
+	private Integer maintenance;
+	private Integer height;
+	private Integer ramNumber;
+	private Integer cpuNumber;
+	private Integer nicNumber;
+	private Integer hdNumber;
+	private String cpuModel;
+	private Double price;
 
 	public DeviceSpecHistory() {
 	}

@@ -18,19 +18,19 @@ import javax.persistence.TemporalType;
 @Table(name = "netapp_box_history", schema = "public")
 public class NetappBoxHistory extends BasicEntity {
 
-	private Integer deviceSpec;
-	private Integer diskNumber;
-	private Integer diskType;
-	private Date endDate;
-	private String gdzcSn;
-	private Integer idc;
-	private Integer ipaddress;
 	private NetappBox netappBox;
-	private Integer rack;
+	private Date endDate;
 	private String remark;
-	private String site;
-	private String sn;
+	private Integer idc;
+	private Integer rack;
+	private Integer deviceSpec;
+	private Integer ipaddress;
 	private Integer netappController;
+	private Integer diskType;
+	private String site;
+	private Integer diskNumber;
+	private String sn;
+	private String gdzcSn;
 
 	public NetappBoxHistory() {
 	}

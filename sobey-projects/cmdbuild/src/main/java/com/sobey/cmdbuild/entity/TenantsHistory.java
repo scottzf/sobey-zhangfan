@@ -18,14 +18,14 @@ import javax.persistence.TemporalType;
 @Table(name = "tenants_history", schema = "public")
 public class TenantsHistory extends BasicEntity {
 
-	private Double accontBalance;
-	private Integer company;
-	private String email;
-	private Date endDate;
-	private String password;
-	private String phone;
-	private String remark;
 	private Tenants tenants;
+	private Date endDate;
+	private String remark;
+	private Integer company;
+	private String password;
+	private String email;
+	private String phone;
+	private Double accontBalance;
 
 	public TenantsHistory() {
 	}

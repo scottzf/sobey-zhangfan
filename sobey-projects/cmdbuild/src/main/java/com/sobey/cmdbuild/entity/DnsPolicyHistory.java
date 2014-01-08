@@ -18,11 +18,11 @@ import javax.persistence.TemporalType;
 @Table(name = "dns_policy_history", schema = "public")
 public class DnsPolicyHistory extends BasicEntity {
 
+	private DnsPolicy dnsPolicy;
 	private Date endDate;
 	private Integer dns;
-	private DnsPolicy dnsPolicy;
-	private Integer esgProtocol;
 	private Integer port;
+	private Integer esgProtocol;
 
 	public DnsPolicyHistory() {
 	}

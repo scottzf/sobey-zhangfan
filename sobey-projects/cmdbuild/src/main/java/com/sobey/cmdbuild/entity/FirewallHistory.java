@@ -18,16 +18,16 @@ import javax.persistence.TemporalType;
 @Table(name = "firewall_history", schema = "public")
 public class FirewallHistory extends BasicEntity {
 
-	private Integer deviceSpec;
-	private Date endDate;
 	private Firewall firewall;
-	private String gdzcSn;
-	private Integer idc;
-	private Integer ipaddress;
-	private Integer rack;
+	private Date endDate;
 	private String remark;
+	private Integer idc;
+	private Integer rack;
+	private Integer deviceSpec;
+	private Integer ipaddress;
 	private String site;
 	private String sn;
+	private String gdzcSn;
 
 	public FirewallHistory() {
 	}

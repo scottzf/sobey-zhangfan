@@ -18,15 +18,14 @@ import javax.persistence.TemporalType;
 @Table(name = "load_balancer_port_history", schema = "public")
 public class LoadBalancerPortHistory extends BasicEntity {
 
-	private Integer connectedTo;
-
-	private Date endDate;
-	private Integer ipaddress;
-	private Integer loadBalancer;
 	private LoadBalancerPort loadBalancerPort;
-	private String macAddress;
+	private Date endDate;
 	private String remark;
+	private Integer loadBalancer;
+	private Integer connectedTo;
+	private Integer ipaddress;
 	private String site;
+	private String macAddress;
 
 	public LoadBalancerPortHistory() {
 	}

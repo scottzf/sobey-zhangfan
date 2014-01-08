@@ -20,11 +20,11 @@ public class ElbHistory extends BasicEntity {
 
 	private Elb elb;
 	private Date endDate;
-	private Integer ipaddress;
-	private Boolean isSession;
 	private String remark;
 	private Integer tag;
 	private Integer tenants;
+	private Integer ipaddress;
+	private Boolean isSession;
 
 	public ElbHistory() {
 	}

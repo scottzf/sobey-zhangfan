@@ -18,15 +18,14 @@ import javax.persistence.TemporalType;
 @Table(name = "ipaddress_history", schema = "public")
 public class IpaddressHistory extends BasicEntity {
 
-	private Date endDate;
-
-	private String gateway;
 	private Ipaddress ipaddress;
+	private Date endDate;
+	private Integer vlan;
+	private Integer isp;
 	private Integer ipaddressPool;
 	private Integer ipaddressStatus;
-	private Integer isp;
 	private String netMask;
-	private Integer vlan;
+	private String gateway;
 
 	public IpaddressHistory() {
 	}

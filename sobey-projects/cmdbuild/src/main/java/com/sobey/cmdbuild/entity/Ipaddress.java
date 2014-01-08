@@ -16,13 +16,13 @@ import javax.persistence.Table;
 @Table(name = "ipaddress", schema = "public")
 public class Ipaddress extends BasicEntity {
 
-	private String gateway;
-	private Set<IpaddressHistory> ipaddressHistories = new HashSet<IpaddressHistory>(0);
+	private Integer vlan;
+	private Integer isp;
 	private Integer ipaddressPool;
 	private Integer ipaddressStatus;
-	private Integer isp;
 	private String netMask;
-	private Integer vlan;
+	private String gateway;
+	private Set<IpaddressHistory> ipaddressHistories = new HashSet<IpaddressHistory>(0);
 
 	public Ipaddress() {
 	}

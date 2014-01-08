@@ -16,13 +16,13 @@ import javax.persistence.Table;
 @Table(name = "firewall_port", schema = "public")
 public class FirewallPort extends BasicEntity {
 
-	private Integer connectedTo;
-	private Integer firewall;
-	private Set<FirewallPortHistory> firewallPortHistories = new HashSet<FirewallPortHistory>(0);
-	private Integer ipaddress;
-	private String macAddress;
 	private String remark;
+	private Integer firewall;
+	private Integer connectedTo;
+	private Integer ipaddress;
 	private String site;
+	private String macAddress;
+	private Set<FirewallPortHistory> firewallPortHistories = new HashSet<FirewallPortHistory>(0);
 
 	public FirewallPort() {
 	}

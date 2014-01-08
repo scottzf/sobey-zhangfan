@@ -18,17 +18,16 @@ import javax.persistence.TemporalType;
 @Table(name = "netapp_controller_history", schema = "public")
 public class NetappControllerHistory extends BasicEntity {
 
-	private Integer deviceSpec;
-
-	private Date endDate;
-	private String gdzcSn;
-	private Integer idc;
-	private Integer ipaddress;
 	private NetappController netappController;
-	private Integer rack;
+	private Date endDate;
 	private String remark;
+	private Integer idc;
+	private Integer rack;
+	private Integer deviceSpec;
+	private Integer ipaddress;
 	private String site;
 	private String sn;
+	private String gdzcSn;
 
 	public NetappControllerHistory() {
 	}

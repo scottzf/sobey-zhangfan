@@ -16,16 +16,16 @@ import javax.persistence.TemporalType;
 public class As2History extends BasicEntity {
 
 	private As2 as2;
-	private Integer diskSize;
 	private Date endDate;
-	private Integer es3Spec;
-	private Integer ipaddress;
-	private Integer netAppController;
 	private String remark;
 	private Integer tag;
+	private Integer ipaddress;
 	private Integer tenants;
-	private String volumePath;
+	private Integer es3Spec;
+	private Integer netAppController;
 	private Integer volumeType;
+	private Integer diskSize;
+	private String volumePath;
 
 	public As2History() {
 	}

@@ -16,11 +16,11 @@ import javax.persistence.Table;
 @Table(name = "eip_spec", schema = "public")
 public class EipSpec extends BasicEntity {
 
-	private Set<EipSpecHistory> eipSpecHistories = new HashSet<EipSpecHistory>(0);
-	private Double price;
 	private String remark;
-	private Integer isp;
 	private Integer brand;
+	private Integer isp;
+	private Double price;
+	private Set<EipSpecHistory> eipSpecHistories = new HashSet<EipSpecHistory>(0);
 
 	public EipSpec() {
 	}
