@@ -756,7 +756,6 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
 			return handleParameterError(result, e, message);
-
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {

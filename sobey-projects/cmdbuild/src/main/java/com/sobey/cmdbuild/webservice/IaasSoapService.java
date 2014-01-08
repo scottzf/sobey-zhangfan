@@ -7,10 +7,14 @@ import javax.jws.WebParam;
 import com.sobey.cmdbuild.webservice.response.dto.As2DTO;
 import com.sobey.cmdbuild.webservice.response.dto.Cs2DTO;
 import com.sobey.cmdbuild.webservice.response.dto.DnsDTO;
+import com.sobey.cmdbuild.webservice.response.dto.DnsPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EcsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EipDTO;
+import com.sobey.cmdbuild.webservice.response.dto.EipPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ElbDTO;
+import com.sobey.cmdbuild.webservice.response.dto.ElbPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EsgDTO;
+import com.sobey.cmdbuild.webservice.response.dto.EsgPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.GroupPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.VpnDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
@@ -98,6 +102,27 @@ public interface IaasSoapService {
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
+	// ========= EipPolicy ==========//
+	// ==============================//
+
+	DTOResult<EipPolicyDTO> findEipPolicy(@WebParam(name = "id") Integer id);
+
+	DTOResult<EipPolicyDTO> findEipPolicyByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+
+	IdResult createEipPolicy(@WebParam(name = "eipPolicyDTO") EipPolicyDTO eipPolicyDTO);
+
+	IdResult updateEipPolicy(@WebParam(name = "id") Integer id,
+			@WebParam(name = "eipPolicyDTO") EipPolicyDTO eipPolicyDTO);
+
+	IdResult deleteEipPolicy(@WebParam(name = "id") Integer id);
+
+	DTOListResult<EipPolicyDTO> getEipPolicyList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+
+	PaginationResult<EipPolicyDTO> getEipPolicyPagination(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
 	// ============ Elb =============//
 	// ==============================//
 
@@ -117,6 +142,27 @@ public interface IaasSoapService {
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
+	// ========= ElbPolicy ==========//
+	// ==============================//
+
+	DTOResult<ElbPolicyDTO> findElbPolicy(@WebParam(name = "id") Integer id);
+
+	DTOResult<ElbPolicyDTO> findElbPolicyByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+
+	IdResult createElbPolicy(@WebParam(name = "elbPolicyDTO") ElbPolicyDTO elbPolicyDTO);
+
+	IdResult updateElbPolicy(@WebParam(name = "id") Integer id,
+			@WebParam(name = "elbPolicyDTO") ElbPolicyDTO elbPolicyDTO);
+
+	IdResult deleteElbPolicy(@WebParam(name = "id") Integer id);
+
+	DTOListResult<ElbPolicyDTO> getElbPolicyList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+
+	PaginationResult<ElbPolicyDTO> getElbPolicyPagination(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
 	// ============ Dns =============//
 	// ==============================//
 
@@ -124,15 +170,36 @@ public interface IaasSoapService {
 
 	DTOResult<DnsDTO> findDnsByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createDns(@WebParam(name = "DnsDTO") DnsDTO DnsDTO);
+	IdResult createDns(@WebParam(name = "dnsDTO") DnsDTO DnsDTO);
 
-	IdResult updateDns(@WebParam(name = "id") Integer id, @WebParam(name = "DnsDTO") DnsDTO DnsDTO);
+	IdResult updateDns(@WebParam(name = "id") Integer id, @WebParam(name = "dnsDTO") DnsDTO DnsDTO);
 
 	IdResult deleteDns(@WebParam(name = "id") Integer id);
 
 	DTOListResult<DnsDTO> getDnsList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
 	PaginationResult<DnsDTO> getDnsPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// ========= DnsPolicy ==========//
+	// ==============================//
+
+	DTOResult<DnsPolicyDTO> findDnsPolicy(@WebParam(name = "id") Integer id);
+
+	DTOResult<DnsPolicyDTO> findDnsPolicyByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+
+	IdResult createDnsPolicy(@WebParam(name = "dnsPolicyDTO") DnsPolicyDTO dnsPolicyDTO);
+
+	IdResult updateDnsPolicy(@WebParam(name = "id") Integer id,
+			@WebParam(name = "dnsPolicyDTO") DnsPolicyDTO dnsPolicyDTO);
+
+	IdResult deleteDnsPolicy(@WebParam(name = "id") Integer id);
+
+	DTOListResult<DnsPolicyDTO> getDnsPolicyList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+
+	PaginationResult<DnsPolicyDTO> getDnsPolicyPagination(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -145,13 +212,34 @@ public interface IaasSoapService {
 
 	IdResult createEsg(@WebParam(name = "esgDTO") EsgDTO esgDTO);
 
-	IdResult updateEsg(@WebParam(name = "id") Integer id, @WebParam(name = "EsgDTO") EsgDTO esgDTO);
+	IdResult updateEsg(@WebParam(name = "id") Integer id, @WebParam(name = "esgDTO") EsgDTO esgDTO);
 
 	IdResult deleteEsg(@WebParam(name = "id") Integer id);
 
 	DTOListResult<EsgDTO> getEsgList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
 	PaginationResult<EsgDTO> getEsgPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// ========= EsgPolicy ==========//
+	// ==============================//
+
+	DTOResult<EsgPolicyDTO> findEsgPolicy(@WebParam(name = "id") Integer id);
+
+	DTOResult<EsgPolicyDTO> findEsgPolicyByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+
+	IdResult createEsgPolicy(@WebParam(name = "esgPolicyDTO") EsgPolicyDTO esgPolicyDTO);
+
+	IdResult updateEsgPolicy(@WebParam(name = "id") Integer id,
+			@WebParam(name = "esgPolicyDTO") EsgPolicyDTO esgPolicyDTO);
+
+	IdResult deleteEsgPolicy(@WebParam(name = "id") Integer id);
+
+	DTOListResult<EsgPolicyDTO> getEsgPolicyList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+
+	PaginationResult<EsgPolicyDTO> getEsgPolicyPagination(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -164,7 +252,7 @@ public interface IaasSoapService {
 
 	IdResult createVpn(@WebParam(name = "vpnDTO") VpnDTO vpnDTO);
 
-	IdResult updateVpn(@WebParam(name = "id") Integer id, @WebParam(name = "VpnDTO") VpnDTO vpnDTO);
+	IdResult updateVpn(@WebParam(name = "id") Integer id, @WebParam(name = "vpnDTO") VpnDTO vpnDTO);
 
 	IdResult deleteVpn(@WebParam(name = "id") Integer id);
 

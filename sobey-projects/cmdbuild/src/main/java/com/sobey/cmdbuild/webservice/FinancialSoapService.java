@@ -33,10 +33,10 @@ public interface FinancialSoapService {
 
 	DTOResult<DeviceSpecDTO> findDeviceSpecByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createDeviceSpec(@WebParam(name = "DeviceSpecDTO") DeviceSpecDTO deviceSpecDTO);
+	IdResult createDeviceSpec(@WebParam(name = "deviceSpecDTO") DeviceSpecDTO deviceSpecDTO);
 
 	IdResult updateDeviceSpec(@WebParam(name = "id") Integer id,
-			@WebParam(name = "DeviceSpecDTO") DeviceSpecDTO deviceSpecDTO);
+			@WebParam(name = "deviceSpecDTO") DeviceSpecDTO deviceSpecDTO);
 
 	IdResult deleteDeviceSpec(@WebParam(name = "id") Integer id);
 
@@ -54,9 +54,9 @@ public interface FinancialSoapService {
 
 	DTOResult<EcsSpecDTO> findEcsSpecByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createEcsSpec(@WebParam(name = "EcsSpecDTO") EcsSpecDTO ecsSpecDTO);
+	IdResult createEcsSpec(@WebParam(name = "ecsSpecDTO") EcsSpecDTO ecsSpecDTO);
 
-	IdResult updateEcsSpec(@WebParam(name = "id") Integer id, @WebParam(name = "EcsSpecDTO") EcsSpecDTO ecsSpecDTO);
+	IdResult updateEcsSpec(@WebParam(name = "id") Integer id, @WebParam(name = "ecsSpecDTO") EcsSpecDTO ecsSpecDTO);
 
 	IdResult deleteEcsSpec(@WebParam(name = "id") Integer id);
 
@@ -74,9 +74,9 @@ public interface FinancialSoapService {
 
 	DTOResult<EipSpecDTO> findEipSpecByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createEipSpec(@WebParam(name = "EipSpecDTO") EipSpecDTO eipSpecDTO);
+	IdResult createEipSpec(@WebParam(name = "eipSpecDTO") EipSpecDTO eipSpecDTO);
 
-	IdResult updateEipSpec(@WebParam(name = "id") Integer id, @WebParam(name = "EipSpecDTO") EipSpecDTO eipSpecDTO);
+	IdResult updateEipSpec(@WebParam(name = "id") Integer id, @WebParam(name = "eipSpecDTO") EipSpecDTO eipSpecDTO);
 
 	IdResult deleteEipSpec(@WebParam(name = "id") Integer id);
 
@@ -94,9 +94,9 @@ public interface FinancialSoapService {
 
 	DTOResult<Es3SpecDTO> findEs3SpecByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createEs3Spec(@WebParam(name = "Es3SpecDTO") Es3SpecDTO es3SpecDTO);
+	IdResult createEs3Spec(@WebParam(name = "es3SpecDTO") Es3SpecDTO es3SpecDTO);
 
-	IdResult updateEs3Spec(@WebParam(name = "id") Integer id, @WebParam(name = "Es3SpecDTO") Es3SpecDTO es3SpecDTO);
+	IdResult updateEs3Spec(@WebParam(name = "id") Integer id, @WebParam(name = "es3SpecDTO") Es3SpecDTO es3SpecDTO);
 
 	IdResult deleteEs3Spec(@WebParam(name = "id") Integer id);
 

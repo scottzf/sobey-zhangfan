@@ -16,19 +16,27 @@ import com.sobey.cmdbuild.constants.ERROR;
 import com.sobey.cmdbuild.entity.As2;
 import com.sobey.cmdbuild.entity.Cs2;
 import com.sobey.cmdbuild.entity.Dns;
+import com.sobey.cmdbuild.entity.DnsPolicy;
 import com.sobey.cmdbuild.entity.Ecs;
 import com.sobey.cmdbuild.entity.Eip;
+import com.sobey.cmdbuild.entity.EipPolicy;
 import com.sobey.cmdbuild.entity.Elb;
+import com.sobey.cmdbuild.entity.ElbPolicy;
 import com.sobey.cmdbuild.entity.Esg;
+import com.sobey.cmdbuild.entity.EsgPolicy;
 import com.sobey.cmdbuild.entity.GroupPolicy;
 import com.sobey.cmdbuild.entity.Vpn;
 import com.sobey.cmdbuild.webservice.response.dto.As2DTO;
 import com.sobey.cmdbuild.webservice.response.dto.Cs2DTO;
 import com.sobey.cmdbuild.webservice.response.dto.DnsDTO;
+import com.sobey.cmdbuild.webservice.response.dto.DnsPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EcsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EipDTO;
+import com.sobey.cmdbuild.webservice.response.dto.EipPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ElbDTO;
+import com.sobey.cmdbuild.webservice.response.dto.ElbPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EsgDTO;
+import com.sobey.cmdbuild.webservice.response.dto.EsgPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.GroupPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.VpnDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
@@ -897,6 +905,211 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	}
 
 	@Override
+	public DTOResult<EipPolicyDTO> findEipPolicy(@WebParam(name = "id") Integer id) {
+
+		DTOResult<EipPolicyDTO> result = new DTOResult<EipPolicyDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			EipPolicy eipPolicy = comm.eipPolicyService.findEipPolicy(id);
+
+			Validate.notNull(eipPolicy, ERROR.OBJECT_NULL);
+
+			EipPolicyDTO dto = BeanMapper.map(eipPolicy, EipPolicyDTO.class);
+
+			// LookUp
+			dto.setProtocolText(cmdbuildSoapServiceImpl.findLookUp(dto.getProtocol()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<EipPolicyDTO> findEipPolicyByParams(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
+		DTOResult<EipPolicyDTO> result = new DTOResult<EipPolicyDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			EipPolicy eipPolicy = comm.eipPolicyService.findEipPolicy(searchParams);
+
+			Validate.notNull(eipPolicy, ERROR.OBJECT_NULL);
+
+			EipPolicyDTO dto = BeanMapper.map(eipPolicy, EipPolicyDTO.class);
+
+			// LookUp
+			dto.setProtocolText(cmdbuildSoapServiceImpl.findLookUp(dto.getProtocol()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult createEipPolicy(@WebParam(name = "eipPolicyDTO") EipPolicyDTO eipPolicyDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(eipPolicyDTO, ERROR.INPUT_NULL);
+
+			// 验证code是否唯一.如果不为null,则弹出错误.
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_code", eipPolicyDTO.getCode());
+
+			Validate.isTrue(comm.eipPolicyService.findEipPolicy(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象
+			EipPolicy eipPolicy = BeanMapper.map(eipPolicyDTO, EipPolicy.class);
+			eipPolicy.setUser(DEFAULT_USER);
+			eipPolicy.setIdClass(TableNameUtil.getTableName(EipPolicy.class));
+
+			BeanValidators.validateWithException(validator, eipPolicy);
+
+			comm.eipPolicyService.saveOrUpdate(eipPolicy);
+
+			return result;
+
+		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public IdResult updateEipPolicy(@WebParam(name = "id") Integer id,
+			@WebParam(name = "eipPolicyDTO") EipPolicyDTO eipPolicyDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(eipPolicyDTO, ERROR.INPUT_NULL);
+
+			EipPolicy eipPolicy = comm.eipPolicyService.findEipPolicy(id);
+
+			Validate.notNull(eipPolicy, ERROR.OBJECT_NULL);
+
+			// 验证code是否唯一.如果不为null,则弹出错误.
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_code", eipPolicyDTO.getCode());
+
+			Validate.isTrue(
+					comm.eipPolicyService.findEipPolicy(searchParams) == null
+							|| eipPolicy.getCode().equals(eipPolicyDTO.getCode()), ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(eipPolicyDTO, EipPolicy.class), eipPolicy);
+
+			eipPolicy.setUser(DEFAULT_USER);
+			eipPolicy.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			eipPolicy.setIdClass(TableNameUtil.getTableName(EipPolicy.class));
+
+			BeanValidators.validateWithException(validator, eipPolicy);
+
+			comm.eipPolicyService.saveOrUpdate(eipPolicy);
+
+			return result;
+
+		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public IdResult deleteEipPolicy(@WebParam(name = "id") Integer id) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			EipPolicy eipPolicy = comm.eipPolicyService.findEipPolicy(id);
+
+			Validate.notNull(eipPolicy, ERROR.OBJECT_NULL);
+
+			eipPolicy.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.eipPolicyService.saveOrUpdate(eipPolicy);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOListResult<EipPolicyDTO> getEipPolicyList(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
+		DTOListResult<EipPolicyDTO> result = new DTOListResult<EipPolicyDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.eipPolicyService.getEipPolicyList(searchParams), EipPolicyDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<EipPolicyDTO> getEipPolicyPagination(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
+		PaginationResult<EipPolicyDTO> result = new PaginationResult<EipPolicyDTO>();
+
+		try {
+
+			return comm.eipPolicyService.getEipPolicyDTOPagination(searchParams, pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
 	public DTOResult<ElbDTO> findElb(@WebParam(name = "id") Integer id) {
 
 		DTOResult<ElbDTO> result = new DTOResult<ElbDTO>();
@@ -1089,6 +1302,214 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			result.setDtos(BeanMapper.mapList(comm.elbService.getElbList(searchParams), ElbDTO.class));
 
 			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<ElbPolicyDTO> findElbPolicy(@WebParam(name = "id") Integer id) {
+
+		DTOResult<ElbPolicyDTO> result = new DTOResult<ElbPolicyDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			ElbPolicy elbPolicy = comm.elbPolicyService.findElbPolicy(id);
+
+			Validate.notNull(elbPolicy, ERROR.OBJECT_NULL);
+
+			ElbPolicyDTO dto = BeanMapper.map(elbPolicy, ElbPolicyDTO.class);
+
+			// LookUp
+			dto.setProtocolText(cmdbuildSoapServiceImpl.findLookUp(dto.getProtocol()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public DTOResult<ElbPolicyDTO> findElbPolicyByParams(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
+		DTOResult<ElbPolicyDTO> result = new DTOResult<ElbPolicyDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			ElbPolicy elbPolicy = comm.elbPolicyService.findElbPolicy(searchParams);
+
+			Validate.notNull(elbPolicy, ERROR.OBJECT_NULL);
+
+			ElbPolicyDTO dto = BeanMapper.map(elbPolicy, ElbPolicyDTO.class);
+
+			// LookUp
+			dto.setProtocolText(cmdbuildSoapServiceImpl.findLookUp(dto.getProtocol()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public IdResult createElbPolicy(@WebParam(name = "elbPolicyDTO") ElbPolicyDTO elbPolicyDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(elbPolicyDTO, ERROR.INPUT_NULL);
+
+			// 验证code是否唯一.如果不为null,则弹出错误.
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_code", elbPolicyDTO.getCode());
+
+			Validate.isTrue(comm.elbPolicyService.findElbPolicy(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象
+			ElbPolicy elbPolicy = BeanMapper.map(elbPolicyDTO, ElbPolicy.class);
+			elbPolicy.setUser(DEFAULT_USER);
+			elbPolicy.setIdClass(TableNameUtil.getTableName(DnsPolicy.class));
+
+			BeanValidators.validateWithException(validator, elbPolicy);
+
+			comm.elbPolicyService.saveOrUpdate(elbPolicy);
+
+			return result;
+
+		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public IdResult updateElbPolicy(@WebParam(name = "id") Integer id,
+			@WebParam(name = "elbPolicyDTO") ElbPolicyDTO elbPolicyDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(elbPolicyDTO, ERROR.INPUT_NULL);
+
+			ElbPolicy elbPolicy = comm.elbPolicyService.findElbPolicy(id);
+
+			Validate.notNull(elbPolicy, ERROR.OBJECT_NULL);
+
+			// 验证code是否唯一.如果不为null,则弹出错误.
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_code", elbPolicyDTO.getCode());
+
+			Validate.isTrue(
+					comm.elbPolicyService.findElbPolicy(searchParams) == null
+							|| elbPolicy.getCode().equals(elbPolicyDTO.getCode()), ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(elbPolicyDTO, ElbPolicy.class), elbPolicy);
+
+			elbPolicy.setUser(DEFAULT_USER);
+			elbPolicy.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			elbPolicy.setIdClass(TableNameUtil.getTableName(DnsPolicy.class));
+
+			BeanValidators.validateWithException(validator, elbPolicy);
+
+			comm.elbPolicyService.saveOrUpdate(elbPolicy);
+
+			return result;
+
+		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public IdResult deleteElbPolicy(@WebParam(name = "id") Integer id) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			ElbPolicy elbPolicy = comm.elbPolicyService.findElbPolicy(id);
+
+			Validate.notNull(elbPolicy, ERROR.OBJECT_NULL);
+
+			elbPolicy.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.elbPolicyService.saveOrUpdate(elbPolicy);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOListResult<ElbPolicyDTO> getElbPolicyList(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
+		DTOListResult<ElbPolicyDTO> result = new DTOListResult<ElbPolicyDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.elbPolicyService.getElbPolicyList(searchParams), ElbPolicyDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public PaginationResult<ElbPolicyDTO> getElbPolicyPagination(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
+		PaginationResult<ElbPolicyDTO> result = new PaginationResult<ElbPolicyDTO>();
+
+		try {
+
+			return comm.elbPolicyService.getElbPolicyDTOPagination(searchParams, pageNumber, pageSize);
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1302,6 +1723,210 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 	}
 
 	@Override
+	public DTOResult<DnsPolicyDTO> findDnsPolicy(@WebParam(name = "id") Integer id) {
+
+		DTOResult<DnsPolicyDTO> result = new DTOResult<DnsPolicyDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			DnsPolicy dnsPolicy = comm.dnsPolicyService.findDnsPolicy(id);
+
+			Validate.notNull(dnsPolicy, ERROR.OBJECT_NULL);
+
+			DnsPolicyDTO dto = BeanMapper.map(dnsPolicy, DnsPolicyDTO.class);
+
+			// LookUp
+			dto.setProtocolText(cmdbuildSoapServiceImpl.findLookUp(dto.getProtocol()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<DnsPolicyDTO> findDnsPolicyByParams(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
+		DTOResult<DnsPolicyDTO> result = new DTOResult<DnsPolicyDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			DnsPolicy dnsPolicy = comm.dnsPolicyService.findDnsPolicy(searchParams);
+
+			Validate.notNull(dnsPolicy, ERROR.OBJECT_NULL);
+
+			DnsPolicyDTO dto = BeanMapper.map(dnsPolicy, DnsPolicyDTO.class);
+
+			// LookUp
+			dto.setProtocolText(cmdbuildSoapServiceImpl.findLookUp(dto.getProtocol()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
+	}
+
+	@Override
+	public IdResult createDnsPolicy(@WebParam(name = "dnsPolicyDTO") DnsPolicyDTO dnsPolicyDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(dnsPolicyDTO, ERROR.INPUT_NULL);
+
+			// 验证code是否唯一.如果不为null,则弹出错误.
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_code", dnsPolicyDTO.getCode());
+
+			Validate.isTrue(comm.dnsPolicyService.findDnsPolicy(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象
+			DnsPolicy dnsPolicy = BeanMapper.map(dnsPolicyDTO, DnsPolicy.class);
+			dnsPolicy.setUser(DEFAULT_USER);
+			dnsPolicy.setIdClass(TableNameUtil.getTableName(DnsPolicy.class));
+
+			BeanValidators.validateWithException(validator, dnsPolicy);
+
+			comm.dnsPolicyService.saveOrUpdate(dnsPolicy);
+
+			return result;
+
+		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult updateDnsPolicy(@WebParam(name = "id") Integer id,
+			@WebParam(name = "dnsPolicyDTO") DnsPolicyDTO dnsPolicyDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(dnsPolicyDTO, ERROR.INPUT_NULL);
+
+			DnsPolicy dnsPolicy = comm.dnsPolicyService.findDnsPolicy(id);
+
+			Validate.notNull(dnsPolicy, ERROR.OBJECT_NULL);
+
+			// 验证code是否唯一.如果不为null,则弹出错误.
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_code", dnsPolicyDTO.getCode());
+
+			Validate.isTrue(
+					comm.dnsPolicyService.findDnsPolicy(searchParams) == null
+							|| dnsPolicy.getCode().equals(dnsPolicyDTO.getCode()), ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(dnsPolicyDTO, DnsPolicy.class), dnsPolicy);
+
+			dnsPolicy.setUser(DEFAULT_USER);
+			dnsPolicy.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			dnsPolicy.setIdClass(TableNameUtil.getTableName(DnsPolicy.class));
+
+			BeanValidators.validateWithException(validator, dnsPolicy);
+
+			comm.dnsPolicyService.saveOrUpdate(dnsPolicy);
+
+			return result;
+
+		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteDnsPolicy(@WebParam(name = "id") Integer id) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			DnsPolicy dnsPolicy = comm.dnsPolicyService.findDnsPolicy(id);
+
+			Validate.notNull(dnsPolicy, ERROR.OBJECT_NULL);
+
+			dnsPolicy.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.dnsPolicyService.saveOrUpdate(dnsPolicy);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public DTOListResult<DnsPolicyDTO> getDnsPolicyList(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
+		DTOListResult<DnsPolicyDTO> result = new DTOListResult<DnsPolicyDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.dnsPolicyService.getDnsPolicyList(searchParams), DnsPolicyDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<DnsPolicyDTO> getDnsPolicyPagination(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
+		PaginationResult<DnsPolicyDTO> result = new PaginationResult<DnsPolicyDTO>();
+
+		try {
+
+			return comm.dnsPolicyService.getDnsPolicyDTOPagination(searchParams, pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
 	public DTOResult<EsgDTO> findEsg(@WebParam(name = "id") Integer id) {
 
 		DTOResult<EsgDTO> result = new DTOResult<EsgDTO>();
@@ -1491,6 +2116,210 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 			result.setDtos(BeanMapper.mapList(comm.esgService.getEsgList(searchParams), EsgDTO.class));
 
 			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<EsgPolicyDTO> findEsgPolicy(@WebParam(name = "id") Integer id) {
+
+		DTOResult<EsgPolicyDTO> result = new DTOResult<EsgPolicyDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			EsgPolicy esgPolicy = comm.esgPolicyService.findEsgPolicy(id);
+
+			Validate.notNull(esgPolicy, ERROR.OBJECT_NULL);
+
+			EsgPolicyDTO dto = BeanMapper.map(esgPolicy, EsgPolicyDTO.class);
+
+			// LookUp
+			dto.setProtocolText(cmdbuildSoapServiceImpl.findLookUp(dto.getProtocol()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<EsgPolicyDTO> findEsgPolicyByParams(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
+		DTOResult<EsgPolicyDTO> result = new DTOResult<EsgPolicyDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			EsgPolicy esgPolicy = comm.esgPolicyService.findEsgPolicy(searchParams);
+
+			Validate.notNull(esgPolicy, ERROR.OBJECT_NULL);
+
+			EsgPolicyDTO dto = BeanMapper.map(esgPolicy, EsgPolicyDTO.class);
+
+			// LookUp
+			dto.setProtocolText(cmdbuildSoapServiceImpl.findLookUp(dto.getProtocol()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult createEsgPolicy(@WebParam(name = "esgPolicyDTO") EsgPolicyDTO esgPolicyDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(esgPolicyDTO, ERROR.INPUT_NULL);
+
+			// 验证code是否唯一.如果不为null,则弹出错误.
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_code", esgPolicyDTO.getCode());
+
+			Validate.isTrue(comm.esgPolicyService.findEsgPolicy(searchParams) == null, ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象
+			EsgPolicy esgPolicy = BeanMapper.map(esgPolicyDTO, EsgPolicy.class);
+			esgPolicy.setUser(DEFAULT_USER);
+			esgPolicy.setIdClass(TableNameUtil.getTableName(EsgPolicy.class));
+
+			BeanValidators.validateWithException(validator, esgPolicy);
+
+			comm.esgPolicyService.saveOrUpdate(esgPolicy);
+
+			return result;
+
+		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult updateEsgPolicy(@WebParam(name = "id") Integer id,
+			@WebParam(name = "esgPolicyDTO") EsgPolicyDTO esgPolicyDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(esgPolicyDTO, ERROR.INPUT_NULL);
+
+			EsgPolicy esgPolicy = comm.esgPolicyService.findEsgPolicy(id);
+
+			Validate.notNull(esgPolicy, ERROR.OBJECT_NULL);
+
+			// 验证code是否唯一.如果不为null,则弹出错误.
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_code", esgPolicyDTO.getCode());
+
+			Validate.isTrue(
+					comm.esgPolicyService.findEsgPolicy(searchParams) == null
+							|| esgPolicy.getCode().equals(esgPolicyDTO.getCode()), ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(esgPolicyDTO, EsgPolicy.class), esgPolicy);
+
+			esgPolicy.setUser(DEFAULT_USER);
+			esgPolicy.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			esgPolicy.setIdClass(TableNameUtil.getTableName(EsgPolicy.class));
+
+			BeanValidators.validateWithException(validator, esgPolicy);
+
+			comm.esgPolicyService.saveOrUpdate(esgPolicy);
+
+			return result;
+
+		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteEsgPolicy(@WebParam(name = "id") Integer id) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			EsgPolicy esgPolicy = comm.esgPolicyService.findEsgPolicy(id);
+
+			Validate.notNull(esgPolicy, ERROR.OBJECT_NULL);
+
+			esgPolicy.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.esgPolicyService.saveOrUpdate(esgPolicy);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public DTOListResult<EsgPolicyDTO> getEsgPolicyList(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
+		DTOListResult<EsgPolicyDTO> result = new DTOListResult<EsgPolicyDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.esgPolicyService.getEsgPolicyList(searchParams), EsgPolicyDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<EsgPolicyDTO> getEsgPolicyPagination(
+			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
+		PaginationResult<EsgPolicyDTO> result = new PaginationResult<EsgPolicyDTO>();
+
+		try {
+
+			return comm.esgPolicyService.getEsgPolicyDTOPagination(searchParams, pageNumber, pageSize);
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
