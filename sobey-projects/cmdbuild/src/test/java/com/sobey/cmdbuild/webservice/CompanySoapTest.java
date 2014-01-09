@@ -84,15 +84,15 @@ public class CompanySoapTest extends BaseFunctionalTestCase {
 	}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void delete() {
-		Integer id = 138;
+		Integer id = 86;
 		IdResult response = cmdbuildSoapService.deleteCompany(id);
 		assertNotNull(response.getId());
 	}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void getPagination() {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
