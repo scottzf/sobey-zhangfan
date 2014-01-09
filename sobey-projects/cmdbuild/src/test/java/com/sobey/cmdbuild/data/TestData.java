@@ -17,6 +17,7 @@ import com.sobey.cmdbuild.entity.EipSpec;
 import com.sobey.cmdbuild.entity.Elb;
 import com.sobey.cmdbuild.entity.Es3Spec;
 import com.sobey.cmdbuild.entity.Esg;
+import com.sobey.cmdbuild.entity.EsgPolicy;
 import com.sobey.cmdbuild.entity.Fimas;
 import com.sobey.cmdbuild.entity.FimasBox;
 import com.sobey.cmdbuild.entity.FimasPort;
@@ -73,7 +74,7 @@ public class TestData {
 		tenants.setPhone(RandomData.randomName("phone"));
 		tenants.setRemark(RandomData.randomName("remark"));
 		tenants.setAccontBalance(RandomData.randomDouble());
-		tenants.setCompany(86);
+		tenants.setCompany(85);
 		tenants.setPassword(RandomData.randomName("password"));
 		tenants.setEmail(RandomData.randomName("email"));
 		return tenants;
@@ -86,7 +87,7 @@ public class TestData {
 		tag.setDescription(RandomData.randomName("description"));
 
 		tag.setRemark(RandomData.randomName("remark"));
-		tag.setTenants(217);
+		tag.setTenants(89);
 		return tag;
 	}
 
@@ -531,12 +532,28 @@ public class TestData {
 
 	public static Esg randomEsg() {
 		Esg esg = new Esg();
-		esg.setAclNumber(0);
-		esg.setIsPublic(true);
+		esg.setId(0);
+		esg.setCode(RandomData.randomName("code"));
+		esg.setDescription(RandomData.randomName("description"));
 		esg.setRemark(RandomData.randomName("remark"));
-		esg.setTag(0);
-		esg.setTenants(116);
+		esg.setAclNumber(2000);
+		esg.setIsPublic(true);
+		esg.setTag(92);
+		esg.setTenants(89);
 		return esg;
+	}
+
+	public static EsgPolicy randomEsgPolicy() {
+		EsgPolicy policy = new EsgPolicy();
+		policy.setId(0);
+		policy.setCode(RandomData.randomName("code"));
+		policy.setDescription(RandomData.randomName("description"));
+		policy.setEsg(95);
+		policy.setSourceIp("10.10.0.0");
+		policy.setTargetIp("10.10.8.8");
+		policy.setPort(80);
+		policy.setEsgProtocol(68);
+		return policy;
 	}
 
 	public static Vpn randomVpn() {
@@ -557,7 +574,14 @@ public class TestData {
 	}
 
 	public static Ecs randomEcs() {
-		return null;
+		Ecs ecs = new Ecs();
+		ecs.setId(0);
+		ecs.setCode(RandomData.randomName("code"));
+		ecs.setDescription(RandomData.randomName("description"));
+		ecs.setRemark(RandomData.randomName("remark"));
+		ecs.setTag(92);
+		ecs.setTenants(89);
+		return ecs;
 	}
 
 }
