@@ -1,12 +1,14 @@
 package com.sobey.cmdbuild.webservice.response.dto;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.google.common.collect.Lists;
 import com.sobey.cmdbuild.constants.WsConstants;
 
 @XmlRootElement(name = "EsgDTO")
@@ -23,7 +25,7 @@ public class EsgDTO {
 	private Integer tenants;
 	private TenantsDTO tenantsDTO;
 	private Integer aclNumber;
-	private Integer isPublic;
+	private Boolean isPublic;
 
 	public Integer getId() {
 		return id;
@@ -105,11 +107,11 @@ public class EsgDTO {
 		this.aclNumber = aclNumber;
 	}
 
-	public Integer getIsPublic() {
+	public Boolean getIsPublic() {
 		return isPublic;
 	}
 
-	public void setIsPublic(Integer isPublic) {
+	public void setIsPublic(Boolean isPublic) {
 		this.isPublic = isPublic;
 	}
 

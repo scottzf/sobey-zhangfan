@@ -3,7 +3,9 @@ package com.sobey.cmdbuild.webservice;
 import java.util.Map;
 
 import javax.jws.WebParam;
+import javax.jws.WebService;
 
+import com.sobey.cmdbuild.constants.WsConstants;
 import com.sobey.cmdbuild.webservice.response.dto.As2DTO;
 import com.sobey.cmdbuild.webservice.response.dto.Cs2DTO;
 import com.sobey.cmdbuild.webservice.response.dto.DnsDTO;
@@ -22,7 +24,7 @@ import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 
-//@WebService(name = "IaasSoapService", targetNamespace = WsConstants.NS)
+@WebService(name = "IaasSoapService", targetNamespace = WsConstants.NS)
 public interface IaasSoapService {
 
 	// ==============================//
