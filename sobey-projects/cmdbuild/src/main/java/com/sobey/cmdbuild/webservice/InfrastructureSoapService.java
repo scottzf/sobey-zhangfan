@@ -188,7 +188,7 @@ public interface InfrastructureSoapService {
 	 * @param id
 	 * @return IdResult
 	 */
-	IdResult allocateIPAddress(@WebParam(name = "id") Integer id);
+	IdResult allocateIpaddress(@WebParam(name = "id") Integer id);
 
 	/**
 	 * 批量插入 IPAddress。<br/>
@@ -198,7 +198,7 @@ public interface InfrastructureSoapService {
 	 * @param ipaddressDTOList
 	 * @return IdResult
 	 */
-	IdResult insertIPAddress(@WebParam(name = "ipaddressDTOList") List<IpaddressDTO> ipaddressDTOList);
+	IdResult insertIpaddress(@WebParam(name = "ipaddressDTOList") List<IpaddressDTO> ipaddressDTOList);
 
 	/**
 	 * 初始化 IPAddress。<br/>
@@ -207,7 +207,7 @@ public interface InfrastructureSoapService {
 	 * @param id
 	 * @return IdResult
 	 */
-	IdResult initIPAddress(@WebParam(name = "id") Integer id);
+	IdResult initIpaddress(@WebParam(name = "id") Integer id);
 
 	// ==============================//
 	// ======== LoadBalancer ========//

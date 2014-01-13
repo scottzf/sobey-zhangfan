@@ -9,19 +9,65 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
 
-@XmlRootElement
+@XmlRootElement(name = "GroupPolicyDTO")
 @XmlType(name = "GroupPolicyDTO", namespace = WsConstants.NS)
 public class GroupPolicyDTO {
 
-	private Date beginDate;
+	private Integer id;
 	private String code;
 	private String description;
-	private Integer id;
+	private Date beginDate;
 	private String remark;
-
+	private Integer tenants;
 	private TenantsDTO tenantsDTO;
 
-	private Integer tenants;
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public Integer getTenants() {
+		return tenants;
+	}
+
+	public void setTenants(Integer tenants) {
+		this.tenants = tenants;
+	}
 
 	public TenantsDTO getTenantsDTO() {
 		return tenantsDTO;
@@ -29,54 +75,6 @@ public class GroupPolicyDTO {
 
 	public void setTenantsDTO(TenantsDTO tenantsDTO) {
 		this.tenantsDTO = tenantsDTO;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public Integer getTenants() {
-		return tenants;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public void setTenants(Integer tenants) {
-		this.tenants = tenants;
 	}
 
 	/**

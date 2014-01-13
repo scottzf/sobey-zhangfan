@@ -16,9 +16,9 @@ import javax.persistence.Table;
 @Table(name = "group_policy", schema = "public")
 public class GroupPolicy extends BasicEntity {
 
-	private Set<GroupPolicyHistory> groupPolicyHistories = new HashSet<GroupPolicyHistory>(0);
 	private String remark;
 	private Integer tenants;
+	private Set<GroupPolicyHistory> groupPolicyHistories = new HashSet<GroupPolicyHistory>(0);
 
 	public GroupPolicy() {
 	}

@@ -18,11 +18,11 @@ import javax.persistence.TemporalType;
 @Table(name = "vpn_history", schema = "public")
 public class VpnHistory extends BasicEntity {
 
+	private Vpn vpn;
 	private Date endDate;
 	private String remark;
-	private Integer tag;
 	private Integer tenants;
-	private Vpn vpn;
+	private Integer tag;
 	private String vpnName;
 	private String vpnPassword;
 

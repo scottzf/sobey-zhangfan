@@ -16,13 +16,13 @@ import javax.persistence.Table;
 @Table(name = "netapp_port", schema = "public")
 public class NetappPort extends BasicEntity {
 
+	private String remark;
+	private Integer netAppController;
 	private Integer connectedTo;
 	private Integer ipaddress;
-	private String macAddress;
-	private Integer netAppController;
-	private Set<NetappPortHistory> netappPortHistories = new HashSet<NetappPortHistory>(0);
-	private String remark;
 	private String site;
+	private String macAddress;
+	private Set<NetappPortHistory> netappPortHistories = new HashSet<NetappPortHistory>(0);
 
 	public NetappPort() {
 	}

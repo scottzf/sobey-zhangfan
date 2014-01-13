@@ -16,16 +16,16 @@ import javax.persistence.Table;
 @Table(name = "ecs", schema = "public")
 public class Ecs extends BasicEntity {
 
-	private Integer ecsAgent;
-	private Set<EcsHistory> ecsHistories = new HashSet<EcsHistory>(0);
-	private Integer ecsSpec;
-	private Integer ecsStatus;
-	private Integer image;
-	private Integer ipaddress;
 	private String remark;
-	private Integer server;
 	private Integer tag;
+	private Integer ipaddress;
+	private Integer ecsSpec;
 	private Integer tenants;
+	private Integer server;
+	private Integer image;
+	private Integer ecsAgent;
+	private Integer ecsStatus;
+	private Set<EcsHistory> ecsHistories = new HashSet<EcsHistory>(0);
 
 	public Ecs() {
 	}

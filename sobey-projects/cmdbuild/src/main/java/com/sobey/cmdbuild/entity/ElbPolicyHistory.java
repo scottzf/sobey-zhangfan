@@ -18,12 +18,12 @@ import javax.persistence.TemporalType;
 @Table(name = "elb_policy_history", schema = "public")
 public class ElbPolicyHistory extends BasicEntity {
 
-	private Integer elb;
 	private ElbPolicy elbPolicy;
 	private Date endDate;
-	private Integer protocol;
+	private Integer elb;
 	private Integer sourcePort;
 	private Integer targetPort;
+	private Integer protocol;
 
 	public ElbPolicyHistory() {
 	}

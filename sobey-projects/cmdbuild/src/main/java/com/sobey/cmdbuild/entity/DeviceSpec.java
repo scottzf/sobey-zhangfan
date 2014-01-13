@@ -16,19 +16,19 @@ import javax.persistence.Table;
 @Table(name = "device_spec", schema = "public")
 public class DeviceSpec extends BasicEntity {
 
-	private Integer brand;
-	private String cpuModel;
-	private Integer cpuNumber;
-	private Set<DeviceSpecHistory> deviceSpecHistories = new HashSet<DeviceSpecHistory>(0);
-	private Integer deviceType;
-	private Integer hdNumber;
-	private Integer height;
-	private Integer maintenance;
-	private Integer nicNumber;
-	private Integer power;
-	private Double price;
-	private Integer ramNumber;
 	private String remark;
+	private Integer deviceType;
+	private Integer brand;
+	private Integer power;
+	private Integer maintenance;
+	private Integer height;
+	private Integer ramNumber;
+	private Integer cpuNumber;
+	private Integer nicNumber;
+	private Integer hdNumber;
+	private String cpuModel;
+	private Double price;
+	private Set<DeviceSpecHistory> deviceSpecHistories = new HashSet<DeviceSpecHistory>(0);
 
 	public DeviceSpec() {
 	}

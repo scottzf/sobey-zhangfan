@@ -18,12 +18,12 @@ import javax.persistence.TemporalType;
 @Table(name = "idc_history", schema = "public")
 public class IdcHistory extends BasicEntity {
 
+	private Idc idc;
+	private Date endDate;
+	private String remark;
 	private String address;
 	private String city;
-	private Date endDate;
-	private Idc idc;
 	private String phone;
-	private String remark;
 	private String zip;
 
 	public IdcHistory() {

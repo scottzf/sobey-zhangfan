@@ -18,19 +18,19 @@ import javax.persistence.TemporalType;
 @Table(name = "fimas_box_history", schema = "public")
 public class FimasBoxHistory extends BasicEntity {
 
-	private Integer deviceSpec;
-	private Integer diskNumber;
-	private Integer diskType;
-	private Date endDate;
 	private FimasBox fimasBox;
-	private String gdzcSn;
-	private Integer idc;
-	private Integer ipaddress;
-	private Integer rack;
+	private Date endDate;
 	private String remark;
-	private Integer site;
-	private String sn;
+	private Integer idc;
+	private Integer rack;
+	private Integer deviceSpec;
+	private Integer ipaddress;
 	private Integer fimas;
+	private Integer diskType;
+	private Integer site;
+	private Integer diskNumber;
+	private String sn;
+	private String gdzcSn;
 
 	public FimasBoxHistory() {
 	}

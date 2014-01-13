@@ -16,13 +16,13 @@ import javax.persistence.Table;
 @Table(name = "hard_disk", schema = "public")
 public class HardDisk extends BasicEntity {
 
-	private Integer brand;
-	private Integer fimas;
-	private Set<HardDiskHistory> hardDiskHistories = new HashSet<HardDiskHistory>(0);
-	private Integer hardDiskSize;
 	private Integer idc;
-	private Integer rotationalSpeed;
 	private Integer server;
+	private Integer fimas;
+	private Integer brand;
+	private Integer rotationalSpeed;
+	private Integer hardDiskSize;
+	private Set<HardDiskHistory> hardDiskHistories = new HashSet<HardDiskHistory>(0);
 
 	public HardDisk() {
 	}

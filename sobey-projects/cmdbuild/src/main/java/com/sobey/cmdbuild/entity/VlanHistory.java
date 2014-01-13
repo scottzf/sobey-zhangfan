@@ -18,14 +18,14 @@ import javax.persistence.TemporalType;
 @Table(name = "vlan_history", schema = "public")
 public class VlanHistory extends BasicEntity {
 
-	private Date endDate;
-	private String gateway;
-	private Integer idc;
-	private String netMask;
-	private String remark;
-	private String segment;
 	private Vlan vlan;
+	private Date endDate;
+	private String remark;
 	private Integer tenants;
+	private Integer idc;
+	private String segment;
+	private String gateway;
+	private String netMask;
 
 	public VlanHistory() {
 	}

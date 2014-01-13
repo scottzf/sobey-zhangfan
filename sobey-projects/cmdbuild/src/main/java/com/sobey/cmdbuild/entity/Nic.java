@@ -16,13 +16,13 @@ import javax.persistence.Table;
 @Table(name = "nic", schema = "public")
 public class Nic extends BasicEntity {
 
-	private Integer brand;
-	private Integer fimas;
 	private Integer idc;
-	private Set<NicHistory> nicHistories = new HashSet<NicHistory>(0);
+	private Integer server;
+	private Integer fimas;
+	private Integer brand;
 	private Integer nicRate;
 	private Integer portNumber;
-	private Integer server;
+	private Set<NicHistory> nicHistories = new HashSet<NicHistory>(0);
 
 	public Nic() {
 	}

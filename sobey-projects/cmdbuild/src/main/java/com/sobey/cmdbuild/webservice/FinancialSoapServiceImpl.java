@@ -14,27 +14,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
 import com.sobey.cmdbuild.constants.ERROR;
-import com.sobey.cmdbuild.constants.LookUpConstants;
 import com.sobey.cmdbuild.constants.WsConstants;
-import com.sobey.cmdbuild.entity.Consumptions;
 import com.sobey.cmdbuild.entity.DeviceSpec;
 import com.sobey.cmdbuild.entity.EcsSpec;
 import com.sobey.cmdbuild.entity.EipSpec;
 import com.sobey.cmdbuild.entity.Es3Spec;
-import com.sobey.cmdbuild.entity.Tenants;
-import com.sobey.cmdbuild.webservice.response.dto.ConsumptionsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DeviceSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EcsSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EipSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.Es3SpecDTO;
-import com.sobey.cmdbuild.webservice.response.dto.TenantsDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.core.beanvalidator.BeanValidators;
 import com.sobey.core.mapper.BeanMapper;
-import com.sobey.core.utils.MathsUtil;
 import com.sobey.core.utils.TableNameUtil;
 
 @WebService(serviceName = "FinancialSoapService", endpointInterface = "com.sobey.cmdbuild.webservice.FinancialSoapService", targetNamespace = WsConstants.NS)
@@ -49,264 +43,6 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 	 * CMDBuild的默认超级用户名
 	 */
 	private static final String DEFAULT_USER = "admin";
-
-	@Override
-	public DTOResult<ConsumptionsDTO> findConsumptions(@WebParam(name = "id") Integer id) {
-
-		DTOResult<ConsumptionsDTO> result = new DTOResult<ConsumptionsDTO>();
-
-		try {
-
-			Validate.notNull(id, ERROR.INPUT_NULL);
-
-			Consumptions consumptions = comm.consumptionsService.findConsumptions(id);
-
-			Validate.notNull(consumptions, ERROR.OBJECT_NULL);
-
-			ConsumptionsDTO dto = BeanMapper.map(consumptions, ConsumptionsDTO.class);
-
-			// Reference
-			DTOResult<TenantsDTO> tenantsDTO = cmdbuildSoapServiceImpl.findTenants(dto.getTenants());
-			if (tenantsDTO != null)
-				dto.setTenantsDTO(tenantsDTO.getDto());
-
-			// LookUp
-			dto.setServiceTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getServiceType()).getDto().getDescription());
-			dto.setConsumptionsStatusText(cmdbuildSoapServiceImpl.findLookUp(dto.getConsumptionsStatus()).getDto()
-					.getDescription());
-
-			result.setDto(dto);
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public DTOResult<ConsumptionsDTO> findConsumptionsByParams(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
-
-		DTOResult<ConsumptionsDTO> result = new DTOResult<ConsumptionsDTO>();
-
-		try {
-
-			Validate.notNull(searchParams, ERROR.INPUT_NULL);
-
-			Consumptions consumptions = comm.consumptionsService.findConsumptions(searchParams);
-
-			Validate.notNull(consumptions, ERROR.OBJECT_NULL);
-
-			ConsumptionsDTO dto = BeanMapper.map(consumptions, ConsumptionsDTO.class);
-
-			// Reference
-			dto.setTenantsDTO(cmdbuildSoapServiceImpl.findTenants(dto.getTenants()).getDto());
-
-			// LookUp
-			dto.setServiceTypeText(cmdbuildSoapServiceImpl.findLookUp(dto.getServiceType()).getDto().getDescription());
-			dto.setConsumptionsStatusText(cmdbuildSoapServiceImpl.findLookUp(dto.getConsumptionsStatus()).getDto()
-					.getDescription());
-
-			result.setDto(dto);
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e, ERROR.MORE_RESULT);
-		}
-	}
-
-	@Override
-	public IdResult createConsumptions(@WebParam(name = "consumptionsDTO") ConsumptionsDTO consumptionsDTO) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			Validate.notNull(consumptionsDTO, ERROR.INPUT_NULL);
-
-			Map<String, Object> searchParams = Maps.newHashMap();
-			searchParams.put("EQ_code", consumptionsDTO.getCode());
-
-			// 验证code是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(comm.consumptionsService.findConsumptions(searchParams) == null, ERROR.OBJECT_DUPLICATE);
-
-			// 将DTO对象转换至Entity对象
-			Consumptions consumptions = BeanMapper.map(consumptionsDTO, Consumptions.class);
-			consumptions.setUser(DEFAULT_USER);
-			consumptions.setIdClass(TableNameUtil.getTableName(Consumptions.class));
-
-			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
-			BeanValidators.validateWithException(validator, consumptions);
-
-			comm.consumptionsService.saveOrUpdate(consumptions);
-
-			return new IdResult(consumptions.getId());
-
-		} catch (ConstraintViolationException e) {
-			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
-			return handleParameterError(result, e, message);
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public IdResult updateConsumptions(@WebParam(name = "id") Integer id,
-			@WebParam(name = "consumptionsDTO") ConsumptionsDTO consumptionsDTO) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			Validate.notNull(consumptionsDTO, ERROR.INPUT_NULL);
-
-			Consumptions consumptions = comm.consumptionsService.findConsumptions(id);
-
-			Validate.notNull(consumptions, ERROR.OBJECT_NULL);
-
-			// 验证code是否唯一.如果不为null,则弹出错误.
-			Map<String, Object> searchParams = Maps.newHashMap();
-			searchParams.put("EQ_code", consumptionsDTO.getCode());
-
-			Validate.isTrue(comm.consumptionsService.findConsumptions(searchParams) == null
-					|| consumptions.getCode().equals(consumptionsDTO.getCode()), ERROR.OBJECT_DUPLICATE);
-
-			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
-			BeanMapper.copy(BeanMapper.map(consumptionsDTO, Consumptions.class), consumptions);
-
-			consumptions.setUser(DEFAULT_USER);
-			consumptions.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			consumptions.setIdClass(TableNameUtil.getTableName(Consumptions.class));
-
-			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
-			BeanValidators.validateWithException(validator, consumptions);
-
-			comm.consumptionsService.saveOrUpdate(consumptions);
-
-			return new IdResult(consumptions.getId());
-
-		} catch (ConstraintViolationException e) {
-			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
-			return handleParameterError(result, e, message);
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public IdResult deleteConsumptions(@WebParam(name = "id") Integer id) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			Validate.notNull(id, ERROR.INPUT_NULL);
-
-			Consumptions consumptions = comm.consumptionsService.findConsumptions(id);
-
-			Validate.notNull(consumptions, ERROR.OBJECT_NULL);
-
-			consumptions.setIdClass(TableNameUtil.getTableName(Consumptions.class));
-			consumptions.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
-
-			comm.consumptionsService.saveOrUpdate(consumptions);
-
-			return new IdResult(consumptions.getId());
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public PaginationResult<ConsumptionsDTO> getConsumptionsPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
-		PaginationResult<ConsumptionsDTO> result = new PaginationResult<ConsumptionsDTO>();
-		try {
-			return comm.consumptionsService.getConsumptionsDTOPagination(searchParams, pageNumber, pageSize);
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public DTOListResult<ConsumptionsDTO> getConsumptionsList(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
-		DTOListResult<ConsumptionsDTO> result = new DTOListResult<ConsumptionsDTO>();
-		try {
-			result.setDtos(BeanMapper.mapList(comm.consumptionsService.getConsumptionsList(searchParams),
-					ConsumptionsDTO.class));
-			return result;
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public IdResult settleConsumptions(Integer consumptionsId, Integer tenantsId) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			Validate.notNull(consumptionsId, ERROR.INPUT_NULL);
-			Validate.notNull(tenantsId, ERROR.INPUT_NULL);
-
-			Tenants tenants = comm.tenantsService.findTenants(tenantsId);
-
-			Validate.notNull(tenants, ERROR.OBJECT_NULL);
-
-			Consumptions consumptions = comm.consumptionsService.findConsumptions(consumptionsId);
-
-			Validate.notNull(consumptions, ERROR.OBJECT_NULL);
-
-			// TODO 是否需要对ConsumptionsStatus进行判断?待后续流程明晰做决定.
-
-			/* 更新租户的余额. */
-			// 余额 = 租户账户上的账户余额 - 订单价格.
-			tenants.setAccontBalance(MathsUtil.sub(tenants.getAccontBalance(), consumptions.getSpending()));
-
-			// 更新订单状态为"完成"
-			consumptions.setConsumptionsStatus(LookUpConstants.ConsumptionsStatus.Complete.getValue());
-
-			comm.tenantsService.saveOrUpdate(tenants);
-
-			comm.consumptionsService.saveOrUpdate(consumptions);
-
-			result.setId(consumptions.getId());
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-
-	}
-
-	@Override
-	public DTOListResult<ConsumptionsDTO> reportConsumptions(Map<String, Object> searchParams) {
-		// TODO 待完成
-		return null;
-	}
 
 	@Override
 	public DTOResult<DeviceSpecDTO> findDeviceSpec(@WebParam(name = "id") Integer id) {
@@ -392,15 +128,15 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			// 将DTO对象转换至Entity对象
 			DeviceSpec deviceSpec = BeanMapper.map(deviceSpecDTO, DeviceSpec.class);
-			deviceSpec.setUser(DEFAULT_USER);
 			deviceSpec.setIdClass(TableNameUtil.getTableName(DeviceSpec.class));
+			deviceSpec.setUser(DEFAULT_USER);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, deviceSpec);
 
 			comm.deviceSpecService.saveOrUpdate(deviceSpec);
 
-			return new IdResult(deviceSpec.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -447,7 +183,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			comm.deviceSpecService.saveOrUpdate(deviceSpec);
 
-			return new IdResult(deviceSpec.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -472,11 +208,13 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			Validate.notNull(deviceSpec, ERROR.OBJECT_NULL);
 
+			deviceSpec.setUser(DEFAULT_USER);
 			deviceSpec.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+			deviceSpec.setIdClass(TableNameUtil.getTableName(DeviceSpec.class));
 
 			comm.deviceSpecService.saveOrUpdate(deviceSpec);
 
-			return new IdResult(deviceSpec.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -489,9 +227,13 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 	public PaginationResult<DeviceSpecDTO> getDeviceSpecPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<DeviceSpecDTO> result = new PaginationResult<DeviceSpecDTO>();
+
 		try {
+
 			return comm.deviceSpecService.getDeviceSpecDTOPagination(searchParams, pageNumber, pageSize);
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -502,11 +244,16 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 	@Override
 	public DTOListResult<DeviceSpecDTO> getDeviceSpecList(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<DeviceSpecDTO> result = new DTOListResult<DeviceSpecDTO>();
+
 		try {
+
 			result.setDtos(BeanMapper.mapList(comm.deviceSpecService.getDeviceSpecList(searchParams),
 					DeviceSpecDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -562,6 +309,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
 
 			result.setDto(dto);
+
 			return result;
 
 		} catch (IllegalArgumentException e) {
@@ -588,14 +336,16 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			// 将DTO对象转换至Entity对象
 			EcsSpec ecsSpec = BeanMapper.map(ecsSpecDTO, EcsSpec.class);
+
 			ecsSpec.setUser(DEFAULT_USER);
+			ecsSpec.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			ecsSpec.setIdClass(TableNameUtil.getTableName(EcsSpec.class));
 
 			BeanValidators.validateWithException(validator, ecsSpec);
 
 			comm.ecsSpecService.saveOrUpdate(ecsSpec);
 
-			return new IdResult(ecsSpec.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -640,7 +390,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			comm.ecsSpecService.saveOrUpdate(ecsSpec);
 
-			return new IdResult(ecsSpec.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -669,7 +419,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			comm.ecsSpecService.saveOrUpdate(ecsSpec);
 
-			return new IdResult(ecsSpec.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -682,9 +432,13 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 	public PaginationResult<EcsSpecDTO> getEcsSpecPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<EcsSpecDTO> result = new PaginationResult<EcsSpecDTO>();
+
 		try {
+
 			return comm.ecsSpecService.getEcsSpecDTOPagination(searchParams, pageNumber, pageSize);
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -694,10 +448,15 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 	@Override
 	public DTOListResult<EcsSpecDTO> getEcsSpecList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<EcsSpecDTO> result = new DTOListResult<EcsSpecDTO>();
+
 		try {
+
 			result.setDtos(BeanMapper.mapList(comm.ecsSpecService.getEcsSpecList(searchParams), EcsSpecDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -722,6 +481,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			// LookUp
 			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+			dto.setIspText(cmdbuildSoapServiceImpl.findLookUp(dto.getIsp()).getDto().getDescription());
 
 			result.setDto(dto);
 
@@ -751,6 +511,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			// LookUp
 			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+			dto.setIspText(cmdbuildSoapServiceImpl.findLookUp(dto.getIsp()).getDto().getDescription());
 
 			result.setDto(dto);
 
@@ -787,7 +548,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			comm.eipSpecService.saveOrUpdate(eipSpec);
 
-			return new IdResult(eipSpec.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -832,7 +593,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			comm.eipSpecService.saveOrUpdate(eipSpec);
 
-			return new IdResult(eipSpec.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -861,7 +622,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			comm.eipSpecService.saveOrUpdate(eipSpec);
 
-			return new IdResult(eipSpec.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -874,9 +635,13 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 	public PaginationResult<EipSpecDTO> getEipSpecPagination(
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
+
 		PaginationResult<EipSpecDTO> result = new PaginationResult<EipSpecDTO>();
+
 		try {
+
 			return comm.eipSpecService.getEipSpecDTOPagination(searchParams, pageNumber, pageSize);
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -886,10 +651,15 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 	@Override
 	public DTOListResult<EipSpecDTO> getEipSpecList(@WebParam(name = "searchParams") Map<String, Object> searchParams) {
+
 		DTOListResult<EipSpecDTO> result = new DTOListResult<EipSpecDTO>();
+
 		try {
+
 			result.setDtos(BeanMapper.mapList(comm.eipSpecService.getEipSpecList(searchParams), EipSpecDTO.class));
+
 			return result;
+
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -914,6 +684,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			// LookUp
 			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+			dto.setIopsText(cmdbuildSoapServiceImpl.findLookUp(dto.getIops()).getDto().getDescription());
 
 			result.setDto(dto);
 
@@ -943,6 +714,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			// LookUp
 			dto.setBrandText(cmdbuildSoapServiceImpl.findLookUp(dto.getBrand()).getDto().getDescription());
+			dto.setIopsText(cmdbuildSoapServiceImpl.findLookUp(dto.getIops()).getDto().getDescription());
 
 			result.setDto(dto);
 
@@ -979,12 +751,11 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			comm.es3SpecService.saveOrUpdate(es3Spec);
 
-			return new IdResult(es3Spec.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
 			return handleParameterError(result, e, message);
-
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
 		} catch (RuntimeException e) {
@@ -1025,7 +796,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			comm.es3SpecService.saveOrUpdate(es3Spec);
 
-			return new IdResult(es3Spec.getId());
+			return result;
 
 		} catch (ConstraintViolationException e) {
 			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
@@ -1054,7 +825,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 
 			comm.es3SpecService.saveOrUpdate(es3Spec);
 
-			return new IdResult(es3Spec.getId());
+			return result;
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -1069,6 +840,7 @@ public class FinancialSoapServiceImpl extends BasicSoapSevcie implements Financi
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
 
 		PaginationResult<Es3SpecDTO> result = new PaginationResult<Es3SpecDTO>();
+
 		try {
 
 			return comm.es3SpecService.getEs3SpecDTOPagination(searchParams, pageNumber, pageSize);

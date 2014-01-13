@@ -9,68 +9,76 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
 
-@XmlRootElement
+@XmlRootElement(name = "As2DTO")
 @XmlType(name = "As2DTO", namespace = WsConstants.NS)
 public class As2DTO {
 
-	private Date beginDate;
+	private Integer id;
 	private String code;
 	private String description;
-	private Double diskSize;
-	private Integer id;
-	private Integer ipaddress;
+	private Date beginDate;
 	private String remark;
 	private Integer tag;
-	private Integer tenants;
-	private String volumePath;
-	private Integer volumeType;
-
-	private Integer es3Spec;
-	private Integer netappController;
-	private IpaddressDTO ipaddressDTO;
-	private Es3SpecDTO es3SpecDTO;
-	private TenantsDTO tenantsDTO;
 	private TagDTO tagDTO;
+	private Integer ipaddress;
+	private IpaddressDTO ipaddressDTO;
+	private Integer tenants;
+	private TenantsDTO tenantsDTO;
+	private Integer es3Spec;
+	private Es3SpecDTO es3SpecDTO;
+	private Integer netappController;
 	private NetappControllerDTO netappControllerDTO;
+	private Integer volumeType;
+	private String volumeTypeText;
+	private Double diskSize;
+	private String volumePath;
 
-	public Integer getEs3Spec() {
-		return es3Spec;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setEs3Spec(Integer es3Spec) {
-		this.es3Spec = es3Spec;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public Integer getNetappController() {
-		return netappController;
+	public String getCode() {
+		return code;
 	}
 
-	public void setNetappController(Integer netappController) {
-		this.netappController = netappController;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
-	public IpaddressDTO getIpaddressDTO() {
-		return ipaddressDTO;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
-		this.ipaddressDTO = ipaddressDTO;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public Es3SpecDTO getEs3SpecDTO() {
-		return es3SpecDTO;
+	public Date getBeginDate() {
+		return beginDate;
 	}
 
-	public void setEs3SpecDTO(Es3SpecDTO es3SpecDTO) {
-		this.es3SpecDTO = es3SpecDTO;
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
 	}
 
-	public TenantsDTO getTenantsDTO() {
-		return tenantsDTO;
+	public String getRemark() {
+		return remark;
 	}
 
-	public void setTenantsDTO(TenantsDTO tenantsDTO) {
-		this.tenantsDTO = tenantsDTO;
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public Integer getTag() {
+		return tag;
+	}
+
+	public void setTag(Integer tag) {
+		this.tag = tag;
 	}
 
 	public TagDTO getTagDTO() {
@@ -81,6 +89,62 @@ public class As2DTO {
 		this.tagDTO = tagDTO;
 	}
 
+	public Integer getIpaddress() {
+		return ipaddress;
+	}
+
+	public void setIpaddress(Integer ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public IpaddressDTO getIpaddressDTO() {
+		return ipaddressDTO;
+	}
+
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
+	}
+
+	public Integer getTenants() {
+		return tenants;
+	}
+
+	public void setTenants(Integer tenants) {
+		this.tenants = tenants;
+	}
+
+	public TenantsDTO getTenantsDTO() {
+		return tenantsDTO;
+	}
+
+	public void setTenantsDTO(TenantsDTO tenantsDTO) {
+		this.tenantsDTO = tenantsDTO;
+	}
+
+	public Integer getEs3Spec() {
+		return es3Spec;
+	}
+
+	public void setEs3Spec(Integer es3Spec) {
+		this.es3Spec = es3Spec;
+	}
+
+	public Es3SpecDTO getEs3SpecDTO() {
+		return es3SpecDTO;
+	}
+
+	public void setEs3SpecDTO(Es3SpecDTO es3SpecDTO) {
+		this.es3SpecDTO = es3SpecDTO;
+	}
+
+	public Integer getNetappController() {
+		return netappController;
+	}
+
+	public void setNetappController(Integer netappController) {
+		this.netappController = netappController;
+	}
+
 	public NetappControllerDTO getNetappControllerDTO() {
 		return netappControllerDTO;
 	}
@@ -89,92 +153,36 @@ public class As2DTO {
 		this.netappControllerDTO = netappControllerDTO;
 	}
 
-	public Date getBeginDate() {
-		return beginDate;
+	public Integer getVolumeType() {
+		return volumeType;
 	}
 
-	public String getCode() {
-		return code;
+	public void setVolumeType(Integer volumeType) {
+		this.volumeType = volumeType;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getVolumeTypeText() {
+		return volumeTypeText;
+	}
+
+	public void setVolumeTypeText(String volumeTypeText) {
+		this.volumeTypeText = volumeTypeText;
 	}
 
 	public Double getDiskSize() {
 		return diskSize;
 	}
 
-	public Integer getId() {
-		return id;
-	}
-
-	public Integer getIpaddress() {
-		return ipaddress;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public Integer getTag() {
-		return tag;
-	}
-
-	public Integer getTenants() {
-		return tenants;
+	public void setDiskSize(Double diskSize) {
+		this.diskSize = diskSize;
 	}
 
 	public String getVolumePath() {
 		return volumePath;
 	}
 
-	public Integer getVolumeType() {
-		return volumeType;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setDiskSize(Double diskSize) {
-		this.diskSize = diskSize;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public void setIpaddress(Integer ipaddress) {
-		this.ipaddress = ipaddress;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public void setTag(Integer tag) {
-		this.tag = tag;
-	}
-
-	public void setTenants(Integer tenants) {
-		this.tenants = tenants;
-	}
-
 	public void setVolumePath(String volumePath) {
 		this.volumePath = volumePath;
-	}
-
-	public void setVolumeType(Integer volumeType) {
-		this.volumeType = volumeType;
 	}
 
 	/**

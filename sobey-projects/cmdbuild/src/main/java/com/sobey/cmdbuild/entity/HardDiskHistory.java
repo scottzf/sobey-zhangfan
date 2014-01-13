@@ -18,14 +18,14 @@ import javax.persistence.TemporalType;
 @Table(name = "hard_disk_history", schema = "public")
 public class HardDiskHistory extends BasicEntity {
 
-	private Integer brand;
-	private Date endDate;
-	private Integer fimas;
 	private HardDisk hardDisk;
-	private Integer hardDiskSize;
+	private Date endDate;
 	private Integer idc;
-	private Integer rotationalSpeed;
 	private Integer server;
+	private Integer fimas;
+	private Integer brand;
+	private Integer rotationalSpeed;
+	private Integer hardDiskSize;
 
 	public HardDiskHistory() {
 	}

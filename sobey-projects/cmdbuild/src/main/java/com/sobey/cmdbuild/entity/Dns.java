@@ -13,13 +13,13 @@ import javax.persistence.Table;
 @Table(name = "dns", schema = "public")
 public class Dns extends BasicEntity {
 
-	private String cnameDomain;
-	private Set<DnsHistory> dnsHistories = new HashSet<DnsHistory>(0);
-	private String domainName;
-	private Integer domainType;
 	private String remark;
 	private Integer tag;
 	private Integer tenants;
+	private Integer domainType;
+	private String domainName;
+	private String cnameDomain;
+	private Set<DnsHistory> dnsHistories = new HashSet<DnsHistory>(0);
 
 	public Dns() {
 	}

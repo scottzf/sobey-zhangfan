@@ -18,8 +18,8 @@ import javax.persistence.TemporalType;
 @Table(name = "group_policy_history", schema = "public")
 public class GroupPolicyHistory extends BasicEntity {
 
-	private Date endDate;
 	private GroupPolicy groupPolicy;
+	private Date endDate;
 	private String remark;
 	private Integer tenants;
 

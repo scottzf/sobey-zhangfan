@@ -9,166 +9,78 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
 
-@XmlRootElement
+@XmlRootElement(name = "DeviceSpecDTO")
 @XmlType(name = "DeviceSpecDTO", namespace = WsConstants.NS)
 public class DeviceSpecDTO {
 
-	private Date beginDate;
-	private String code;
-	private String cpuModel;
-	private Integer cpuNumber;
-	private String description;
-	private Integer hdnumber;
 	private Integer id;
-	private Integer nicNumber;
-	private Double price;
-	private Integer ramNumber;
+	private String code;
+	private String description;
+	private Date beginDate;
 	private String remark;
-	private Integer brand;
 	private Integer deviceType;
-	private Integer hight;
-	private Integer maintenance;
-	private Integer power;
-	private String brandText;
 	private String deviceTypeText;
-	private String hightText;
-	private String maintenanceText;
+	private Integer brand;
+	private String brandText;
+	private Integer power;
 	private String powerText;
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public Integer getBrand() {
-		return brand;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public String getCpuModel() {
-		return cpuModel;
-	}
-
-	public Integer getCpuNumber() {
-		return cpuNumber;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public Integer getDeviceType() {
-		return deviceType;
-	}
-
-	public Integer getHdnumber() {
-		return hdnumber;
-	}
-
-	public Integer getHight() {
-		return hight;
-	}
+	private Integer maintenance;
+	private String maintenanceText;
+	private Integer hight;
+	private String hightText;
+	private Integer ramNumber;
+	private Integer cpuNumber;
+	private Integer nicNumber;
+	private Integer hdnumber;
+	private String cpuModel;
+	private Double price;
 
 	public Integer getId() {
 		return id;
-	}
-
-	public Integer getMaintenance() {
-		return maintenance;
-	}
-
-	public Integer getNicNumber() {
-		return nicNumber;
-	}
-
-	public Integer getPower() {
-		return power;
-	}
-
-	public Double getPrice() {
-		return price;
-	}
-
-	public Integer getRamNumber() {
-		return ramNumber;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public void setBrand(Integer brand) {
-		this.brand = brand;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public void setCpuModel(String cpuModel) {
-		this.cpuModel = cpuModel;
-	}
-
-	public void setCpuNumber(Integer cpuNumber) {
-		this.cpuNumber = cpuNumber;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setDeviceType(Integer deviceType) {
-		this.deviceType = deviceType;
-	}
-
-	public void setHdnumber(Integer hdnumber) {
-		this.hdnumber = hdnumber;
-	}
-
-	public void setHight(Integer hight) {
-		this.hight = hight;
 	}
 
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public void setMaintenance(Integer maintenance) {
-		this.maintenance = maintenance;
+	public String getCode() {
+		return code;
 	}
 
-	public void setNicNumber(Integer nicNumber) {
-		this.nicNumber = nicNumber;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
-	public void setPower(Integer power) {
-		this.power = power;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setPrice(Double price) {
-		this.price = price;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public void setRamNumber(Integer ramNumber) {
-		this.ramNumber = ramNumber;
+	public Date getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public String getRemark() {
+		return remark;
 	}
 
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
 
-	public String getBrandText() {
-		return brandText;
+	public Integer getDeviceType() {
+		return deviceType;
 	}
 
-	public void setBrandText(String brandText) {
-		this.brandText = brandText;
+	public void setDeviceType(Integer deviceType) {
+		this.deviceType = deviceType;
 	}
 
 	public String getDeviceTypeText() {
@@ -179,12 +91,44 @@ public class DeviceSpecDTO {
 		this.deviceTypeText = deviceTypeText;
 	}
 
-	public String getHightText() {
-		return hightText;
+	public Integer getBrand() {
+		return brand;
 	}
 
-	public void setHightText(String hightText) {
-		this.hightText = hightText;
+	public void setBrand(Integer brand) {
+		this.brand = brand;
+	}
+
+	public String getBrandText() {
+		return brandText;
+	}
+
+	public void setBrandText(String brandText) {
+		this.brandText = brandText;
+	}
+
+	public Integer getPower() {
+		return power;
+	}
+
+	public void setPower(Integer power) {
+		this.power = power;
+	}
+
+	public String getPowerText() {
+		return powerText;
+	}
+
+	public void setPowerText(String powerText) {
+		this.powerText = powerText;
+	}
+
+	public Integer getMaintenance() {
+		return maintenance;
+	}
+
+	public void setMaintenance(Integer maintenance) {
+		this.maintenance = maintenance;
 	}
 
 	public String getMaintenanceText() {
@@ -195,12 +139,68 @@ public class DeviceSpecDTO {
 		this.maintenanceText = maintenanceText;
 	}
 
-	public String getPowerText() {
-		return powerText;
+	public Integer getHight() {
+		return hight;
 	}
 
-	public void setPowerText(String powerText) {
-		this.powerText = powerText;
+	public void setHight(Integer hight) {
+		this.hight = hight;
+	}
+
+	public String getHightText() {
+		return hightText;
+	}
+
+	public void setHightText(String hightText) {
+		this.hightText = hightText;
+	}
+
+	public Integer getRamNumber() {
+		return ramNumber;
+	}
+
+	public void setRamNumber(Integer ramNumber) {
+		this.ramNumber = ramNumber;
+	}
+
+	public Integer getCpuNumber() {
+		return cpuNumber;
+	}
+
+	public void setCpuNumber(Integer cpuNumber) {
+		this.cpuNumber = cpuNumber;
+	}
+
+	public Integer getNicNumber() {
+		return nicNumber;
+	}
+
+	public void setNicNumber(Integer nicNumber) {
+		this.nicNumber = nicNumber;
+	}
+
+	public Integer getHdnumber() {
+		return hdnumber;
+	}
+
+	public void setHdnumber(Integer hdnumber) {
+		this.hdnumber = hdnumber;
+	}
+
+	public String getCpuModel() {
+		return cpuModel;
+	}
+
+	public void setCpuModel(String cpuModel) {
+		this.cpuModel = cpuModel;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
 	}
 
 	/**

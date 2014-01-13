@@ -20,10 +20,10 @@ public class EipSpecHistory extends BasicEntity {
 
 	private EipSpec eipSpec;
 	private Date endDate;
-	private Double price;
 	private String remark;
-	private Integer isp;
 	private Integer brand;
+	private Integer isp;
+	private Double price;
 
 	public EipSpecHistory() {
 	}

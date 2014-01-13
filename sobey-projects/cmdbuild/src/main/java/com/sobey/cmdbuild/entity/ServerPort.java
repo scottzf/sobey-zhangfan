@@ -16,13 +16,13 @@ import javax.persistence.Table;
 @Table(name = "server_port", schema = "public")
 public class ServerPort extends BasicEntity {
 
-	private Integer connectedTo;
-	private Integer ipaddress;
-	private String macAddress;
 	private String remark;
 	private Integer server;
-	private Set<ServerPortHistory> serverPortHistories = new HashSet<ServerPortHistory>(0);
+	private Integer connectedTo;
+	private Integer ipaddress;
 	private String site;
+	private String macAddress;
+	private Set<ServerPortHistory> serverPortHistories = new HashSet<ServerPortHistory>(0);
 
 	public ServerPort() {
 	}

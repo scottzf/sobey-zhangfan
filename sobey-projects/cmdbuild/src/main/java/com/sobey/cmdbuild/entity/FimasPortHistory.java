@@ -18,14 +18,14 @@ import javax.persistence.TemporalType;
 @Table(name = "fimas_port_history", schema = "public")
 public class FimasPortHistory extends BasicEntity {
 
-	private Integer connectedTo;
-	private Date endDate;
-	private Integer fimas;
 	private FimasPort fimasPort;
-	private Integer ipaddress;
-	private String macAddress;
+	private Date endDate;
 	private String remark;
+	private Integer fimas;
+	private Integer connectedTo;
+	private Integer ipaddress;
 	private String site;
+	private String macAddress;
 
 	public FimasPortHistory() {
 	}

@@ -16,17 +16,17 @@ import javax.persistence.Table;
 @Table(name = "rack", schema = "public")
 public class Rack extends BasicEntity {
 
-	private Integer brand;
-	private String gdzcSn;
-	private Integer height;
+	private String remark;
 	private Integer idc;
-	private String model;
+	private Integer height;
 	private Integer power;
+	private Integer brand;
+	private String model;
+	private Integer unitNumber;
+	private String sn;
+	private String gdzcSn;
 	private Double price;
 	private Set<RackHistory> rackHistories = new HashSet<RackHistory>(0);
-	private String remark;
-	private String sn;
-	private Integer unitNumber;
 
 	public Rack() {
 	}

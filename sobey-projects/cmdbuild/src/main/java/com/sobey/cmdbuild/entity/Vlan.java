@@ -16,12 +16,12 @@ import javax.persistence.Table;
 @Table(name = "vlan", schema = "public")
 public class Vlan extends BasicEntity {
 
-	private String gateway;
-	private Integer idc;
-	private String netMask;
 	private String remark;
-	private String segment;
 	private Integer tenants;
+	private Integer idc;
+	private String segment;
+	private String gateway;
+	private String netMask;
 	private Set<VlanHistory> vlanHistories = new HashSet<VlanHistory>(0);
 
 	public Vlan() {

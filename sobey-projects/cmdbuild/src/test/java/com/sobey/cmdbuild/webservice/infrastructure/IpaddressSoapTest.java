@@ -180,7 +180,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 
 		List<IpaddressDTO> list = BeanMapper.mapList(TestData.randomIpaddressList(10), IpaddressDTO.class);
 
-		IdResult results = infrastructureService.insertIPAddress(list);
+		IdResult results = infrastructureService.insertIpaddress(list);
 		System.err.println(results.getMessage());
 		assertEquals("0", results.getCode());
 
@@ -200,7 +200,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 		// 将随机数据插入IPList
 		list.addAll(BeanMapper.mapList(TestData.randomIpaddressList(5), IpaddressDTO.class));
 
-		IdResult results = infrastructureService.insertIPAddress(list);
+		IdResult results = infrastructureService.insertIpaddress(list);
 		System.err.println(results.getMessage());
 		assertEquals("0", results.getCode());
 
@@ -212,7 +212,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 
 		int id = 0;// Ipaddress对象的id
 
-		IdResult results = infrastructureService.initIPAddress(id);// 设置状态为未使用
+		IdResult results = infrastructureService.initIpaddress(id);// 设置状态为未使用
 
 		assertEquals("0", results.getCode());
 
@@ -224,7 +224,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 
 		int id = 0;// Ipaddress对象的id
 
-		IdResult results = infrastructureService.allocateIPAddress(id);// 设置状态为使用
+		IdResult results = infrastructureService.allocateIpaddress(id);// 设置状态为使用
 
 		assertEquals("0", results.getCode());
 	}

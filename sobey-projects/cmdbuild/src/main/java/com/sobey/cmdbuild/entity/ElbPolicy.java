@@ -17,10 +17,10 @@ import javax.persistence.Table;
 public class ElbPolicy extends BasicEntity {
 
 	private Integer elb;
-	private Set<ElbPolicyHistory> elbPolicyHistories = new HashSet<ElbPolicyHistory>(0);
-	private Integer protocol;
 	private Integer sourcePort;
 	private Integer targetPort;
+	private Integer protocol;
+	private Set<ElbPolicyHistory> elbPolicyHistories = new HashSet<ElbPolicyHistory>(0);
 
 	public ElbPolicy() {
 	}

@@ -16,12 +16,12 @@ import javax.persistence.Table;
 @Table(name = "idc", schema = "public")
 public class Idc extends BasicEntity {
 
+	private String remark;
 	private String address;
 	private String city;
-	private Set<IdcHistory> idcHistories = new HashSet<IdcHistory>(0);
 	private String phone;
-	private String remark;
 	private String zip;
+	private Set<IdcHistory> idcHistories = new HashSet<IdcHistory>(0);
 
 	public Idc() {
 	}

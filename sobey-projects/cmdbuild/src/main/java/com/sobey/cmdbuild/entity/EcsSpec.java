@@ -16,13 +16,13 @@ import javax.persistence.Table;
 @Table(name = "ecs_spec", schema = "public")
 public class EcsSpec extends BasicEntity {
 
-	private Integer cpuNumber;
-	private Integer diskSize;
-	private Set<EcsSpecHistory> ecsSpecHistories = new HashSet<EcsSpecHistory>(0);
-	private Integer memory;
-	private Double price;
 	private String remark;
 	private Integer brand;
+	private Integer memory;
+	private Integer cpuNumber;
+	private Integer diskSize;
+	private Double price;
+	private Set<EcsSpecHistory> ecsSpecHistories = new HashSet<EcsSpecHistory>(0);
 
 	public EcsSpec() {
 	}

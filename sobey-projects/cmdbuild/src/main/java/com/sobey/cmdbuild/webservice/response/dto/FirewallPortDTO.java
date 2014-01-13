@@ -9,54 +9,126 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
 
-@XmlRootElement
+@XmlRootElement(name = "FirewallPortDTO")
 @XmlType(name = "FirewallPortDTO", namespace = WsConstants.NS)
 public class FirewallPortDTO {
 
-	private Date beginDate;
+	private Integer id;
 	private String code;
 	private String description;
-	private Integer id;
+	private Date beginDate;
 	private String remark;
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
+	private Integer firewall;
+	private FirewallDTO firewallDTO;;
+	private Integer connectedTo;
+	private SwitchPortDTO switchPortDTO;
+	private Integer ipaddress;
+	private IpaddressDTO ipaddressDTO;
+	private String site;
+	private String macAddress;
 
 	public Integer getId() {
 		return id;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public Integer getFirewall() {
+		return firewall;
+	}
+
+	public void setFirewall(Integer firewall) {
+		this.firewall = firewall;
+	}
+
+	public FirewallDTO getFirewallDTO() {
+		return firewallDTO;
+	}
+
+	public void setFirewallDTO(FirewallDTO firewallDTO) {
+		this.firewallDTO = firewallDTO;
+	}
+
+	public Integer getConnectedTo() {
+		return connectedTo;
+	}
+
+	public void setConnectedTo(Integer connectedTo) {
+		this.connectedTo = connectedTo;
+	}
+
+	public SwitchPortDTO getSwitchPortDTO() {
+		return switchPortDTO;
+	}
+
+	public void setSwitchPortDTO(SwitchPortDTO switchPortDTO) {
+		this.switchPortDTO = switchPortDTO;
+	}
+
+	public Integer getIpaddress() {
+		return ipaddress;
+	}
+
+	public void setIpaddress(Integer ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public IpaddressDTO getIpaddressDTO() {
+		return ipaddressDTO;
+	}
+
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
+	}
+
+	public String getSite() {
+		return site;
+	}
+
+	public void setSite(String site) {
+		this.site = site;
+	}
+
+	public String getMacAddress() {
+		return macAddress;
+	}
+
+	public void setMacAddress(String macAddress) {
+		this.macAddress = macAddress;
 	}
 
 	/**

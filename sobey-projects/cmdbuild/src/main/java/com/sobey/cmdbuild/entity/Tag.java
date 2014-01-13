@@ -17,8 +17,8 @@ import javax.persistence.Table;
 public class Tag extends BasicEntity {
 
 	private String remark;
-	private Set<TagHistory> tagHistories = new HashSet<TagHistory>(0);
 	private Integer tenants;
+	private Set<TagHistory> tagHistories = new HashSet<TagHistory>(0);
 
 	public Tag() {
 	}

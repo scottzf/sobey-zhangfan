@@ -62,7 +62,7 @@ public interface FirewallSoapService {
 	WSResult deleteVPNUserByFirewall(@WebParam(name = "VPNUserParameter") VPNUserParameter parameter);
 
 	/**
-	 * 在防火墙上执行脚本，为VPUN用户组新增或删除可访问段.
+	 * 在防火墙上执行脚本，为VPNUser组新增或删除可访问段.
 	 * 
 	 * @param parameter
 	 *            {@link VPNUserParameter }

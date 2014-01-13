@@ -19,16 +19,16 @@ import javax.persistence.TemporalType;
 public class EcsHistory extends BasicEntity {
 
 	private Ecs ecs;
-	private Integer ecsAgent;
-	private Integer ecsSpec;
-	private Integer ecsStatus;
 	private Date endDate;
-	private Integer image;
-	private Integer ipaddress;
 	private String remark;
-	private Integer server;
 	private Integer tag;
+	private Integer ipaddress;
+	private Integer ecsSpec;
 	private Integer tenants;
+	private Integer server;
+	private Integer image;
+	private Integer ecsAgent;
+	private Integer ecsStatus;
 
 	public EcsHistory() {
 	}

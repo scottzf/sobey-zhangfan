@@ -50,13 +50,13 @@ public class EcsSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<EcsDTO> responseParams = iaasSoapService.findECSByParams(searchParams);
+		DTOResult<EcsDTO> responseParams = iaasSoapService.findEcsByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<EcsDTO> response = iaasSoapService.findECS(id);
+		DTOResult<EcsDTO> response = iaasSoapService.findEcs(id);
 
 		assertNotNull(response);
 
@@ -70,7 +70,7 @@ public class EcsSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<EcsDTO> result = iaasSoapService.getECSList(searchParams);
+		DTOListResult<EcsDTO> result = iaasSoapService.getEcsList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -86,7 +86,7 @@ public class EcsSoapTest extends BaseFunctionalTestCase {
 
 		EcsDTO ecsDTO = BeanMapper.map(ecs, EcsDTO.class);
 
-		IdResult response = iaasSoapService.createECS(ecsDTO);
+		IdResult response = iaasSoapService.createEcs(ecsDTO);
 
 		assertNotNull(response.getId());
 

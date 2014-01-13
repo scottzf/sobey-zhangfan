@@ -18,12 +18,12 @@ import javax.persistence.TemporalType;
 @Table(name = "eip_policy_history", schema = "public")
 public class EipPolicyHistory extends BasicEntity {
 
-	private Integer eip;
 	private EipPolicy eipPolicy;
 	private Date endDate;
-	private Integer protocol;
+	private Integer eip;
 	private Integer sourcePort;
 	private Integer targetPort;
+	private Integer protocol;
 
 	public EipPolicyHistory() {
 	}

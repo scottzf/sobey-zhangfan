@@ -18,15 +18,14 @@ import javax.persistence.TemporalType;
 @Table(name = "memory_history", schema = "public")
 public class MemoryHistory extends BasicEntity {
 
-	private Integer brand;
-
-	private Date endDate;
-	private Integer fimas;
-	private Integer frequency;
-	private Integer idc;
 	private Memory memory;
-	private Integer ram;
+	private Date endDate;
+	private Integer idc;
 	private Integer server;
+	private Integer fimas;
+	private Integer brand;
+	private Integer frequency;
+	private Integer ram;
 
 	public MemoryHistory() {
 	}

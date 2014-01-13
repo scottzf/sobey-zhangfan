@@ -18,9 +18,9 @@ import javax.persistence.TemporalType;
 @Table(name = "tag_history", schema = "public")
 public class TagHistory extends BasicEntity {
 
+	private Tag tag;
 	private Date endDate;
 	private String remark;
-	private Tag tag;
 	private Integer tenants;
 
 	public TagHistory() {

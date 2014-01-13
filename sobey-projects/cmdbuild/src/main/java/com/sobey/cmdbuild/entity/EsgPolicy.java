@@ -17,11 +17,11 @@ import javax.persistence.Table;
 public class EsgPolicy extends BasicEntity {
 
 	private Integer esg;
-	private Set<EsgPolicyHistory> esgPolicyHistories = new HashSet<EsgPolicyHistory>(0);
 	private Integer esgProtocol;
-	private Integer port;
 	private String sourceIp;
 	private String targetIp;
+	private Integer port;
+	private Set<EsgPolicyHistory> esgPolicyHistories = new HashSet<EsgPolicyHistory>(0);
 
 	public EsgPolicy() {
 	}

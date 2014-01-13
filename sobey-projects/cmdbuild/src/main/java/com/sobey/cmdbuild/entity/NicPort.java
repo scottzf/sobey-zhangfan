@@ -16,13 +16,13 @@ import javax.persistence.Table;
 @Table(name = "nic_port", schema = "public")
 public class NicPort extends BasicEntity {
 
+	private String remark;
+	private Integer nic;
 	private Integer connectedTo;
 	private Integer ipaddress;
-	private String macAddress;
-	private Integer nic;
-	private Set<NicPortHistory> nicPortHistories = new HashSet<NicPortHistory>(0);
-	private String remark;
 	private String site;
+	private String macAddress;
+	private Set<NicPortHistory> nicPortHistories = new HashSet<NicPortHistory>(0);
 
 	public NicPort() {
 	}

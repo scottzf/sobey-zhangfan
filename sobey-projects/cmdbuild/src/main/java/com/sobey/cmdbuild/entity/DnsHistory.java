@@ -18,14 +18,14 @@ import javax.persistence.TemporalType;
 @Table(name = "dns_history", schema = "public")
 public class DnsHistory extends BasicEntity {
 
-	private String cnameDomain;
 	private Dns dns;
-	private String domainName;
-	private Integer domainType;
 	private Date endDate;
 	private String remark;
 	private Integer tag;
 	private Integer tenants;
+	private Integer domainType;
+	private String domainName;
+	private String cnameDomain;
 
 	public DnsHistory() {
 	}

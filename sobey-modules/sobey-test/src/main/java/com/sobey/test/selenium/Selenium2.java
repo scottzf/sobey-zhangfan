@@ -333,6 +333,7 @@ public class Selenium2 {
 	 * @see #waitForTextPresent(By, String, int)
 	 * @see ExpectedConditions
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void waitForCondition(ExpectedCondition conditon, int timeout) {
 		(new WebDriverWait(driver, timeout)).until(conditon);
 	}

@@ -16,13 +16,13 @@ import javax.persistence.Table;
 @Table(name = "memory", schema = "public")
 public class Memory extends BasicEntity {
 
-	private Integer brand;
-	private Integer fimas;
-	private Integer frequency;
 	private Integer idc;
-	private Set<MemoryHistory> memoryHistories = new HashSet<MemoryHistory>(0);
-	private Integer ram;
 	private Integer server;
+	private Integer fimas;
+	private Integer brand;
+	private Integer frequency;
+	private Integer ram;
+	private Set<MemoryHistory> memoryHistories = new HashSet<MemoryHistory>(0);
 
 	public Memory() {
 	}

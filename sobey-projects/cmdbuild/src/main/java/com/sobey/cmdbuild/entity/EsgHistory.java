@@ -18,13 +18,13 @@ import javax.persistence.TemporalType;
 @Table(name = "esg_history", schema = "public")
 public class EsgHistory extends BasicEntity {
 
-	private Integer aclNumber;
-	private Date endDate;
 	private Esg esg;
-	private Boolean isPublic;
+	private Date endDate;
 	private String remark;
 	private Integer tag;
 	private Integer tenants;
+	private Integer aclNumber;
+	private Boolean isPublic;
 
 	public EsgHistory() {
 	}

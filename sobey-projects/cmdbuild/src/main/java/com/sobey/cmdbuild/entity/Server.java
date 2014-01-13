@@ -16,15 +16,15 @@ import javax.persistence.Table;
 @Table(name = "server", schema = "public")
 public class Server extends BasicEntity {
 
-	private Integer deviceSpec;
-	private String gdzcSn;
-	private Integer idc;
-	private Integer ipaddress;
-	private Integer rack;
 	private String remark;
-	private Set<ServerHistory> serverHistories = new HashSet<ServerHistory>(0);
+	private Integer idc;
+	private Integer rack;
+	private Integer deviceSpec;
+	private Integer ipaddress;
 	private String site;
 	private String sn;
+	private String gdzcSn;
+	private Set<ServerHistory> serverHistories = new HashSet<ServerHistory>(0);
 
 	public Server() {
 	}

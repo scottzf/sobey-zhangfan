@@ -16,13 +16,13 @@ import javax.persistence.Table;
 @Table(name = "load_balancer_port", schema = "public")
 public class LoadBalancerPort extends BasicEntity {
 
+	private String remark;
+	private Integer loadBalancer;
 	private Integer connectedTo;
 	private Integer ipaddress;
-	private Integer loadBalancer;
-	private Set<LoadBalancerPortHistory> loadBalancerPortHistories = new HashSet<LoadBalancerPortHistory>(0);
-	private String macAddress;
-	private String remark;
 	private String site;
+	private String macAddress;
+	private Set<LoadBalancerPortHistory> loadBalancerPortHistories = new HashSet<LoadBalancerPortHistory>(0);
 
 	public LoadBalancerPort() {
 	}

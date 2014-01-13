@@ -9,27 +9,65 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
 
-@XmlRootElement
+@XmlRootElement(name = "HardDiskDTO")
 @XmlType(name = "HardDiskDTO", namespace = WsConstants.NS)
 public class HardDiskDTO {
 
-	private Date beginDate;
-	private Integer brand;
+	private Integer id;
 	private String code;
 	private String description;
-	private Integer fimas;
-	private Integer hardDiskSize;
-	private Integer id;
+	private Date beginDate;
 	private Integer idc;
-	private String remark;
-	private Integer rotationalSpeed;
-	private Integer server;
-
 	private IdcDTO idcDTO;
+	private Integer server;
 	private ServerDTO serverDTO;
+	private Integer fimas;
 	private FimasDTO fimasDTO;
-	private String rotationalSpeedText;
+	private Integer brand;
 	private String brandText;
+	private Integer rotationalSpeed;
+	private String rotationalSpeedText;
+	private Integer hardDiskSize;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public Integer getIdc() {
+		return idc;
+	}
+
+	public void setIdc(Integer idc) {
+		this.idc = idc;
+	}
 
 	public IdcDTO getIdcDTO() {
 		return idcDTO;
@@ -37,6 +75,14 @@ public class HardDiskDTO {
 
 	public void setIdcDTO(IdcDTO idcDTO) {
 		this.idcDTO = idcDTO;
+	}
+
+	public Integer getServer() {
+		return server;
+	}
+
+	public void setServer(Integer server) {
+		this.server = server;
 	}
 
 	public ServerDTO getServerDTO() {
@@ -47,6 +93,14 @@ public class HardDiskDTO {
 		this.serverDTO = serverDTO;
 	}
 
+	public Integer getFimas() {
+		return fimas;
+	}
+
+	public void setFimas(Integer fimas) {
+		this.fimas = fimas;
+	}
+
 	public FimasDTO getFimasDTO() {
 		return fimasDTO;
 	}
@@ -55,12 +109,12 @@ public class HardDiskDTO {
 		this.fimasDTO = fimasDTO;
 	}
 
-	public String getRotationalSpeedText() {
-		return rotationalSpeedText;
+	public Integer getBrand() {
+		return brand;
 	}
 
-	public void setRotationalSpeedText(String rotationalSpeedText) {
-		this.rotationalSpeedText = rotationalSpeedText;
+	public void setBrand(Integer brand) {
+		this.brand = brand;
 	}
 
 	public String getBrandText() {
@@ -71,92 +125,28 @@ public class HardDiskDTO {
 		this.brandText = brandText;
 	}
 
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public Integer getBrand() {
-		return brand;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public Integer getFimas() {
-		return fimas;
-	}
-
-	public Integer getHardDiskSize() {
-		return hardDiskSize;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public Integer getIdc() {
-		return idc;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
 	public Integer getRotationalSpeed() {
 		return rotationalSpeed;
-	}
-
-	public Integer getServer() {
-		return server;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public void setBrand(Integer brand) {
-		this.brand = brand;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setFimas(Integer fimas) {
-		this.fimas = fimas;
-	}
-
-	public void setHardDiskSize(Integer hardDiskSize) {
-		this.hardDiskSize = hardDiskSize;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public void setIdc(Integer idc) {
-		this.idc = idc;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
 	}
 
 	public void setRotationalSpeed(Integer rotationalSpeed) {
 		this.rotationalSpeed = rotationalSpeed;
 	}
 
-	public void setServer(Integer server) {
-		this.server = server;
+	public String getRotationalSpeedText() {
+		return rotationalSpeedText;
+	}
+
+	public void setRotationalSpeedText(String rotationalSpeedText) {
+		this.rotationalSpeedText = rotationalSpeedText;
+	}
+
+	public Integer getHardDiskSize() {
+		return hardDiskSize;
+	}
+
+	public void setHardDiskSize(Integer hardDiskSize) {
+		this.hardDiskSize = hardDiskSize;
 	}
 
 	/**

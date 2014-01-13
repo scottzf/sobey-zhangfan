@@ -8,7 +8,6 @@ import javax.jws.WebService;
 import org.springframework.stereotype.Component;
 
 import com.sobey.cmdbuild.constants.WsConstants;
-import com.sobey.cmdbuild.webservice.response.dto.ConsumptionsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DeviceSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EcsSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EipSpecDTO;
@@ -27,49 +26,6 @@ public interface FinancialSoapService {
 	 *************************************************/
 
 	// ==============================//
-	// ========= Consumptions =======//
-	// ==============================//
-
-	DTOResult<ConsumptionsDTO> findConsumptions(@WebParam(name = "id") Integer id);
-
-	DTOResult<ConsumptionsDTO> findConsumptionsByParams(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams);
-
-	IdResult createConsumptions(@WebParam(name = "ConsumptionsDTO") ConsumptionsDTO consumptionsDTO);
-
-	IdResult updateConsumptions(@WebParam(name = "id") Integer id,
-			@WebParam(name = "ConsumptionsDTO") ConsumptionsDTO consumptionsDTO);
-
-	IdResult deleteConsumptions(@WebParam(name = "id") Integer id);
-
-	DTOListResult<ConsumptionsDTO> getConsumptionsList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
-
-	PaginationResult<ConsumptionsDTO> getConsumptionsPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
-	/**
-	 * Consumptions 结算.<br/>
-	 * 在租户用户的账号余额基础上扣除 Consumptions 的 Spending(消费金额), 并将 Consumptions 状态改为"完成"。<br/>
-	 * 
-	 * @param consumptionsId
-	 *            消费id
-	 * @param tenantsId
-	 *            租户id
-	 * @return IdResult
-	 */
-	IdResult settleConsumptions(@WebParam(name = "consumptionsId") Integer consumptionsId,
-			@WebParam(name = "tenantsId") Integer tenantsId);
-
-	/**
-	 * 多条件获取对象集合，并导出列表的信息为 Excel 文件。
-	 * 
-	 * @param searchParams
-	 * @return DTOListResult<ConsumptionsDTO>
-	 */
-	DTOListResult<ConsumptionsDTO> reportConsumptions(@WebParam(name = "searchParams") Map<String, Object> searchParams);
-
-	// ==============================//
 	// ========= DeviceSpec =========//
 	// ==============================//
 
@@ -77,10 +33,10 @@ public interface FinancialSoapService {
 
 	DTOResult<DeviceSpecDTO> findDeviceSpecByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createDeviceSpec(@WebParam(name = "DeviceSpecDTO") DeviceSpecDTO deviceSpecDTO);
+	IdResult createDeviceSpec(@WebParam(name = "deviceSpecDTO") DeviceSpecDTO deviceSpecDTO);
 
 	IdResult updateDeviceSpec(@WebParam(name = "id") Integer id,
-			@WebParam(name = "DeviceSpecDTO") DeviceSpecDTO deviceSpecDTO);
+			@WebParam(name = "deviceSpecDTO") DeviceSpecDTO deviceSpecDTO);
 
 	IdResult deleteDeviceSpec(@WebParam(name = "id") Integer id);
 
@@ -98,9 +54,9 @@ public interface FinancialSoapService {
 
 	DTOResult<EcsSpecDTO> findEcsSpecByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createEcsSpec(@WebParam(name = "EcsSpecDTO") EcsSpecDTO ecsSpecDTO);
+	IdResult createEcsSpec(@WebParam(name = "ecsSpecDTO") EcsSpecDTO ecsSpecDTO);
 
-	IdResult updateEcsSpec(@WebParam(name = "id") Integer id, @WebParam(name = "EcsSpecDTO") EcsSpecDTO ecsSpecDTO);
+	IdResult updateEcsSpec(@WebParam(name = "id") Integer id, @WebParam(name = "ecsSpecDTO") EcsSpecDTO ecsSpecDTO);
 
 	IdResult deleteEcsSpec(@WebParam(name = "id") Integer id);
 
@@ -118,9 +74,9 @@ public interface FinancialSoapService {
 
 	DTOResult<EipSpecDTO> findEipSpecByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createEipSpec(@WebParam(name = "EipSpecDTO") EipSpecDTO eipSpecDTO);
+	IdResult createEipSpec(@WebParam(name = "eipSpecDTO") EipSpecDTO eipSpecDTO);
 
-	IdResult updateEipSpec(@WebParam(name = "id") Integer id, @WebParam(name = "EipSpecDTO") EipSpecDTO eipSpecDTO);
+	IdResult updateEipSpec(@WebParam(name = "id") Integer id, @WebParam(name = "eipSpecDTO") EipSpecDTO eipSpecDTO);
 
 	IdResult deleteEipSpec(@WebParam(name = "id") Integer id);
 
@@ -138,9 +94,9 @@ public interface FinancialSoapService {
 
 	DTOResult<Es3SpecDTO> findEs3SpecByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
 
-	IdResult createEs3Spec(@WebParam(name = "Es3SpecDTO") Es3SpecDTO es3SpecDTO);
+	IdResult createEs3Spec(@WebParam(name = "es3SpecDTO") Es3SpecDTO es3SpecDTO);
 
-	IdResult updateEs3Spec(@WebParam(name = "id") Integer id, @WebParam(name = "Es3SpecDTO") Es3SpecDTO es3SpecDTO);
+	IdResult updateEs3Spec(@WebParam(name = "id") Integer id, @WebParam(name = "es3SpecDTO") Es3SpecDTO es3SpecDTO);
 
 	IdResult deleteEs3Spec(@WebParam(name = "id") Integer id);
 

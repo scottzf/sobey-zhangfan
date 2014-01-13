@@ -18,13 +18,13 @@ import javax.persistence.TemporalType;
 @Table(name = "es3_spec_history", schema = "public")
 public class Es3SpecHistory extends BasicEntity {
 
-	private Date endDate;
 	private Es3Spec es3Spec;
-	private Double price;
+	private Date endDate;
 	private String remark;
 	private Integer maxSpace;
 	private Integer iops;
 	private Integer brand;
+	private Double price;
 
 	public Es3SpecHistory() {
 	}

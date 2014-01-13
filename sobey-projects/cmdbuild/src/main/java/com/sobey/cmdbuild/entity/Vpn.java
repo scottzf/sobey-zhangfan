@@ -17,11 +17,11 @@ import javax.persistence.Table;
 public class Vpn extends BasicEntity {
 
 	private String remark;
-	private Integer tag;
 	private Integer tenants;
-	private Set<VpnHistory> vpnHistories = new HashSet<VpnHistory>(0);
+	private Integer tag;
 	private String vpnName;
 	private String vpnPassword;
+	private Set<VpnHistory> vpnHistories = new HashSet<VpnHistory>(0);
 
 	public Vpn() {
 	}

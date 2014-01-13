@@ -18,14 +18,14 @@ import javax.persistence.TemporalType;
 @Table(name = "firewall_port_history", schema = "public")
 public class FirewallPortHistory extends BasicEntity {
 
-	private Integer connectedTo;
-	private Date endDate;
-	private Integer firewall;
 	private FirewallPort firewallPort;
-	private Integer ipaddress;
-	private String macAddress;
+	private Date endDate;
 	private String remark;
+	private Integer firewall;
+	private Integer connectedTo;
+	private Integer ipaddress;
 	private String site;
+	private String macAddress;
 
 	public FirewallPortHistory() {
 	}

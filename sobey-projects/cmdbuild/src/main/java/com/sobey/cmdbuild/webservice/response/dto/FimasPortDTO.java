@@ -9,24 +9,71 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
 
-@XmlRootElement
+@XmlRootElement(name = "FimasPortDTO")
 @XmlType(name = "FimasPortDTO", namespace = WsConstants.NS)
 public class FimasPortDTO {
 
-	private Date beginDate;
+	private Integer id;
 	private String code;
 	private String description;
-	private Integer id;
+	private Date beginDate;
 	private String remark;
-
+	private Integer fimas;
 	private FimasDTO fimasDTO;
-	private IpaddressDTO ipaddressDTO;
 	private Integer connectedTo;
 	private SwitchPortDTO switchPortDTO;
-	private Integer fimas;
-	private String macAddress;
-	private String site;
 	private Integer ipaddress;
+	private IpaddressDTO ipaddressDTO;
+	private String site;
+	private String macAddress;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public Integer getFimas() {
+		return fimas;
+	}
+
+	public void setFimas(Integer fimas) {
+		this.fimas = fimas;
+	}
 
 	public FimasDTO getFimasDTO() {
 		return fimasDTO;
@@ -34,14 +81,6 @@ public class FimasPortDTO {
 
 	public void setFimasDTO(FimasDTO fimasDTO) {
 		this.fimasDTO = fimasDTO;
-	}
-
-	public IpaddressDTO getIpaddressDTO() {
-		return ipaddressDTO;
-	}
-
-	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
-		this.ipaddressDTO = ipaddressDTO;
 	}
 
 	public Integer getConnectedTo() {
@@ -60,20 +99,20 @@ public class FimasPortDTO {
 		this.switchPortDTO = switchPortDTO;
 	}
 
-	public Integer getFimas() {
-		return fimas;
+	public Integer getIpaddress() {
+		return ipaddress;
 	}
 
-	public void setFimas(Integer fimas) {
-		this.fimas = fimas;
+	public void setIpaddress(Integer ipaddress) {
+		this.ipaddress = ipaddress;
 	}
 
-	public String getMacAddress() {
-		return macAddress;
+	public IpaddressDTO getIpaddressDTO() {
+		return ipaddressDTO;
 	}
 
-	public void setMacAddress(String macAddress) {
-		this.macAddress = macAddress;
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
 	}
 
 	public String getSite() {
@@ -84,52 +123,12 @@ public class FimasPortDTO {
 		this.site = site;
 	}
 
-	public Integer getIpaddress() {
-		return ipaddress;
+	public String getMacAddress() {
+		return macAddress;
 	}
 
-	public void setIpaddress(Integer ipaddress) {
-		this.ipaddress = ipaddress;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setMacAddress(String macAddress) {
+		this.macAddress = macAddress;
 	}
 
 	/**

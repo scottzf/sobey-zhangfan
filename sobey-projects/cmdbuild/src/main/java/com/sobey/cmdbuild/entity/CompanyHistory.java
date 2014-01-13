@@ -22,10 +22,10 @@ public class CompanyHistory extends BasicEntity {
 
 	private Company company;
 	private Date endDate;
+	private String remark;
 	private String zip;
 	private String phone;
 	private String address;
-	private String remark;
 
 	public CompanyHistory() {
 	}
