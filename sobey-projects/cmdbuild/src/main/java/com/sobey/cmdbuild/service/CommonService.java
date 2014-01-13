@@ -19,6 +19,16 @@ import com.sobey.cmdbuild.service.iaas.ElbService;
 import com.sobey.cmdbuild.service.iaas.EsgPolicyService;
 import com.sobey.cmdbuild.service.iaas.EsgService;
 import com.sobey.cmdbuild.service.iaas.GroupPolicyService;
+import com.sobey.cmdbuild.service.iaas.MapEcsAs2Service;
+import com.sobey.cmdbuild.service.iaas.MapEcsCs2Service;
+import com.sobey.cmdbuild.service.iaas.MapEcsEipService;
+import com.sobey.cmdbuild.service.iaas.MapEcsElbService;
+import com.sobey.cmdbuild.service.iaas.MapEcsEsgService;
+import com.sobey.cmdbuild.service.iaas.MapEipDnsService;
+import com.sobey.cmdbuild.service.iaas.MapEipElbService;
+import com.sobey.cmdbuild.service.iaas.MapGroupPolicyIpaddressService;
+import com.sobey.cmdbuild.service.iaas.MapGroupPolicyVlanService;
+import com.sobey.cmdbuild.service.iaas.MapVpnGroupPolicyService;
 import com.sobey.cmdbuild.service.iaas.VpnService;
 import com.sobey.cmdbuild.service.infrastructure.FimasBoxService;
 import com.sobey.cmdbuild.service.infrastructure.FimasPortService;
@@ -69,10 +79,10 @@ public class CommonService {
 	public DeviceSpecService deviceSpecService;
 
 	@Autowired
-	public DnsService dnsService;
+	public DnsPolicyService dnsPolicyService;
 
 	@Autowired
-	public DnsPolicyService dnsPolicyService;
+	public DnsService dnsService;
 
 	@Autowired
 	public EcsService ecsService;
@@ -139,6 +149,36 @@ public class CommonService {
 
 	@Autowired
 	public LookUpService lookUpService;
+
+	@Autowired
+	public MapEcsAs2Service mapEcsAs2Service;
+
+	@Autowired
+	public MapEcsCs2Service mapEcsCs2Service;
+
+	@Autowired
+	public MapEcsEipService mapEcsEipService;
+
+	@Autowired
+	public MapEcsElbService mapEcsElbService;
+
+	@Autowired
+	public MapEcsEsgService mapEcsEsgService;
+
+	@Autowired
+	public MapEipDnsService mapEipDnsService;
+
+	@Autowired
+	public MapEipElbService mapEipElbService;
+
+	@Autowired
+	public MapGroupPolicyIpaddressService mapGroupPolicyIpaddressService;
+
+	@Autowired
+	public MapGroupPolicyVlanService mapGroupPolicyVlanService;
+
+	@Autowired
+	public MapVpnGroupPolicyService mapVpnGroupPolicyService;
 
 	@Autowired
 	public MemoryService memoryService;

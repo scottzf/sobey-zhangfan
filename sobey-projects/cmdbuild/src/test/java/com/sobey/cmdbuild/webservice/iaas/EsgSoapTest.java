@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,7 +18,9 @@ import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
 import com.sobey.cmdbuild.entity.Esg;
+import com.sobey.cmdbuild.entity.EsgPolicy;
 import com.sobey.cmdbuild.webservice.response.dto.EsgDTO;
+import com.sobey.cmdbuild.webservice.response.dto.EsgPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
@@ -33,7 +36,7 @@ public class EsgSoapTest extends BaseFunctionalTestCase {
 
 	private String code = "";
 
-	@Test
+	// @Test
 	public void testAll() {
 		testCreateEsg();
 		testFindEsg();
@@ -81,8 +84,8 @@ public class EsgSoapTest extends BaseFunctionalTestCase {
 
 	}
 
-	// @Test
-	// @Ignore
+	@Test
+	@Ignore
 	public void testCreateEsg() {
 
 		Esg esg = TestData.randomEsg();
@@ -91,10 +94,37 @@ public class EsgSoapTest extends BaseFunctionalTestCase {
 
 		IdResult response = iaasSoapService.createEsg(esgDTO);
 
-		assertNotNull(response.getId());
+		System.out.println(response.getCode());
+		System.out.println(response.getId());
+
+		// assertNotNull(response.getId());
 
 		code = esg.getCode();// 设置code
 
+	}
+
+	@Test
+	@Ignore
+	public void createEsgPolicy() {
+
+		EsgPolicy policy = TestData.randomEsgPolicy();
+
+		EsgPolicyDTO policyDTO = BeanMapper.map(policy, EsgPolicyDTO.class);
+
+		iaasSoapService.createEsgPolicy(policyDTO);
+
+	}
+
+	@Test
+	@Ignore
+	public void createMap_ecs_esg() {
+		iaasSoapService.createMapEcsEsg(100, 111);
+	}
+
+	@Test
+	@Ignore
+	public void deleteMap_ecs_esg() {
+		iaasSoapService.deleteMapEcsEsg(100, 111);
 	}
 
 	// @Test

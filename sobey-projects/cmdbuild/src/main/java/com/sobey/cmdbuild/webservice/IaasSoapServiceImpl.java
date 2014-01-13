@@ -25,6 +25,18 @@ import com.sobey.cmdbuild.entity.ElbPolicy;
 import com.sobey.cmdbuild.entity.Esg;
 import com.sobey.cmdbuild.entity.EsgPolicy;
 import com.sobey.cmdbuild.entity.GroupPolicy;
+import com.sobey.cmdbuild.entity.Ipaddress;
+import com.sobey.cmdbuild.entity.MapEcsAs2;
+import com.sobey.cmdbuild.entity.MapEcsCs2;
+import com.sobey.cmdbuild.entity.MapEcsEip;
+import com.sobey.cmdbuild.entity.MapEcsElb;
+import com.sobey.cmdbuild.entity.MapEcsEsg;
+import com.sobey.cmdbuild.entity.MapEipDns;
+import com.sobey.cmdbuild.entity.MapEipElb;
+import com.sobey.cmdbuild.entity.MapGroupPolicyIpaddress;
+import com.sobey.cmdbuild.entity.MapGroupPolicyVlan;
+import com.sobey.cmdbuild.entity.MapVpnGroupPolicy;
+import com.sobey.cmdbuild.entity.Vlan;
 import com.sobey.cmdbuild.entity.Vpn;
 import com.sobey.cmdbuild.webservice.response.dto.As2DTO;
 import com.sobey.cmdbuild.webservice.response.dto.Cs2DTO;
@@ -2725,6 +2737,603 @@ public class IaasSoapServiceImpl extends BasicSoapSevcie implements IaasSoapServ
 		} catch (RuntimeException e) {
 			return handleGeneralError(result, e);
 		}
+	}
+
+	@Override
+	public IdResult createMapEcsEsg(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "esgId") Integer esgId) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			MapEcsEsg map = new MapEcsEsg();
+
+			map.setId(0);
+			map.setIdObj1(ecsId);
+			map.setIdObj2(esgId);
+			map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
+			map.setIdClass2(TableNameUtil.getTableName(Esg.class));
+			map.setUser(DEFAULT_USER);
+			map.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+
+			comm.mapEcsEsgService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteMapEcsEsg(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "esgId") Integer esgId) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(ecsId, ERROR.INPUT_NULL);
+			Validate.notNull(esgId, ERROR.INPUT_NULL);
+
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_idObj1", ecsId);
+			searchParams.put("EQ_idObj2", esgId);
+
+			MapEcsEsg map = comm.mapEcsEsgService.findMapEcsEsg(searchParams);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.mapEcsEsgService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult createMapEcsAs2(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "as2Id") Integer as2Id) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			MapEcsAs2 map = new MapEcsAs2();
+
+			map.setIdObj1(ecsId);
+			map.setIdObj2(as2Id);
+			map.setId(0);
+			map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
+			map.setIdClass2(TableNameUtil.getTableName(As2.class));
+			map.setUser(DEFAULT_USER);
+			map.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+
+			comm.mapEcsAs2Service.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteMapEcsAs2(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "as2Id") Integer as2Id) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(ecsId, ERROR.INPUT_NULL);
+			Validate.notNull(as2Id, ERROR.INPUT_NULL);
+
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_idObj1", ecsId);
+			searchParams.put("EQ_idObj2", as2Id);
+
+			MapEcsAs2 map = comm.mapEcsAs2Service.findMapEcsAs2(searchParams);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.mapEcsAs2Service.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult createMapEcsCs2(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "cs2Id") Integer cs2Id) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			MapEcsCs2 map = new MapEcsCs2();
+
+			map.setIdObj1(ecsId);
+			map.setIdObj2(cs2Id);
+			map.setId(0);
+			map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
+			map.setIdClass2(TableNameUtil.getTableName(Cs2.class));
+			map.setUser(DEFAULT_USER);
+			map.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+
+			comm.mapEcsCs2Service.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteMapEcsCs2(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "cs2Id") Integer cs2Id) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(ecsId, ERROR.INPUT_NULL);
+			Validate.notNull(cs2Id, ERROR.INPUT_NULL);
+
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_idObj1", ecsId);
+			searchParams.put("EQ_idObj2", cs2Id);
+
+			MapEcsCs2 map = comm.mapEcsCs2Service.findMapEcsCs2(searchParams);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.mapEcsCs2Service.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult createMapEcsEip(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "eipId") Integer eipId) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			MapEcsEip map = new MapEcsEip();
+
+			map.setIdObj1(ecsId);
+			map.setIdObj2(eipId);
+			map.setId(0);
+			map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
+			map.setIdClass2(TableNameUtil.getTableName(Eip.class));
+			map.setUser(DEFAULT_USER);
+			map.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+
+			comm.mapEcsEipService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteMapEcsEip(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "eipId") Integer eipId) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(ecsId, ERROR.INPUT_NULL);
+			Validate.notNull(eipId, ERROR.INPUT_NULL);
+
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_idObj1", ecsId);
+			searchParams.put("EQ_idObj2", eipId);
+
+			MapEcsEip map = comm.mapEcsEipService.findMapEcsEip(searchParams);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.mapEcsEipService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult createMapEcsElb(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "elbId") Integer elbId) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			MapEcsElb map = new MapEcsElb();
+
+			map.setIdObj1(ecsId);
+			map.setIdObj2(elbId);
+			map.setId(0);
+			map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
+			map.setIdClass2(TableNameUtil.getTableName(Elb.class));
+			map.setUser(DEFAULT_USER);
+			map.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+
+			comm.mapEcsElbService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteMapEcsElb(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "elbId") Integer elbId) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(ecsId, ERROR.INPUT_NULL);
+			Validate.notNull(elbId, ERROR.INPUT_NULL);
+
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_idObj1", ecsId);
+			searchParams.put("EQ_idObj2", elbId);
+
+			MapEcsElb map = comm.mapEcsElbService.findMapEcsElb(searchParams);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.mapEcsElbService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult createMapEipElb(@WebParam(name = "eipId") Integer eipId, @WebParam(name = "elbId") Integer elbId) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			MapEipElb map = new MapEipElb();
+
+			map.setIdObj1(eipId);
+			map.setIdObj2(elbId);
+			map.setId(0);
+			map.setIdClass1(TableNameUtil.getTableName(Eip.class));
+			map.setIdClass2(TableNameUtil.getTableName(Elb.class));
+			map.setUser(DEFAULT_USER);
+			map.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+
+			comm.mapEipElbService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteMapEipElb(@WebParam(name = "eipId") Integer eipId, @WebParam(name = "elbId") Integer elbId) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(eipId, ERROR.INPUT_NULL);
+			Validate.notNull(elbId, ERROR.INPUT_NULL);
+
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_idObj1", eipId);
+			searchParams.put("EQ_idObj2", elbId);
+
+			MapEipElb map = comm.mapEipElbService.findMapEipElb(searchParams);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.mapEipElbService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult createMapEipDns(@WebParam(name = "eipId") Integer eipId, @WebParam(name = "dnsId") Integer dnsId) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			MapEipDns map = new MapEipDns();
+
+			map.setIdObj1(eipId);
+			map.setIdObj2(dnsId);
+			map.setId(0);
+			map.setIdClass1(TableNameUtil.getTableName(Eip.class));
+			map.setIdClass2(TableNameUtil.getTableName(Dns.class));
+			map.setUser(DEFAULT_USER);
+			map.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+
+			comm.mapEipDnsService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteMapEipDns(@WebParam(name = "eipId") Integer eipId, @WebParam(name = "dnsId") Integer dnsId) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(eipId, ERROR.INPUT_NULL);
+			Validate.notNull(dnsId, ERROR.INPUT_NULL);
+
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_idObj1", eipId);
+			searchParams.put("EQ_idObj2", dnsId);
+
+			MapEipDns map = comm.mapEipDnsService.findMapEipDns(searchParams);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.mapEipDnsService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult createMapGroupPolicyVlan(@WebParam(name = "groupPolicyId") Integer groupPolicyId,
+			@WebParam(name = "vlanId") Integer vlanId) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			MapGroupPolicyVlan map = new MapGroupPolicyVlan();
+
+			map.setIdObj1(groupPolicyId);
+			map.setIdObj2(vlanId);
+			map.setId(0);
+			map.setIdClass1(TableNameUtil.getTableName(GroupPolicy.class));
+			map.setIdClass2(TableNameUtil.getTableName(Vlan.class));
+			map.setUser(DEFAULT_USER);
+			map.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+
+			comm.mapGroupPolicyVlanService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteMapGroupPolicyVlan(@WebParam(name = "groupPolicyId") Integer groupPolicyId,
+			@WebParam(name = "vlanId") Integer vlanId) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(groupPolicyId, ERROR.INPUT_NULL);
+			Validate.notNull(vlanId, ERROR.INPUT_NULL);
+
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_idObj1", groupPolicyId);
+			searchParams.put("EQ_idObj2", vlanId);
+
+			MapGroupPolicyVlan map = comm.mapGroupPolicyVlanService.findMapGroupPolicyVlan(searchParams);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.mapGroupPolicyVlanService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult createMapGroupPolicyIpaddress(@WebParam(name = "groupPolicyId") Integer groupPolicyId,
+			@WebParam(name = "ipaddressId") Integer ipaddressId) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			MapGroupPolicyIpaddress map = new MapGroupPolicyIpaddress();
+
+			map.setIdObj1(groupPolicyId);
+			map.setIdObj2(ipaddressId);
+			map.setId(0);
+			map.setIdClass1(TableNameUtil.getTableName(GroupPolicy.class));
+			map.setIdClass2(TableNameUtil.getTableName(Ipaddress.class));
+			map.setUser(DEFAULT_USER);
+			map.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+
+			comm.mapGroupPolicyIpaddressService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteMapGroupPolicyIpaddress(@WebParam(name = "groupPolicyId") Integer groupPolicyId,
+			@WebParam(name = "ipaddressId") Integer ipaddressId) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(groupPolicyId, ERROR.INPUT_NULL);
+			Validate.notNull(ipaddressId, ERROR.INPUT_NULL);
+
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_idObj1", groupPolicyId);
+			searchParams.put("EQ_idObj2", ipaddressId);
+
+			MapGroupPolicyIpaddress map = comm.mapGroupPolicyIpaddressService.findMapGroupPolicyIpaddress(searchParams);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.mapGroupPolicyIpaddressService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult createMapVpnGroupPolicy(@WebParam(name = "vpnId") Integer vpnId,
+			@WebParam(name = "groupPolicyId") Integer groupPolicyId) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			MapVpnGroupPolicy map = new MapVpnGroupPolicy();
+
+			map.setIdObj1(vpnId);
+			map.setIdObj2(groupPolicyId);
+			map.setId(0);
+			map.setIdClass1(TableNameUtil.getTableName(Vpn.class));
+			map.setIdClass2(TableNameUtil.getTableName(GroupPolicy.class));
+			map.setUser(DEFAULT_USER);
+			map.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+
+			comm.mapVpnGroupPolicyService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteMapVpnGroupPolicy(@WebParam(name = "vpnId") Integer vpnId,
+			@WebParam(name = "groupPolicyId") Integer groupPolicyId) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(vpnId, ERROR.INPUT_NULL);
+			Validate.notNull(groupPolicyId, ERROR.INPUT_NULL);
+
+			Map<String, Object> searchParams = Maps.newHashMap();
+			searchParams.put("EQ_idObj1", vpnId);
+			searchParams.put("EQ_idObj2", groupPolicyId);
+
+			MapVpnGroupPolicy map = comm.mapVpnGroupPolicyService.findMapVpnGroupPolicy(searchParams);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.mapVpnGroupPolicyService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
 	}
 
 }

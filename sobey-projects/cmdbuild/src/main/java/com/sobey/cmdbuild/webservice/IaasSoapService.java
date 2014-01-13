@@ -284,4 +284,90 @@ public interface IaasSoapService {
 			@WebParam(name = "searchParams") Map<String, Object> searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
+	// ==============================//
+	// ========= MapEcsEsg ==========//
+	// ==============================//
+
+	IdResult createMapEcsEsg(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "esgId") Integer esgId);
+
+	IdResult deleteMapEcsEsg(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "esgId") Integer esgId);
+
+	// ==============================//
+	// ========= MapEcsAs2 ==========//
+	// ==============================//
+
+	IdResult createMapEcsAs2(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "as2Id") Integer as2Id);
+
+	IdResult deleteMapEcsAs2(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "as2Id") Integer as2Id);
+
+	// ==============================//
+	// ========= MapEcsCs2 ==========//
+	// ==============================//
+
+	IdResult createMapEcsCs2(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "cs2Id") Integer cs2Id);
+
+	IdResult deleteMapEcsCs2(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "cs2Id") Integer cs2Id);
+
+	// ==============================//
+	// ========= MapEcsEip ==========//
+	// ==============================//
+
+	IdResult createMapEcsEip(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "eipId") Integer eipId);
+
+	IdResult deleteMapEcsEip(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "eipId") Integer eipId);
+
+	// ==============================//
+	// ========= MapEcsElb ==========//
+	// ==============================//
+
+	IdResult createMapEcsElb(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "elbId") Integer elbId);
+
+	IdResult deleteMapEcsElb(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "elbId") Integer elbId);
+
+	// ==============================//
+	// ========= MapEipElb ==========//
+	// ==============================//
+
+	IdResult createMapEipElb(@WebParam(name = "eipId") Integer eipId, @WebParam(name = "elbId") Integer elbId);
+
+	IdResult deleteMapEipElb(@WebParam(name = "eipId") Integer eipId, @WebParam(name = "elbId") Integer elbId);
+
+	// ==============================//
+	// ========= MapEipDns ==========//
+	// ==============================//
+
+	IdResult createMapEipDns(@WebParam(name = "eipId") Integer eipId, @WebParam(name = "dnsId") Integer dnsId);
+
+	IdResult deleteMapEipDns(@WebParam(name = "eipId") Integer eipId, @WebParam(name = "dnsId") Integer dnsId);
+
+	// ==============================//
+	// ====== MapGroupPolicyVlan ====//
+	// ==============================//
+
+	IdResult createMapGroupPolicyVlan(@WebParam(name = "groupPolicyId") Integer groupPolicyId,
+			@WebParam(name = "vlanId") Integer vlanId);
+
+	IdResult deleteMapGroupPolicyVlan(@WebParam(name = "groupPolicyId") Integer groupPolicyId,
+			@WebParam(name = "vlanId") Integer vlanId);
+
+	// ==============================//
+	// === MapGroupPolicyIpaddress ==//
+	// ==============================//
+
+	IdResult createMapGroupPolicyIpaddress(@WebParam(name = "groupPolicyId") Integer groupPolicyId,
+			@WebParam(name = "ipaddressId") Integer ipaddressId);
+
+	IdResult deleteMapGroupPolicyIpaddress(@WebParam(name = "groupPolicyId") Integer groupPolicyId,
+			@WebParam(name = "ipaddressId") Integer ipaddressId);
+
+	// ==============================//
+	// ====== MapVpnGroupPolicy =====//
+	// ==============================//
+
+	IdResult createMapVpnGroupPolicy(@WebParam(name = "vpnId") Integer vpnId,
+			@WebParam(name = "groupPolicyId") Integer groupPolicyId);
+
+	IdResult deleteMapVpnGroupPolicy(@WebParam(name = "vpnId") Integer vpnId,
+			@WebParam(name = "groupPolicyId") Integer groupPolicyId);
+
 }
