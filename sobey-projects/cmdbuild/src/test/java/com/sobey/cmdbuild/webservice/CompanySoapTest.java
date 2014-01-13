@@ -97,12 +97,6 @@ public class CompanySoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		/**
-		 * TODO 查询有问题.设置 status = 'A' , 但是传递到下个方法后转换成了status = 65 , 存疑. <br>
-		 * 将该参数放置在最后一步的分页查询还是OK的.
-		 */
-		// searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
-
 		PaginationResult<CompanyDTO> result = cmdbuildSoapService.getCompanyPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
