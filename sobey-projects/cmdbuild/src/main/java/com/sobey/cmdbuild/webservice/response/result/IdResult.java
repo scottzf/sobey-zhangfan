@@ -15,6 +15,7 @@ public class IdResult extends WSResult {
 	private Integer id;
 
 	public IdResult() {
+		this.id = Integer.valueOf(WSResult.SUCESS);
 	}
 
 	public IdResult(Integer id) {
