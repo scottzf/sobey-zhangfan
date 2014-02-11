@@ -20,9 +20,11 @@ public class DeleteEIPTest extends PropertiesAbstract {
 
 		EIPParameter parameter = TestData.randomEIPParameter();
 
-		List<String> memberList = Lists.newArrayList();
+		List<String> allPolicies = Lists.newArrayList();
+		allPolicies.add("119.6.200.219-tcp-80");
+		allPolicies.add("119.6.200.219-udp-8080");
 
-		String command = GenerateScript.generateDeleteEIPScript(parameter, memberList);
+		String command = GenerateScript.generateDeleteEIPScript(parameter, allPolicies);
 		System.out.println(command);
 
 		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command);

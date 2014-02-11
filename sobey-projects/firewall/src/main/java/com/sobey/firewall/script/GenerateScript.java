@@ -173,7 +173,10 @@ public class GenerateScript {
 
 	/**
 	 * 生成在<b>防火墙</b>执行的创建EIP脚本.<br>
-	 * <b>注意,在set member后添加的映射名,是包含了所有租户的EIP的映射名</b><br>
+	 * <b>注意:<br>
+	 * 1.在set member后添加的映射名,是包含了所有租户的EIP的映射名;<br>
+	 * 2.防火墙中的虚拟IP组中的组成员不能为空;<br>
+	 * 3.如果IP名存在,command会报错,需在CMDB中约束</b><br>
 	 * 
 	 * Example:
 	 * 
@@ -258,7 +261,10 @@ public class GenerateScript {
 
 	/**
 	 * 生成在<b>防火墙</b>执行的创建EIP脚本,默认换行符号<br>
-	 * <b>注意,在set member后添加的映射名,是包含了所有租户的EIP的映射名</b><br>
+	 * <b>注意:<br>
+	 * 1.在set member后添加的映射名,是包含了所有租户的EIP的映射名;<br>
+	 * 2.防火墙中的虚拟IP组中的组成员不能为空;<br>
+	 * 3.如果IP名存在,command会报错,需在CMDB中约束</b><br>
 	 * 
 	 * Example:
 	 * 
@@ -339,7 +345,7 @@ public class GenerateScript {
 		/*
 		 * 1.获得所有租户的VIP策略组名集合.
 		 * 
-		 * 2.在所有VIP策略组名集合中移除删除EIP的VIP组策略
+		 * 2.在所有VIP策略组名集合中移除删除EIP的VIP组策略(重点)
 		 * 
 		 * 3.再次设置VIP策略组,将步骤2得到的集合进行VIP组的绑定,这样删除的EIP就和VIP组进行解绑
 		 * 
@@ -369,7 +375,7 @@ public class GenerateScript {
 		// Step.4
 		for (String policy : policies) {
 			sb.append("config firewall vip").append(symbol);
-			sb.append("edit ").append(policy).append(symbol);
+			sb.append("delet ").append(policy).append(symbol);
 			sb.append("end").append(symbol);
 			sb.append(symbol);
 		}
