@@ -111,19 +111,21 @@ public class GenerateScript {
 	 * 
 	 * <pre>
 	 * add server 113.142.30.109 113.142.30.109
-	 * add gslb service 113.142.30.109-80 113.142.30.109 HTTP 80 -publicIP 113.142.30.109 -publicPort 80 -maxClient 0 -siteName 113.142.30.xxx -cltTimeout 180 -svrTimeout 360 -downStateFlush DISABLED
-	 * bind lb monitor tcp 113.142.30.109
-	 * bind gslb vserver mdnftp.sobeycache.com -serviceName 113.142.30.109
-	 * 
 	 * add server 113.200.74.140 113.200.74.140
-	 * add gslb service 113.200.74.140-80 113.200.74.140 HTTP 80 -publicIP 113.200.74.140 -publicPort 80 -maxClient 0 -siteName 113.200.74.xxx -cltTimeout 180 -svrTimeout 360 -downStateFlush DISABLED
-	 * bind lb monitor tcp 113.200.74.140
-	 * bind gslb vserver mdnftp.sobeycache.com -serviceName 113.200.74.140
+	 * 
+	 * add gslb service 113.142.30.109-80 113.142.30.109 tcp 80 -publicIP 113.142.30.109 -publicPort 80 -maxClient 0 -siteName 113.142.30.xxx -cltTimeout 180 -svrTimeout 360 -downStateFlush DISABLED
+	 * add gslb service 113.200.74.140-80 113.200.74.140 tcp 80 -publicIP 113.200.74.140 -publicPort 80 -maxClient 0 -siteName 113.200.74.xxx -cltTimeout 180 -svrTimeout 360 -downStateFlush DISABLED
+	 * 
+	 * bind lb monitor tcp 113.142.30.109-80
+	 * bind lb monitor tcp 113.200.74.140-80
+	 * 
+	 * add gslb vserver mdnftp.sobeycache.com tcp -lbMethod STATICPROXIMITY  -backupLBMethod ROUNDROBIN -tolerance 0 -appflowLog DISABLED
+	 * add gslb vserver mdnftp.sobeycache.com tcp -lbMethod STATICPROXIMITY  -backupLBMethod ROUNDROBIN -tolerance 0 -appflowLog DISABLED
+	 * 
+	 * bind gslb vserver mdnftp.sobeycache.com -serviceName 113.142.30.109-80
+	 * bind gslb vserver mdnftp.sobeycache.com -serviceName 113.200.74.140-80
 	 * 
 	 * bind gslb vserver mdnftp.sobeycache.com -domainName mdnftp.sobeycache.com -TTL 5
-	 * 
-	 * add gslb vserver mdnftp.sobeycache.com HTTP -lbMethod STATICPROXIMITY  -backupLBMethod ROUNDROBIN -tolerance 0 -appflowLog DISABLED
-	 * set gslb vserver mdnftp.sobeycache.com HTTP -lbMethod STATICPROXIMITY  -backupLBMethod ROUNDROBIN -appflowLog DISABLED
 	 * </pre>
 	 * 
 	 * @param dnsParameter
@@ -141,18 +143,26 @@ public class GenerateScript {
 		 * 
 		 * 3.配置状态检测协议(munitors)服务.选择状态检测TCP协议
 		 * 
-		 * 4.配置DNS域名和解析服务IP地址对应关系
+		 * 4.配置vserver
 		 * 
-		 * 5.配置解决协议http,配置DNS解析策略为静态策略
+		 * 5.将service服务绑定在vserver上
+		 * 
+		 * 6.将vserver和域名进行绑定
 		 */
 
 		StringBuilder sb = new StringBuilder();
+
+		// 协议
+		String protocol = "";
 
 		for (DNSPublicIPParameter ipParameter : dnsParameter.getPublicIPs()) {
 
 			// Step.1
 			sb.append("add server ").append(ipParameter.getIpaddress()).append(" ").append(ipParameter.getIpaddress())
 					.append(symbol);
+		}
+
+		for (DNSPublicIPParameter ipParameter : dnsParameter.getPublicIPs()) {
 
 			// Step.2
 			for (DNSPolicyParameter dnsPolicyParameter : ipParameter.getPolicyParameters()) {
@@ -165,29 +175,40 @@ public class GenerateScript {
 						.append(" -siteName ").append(generateSiteName(ipParameter)).append(" -cltTimeout ")
 						.append(DNS_CLTTIMEOUT).append(" -svrTimeout ").append(DNS_SVRTIMEOUT)
 						.append(" -downStateFlush ").append(DNS_DOWNSTATEFLUSH).append(symbol);
+
+				// 获得dns的协议,避免Step4重复循环.
+				protocol = dnsPolicyParameter.getProtocolText();
 			}
 
-			// Step.3
-			sb.append("bind lb monitor tcp ").append(ipParameter.getIpaddress()).append(symbol);
-			sb.append("bind ").append(dnsParameter.getDomianType()).append(" vserver ")
-					.append(dnsParameter.getDomianName()).append(" -serviceName ").append(ipParameter.getIpaddress())
-					.append(symbol);
+		}
+
+		for (DNSPublicIPParameter ipParameter : dnsParameter.getPublicIPs()) {
+			for (DNSPolicyParameter dnsPolicyParameter : ipParameter.getPolicyParameters()) {
+				// Step.3
+				sb.append("bind lb monitor tcp ").append(generateServiceName(ipParameter, dnsPolicyParameter))
+						.append(symbol);
+			}
 		}
 
 		// Step.4
-		sb.append("bind ").append(dnsParameter.getDomianType()).append(" vserver ")
-				.append(dnsParameter.getDomianName()).append(" -domainName ").append(dnsParameter.getDomianName())
-				.append(" -TTL ").append(DNS_TTL).append(symbol);
-
-		// Step.5
 		sb.append("add ").append(dnsParameter.getDomianType()).append(" vserver ").append(dnsParameter.getDomianName())
-				.append(" HTTP").append(" -lbMethod ").append(DNS_LBMETHOD).append(" -backupLBMethod ")
+				.append(" ").append(protocol).append(" -lbMethod ").append(DNS_LBMETHOD).append(" -backupLBMethod ")
 				.append(DNS_BACKUP).append(" -tolerance ").append(DNS_TOLERANCE).append(" -appflowLog ")
 				.append(DNS_APPFLOWLOG).append(symbol);
 
-		sb.append("set ").append(dnsParameter.getDomianType()).append(" vserver ").append(dnsParameter.getDomianName())
-				.append(" HTTP").append(" -lbMethod ").append(DNS_LBMETHOD).append(" -backupLBMethod ")
-				.append(DNS_BACKUP).append(" -appflowLog ").append(DNS_APPFLOWLOG).append(symbol);
+		for (DNSPublicIPParameter ipParameter : dnsParameter.getPublicIPs()) {
+			for (DNSPolicyParameter dnsPolicyParameter : ipParameter.getPolicyParameters()) {
+				// Step.5
+				sb.append("bind ").append(dnsParameter.getDomianType()).append(" vserver ")
+						.append(dnsParameter.getDomianName()).append(" -serviceName ")
+						.append(generateServiceName(ipParameter, dnsPolicyParameter)).append(symbol);
+			}
+		}
+
+		// Step.6
+		sb.append("bind ").append(dnsParameter.getDomianType()).append(" vserver ")
+				.append(dnsParameter.getDomianName()).append(" -domainName ").append(dnsParameter.getDomianName())
+				.append(" -TTL ").append(DNS_TTL).append(symbol);
 
 		return sb.toString();
 	}
@@ -200,19 +221,21 @@ public class GenerateScript {
 	 * 
 	 * <pre>
 	 * add server 113.142.30.109 113.142.30.109
-	 * add gslb service 113.142.30.109-80 113.142.30.109 HTTP 80 -publicIP 113.142.30.109 -publicPort 80 -maxClient 0 -siteName 113.142.30.xxx -cltTimeout 180 -svrTimeout 360 -downStateFlush DISABLED
-	 * bind lb monitor tcp 113.142.30.109
-	 * bind gslb vserver mdnftp.sobeycache.com -serviceName 113.142.30.109
-	 * 
 	 * add server 113.200.74.140 113.200.74.140
-	 * add gslb service 113.200.74.140-80 113.200.74.140 HTTP 80 -publicIP 113.200.74.140 -publicPort 80 -maxClient 0 -siteName 113.200.74.xxx -cltTimeout 180 -svrTimeout 360 -downStateFlush DISABLED
-	 * bind lb monitor tcp 113.200.74.140
-	 * bind gslb vserver mdnftp.sobeycache.com -serviceName 113.200.74.140
+	 * 
+	 * add gslb service 113.142.30.109-80 113.142.30.109 tcp 80 -publicIP 113.142.30.109 -publicPort 80 -maxClient 0 -siteName 113.142.30.xxx -cltTimeout 180 -svrTimeout 360 -downStateFlush DISABLED
+	 * add gslb service 113.200.74.140-80 113.200.74.140 tcp 80 -publicIP 113.200.74.140 -publicPort 80 -maxClient 0 -siteName 113.200.74.xxx -cltTimeout 180 -svrTimeout 360 -downStateFlush DISABLED
+	 * 
+	 * bind lb monitor tcp 113.142.30.109-80
+	 * bind lb monitor tcp 113.200.74.140-80
+	 * 
+	 * add gslb vserver mdnftp.sobeycache.com tcp -lbMethod STATICPROXIMITY  -backupLBMethod ROUNDROBIN -tolerance 0 -appflowLog DISABLED
+	 * add gslb vserver mdnftp.sobeycache.com tcp -lbMethod STATICPROXIMITY  -backupLBMethod ROUNDROBIN -tolerance 0 -appflowLog DISABLED
+	 * 
+	 * bind gslb vserver mdnftp.sobeycache.com -serviceName 113.142.30.109-80
+	 * bind gslb vserver mdnftp.sobeycache.com -serviceName 113.200.74.140-80
 	 * 
 	 * bind gslb vserver mdnftp.sobeycache.com -domainName mdnftp.sobeycache.com -TTL 5
-	 * 
-	 * add gslb vserver mdnftp.sobeycache.com HTTP -lbMethod STATICPROXIMITY  -backupLBMethod ROUNDROBIN -tolerance 0 -appflowLog DISABLED
-	 * set gslb vserver mdnftp.sobeycache.com HTTP -lbMethod STATICPROXIMITY  -backupLBMethod ROUNDROBIN -appflowLog DISABLED
 	 * </pre>
 	 * 
 	 * @param dnsParameter
@@ -230,10 +253,8 @@ public class GenerateScript {
 	 * 
 	 * <pre>
 	 * rm server 113.142.30.109
-	 * rm service 113.142.30.109-80
 	 * 
 	 * rm server 113.200.74.140
-	 * rm service 113.200.74.140-80
 	 * 
 	 * rm gslb vserver mdnftp.sobeycache.com
 	 * save ns config
@@ -250,9 +271,7 @@ public class GenerateScript {
 		/*
 		 * 1.删除servers服务
 		 * 
-		 * 2.删除services服务
-		 * 
-		 * 3.删除域名和IP对应关系
+		 * 2.删除域名和IP对应关系
 		 */
 
 		StringBuilder sb = new StringBuilder();
@@ -262,13 +281,9 @@ public class GenerateScript {
 			// Step.1
 			sb.append("rm server ").append(ipParameter.getIpaddress()).append(symbol);
 
-			// Step.2
-			for (DNSPolicyParameter dnsPolicyParameter : ipParameter.getPolicyParameters()) {
-				sb.append("rm service ").append(generateServiceName(ipParameter, dnsPolicyParameter)).append(symbol);
-			}
 		}
 
-		// Step.3
+		// Step.2
 		sb.append("rm ").append(dnsParameter.getDomianType()).append(" vserver ").append(dnsParameter.getDomianName())
 				.append(symbol);
 		sb.append("save ns config").append(symbol);
@@ -283,10 +298,8 @@ public class GenerateScript {
 	 * 
 	 * <pre>
 	 * rm server 113.142.30.109
-	 * rm service 113.142.30.109-80
 	 * 
 	 * rm server 113.200.74.140
-	 * rm service 113.200.74.140-80
 	 * 
 	 * rm gslb vserver mdnftp.sobeycache.com
 	 * save ns config
