@@ -121,24 +121,23 @@ public class GenerateScript {
 	 * add server 172.20.0.94 172.20.0.94
 	 * add server 172.20.0.99 172.20.0.99
 	 * 
-	 * add service 172.20.0.94-tcp-8080 172.20.0.94 tcp 8080 -gslb NONE -maxClient 0 -maxReq 0 -cip DISABLED -usip NO -useproxyport YES -sp OFF -cltTimeout 180 -svrTimeout 360 -CKA YES -TCPB NO -CMP NO
-	 * add service 172.20.0.94-tcp-80 172.20.0.94 tcp 80 -gslb NONE -maxClient 0 -maxReq 0 -cip DISABLED -usip NO -useproxyport YES -sp OFF -cltTimeout 180 -svrTimeout 360 -CKA YES -TCPB NO -CMP NO
-	 * add service 172.20.0.99-tcp-8080 172.20.0.99 tcp 8080 -gslb NONE -maxClient 0 -maxReq 0 -cip DISABLED -usip NO -useproxyport YES -sp OFF -cltTimeout 180 -svrTimeout 360 -CKA YES -TCPB NO -CMP NO
-	 * add service 172.20.0.99-tcp-80 172.20.0.99 tcp 80 -gslb NONE -maxClient 0 -maxReq 0 -cip DISABLED -usip NO -useproxyport YES -sp OFF -cltTimeout 180 -svrTimeout 360 -CKA YES -TCPB NO -CMP NO
+	 * add service 172.20.0.94-tcp-8080 172.20.0.94 tcp 8080 -gslb NONE -maxClient 0 -maxReq 0 -cip DISABLED -usip NO -useproxyport YES -sp OFF -cltTimeout 9000 -svrTimeout 360 -CKA YES -TCPB NO -CMP NO
+	 * add service 172.20.0.94-tcp-80 172.20.0.94 tcp 80 -gslb NONE -maxClient 0 -maxReq 0 -cip DISABLED -usip NO -useproxyport YES -sp OFF -cltTimeout 9000 -svrTimeout 360 -CKA YES -TCPB NO -CMP NO
+	 * add service 172.20.0.99-tcp-8080 172.20.0.99 tcp 8080 -gslb NONE -maxClient 0 -maxReq 0 -cip DISABLED -usip NO -useproxyport YES -sp OFF -cltTimeout 9000 -svrTimeout 360 -CKA YES -TCPB NO -CMP NO
+	 * add service 172.20.0.99-tcp-80 172.20.0.99 tcp 80 -gslb NONE -maxClient 0 -maxReq 0 -cip DISABLED -usip NO -useproxyport YES -sp OFF -cltTimeout 9000 -svrTimeout 360 -CKA YES -TCPB NO -CMP NO
 	 * 
 	 * bind lb monitor tcp 172.20.0.94-tcp-8080
 	 * bind lb monitor tcp 172.20.0.94-tcp-80
 	 * bind lb monitor tcp 172.20.0.99-tcp-8080
 	 * bind lb monitor tcp 172.20.0.99-tcp-80
 	 * 
-	 * add lb vserver 10.0.8.72-tcp-8080 tcp 10.0.8.72 8080 -persistenceType COOKIEINSERT -lbMethod ROUNDROBIN -cltTimeout 180
-	 * add lb vserver 10.0.8.72-tcp-80 tcp 10.0.8.72 80 -persistenceType COOKIEINSERT -lbMethod ROUNDROBIN -cltTimeout 180
+	 * add lb vserver 10.0.8.72-tcp-8080 tcp 10.0.8.72 8080 -persistenceType SOURCEIP -lbMethod ROUNDROBIN -cltTimeout 9000
+	 * add lb vserver 10.0.8.72-tcp-80 tcp 10.0.8.72 80 -persistenceType SOURCEIP -lbMethod ROUNDROBIN -cltTimeout 9000
 	 * 
 	 * bind lb vserver 10.0.8.72-tcp-8080 172.20.0.94-tcp-8080
 	 * bind lb vserver 10.0.8.72-tcp-80 172.20.0.94-tcp-80
 	 * bind lb vserver 10.0.8.72-tcp-8080 172.20.0.99-tcp-8080
 	 * bind lb vserver 10.0.8.72-tcp-80 172.20.0.99-tcp-80
-	 * 
 	 * </pre>
 	 * 
 	 * @param ELBParameter
@@ -259,23 +258,24 @@ public class GenerateScript {
 	 * add server 172.20.0.94 172.20.0.94
 	 * add server 172.20.0.99 172.20.0.99
 	 * 
-	 * add service 172.20.0.94-tcp-8080 172.20.0.94 tcp 8080 -gslb NONE -maxClient 0 -maxReq 0 -cip DISABLED -usip NO -useproxyport YES -sp OFF -cltTimeout 180 -svrTimeout 360 -CKA YES -TCPB NO -CMP NO
-	 * add service 172.20.0.94-tcp-80 172.20.0.94 tcp 80 -gslb NONE -maxClient 0 -maxReq 0 -cip DISABLED -usip NO -useproxyport YES -sp OFF -cltTimeout 180 -svrTimeout 360 -CKA YES -TCPB NO -CMP NO
-	 * add service 172.20.0.99-tcp-8080 172.20.0.99 tcp 8080 -gslb NONE -maxClient 0 -maxReq 0 -cip DISABLED -usip NO -useproxyport YES -sp OFF -cltTimeout 180 -svrTimeout 360 -CKA YES -TCPB NO -CMP NO
-	 * add service 172.20.0.99-tcp-80 172.20.0.99 tcp 80 -gslb NONE -maxClient 0 -maxReq 0 -cip DISABLED -usip NO -useproxyport YES -sp OFF -cltTimeout 180 -svrTimeout 360 -CKA YES -TCPB NO -CMP NO
+	 * add service 172.20.0.94-tcp-8080 172.20.0.94 tcp 8080 -gslb NONE -maxClient 0 -maxReq 0 -cip DISABLED -usip NO -useproxyport YES -sp OFF -cltTimeout 9000 -svrTimeout 360 -CKA YES -TCPB NO -CMP NO
+	 * add service 172.20.0.94-tcp-80 172.20.0.94 tcp 80 -gslb NONE -maxClient 0 -maxReq 0 -cip DISABLED -usip NO -useproxyport YES -sp OFF -cltTimeout 9000 -svrTimeout 360 -CKA YES -TCPB NO -CMP NO
+	 * add service 172.20.0.99-tcp-8080 172.20.0.99 tcp 8080 -gslb NONE -maxClient 0 -maxReq 0 -cip DISABLED -usip NO -useproxyport YES -sp OFF -cltTimeout 9000 -svrTimeout 360 -CKA YES -TCPB NO -CMP NO
+	 * add service 172.20.0.99-tcp-80 172.20.0.99 tcp 80 -gslb NONE -maxClient 0 -maxReq 0 -cip DISABLED -usip NO -useproxyport YES -sp OFF -cltTimeout 9000 -svrTimeout 360 -CKA YES -TCPB NO -CMP NO
 	 * 
 	 * bind lb monitor tcp 172.20.0.94-tcp-8080
 	 * bind lb monitor tcp 172.20.0.94-tcp-80
 	 * bind lb monitor tcp 172.20.0.99-tcp-8080
 	 * bind lb monitor tcp 172.20.0.99-tcp-80
 	 * 
-	 * add lb vserver 10.0.8.72-tcp-8080 tcp 10.0.8.72 8080 -persistenceType COOKIEINSERT -lbMethod ROUNDROBIN -cltTimeout 180
-	 * add lb vserver 10.0.8.72-tcp-80 tcp 10.0.8.72 80 -persistenceType COOKIEINSERT -lbMethod ROUNDROBIN -cltTimeout 180
+	 * add lb vserver 10.0.8.72-tcp-8080 tcp 10.0.8.72 8080 -persistenceType SOURCEIP -lbMethod ROUNDROBIN -cltTimeout 9000
+	 * add lb vserver 10.0.8.72-tcp-80 tcp 10.0.8.72 80 -persistenceType SOURCEIP -lbMethod ROUNDROBIN -cltTimeout 9000
 	 * 
 	 * bind lb vserver 10.0.8.72-tcp-8080 172.20.0.94-tcp-8080
 	 * bind lb vserver 10.0.8.72-tcp-80 172.20.0.94-tcp-80
 	 * bind lb vserver 10.0.8.72-tcp-8080 172.20.0.99-tcp-8080
 	 * bind lb vserver 10.0.8.72-tcp-80 172.20.0.99-tcp-80
+	 * 
 	 * 
 	 * </pre>
 	 * 
