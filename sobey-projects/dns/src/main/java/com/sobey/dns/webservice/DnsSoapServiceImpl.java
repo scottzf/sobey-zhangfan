@@ -3,9 +3,11 @@ package com.sobey.dns.webservice;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.sobey.core.utils.PropertiesLoader;
-import com.sobey.core.utils.TelnetUtil;
 import com.sobey.dns.constans.WsConstants;
+import com.sobey.dns.service.NitroService;
 import com.sobey.dns.webservice.response.dto.DNSParameter;
 import com.sobey.dns.webservice.response.result.WSResult;
 
@@ -17,33 +19,35 @@ public class DnsSoapServiceImpl implements DnsSoapService {
 	 */
 	protected static PropertiesLoader DNS_LOADER = new PropertiesLoader("classpath:/dns.properties");
 
-	/* DNS登录 */
-	protected static final String DNS_IP = DNS_LOADER.getProperty("DNS_IP");
-	protected static final String DNS_USERNAME = DNS_LOADER.getProperty("DNS_USERNAME");
-	protected static final String DNS_PASSWORD = DNS_LOADER.getProperty("DNS_PASSWORD");
+	@Autowired
+	public NitroService nitroService;
 
 	@Override
 	public WSResult createDNSByDNS(@WebParam(name = "DNSParameter") DNSParameter parameter) {
 
-		String command = com.sobey.dns.script.GenerateScript.generateCreateDNSScript(parameter);
+		WSResult result = new WSResult();
 
-		TelnetUtil.execCommand(DNS_IP, DNS_USERNAME, DNS_PASSWORD, command);
+		boolean falg = nitroService.createDns(parameter);
 
-		// TODO 缺少针对返回字符串解析是否执行成功的判断.
+		if (!falg) {
+			result.setCode(WSResult.PARAMETER_ERROR);
+		}
 
-		return new WSResult();
+		return result;
 	}
 
 	@Override
 	public WSResult deleteDNSByDNS(@WebParam(name = "DNSParameter") DNSParameter parameter) {
 
-		String command = com.sobey.dns.script.GenerateScript.generateDeleteDNSScript(parameter);
+		WSResult result = new WSResult();
 
-		TelnetUtil.execCommand(DNS_IP, DNS_USERNAME, DNS_PASSWORD, command);
+		boolean falg = nitroService.deleteDns(parameter);
 
-		// TODO 缺少针对返回字符串解析是否执行成功的判断.
+		if (!falg) {
+			result.setCode(WSResult.PARAMETER_ERROR);
+		}
 
-		return new WSResult();
+		return result;
 	}
 
 }

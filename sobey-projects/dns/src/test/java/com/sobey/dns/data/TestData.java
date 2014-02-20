@@ -15,11 +15,11 @@ public class TestData {
 		List<DNSPolicyParameter> policyParameters = Lists.newArrayList();
 		List<DNSPolicyParameter> policyParameters2 = Lists.newArrayList();
 
-		// DNSPolicyParameter policyParameter = new DNSPolicyParameter();
-		// policyParameter.setProtocolText("tcp");
-		// policyParameter.setSourcePort(8080);
-		// policyParameter.setTargetPort(8080);
-		// policyParameters.add(policyParameter);
+		DNSPolicyParameter policyParameter = new DNSPolicyParameter();
+		policyParameter.setProtocolText("tcp");
+		policyParameter.setSourcePort(8080);
+		policyParameter.setTargetPort(8080);
+		policyParameters.add(policyParameter);
 
 		DNSPolicyParameter policyParameter2 = new DNSPolicyParameter();
 		policyParameter2.setProtocolText("tcp");
@@ -35,11 +35,11 @@ public class TestData {
 
 		publicIPs.add(ipParameter);
 
-		// DNSPolicyParameter policyParameter3 = new DNSPolicyParameter();
-		// policyParameter3.setProtocolText("tcp");
-		// policyParameter3.setSourcePort(8080);
-		// policyParameter3.setTargetPort(8080);
-		// policyParameters2.add(policyParameter3);
+		DNSPolicyParameter policyParameter3 = new DNSPolicyParameter();
+		policyParameter3.setProtocolText("tcp");
+		policyParameter3.setSourcePort(8080);
+		policyParameter3.setTargetPort(8080);
+		policyParameters2.add(policyParameter3);
 
 		DNSPolicyParameter policyParameter4 = new DNSPolicyParameter();
 		policyParameter4.setProtocolText("tcp");

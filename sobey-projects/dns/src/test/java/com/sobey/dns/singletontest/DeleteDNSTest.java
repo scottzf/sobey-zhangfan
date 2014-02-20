@@ -1,7 +1,7 @@
 package com.sobey.dns.singletontest;
 
 import com.sobey.dns.data.TestData;
-import com.sobey.dns.script.GenerateScript;
+import com.sobey.dns.service.NitroService;
 import com.sobey.dns.webservice.response.dto.DNSParameter;
 
 /**
@@ -16,10 +16,8 @@ public class DeleteDNSTest extends PropertiesAbstract {
 
 		DNSParameter parameter = TestData.randomDNSParameter();
 
-		String command = GenerateScript.generateDeleteDNSScript(parameter);
-		System.out.println(command);
-
-		// TelnetUtil.execCommand(DNS_IP, DNS_USERNAME, DNS_PASSWORD, command);
+		NitroService nitroService = new NitroService();
+		nitroService.deleteDns(parameter);
 	}
 
 }
