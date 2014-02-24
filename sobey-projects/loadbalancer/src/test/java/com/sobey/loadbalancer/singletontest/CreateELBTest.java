@@ -1,7 +1,7 @@
 package com.sobey.loadbalancer.singletontest;
 
 import com.sobey.loadbalancer.data.TestData;
-import com.sobey.loadbalancer.script.GenerateScript;
+import com.sobey.loadbalancer.service.NitroService;
 import com.sobey.loadbalancer.webservice.response.dto.ELBParameter;
 
 /**
@@ -10,16 +10,14 @@ import com.sobey.loadbalancer.webservice.response.dto.ELBParameter;
  * @author Administrator
  * 
  */
-public class CreateELBTest extends PropertiesAbstract {
+public class CreateELBTest {
 
 	public static void main(String[] args) {
 
 		ELBParameter parameter = TestData.randomELBParameter();
 
-		String command = GenerateScript.generateCreateELBScript(parameter);
-		System.out.println(command);
-
-		// TelnetUtil.execCommand(DNS_IP, DNS_USERNAME, DNS_PASSWORD, command);
+		NitroService nitroService = new NitroService();
+		nitroService.createElb(parameter);
 	}
 
 }

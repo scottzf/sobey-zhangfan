@@ -139,6 +139,17 @@
 			<scope>compile</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+
+		<!-- Netscaler -->
+		<dependency>
+			<groupId>com.citrix.netscaler</groupId>
+			<artifactId>nitro</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
