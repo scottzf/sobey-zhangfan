@@ -10,7 +10,7 @@ import com.sobey.dns.webservice.response.dto.DNSParameter;
  * @author Administrator
  * 
  */
-public class DeleteDNSTest extends PropertiesAbstract {
+public class DeleteDNSTest {
 
 	public static void main(String[] args) {
 
