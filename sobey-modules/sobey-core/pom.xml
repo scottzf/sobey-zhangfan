@@ -153,6 +153,13 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- TEST end -->
+
+		<!-- SSH connect -->
+		<dependency>
+			<groupId>com.jcraft</groupId>
+			<artifactId>jsch</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>

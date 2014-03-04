@@ -48,6 +48,7 @@
 		<h2.version>1.3.174</h2.version>
 		<postgresql.version>9.1-901.jdbc4</postgresql.version>
 		<nitro.version>9.3</nitro.version>
+		<jsch.version>0.1.50</jsch.version>
 
 		<!-- Plugin的属性定义 -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -793,6 +794,13 @@
 				<scope>test</scope>
 			</dependency>
 			<!-- TEST end -->
+
+			<!-- SSH connect -->
+			<dependency>
+				<groupId>com.jcraft</groupId>
+				<artifactId>jsch</artifactId>
+				<version>${jsch.version}</version>
+			</dependency>
 
 			<!-- Netscaler -->
 			<dependency>
