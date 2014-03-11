@@ -33,7 +33,7 @@
 		<commons-lang3.version>3.1</commons-lang3.version>
 		<commons-io.version>2.4</commons-io.version>
 		<commons-net.version>3.3</commons-net.version>
-		<guava.version>15.0</guava.version>
+		<guava.version>16.0.1</guava.version>
 		<joda-time.version>2.3</joda-time.version>
 		<dozer.version>5.4.0</dozer.version>
 		<httpclient.version>4.3.1</httpclient.version>
@@ -49,6 +49,7 @@
 		<postgresql.version>9.1-901.jdbc4</postgresql.version>
 		<nitro.version>9.3</nitro.version>
 		<jsch.version>0.1.50</jsch.version>
+		<vijava.version>55b20130927</vijava.version>
 
 		<!-- Plugin的属性定义 -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -807,6 +808,13 @@
 				<groupId>com.citrix.netscaler</groupId>
 				<artifactId>nitro</artifactId>
 				<version>${nitro.version}</version>
+			</dependency>
+
+			<!-- vijava -->
+			<dependency>
+				<groupId>com.vmware</groupId>
+				<artifactId>vijava</artifactId>
+				<version>${vijava.version}</version>
 			</dependency>
 
 		</dependencies>

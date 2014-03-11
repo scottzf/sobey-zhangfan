@@ -22,3 +22,6 @@
 
 ###需要导入netscaler的SDK包
 *mvn install:install-file -Dfile=D:\nitro.jar -DgroupId=com.citrix.netscaler -DartifactId=nitro -Dversion=9.3 -Dpackaging=jar
+
+###需要导入vijava的jar包
+*mvn install:install-file -Dfile=D:\vijava55b20130927.jar -DgroupId=com.vmware -DartifactId=vijava -Dversion=55b20130927 -Dpackaging=jar
