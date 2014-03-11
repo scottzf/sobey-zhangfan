@@ -21,7 +21,7 @@ public class LoadbalancerSoapServiceImpl implements LoadbalancerSoapService {
 		boolean falg = nitroService.createElb(parameter);
 
 		if (!falg) {
-			result.setCode(WSResult.PARAMETER_ERROR);
+			result.setCode(WSResult.SYSTEM_ERROR);
 		}
 
 		return result;
@@ -36,7 +36,7 @@ public class LoadbalancerSoapServiceImpl implements LoadbalancerSoapService {
 		boolean falg = nitroService.deleteElb(parameter);
 
 		if (!falg) {
-			result.setCode(WSResult.PARAMETER_ERROR);
+			result.setCode(WSResult.SYSTEM_ERROR);
 		}
 
 		return result;
