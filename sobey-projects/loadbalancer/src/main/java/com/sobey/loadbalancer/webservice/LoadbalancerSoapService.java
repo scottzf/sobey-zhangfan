@@ -17,7 +17,7 @@ import com.sobey.loadbalancer.webservice.response.result.WSResult;
 public interface LoadbalancerSoapService {
 
 	/**
-	 * 在Loadbalancer上执行脚本,创建ELB
+	 * 在Loadbalancer上创建ELB
 	 * 
 	 * @param parameter
 	 *            {@link ELBParameter}
@@ -26,7 +26,7 @@ public interface LoadbalancerSoapService {
 	WSResult createELBByLoadbalancer(@WebParam(name = "ELBParameter") ELBParameter parameter);
 
 	/**
-	 * 在Loadbalancer上执行脚本,删除ELB
+	 * 在Loadbalancer上删除ELB
 	 * 
 	 * @param parameter
 	 *            {@link ELBParameter}

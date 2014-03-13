@@ -80,6 +80,7 @@ public class NitroService {
 	 * 创建DNS
 	 * 
 	 * @param elbParameter
+	 *            {@link ELBParameter}
 	 * @return
 	 */
 	public boolean createElb(ELBParameter elbParameter) {

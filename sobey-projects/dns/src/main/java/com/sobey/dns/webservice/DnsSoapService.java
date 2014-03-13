@@ -17,7 +17,7 @@ import com.sobey.dns.webservice.response.result.WSResult;
 public interface DnsSoapService {
 
 	/**
-	 * 在DNS上执行脚本,创建DNS
+	 * 在DNS上创建DNS
 	 * 
 	 * @param parameter
 	 *            {@link DNSParameter}
@@ -26,7 +26,7 @@ public interface DnsSoapService {
 	WSResult createDNSByDNS(@WebParam(name = "DNSParameter") DNSParameter parameter);
 
 	/**
-	 * 在DNS上执行脚本,删除DNS
+	 * 在DNS上删除DNS
 	 * 
 	 * @param parameter
 	 *            {@link DNSParameter}
