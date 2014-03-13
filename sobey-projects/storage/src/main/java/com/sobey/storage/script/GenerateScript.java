@@ -3,8 +3,13 @@ package com.sobey.storage.script;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
 
-import com.sobey.storage.webservice.response.dto.NetAppParameter;
+import com.sobey.storage.webservice.response.dto.CreateEs3Parameter;
+import com.sobey.storage.webservice.response.dto.DeleteEs3Parameter;
+import com.sobey.storage.webservice.response.dto.MountEs3Parameter;
+import com.sobey.storage.webservice.response.dto.RemountEs3Parameter;
+import com.sobey.storage.webservice.response.dto.UmountEs3Parameter;
 
 /**
  * netapp 脚本模板生成类.
@@ -12,6 +17,7 @@ import com.sobey.storage.webservice.response.dto.NetAppParameter;
  * @author Administrator
  * 
  */
+@Service
 public class GenerateScript {
 
 	/**
@@ -22,15 +28,14 @@ public class GenerateScript {
 	 *  /root/sc/createvol.sh liukai 20 10.10.1.6
 	 * </pre>
 	 * 
-	 * @param netAppParameter
+	 * @param parameter
+	 *            {@link CreateEs3Parameter}
 	 * @return
 	 */
-	public static String generateCreateEs3Script(NetAppParameter netAppParameter) {
+	public static String generateCreateEs3Script(CreateEs3Parameter parameter) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("/root/sc/createvol.sh ").append(netAppParameter.getVolumeName()).append(" ")
-				.append(netAppParameter.getVolumeSize()).append(" ").append(netAppParameter.getClientIPaddress())
-				.append(" \n");
-		System.out.println(sb.toString());
+		sb.append("/root/sc/createvol.sh ").append(parameter.getVolumeName()).append(" ")
+				.append(parameter.getVolumeSize()).append(" ").append(parameter.getClientIPaddress()).append(" \n");
 		return sb.toString();
 	}
 
@@ -42,13 +47,13 @@ public class GenerateScript {
 	 * /root/sc/delvol.sh liukai
 	 * </pre>
 	 * 
-	 * @param netAppParameter
+	 * @param parameter
+	 *            {@link DeleteEs3Parameter}
 	 * @return
 	 */
-	public static String generateDeleteEs3Script(NetAppParameter netAppParameter) {
+	public static String generateDeleteEs3Script(DeleteEs3Parameter parameter) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("/root/sc/delvol.sh ").append(netAppParameter.getVolumeName()).append(" \n");
-		System.out.println(sb.toString());
+		sb.append("/root/sc/delvol.sh ").append(parameter.getVolumeName()).append(" \n");
 		return sb.toString();
 	}
 
@@ -60,15 +65,14 @@ public class GenerateScript {
 	 * /root/sc/mountdisk.sh 10.10.1.18 10.10.1.6 liukai
 	 * </pre>
 	 * 
-	 * @param netAppParameter
+	 * @param parameter
+	 *            {@link MountEs3Parameter}
 	 * @return
 	 */
-	public static String generateMountEs3Script(NetAppParameter netAppParameter) {
+	public static String generateMountEs3Script(MountEs3Parameter parameter) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("/root/sc/mountdisk.sh ").append(netAppParameter.getClientIPaddress()).append(" ")
-				.append(netAppParameter.getNetAppIPaddress()).append(" ").append(netAppParameter.getVolumeName())
-				.append(" \n");
-		System.out.println(sb.toString());
+		sb.append("/root/sc/mountdisk.sh ").append(parameter.getClientIPaddress()).append(" ")
+				.append(parameter.getNetAppIPaddress()).append(" ").append(parameter.getVolumeName()).append(" \n");
 		return sb.toString();
 	}
 
@@ -80,13 +84,13 @@ public class GenerateScript {
 	 * /root/sc/umountdiks.sh 10.10.1.18
 	 * </pre>
 	 * 
-	 * @param netAppParameter
+	 * @param parameter
+	 *            {@link UmountEs3Parameter}
 	 * @return
 	 */
-	public static String generateUmountEs3Script(NetAppParameter netAppParameter) {
+	public static String generateUmountEs3Script(UmountEs3Parameter parameter) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("/root/sc/umountdiks.sh ").append(netAppParameter.getClientIPaddress()).append(" \n");
-		System.out.println(sb.toString());
+		sb.append("/root/sc/umountdiks.sh ").append(parameter.getClientIPaddress()).append(" \n");
 		return sb.toString();
 	}
 
@@ -95,18 +99,18 @@ public class GenerateScript {
 	 * eg:
 	 * 
 	 * <pre>
-	 * /root/sc/remo.sh liukai 10.10.1.6:10.10.1.18:10.10.1.6:10.10.1.18:10.10.1.20
+	 * /root/sc/remo.sh liukai 10.10.1.6:10.10.1.18 10.10.1.6:10.10.1.18:10.10.1.20
 	 * </pre>
 	 * 
-	 * @param netAppParameter
+	 * @param parameter
+	 *            {@link RemountEs3Parameter}
 	 * @return
 	 */
-	public static String generateRemountEs3Script(NetAppParameter netAppParameter) {
+	public static String generateRemountEs3Script(RemountEs3Parameter parameter) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("/root/sc/remo.sh ").append(netAppParameter.getVolumeName()).append(" ")
-				.append(JoinString(netAppParameter.getBeforeClientIPaddress())).append(" ")
-				.append(JoinString(netAppParameter.getAfterClientIPaddress())).append(" \n");
-		System.out.println(sb.toString());
+		sb.append("/root/sc/remo.sh ").append(parameter.getVolumeName()).append(" ")
+				.append(JoinString(parameter.getBeforeClientIPaddress())).append(" ")
+				.append(JoinString(parameter.getAfterClientIPaddress())).append(" \n");
 		return sb.toString();
 	}
 
