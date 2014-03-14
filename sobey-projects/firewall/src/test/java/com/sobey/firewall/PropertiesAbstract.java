@@ -1,4 +1,4 @@
-package com.sobey.firewall.singletontest;
+package com.sobey.firewall;
 
 import com.sobey.core.utils.PropertiesLoader;
 

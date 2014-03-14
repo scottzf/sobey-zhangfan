@@ -1,6 +1,8 @@
-package com.sobey.firewall.script;
+package com.sobey.firewall.service;
 
 import java.util.List;
+
+import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
 import com.sobey.core.utils.Collections3;
@@ -16,7 +18,8 @@ import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
  * @author Administrator
  * 
  */
-public class GenerateScript {
+@Service
+public class FirewallService {
 
 	/**
 	 * 加载applicationContext.propertie文件
@@ -220,7 +223,7 @@ public class GenerateScript {
 	 *            (用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public static String generateCreateEIPScript(EIPParameter parameter, List<String> allPolicies, String symbol) {
+	public String createEip(EIPParameter parameter, List<String> allPolicies, String symbol) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -306,8 +309,8 @@ public class GenerateScript {
 	 *            所有EIP的映射策略.
 	 * @return
 	 */
-	public static String generateCreateEIPScript(EIPParameter parameter, List<String> allPolicies) {
-		return generateCreateEIPScript(parameter, allPolicies, SymbolEnum.DEFAULT_SYMBOL.getName());
+	public String createEip(EIPParameter parameter, List<String> allPolicies) {
+		return createEip(parameter, allPolicies, SymbolEnum.DEFAULT_SYMBOL.getName());
 	}
 
 	/**
@@ -340,7 +343,7 @@ public class GenerateScript {
 	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public static String generateDeleteEIPScript(EIPParameter parameter, List<String> allPolicies, String symbol) {
+	public String deleteEip(EIPParameter parameter, List<String> allPolicies, String symbol) {
 
 		/*
 		 * 1.获得所有租户的VIP策略组名集合.
@@ -411,8 +414,8 @@ public class GenerateScript {
 	 *            所有EIP的映射策略.
 	 * @return
 	 */
-	public static String generateDeleteEIPScript(EIPParameter parameter, List<String> allPolicies) {
-		return generateDeleteEIPScript(parameter, allPolicies, SymbolEnum.DEFAULT_SYMBOL.getName());
+	public String deleteEip(EIPParameter parameter, List<String> allPolicies) {
+		return deleteEip(parameter, allPolicies, SymbolEnum.DEFAULT_SYMBOL.getName());
 	}
 
 	/**
@@ -480,7 +483,7 @@ public class GenerateScript {
 	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public static String generateCreateVPNUserScript(VPNUserParameter parameter, String symbol) {
+	public String createVPNUser(VPNUserParameter parameter, String symbol) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -618,8 +621,8 @@ public class GenerateScript {
 	 *            {@link VPNUserParameter}
 	 * @return
 	 */
-	public static String generateCreateVPNUserScript(VPNUserParameter parameter) {
-		return generateCreateVPNUserScript(parameter, SymbolEnum.DEFAULT_SYMBOL.getName());
+	public String createVPNUser(VPNUserParameter parameter) {
+		return createVPNUser(parameter, SymbolEnum.DEFAULT_SYMBOL.getName());
 	}
 
 	/**
@@ -678,7 +681,7 @@ public class GenerateScript {
 	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public static String generateChangeAccesssAddressIntoVPNUserScript(VPNUserParameter parameter, String symbol) {
+	public String changeAccesssAddressIntoVPNUser(VPNUserParameter parameter, String symbol) {
 
 		/*
 		 * 1.增加要访问的地址段
@@ -800,8 +803,8 @@ public class GenerateScript {
 	 *            {@link VPNUserParameter}
 	 * @return
 	 */
-	public static String generateChangeAccesssAddressIntoVPNUserScript(VPNUserParameter parameter) {
-		return generateChangeAccesssAddressIntoVPNUserScript(parameter, SymbolEnum.DEFAULT_SYMBOL.getName());
+	public String changeAccesssAddressIntoVPNUser(VPNUserParameter parameter) {
+		return changeAccesssAddressIntoVPNUser(parameter, SymbolEnum.DEFAULT_SYMBOL.getName());
 	}
 
 	/**
@@ -841,7 +844,7 @@ public class GenerateScript {
 	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public static String generateDeleteVPNUserScript(VPNUserParameter parameter, String symbol) {
+	public String deleteVPNUser(VPNUserParameter parameter, String symbol) {
 
 		/*
 		 * 1.删除租户VPN策略
@@ -938,8 +941,8 @@ public class GenerateScript {
 	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public static String generateDeleteVPNUserScript(VPNUserParameter parameter) {
-		return generateDeleteVPNUserScript(parameter, SymbolEnum.DEFAULT_SYMBOL.getName());
+	public String deleteVPNUser(VPNUserParameter parameter) {
+		return deleteVPNUser(parameter, SymbolEnum.DEFAULT_SYMBOL.getName());
 	}
 
 }
