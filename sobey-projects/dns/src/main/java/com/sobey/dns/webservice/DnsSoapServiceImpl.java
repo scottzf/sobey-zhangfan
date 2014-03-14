@@ -14,14 +14,14 @@ import com.sobey.dns.webservice.response.result.WSResult;
 public class DnsSoapServiceImpl implements DnsSoapService {
 
 	@Autowired
-	public NitroService nitroService;
+	public NitroService service;
 
 	@Override
 	public WSResult createDNSByDNS(@WebParam(name = "DNSParameter") DNSParameter parameter) {
 
 		WSResult result = new WSResult();
 
-		boolean falg = nitroService.createDns(parameter);
+		boolean falg = service.createDns(parameter);
 
 		if (!falg) {
 			result.setCode(WSResult.PARAMETER_ERROR);
@@ -35,7 +35,7 @@ public class DnsSoapServiceImpl implements DnsSoapService {
 
 		WSResult result = new WSResult();
 
-		boolean falg = nitroService.deleteDns(parameter);
+		boolean falg = service.deleteDns(parameter);
 
 		if (!falg) {
 			result.setCode(WSResult.PARAMETER_ERROR);
