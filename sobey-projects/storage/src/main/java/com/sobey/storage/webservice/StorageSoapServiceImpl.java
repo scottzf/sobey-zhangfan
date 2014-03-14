@@ -3,10 +3,12 @@ package com.sobey.storage.webservice;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.sobey.core.utils.JschUtil;
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.storage.constans.WsConstants;
-import com.sobey.storage.script.GenerateScript;
+import com.sobey.storage.script.NetAppService;
 import com.sobey.storage.webservice.response.dto.CreateEs3Parameter;
 import com.sobey.storage.webservice.response.dto.DeleteEs3Parameter;
 import com.sobey.storage.webservice.response.dto.MountEs3Parameter;
@@ -27,10 +29,13 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 	protected static final String STORAGE_USERNAME = STORAGE_LOADER.getProperty("STORAGE_USERNAME");
 	protected static final String STORAGE_PASSWORD = STORAGE_LOADER.getProperty("STORAGE_PASSWORD");
 
+	@Autowired
+	private NetAppService service;
+
 	@Override
 	public WSResult createEs3ByStorage(@WebParam(name = "createEs3Parameter") CreateEs3Parameter createEs3Parameter) {
 
-		String command = GenerateScript.generateCreateEs3Script(createEs3Parameter);
+		String command = service.createEs3(createEs3Parameter);
 
 		JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command);
 
@@ -42,7 +47,7 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 	@Override
 	public WSResult deleteEs3ByStorage(@WebParam(name = "deleteEs3Parameter") DeleteEs3Parameter deleteEs3Parameter) {
 
-		String command = GenerateScript.generateDeleteEs3Script(deleteEs3Parameter);
+		String command = service.deleteEs3(deleteEs3Parameter);
 
 		JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command);
 
@@ -54,7 +59,7 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 	@Override
 	public WSResult mountEs3ByStorage(@WebParam(name = "mountEs3Parameter") MountEs3Parameter mountEs3Parameter) {
 
-		String command = GenerateScript.generateMountEs3Script(mountEs3Parameter);
+		String command = service.mountEs3(mountEs3Parameter);
 
 		JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command);
 
@@ -66,7 +71,7 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 	@Override
 	public WSResult umountEs3ByStorage(@WebParam(name = "umountEs3Parameter") UmountEs3Parameter umountEs3Parameter) {
 
-		String command = GenerateScript.generateUmountEs3Script(umountEs3Parameter);
+		String command = service.umountEs3(umountEs3Parameter);
 
 		JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command);
 
@@ -78,7 +83,7 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 	@Override
 	public WSResult remountEs3ByStorage(@WebParam(name = "remountEs3Parameter") RemountEs3Parameter remountEs3Parameter) {
 
-		String command = GenerateScript.generateRemountEs3Script(remountEs3Parameter);
+		String command = service.remountEs3(remountEs3Parameter);
 
 		JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command);
 

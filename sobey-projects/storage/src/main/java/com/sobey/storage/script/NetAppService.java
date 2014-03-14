@@ -18,7 +18,7 @@ import com.sobey.storage.webservice.response.dto.UmountEs3Parameter;
  * 
  */
 @Service
-public class GenerateScript {
+public class NetAppService {
 
 	/**
 	 * 生成在<b>netapp</b>执行的创建volume脚本.<br>
@@ -32,7 +32,7 @@ public class GenerateScript {
 	 *            {@link CreateEs3Parameter}
 	 * @return
 	 */
-	public static String generateCreateEs3Script(CreateEs3Parameter parameter) {
+	public String createEs3(CreateEs3Parameter parameter) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("/root/sc/createvol.sh ").append(parameter.getVolumeName()).append(" ")
 				.append(parameter.getVolumeSize()).append(" ").append(parameter.getClientIPaddress()).append(" \n");
@@ -51,7 +51,7 @@ public class GenerateScript {
 	 *            {@link DeleteEs3Parameter}
 	 * @return
 	 */
-	public static String generateDeleteEs3Script(DeleteEs3Parameter parameter) {
+	public String deleteEs3(DeleteEs3Parameter parameter) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("/root/sc/delvol.sh ").append(parameter.getVolumeName()).append(" \n");
 		return sb.toString();
@@ -69,7 +69,7 @@ public class GenerateScript {
 	 *            {@link MountEs3Parameter}
 	 * @return
 	 */
-	public static String generateMountEs3Script(MountEs3Parameter parameter) {
+	public String mountEs3(MountEs3Parameter parameter) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("/root/sc/mountdisk.sh ").append(parameter.getClientIPaddress()).append(" ")
 				.append(parameter.getNetAppIPaddress()).append(" ").append(parameter.getVolumeName()).append(" \n");
@@ -88,7 +88,7 @@ public class GenerateScript {
 	 *            {@link UmountEs3Parameter}
 	 * @return
 	 */
-	public static String generateUmountEs3Script(UmountEs3Parameter parameter) {
+	public String umountEs3(UmountEs3Parameter parameter) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("/root/sc/umountdiks.sh ").append(parameter.getClientIPaddress()).append(" \n");
 		return sb.toString();
@@ -106,7 +106,7 @@ public class GenerateScript {
 	 *            {@link RemountEs3Parameter}
 	 * @return
 	 */
-	public static String generateRemountEs3Script(RemountEs3Parameter parameter) {
+	public String remountEs3(RemountEs3Parameter parameter) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("/root/sc/remo.sh ").append(parameter.getVolumeName()).append(" ")
 				.append(JoinString(parameter.getBeforeClientIPaddress())).append(" ")
