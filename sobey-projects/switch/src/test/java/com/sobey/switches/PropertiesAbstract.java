@@ -1,4 +1,4 @@
-package com.sobey.switches.singletontest;
+package com.sobey.switches;
 
 import com.sobey.core.utils.PropertiesLoader;
 

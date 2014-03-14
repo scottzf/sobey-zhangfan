@@ -1,6 +1,8 @@
-package com.sobey.switches.script;
+package com.sobey.switches.service;
 
 import java.util.List;
+
+import org.springframework.stereotype.Service;
 
 import com.sobey.switches.constans.SymbolEnum;
 import com.sobey.switches.webservice.response.dto.RuleParameter;
@@ -11,7 +13,8 @@ import com.sobey.switches.webservice.response.dto.RuleParameter;
  * @author Administrator
  * 
  */
-public class GenerateScript {
+@Service
+public class SwitchService {
 
 	/**
 	 * 生成在<b>接入层交换机</b>执行的创建Vlan脚本.<br>
@@ -38,8 +41,7 @@ public class GenerateScript {
 	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public static String generateCreateVlanScriptOnAccessLayer(Integer vlanId, String gateway, String netMask,
-			String symbol) {
+	public String createVlanOnAccessLayer(Integer vlanId, String gateway, String netMask, String symbol) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -78,8 +80,8 @@ public class GenerateScript {
 	 *            子网掩码
 	 * @return
 	 */
-	public static String generateCreateVlanScriptOnAccessLayer(Integer vlanId, String gateway, String netMask) {
-		return generateCreateVlanScriptOnAccessLayer(vlanId, gateway, netMask, SymbolEnum.DEFAULT_SYMBOL.getName());
+	public String createVlanOnAccessLayer(Integer vlanId, String gateway, String netMask) {
+		return createVlanOnAccessLayer(vlanId, gateway, netMask, SymbolEnum.DEFAULT_SYMBOL.getName());
 	}
 
 	/**
@@ -109,8 +111,7 @@ public class GenerateScript {
 	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public static String generateCreateVlanScriptOnCoreLayer(Integer vlanId, String gateway, String netMask,
-			String symbol) {
+	public String createVlanOnCoreLayer(Integer vlanId, String gateway, String netMask, String symbol) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -155,8 +156,8 @@ public class GenerateScript {
 	 *            子网掩码
 	 * @return
 	 */
-	public static String generateCreateVlanScriptOnCoreLayer(Integer vlanId, String gateway, String netMask) {
-		return generateCreateVlanScriptOnCoreLayer(vlanId, gateway, netMask, SymbolEnum.DEFAULT_SYMBOL.getName());
+	public String createVlanOnCoreLayer(Integer vlanId, String gateway, String netMask) {
+		return createVlanOnCoreLayer(vlanId, gateway, netMask, SymbolEnum.DEFAULT_SYMBOL.getName());
 	}
 
 	/**
@@ -180,7 +181,7 @@ public class GenerateScript {
 	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public static String generateDeleteVlanScriptOnAccessLayer(Integer vlanId, String symbol) {
+	public String deleteVlanOnAccessLayer(Integer vlanId, String symbol) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -217,8 +218,8 @@ public class GenerateScript {
 	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public static String generateDeleteVlanScriptOnAccessLayer(Integer vlanId) {
-		return generateDeleteVlanScriptOnAccessLayer(vlanId, SymbolEnum.DEFAULT_SYMBOL.getName());
+	public String deleteVlanOnAccessLayer(Integer vlanId) {
+		return deleteVlanOnAccessLayer(vlanId, SymbolEnum.DEFAULT_SYMBOL.getName());
 	}
 
 	/**
@@ -242,7 +243,7 @@ public class GenerateScript {
 	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public static String generateDeleteVlanScriptOnCoreLayer(Integer vlanId, String symbol) {
+	public String deleteVlanOnCoreLayer(Integer vlanId, String symbol) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -279,8 +280,8 @@ public class GenerateScript {
 	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public static String generateDeleteVlanScriptOnCoreLayer(Integer vlanId) {
-		return generateDeleteVlanScriptOnCoreLayer(vlanId, SymbolEnum.DEFAULT_SYMBOL.getName());
+	public String deleteVlanOnCoreLayer(Integer vlanId) {
+		return deleteVlanOnCoreLayer(vlanId, SymbolEnum.DEFAULT_SYMBOL.getName());
 	}
 
 	/**
@@ -323,8 +324,8 @@ public class GenerateScript {
 	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public static String generateCreateESGScript(Integer aclNumber, Integer vlanId, String desc,
-			List<RuleParameter> permits, List<RuleParameter> denys, String symbol) {
+	public String createEsg(Integer aclNumber, Integer vlanId, String desc, List<RuleParameter> permits,
+			List<RuleParameter> denys, String symbol) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -400,9 +401,9 @@ public class GenerateScript {
 	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public static String generateCreateESGScript(Integer aclNumber, Integer vlanId, String desc,
-			List<RuleParameter> permits, List<RuleParameter> denys) {
-		return generateCreateESGScript(aclNumber, vlanId, desc, permits, denys, SymbolEnum.DEFAULT_SYMBOL.getName());
+	public String createEsg(Integer aclNumber, Integer vlanId, String desc, List<RuleParameter> permits,
+			List<RuleParameter> denys) {
+		return createEsg(aclNumber, vlanId, desc, permits, denys, SymbolEnum.DEFAULT_SYMBOL.getName());
 	}
 
 	/**
@@ -423,7 +424,7 @@ public class GenerateScript {
 	 *            acl编号(3000-3999)
 	 * @return
 	 */
-	public static String generateDeleteESGScript(Integer aclNumber, String symbol) {
+	public String deleteEsg(Integer aclNumber, String symbol) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -456,8 +457,8 @@ public class GenerateScript {
 	 *            acl编号(3000-3999)
 	 * @return
 	 */
-	public static String generateDeleteESGScript(Integer aclNumber) {
-		return generateDeleteESGScript(aclNumber, SymbolEnum.DEFAULT_SYMBOL.getName());
+	public String deleteEsg(Integer aclNumber) {
+		return deleteEsg(aclNumber, SymbolEnum.DEFAULT_SYMBOL.getName());
 	}
 
 }
