@@ -1,4 +1,4 @@
-package com.sobey.storage.script;
+package com.sobey.storage.service;
 
 import java.util.List;
 

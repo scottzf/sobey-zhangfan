@@ -10,7 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.sobey.core.utils.JschUtil;
 import com.sobey.storage.PropertiesAbstract;
 import com.sobey.storage.data.TestData;
-import com.sobey.storage.script.NetAppService;
+import com.sobey.storage.service.NetAppService;
 import com.sobey.storage.webservice.response.dto.CreateEs3Parameter;
 import com.sobey.storage.webservice.response.dto.DeleteEs3Parameter;
 import com.sobey.storage.webservice.response.dto.MountEs3Parameter;

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.sobey.core.utils.JschUtil;
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.storage.constans.WsConstants;
-import com.sobey.storage.script.NetAppService;
+import com.sobey.storage.service.NetAppService;
 import com.sobey.storage.webservice.response.dto.CreateEs3Parameter;
 import com.sobey.storage.webservice.response.dto.DeleteEs3Parameter;
 import com.sobey.storage.webservice.response.dto.MountEs3Parameter;
