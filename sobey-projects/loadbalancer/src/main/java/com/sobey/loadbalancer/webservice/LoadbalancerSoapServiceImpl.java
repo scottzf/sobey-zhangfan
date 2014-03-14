@@ -11,14 +11,14 @@ import com.sobey.loadbalancer.webservice.response.result.WSResult;
 public class LoadbalancerSoapServiceImpl implements LoadbalancerSoapService {
 
 	@Autowired
-	public NitroService nitroService;
+	public NitroService service;
 
 	@Override
 	public WSResult createELBByLoadbalancer(@WebParam(name = "ELBParameter") ELBParameter parameter) {
 
 		WSResult result = new WSResult();
 
-		boolean falg = nitroService.createElb(parameter);
+		boolean falg = service.createElb(parameter);
 
 		if (!falg) {
 			result.setCode(WSResult.SYSTEM_ERROR);
@@ -33,7 +33,7 @@ public class LoadbalancerSoapServiceImpl implements LoadbalancerSoapService {
 
 		WSResult result = new WSResult();
 
-		boolean falg = nitroService.deleteElb(parameter);
+		boolean falg = service.deleteElb(parameter);
 
 		if (!falg) {
 			result.setCode(WSResult.SYSTEM_ERROR);
