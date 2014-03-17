@@ -40,7 +40,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 	public void save() {
 		Ipaddress ipaddress = TestData.randomIpaddress();
 		IpaddressDTO ipaddressDTO = BeanMapper.map(ipaddress, IpaddressDTO.class);
-		IdResult response = infrastructureService.createIpaddress(ipaddressDTO);
+		IdResult response = cmdbuildSoapService.createIpaddress(ipaddressDTO);
 		assertNotNull(response.getId());
 	}
 
@@ -50,10 +50,10 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 
 		Integer id = 469;
 
-		DTOResult<IpaddressDTO> response = infrastructureService.findIpaddress(id);
+		DTOResult<IpaddressDTO> response = cmdbuildSoapService.findIpaddress(id);
 		IpaddressDTO dto = response.getDto();
 		dto.setDescription("我是超人啊~!");
-		IdResult result = infrastructureService.updateIpaddress(id, dto);
+		IdResult result = cmdbuildSoapService.updateIpaddress(id, dto);
 		assertNotNull(result.getId());
 	}
 
@@ -61,7 +61,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 	@Ignore
 	public void delete() {
 		Integer id = 527;
-		IdResult response = infrastructureService.deleteIpaddress(id);
+		IdResult response = cmdbuildSoapService.deleteIpaddress(id);
 		assertNotNull(response.getId());
 	}
 
@@ -85,13 +85,13 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<IpaddressDTO> responseParams = infrastructureService.findIpaddressByParams(searchParams);
+		DTOResult<IpaddressDTO> responseParams = cmdbuildSoapService.findIpaddressByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<IpaddressDTO> response = infrastructureService.findIpaddress(id);
+		DTOResult<IpaddressDTO> response = cmdbuildSoapService.findIpaddress(id);
 
 		assertNotNull(response);
 
@@ -105,7 +105,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<IpaddressDTO> result = infrastructureService.getIpaddressList(searchParams);
+		DTOListResult<IpaddressDTO> result = cmdbuildSoapService.getIpaddressList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -121,7 +121,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 
 		IpaddressDTO ipaddressDTO = BeanMapper.map(ipaddress, IpaddressDTO.class);
 
-		IdResult response = infrastructureService.createIpaddress(ipaddressDTO);
+		IdResult response = cmdbuildSoapService.createIpaddress(ipaddressDTO);
 
 		assertNotNull(response.getId());
 
@@ -133,7 +133,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateIpaddress() {
 
-		DTOResult<IpaddressDTO> response = infrastructureService.findIpaddress(id);
+		DTOResult<IpaddressDTO> response = cmdbuildSoapService.findIpaddress(id);
 
 		IpaddressDTO ipaddressDTO = response.getDto();
 
@@ -141,7 +141,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 
 		ipaddressDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateIpaddress(id, ipaddressDTO);
+		IdResult result = cmdbuildSoapService.updateIpaddress(id, ipaddressDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -151,7 +151,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteIpaddress() {
 
-		IdResult response = infrastructureService.deleteIpaddress(id);
+		IdResult response = cmdbuildSoapService.deleteIpaddress(id);
 
 		assertNotNull(response.getId());
 
@@ -163,7 +163,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<IpaddressDTO> result = infrastructureService.getIpaddressPagination(searchParams, 1, 10);
+		PaginationResult<IpaddressDTO> result = cmdbuildSoapService.getIpaddressPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 
@@ -180,7 +180,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 
 		List<IpaddressDTO> list = BeanMapper.mapList(TestData.randomIpaddressList(10), IpaddressDTO.class);
 
-		IdResult results = infrastructureService.insertIpaddress(list);
+		IdResult results = cmdbuildSoapService.insertIpaddress(list);
 		System.err.println(results.getMessage());
 		assertEquals("0", results.getCode());
 
@@ -194,13 +194,13 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 	public void testInsertIPAddress2() {
 
 		// 已有的IP
-		List<IpaddressDTO> list = infrastructureService.getIpaddressPagination(new HashMap<String, Object>(), 1, 5)
+		List<IpaddressDTO> list = cmdbuildSoapService.getIpaddressPagination(new HashMap<String, Object>(), 1, 5)
 				.getGetContent();
 
 		// 将随机数据插入IPList
 		list.addAll(BeanMapper.mapList(TestData.randomIpaddressList(5), IpaddressDTO.class));
 
-		IdResult results = infrastructureService.insertIpaddress(list);
+		IdResult results = cmdbuildSoapService.insertIpaddress(list);
 		System.err.println(results.getMessage());
 		assertEquals("0", results.getCode());
 
@@ -212,7 +212,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 
 		int id = 0;// Ipaddress对象的id
 
-		IdResult results = infrastructureService.initIpaddress(id);// 设置状态为未使用
+		IdResult results = cmdbuildSoapService.initIpaddress(id);// 设置状态为未使用
 
 		assertEquals("0", results.getCode());
 
@@ -224,7 +224,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 
 		int id = 0;// Ipaddress对象的id
 
-		IdResult results = infrastructureService.allocateIpaddress(id);// 设置状态为使用
+		IdResult results = cmdbuildSoapService.allocateIpaddress(id);// 设置状态为使用
 
 		assertEquals("0", results.getCode());
 	}

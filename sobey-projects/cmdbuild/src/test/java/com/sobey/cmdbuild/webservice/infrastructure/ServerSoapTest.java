@@ -53,13 +53,13 @@ public class ServerSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<ServerDTO> responseParams = infrastructureService.findServerByParams(searchParams);
+		DTOResult<ServerDTO> responseParams = cmdbuildSoapService.findServerByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<ServerDTO> response = infrastructureService.findServer(id);
+		DTOResult<ServerDTO> response = cmdbuildSoapService.findServer(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class ServerSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<ServerDTO> result = infrastructureService.getServerList(searchParams);
+		DTOListResult<ServerDTO> result = cmdbuildSoapService.getServerList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class ServerSoapTest extends BaseFunctionalTestCase {
 
 		ServerDTO serverDTO = BeanMapper.map(server, ServerDTO.class);
 
-		IdResult response = infrastructureService.createServer(serverDTO);
+		IdResult response = cmdbuildSoapService.createServer(serverDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class ServerSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateServer() {
 
-		DTOResult<ServerDTO> response = infrastructureService.findServer(id);
+		DTOResult<ServerDTO> response = cmdbuildSoapService.findServer(id);
 
 		ServerDTO serverDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class ServerSoapTest extends BaseFunctionalTestCase {
 
 		serverDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateServer(id, serverDTO);
+		IdResult result = cmdbuildSoapService.updateServer(id, serverDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class ServerSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteServer() {
 
-		IdResult response = infrastructureService.deleteServer(id);
+		IdResult response = cmdbuildSoapService.deleteServer(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class ServerSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<ServerDTO> result = infrastructureService.getServerPagination(searchParams, 1, 10);
+		PaginationResult<ServerDTO> result = cmdbuildSoapService.getServerPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

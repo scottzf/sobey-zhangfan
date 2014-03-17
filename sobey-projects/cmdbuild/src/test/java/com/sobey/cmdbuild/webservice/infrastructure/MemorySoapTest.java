@@ -53,13 +53,13 @@ public class MemorySoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<MemoryDTO> responseParams = infrastructureService.findMemoryByParams(searchParams);
+		DTOResult<MemoryDTO> responseParams = cmdbuildSoapService.findMemoryByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<MemoryDTO> response = infrastructureService.findMemory(id);
+		DTOResult<MemoryDTO> response = cmdbuildSoapService.findMemory(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class MemorySoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<MemoryDTO> result = infrastructureService.getMemoryList(searchParams);
+		DTOListResult<MemoryDTO> result = cmdbuildSoapService.getMemoryList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class MemorySoapTest extends BaseFunctionalTestCase {
 
 		MemoryDTO memoryDTO = BeanMapper.map(memory, MemoryDTO.class);
 
-		IdResult response = infrastructureService.createMemory(memoryDTO);
+		IdResult response = cmdbuildSoapService.createMemory(memoryDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class MemorySoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateMemory() {
 
-		DTOResult<MemoryDTO> response = infrastructureService.findMemory(id);
+		DTOResult<MemoryDTO> response = cmdbuildSoapService.findMemory(id);
 
 		MemoryDTO memoryDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class MemorySoapTest extends BaseFunctionalTestCase {
 
 		memoryDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateMemory(id, memoryDTO);
+		IdResult result = cmdbuildSoapService.updateMemory(id, memoryDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class MemorySoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteMemory() {
 
-		IdResult response = infrastructureService.deleteMemory(id);
+		IdResult response = cmdbuildSoapService.deleteMemory(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class MemorySoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<MemoryDTO> result = infrastructureService.getMemoryPagination(searchParams, 1, 10);
+		PaginationResult<MemoryDTO> result = cmdbuildSoapService.getMemoryPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

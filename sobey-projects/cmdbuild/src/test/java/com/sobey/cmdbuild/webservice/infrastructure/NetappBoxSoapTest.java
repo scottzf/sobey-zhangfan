@@ -53,13 +53,13 @@ public class NetappBoxSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<NetappBoxDTO> responseParams = infrastructureService.findNetappBoxByParams(searchParams);
+		DTOResult<NetappBoxDTO> responseParams = cmdbuildSoapService.findNetappBoxByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<NetappBoxDTO> response = infrastructureService.findNetappBox(id);
+		DTOResult<NetappBoxDTO> response = cmdbuildSoapService.findNetappBox(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class NetappBoxSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<NetappBoxDTO> result = infrastructureService.getNetappBoxList(searchParams);
+		DTOListResult<NetappBoxDTO> result = cmdbuildSoapService.getNetappBoxList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class NetappBoxSoapTest extends BaseFunctionalTestCase {
 
 		NetappBoxDTO netappBoxDTO = BeanMapper.map(netappBox, NetappBoxDTO.class);
 
-		IdResult response = infrastructureService.createNetappBox(netappBoxDTO);
+		IdResult response = cmdbuildSoapService.createNetappBox(netappBoxDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class NetappBoxSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateNetappBox() {
 
-		DTOResult<NetappBoxDTO> response = infrastructureService.findNetappBox(id);
+		DTOResult<NetappBoxDTO> response = cmdbuildSoapService.findNetappBox(id);
 
 		NetappBoxDTO netappBoxDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class NetappBoxSoapTest extends BaseFunctionalTestCase {
 
 		netappBoxDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateNetappBox(id, netappBoxDTO);
+		IdResult result = cmdbuildSoapService.updateNetappBox(id, netappBoxDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class NetappBoxSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteNetappBox() {
 
-		IdResult response = infrastructureService.deleteNetappBox(id);
+		IdResult response = cmdbuildSoapService.deleteNetappBox(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class NetappBoxSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<NetappBoxDTO> result = infrastructureService.getNetappBoxPagination(searchParams, 1, 10);
+		PaginationResult<NetappBoxDTO> result = cmdbuildSoapService.getNetappBoxPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

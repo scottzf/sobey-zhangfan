@@ -53,13 +53,13 @@ public class VpnSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<VpnDTO> responseParams = iaasSoapService.findVpnByParams(searchParams);
+		DTOResult<VpnDTO> responseParams = cmdbuildSoapService.findVpnByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<VpnDTO> response = iaasSoapService.findVpn(id);
+		DTOResult<VpnDTO> response = cmdbuildSoapService.findVpn(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class VpnSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<VpnDTO> result = iaasSoapService.getVpnList(searchParams);
+		DTOListResult<VpnDTO> result = cmdbuildSoapService.getVpnList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class VpnSoapTest extends BaseFunctionalTestCase {
 
 		VpnDTO vpnDTO = BeanMapper.map(vpn, VpnDTO.class);
 
-		IdResult response = iaasSoapService.createVpn(vpnDTO);
+		IdResult response = cmdbuildSoapService.createVpn(vpnDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class VpnSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateVpn() {
 
-		DTOResult<VpnDTO> response = iaasSoapService.findVpn(id);
+		DTOResult<VpnDTO> response = cmdbuildSoapService.findVpn(id);
 
 		VpnDTO vpnDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class VpnSoapTest extends BaseFunctionalTestCase {
 
 		vpnDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = iaasSoapService.updateVpn(id, vpnDTO);
+		IdResult result = cmdbuildSoapService.updateVpn(id, vpnDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class VpnSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteVpn() {
 
-		IdResult response = iaasSoapService.deleteVpn(id);
+		IdResult response = cmdbuildSoapService.deleteVpn(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class VpnSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<VpnDTO> result = iaasSoapService.getVpnPagination(searchParams, 1, 10);
+		PaginationResult<VpnDTO> result = cmdbuildSoapService.getVpnPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

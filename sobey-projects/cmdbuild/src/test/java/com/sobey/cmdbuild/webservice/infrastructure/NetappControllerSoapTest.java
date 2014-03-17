@@ -53,14 +53,13 @@ public class NetappControllerSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<NetappControllerDTO> responseParams = infrastructureService
-				.findNetappControllerByParams(searchParams);
+		DTOResult<NetappControllerDTO> responseParams = cmdbuildSoapService.findNetappControllerByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<NetappControllerDTO> response = infrastructureService.findNetappController(id);
+		DTOResult<NetappControllerDTO> response = cmdbuildSoapService.findNetappController(id);
 
 		assertNotNull(response);
 
@@ -74,7 +73,7 @@ public class NetappControllerSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<NetappControllerDTO> result = infrastructureService.getNetappControllerList(searchParams);
+		DTOListResult<NetappControllerDTO> result = cmdbuildSoapService.getNetappControllerList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -90,7 +89,7 @@ public class NetappControllerSoapTest extends BaseFunctionalTestCase {
 
 		NetappControllerDTO netappControllerDTO = BeanMapper.map(netappController, NetappControllerDTO.class);
 
-		IdResult response = infrastructureService.createNetappController(netappControllerDTO);
+		IdResult response = cmdbuildSoapService.createNetappController(netappControllerDTO);
 
 		assertNotNull(response.getId());
 
@@ -102,7 +101,7 @@ public class NetappControllerSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateNetappController() {
 
-		DTOResult<NetappControllerDTO> response = infrastructureService.findNetappController(id);
+		DTOResult<NetappControllerDTO> response = cmdbuildSoapService.findNetappController(id);
 
 		NetappControllerDTO netappControllerDTO = response.getDto();
 
@@ -110,7 +109,7 @@ public class NetappControllerSoapTest extends BaseFunctionalTestCase {
 
 		netappControllerDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateNetappController(id, netappControllerDTO);
+		IdResult result = cmdbuildSoapService.updateNetappController(id, netappControllerDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -120,7 +119,7 @@ public class NetappControllerSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteNetappController() {
 
-		IdResult response = infrastructureService.deleteNetappController(id);
+		IdResult response = cmdbuildSoapService.deleteNetappController(id);
 
 		assertNotNull(response.getId());
 
@@ -132,8 +131,8 @@ public class NetappControllerSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<NetappControllerDTO> result = infrastructureService.getNetappControllerPagination(
-				searchParams, 1, 10);
+		PaginationResult<NetappControllerDTO> result = cmdbuildSoapService.getNetappControllerPagination(searchParams,
+				1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

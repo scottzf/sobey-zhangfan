@@ -53,13 +53,13 @@ public class ServerPortSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<ServerPortDTO> responseParams = infrastructureService.findServerPortByParams(searchParams);
+		DTOResult<ServerPortDTO> responseParams = cmdbuildSoapService.findServerPortByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<ServerPortDTO> response = infrastructureService.findServerPort(id);
+		DTOResult<ServerPortDTO> response = cmdbuildSoapService.findServerPort(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class ServerPortSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<ServerPortDTO> result = infrastructureService.getServerPortList(searchParams);
+		DTOListResult<ServerPortDTO> result = cmdbuildSoapService.getServerPortList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class ServerPortSoapTest extends BaseFunctionalTestCase {
 
 		ServerPortDTO serverPortDTO = BeanMapper.map(serverPort, ServerPortDTO.class);
 
-		IdResult response = infrastructureService.createServerPort(serverPortDTO);
+		IdResult response = cmdbuildSoapService.createServerPort(serverPortDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class ServerPortSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateServerPort() {
 
-		DTOResult<ServerPortDTO> response = infrastructureService.findServerPort(id);
+		DTOResult<ServerPortDTO> response = cmdbuildSoapService.findServerPort(id);
 
 		ServerPortDTO serverPortDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class ServerPortSoapTest extends BaseFunctionalTestCase {
 
 		serverPortDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateServerPort(id, serverPortDTO);
+		IdResult result = cmdbuildSoapService.updateServerPort(id, serverPortDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class ServerPortSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteServerPort() {
 
-		IdResult response = infrastructureService.deleteServerPort(id);
+		IdResult response = cmdbuildSoapService.deleteServerPort(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class ServerPortSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<ServerPortDTO> result = infrastructureService.getServerPortPagination(searchParams, 1, 10);
+		PaginationResult<ServerPortDTO> result = cmdbuildSoapService.getServerPortPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

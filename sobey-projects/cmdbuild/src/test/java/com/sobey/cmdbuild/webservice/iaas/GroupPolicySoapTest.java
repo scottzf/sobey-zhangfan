@@ -53,13 +53,13 @@ public class GroupPolicySoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<GroupPolicyDTO> responseParams = iaasSoapService.findGroupPolicyByParams(searchParams);
+		DTOResult<GroupPolicyDTO> responseParams = cmdbuildSoapService.findGroupPolicyByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<GroupPolicyDTO> response = iaasSoapService.findGroupPolicy(id);
+		DTOResult<GroupPolicyDTO> response = cmdbuildSoapService.findGroupPolicy(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class GroupPolicySoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<GroupPolicyDTO> result = iaasSoapService.getGroupPolicyList(searchParams);
+		DTOListResult<GroupPolicyDTO> result = cmdbuildSoapService.getGroupPolicyList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class GroupPolicySoapTest extends BaseFunctionalTestCase {
 
 		GroupPolicyDTO groupPolicyDTO = BeanMapper.map(groupPolicy, GroupPolicyDTO.class);
 
-		IdResult response = iaasSoapService.createGroupPolicy(groupPolicyDTO);
+		IdResult response = cmdbuildSoapService.createGroupPolicy(groupPolicyDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class GroupPolicySoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateGroupPolicy() {
 
-		DTOResult<GroupPolicyDTO> response = iaasSoapService.findGroupPolicy(id);
+		DTOResult<GroupPolicyDTO> response = cmdbuildSoapService.findGroupPolicy(id);
 
 		GroupPolicyDTO groupPolicyDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class GroupPolicySoapTest extends BaseFunctionalTestCase {
 
 		groupPolicyDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = iaasSoapService.updateGroupPolicy(id, groupPolicyDTO);
+		IdResult result = cmdbuildSoapService.updateGroupPolicy(id, groupPolicyDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class GroupPolicySoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteGroupPolicy() {
 
-		IdResult response = iaasSoapService.deleteGroupPolicy(id);
+		IdResult response = cmdbuildSoapService.deleteGroupPolicy(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class GroupPolicySoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<GroupPolicyDTO> result = iaasSoapService.getGroupPolicyPagination(searchParams, 1, 10);
+		PaginationResult<GroupPolicyDTO> result = cmdbuildSoapService.getGroupPolicyPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

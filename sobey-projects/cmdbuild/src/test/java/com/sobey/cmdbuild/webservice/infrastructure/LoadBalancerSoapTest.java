@@ -53,13 +53,13 @@ public class LoadBalancerSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<LoadBalancerDTO> responseParams = infrastructureService.findLoadBalancerByParams(searchParams);
+		DTOResult<LoadBalancerDTO> responseParams = cmdbuildSoapService.findLoadBalancerByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<LoadBalancerDTO> response = infrastructureService.findLoadBalancer(id);
+		DTOResult<LoadBalancerDTO> response = cmdbuildSoapService.findLoadBalancer(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class LoadBalancerSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<LoadBalancerDTO> result = infrastructureService.getLoadBalancerList(searchParams);
+		DTOListResult<LoadBalancerDTO> result = cmdbuildSoapService.getLoadBalancerList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class LoadBalancerSoapTest extends BaseFunctionalTestCase {
 
 		LoadBalancerDTO loadBalancerDTO = BeanMapper.map(loadBalancer, LoadBalancerDTO.class);
 
-		IdResult response = infrastructureService.createLoadBalancer(loadBalancerDTO);
+		IdResult response = cmdbuildSoapService.createLoadBalancer(loadBalancerDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class LoadBalancerSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateLoadBalancer() {
 
-		DTOResult<LoadBalancerDTO> response = infrastructureService.findLoadBalancer(id);
+		DTOResult<LoadBalancerDTO> response = cmdbuildSoapService.findLoadBalancer(id);
 
 		LoadBalancerDTO loadBalancerDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class LoadBalancerSoapTest extends BaseFunctionalTestCase {
 
 		loadBalancerDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateLoadBalancer(id, loadBalancerDTO);
+		IdResult result = cmdbuildSoapService.updateLoadBalancer(id, loadBalancerDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class LoadBalancerSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteLoadBalancer() {
 
-		IdResult response = infrastructureService.deleteLoadBalancer(id);
+		IdResult response = cmdbuildSoapService.deleteLoadBalancer(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class LoadBalancerSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<LoadBalancerDTO> result = infrastructureService.getLoadBalancerPagination(searchParams, 1, 10);
+		PaginationResult<LoadBalancerDTO> result = cmdbuildSoapService.getLoadBalancerPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

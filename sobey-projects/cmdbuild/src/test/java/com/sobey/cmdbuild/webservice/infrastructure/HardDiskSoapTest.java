@@ -53,13 +53,13 @@ public class HardDiskSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<HardDiskDTO> responseParams = infrastructureService.findHardDiskByParams(searchParams);
+		DTOResult<HardDiskDTO> responseParams = cmdbuildSoapService.findHardDiskByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<HardDiskDTO> response = infrastructureService.findHardDisk(id);
+		DTOResult<HardDiskDTO> response = cmdbuildSoapService.findHardDisk(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class HardDiskSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<HardDiskDTO> result = infrastructureService.getHardDiskList(searchParams);
+		DTOListResult<HardDiskDTO> result = cmdbuildSoapService.getHardDiskList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class HardDiskSoapTest extends BaseFunctionalTestCase {
 
 		HardDiskDTO hardDiskDTO = BeanMapper.map(hardDisk, HardDiskDTO.class);
 
-		IdResult response = infrastructureService.createHardDisk(hardDiskDTO);
+		IdResult response = cmdbuildSoapService.createHardDisk(hardDiskDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class HardDiskSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateHardDisk() {
 
-		DTOResult<HardDiskDTO> response = infrastructureService.findHardDisk(id);
+		DTOResult<HardDiskDTO> response = cmdbuildSoapService.findHardDisk(id);
 
 		HardDiskDTO hardDiskDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class HardDiskSoapTest extends BaseFunctionalTestCase {
 
 		hardDiskDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateHardDisk(id, hardDiskDTO);
+		IdResult result = cmdbuildSoapService.updateHardDisk(id, hardDiskDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class HardDiskSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteHardDisk() {
 
-		IdResult response = infrastructureService.deleteHardDisk(id);
+		IdResult response = cmdbuildSoapService.deleteHardDisk(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class HardDiskSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<HardDiskDTO> result = infrastructureService.getHardDiskPagination(searchParams, 1, 10);
+		PaginationResult<HardDiskDTO> result = cmdbuildSoapService.getHardDiskPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

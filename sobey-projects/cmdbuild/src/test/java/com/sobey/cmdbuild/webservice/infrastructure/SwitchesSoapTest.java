@@ -53,13 +53,13 @@ public class SwitchesSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<SwitchesDTO> responseParams = infrastructureService.findSwitchesByParams(searchParams);
+		DTOResult<SwitchesDTO> responseParams = cmdbuildSoapService.findSwitchesByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<SwitchesDTO> response = infrastructureService.findSwitches(id);
+		DTOResult<SwitchesDTO> response = cmdbuildSoapService.findSwitches(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class SwitchesSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<SwitchesDTO> result = infrastructureService.getSwitchesList(searchParams);
+		DTOListResult<SwitchesDTO> result = cmdbuildSoapService.getSwitchesList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class SwitchesSoapTest extends BaseFunctionalTestCase {
 
 		SwitchesDTO switchesDTO = BeanMapper.map(switches, SwitchesDTO.class);
 
-		IdResult response = infrastructureService.createSwitches(switchesDTO);
+		IdResult response = cmdbuildSoapService.createSwitches(switchesDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class SwitchesSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateSwitches() {
 
-		DTOResult<SwitchesDTO> response = infrastructureService.findSwitches(id);
+		DTOResult<SwitchesDTO> response = cmdbuildSoapService.findSwitches(id);
 
 		SwitchesDTO switchesDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class SwitchesSoapTest extends BaseFunctionalTestCase {
 
 		switchesDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateSwitches(id, switchesDTO);
+		IdResult result = cmdbuildSoapService.updateSwitches(id, switchesDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class SwitchesSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteSwitches() {
 
-		IdResult response = infrastructureService.deleteSwitches(id);
+		IdResult response = cmdbuildSoapService.deleteSwitches(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class SwitchesSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<SwitchesDTO> result = infrastructureService.getSwitchesPagination(searchParams, 1, 10);
+		PaginationResult<SwitchesDTO> result = cmdbuildSoapService.getSwitchesPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

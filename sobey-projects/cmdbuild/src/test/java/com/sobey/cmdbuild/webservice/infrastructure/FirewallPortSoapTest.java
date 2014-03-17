@@ -53,13 +53,13 @@ public class FirewallPortSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<FirewallPortDTO> responseParams = infrastructureService.findFirewallPortByParams(searchParams);
+		DTOResult<FirewallPortDTO> responseParams = cmdbuildSoapService.findFirewallPortByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<FirewallPortDTO> response = infrastructureService.findFirewallPort(id);
+		DTOResult<FirewallPortDTO> response = cmdbuildSoapService.findFirewallPort(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class FirewallPortSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<FirewallPortDTO> result = infrastructureService.getFirewallPortList(searchParams);
+		DTOListResult<FirewallPortDTO> result = cmdbuildSoapService.getFirewallPortList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class FirewallPortSoapTest extends BaseFunctionalTestCase {
 
 		FirewallPortDTO firewallPortDTO = BeanMapper.map(firewallPort, FirewallPortDTO.class);
 
-		IdResult response = infrastructureService.createFirewallPort(firewallPortDTO);
+		IdResult response = cmdbuildSoapService.createFirewallPort(firewallPortDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class FirewallPortSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateFirewallPort() {
 
-		DTOResult<FirewallPortDTO> response = infrastructureService.findFirewallPort(id);
+		DTOResult<FirewallPortDTO> response = cmdbuildSoapService.findFirewallPort(id);
 
 		FirewallPortDTO firewallPortDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class FirewallPortSoapTest extends BaseFunctionalTestCase {
 
 		firewallPortDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateFirewallPort(id, firewallPortDTO);
+		IdResult result = cmdbuildSoapService.updateFirewallPort(id, firewallPortDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class FirewallPortSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteFirewallPort() {
 
-		IdResult response = infrastructureService.deleteFirewallPort(id);
+		IdResult response = cmdbuildSoapService.deleteFirewallPort(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class FirewallPortSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<FirewallPortDTO> result = infrastructureService.getFirewallPortPagination(searchParams, 1, 10);
+		PaginationResult<FirewallPortDTO> result = cmdbuildSoapService.getFirewallPortPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

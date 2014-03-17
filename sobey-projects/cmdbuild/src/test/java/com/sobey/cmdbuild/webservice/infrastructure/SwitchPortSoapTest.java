@@ -53,13 +53,13 @@ public class SwitchPortSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<SwitchPortDTO> responseParams = infrastructureService.findSwitchPortByParams(searchParams);
+		DTOResult<SwitchPortDTO> responseParams = cmdbuildSoapService.findSwitchPortByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<SwitchPortDTO> response = infrastructureService.findSwitchPort(id);
+		DTOResult<SwitchPortDTO> response = cmdbuildSoapService.findSwitchPort(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class SwitchPortSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<SwitchPortDTO> result = infrastructureService.getSwitchPortList(searchParams);
+		DTOListResult<SwitchPortDTO> result = cmdbuildSoapService.getSwitchPortList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class SwitchPortSoapTest extends BaseFunctionalTestCase {
 
 		SwitchPortDTO switchPortDTO = BeanMapper.map(switchPort, SwitchPortDTO.class);
 
-		IdResult response = infrastructureService.createSwitchPort(switchPortDTO);
+		IdResult response = cmdbuildSoapService.createSwitchPort(switchPortDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class SwitchPortSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateSwitchPort() {
 
-		DTOResult<SwitchPortDTO> response = infrastructureService.findSwitchPort(id);
+		DTOResult<SwitchPortDTO> response = cmdbuildSoapService.findSwitchPort(id);
 
 		SwitchPortDTO switchPortDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class SwitchPortSoapTest extends BaseFunctionalTestCase {
 
 		switchPortDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateSwitchPort(id, switchPortDTO);
+		IdResult result = cmdbuildSoapService.updateSwitchPort(id, switchPortDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class SwitchPortSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteSwitchPort() {
 
-		IdResult response = infrastructureService.deleteSwitchPort(id);
+		IdResult response = cmdbuildSoapService.deleteSwitchPort(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class SwitchPortSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<SwitchPortDTO> result = infrastructureService.getSwitchPortPagination(searchParams, 1, 10);
+		PaginationResult<SwitchPortDTO> result = cmdbuildSoapService.getSwitchPortPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

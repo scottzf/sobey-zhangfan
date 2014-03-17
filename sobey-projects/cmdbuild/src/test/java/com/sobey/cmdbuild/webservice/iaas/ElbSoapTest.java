@@ -53,13 +53,13 @@ public class ElbSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<ElbDTO> responseParams = iaasSoapService.findElbByParams(searchParams);
+		DTOResult<ElbDTO> responseParams = cmdbuildSoapService.findElbByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<ElbDTO> response = iaasSoapService.findElb(id);
+		DTOResult<ElbDTO> response = cmdbuildSoapService.findElb(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class ElbSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<ElbDTO> result = iaasSoapService.getElbList(searchParams);
+		DTOListResult<ElbDTO> result = cmdbuildSoapService.getElbList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class ElbSoapTest extends BaseFunctionalTestCase {
 
 		ElbDTO elbDTO = BeanMapper.map(elb, ElbDTO.class);
 
-		IdResult response = iaasSoapService.createElb(elbDTO);
+		IdResult response = cmdbuildSoapService.createElb(elbDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class ElbSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateElb() {
 
-		DTOResult<ElbDTO> response = iaasSoapService.findElb(id);
+		DTOResult<ElbDTO> response = cmdbuildSoapService.findElb(id);
 
 		ElbDTO elbDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class ElbSoapTest extends BaseFunctionalTestCase {
 
 		elbDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = iaasSoapService.updateElb(id, elbDTO);
+		IdResult result = cmdbuildSoapService.updateElb(id, elbDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class ElbSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteElb() {
 
-		IdResult response = iaasSoapService.deleteElb(id);
+		IdResult response = cmdbuildSoapService.deleteElb(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class ElbSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<ElbDTO> result = iaasSoapService.getElbPagination(searchParams, 1, 10);
+		PaginationResult<ElbDTO> result = cmdbuildSoapService.getElbPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

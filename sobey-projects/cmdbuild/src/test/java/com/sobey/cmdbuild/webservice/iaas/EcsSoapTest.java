@@ -50,13 +50,13 @@ public class EcsSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<EcsDTO> responseParams = iaasSoapService.findEcsByParams(searchParams);
+		DTOResult<EcsDTO> responseParams = cmdbuildSoapService.findEcsByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<EcsDTO> response = iaasSoapService.findEcs(id);
+		DTOResult<EcsDTO> response = cmdbuildSoapService.findEcs(id);
 
 		assertNotNull(response);
 
@@ -70,7 +70,7 @@ public class EcsSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<EcsDTO> result = iaasSoapService.getEcsList(searchParams);
+		DTOListResult<EcsDTO> result = cmdbuildSoapService.getEcsList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -86,7 +86,7 @@ public class EcsSoapTest extends BaseFunctionalTestCase {
 
 		EcsDTO ecsDTO = BeanMapper.map(ecs, EcsDTO.class);
 
-		IdResult response = iaasSoapService.createEcs(ecsDTO);
+		IdResult response = cmdbuildSoapService.createEcs(ecsDTO);
 
 		assertNotNull(response.getId());
 
@@ -100,7 +100,7 @@ public class EcsSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<EcsDTO> result = iaasSoapService.getEcsPagination(searchParams, 1, 10);
+		PaginationResult<EcsDTO> result = cmdbuildSoapService.getEcsPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

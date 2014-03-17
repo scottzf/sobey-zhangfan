@@ -53,13 +53,13 @@ public class NetappPortSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<NetappPortDTO> responseParams = infrastructureService.findNetappPortByParams(searchParams);
+		DTOResult<NetappPortDTO> responseParams = cmdbuildSoapService.findNetappPortByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<NetappPortDTO> response = infrastructureService.findNetappPort(id);
+		DTOResult<NetappPortDTO> response = cmdbuildSoapService.findNetappPort(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class NetappPortSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<NetappPortDTO> result = infrastructureService.getNetappPortList(searchParams);
+		DTOListResult<NetappPortDTO> result = cmdbuildSoapService.getNetappPortList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class NetappPortSoapTest extends BaseFunctionalTestCase {
 
 		NetappPortDTO netappPortDTO = BeanMapper.map(netappPort, NetappPortDTO.class);
 
-		IdResult response = infrastructureService.createNetappPort(netappPortDTO);
+		IdResult response = cmdbuildSoapService.createNetappPort(netappPortDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class NetappPortSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateNetappPort() {
 
-		DTOResult<NetappPortDTO> response = infrastructureService.findNetappPort(id);
+		DTOResult<NetappPortDTO> response = cmdbuildSoapService.findNetappPort(id);
 
 		NetappPortDTO netappPortDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class NetappPortSoapTest extends BaseFunctionalTestCase {
 
 		netappPortDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateNetappPort(id, netappPortDTO);
+		IdResult result = cmdbuildSoapService.updateNetappPort(id, netappPortDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class NetappPortSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteNetappPort() {
 
-		IdResult response = infrastructureService.deleteNetappPort(id);
+		IdResult response = cmdbuildSoapService.deleteNetappPort(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class NetappPortSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<NetappPortDTO> result = infrastructureService.getNetappPortPagination(searchParams, 1, 10);
+		PaginationResult<NetappPortDTO> result = cmdbuildSoapService.getNetappPortPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 
