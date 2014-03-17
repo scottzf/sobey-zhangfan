@@ -21,7 +21,7 @@
 		<module>loadbalancer</module>
 		<module>storage</module>
 		<module>dns</module>
-		<module>portal</module>
 		<module>nagios</module>
+		<module>cmop-api</module>
 	</modules>
 </project>
