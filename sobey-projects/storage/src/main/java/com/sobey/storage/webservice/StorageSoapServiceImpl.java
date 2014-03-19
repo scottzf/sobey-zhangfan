@@ -3,6 +3,7 @@ package com.sobey.storage.webservice;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
+import org.apache.cxf.feature.Features;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sobey.core.utils.JschUtil;
@@ -17,6 +18,7 @@ import com.sobey.storage.webservice.response.dto.UmountEs3Parameter;
 import com.sobey.storage.webservice.response.result.WSResult;
 
 @WebService(serviceName = "StorageSoapService", endpointInterface = "com.sobey.storage.webservice.StorageSoapService", targetNamespace = WsConstants.NS)
+@Features(features = "org.apache.cxf.feature.LoggingFeature")
 public class StorageSoapServiceImpl implements StorageSoapService {
 
 	/**

@@ -3,6 +3,8 @@ package com.sobey.switches.webservice;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
+import org.apache.cxf.feature.Features;
+
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.core.utils.TelnetUtil;
 import com.sobey.switches.constans.WsConstants;
@@ -12,6 +14,7 @@ import com.sobey.switches.webservice.response.dto.VlanParameter;
 import com.sobey.switches.webservice.response.result.WSResult;
 
 @WebService(serviceName = "SwitchesSoapService", endpointInterface = "com.sobey.switches.webservice.SwitchesSoapService", targetNamespace = WsConstants.NS)
+@Features(features = "org.apache.cxf.feature.LoggingFeature")
 public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 
 	/**
