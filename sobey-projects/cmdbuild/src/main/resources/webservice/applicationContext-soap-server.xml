@@ -13,16 +13,6 @@
 
 
 	<!-- WebService的实现Bean定义 -->
-
 	<bean id="cmdbuildSoapService" class="com.sobey.cmdbuild.webservice.CmdbuildSoapServiceImpl" />
-
-
-	<!-- inject WebService Client -->
-
-	<jaxws:client id="switchesSoapService" serviceClass="com.sobey.generate.switches.SwitchesSoapService"
-		address="http://localhost:8082/switch/cxf/soap/switchesSoapService?wsdl" />
-
-	<jaxws:client id="firewallSoapService" serviceClass="com.sobey.generate.firewall.FirewallSoapService"
-		address="http://localhost:8083/firewall/cxf/soap/firewallSoapService?wsdl" />
 
 </beans>
