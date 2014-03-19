@@ -464,11 +464,31 @@
 			</plugin>
 
 			<!-- cxf wsdl2java 插件 -->
-			<!-- <plugin> <groupId>org.apache.cxf</groupId> <artifactId>cxf-codegen-plugin</artifactId> <version>${cxf.version}</version> 
-				<executions> <execution> <id>generate-sources</id> <phase>generate-sources</phase> <configuration> <sourceRoot>${basedir}/src/main/java</sourceRoot> 
-				<wsdlOptions> <wsdlOption> <wsdl>${basedir}/src/main/resources/wsdl/switchesSoapService.xml</wsdl> </wsdlOption> <wsdlOption> 
-				<wsdl>${basedir}/src/main/resources/wsdl/firewallSoapService.xml</wsdl> </wsdlOption> </wsdlOptions> </configuration> <goals> 
-				<goal>wsdl2java</goal> </goals> </execution> </executions> </plugin> -->
+			<plugin>
+				<groupId>org.apache.cxf</groupId>
+				<artifactId>cxf-codegen-plugin</artifactId>
+				<version>${cxf.version}</version>
+				<executions>
+					<execution>
+						<id>generate-sources</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<sourceRoot>${basedir}/src/main/java</sourceRoot>
+							<wsdlOptions>
+							<!-- 	<wsdlOption>
+									<wsdl>${basedir}/src/main/resources/wsdl/cmdbuildSoapService.xml</wsdl>
+								</wsdlOption> -->
+								<wsdlOption>
+									<wsdl>${basedir}/src/main/resources/wsdl/instanceSoapService.xml</wsdl>
+								</wsdlOption>
+							</wsdlOptions>
+						</configuration>
+						<goals>
+							<goal>wsdl2java</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
 		</plugins>
 	</build>
