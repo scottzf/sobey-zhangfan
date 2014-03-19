@@ -1,5 +1,7 @@
 package com.sobey.api.test;
 
+import java.util.Map.Entry;
+
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -13,7 +15,6 @@ import com.sobey.generate.instance.CloneVMParameter;
 import com.sobey.generate.instance.DestroyVMParameter;
 import com.sobey.generate.instance.PowerVMParameter;
 import com.sobey.generate.instance.ReconfigVMParameter;
-import com.sobey.generate.instance.RelationVMParameter.RelationMaps.Entry;
 
 /**
  * 针对VM的测试,别忘了导入applicationContext-api.xml. 因为是单元测试,所以没走web.xml那块.因此需要手动指定配置文件.
@@ -35,7 +36,7 @@ public class VMTest extends TestCase {
 		assertEquals(service.desoroyVM(destroyVMParameter).getCode(), "0");
 	}
 
-	@Test
+	// @Test
 	public void cloneVM() {
 		CloneVMParameter cloneVMParameter = new CloneVMParameter();
 		cloneVMParameter.setDescription("这个一个API测试程序");
@@ -66,9 +67,9 @@ public class VMTest extends TestCase {
 		assertEquals(service.reconfigVM(reconfigVMParameter).getCode(), "0");
 	}
 
-	// @Test
+	@Test
 	public void relationVMTest() {
-		for (Entry entry : service.relationVM().getEntry()) {
+		for (Entry<String, String> entry : service.relationVM().entrySet()) {
 			System.out.println(entry.getValue() + " : " + entry.getKey());
 		}
 	}

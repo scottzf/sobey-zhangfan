@@ -1,5 +1,7 @@
 package com.sobey.api.service;
 
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,7 +10,7 @@ import com.sobey.generate.instance.DestroyVMParameter;
 import com.sobey.generate.instance.InstanceSoapService;
 import com.sobey.generate.instance.PowerVMParameter;
 import com.sobey.generate.instance.ReconfigVMParameter;
-import com.sobey.generate.instance.RelationVMParameter.RelationMaps;
+import com.sobey.generate.instance.RelationVMParameter.RelationMaps.Entry;
 import com.sobey.generate.instance.WSResult;
 
 /**
@@ -27,8 +29,17 @@ public class InstanceService {
 		return instanceSoapService.destroyVMByInstance(destroyVMParameter);
 	}
 
-	public RelationMaps relationVM() {
-		return instanceSoapService.getVMAndHostRelationByInstance().getRelationMaps();
+	public HashMap<String, String> relationVM() {
+
+		HashMap<String, String> map = new HashMap<String, String>();
+
+		// 将RelationVMParameter转换成HashMap
+
+		for (Entry entry : instanceSoapService.getVMAndHostRelationByInstance().getRelationMaps().getEntry()) {
+			map.put(entry.getKey(), entry.getValue());
+		}
+
+		return map;
 	}
 
 	public WSResult cloneVM(CloneVMParameter cloneVMParameter) {
