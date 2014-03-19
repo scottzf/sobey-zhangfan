@@ -61,7 +61,7 @@ import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
  * @author Administrator
  * 
  */
-@WebService(name = "CmdbuildService", targetNamespace = WsConstants.NS)
+@WebService(name = "CmdbuildSoapService", targetNamespace = WsConstants.NS)
 public interface CmdbuildSoapService {
 
 	// ==============================//

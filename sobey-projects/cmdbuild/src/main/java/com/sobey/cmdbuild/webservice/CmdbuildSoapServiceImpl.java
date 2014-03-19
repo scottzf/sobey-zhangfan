@@ -120,7 +120,7 @@ import com.sobey.core.beanvalidator.BeanValidators;
 import com.sobey.core.mapper.BeanMapper;
 import com.sobey.core.utils.TableNameUtil;
 
-@WebService(serviceName = "CmdbuildService", endpointInterface = "com.sobey.cmdbuild.webservice.CmdbuildSoapService", targetNamespace = WsConstants.NS)
+@WebService(serviceName = "CmdbuildSoapService", endpointInterface = "com.sobey.cmdbuild.webservice.CmdbuildSoapService", targetNamespace = WsConstants.NS)
 // 查看webservice的日志.
 @Features(features = "org.apache.cxf.feature.LoggingFeature")
 public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements CmdbuildSoapService {
