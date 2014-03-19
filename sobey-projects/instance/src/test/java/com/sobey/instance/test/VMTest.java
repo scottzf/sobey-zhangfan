@@ -1,6 +1,5 @@
 package com.sobey.instance.test;
 
-import java.util.HashMap;
 import java.util.Map.Entry;
 
 import junit.framework.TestCase;
@@ -17,6 +16,7 @@ import com.sobey.instance.webservice.response.dto.CloneVMParameter;
 import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
+import com.sobey.instance.webservice.response.dto.RelationVMParameter;
 
 @ContextConfiguration({ "classpath:applicationContext.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -51,8 +51,8 @@ public class VMTest extends TestCase {
 
 	// @Test
 	public void getVM() {
-		HashMap<String, String> map = service.getVMAndHostRelation();
-		for (Entry<String, String> element : map.entrySet()) {
+		RelationVMParameter parameter = service.getVMAndHostRelation();
+		for (Entry<String, String> element : parameter.getRelationMaps().entrySet()) {
 			System.out.println("VM:" + element.getKey());
 			System.out.println("Host:" + element.getValue());
 			System.out.println("************************");

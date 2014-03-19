@@ -6,6 +6,8 @@
 
 	<description>Apache CXF的 SOAP Web Service配置</description>
 
+	<!-- WebService Service -->
+
 	<!-- jax-ws endpoint定义 -->
 	<jaxws:endpoint address="/api/dnsSoapService">
 		<jaxws:implementor ref="apiSoapService" />
@@ -14,5 +16,10 @@
 	<!-- WebService的实现Bean定义 -->
 
 	<bean id="apiSoapService" class="com.sobey.api.webservice.ApiSoapServiceImpl" />
+
+	<!-- WebService Client inject -->
+
+	<jaxws:client id="instanceSoapService" serviceClass="com.sobey.generate.instance.InstanceSoapService"
+		address="http://localhost:8081/instance/cxf/soap/instanceSoapService?wsdl" />
 
 </beans>

@@ -13,6 +13,7 @@ import com.sobey.instance.webservice.response.dto.CloneVMParameter;
 import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
+import com.sobey.instance.webservice.response.dto.RelationVMParameter;
 import com.vmware.vim25.CustomizationAdapterMapping;
 import com.vmware.vim25.CustomizationFixedIp;
 import com.vmware.vim25.CustomizationFixedName;
@@ -317,7 +318,7 @@ public class VMService {
 	 * 
 	 * @return
 	 */
-	public HashMap<String, String> getVMAndHostRelation() {
+	public RelationVMParameter getVMAndHostRelation() {
 
 		HashMap<String, String> map = Maps.newHashMap();
 
@@ -347,7 +348,10 @@ public class VMService {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-		return map;
+
+		RelationVMParameter parameter = new RelationVMParameter();
+		parameter.setRelationMaps(map);
+		return parameter;
 	}
 
 	/**

@@ -1,10 +1,9 @@
 package com.sobey.instance.webservice;
 
-import java.util.HashMap;
-
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
+import org.apache.cxf.feature.Features;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sobey.instance.constans.WsConstants;
@@ -13,9 +12,11 @@ import com.sobey.instance.webservice.response.dto.CloneVMParameter;
 import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
+import com.sobey.instance.webservice.response.dto.RelationVMParameter;
 import com.sobey.instance.webservice.response.result.WSResult;
 
 @WebService(serviceName = "InstanceSoapService", endpointInterface = "com.sobey.instance.webservice.InstanceSoapService", targetNamespace = WsConstants.NS)
+@Features(features = "org.apache.cxf.feature.LoggingFeature")
 public class InstanceSoapServiceImpl implements InstanceSoapService {
 
 	@Autowired
@@ -78,7 +79,7 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	}
 
 	@Override
-	public HashMap<String, String> getVMAndHostRelationByInstance() {
+	public RelationVMParameter getVMAndHostRelationByInstance() {
 		return service.getVMAndHostRelation();
 	}
 

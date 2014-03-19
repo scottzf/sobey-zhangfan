@@ -1,7 +1,5 @@
 package com.sobey.instance.webservice;
 
-import java.util.HashMap;
-
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
@@ -10,6 +8,7 @@ import com.sobey.instance.webservice.response.dto.CloneVMParameter;
 import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
+import com.sobey.instance.webservice.response.dto.RelationVMParameter;
 import com.sobey.instance.webservice.response.result.WSResult;
 
 /**
@@ -28,7 +27,7 @@ public interface InstanceSoapService {
 	 *            {@link CloneVMParameter}
 	 * @return
 	 */
-	WSResult cloneVMByInstance(@WebParam(name = "CloneVMParameter") CloneVMParameter parameter);
+	WSResult cloneVMByInstance(@WebParam(name = "cloneVMParameter") CloneVMParameter cloneVMParameter);
 
 	/**
 	 * 调用vcenter接口,销毁虚拟机
@@ -37,7 +36,7 @@ public interface InstanceSoapService {
 	 *            {@link CloneVMParameter}
 	 * @return
 	 */
-	WSResult destroyVMByInstance(@WebParam(name = "DestroyVMParameter") DestroyVMParameter parameter);
+	WSResult destroyVMByInstance(@WebParam(name = "destroyVMParameter") DestroyVMParameter destroyVMParameter);
 
 	/**
 	 * 调用vcenter接口,修改虚拟机配置
@@ -46,7 +45,7 @@ public interface InstanceSoapService {
 	 *            {@link CloneVMParameter}
 	 * @return
 	 */
-	WSResult reconfigVMByInstance(@WebParam(name = "ReconfigVMParameter") ReconfigVMParameter parameter);
+	WSResult reconfigVMByInstance(@WebParam(name = "reconfigVMParameter") ReconfigVMParameter reconfigVMParameter);
 
 	/**
 	 * 调用vcenter接口,对虚拟机进行电源操作
@@ -55,7 +54,7 @@ public interface InstanceSoapService {
 	 *            {@link CloneVMParameter}
 	 * @return
 	 */
-	WSResult powerVMByInstance(@WebParam(name = "PowerVMParameter") PowerVMParameter parameter);
+	WSResult powerVMByInstance(@WebParam(name = "powerVMParameter") PowerVMParameter powerVMParameter);
 
 	/**
 	 * 调用vcenter接口,获得宿主机和虚拟机之间的关联关系,放入HashMap中返回.<br>
@@ -63,6 +62,6 @@ public interface InstanceSoapService {
 	 * 
 	 * @return
 	 */
-	HashMap<String, String> getVMAndHostRelationByInstance();
+	RelationVMParameter getVMAndHostRelationByInstance();
 
 }
