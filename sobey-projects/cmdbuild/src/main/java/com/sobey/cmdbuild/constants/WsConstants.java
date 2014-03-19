@@ -11,5 +11,5 @@ public class WsConstants {
 	/**
 	 * 项目内统一的NameSpace定义.
 	 */
-	public static final String NS = "http://cmdbuild.sobey.com";
+	public static final String NS = "http://cmdbuild.generate.sobey.com";
 }
