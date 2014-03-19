@@ -53,13 +53,13 @@ public class FimasBoxSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<FimasBoxDTO> responseParams = infrastructureService.findFimasBoxByParams(searchParams);
+		DTOResult<FimasBoxDTO> responseParams = cmdbuildSoapService.findFimasBoxByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<FimasBoxDTO> response = infrastructureService.findFimasBox(id);
+		DTOResult<FimasBoxDTO> response = cmdbuildSoapService.findFimasBox(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class FimasBoxSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<FimasBoxDTO> result = infrastructureService.getFimasBoxList(searchParams);
+		DTOListResult<FimasBoxDTO> result = cmdbuildSoapService.getFimasBoxList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class FimasBoxSoapTest extends BaseFunctionalTestCase {
 
 		FimasBoxDTO fimasBoxDTO = BeanMapper.map(fimasBox, FimasBoxDTO.class);
 
-		IdResult response = infrastructureService.createFimasBox(fimasBoxDTO);
+		IdResult response = cmdbuildSoapService.createFimasBox(fimasBoxDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class FimasBoxSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateFimasBox() {
 
-		DTOResult<FimasBoxDTO> response = infrastructureService.findFimasBox(id);
+		DTOResult<FimasBoxDTO> response = cmdbuildSoapService.findFimasBox(id);
 
 		FimasBoxDTO fimasBoxDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class FimasBoxSoapTest extends BaseFunctionalTestCase {
 
 		fimasBoxDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateFimasBox(id, fimasBoxDTO);
+		IdResult result = cmdbuildSoapService.updateFimasBox(id, fimasBoxDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class FimasBoxSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteFimasBox() {
 
-		IdResult response = infrastructureService.deleteFimasBox(id);
+		IdResult response = cmdbuildSoapService.deleteFimasBox(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class FimasBoxSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<FimasBoxDTO> result = infrastructureService.getFimasBoxPagination(searchParams, 1, 10);
+		PaginationResult<FimasBoxDTO> result = cmdbuildSoapService.getFimasBoxPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

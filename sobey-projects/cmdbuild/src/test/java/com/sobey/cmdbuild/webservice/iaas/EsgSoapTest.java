@@ -56,13 +56,13 @@ public class EsgSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<EsgDTO> responseParams = iaasSoapService.findEsgByParams(searchParams);
+		DTOResult<EsgDTO> responseParams = cmdbuildSoapService.findEsgByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<EsgDTO> response = iaasSoapService.findEsg(id);
+		DTOResult<EsgDTO> response = cmdbuildSoapService.findEsg(id);
 
 		assertNotNull(response);
 
@@ -76,7 +76,7 @@ public class EsgSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<EsgDTO> result = iaasSoapService.getEsgList(searchParams);
+		DTOListResult<EsgDTO> result = cmdbuildSoapService.getEsgList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -92,7 +92,7 @@ public class EsgSoapTest extends BaseFunctionalTestCase {
 
 		EsgDTO esgDTO = BeanMapper.map(esg, EsgDTO.class);
 
-		IdResult response = iaasSoapService.createEsg(esgDTO);
+		IdResult response = cmdbuildSoapService.createEsg(esgDTO);
 
 		System.out.println(response.getCode());
 		System.out.println(response.getId());
@@ -111,27 +111,27 @@ public class EsgSoapTest extends BaseFunctionalTestCase {
 
 		EsgPolicyDTO policyDTO = BeanMapper.map(policy, EsgPolicyDTO.class);
 
-		iaasSoapService.createEsgPolicy(policyDTO);
+		cmdbuildSoapService.createEsgPolicy(policyDTO);
 
 	}
 
 	@Test
 	@Ignore
 	public void createMap_ecs_esg() {
-		iaasSoapService.createMapEcsEsg(100, 111);
+		cmdbuildSoapService.createMapEcsEsg(100, 111);
 	}
 
 	@Test
 	@Ignore
 	public void deleteMap_ecs_esg() {
-		iaasSoapService.deleteMapEcsEsg(100, 111);
+		cmdbuildSoapService.deleteMapEcsEsg(100, 111);
 	}
 
 	// @Test
 	// @Ignore
 	public void testUpdateEsg() {
 
-		DTOResult<EsgDTO> response = iaasSoapService.findEsg(id);
+		DTOResult<EsgDTO> response = cmdbuildSoapService.findEsg(id);
 
 		EsgDTO esgDTO = response.getDto();
 
@@ -139,7 +139,7 @@ public class EsgSoapTest extends BaseFunctionalTestCase {
 
 		esgDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = iaasSoapService.updateEsg(id, esgDTO);
+		IdResult result = cmdbuildSoapService.updateEsg(id, esgDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -149,7 +149,7 @@ public class EsgSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteEsg() {
 
-		IdResult response = iaasSoapService.deleteEsg(id);
+		IdResult response = cmdbuildSoapService.deleteEsg(id);
 
 		assertNotNull(response.getId());
 
@@ -161,7 +161,7 @@ public class EsgSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<EsgDTO> result = iaasSoapService.getEsgPagination(searchParams, 1, 10);
+		PaginationResult<EsgDTO> result = cmdbuildSoapService.getEsgPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

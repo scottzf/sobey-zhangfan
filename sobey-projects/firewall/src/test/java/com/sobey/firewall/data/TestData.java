@@ -30,7 +30,7 @@ public class TestData {
 		policyParameter2.setTargetPort(80);
 
 		policies.add(policyParameter);
-		policies.add(policyParameter2);
+		// policies.add(policyParameter2);
 
 		parameter.setPolicies(policies);
 

@@ -53,13 +53,13 @@ public class FimasPortSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<FimasPortDTO> responseParams = infrastructureService.findFimasPortByParams(searchParams);
+		DTOResult<FimasPortDTO> responseParams = cmdbuildSoapService.findFimasPortByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<FimasPortDTO> response = infrastructureService.findFimasPort(id);
+		DTOResult<FimasPortDTO> response = cmdbuildSoapService.findFimasPort(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class FimasPortSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<FimasPortDTO> result = infrastructureService.getFimasPortList(searchParams);
+		DTOListResult<FimasPortDTO> result = cmdbuildSoapService.getFimasPortList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class FimasPortSoapTest extends BaseFunctionalTestCase {
 
 		FimasPortDTO fimasPortDTO = BeanMapper.map(fimasPort, FimasPortDTO.class);
 
-		IdResult response = infrastructureService.createFimasPort(fimasPortDTO);
+		IdResult response = cmdbuildSoapService.createFimasPort(fimasPortDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class FimasPortSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateFimasPort() {
 
-		DTOResult<FimasPortDTO> response = infrastructureService.findFimasPort(id);
+		DTOResult<FimasPortDTO> response = cmdbuildSoapService.findFimasPort(id);
 
 		FimasPortDTO fimasPortDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class FimasPortSoapTest extends BaseFunctionalTestCase {
 
 		fimasPortDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateFimasPort(id, fimasPortDTO);
+		IdResult result = cmdbuildSoapService.updateFimasPort(id, fimasPortDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class FimasPortSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteFimasPort() {
 
-		IdResult response = infrastructureService.deleteFimasPort(id);
+		IdResult response = cmdbuildSoapService.deleteFimasPort(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class FimasPortSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<FimasPortDTO> result = infrastructureService.getFimasPortPagination(searchParams, 1, 10);
+		PaginationResult<FimasPortDTO> result = cmdbuildSoapService.getFimasPortPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

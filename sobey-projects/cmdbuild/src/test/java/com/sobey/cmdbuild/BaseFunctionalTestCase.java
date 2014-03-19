@@ -11,9 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import com.sobey.cmdbuild.webservice.CmdbuildSoapService;
-import com.sobey.cmdbuild.webservice.FinancialSoapService;
-import com.sobey.cmdbuild.webservice.IaasSoapService;
-import com.sobey.cmdbuild.webservice.InfrastructureSoapService;
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.test.jetty.JettyFactory;
 import com.sobey.test.spring.Profiles;
@@ -38,16 +35,7 @@ public class BaseFunctionalTestCase {
 	private static Logger logger = LoggerFactory.getLogger(BaseFunctionalTestCase.class);
 
 	@Autowired
-	protected InfrastructureSoapService infrastructureService;
-
-	@Autowired
-	protected FinancialSoapService financialSoapService;
-
-	@Autowired
 	protected CmdbuildSoapService cmdbuildSoapService;
-
-	@Autowired
-	protected IaasSoapService iaasSoapService;
 
 	@BeforeClass
 	public static void initFunctionalTestEnv() throws Exception {

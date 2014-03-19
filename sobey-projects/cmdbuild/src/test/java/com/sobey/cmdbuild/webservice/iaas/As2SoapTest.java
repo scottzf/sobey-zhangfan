@@ -53,13 +53,13 @@ public class As2SoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<As2DTO> responseParams = iaasSoapService.findAs2ByParams(searchParams);
+		DTOResult<As2DTO> responseParams = cmdbuildSoapService.findAs2ByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<As2DTO> response = iaasSoapService.findAs2(id);
+		DTOResult<As2DTO> response = cmdbuildSoapService.findAs2(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class As2SoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<As2DTO> result = iaasSoapService.getAs2List(searchParams);
+		DTOListResult<As2DTO> result = cmdbuildSoapService.getAs2List(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class As2SoapTest extends BaseFunctionalTestCase {
 
 		As2DTO as2DTO = BeanMapper.map(as2, As2DTO.class);
 
-		IdResult response = iaasSoapService.createAs2(as2DTO);
+		IdResult response = cmdbuildSoapService.createAs2(as2DTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class As2SoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateAs2() {
 
-		DTOResult<As2DTO> response = iaasSoapService.findAs2(id);
+		DTOResult<As2DTO> response = cmdbuildSoapService.findAs2(id);
 
 		As2DTO as2DTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class As2SoapTest extends BaseFunctionalTestCase {
 
 		as2DTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = iaasSoapService.updateAs2(id, as2DTO);
+		IdResult result = cmdbuildSoapService.updateAs2(id, as2DTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class As2SoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteAs2() {
 
-		IdResult response = iaasSoapService.deleteAs2(id);
+		IdResult response = cmdbuildSoapService.deleteAs2(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class As2SoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<As2DTO> result = iaasSoapService.getAs2Pagination(searchParams, 1, 10);
+		PaginationResult<As2DTO> result = cmdbuildSoapService.getAs2Pagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

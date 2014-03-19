@@ -1,59 +1,50 @@
 package com.sobey.loadbalancer.webservice;
 
 import javax.jws.WebParam;
+import javax.jws.WebService;
 
-import com.sobey.core.utils.PropertiesLoader;
-import com.sobey.core.utils.TelnetUtil;
-import com.sobey.loadbalancer.script.GenerateScript;
+import org.apache.cxf.feature.Features;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.sobey.loadbalancer.constans.WsConstants;
+import com.sobey.loadbalancer.service.NitroService;
 import com.sobey.loadbalancer.webservice.response.dto.ELBParameter;
 import com.sobey.loadbalancer.webservice.response.result.WSResult;
 
+@WebService(serviceName = "LoadbalancerSoapService", endpointInterface = "com.sobey.loadbalancer.webservice.LoadbalancerSoapService", targetNamespace = WsConstants.NS)
+@Features(features = "org.apache.cxf.feature.LoggingFeature")
 public class LoadbalancerSoapServiceImpl implements LoadbalancerSoapService {
 
-	/**
-	 * 加载applicationContext.propertie文件
-	 */
-	protected static PropertiesLoader LOADBALANCER_LOADER = new PropertiesLoader("classpath:/LOADBALANCER.properties");
-
-	/* LOADBALANCER登录 */
-	protected static final String LOADBALANCER_IP = LOADBALANCER_LOADER.getProperty("LOADBALANCER_IP");
-	protected static final String LOADBALANCER_USERNAME = LOADBALANCER_LOADER.getProperty("LOADBALANCER_USERNAME");
-	protected static final String LOADBALANCER_PASSWORD = LOADBALANCER_LOADER.getProperty("LOADBALANCER_PASSWORD");
+	@Autowired
+	public NitroService service;
 
 	@Override
 	public WSResult createELBByLoadbalancer(@WebParam(name = "ELBParameter") ELBParameter parameter) {
 
-		String command = GenerateScript.generateCreateELBScript(parameter);
+		WSResult result = new WSResult();
 
-		TelnetUtil.execCommand(LOADBALANCER_IP, LOADBALANCER_USERNAME, LOADBALANCER_PASSWORD, command);
+		boolean falg = service.createElb(parameter);
 
-		// TODO 缺少针对返回字符串解析是否执行成功的判断.
+		if (!falg) {
+			result.setCode(WSResult.SYSTEM_ERROR);
+		}
 
-		return new WSResult();
+		return result;
+
 	}
 
 	@Override
 	public WSResult deleteELBByLoadbalancer(@WebParam(name = "ELBParameter") ELBParameter parameter) {
 
-		String command = GenerateScript.generateDeleteELBScript(parameter);
+		WSResult result = new WSResult();
 
-		TelnetUtil.execCommand(LOADBALANCER_IP, LOADBALANCER_USERNAME, LOADBALANCER_PASSWORD, command);
+		boolean falg = service.deleteElb(parameter);
 
-		// TODO 缺少针对返回字符串解析是否执行成功的判断.
+		if (!falg) {
+			result.setCode(WSResult.SYSTEM_ERROR);
+		}
 
-		return new WSResult();
-	}
-
-	@Override
-	public WSResult deleteELBPortByLoadbalancer(@WebParam(name = "ELBParameter") ELBParameter parameter) {
-
-		String command = GenerateScript.generateDeleteELBPortScript(parameter);
-
-		TelnetUtil.execCommand(LOADBALANCER_IP, LOADBALANCER_USERNAME, LOADBALANCER_PASSWORD, command);
-
-		// TODO 缺少针对返回字符串解析是否执行成功的判断.
-
-		return new WSResult();
+		return result;
 	}
 
 }

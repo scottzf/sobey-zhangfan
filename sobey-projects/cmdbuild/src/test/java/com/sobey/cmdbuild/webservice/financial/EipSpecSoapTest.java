@@ -53,13 +53,13 @@ public class EipSpecSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<EipSpecDTO> responseParams = financialSoapService.findEipSpecByParams(searchParams);
+		DTOResult<EipSpecDTO> responseParams = cmdbuildSoapService.findEipSpecByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<EipSpecDTO> response = financialSoapService.findEipSpec(id);
+		DTOResult<EipSpecDTO> response = cmdbuildSoapService.findEipSpec(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class EipSpecSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<EipSpecDTO> result = financialSoapService.getEipSpecList(searchParams);
+		DTOListResult<EipSpecDTO> result = cmdbuildSoapService.getEipSpecList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class EipSpecSoapTest extends BaseFunctionalTestCase {
 
 		EipSpecDTO eipSpecDTO = BeanMapper.map(eipSpec, EipSpecDTO.class);
 
-		IdResult response = financialSoapService.createEipSpec(eipSpecDTO);
+		IdResult response = cmdbuildSoapService.createEipSpec(eipSpecDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class EipSpecSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateEipSpec() {
 
-		DTOResult<EipSpecDTO> response = financialSoapService.findEipSpec(id);
+		DTOResult<EipSpecDTO> response = cmdbuildSoapService.findEipSpec(id);
 
 		EipSpecDTO eipSpecDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class EipSpecSoapTest extends BaseFunctionalTestCase {
 
 		eipSpecDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = financialSoapService.updateEipSpec(id, eipSpecDTO);
+		IdResult result = cmdbuildSoapService.updateEipSpec(id, eipSpecDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class EipSpecSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteEipSpec() {
 
-		IdResult response = financialSoapService.deleteEipSpec(id);
+		IdResult response = cmdbuildSoapService.deleteEipSpec(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class EipSpecSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<EipSpecDTO> result = financialSoapService.getEipSpecPagination(searchParams, 1, 10);
+		PaginationResult<EipSpecDTO> result = cmdbuildSoapService.getEipSpecPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

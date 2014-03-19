@@ -138,6 +138,18 @@
 			<artifactId>spring-test</artifactId>
 			<scope>compile</scope>
 		</dependency>
+		<!-- TEST end -->
+
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+
+		<!-- Netscaler -->
+		<dependency>
+			<groupId>com.citrix.netscaler</groupId>
+			<artifactId>nitro</artifactId>
+		</dependency>
 
 	</dependencies>
 

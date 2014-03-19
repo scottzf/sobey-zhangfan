@@ -11,34 +11,8 @@
 		<jaxws:implementor ref="cmdbuildSoapService" />
 	</jaxws:endpoint>
 
-	<jaxws:endpoint address="/soap/infrastructureSoapService">
-		<jaxws:implementor ref="infrastructureSoapService" />
-	</jaxws:endpoint>
-
-	<jaxws:endpoint address="/soap/financialSoapService">
-		<jaxws:implementor ref="financialSoapService" />
-	</jaxws:endpoint>
-
-	<jaxws:endpoint address="/soap/iaasSoapService">
-		<jaxws:implementor ref="iaasSoapService" />
-	</jaxws:endpoint>
 
 	<!-- WebService的实现Bean定义 -->
-
 	<bean id="cmdbuildSoapService" class="com.sobey.cmdbuild.webservice.CmdbuildSoapServiceImpl" />
-
-	<bean id="infrastructureSoapService" class="com.sobey.cmdbuild.webservice.InfrastructureSoapServiceImpl" />
-
-	<bean id="financialSoapService" class="com.sobey.cmdbuild.webservice.FinancialSoapServiceImpl" />
-
-	<bean id="iaasSoapService" class="com.sobey.cmdbuild.webservice.IaasSoapServiceImpl" />
-
-	<!-- inject WebService Client -->
-
-	<jaxws:client id="switchesSoapService" serviceClass="com.sobey.generate.switches.SwitchesSoapService"
-		address="http://localhost:8082/switch/cxf/soap/switchesSoapService?wsdl" />
-
-	<jaxws:client id="firewallSoapService" serviceClass="com.sobey.generate.firewall.FirewallSoapService"
-		address="http://localhost:8083/firewall/cxf/soap/firewallSoapService?wsdl" />
 
 </beans>

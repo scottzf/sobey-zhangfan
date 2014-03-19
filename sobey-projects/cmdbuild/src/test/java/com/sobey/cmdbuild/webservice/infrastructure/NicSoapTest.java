@@ -53,13 +53,13 @@ public class NicSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<NicDTO> responseParams = infrastructureService.findNicByParams(searchParams);
+		DTOResult<NicDTO> responseParams = cmdbuildSoapService.findNicByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<NicDTO> response = infrastructureService.findNic(id);
+		DTOResult<NicDTO> response = cmdbuildSoapService.findNic(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class NicSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<NicDTO> result = infrastructureService.getNicList(searchParams);
+		DTOListResult<NicDTO> result = cmdbuildSoapService.getNicList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class NicSoapTest extends BaseFunctionalTestCase {
 
 		NicDTO nicDTO = BeanMapper.map(nic, NicDTO.class);
 
-		IdResult response = infrastructureService.createNic(nicDTO);
+		IdResult response = cmdbuildSoapService.createNic(nicDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class NicSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateNic() {
 
-		DTOResult<NicDTO> response = infrastructureService.findNic(id);
+		DTOResult<NicDTO> response = cmdbuildSoapService.findNic(id);
 
 		NicDTO nicDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class NicSoapTest extends BaseFunctionalTestCase {
 
 		nicDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateNic(id, nicDTO);
+		IdResult result = cmdbuildSoapService.updateNic(id, nicDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class NicSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteNic() {
 
-		IdResult response = infrastructureService.deleteNic(id);
+		IdResult response = cmdbuildSoapService.deleteNic(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class NicSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<NicDTO> result = infrastructureService.getNicPagination(searchParams, 1, 10);
+		PaginationResult<NicDTO> result = cmdbuildSoapService.getNicPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

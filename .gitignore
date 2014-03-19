@@ -13,6 +13,7 @@
 .idea/
 
 # Others
+generate/
 target/
 logs/
 /support/jmeter/*.jtl

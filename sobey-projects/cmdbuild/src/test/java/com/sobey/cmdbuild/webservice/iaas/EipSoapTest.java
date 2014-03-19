@@ -53,13 +53,13 @@ public class EipSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<EipDTO> responseParams = iaasSoapService.findEipByParams(searchParams);
+		DTOResult<EipDTO> responseParams = cmdbuildSoapService.findEipByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<EipDTO> response = iaasSoapService.findEip(id);
+		DTOResult<EipDTO> response = cmdbuildSoapService.findEip(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class EipSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<EipDTO> result = iaasSoapService.getEipList(searchParams);
+		DTOListResult<EipDTO> result = cmdbuildSoapService.getEipList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class EipSoapTest extends BaseFunctionalTestCase {
 
 		EipDTO eipDTO = BeanMapper.map(eip, EipDTO.class);
 
-		IdResult response = iaasSoapService.createEip(eipDTO);
+		IdResult response = cmdbuildSoapService.createEip(eipDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class EipSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateEip() {
 
-		DTOResult<EipDTO> response = iaasSoapService.findEip(id);
+		DTOResult<EipDTO> response = cmdbuildSoapService.findEip(id);
 
 		EipDTO eipDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class EipSoapTest extends BaseFunctionalTestCase {
 
 		eipDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = iaasSoapService.updateEip(id, eipDTO);
+		IdResult result = cmdbuildSoapService.updateEip(id, eipDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class EipSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteEip() {
 
-		IdResult response = iaasSoapService.deleteEip(id);
+		IdResult response = cmdbuildSoapService.deleteEip(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class EipSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<EipDTO> result = iaasSoapService.getEipPagination(searchParams, 1, 10);
+		PaginationResult<EipDTO> result = cmdbuildSoapService.getEipPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

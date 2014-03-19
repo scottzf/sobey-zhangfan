@@ -55,13 +55,13 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<VlanDTO> responseParams = infrastructureService.findVlanByParams(searchParams);
+		DTOResult<VlanDTO> responseParams = cmdbuildSoapService.findVlanByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<VlanDTO> response = infrastructureService.findVlan(id);
+		DTOResult<VlanDTO> response = cmdbuildSoapService.findVlan(id);
 
 		assertNotNull(response);
 
@@ -75,7 +75,7 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<VlanDTO> result = infrastructureService.getVlanList(searchParams);
+		DTOListResult<VlanDTO> result = cmdbuildSoapService.getVlanList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -91,7 +91,7 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 
 		VlanDTO vlanDTO = BeanMapper.map(vlan, VlanDTO.class);
 
-		IdResult response = infrastructureService.createVlan(vlanDTO);
+		IdResult response = cmdbuildSoapService.createVlan(vlanDTO);
 
 		assertNotNull(response.getId());
 
@@ -103,7 +103,7 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateVlan() {
 
-		DTOResult<VlanDTO> response = infrastructureService.findVlan(id);
+		DTOResult<VlanDTO> response = cmdbuildSoapService.findVlan(id);
 
 		VlanDTO vlanDTO = response.getDto();
 
@@ -111,7 +111,7 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 
 		vlanDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateVlan(id, vlanDTO);
+		IdResult result = cmdbuildSoapService.updateVlan(id, vlanDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -121,7 +121,7 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteVlan() {
 
-		IdResult response = infrastructureService.deleteVlan(id);
+		IdResult response = cmdbuildSoapService.deleteVlan(id);
 
 		assertNotNull(response.getId());
 
@@ -133,7 +133,7 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<VlanDTO> result = infrastructureService.getVlanPagination(searchParams, 1, 10);
+		PaginationResult<VlanDTO> result = cmdbuildSoapService.getVlanPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 
@@ -160,7 +160,7 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 
 		}
 
-		IdResult results = infrastructureService.insertVlan(list);
+		IdResult results = cmdbuildSoapService.insertVlan(list);
 		System.err.println(results.getMessage());
 
 	}

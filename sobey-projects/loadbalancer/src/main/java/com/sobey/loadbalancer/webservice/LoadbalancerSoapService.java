@@ -8,7 +8,7 @@ import com.sobey.loadbalancer.webservice.response.dto.ELBParameter;
 import com.sobey.loadbalancer.webservice.response.result.WSResult;
 
 /**
- * DNS对外暴露的唯一的webservice接口.
+ * Loadbalancer对外暴露的唯一的webservice接口.
  * 
  * @author Administrator
  * 
@@ -17,7 +17,7 @@ import com.sobey.loadbalancer.webservice.response.result.WSResult;
 public interface LoadbalancerSoapService {
 
 	/**
-	 * 在Loadbalancer上执行脚本,创建ELB
+	 * 在Loadbalancer上创建ELB
 	 * 
 	 * @param parameter
 	 *            {@link ELBParameter}
@@ -26,21 +26,12 @@ public interface LoadbalancerSoapService {
 	WSResult createELBByLoadbalancer(@WebParam(name = "ELBParameter") ELBParameter parameter);
 
 	/**
-	 * 在Loadbalancer上执行脚本,删除ELB
+	 * 在Loadbalancer上删除ELB
 	 * 
 	 * @param parameter
 	 *            {@link ELBParameter}
 	 * @return
 	 */
 	WSResult deleteELBByLoadbalancer(@WebParam(name = "ELBParameter") ELBParameter parameter);
-
-	/**
-	 * 在Loadbalancer上执行脚本,删除ELB Port
-	 * 
-	 * @param parameter
-	 *            {@link ELBParameter}
-	 * @return
-	 */
-	WSResult deleteELBPortByLoadbalancer(@WebParam(name = "ELBParameter") ELBParameter parameter);
 
 }

@@ -15,27 +15,56 @@ echo [Step 2] Start all sobey projects.
 cd sobey-projects\cmdbuild
 start "CMDBuild" %MVN% clean clean tomcat:run -Dmaven.tomcat.port=8080
 if errorlevel 1 goto error
+ 
 
-rem cd ..\instance
-rem start "Instance" %MVN% clean tomcat:run -Dmaven.tomcat.port=8081
-rem if errorlevel 1 goto error
-rem cd ..\..\
+cd ..\instance
+start "Instance" %MVN% clean tomcat:run -Dmaven.tomcat.port=8081
+if errorlevel 1 goto error
 
+rem 注释end
+goto start  
+ 
 cd ..\switch
 start "Switch" %MVN% clean tomcat:run -Dmaven.tomcat.port=8082
 if errorlevel 1 goto error
-cd ..\..\
-
+ 
 cd ..\firewal
 start "Firewal" %MVN% clean tomcat:run -Dmaven.tomcat.port=8083
 if errorlevel 1 goto error
-cd ..\..\
+
+cd ..\storage
+start "Storage" %MVN% clean tomcat:run -Dmaven.tomcat.port=8084
+if errorlevel 1 goto error
+
+cd ..\dns
+start "DNS" %MVN% clean tomcat:run -Dmaven.tomcat.port=8085
+if errorlevel 1 goto error
+
+
+
+cd ..\loadbalancer
+start "Loadbalancer" %MVN% clean tomcat:run -Dmaven.tomcat.port=8086
+if errorlevel 1 goto error
+
+rem 注释start
+:start
+
+
+cd ..\cmop-api
+start "cmop-api" %MVN% clean tomcat:run -Dmaven.tomcat.port=8088
+if errorlevel 1 goto error
+
 
 echo [INFO] Please wait a moment. When you see "[INFO] Started Jetty Server" in consoles, you can access below demo sites:
 echo [INFO] http://localhost:8080/cmdbuild
 echo [INFO] http://localhost:8081/instance
 echo [INFO] http://localhost:8082/switch
 echo [INFO] http://localhost:8083/firewall
+echo [INFO] http://localhost:8084/storage
+echo [INFO] http://localhost:8085/dns
+echo [INFO] http://localhost:8086/loadbalancer
+rem echo [INFO] http://localhost:8087/nagios
+echo [INFO] http://localhost:8088/cmop-api
 
 goto end
 :error

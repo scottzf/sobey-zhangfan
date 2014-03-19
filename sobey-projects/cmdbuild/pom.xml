@@ -6,7 +6,7 @@
 		<groupId>com.sobey</groupId>
 		<artifactId>sobey-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../modules/parent/</relativePath>
+		<relativePath>../sobey-modules/sobey-parent/</relativePath>
 	</parent>
 	<groupId>com.sobey.cmdbuild</groupId>
 	<artifactId>cmdbuild</artifactId>
@@ -464,32 +464,6 @@
 				<artifactId>maven-enforcer-plugin</artifactId>
 			</plugin>
 
-			<!-- cxf wsdl2java 插件 -->
-			<plugin>
-				<groupId>org.apache.cxf</groupId>
-				<artifactId>cxf-codegen-plugin</artifactId>
-				<version>${cxf.version}</version>
-				<executions>
-					<execution>
-						<id>generate-sources</id>
-						<phase>generate-sources</phase>
-						<configuration>
-							<sourceRoot>${basedir}/src/main/java</sourceRoot>
-							<wsdlOptions>
-								<wsdlOption>
-									<wsdl>${basedir}/src/main/resources/wsdl/switchesSoapService.xml</wsdl>
-								</wsdlOption>
-								<wsdlOption>
-									<wsdl>${basedir}/src/main/resources/wsdl/firewallSoapService.xml</wsdl>
-								</wsdlOption>
-							</wsdlOptions>
-						</configuration>
-						<goals>
-							<goal>wsdl2java</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 

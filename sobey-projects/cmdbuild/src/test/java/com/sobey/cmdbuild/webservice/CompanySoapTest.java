@@ -30,7 +30,6 @@ import com.sobey.core.mapper.BeanMapper;
  * 
  * 使用在Spring applicaitonContext.xml中用<jaxws:client/>，根据CmdbuildWebService接口创建的Client.
  * 
- * 
  * @author Administrator
  */
 @RunWith(SpringJUnit4ClassRunner.class)

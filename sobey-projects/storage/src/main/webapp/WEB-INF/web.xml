@@ -37,15 +37,7 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
-	<filter>
-		<filter-name>openEntityManagerInViewFilter</filter-name>
-		<filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>openEntityManagerInViewFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
+	<!-- Spring MVC Servlet -->
 	<servlet>
 		<servlet-name>springServlet</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -73,16 +65,4 @@
 		<session-timeout>120</session-timeout>
 	</session-config>
 
-	<error-page>
-		<exception-type>java.lang.Throwable</exception-type>
-		<location>/WEB-INF/views/error/500.jsp</location>
-	</error-page>
-	<error-page>
-		<error-code>500</error-code>
-		<location>/WEB-INF/views/error/500.jsp</location>
-	</error-page>
-	<error-page>
-		<error-code>404</error-code>
-		<location>/WEB-INF/views/error/404.jsp</location>
-	</error-page>
 </web-app>

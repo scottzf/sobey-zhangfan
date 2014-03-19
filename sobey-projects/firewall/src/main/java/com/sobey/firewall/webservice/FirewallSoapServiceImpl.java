@@ -5,10 +5,12 @@ import java.util.List;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.core.utils.TelnetUtil;
 import com.sobey.firewall.constans.WsConstants;
-import com.sobey.firewall.script.GenerateScript;
+import com.sobey.firewall.service.FirewallService;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
 import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
 import com.sobey.firewall.webservice.response.result.WSResult;
@@ -26,11 +28,14 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 	protected static final String FIREWALL_USERNAME = FIREWALL_LOADER.getProperty("FIREWALL_USERNAME");
 	protected static final String FIREWALL_PASSWORD = FIREWALL_LOADER.getProperty("FIREWALL_PASSWORD");
 
+	@Autowired
+	private FirewallService service;
+
 	@Override
 	public WSResult createEIPByFirewall(@WebParam(name = "EIPParameter") EIPParameter parameter,
 			@WebParam(name = "allPolicies") List<String> allPolicies) {
 
-		String command = GenerateScript.generateCreateEIPScript(parameter, allPolicies);
+		String command = service.createEip(parameter, allPolicies);
 
 		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command);
 
@@ -43,7 +48,7 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 	public WSResult deleteEIPByFirewall(@WebParam(name = "EIPParameter") EIPParameter parameter,
 			@WebParam(name = "allPolicies") List<String> allPolicies) {
 
-		String command = GenerateScript.generateDeleteEIPScript(parameter, allPolicies);
+		String command = service.deleteEip(parameter, allPolicies);
 
 		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command);
 
@@ -55,7 +60,7 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 	@Override
 	public WSResult createVPNUserByFirewall(@WebParam(name = "VPNUserParameter") VPNUserParameter parameter) {
 
-		String command = GenerateScript.generateCreateVPNUserScript(parameter);
+		String command = service.createVPNUser(parameter);
 
 		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command);
 
@@ -67,7 +72,7 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 	@Override
 	public WSResult deleteVPNUserByFirewall(@WebParam(name = "VPNUserParameter") VPNUserParameter parameter) {
 
-		String command = GenerateScript.generateDeleteVPNUserScript(parameter);
+		String command = service.deleteVPNUser(parameter);
 
 		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command);
 
@@ -80,7 +85,7 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 	public WSResult changeVPNUserAccesssAddressByFirewall(
 			@WebParam(name = "VPNUserParameter") VPNUserParameter parameter) {
 
-		String command = GenerateScript.generateChangeAccesssAddressIntoVPNUserScript(parameter);
+		String command = service.changeAccesssAddressIntoVPNUser(parameter);
 
 		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command);
 

@@ -53,14 +53,13 @@ public class LoadBalancerPortSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<LoadBalancerPortDTO> responseParams = infrastructureService
-				.findLoadBalancerPortByParams(searchParams);
+		DTOResult<LoadBalancerPortDTO> responseParams = cmdbuildSoapService.findLoadBalancerPortByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<LoadBalancerPortDTO> response = infrastructureService.findLoadBalancerPort(id);
+		DTOResult<LoadBalancerPortDTO> response = cmdbuildSoapService.findLoadBalancerPort(id);
 
 		assertNotNull(response);
 
@@ -74,7 +73,7 @@ public class LoadBalancerPortSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<LoadBalancerPortDTO> result = infrastructureService.getLoadBalancerPortList(searchParams);
+		DTOListResult<LoadBalancerPortDTO> result = cmdbuildSoapService.getLoadBalancerPortList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -90,7 +89,7 @@ public class LoadBalancerPortSoapTest extends BaseFunctionalTestCase {
 
 		LoadBalancerPortDTO loadBalancerPortDTO = BeanMapper.map(loadBalancerPort, LoadBalancerPortDTO.class);
 
-		IdResult response = infrastructureService.createLoadBalancerPort(loadBalancerPortDTO);
+		IdResult response = cmdbuildSoapService.createLoadBalancerPort(loadBalancerPortDTO);
 
 		assertNotNull(response.getId());
 
@@ -102,7 +101,7 @@ public class LoadBalancerPortSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateLoadBalancerPort() {
 
-		DTOResult<LoadBalancerPortDTO> response = infrastructureService.findLoadBalancerPort(id);
+		DTOResult<LoadBalancerPortDTO> response = cmdbuildSoapService.findLoadBalancerPort(id);
 
 		LoadBalancerPortDTO loadBalancerPortDTO = response.getDto();
 
@@ -110,7 +109,7 @@ public class LoadBalancerPortSoapTest extends BaseFunctionalTestCase {
 
 		loadBalancerPortDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateLoadBalancerPort(id, loadBalancerPortDTO);
+		IdResult result = cmdbuildSoapService.updateLoadBalancerPort(id, loadBalancerPortDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -120,7 +119,7 @@ public class LoadBalancerPortSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteLoadBalancerPort() {
 
-		IdResult response = infrastructureService.deleteLoadBalancerPort(id);
+		IdResult response = cmdbuildSoapService.deleteLoadBalancerPort(id);
 
 		assertNotNull(response.getId());
 
@@ -132,8 +131,8 @@ public class LoadBalancerPortSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<LoadBalancerPortDTO> result = infrastructureService.getLoadBalancerPortPagination(
-				searchParams, 1, 10);
+		PaginationResult<LoadBalancerPortDTO> result = cmdbuildSoapService.getLoadBalancerPortPagination(searchParams,
+				1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

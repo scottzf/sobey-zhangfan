@@ -53,13 +53,13 @@ public class FirewallSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<FirewallDTO> responseParams = infrastructureService.findFirewallByParams(searchParams);
+		DTOResult<FirewallDTO> responseParams = cmdbuildSoapService.findFirewallByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<FirewallDTO> response = infrastructureService.findFirewall(id);
+		DTOResult<FirewallDTO> response = cmdbuildSoapService.findFirewall(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class FirewallSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<FirewallDTO> result = infrastructureService.getFirewallList(searchParams);
+		DTOListResult<FirewallDTO> result = cmdbuildSoapService.getFirewallList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class FirewallSoapTest extends BaseFunctionalTestCase {
 
 		FirewallDTO firewallDTO = BeanMapper.map(firewall, FirewallDTO.class);
 
-		IdResult response = infrastructureService.createFirewall(firewallDTO);
+		IdResult response = cmdbuildSoapService.createFirewall(firewallDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class FirewallSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateFirewall() {
 
-		DTOResult<FirewallDTO> response = infrastructureService.findFirewall(id);
+		DTOResult<FirewallDTO> response = cmdbuildSoapService.findFirewall(id);
 
 		FirewallDTO firewallDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class FirewallSoapTest extends BaseFunctionalTestCase {
 
 		firewallDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateFirewall(id, firewallDTO);
+		IdResult result = cmdbuildSoapService.updateFirewall(id, firewallDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class FirewallSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteFirewall() {
 
-		IdResult response = infrastructureService.deleteFirewall(id);
+		IdResult response = cmdbuildSoapService.deleteFirewall(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class FirewallSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<FirewallDTO> result = infrastructureService.getFirewallPagination(searchParams, 1, 10);
+		PaginationResult<FirewallDTO> result = cmdbuildSoapService.getFirewallPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

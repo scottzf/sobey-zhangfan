@@ -53,13 +53,13 @@ public class DnsSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<DnsDTO> responseParams = iaasSoapService.findDnsByParams(searchParams);
+		DTOResult<DnsDTO> responseParams = cmdbuildSoapService.findDnsByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<DnsDTO> response = iaasSoapService.findDns(id);
+		DTOResult<DnsDTO> response = cmdbuildSoapService.findDns(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class DnsSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<DnsDTO> result = iaasSoapService.getDnsList(searchParams);
+		DTOListResult<DnsDTO> result = cmdbuildSoapService.getDnsList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class DnsSoapTest extends BaseFunctionalTestCase {
 
 		DnsDTO dnsDTO = BeanMapper.map(dns, DnsDTO.class);
 
-		IdResult response = iaasSoapService.createDns(dnsDTO);
+		IdResult response = cmdbuildSoapService.createDns(dnsDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class DnsSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateDns() {
 
-		DTOResult<DnsDTO> response = iaasSoapService.findDns(id);
+		DTOResult<DnsDTO> response = cmdbuildSoapService.findDns(id);
 
 		DnsDTO dnsDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class DnsSoapTest extends BaseFunctionalTestCase {
 
 		dnsDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = iaasSoapService.updateDns(id, dnsDTO);
+		IdResult result = cmdbuildSoapService.updateDns(id, dnsDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class DnsSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteDns() {
 
-		IdResult response = iaasSoapService.deleteDns(id);
+		IdResult response = cmdbuildSoapService.deleteDns(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class DnsSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<DnsDTO> result = iaasSoapService.getDnsPagination(searchParams, 1, 10);
+		PaginationResult<DnsDTO> result = cmdbuildSoapService.getDnsPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

@@ -53,13 +53,13 @@ public class NicPortSoapTest extends BaseFunctionalTestCase {
 
 		searchParams.put("EQ_code", code);
 
-		DTOResult<NicPortDTO> responseParams = infrastructureService.findNicPortByParams(searchParams);
+		DTOResult<NicPortDTO> responseParams = cmdbuildSoapService.findNicPortByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<NicPortDTO> response = infrastructureService.findNicPort(id);
+		DTOResult<NicPortDTO> response = cmdbuildSoapService.findNicPort(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class NicPortSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = Maps.newHashMap();
 
-		DTOListResult<NicPortDTO> result = infrastructureService.getNicPortList(searchParams);
+		DTOListResult<NicPortDTO> result = cmdbuildSoapService.getNicPortList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -89,7 +89,7 @@ public class NicPortSoapTest extends BaseFunctionalTestCase {
 
 		NicPortDTO nicPortDTO = BeanMapper.map(nicPort, NicPortDTO.class);
 
-		IdResult response = infrastructureService.createNicPort(nicPortDTO);
+		IdResult response = cmdbuildSoapService.createNicPort(nicPortDTO);
 
 		assertNotNull(response.getId());
 
@@ -101,7 +101,7 @@ public class NicPortSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateNicPort() {
 
-		DTOResult<NicPortDTO> response = infrastructureService.findNicPort(id);
+		DTOResult<NicPortDTO> response = cmdbuildSoapService.findNicPort(id);
 
 		NicPortDTO nicPortDTO = response.getDto();
 
@@ -109,7 +109,7 @@ public class NicPortSoapTest extends BaseFunctionalTestCase {
 
 		nicPortDTO.setDescription(RandomData.randomName("update"));
 
-		IdResult result = infrastructureService.updateNicPort(id, nicPortDTO);
+		IdResult result = cmdbuildSoapService.updateNicPort(id, nicPortDTO);
 
 		assertEquals("0", result.getCode());
 
@@ -119,7 +119,7 @@ public class NicPortSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testDeleteNicPort() {
 
-		IdResult response = infrastructureService.deleteNicPort(id);
+		IdResult response = cmdbuildSoapService.deleteNicPort(id);
 
 		assertNotNull(response.getId());
 
@@ -131,7 +131,7 @@ public class NicPortSoapTest extends BaseFunctionalTestCase {
 
 		Map<String, Object> searchParams = new HashMap<String, Object>();
 
-		PaginationResult<NicPortDTO> result = infrastructureService.getNicPortPagination(searchParams, 1, 10);
+		PaginationResult<NicPortDTO> result = cmdbuildSoapService.getNicPortPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 
