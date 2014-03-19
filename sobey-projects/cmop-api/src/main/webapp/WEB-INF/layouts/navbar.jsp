@@ -18,12 +18,12 @@
        
          
          <li class="dropdown "active"">
-           <a href="#" class="dropdown-toggle" data-toggle="dropdown">网络管理 <b class="caret"></b></a>
+           <a href="#" class="dropdown-toggle" data-toggle="dropdown">IaaS中间件<b class="caret"></b></a>
            <ul class="dropdown-menu">
-             <li><a href="#">Switch</a></li>
-             <li><a href="#">Firewall</a></li>
-             <li><a href="#">DNS</a></li>
-             <li><a href="#">LoadBalancer</a></li>
+             <li><a href="#">云主机克隆</a></li>
+             <li><a href="#">云主机管理</a></li>
+             <li><a href="#">云主机监控</a></li>
+             <li><a href="#">DNS管理</a></li>
            </ul>
          </li>
          
