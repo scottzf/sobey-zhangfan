@@ -1,5 +1,8 @@
 package com.sobey.api.web;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +12,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sobey.api.service.DnsService;
 import com.sobey.generate.dns.DNSParameter;
+import com.sobey.generate.dns.DNSPolicyParameter;
+import com.sobey.generate.dns.DNSPublicIPParameter;
 
 /**
  * Dns 模块
@@ -32,15 +37,55 @@ public class DnsController {
 	}
 
 	/**
+	 * 根据协议获得默认的端口.
+	 * 
+	 * <pre>
+	 * HTTP:80
+	 * HTTPS:443
+	 * </pre>
+	 * 
+	 * @param protocol
+	 * @return
+	 */
+	private Integer getPortFromProtocol(String protocol) {
+
+		if ("HTTPS".equals(protocol.toUpperCase())) {
+			return 443;
+		} else {
+			return 80;
+		}
+
+	}
+
+	/**
 	 * 创建一个Dns
 	 */
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String create(@RequestParam(value = "description") String description,
-			@RequestParam(value = "gateway") String gateway, @RequestParam(value = "ipaddress") String ipaddress,
-			@RequestParam(value = "subNetMask") String subNetMask, @RequestParam(value = "vmName") String vmName,
-			RedirectAttributes redirectAttributes) {
+	public String create(@RequestParam(value = "domianName") String domianName,
+			@RequestParam(value = "publicIPs") String[] publicIPs,
+			@RequestParam(value = "protocols") String[] protocols, RedirectAttributes redirectAttributes) {
+
+		List<DNSPublicIPParameter> publicIPParameters = new ArrayList<DNSPublicIPParameter>();
+
+		for (int i = 0; i < protocols.length; i++) {
+
+			DNSPolicyParameter policyParameter = new DNSPolicyParameter();
+			policyParameter.setProtocolText(protocols[i]);
+			policyParameter.setSourcePort(getPortFromProtocol(protocols[i]));
+			policyParameter.setTargetPort(getPortFromProtocol(protocols[i]));
+
+			DNSPublicIPParameter publicIPParameter = new DNSPublicIPParameter();
+			publicIPParameter.setIpaddress(publicIPs[i]);
+			publicIPParameter.getPolicyParameters().add(policyParameter);
+
+			publicIPParameters.add(publicIPParameter);
+
+		}
 
 		DNSParameter dnsParameter = new DNSParameter();
+		dnsParameter.setDomianType("gslb");
+		dnsParameter.setDomianName(domianName);
+		dnsParameter.getPublicIPs().addAll(publicIPParameters);
 
 		String message = "";
 
@@ -67,9 +112,31 @@ public class DnsController {
 	 * 删除Dns
 	 */
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	public String delete(@RequestParam(value = "vmName") String vmName, RedirectAttributes redirectAttributes) {
+	public String delete(@RequestParam(value = "domianName") String domianName,
+			@RequestParam(value = "publicIPs") String[] publicIPs,
+			@RequestParam(value = "protocols") String[] protocols, RedirectAttributes redirectAttributes) {
+
+		List<DNSPublicIPParameter> publicIPParameters = new ArrayList<DNSPublicIPParameter>();
+
+		for (int i = 0; i < protocols.length; i++) {
+
+			DNSPolicyParameter policyParameter = new DNSPolicyParameter();
+			policyParameter.setProtocolText(protocols[i]);
+			policyParameter.setSourcePort(getPortFromProtocol(protocols[i]));
+			policyParameter.setTargetPort(getPortFromProtocol(protocols[i]));
+
+			DNSPublicIPParameter publicIPParameter = new DNSPublicIPParameter();
+			publicIPParameter.setIpaddress(publicIPs[i]);
+			publicIPParameter.getPolicyParameters().add(policyParameter);
+
+			publicIPParameters.add(publicIPParameter);
+
+		}
 
 		DNSParameter dnsParameter = new DNSParameter();
+		dnsParameter.setDomianType("gslb");
+		dnsParameter.setDomianName(domianName);
+		dnsParameter.getPublicIPs().addAll(publicIPParameters);
 
 		String message = "";
 

@@ -475,9 +475,9 @@
 						<configuration>
 							<sourceRoot>${basedir}/src/main/java</sourceRoot>
 							<wsdlOptions>
-							<!-- 	<wsdlOption>
-									<wsdl>${basedir}/src/main/resources/wsdl/cmdbuildSoapService.xml</wsdl>
-								</wsdlOption> -->
+								<wsdlOption>
+									<wsdl>${basedir}/src/main/resources/wsdl/dnsSoapService.xml</wsdl>
+								</wsdlOption>
 								<wsdlOption>
 									<wsdl>${basedir}/src/main/resources/wsdl/instanceSoapService.xml</wsdl>
 								</wsdlOption>

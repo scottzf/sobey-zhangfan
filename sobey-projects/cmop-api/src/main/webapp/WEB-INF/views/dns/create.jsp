@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Instance Clone Demo</title>
+<title>Dns Create Demo</title>
 </head>
 
 <body>
@@ -11,51 +11,62 @@
 	<form class="form-horizontal" role="form" method="post" action=".">
 
 		<div class="form-group">
-			<label for="vmName" class="col-sm-2 control-label">VMName</label>
+			<label for="domianName" class="col-sm-2 control-label">DomianName</label>
 			<div class="col-sm-10">
-				<input type="text" class="form-control" id="vmName" name="vmName"
-					placeholder="虚拟机名称" value="Sobey">
+				<input type="text" class="form-control" id="domianName"
+					name="domianName" placeholder="域名">
 			</div>
 		</div>
 
-		<div class="form-group">
-			<label for="ipaddress" class="col-sm-2 control-label">Ipaddress</label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" id="ipaddress"
-					name="ipaddress" placeholder="ip地址" value="10.10.1.80">
+		<div class="form-group clone">
+			<label for="domianName" class="col-sm-2 control-label">Policy</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" name="publicIPs"
+					placeholder="IP地址">
+			</div>
+
+			<div class="col-sm-2">
+				<select name="protocols" class="form-control">
+					<option value="HTTP">HTTP</option>
+					<option value="SSL">HTTPS</option>
+				</select>
+			</div>
+
+			<div class="col-sm-1">
+				<button type="button" class="btn btn-default clone">Add
+					Policy</button>
+			</div>
+			<div class="col-sm-1">
+				<button type="button" class="btn btn-warning clone">Delete
+					Policy</button>
 			</div>
 		</div>
 
-		<div class="form-group">
-			<label for="gateway" class="col-sm-2 control-label">Gateway</label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" id="gateway" name="gateway"
-					placeholder="网关" value="10.10.1.0">
-			</div>
-		</div>
-
-		<div class="form-group">
-			<label for="subNetMask" class="col-sm-2 control-label">SubNetMask</label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" id="subNetMask"
-					name="subNetMask" placeholder="子网掩码" value="255.255.255.0">
-			</div>
-		</div>
-
-		<div class="form-group">
-			<label for="description" class="col-sm-2 control-label">Description</label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" id="description"
-					name="description" placeholder="备注" value="CMOP v2.0 Demo">
-			</div>
-		</div>
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<button type="submit" class="btn btn-primary">Clone</button>
+				<button type="submit" class="btn btn-primary">Create</button>
 			</div>
 		</div>
 	</form>
+
+	<script>
+		$(document).ready(function() {
+
+			$(document).on("click", "button.clone", function() {
+				var $this = $(this);
+				var $div = $this.closest('div.clone');
+				if ($this.hasClass("btn-warning")) {
+					$div.remove();
+				} else {
+					var $clone = $div.clone();
+					$clone.find('input[type=text]').val('');
+					$div.after($clone);
+				}
+			});
+
+		});
+	</script>
 
 </body>
 </html>

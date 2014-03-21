@@ -25,6 +25,12 @@
 						<li><a href="${ctx}/instance/destroy/">虚拟机销毁</a></li>
 						<li><a href="${ctx}/instance/relation/">主机、虚拟机关联关系</a></li>
 					</ul></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">Dns <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="${ctx}/dns/create/">创建Dns</a></li>
+						<li><a href="${ctx}/dns/delete/">删除Dns</a></li>
+					</ul></li>
 			</ul>
 		</div>
 		<!--/.nav-collapse -->
