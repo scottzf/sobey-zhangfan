@@ -17,11 +17,11 @@ public class DnsSoapServiceImpl implements DnsSoapService {
 	public NitroService service;
 
 	@Override
-	public WSResult createDNSByDNS(@WebParam(name = "DNSParameter") DNSParameter parameter) {
+	public WSResult createDNSByDNS(@WebParam(name = "dnsParameter") DNSParameter dnsParameter) {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.createDns(parameter);
+		boolean falg = service.createDns(dnsParameter);
 
 		if (!falg) {
 			result.setCode(WSResult.PARAMETER_ERROR);
@@ -31,11 +31,11 @@ public class DnsSoapServiceImpl implements DnsSoapService {
 	}
 
 	@Override
-	public WSResult deleteDNSByDNS(@WebParam(name = "DNSParameter") DNSParameter parameter) {
+	public WSResult deleteDNSByDNS(@WebParam(name = "dnsParameter") DNSParameter dnsParameter) {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.deleteDns(parameter);
+		boolean falg = service.deleteDns(dnsParameter);
 
 		if (!falg) {
 			result.setCode(WSResult.PARAMETER_ERROR);
