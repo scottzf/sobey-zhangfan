@@ -23,11 +23,11 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	public VMService service;
 
 	@Override
-	public WSResult cloneVMByInstance(@WebParam(name = "CloneVMParameter") CloneVMParameter parameter) {
+	public WSResult cloneVMByInstance(@WebParam(name = "cloneVMParameter") CloneVMParameter cloneVMParameter) {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.cloneVM(parameter);
+		boolean falg = service.cloneVM(cloneVMParameter);
 
 		if (!falg) {
 			result.setCode(WSResult.SYSTEM_ERROR);
@@ -37,11 +37,11 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	}
 
 	@Override
-	public WSResult destroyVMByInstance(@WebParam(name = "DestroyVMParameter") DestroyVMParameter parameter) {
+	public WSResult destroyVMByInstance(@WebParam(name = "destroyVMParameter") DestroyVMParameter destroyVMParameter) {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.destroyVM(parameter);
+		boolean falg = service.destroyVM(destroyVMParameter);
 
 		if (!falg) {
 			result.setCode(WSResult.SYSTEM_ERROR);
@@ -51,11 +51,11 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	}
 
 	@Override
-	public WSResult reconfigVMByInstance(@WebParam(name = "ReconfigVMParameter") ReconfigVMParameter parameter) {
+	public WSResult reconfigVMByInstance(@WebParam(name = "reconfigVMParameter") ReconfigVMParameter reconfigVMParameter) {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.reconfigVM(parameter);
+		boolean falg = service.reconfigVM(reconfigVMParameter);
 
 		if (!falg) {
 			result.setCode(WSResult.SYSTEM_ERROR);
@@ -65,11 +65,11 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	}
 
 	@Override
-	public WSResult powerVMByInstance(@WebParam(name = "PowerVMParameter") PowerVMParameter parameter) {
+	public WSResult powerVMByInstance(@WebParam(name = "powerVMParameter") PowerVMParameter powerVMParameter) {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.powerVM(parameter);
+		boolean falg = service.powerVM(powerVMParameter);
 
 		if (!falg) {
 			result.setCode(WSResult.SYSTEM_ERROR);
