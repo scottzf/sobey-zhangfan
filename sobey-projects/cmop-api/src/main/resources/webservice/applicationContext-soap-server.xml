@@ -22,7 +22,10 @@
 	<jaxws:client id="instanceSoapService" serviceClass="com.sobey.generate.instance.InstanceSoapService"
 		address="http://localhost:8081/instance/cxf/soap/instanceSoapService?wsdl" />
 
-	<jaxws:client id="dnsSoapService" serviceClass="com.sobey.generate.dns.DnsSoapService"
-		address="http://localhost:8085/dns/cxf/soap/dnsSoapService?wsdl" />
+	<jaxws:client id="dnsSoapService" serviceClass="com.sobey.generate.dns.DnsSoapService" address="http://localhost:8085/dns/cxf/soap/dnsSoapService?wsdl" />
+
+
+	<jaxws:client id="nagiosSoapService" serviceClass="com.sobey.generate.nagios.NagiosSoapService"
+		address="http://localhost:8087/nagios/cxf/soap/nagiosSoapService?wsdl" />
 
 </beans>

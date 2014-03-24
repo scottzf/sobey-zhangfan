@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://nagios.generate.sobey.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="NagiosSoapService" targetNamespace="http://nagios.generate.sobey.com">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nagios.generate.sobey.com" elementFormDefault="unqualified" targetNamespace="http://nagios.generate.sobey.com" version="1.0">
+
+  <xs:element name="NagiosPingDTO" type="tns:NagiosPingDTO"/>
+
+  <xs:element name="getNagiosPing" type="tns:getNagiosPing"/>
+
+  <xs:element name="getNagiosPingResponse" type="tns:getNagiosPingResponse"/>
+
+  <xs:complexType name="getNagiosPing">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg3" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosPingResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:NagiosPingDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="NagiosPingDTO">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="nagiosPings" nillable="true" type="tns:nagiosPing"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="nagiosPing">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="endTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="packetLoss" type="xs:string"/>
+      <xs:element minOccurs="0" name="rta" type="xs:string"/>
+      <xs:element minOccurs="0" name="startTime" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="getNagiosPing">
+    <wsdl:part element="tns:getNagiosPing" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosPingResponse">
+    <wsdl:part element="tns:getNagiosPingResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="NagiosSoapService">
+    <wsdl:operation name="getNagiosPing">
+      <wsdl:input message="tns:getNagiosPing" name="getNagiosPing">
+    </wsdl:input>
+      <wsdl:output message="tns:getNagiosPingResponse" name="getNagiosPingResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="NagiosSoapServiceSoapBinding" type="tns:NagiosSoapService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getNagiosPing">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getNagiosPing">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getNagiosPingResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="NagiosSoapService">
+    <wsdl:port binding="tns:NagiosSoapServiceSoapBinding" name="NagiosSoapServiceImplPort">
+      <soap:address location="http://localhost:8087/nagios/cxf/soap/nagiosSoapService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -5,7 +5,10 @@
 	<description>导入Nagios中的applicationContext文件列表</description>
 	
 	<!-- required  -->
+	
 
 	<!-- optional -->
+	
+	<import resource="webservice/applicationContext-soap-server.xml" />
 	
 </beans>
