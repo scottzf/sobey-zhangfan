@@ -1,0 +1,728 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://nagios.generate.sobey.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="NagiosSoapService" targetNamespace="http://nagios.generate.sobey.com">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nagios.generate.sobey.com" elementFormDefault="unqualified" targetNamespace="http://nagios.generate.sobey.com" version="1.0">
+
+  <xs:element name="NagiosCPULoadDTO" type="tns:NagiosCPULoadDTO"/>
+
+  <xs:element name="NagiosCPUNumberDTO" type="tns:NagiosCPUNumberDTO"/>
+
+  <xs:element name="NagiosCurrentUsersDTO" type="tns:NagiosCurrentUsersDTO"/>
+
+  <xs:element name="NagiosDiskIODTO" type="tns:NagiosDiskIODTO"/>
+
+  <xs:element name="NagiosEthDTO" type="tns:NagiosEthDTO"/>
+
+  <xs:element name="NagiosMemoryLoadDTO" type="tns:NagiosMemoryLoadDTO"/>
+
+  <xs:element name="NagiosPingDTO" type="tns:NagiosPingDTO"/>
+
+  <xs:element name="NagiosRootPartitionDTO" type="tns:NagiosRootPartitionDTO"/>
+
+  <xs:element name="NagiosSwapUsageDTO" type="tns:NagiosSwapUsageDTO"/>
+
+  <xs:element name="NagiosSystemOSDTO" type="tns:NagiosSystemOSDTO"/>
+
+  <xs:element name="NagiosTotalProcessesDTO" type="tns:NagiosTotalProcessesDTO"/>
+
+  <xs:element name="NagiosUpTimeDTO" type="tns:NagiosUpTimeDTO"/>
+
+  <xs:element name="getNagiosCPULoad" type="tns:getNagiosCPULoad"/>
+
+  <xs:element name="getNagiosCPULoadResponse" type="tns:getNagiosCPULoadResponse"/>
+
+  <xs:element name="getNagiosCPUNumber" type="tns:getNagiosCPUNumber"/>
+
+  <xs:element name="getNagiosCPUNumberResponse" type="tns:getNagiosCPUNumberResponse"/>
+
+  <xs:element name="getNagiosCurrentUsers" type="tns:getNagiosCurrentUsers"/>
+
+  <xs:element name="getNagiosCurrentUsersResponse" type="tns:getNagiosCurrentUsersResponse"/>
+
+  <xs:element name="getNagiosDiskIO" type="tns:getNagiosDiskIO"/>
+
+  <xs:element name="getNagiosDiskIOResponse" type="tns:getNagiosDiskIOResponse"/>
+
+  <xs:element name="getNagiosEth" type="tns:getNagiosEth"/>
+
+  <xs:element name="getNagiosEthResponse" type="tns:getNagiosEthResponse"/>
+
+  <xs:element name="getNagiosMemoryLoad" type="tns:getNagiosMemoryLoad"/>
+
+  <xs:element name="getNagiosMemoryLoadResponse" type="tns:getNagiosMemoryLoadResponse"/>
+
+  <xs:element name="getNagiosPing" type="tns:getNagiosPing"/>
+
+  <xs:element name="getNagiosPingResponse" type="tns:getNagiosPingResponse"/>
+
+  <xs:element name="getNagiosRootPartition" type="tns:getNagiosRootPartition"/>
+
+  <xs:element name="getNagiosRootPartitionResponse" type="tns:getNagiosRootPartitionResponse"/>
+
+  <xs:element name="getNagiosSwapUsage" type="tns:getNagiosSwapUsage"/>
+
+  <xs:element name="getNagiosSwapUsageResponse" type="tns:getNagiosSwapUsageResponse"/>
+
+  <xs:element name="getNagiosSystemOS" type="tns:getNagiosSystemOS"/>
+
+  <xs:element name="getNagiosSystemOSResponse" type="tns:getNagiosSystemOSResponse"/>
+
+  <xs:element name="getNagiosTotalProcesse" type="tns:getNagiosTotalProcesse"/>
+
+  <xs:element name="getNagiosTotalProcesseResponse" type="tns:getNagiosTotalProcesseResponse"/>
+
+  <xs:element name="getNagiosUpTime" type="tns:getNagiosUpTime"/>
+
+  <xs:element name="getNagiosUpTimeResponse" type="tns:getNagiosUpTimeResponse"/>
+
+  <xs:complexType name="getNagiosTotalProcesse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosTotalProcesseResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:NagiosTotalProcessesDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="NagiosTotalProcessesDTO">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="nagiosTotalProcesses" nillable="true" type="tns:nagiosTotalProcesses"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="nagiosTotalProcesses">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="endTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="processes" type="xs:int"/>
+      <xs:element minOccurs="0" name="startTime" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosCPUNumber">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosCPUNumberResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:NagiosCPUNumberDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="NagiosCPUNumberDTO">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="nagiosCPUNumbers" nillable="true" type="tns:nagiosCPUNumber"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="nagiosCPUNumber">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="cpuNumber" type="xs:int"/>
+      <xs:element minOccurs="0" name="endTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="startTime" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosMemoryLoad">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosMemoryLoadResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:NagiosMemoryLoadDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="NagiosMemoryLoadDTO">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="nagiosMemoryLoads" nillable="true" type="tns:nagiosMemoryLoad"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="nagiosMemoryLoad">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="endTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="startTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="total" type="xs:string"/>
+      <xs:element minOccurs="0" name="usedPer" type="xs:string"/>
+      <xs:element minOccurs="0" name="userd" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosCurrentUsers">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosCurrentUsersResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:NagiosCurrentUsersDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="NagiosCurrentUsersDTO">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="nagiosCurrentUsers" nillable="true" type="tns:nagiosCurrentUsers"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="nagiosCurrentUsers">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="endTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="startTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="users" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosSystemOS">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosSystemOSResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:NagiosSystemOSDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="NagiosSystemOSDTO">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="nagiosSystemOSs" nillable="true" type="tns:nagiosSystemOS"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="nagiosSystemOS">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="endTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="startTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="systemOS" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosSwapUsage">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosSwapUsageResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:NagiosSwapUsageDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="NagiosSwapUsageDTO">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="nagiosSwapUsages" nillable="true" type="tns:nagiosSwapUsage"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="nagiosSwapUsage">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="endTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="freePer" type="xs:string"/>
+      <xs:element minOccurs="0" name="freeSpace" type="xs:string"/>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="startTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="totalSpace" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosUpTime">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosUpTimeResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:NagiosUpTimeDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="NagiosUpTimeDTO">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="nagiosUpTimes" nillable="true" type="tns:nagiosUpTime"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="nagiosUpTime">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="endTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="startTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="upTime" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosEth">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosEthResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:NagiosEthDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="NagiosEthDTO">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="nagiosEths" nillable="true" type="tns:nagiosEth"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="nagiosEth">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="endTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="interval" type="xs:string"/>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="startTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="trafficIn" type="xs:string"/>
+      <xs:element minOccurs="0" name="trafficOut" type="xs:string"/>
+      <xs:element minOccurs="0" name="trafficTotal" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosPing">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosPingResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:NagiosPingDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="NagiosPingDTO">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="nagiosPings" nillable="true" type="tns:nagiosPing"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="nagiosPing">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="endTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="packetLoss" type="xs:string"/>
+      <xs:element minOccurs="0" name="rta" type="xs:string"/>
+      <xs:element minOccurs="0" name="startTime" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosCPULoad">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosCPULoadResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:NagiosCPULoadDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="NagiosCPULoadDTO">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="nagiosCPULoads" nillable="true" type="tns:nagiosCPULoad"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="nagiosCPULoad">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="average10" type="xs:string"/>
+      <xs:element minOccurs="0" name="average15" type="xs:string"/>
+      <xs:element minOccurs="0" name="average5" type="xs:string"/>
+      <xs:element minOccurs="0" name="endTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="startTime" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosDiskIO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosDiskIOResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:NagiosDiskIODTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="NagiosDiskIODTO">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="nagiosDiskIOs" nillable="true" type="tns:nagiosDiskIO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="nagiosDiskIO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="endTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="read" type="xs:string"/>
+      <xs:element minOccurs="0" name="startTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="tps" type="xs:string"/>
+      <xs:element minOccurs="0" name="write" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosRootPartition">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNagiosRootPartitionResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:NagiosRootPartitionDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="NagiosRootPartitionDTO">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="nagiosRootPartitions" nillable="true" type="tns:nagiosRootPartition"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="nagiosRootPartition">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="endTime" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="freePer" type="xs:string"/>
+      <xs:element minOccurs="0" name="freeSpace" type="xs:string"/>
+      <xs:element minOccurs="0" name="inode" type="xs:string"/>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="startTime" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="getNagiosUpTime">
+    <wsdl:part element="tns:getNagiosUpTime" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosTotalProcesse">
+    <wsdl:part element="tns:getNagiosTotalProcesse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosSystemOS">
+    <wsdl:part element="tns:getNagiosSystemOS" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosDiskIO">
+    <wsdl:part element="tns:getNagiosDiskIO" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosTotalProcesseResponse">
+    <wsdl:part element="tns:getNagiosTotalProcesseResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosRootPartitionResponse">
+    <wsdl:part element="tns:getNagiosRootPartitionResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosMemoryLoad">
+    <wsdl:part element="tns:getNagiosMemoryLoad" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosCPUNumberResponse">
+    <wsdl:part element="tns:getNagiosCPUNumberResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosCPULoad">
+    <wsdl:part element="tns:getNagiosCPULoad" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosUpTimeResponse">
+    <wsdl:part element="tns:getNagiosUpTimeResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosEth">
+    <wsdl:part element="tns:getNagiosEth" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosCurrentUsers">
+    <wsdl:part element="tns:getNagiosCurrentUsers" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosPingResponse">
+    <wsdl:part element="tns:getNagiosPingResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosCPUNumber">
+    <wsdl:part element="tns:getNagiosCPUNumber" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosRootPartition">
+    <wsdl:part element="tns:getNagiosRootPartition" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosMemoryLoadResponse">
+    <wsdl:part element="tns:getNagiosMemoryLoadResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosDiskIOResponse">
+    <wsdl:part element="tns:getNagiosDiskIOResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosSwapUsageResponse">
+    <wsdl:part element="tns:getNagiosSwapUsageResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosCurrentUsersResponse">
+    <wsdl:part element="tns:getNagiosCurrentUsersResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosPing">
+    <wsdl:part element="tns:getNagiosPing" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosEthResponse">
+    <wsdl:part element="tns:getNagiosEthResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosSwapUsage">
+    <wsdl:part element="tns:getNagiosSwapUsage" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosCPULoadResponse">
+    <wsdl:part element="tns:getNagiosCPULoadResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNagiosSystemOSResponse">
+    <wsdl:part element="tns:getNagiosSystemOSResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="NagiosSoapService">
+    <wsdl:operation name="getNagiosTotalProcesse">
+      <wsdl:input message="tns:getNagiosTotalProcesse" name="getNagiosTotalProcesse">
+    </wsdl:input>
+      <wsdl:output message="tns:getNagiosTotalProcesseResponse" name="getNagiosTotalProcesseResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosCPUNumber">
+      <wsdl:input message="tns:getNagiosCPUNumber" name="getNagiosCPUNumber">
+    </wsdl:input>
+      <wsdl:output message="tns:getNagiosCPUNumberResponse" name="getNagiosCPUNumberResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosMemoryLoad">
+      <wsdl:input message="tns:getNagiosMemoryLoad" name="getNagiosMemoryLoad">
+    </wsdl:input>
+      <wsdl:output message="tns:getNagiosMemoryLoadResponse" name="getNagiosMemoryLoadResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosCurrentUsers">
+      <wsdl:input message="tns:getNagiosCurrentUsers" name="getNagiosCurrentUsers">
+    </wsdl:input>
+      <wsdl:output message="tns:getNagiosCurrentUsersResponse" name="getNagiosCurrentUsersResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosSystemOS">
+      <wsdl:input message="tns:getNagiosSystemOS" name="getNagiosSystemOS">
+    </wsdl:input>
+      <wsdl:output message="tns:getNagiosSystemOSResponse" name="getNagiosSystemOSResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosSwapUsage">
+      <wsdl:input message="tns:getNagiosSwapUsage" name="getNagiosSwapUsage">
+    </wsdl:input>
+      <wsdl:output message="tns:getNagiosSwapUsageResponse" name="getNagiosSwapUsageResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosUpTime">
+      <wsdl:input message="tns:getNagiosUpTime" name="getNagiosUpTime">
+    </wsdl:input>
+      <wsdl:output message="tns:getNagiosUpTimeResponse" name="getNagiosUpTimeResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosEth">
+      <wsdl:input message="tns:getNagiosEth" name="getNagiosEth">
+    </wsdl:input>
+      <wsdl:output message="tns:getNagiosEthResponse" name="getNagiosEthResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosPing">
+      <wsdl:input message="tns:getNagiosPing" name="getNagiosPing">
+    </wsdl:input>
+      <wsdl:output message="tns:getNagiosPingResponse" name="getNagiosPingResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosCPULoad">
+      <wsdl:input message="tns:getNagiosCPULoad" name="getNagiosCPULoad">
+    </wsdl:input>
+      <wsdl:output message="tns:getNagiosCPULoadResponse" name="getNagiosCPULoadResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosDiskIO">
+      <wsdl:input message="tns:getNagiosDiskIO" name="getNagiosDiskIO">
+    </wsdl:input>
+      <wsdl:output message="tns:getNagiosDiskIOResponse" name="getNagiosDiskIOResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosRootPartition">
+      <wsdl:input message="tns:getNagiosRootPartition" name="getNagiosRootPartition">
+    </wsdl:input>
+      <wsdl:output message="tns:getNagiosRootPartitionResponse" name="getNagiosRootPartitionResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="NagiosSoapServiceSoapBinding" type="tns:NagiosSoapService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getNagiosCPUNumber">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getNagiosCPUNumber">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getNagiosCPUNumberResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosTotalProcesse">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getNagiosTotalProcesse">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getNagiosTotalProcesseResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosCurrentUsers">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getNagiosCurrentUsers">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getNagiosCurrentUsersResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosMemoryLoad">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getNagiosMemoryLoad">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getNagiosMemoryLoadResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosSwapUsage">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getNagiosSwapUsage">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getNagiosSwapUsageResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosSystemOS">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getNagiosSystemOS">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getNagiosSystemOSResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosEth">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getNagiosEth">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getNagiosEthResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosUpTime">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getNagiosUpTime">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getNagiosUpTimeResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosPing">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getNagiosPing">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getNagiosPingResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosCPULoad">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getNagiosCPULoad">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getNagiosCPULoadResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosDiskIO">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getNagiosDiskIO">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getNagiosDiskIOResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNagiosRootPartition">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getNagiosRootPartition">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getNagiosRootPartitionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="NagiosSoapService">
+    <wsdl:port binding="tns:NagiosSoapServiceSoapBinding" name="NagiosSoapServiceImplPort">
+      <soap:address location="http://localhost:8087/nagios/cxf/soap/nagiosSoapService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
