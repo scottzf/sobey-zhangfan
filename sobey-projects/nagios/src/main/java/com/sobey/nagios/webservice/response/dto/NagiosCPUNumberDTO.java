@@ -1,34 +1,27 @@
 package com.sobey.nagios.webservice.response.dto;
 
+import java.util.ArrayList;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.nagios.constans.WsConstants;
+import com.sobey.nagios.entity.NagiosCPUNumber;
 
 @XmlRootElement(name = "NagiosCPUNumberDTO")
 @XmlType(name = "NagiosCPUNumberDTO", namespace = WsConstants.NS)
 public class NagiosCPUNumberDTO {
 
-	private String ipaddress;
+	private ArrayList<NagiosCPUNumber> nagiosCPUNumbers;
 
-	private Integer cpuNumber;
-
-	public String getIpaddress() {
-		return ipaddress;
+	public ArrayList<NagiosCPUNumber> getNagiosCPUNumbers() {
+		return nagiosCPUNumbers;
 	}
 
-	public void setIpaddress(String ipaddress) {
-		this.ipaddress = ipaddress;
-	}
-
-	public Integer getCpuNumber() {
-		return cpuNumber;
-	}
-
-	public void setCpuNumber(Integer cpuNumber) {
-		this.cpuNumber = cpuNumber;
+	public void setNagiosCPUNumbers(ArrayList<NagiosCPUNumber> nagiosCPUNumbers) {
+		this.nagiosCPUNumbers = nagiosCPUNumbers;
 	}
 
 	/**

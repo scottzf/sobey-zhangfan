@@ -8,9 +8,9 @@ public class NagiosDiskIO {
 
 	private String ipaddress;
 
-	private Date startDate;
+	private Date startTime;
 
-	private Date endDate;
+	private Date endTime;
 
 	private String tps;
 
@@ -26,20 +26,20 @@ public class NagiosDiskIO {
 		this.ipaddress = ipaddress;
 	}
 
-	public Date getStartDate() {
-		return startDate;
+	public Date getStartTime() {
+		return startTime;
 	}
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
 	}
 
-	public Date getEndDate() {
-		return endDate;
+	public Date getEndTime() {
+		return endTime;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
 	}
 
 	public String getTps() {

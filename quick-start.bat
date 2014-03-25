@@ -16,13 +16,18 @@ cd sobey-projects\cmdbuild
 start "CMDBuild" %MVN% clean clean tomcat:run -Dmaven.tomcat.port=8080
 if errorlevel 1 goto error
  
+cd ..\nagios
+start "Nagios" %MVN% clean tomcat:run -Dmaven.tomcat.port=8087
+if errorlevel 1 goto error
+
+
+rem 注释end
+goto start  
 
 cd ..\instance
 start "Instance" %MVN% clean tomcat:run -Dmaven.tomcat.port=8081
 if errorlevel 1 goto error
 
-rem 注释end
-goto start  
  
 cd ..\switch
 start "Switch" %MVN% clean tomcat:run -Dmaven.tomcat.port=8082

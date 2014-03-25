@@ -14,6 +14,12 @@ import org.springframework.stereotype.Repository;
 
 import com.sobey.nagios.entity.NagiosResult;
 
+/**
+ * 对nagios数据库进行读取.
+ * 
+ * @author Administrator
+ * 
+ */
 @Repository
 public class NagiosDao {
 

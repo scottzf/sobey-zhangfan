@@ -1,6 +1,6 @@
 package com.sobey.nagios.webservice.response.dto;
 
-import java.util.Date;
+import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -8,69 +8,20 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.nagios.constans.WsConstants;
+import com.sobey.nagios.entity.NagiosDiskIO;
 
-@XmlRootElement(name = "NagiosCPULoadDTO")
-@XmlType(name = "NagiosCPULoadDTO", namespace = WsConstants.NS)
+@XmlRootElement(name = "NagiosDiskIODTO")
+@XmlType(name = "NagiosDiskIODTO", namespace = WsConstants.NS)
 public class NagiosDiskIODTO {
 
-	private String ipaddress;
+	private ArrayList<NagiosDiskIO> nagiosDiskIOs;
 
-	private Date startDate;
-
-	private Date endDate;
-
-	private String tps;
-
-	private String read;
-
-	private String write;
-
-	public String getIpaddress() {
-		return ipaddress;
+	public ArrayList<NagiosDiskIO> getNagiosDiskIOs() {
+		return nagiosDiskIOs;
 	}
 
-	public void setIpaddress(String ipaddress) {
-		this.ipaddress = ipaddress;
-	}
-
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	public String getTps() {
-		return tps;
-	}
-
-	public void setTps(String tps) {
-		this.tps = tps;
-	}
-
-	public String getRead() {
-		return read;
-	}
-
-	public void setRead(String read) {
-		this.read = read;
-	}
-
-	public String getWrite() {
-		return write;
-	}
-
-	public void setWrite(String write) {
-		this.write = write;
+	public void setNagiosDiskIOs(ArrayList<NagiosDiskIO> nagiosDiskIOs) {
+		this.nagiosDiskIOs = nagiosDiskIOs;
 	}
 
 	/**

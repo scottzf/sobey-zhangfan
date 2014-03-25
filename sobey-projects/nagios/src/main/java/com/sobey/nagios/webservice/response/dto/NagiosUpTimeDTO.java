@@ -1,6 +1,6 @@
 package com.sobey.nagios.webservice.response.dto;
 
-import java.util.Date;
+import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -8,29 +8,20 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.nagios.constans.WsConstants;
+import com.sobey.nagios.entity.NagiosUpTime;
 
 @XmlRootElement(name = "NagiosUpTimeDTO")
 @XmlType(name = "NagiosUpTimeDTO", namespace = WsConstants.NS)
 public class NagiosUpTimeDTO {
 
-	private String ipaddress;
+	private ArrayList<NagiosUpTime> nagiosUpTimes;
 
-	private Date UpTime;
-
-	public String getIpaddress() {
-		return ipaddress;
+	public ArrayList<NagiosUpTime> getNagiosUpTimes() {
+		return nagiosUpTimes;
 	}
 
-	public void setIpaddress(String ipaddress) {
-		this.ipaddress = ipaddress;
-	}
-
-	public Date getUpTime() {
-		return UpTime;
-	}
-
-	public void setUpTime(Date upTime) {
-		UpTime = upTime;
+	public void setNagiosUpTimes(ArrayList<NagiosUpTime> nagiosUpTimes) {
+		this.nagiosUpTimes = nagiosUpTimes;
 	}
 
 	/**

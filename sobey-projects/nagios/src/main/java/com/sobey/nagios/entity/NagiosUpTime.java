@@ -8,7 +8,11 @@ public class NagiosUpTime {
 
 	private String ipaddress;
 
-	private Date UpTime;
+	private Date startTime;
+
+	private Date endTime;
+
+	private String UpTime;
 
 	public String getIpaddress() {
 		return ipaddress;
@@ -18,11 +22,27 @@ public class NagiosUpTime {
 		this.ipaddress = ipaddress;
 	}
 
-	public Date getUpTime() {
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getUpTime() {
 		return UpTime;
 	}
 
-	public void setUpTime(Date upTime) {
+	public void setUpTime(String upTime) {
 		UpTime = upTime;
 	}
 

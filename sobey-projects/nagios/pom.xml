@@ -42,9 +42,6 @@
 		<!-- SPRING basic end -->
 		<!-- SPRING end -->
 
-		<!-- PERSISTENCE begin -->
-		<!-- hibernate -->
-
 		<!-- spring data access -->
 		<dependency>
 			<groupId>org.springframework</groupId>

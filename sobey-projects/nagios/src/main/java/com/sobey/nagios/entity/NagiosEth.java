@@ -8,15 +8,17 @@ public class NagiosEth {
 
 	private String ipaddress;
 
-	private Date startDate;
+	private Date startTime;
 
-	private Date endDate;
+	private Date endTime;
 
 	private String TrafficIn;
 
 	private String TrafficOut;
 
 	private String TrafficTotal;
+
+	private String interval;
 
 	public String getIpaddress() {
 		return ipaddress;
@@ -26,20 +28,20 @@ public class NagiosEth {
 		this.ipaddress = ipaddress;
 	}
 
-	public Date getStartDate() {
-		return startDate;
+	public Date getStartTime() {
+		return startTime;
 	}
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
 	}
 
-	public Date getEndDate() {
-		return endDate;
+	public Date getEndTime() {
+		return endTime;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
 	}
 
 	public String getTrafficIn() {
@@ -64,6 +66,14 @@ public class NagiosEth {
 
 	public void setTrafficTotal(String trafficTotal) {
 		TrafficTotal = trafficTotal;
+	}
+
+	public String getInterval() {
+		return interval;
+	}
+
+	public void setInterval(String interval) {
+		this.interval = interval;
 	}
 
 	/**

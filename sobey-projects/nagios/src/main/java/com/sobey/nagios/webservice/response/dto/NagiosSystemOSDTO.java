@@ -1,34 +1,27 @@
 package com.sobey.nagios.webservice.response.dto;
 
+import java.util.ArrayList;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.nagios.constans.WsConstants;
+import com.sobey.nagios.entity.NagiosSystemOS;
 
 @XmlRootElement(name = "NagiosSystemOSDTO")
 @XmlType(name = "NagiosSystemOSDTO", namespace = WsConstants.NS)
 public class NagiosSystemOSDTO {
 
-	private String ipaddress;
+	private ArrayList<NagiosSystemOS> nagiosSystemOSs;
 
-	private String systemOS;
-
-	public String getIpaddress() {
-		return ipaddress;
+	public ArrayList<NagiosSystemOS> getNagiosSystemOSs() {
+		return nagiosSystemOSs;
 	}
 
-	public void setIpaddress(String ipaddress) {
-		this.ipaddress = ipaddress;
-	}
-
-	public String getSystemOS() {
-		return systemOS;
-	}
-
-	public void setSystemOS(String systemOS) {
-		this.systemOS = systemOS;
+	public void setNagiosSystemOSs(ArrayList<NagiosSystemOS> nagiosSystemOSs) {
+		this.nagiosSystemOSs = nagiosSystemOSs;
 	}
 
 	/**
