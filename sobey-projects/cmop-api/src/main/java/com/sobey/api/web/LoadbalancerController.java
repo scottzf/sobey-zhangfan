@@ -22,7 +22,7 @@ import com.sobey.generate.loadbalancer.ELBPublicIPParameter;
  * 
  */
 @Controller
-@RequestMapping(value = "/elb")
+@RequestMapping(value = "/loadbalancer")
 public class LoadbalancerController {
 
 	@Autowired
@@ -64,8 +64,6 @@ public class LoadbalancerController {
 	public String create(@RequestParam(value = "vip") String vip,
 			@RequestParam(value = "publicIPs") String[] publicIPs,
 			@RequestParam(value = "protocols") String[] protocols, RedirectAttributes redirectAttributes) {
-		
-		System.out.println("***********");
 
 		List<ELBPublicIPParameter> publicIPParameters = new ArrayList<ELBPublicIPParameter>();
 
@@ -97,7 +95,7 @@ public class LoadbalancerController {
 
 		redirectAttributes.addFlashAttribute("message", message);
 
-		return "redirect:/elb/create/";
+		return "redirect:/loadbalancer/create/";
 	}
 
 	/**
@@ -105,7 +103,7 @@ public class LoadbalancerController {
 	 */
 	@RequestMapping(value = "/delete")
 	public String deletePage() {
-		return "elb/delete";
+		return "loadbalancer/delete";
 	}
 
 	/**
@@ -146,7 +144,7 @@ public class LoadbalancerController {
 
 		redirectAttributes.addFlashAttribute("message", message);
 
-		return "redirect:/elb/delete/";
+		return "redirect:/loadbalancer/delete/";
 	}
 
 }
