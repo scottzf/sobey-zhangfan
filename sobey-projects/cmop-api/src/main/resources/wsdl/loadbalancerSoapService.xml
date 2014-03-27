@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://loadbalancer.generate.sobey.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="LoadbalancerSoapService" targetNamespace="http://loadbalancer.generate.sobey.com">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://loadbalancer.generate.sobey.com" elementFormDefault="unqualified" targetNamespace="http://loadbalancer.generate.sobey.com" version="1.0">
+
+  <xs:element name="ELBParameter" type="tns:ELBParameter"/>
+
+  <xs:element name="ELBPolicyParameter" type="tns:ELBPolicyParameter"/>
+
+  <xs:element name="ELBPublicIPParameter" type="tns:ELBPublicIPParameter"/>
+
+  <xs:element name="createELBByLoadbalancer" type="tns:createELBByLoadbalancer"/>
+
+  <xs:element name="createELBByLoadbalancerResponse" type="tns:createELBByLoadbalancerResponse"/>
+
+  <xs:element name="deleteELBByLoadbalancer" type="tns:deleteELBByLoadbalancer"/>
+
+  <xs:element name="deleteELBByLoadbalancerResponse" type="tns:deleteELBByLoadbalancerResponse"/>
+
+  <xs:complexType name="createELBByLoadbalancer">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="elbParameter" type="tns:ELBParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ELBParameter">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="publicIPs" nillable="true" type="tns:ELBPublicIPParameter"/>
+      <xs:element minOccurs="0" name="vip" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ELBPublicIPParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="policyParameters" nillable="true" type="tns:ELBPolicyParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ELBPolicyParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="protocolText" type="xs:string"/>
+      <xs:element minOccurs="0" name="sourcePort" type="xs:int"/>
+      <xs:element minOccurs="0" name="targetPort" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createELBByLoadbalancerResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="WSResult">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="code" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteELBByLoadbalancer">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="elbParameter" type="tns:ELBParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteELBByLoadbalancerResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="createELBByLoadbalancer">
+    <wsdl:part element="tns:createELBByLoadbalancer" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteELBByLoadbalancer">
+    <wsdl:part element="tns:deleteELBByLoadbalancer" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteELBByLoadbalancerResponse">
+    <wsdl:part element="tns:deleteELBByLoadbalancerResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createELBByLoadbalancerResponse">
+    <wsdl:part element="tns:createELBByLoadbalancerResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="LoadbalancerSoapService">
+    <wsdl:operation name="createELBByLoadbalancer">
+      <wsdl:input message="tns:createELBByLoadbalancer" name="createELBByLoadbalancer">
+    </wsdl:input>
+      <wsdl:output message="tns:createELBByLoadbalancerResponse" name="createELBByLoadbalancerResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteELBByLoadbalancer">
+      <wsdl:input message="tns:deleteELBByLoadbalancer" name="deleteELBByLoadbalancer">
+    </wsdl:input>
+      <wsdl:output message="tns:deleteELBByLoadbalancerResponse" name="deleteELBByLoadbalancerResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="LoadbalancerSoapServiceSoapBinding" type="tns:LoadbalancerSoapService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="createELBByLoadbalancer">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createELBByLoadbalancer">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createELBByLoadbalancerResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteELBByLoadbalancer">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteELBByLoadbalancer">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteELBByLoadbalancerResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="LoadbalancerSoapService">
+    <wsdl:port binding="tns:LoadbalancerSoapServiceSoapBinding" name="LoadbalancerSoapServiceImplPort">
+      <soap:address location="http://localhost:8086/loadbalancer/cxf/soap/loadbalancerSoapService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
