@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Instance Clone Demo</title>
+<title>Instance Create Demo</title>
 </head>
 
 <body>
@@ -13,8 +13,26 @@
 		<div class="form-group">
 			<label for="vmName" class="col-sm-2 control-label">VMName</label>
 			<div class="col-sm-10">
+
 				<input type="text" class="form-control" id="vmName" name="vmName"
-					placeholder="虚拟机名称" value="Sobey">
+					placeholder="规格" value="Sobey">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="operation" class="col-sm-2 control-label">VMTemplateOS</label>
+			<div class="col-sm-10">
+				<select id="vmTemplateOS" name="vmTemplateOS">
+					<option value="CentOS">CentOS</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="vmTemplateOS" class="col-sm-2 control-label">VMTemplateOS</label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" id="vmTemplateOS"
+					name="vmTemplateOS" placeholder="" value="Sobey">
 			</div>
 		</div>
 
@@ -52,7 +70,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<button type="submit" class="btn btn-primary">Clone</button>
+				<button type="submit" class="btn btn-primary">Create</button>
 			</div>
 		</div>
 	</form>

@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Dns Delete Demo</title>
+<title>Elb Create Demo</title>
 </head>
 
 <body>
@@ -11,15 +11,15 @@
 	<form class="form-horizontal" role="form" method="post" action=".">
 
 		<div class="form-group">
-			<label for="domianName" class="col-sm-2 control-label">DomianName</label>
+			<label for="vip" class="col-sm-2 control-label">VIP</label>
 			<div class="col-sm-10">
-				<input type="text" class="form-control" id="domianName"
-					name="domianName" placeholder="域名">
+				<input type="text" class="form-control" id="vip"
+					name="vip" placeholder="虚拟IP">
 			</div>
 		</div>
 
 		<div class="form-group clone">
-			<label for="domianName" class="col-sm-2 control-label">Policy</label>
+			<label for="publicIPs" class="col-sm-2 control-label">Policy</label>
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="publicIPs"
 					placeholder="IP地址">
@@ -45,7 +45,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<button type="submit" class="btn btn-primary">Delete</button>
+				<button type="submit" class="btn btn-primary">Create</button>
 			</div>
 		</div>
 	</form>

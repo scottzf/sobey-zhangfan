@@ -19,11 +19,11 @@ public class LoadbalancerSoapServiceImpl implements LoadbalancerSoapService {
 	public NitroService service;
 
 	@Override
-	public WSResult createELBByLoadbalancer(@WebParam(name = "ELBParameter") ELBParameter parameter) {
+	public WSResult createELBByLoadbalancer(@WebParam(name = "elbParameter") ELBParameter elbParameter) {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.createElb(parameter);
+		boolean falg = service.createElb(elbParameter);
 
 		if (!falg) {
 			result.setCode(WSResult.SYSTEM_ERROR);
@@ -34,11 +34,11 @@ public class LoadbalancerSoapServiceImpl implements LoadbalancerSoapService {
 	}
 
 	@Override
-	public WSResult deleteELBByLoadbalancer(@WebParam(name = "ELBParameter") ELBParameter parameter) {
+	public WSResult deleteELBByLoadbalancer(@WebParam(name = "elbParameter") ELBParameter elbParameter) {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.deleteElb(parameter);
+		boolean falg = service.deleteElb(elbParameter);
 
 		if (!falg) {
 			result.setCode(WSResult.SYSTEM_ERROR);

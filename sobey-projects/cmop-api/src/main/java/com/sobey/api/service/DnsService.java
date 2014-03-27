@@ -17,14 +17,14 @@ import com.sobey.generate.dns.WSResult;
 public class DnsService {
 
 	@Autowired
-	private DnsSoapService dnsSoapService;
+	private DnsSoapService service;
 
 	public WSResult createDNS(DNSParameter dnsParameter) {
-		return dnsSoapService.createDNSByDNS(dnsParameter);
+		return service.createDNSByDNS(dnsParameter);
 	}
 
 	public WSResult deleteDNS(DNSParameter dnsParameter) {
-		return dnsSoapService.deleteDNSByDNS(dnsParameter);
+		return service.deleteDNSByDNS(dnsParameter);
 	}
 
 }

@@ -23,10 +23,10 @@ import com.sobey.generate.instance.WSResult;
 public class InstanceService {
 
 	@Autowired
-	private InstanceSoapService instanceSoapService;
+	private InstanceSoapService service;
 
 	public WSResult desoroyVM(DestroyVMParameter destroyVMParameter) {
-		return instanceSoapService.destroyVMByInstance(destroyVMParameter);
+		return service.destroyVMByInstance(destroyVMParameter);
 	}
 
 	public HashMap<String, String> relationVM() {
@@ -35,7 +35,7 @@ public class InstanceService {
 
 		// 将RelationVMParameter转换成HashMap
 
-		for (Entry entry : instanceSoapService.getVMAndHostRelationByInstance().getRelationMaps().getEntry()) {
+		for (Entry entry : service.getVMAndHostRelationByInstance().getRelationMaps().getEntry()) {
 			map.put(entry.getKey(), entry.getValue());
 		}
 
@@ -43,15 +43,15 @@ public class InstanceService {
 	}
 
 	public WSResult cloneVM(CloneVMParameter cloneVMParameter) {
-		return instanceSoapService.cloneVMByInstance(cloneVMParameter);
+		return service.cloneVMByInstance(cloneVMParameter);
 	}
 
 	public WSResult powerVM(PowerVMParameter powerVMParameter) {
-		return instanceSoapService.powerVMByInstance(powerVMParameter);
+		return service.powerVMByInstance(powerVMParameter);
 	}
 
 	public WSResult reconfigVM(ReconfigVMParameter reconfigVMParameter) {
-		return instanceSoapService.reconfigVMByInstance(reconfigVMParameter);
+		return service.reconfigVMByInstance(reconfigVMParameter);
 	}
 
 }

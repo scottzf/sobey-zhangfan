@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Dns Delete Demo</title>
+<title>Elb Delete Demo</title>
 </head>
 
 <body>
