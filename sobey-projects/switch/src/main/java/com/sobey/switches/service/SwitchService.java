@@ -52,6 +52,7 @@ public class SwitchService {
 		sb.append("y").append(symbol);
 		sb.append("y").append(symbol);
 		sb.append("quit").append(symbol);
+		sb.append("quit").append(symbol);
 		sb.append(symbol);
 
 		return sb.toString();
@@ -191,6 +192,7 @@ public class SwitchService {
 		sb.append("save").append(symbol);
 		sb.append("y").append(symbol);
 		sb.append("y").append(symbol);
+		sb.append("quit").append(symbol);
 		sb.append("quit").append(symbol);
 		sb.append(symbol);
 
