@@ -90,7 +90,7 @@ public class JschUtil {
 	 * @param command
 	 *            脚本信息
 	 * @param filePath
-	 *            文件保存内容,推荐用相对路径. eg:src/main/resources/TerminalInfo.txt
+	 *            文件保存内容,推荐用相对路径. eg:logs/TerminalInfo.txt
 	 * @return
 	 */
 	public static boolean execCommand(String host, String username, String password, String command, String filePath) {
