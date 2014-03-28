@@ -13,7 +13,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.sobey.core.utils.JschUtil;
-import com.sobey.core.utils.PropertiesLoader;
+import com.sobey.storage.PbulicProperties;
 import com.sobey.storage.data.TestData;
 import com.sobey.storage.service.NetAppService;
 import com.sobey.storage.webservice.response.dto.CreateEs3Parameter;
@@ -30,20 +30,10 @@ import com.sobey.storage.webservice.response.dto.UmountEs3Parameter;
  */
 @ContextConfiguration({ "classpath:applicationContext.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
-public class StorageTest extends TestCase {
+public class StorageTest extends TestCase implements PbulicProperties {
 
 	@Autowired
 	private NetAppService service;
-
-	/**
-	 * 加载applicationContext.propertie文件
-	 */
-	private static PropertiesLoader STORAGE_LOADER = new PropertiesLoader("classpath:/storage.properties");
-
-	/* netapp controller登录 */
-	protected static final String STORAGE_IP = STORAGE_LOADER.getProperty("STORAGE_IP");
-	protected static final String STORAGE_USERNAME = STORAGE_LOADER.getProperty("STORAGE_USERNAME");
-	protected static final String STORAGE_PASSWORD = STORAGE_LOADER.getProperty("STORAGE_PASSWORD");
 
 	private static String FILE_PATH = "logs/TerminalInfo.txt";
 
