@@ -31,19 +31,21 @@ public class VlanTest extends TestCase implements PbulicProperties {
 	@Autowired
 	private SwitchService service;
 
-	private static String FILE_PATH = "logs/TerminalInfo.txt";
-
 	@Test
-	public void createVlan() {
+	public void createVlan() throws IOException {
 
 		VlanParameter parameter = TestData.randomVlanParameter();
 
 		String accessCommand = service.createVlanOnAccessLayer(parameter.getVlanId(), parameter.getGateway(),
 				parameter.getNetMask());
-		// System.out.println(accessCommand);
+
+		System.out.println(accessCommand);
 
 		TelnetUtil.execCommand(ACCESS_IP, ACCESS_USERNAME, ACCESS_PASSWORD, accessCommand, FILE_PATH);
 
+		String result = FileUtils.readFileToString(new File(FILE_PATH));
+
+		System.out.println(result);
 	}
 
 	@Test
@@ -57,7 +59,8 @@ public class VlanTest extends TestCase implements PbulicProperties {
 
 		// 文本会有类似"VLAN(s) do(es) not exist."的错误,表示vlan不存在,通过对比是否包含"VLAN(s) do(es) not exist"来判断他是否出错
 		String result = FileUtils.readFileToString(new File(FILE_PATH));
-		assertTrue(!result.contains("VLAN(s) do(es) not exist"));
+		System.out.println(result);
+		assertTrue(result.contains("VLAN(s) do(es) not exist"));
 
 	}
 
