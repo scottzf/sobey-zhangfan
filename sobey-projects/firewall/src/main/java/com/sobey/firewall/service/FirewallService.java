@@ -258,6 +258,7 @@ public class FirewallService {
 		sb.append("set interface ").append("\"").append(FIREWALL_EXTINTF).append("\"").append(symbol);
 		sb.append("set member ").append(generateFormatString(allPolicies)).append(symbol);
 		sb.append("end").append(symbol);
+		sb.append("quit").append(symbol);
 
 		return sb.toString();
 	}
@@ -359,13 +360,16 @@ public class FirewallService {
 
 		List<String> policies = Lists.newArrayList();
 
+		// 获得要删除EIP的映射策略名
 		for (EIPPolicyParameter policy : parameter.getPolicies()) {
 			policies.add(generateVIPMappingName(parameter.getInternetIP(), policy.getProtocolText(),
 					policy.getTargetPort()));
 		}
 
-		// Step.2
+		// Step.2 从所有的映射策略中移除要删除的eip映射策略.
 		allPolicies.removeAll(policies);
+
+		System.out.println(generateFormatString(allPolicies));
 
 		// Step.3
 		sb.append("config firewall vipgrp").append(symbol);
@@ -382,6 +386,7 @@ public class FirewallService {
 			sb.append("end").append(symbol);
 			sb.append(symbol);
 		}
+		sb.append("quit").append(symbol);
 
 		return sb.toString();
 	}
