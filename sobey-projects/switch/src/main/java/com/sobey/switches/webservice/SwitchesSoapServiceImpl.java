@@ -1,12 +1,18 @@
 package com.sobey.switches.webservice;
 
+import java.io.File;
+import java.io.IOException;
+
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.cxf.feature.Features;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.core.utils.TelnetUtil;
+import com.sobey.switches.constans.MethodEnum;
 import com.sobey.switches.constans.WsConstants;
 import com.sobey.switches.service.SwitchService;
 import com.sobey.switches.webservice.response.dto.ESGParameter;
@@ -33,6 +39,18 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 	private static final String ACCESS_USERNAME = ACCESS_LOADER.getProperty("ACCESS_USERNAME");
 	private static final String ACCESS_PASSWORD = ACCESS_LOADER.getProperty("ACCESS_PASSWORD");
 
+	/**
+	 * 获得文件的相对路径,文件名自定义.
+	 * 
+	 * @param input
+	 * @return
+	 */
+	private static String getFilePath(String input) {
+		return "logs/" + input + ".txt";
+
+	}
+
+	@Autowired
 	private SwitchService service;
 
 	@Override
@@ -40,40 +58,58 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 
 		/*
 		 * Vlan创建的顺序是先在若干个交换机上执行脚本,然后在一个核心交换机上执行脚本.
+		 * 
+		 * 测试环境没有区分核心和接入层,目前Vlan暂时将设备当成接入层交换机
 		 */
+
+		WSResult result = new WSResult();
 
 		String accessCommand = service.createVlanOnAccessLayer(vlanParameter.getVlanId(), vlanParameter.getGateway(),
 				vlanParameter.getNetMask());
 
 		TelnetUtil.execCommand(ACCESS_IP, ACCESS_USERNAME, ACCESS_PASSWORD, accessCommand);
 
-		// TODO 测试环境没有区分核心和接入层,目前Vlan暂时将设备当成接入层交换机
-		// String coreCommand = GenerateScript.generateCreateVlanScriptOnCoreLayer(vlanParameter.getVlanId(),
-		// vlanParameter.getGateway(), vlanParameter.getNetMask());
-		// telnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, coreCommand);
+		try {
 
-		// TODO 缺少针对返回字符串解析是否执行成功的判断.
+			String resultStr = FileUtils.readFileToString(new File(getFilePath(vlanParameter.getVlanId().toString())));
 
-		return new WSResult();
+			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.createVlan);
+
+		} catch (IOException e) {
+			result.setDefaultError();
+		}
+
+		return result;
+
 	}
 
 	@Override
 	public WSResult deleteVlanBySwtich(@WebParam(name = "vlanId") Integer vlanId) {
 
 		/*
-		 * Vlan删除的顺序是先在若干个交换机上执行脚本,然后在一个核心交换机上执行脚本.
+		 * Vlan创建的顺序是先在若干个交换机上执行脚本,然后在一个核心交换机上执行脚本.
+		 * 
+		 * 测试环境没有区分核心和接入层,目前Vlan暂时将设备当成接入层交换机
 		 */
 
+		WSResult result = new WSResult();
+
 		String accessCommand = service.deleteVlanOnAccessLayer(vlanId);
+
 		TelnetUtil.execCommand(ACCESS_IP, ACCESS_USERNAME, ACCESS_PASSWORD, accessCommand);
 
-		// TODO 测试环境没有区分核心和接入层,目前Vlan暂时将设备当成接入层交换机
-		// String coreCommand = GenerateScript.generateDeleteVlanScriptOnCoreLayer(vlanId);
-		// telnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, coreCommand);
+		try {
 
-		// TODO 缺少针对返回字符串解析是否执行成功的判断.
+			String resultStr = FileUtils.readFileToString(new File(vlanId.toString()));
 
-		return new WSResult();
+			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.deleteVlan);
+
+		} catch (IOException e) {
+			result.setDefaultError();
+		}
+
+		return result;
+
 	}
 
 	@Override
@@ -83,14 +119,29 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 		 * 在核心交换机上执行脚本.
 		 */
 
+		WSResult result = new WSResult();
+
 		String command = service.createEsg(esgParameter.getAclNumber(), esgParameter.getVlanId(),
 				esgParameter.getDesc(), esgParameter.getPermits(), esgParameter.getDenys());
 
 		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, command);
 
-		// TODO 缺少针对返回字符串解析是否执行成功的判断.
+		try {
 
-		return new WSResult();
+			String resultStr = FileUtils.readFileToString(new File(esgParameter.getAclNumber().toString()));
+
+			// 如果报错,则将已插入的acl删除.
+			if (resultStr.contains(TerminalResultHandle.CREATEACL_ERROR)) {
+				deleteESGBySwtich(esgParameter.getAclNumber());
+			}
+
+			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.createAcl);
+
+		} catch (IOException e) {
+			result.setDefaultError();
+		}
+
+		return result;
 	}
 
 	@Override
@@ -100,12 +151,23 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 		 * 在核心交换机上执行脚本.
 		 */
 
+		WSResult result = new WSResult();
+
 		String command = service.deleteEsg(aclNumber);
+
 		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, command);
 
-		// TODO 缺少针对返回字符串解析是否执行成功的判断.
+		try {
 
-		return new WSResult();
+			String resultStr = FileUtils.readFileToString(new File(aclNumber.toString()));
+
+			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.deleteAcl);
+
+		} catch (IOException e) {
+			result.setDefaultError();
+		}
+
+		return result;
 	}
 
 }
