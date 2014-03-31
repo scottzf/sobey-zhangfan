@@ -553,6 +553,7 @@ public class FirewallService {
 
 		sb.append("next").append(symbol);
 		sb.append("end").append(symbol);
+		sb.append("quit").append(symbol);
 		sb.append(symbol);
 
 		return sb.toString();
@@ -744,6 +745,7 @@ public class FirewallService {
 
 		sb.append("next").append(symbol);
 		sb.append("end").append(symbol);
+		sb.append("quit").append(symbol);
 		sb.append(symbol);
 
 		return sb.toString();
@@ -900,6 +902,8 @@ public class FirewallService {
 			sb.append("end").append(symbol);
 			sb.append(symbol);
 		}
+
+		sb.append("quit").append(symbol);
 
 		return sb.toString();
 	}
