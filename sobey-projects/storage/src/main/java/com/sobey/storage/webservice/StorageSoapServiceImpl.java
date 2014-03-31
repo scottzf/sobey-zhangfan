@@ -64,9 +64,10 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 
 			try {
 
-				String result2 = FileUtils.readFileToString(new File(getFilePath(createEs3Parameter.getVolumeName())));
+				String resultStr = FileUtils
+						.readFileToString(new File(getFilePath(createEs3Parameter.getVolumeName())));
 
-				result = TerminalResultHandle.ResultHandle(result2, MethodEnum.create);
+				result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.create);
 
 			} catch (IOException e) {
 				result.setDefaultError();
@@ -94,9 +95,10 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 
 			try {
 
-				String result2 = FileUtils.readFileToString(new File(getFilePath(deleteEs3Parameter.getVolumeName())));
+				String resultStr = FileUtils
+						.readFileToString(new File(getFilePath(deleteEs3Parameter.getVolumeName())));
 
-				result = TerminalResultHandle.ResultHandle(result2, MethodEnum.delete);
+				result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.delete);
 
 			} catch (IOException e) {
 				result.setDefaultError();
@@ -125,9 +127,9 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 
 			try {
 
-				String result2 = FileUtils.readFileToString(new File(getFilePath(mountEs3Parameter.getVolumeName())));
+				String resultStr = FileUtils.readFileToString(new File(getFilePath(mountEs3Parameter.getVolumeName())));
 
-				result = TerminalResultHandle.ResultHandle(result2, MethodEnum.mount);
+				result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.mount);
 
 			} catch (IOException e) {
 				result.setDefaultError();
@@ -156,10 +158,10 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 
 			try {
 
-				String result2 = FileUtils.readFileToString(new File(getFilePath(umountEs3Parameter
+				String resultStr = FileUtils.readFileToString(new File(getFilePath(umountEs3Parameter
 						.getClientIPaddress())));
 
-				result = TerminalResultHandle.ResultHandle(result2, MethodEnum.umount);
+				result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.umount);
 
 			} catch (IOException e) {
 				result.setDefaultError();
@@ -188,9 +190,10 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 
 			try {
 
-				String result2 = FileUtils.readFileToString(new File(getFilePath(remountEs3Parameter.getVolumeName())));
+				String resultStr = FileUtils
+						.readFileToString(new File(getFilePath(remountEs3Parameter.getVolumeName())));
 
-				result = TerminalResultHandle.ResultHandle(result2, MethodEnum.remount);
+				result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.remount);
 
 			} catch (IOException e) {
 				result.setDefaultError();
