@@ -1,14 +1,18 @@
 package com.sobey.firewall.webservice;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.core.utils.TelnetUtil;
+import com.sobey.firewall.constans.MethodEnum;
 import com.sobey.firewall.constans.WsConstants;
 import com.sobey.firewall.service.FirewallService;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
@@ -31,67 +35,139 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 	@Autowired
 	private FirewallService service;
 
+	/**
+	 * 获得文件的相对路径,文件名自定义.
+	 * 
+	 * @param input
+	 * @return
+	 */
+	private static String getFilePath(String input) {
+		return "logs/" + input + ".txt";
+
+	}
+
 	@Override
-	public WSResult createEIPByFirewall(@WebParam(name = "EIPParameter") EIPParameter parameter,
+	public WSResult createEIPByFirewall(@WebParam(name = "eipParameter") EIPParameter eipParameter,
 			@WebParam(name = "allPolicies") List<String> allPolicies) {
 
-		String command = service.createEip(parameter, allPolicies);
+		WSResult result = new WSResult();
 
-		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command);
+		String command = service.createEip(eipParameter, allPolicies);
 
-		// TODO 缺少针对返回字符串解析是否执行成功的判断.
+		String filePath = getFilePath(eipParameter.getPrivateIP());
 
-		return new WSResult();
+		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command, filePath);
+
+		try {
+
+			String resultStr = FileUtils.readFileToString(new File(filePath));
+
+			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.createEip);
+
+		} catch (IOException e) {
+			result.setDefaultError();
+		}
+
+		return result;
 	}
 
 	@Override
-	public WSResult deleteEIPByFirewall(@WebParam(name = "EIPParameter") EIPParameter parameter,
+	public WSResult deleteEIPByFirewall(@WebParam(name = "eipParameter") EIPParameter eipParameter,
 			@WebParam(name = "allPolicies") List<String> allPolicies) {
 
-		String command = service.deleteEip(parameter, allPolicies);
+		WSResult result = new WSResult();
 
-		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command);
+		String command = service.deleteEip(eipParameter, allPolicies);
 
-		// TODO 缺少针对返回字符串解析是否执行成功的判断.
+		String filePath = getFilePath(eipParameter.getPrivateIP());
 
-		return new WSResult();
+		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command, filePath);
+
+		try {
+
+			String resultStr = FileUtils.readFileToString(new File(filePath));
+
+			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.deleteEip);
+
+		} catch (IOException e) {
+			result.setDefaultError();
+		}
+
+		return result;
 	}
 
 	@Override
-	public WSResult createVPNUserByFirewall(@WebParam(name = "VPNUserParameter") VPNUserParameter parameter) {
+	public WSResult createVPNUserByFirewall(@WebParam(name = "vpnUserParameter") VPNUserParameter vpnUserParameter) {
 
-		String command = service.createVPNUser(parameter);
+		WSResult result = new WSResult();
 
-		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command);
+		String command = service.createVPNUser(vpnUserParameter);
 
-		// TODO 缺少针对返回字符串解析是否执行成功的判断.
+		String filePath = getFilePath(vpnUserParameter.getVpnUser());
 
-		return new WSResult();
+		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command, filePath);
+
+		try {
+
+			String resultStr = FileUtils.readFileToString(new File(filePath));
+
+			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.createVPN);
+
+		} catch (IOException e) {
+			result.setDefaultError();
+		}
+
+		return result;
 	}
 
 	@Override
-	public WSResult deleteVPNUserByFirewall(@WebParam(name = "VPNUserParameter") VPNUserParameter parameter) {
+	public WSResult deleteVPNUserByFirewall(@WebParam(name = "vpnUserParameter") VPNUserParameter vpnUserParameter) {
 
-		String command = service.deleteVPNUser(parameter);
+		WSResult result = new WSResult();
 
-		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command);
+		String command = service.deleteVPNUser(vpnUserParameter);
 
-		// TODO 缺少针对返回字符串解析是否执行成功的判断.
+		String filePath = getFilePath(vpnUserParameter.getVpnUser());
 
-		return new WSResult();
+		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command, filePath);
+
+		try {
+
+			String resultStr = FileUtils.readFileToString(new File(filePath));
+
+			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.deleteVPN);
+
+		} catch (IOException e) {
+			result.setDefaultError();
+		}
+
+		return result;
 	}
 
 	@Override
 	public WSResult changeVPNUserAccesssAddressByFirewall(
-			@WebParam(name = "VPNUserParameter") VPNUserParameter parameter) {
+			@WebParam(name = "vpnUserParameter") VPNUserParameter vpnUserParameter) {
 
-		String command = service.changeAccesssAddressIntoVPNUser(parameter);
+		WSResult result = new WSResult();
 
-		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command);
+		String command = service.changeAccesssAddressIntoVPNUser(vpnUserParameter);
 
-		// TODO 缺少针对返回字符串解析是否执行成功的判断.
+		String filePath = getFilePath(vpnUserParameter.getVpnUser());
 
-		return new WSResult();
+		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command, filePath);
+
+		try {
+
+			String resultStr = FileUtils.readFileToString(new File(filePath));
+
+			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.changeVPN);
+
+		} catch (IOException e) {
+			result.setDefaultError();
+		}
+
+		return result;
+
 	}
 
 }

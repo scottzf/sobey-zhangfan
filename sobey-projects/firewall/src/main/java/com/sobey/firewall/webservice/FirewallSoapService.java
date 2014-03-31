@@ -22,52 +22,53 @@ public interface FirewallSoapService {
 	/**
 	 * 在防火墙上执行脚本，创建EIP
 	 * 
-	 * @param parameter
+	 * @param eipParameter
 	 *            {@link EIPParameter}
 	 * @param allPolicies
 	 *            所有EIP的映射策略.
 	 * @return
 	 */
-	WSResult createEIPByFirewall(@WebParam(name = "EIPParameter") EIPParameter parameter,
+	WSResult createEIPByFirewall(@WebParam(name = "eipParameter") EIPParameter eipParameter,
 			@WebParam(name = "allPolicies") List<String> allPolicies);
 
 	/**
 	 * 在防火墙上执行脚本，删除EIP
 	 * 
-	 * @param parameter
+	 * @param eipParameter
 	 *            {@link EIPParameter}
 	 * @param allPolicies
-	 *            所有EIP的映射策略.
+	 *            所有EIP的映射策略,从CMDBuild中读取,在后台进行过滤
 	 * @return
 	 */
-	WSResult deleteEIPByFirewall(@WebParam(name = "EIPParameter") EIPParameter parameter,
+	WSResult deleteEIPByFirewall(@WebParam(name = "eipParameter") EIPParameter eipParameter,
 			@WebParam(name = "allPolicies") List<String> allPolicies);
 
 	/**
 	 * 在防火墙上执行脚本，创建VPN User
 	 * 
-	 * @param parameter
+	 * @param vpnUserParameter
 	 *            {@link VPNUserParameter }
 	 * @return
 	 */
-	WSResult createVPNUserByFirewall(@WebParam(name = "VPNUserParameter") VPNUserParameter parameter);
+	WSResult createVPNUserByFirewall(@WebParam(name = "vpnUserParameter") VPNUserParameter vpnUserParameter);
 
 	/**
 	 * 在防火墙上执行脚本，删除VPN User
 	 * 
-	 * @param parameter
+	 * @param vpnUserParameter
 	 *            {@link VPNUserParameter }
 	 * @return
 	 */
-	WSResult deleteVPNUserByFirewall(@WebParam(name = "VPNUserParameter") VPNUserParameter parameter);
+	WSResult deleteVPNUserByFirewall(@WebParam(name = "vpnUserParameter") VPNUserParameter vpnUserParameter);
 
 	/**
 	 * 在防火墙上执行脚本，为VPNUser组新增或删除可访问段.
 	 * 
-	 * @param parameter
+	 * @param vpnUserParameter
 	 *            {@link VPNUserParameter }
 	 * @return
 	 */
-	WSResult changeVPNUserAccesssAddressByFirewall(@WebParam(name = "VPNUserParameter") VPNUserParameter parameter);
+	WSResult changeVPNUserAccesssAddressByFirewall(
+			@WebParam(name = "vpnUserParameter") VPNUserParameter vpnUserParameter);
 
 }

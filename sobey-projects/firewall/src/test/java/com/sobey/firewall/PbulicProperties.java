@@ -8,16 +8,17 @@ import com.sobey.core.utils.PropertiesLoader;
  * @author Administrator
  * 
  */
-public abstract class PropertiesAbstract {
+public abstract interface PbulicProperties {
 
 	/**
 	 * 加载applicationContext.propertie文件
 	 */
-	protected static PropertiesLoader FIREWALL_LOADER = new PropertiesLoader("classpath:/firewall.properties");
+	static PropertiesLoader FIREWALL_LOADER = new PropertiesLoader("classpath:/firewall.properties");
 
 	/* 防火墙登录 */
-	protected static final String FIREWALL_IP = FIREWALL_LOADER.getProperty("FIREWALL_IP");
-	protected static final String FIREWALL_USERNAME = FIREWALL_LOADER.getProperty("FIREWALL_USERNAME");
-	protected static final String FIREWALL_PASSWORD = FIREWALL_LOADER.getProperty("FIREWALL_PASSWORD");
+	static final String FIREWALL_IP = FIREWALL_LOADER.getProperty("FIREWALL_IP");
+	static final String FIREWALL_USERNAME = FIREWALL_LOADER.getProperty("FIREWALL_USERNAME");
+	static final String FIREWALL_PASSWORD = FIREWALL_LOADER.getProperty("FIREWALL_PASSWORD");
 
+	static String FILE_PATH = "logs/TerminalInfo.txt";
 }

@@ -1,8 +1,10 @@
 package com.sobey.firewall.test;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
-import org.junit.Ignore;
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.google.common.collect.Lists;
 import com.sobey.core.utils.TelnetUtil;
-import com.sobey.firewall.PropertiesAbstract;
+import com.sobey.firewall.PbulicProperties;
 import com.sobey.firewall.data.TestData;
 import com.sobey.firewall.service.FirewallService;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
@@ -24,14 +26,13 @@ import com.sobey.firewall.webservice.response.dto.EIPParameter;
  */
 @ContextConfiguration({ "classpath:applicationContext.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
-public class EipTest extends PropertiesAbstract {
+public class EipTest implements PbulicProperties {
 
 	@Autowired
 	private FirewallService service;
 
-	@Test
-	@Ignore
-	public void createEip() {
+	// @Test
+	public void createEip() throws IOException {
 
 		EIPParameter parameter = TestData.randomEIPParameter();
 
@@ -41,13 +42,16 @@ public class EipTest extends PropertiesAbstract {
 
 		System.out.println(command);
 
-		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command);
+		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command, FILE_PATH);
+
+		String result = FileUtils.readFileToString(new File(FILE_PATH));
+
+		System.err.println(result);
 
 	}
 
 	@Test
-	@Ignore
-	public void deleteEip() {
+	public void deleteEip() throws IOException {
 
 		EIPParameter parameter = TestData.randomEIPParameter();
 
@@ -57,9 +61,11 @@ public class EipTest extends PropertiesAbstract {
 
 		String command = service.deleteEip(parameter, allPolicies);
 
-		System.out.println(command);
+		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command, FILE_PATH);
 
-		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command);
+		String result = FileUtils.readFileToString(new File(FILE_PATH));
+
+		System.err.println(result);
 
 	}
 }
