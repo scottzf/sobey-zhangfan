@@ -67,11 +67,13 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 		String accessCommand = service.createVlanOnAccessLayer(vlanParameter.getVlanId(), vlanParameter.getGateway(),
 				vlanParameter.getNetMask());
 
-		TelnetUtil.execCommand(ACCESS_IP, ACCESS_USERNAME, ACCESS_PASSWORD, accessCommand);
+		String filePath = getFilePath(vlanParameter.getVlanId().toString());
+
+		TelnetUtil.execCommand(ACCESS_IP, ACCESS_USERNAME, ACCESS_PASSWORD, accessCommand, filePath);
 
 		try {
 
-			String resultStr = FileUtils.readFileToString(new File(getFilePath(vlanParameter.getVlanId().toString())));
+			String resultStr = FileUtils.readFileToString(new File(filePath));
 
 			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.createVlan);
 
@@ -96,11 +98,13 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 
 		String accessCommand = service.deleteVlanOnAccessLayer(vlanId);
 
-		TelnetUtil.execCommand(ACCESS_IP, ACCESS_USERNAME, ACCESS_PASSWORD, accessCommand);
+		String filePath = getFilePath(vlanId.toString());
+
+		TelnetUtil.execCommand(ACCESS_IP, ACCESS_USERNAME, ACCESS_PASSWORD, accessCommand, filePath);
 
 		try {
 
-			String resultStr = FileUtils.readFileToString(new File(vlanId.toString()));
+			String resultStr = FileUtils.readFileToString(new File(filePath));
 
 			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.deleteVlan);
 
@@ -124,11 +128,13 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 		String command = service.createEsg(esgParameter.getAclNumber(), esgParameter.getVlanId(),
 				esgParameter.getDesc(), esgParameter.getPermits(), esgParameter.getDenys());
 
-		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, command);
+		String filePath = getFilePath(esgParameter.getAclNumber().toString());
+
+		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, command, filePath);
 
 		try {
 
-			String resultStr = FileUtils.readFileToString(new File(esgParameter.getAclNumber().toString()));
+			String resultStr = FileUtils.readFileToString(new File(filePath));
 
 			// 如果报错,则将已插入的acl删除.
 			if (resultStr.contains(TerminalResultHandle.CREATEACL_ERROR)) {
@@ -155,11 +161,13 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 
 		String command = service.deleteEsg(aclNumber);
 
-		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, command);
+		String filePath = getFilePath(aclNumber.toString());
+
+		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, command, filePath);
 
 		try {
 
-			String resultStr = FileUtils.readFileToString(new File(aclNumber.toString()));
+			String resultStr = FileUtils.readFileToString(new File(filePath));
 
 			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.deleteAcl);
 

@@ -57,15 +57,16 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 
 		String command = service.createEs3(createEs3Parameter);
 
-		boolean isconnect = JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command);
+		String filePath = getFilePath(createEs3Parameter.getVolumeName());
+
+		boolean isconnect = JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command, filePath);
 
 		// 判断是否连接交换机
 		if (!isconnect) {
 
 			try {
 
-				String resultStr = FileUtils
-						.readFileToString(new File(getFilePath(createEs3Parameter.getVolumeName())));
+				String resultStr = FileUtils.readFileToString(new File(filePath));
 
 				result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.create);
 
@@ -88,15 +89,16 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 
 		String command = service.deleteEs3(deleteEs3Parameter);
 
-		boolean isconnect = JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command);
+		String filePath = getFilePath(deleteEs3Parameter.getVolumeName());
+
+		boolean isconnect = JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command, filePath);
 
 		// 判断是否连接交换机
 		if (!isconnect) {
 
 			try {
 
-				String resultStr = FileUtils
-						.readFileToString(new File(getFilePath(deleteEs3Parameter.getVolumeName())));
+				String resultStr = FileUtils.readFileToString(new File(filePath));
 
 				result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.delete);
 
@@ -120,14 +122,16 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 
 		String command = service.mountEs3(mountEs3Parameter);
 
-		boolean isconnect = JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command);
+		String filePath = getFilePath(mountEs3Parameter.getVolumeName());
+
+		boolean isconnect = JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command, filePath);
 
 		// 判断是否连接交换机
 		if (!isconnect) {
 
 			try {
 
-				String resultStr = FileUtils.readFileToString(new File(getFilePath(mountEs3Parameter.getVolumeName())));
+				String resultStr = FileUtils.readFileToString(new File(filePath));
 
 				result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.mount);
 
@@ -151,15 +155,16 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 
 		String command = service.umountEs3(umountEs3Parameter);
 
-		boolean isconnect = JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command);
+		String filePath = getFilePath(umountEs3Parameter.getClientIPaddress());
+
+		boolean isconnect = JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command, filePath);
 
 		// 判断是否连接交换机
 		if (!isconnect) {
 
 			try {
 
-				String resultStr = FileUtils.readFileToString(new File(getFilePath(umountEs3Parameter
-						.getClientIPaddress())));
+				String resultStr = FileUtils.readFileToString(new File(filePath));
 
 				result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.umount);
 
@@ -183,15 +188,16 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 
 		String command = service.remountEs3(remountEs3Parameter);
 
-		boolean isconnect = JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command);
+		String filePath = getFilePath(remountEs3Parameter.getVolumeName());
+
+		boolean isconnect = JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command, filePath);
 
 		// 判断是否连接交换机
 		if (!isconnect) {
 
 			try {
 
-				String resultStr = FileUtils
-						.readFileToString(new File(getFilePath(remountEs3Parameter.getVolumeName())));
+				String resultStr = FileUtils.readFileToString(new File(filePath));
 
 				result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.remount);
 
