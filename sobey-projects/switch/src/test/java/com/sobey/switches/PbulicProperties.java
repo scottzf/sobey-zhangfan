@@ -26,4 +26,6 @@ public interface PbulicProperties {
 	static final String ACCESS_USERNAME = ACCESS_LOADER.getProperty("ACCESS_USERNAME");
 	static final String ACCESS_PASSWORD = ACCESS_LOADER.getProperty("ACCESS_PASSWORD");
 
+	static String FILE_PATH = "logs/TerminalInfo.txt";
+
 }

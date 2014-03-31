@@ -6,7 +6,7 @@ import com.sobey.storage.webservice.response.result.WSResult;
 /**
  * 对终端返回的信息进行处理.
  * 
- * 先将H3C交换机返回的错误提示进行归纳,将其公共的信息抽象出来,然后将执行脚本返回的信息进行对比. <br>
+ * 先将netapp返回的错误提示进行归纳,将其公共的信息抽象出来,然后将执行脚本返回的信息进行对比. <br>
  * 如果包含,说明报错,返回<b>false</b>.
  * 
  * @return

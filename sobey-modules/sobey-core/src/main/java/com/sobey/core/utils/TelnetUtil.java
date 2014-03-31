@@ -137,7 +137,6 @@ public class TelnetUtil implements Runnable, TelnetNotificationHandler {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
 		}
 	}
 
@@ -208,6 +207,7 @@ public class TelnetUtil implements Runnable, TelnetNotificationHandler {
 				tc.disconnect();
 			} catch (IOException e1) {
 				e1.printStackTrace();
+				return true;
 			}
 			return false;
 		}
