@@ -490,6 +490,12 @@
 								<wsdlOption>
 									<wsdl>${basedir}/src/main/resources/wsdl/storageSoapService.xml</wsdl>
 								</wsdlOption>
+								<wsdlOption>
+									<wsdl>${basedir}/src/main/resources/wsdl/firewallSoapService.xml</wsdl>
+								</wsdlOption>
+								<wsdlOption>
+									<wsdl>${basedir}/src/main/resources/wsdl/switchesSoapService.xml</wsdl>
+								</wsdlOption>
 							</wsdlOptions>
 						</configuration>
 						<goals>
