@@ -487,6 +487,9 @@
 								<wsdlOption>
 									<wsdl>${basedir}/src/main/resources/wsdl/loadbalancerSoapService.xml</wsdl>
 								</wsdlOption>
+								<wsdlOption>
+									<wsdl>${basedir}/src/main/resources/wsdl/storageSoapService.xml</wsdl>
+								</wsdlOption>
 							</wsdlOptions>
 						</configuration>
 						<goals>

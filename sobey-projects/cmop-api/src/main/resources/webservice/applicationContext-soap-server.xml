@@ -21,6 +21,9 @@
 
 	<jaxws:client id="instanceSoapService" serviceClass="com.sobey.generate.instance.InstanceSoapService"
 		address="http://localhost:8081/instance/cxf/soap/instanceSoapService?wsdl" />
+		
+	<jaxws:client id="storageSoapService" serviceClass="com.sobey.generate.storage.StorageSoapService"
+		address="http://localhost:8084/storage/cxf/soap/storageSoapService?wsdl" />
 
 	<jaxws:client id="dnsSoapService" serviceClass="com.sobey.generate.dns.DnsSoapService" address="http://localhost:8085/dns/cxf/soap/dnsSoapService?wsdl" />
 
