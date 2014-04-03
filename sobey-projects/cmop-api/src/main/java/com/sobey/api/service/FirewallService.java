@@ -1,7 +1,5 @@
 package com.sobey.api.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,12 +32,12 @@ public class FirewallService {
 		return service.changeVPNUserAccesssAddressByFirewall(vpnUserParameter);
 	}
 
-	public WSResult createEip(EIPParameter eipParameter, List<String> allPolicies) {
-		return service.createEIPByFirewall(eipParameter, allPolicies);
+	public WSResult createEip(EIPParameter eipParameter) {
+		return service.createEIPByFirewall(eipParameter);
 	}
 
-	public WSResult deleteEip(EIPParameter eipParameter, List<String> allPolicies) {
-		return service.deleteEIPByFirewall(eipParameter, allPolicies);
+	public WSResult deleteEip(EIPParameter eipParameter) {
+		return service.deleteEIPByFirewall(eipParameter);
 	}
 
 }

@@ -23,7 +23,7 @@ public class VPNUserTest implements PbulicProperties {
 	@Autowired
 	private FirewallService service;
 
-	// @Test
+	@Test
 	public void createVPNUser() throws IOException {
 
 		VPNUserParameter parameter = TestData.randomVPNParameter();
@@ -39,7 +39,7 @@ public class VPNUserTest implements PbulicProperties {
 		System.err.println(result);
 	}
 
-	// @Test
+	@Test
 	public void deleteVPNUser() throws IOException {
 
 		VPNUserParameter parameter = TestData.randomVPNParameter();

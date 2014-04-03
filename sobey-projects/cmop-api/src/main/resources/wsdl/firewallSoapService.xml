@@ -63,12 +63,12 @@
   <xs:complexType name="createEIPByFirewall">
     <xs:sequence>
       <xs:element minOccurs="0" name="eipParameter" type="tns:EIPParameter"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="allPolicies" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="EIPParameter">
     <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="allPolicies" nillable="true" type="xs:string"/>
       <xs:element minOccurs="0" name="internetIP" type="xs:string"/>
       <xs:element minOccurs="0" name="isp" type="xs:int"/>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="policies" nillable="true" type="tns:EIPPolicyParameter"/>
@@ -93,7 +93,6 @@
   <xs:complexType name="deleteEIPByFirewall">
     <xs:sequence>
       <xs:element minOccurs="0" name="eipParameter" type="tns:EIPParameter"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="allPolicies" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 

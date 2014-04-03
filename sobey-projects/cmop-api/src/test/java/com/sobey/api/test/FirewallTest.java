@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.google.common.collect.Lists;
 import com.sobey.api.data.FirewallTestData;
 import com.sobey.api.service.FirewallService;
+import com.sobey.generate.firewall.EIPParameter;
 import com.sobey.generate.firewall.WSResult;
 
 /**
@@ -31,9 +32,7 @@ public class FirewallTest extends TestCase {
 	@Test
 	public void createEipTest() {
 
-		List<String> memberList = Lists.newArrayList();
-
-		WSResult result = service.createEip(FirewallTestData.randomEIPParameter(), memberList);
+		WSResult result = service.createEip(FirewallTestData.randomEIPParameter());
 
 		System.out.println(result.getMessage());
 		assertEquals(result.getCode(), "0");
@@ -42,11 +41,14 @@ public class FirewallTest extends TestCase {
 	@Test
 	public void deleteEipTest() {
 
+		EIPParameter parameter = FirewallTestData.randomEIPParameter();
+
 		List<String> allPolicies = Lists.newArrayList();
 		allPolicies.add("119.6.200.219-tcp-80");
 		allPolicies.add("119.6.200.219-udp-8080");
+		parameter.getAllPolicies().addAll(allPolicies);
 
-		WSResult result = service.deleteEip(FirewallTestData.randomEIPParameter(), allPolicies);
+		WSResult result = service.deleteEip(FirewallTestData.randomEIPParameter());
 
 		System.out.println(result.getMessage());
 		assertEquals(result.getCode(), "0");
