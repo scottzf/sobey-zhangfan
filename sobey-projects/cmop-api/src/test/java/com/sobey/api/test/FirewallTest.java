@@ -1,6 +1,6 @@
 package com.sobey.api.test;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
@@ -43,7 +43,7 @@ public class FirewallTest extends TestCase {
 
 		EIPParameter parameter = FirewallTestData.randomEIPParameter();
 
-		List<String> allPolicies = Lists.newArrayList();
+		ArrayList<String> allPolicies = Lists.newArrayList();
 		allPolicies.add("119.6.200.219-tcp-80");
 		allPolicies.add("119.6.200.219-udp-8080");
 		parameter.getAllPolicies().addAll(allPolicies);

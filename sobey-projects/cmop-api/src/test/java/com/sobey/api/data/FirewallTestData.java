@@ -13,6 +13,7 @@ public class FirewallTestData {
 	public static EIPParameter randomEIPParameter() {
 
 		ArrayList<String> allPolicies = Lists.newArrayList();
+		allPolicies.add("192.168.1.1");
 
 		EIPParameter parameter = new EIPParameter();
 
@@ -51,13 +52,13 @@ public class FirewallTestData {
 		parameter.setVpnUser("liukai01");
 		parameter.setVpnPassword("liukai01@sobey");
 
-		List<String> segments = Lists.newArrayList();
+		ArrayList<String> segments = Lists.newArrayList();
 		String segment = "172.20.17.0";
 		String segment2 = "172.20.18.0";
 		segments.add(segment);
 		segments.add(segment2);
 
-		List<String> ipaddress = Lists.newArrayList();
+		ArrayList<String> ipaddress = Lists.newArrayList();
 		String ip = "172.20.19.1";
 		ipaddress.add(ip);
 

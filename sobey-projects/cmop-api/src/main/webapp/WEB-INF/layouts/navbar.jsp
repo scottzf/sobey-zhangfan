@@ -45,6 +45,15 @@
 						<li><a href="${ctx}/switch/create/esg/">创建Esg</a></li>
 						<li><a href="${ctx}/switch/delete/esg/">删除Esg</a></li>
 					</ul></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">Firewall<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="${ctx}/firewall/create/eip/">创建Eip</a></li>
+						<li><a href="${ctx}/firewall/delete/eip/">删除Eip</a></li>
+						<li><a href="${ctx}/firewall/create/vpn/">创建VPN</a></li>
+						<li><a href="${ctx}/firewall/delete/vpn/">删除VPN</a></li>
+						<li><a href="${ctx}/firewall/change/vpn/">更改VPN</a></li>
+					</ul></li>
 			</ul>
 		</div>
 		<!--/.nav-collapse -->
