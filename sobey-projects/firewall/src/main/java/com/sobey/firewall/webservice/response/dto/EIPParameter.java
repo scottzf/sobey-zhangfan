@@ -1,13 +1,12 @@
 package com.sobey.firewall.webservice.response.dto;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.google.common.collect.Lists;
 import com.sobey.firewall.constans.WsConstants;
 
 /**
@@ -46,12 +45,12 @@ public class EIPParameter {
 	/**
 	 * 映射策略集合
 	 */
-	private List<EIPPolicyParameter> policies = Lists.newArrayList();
+	private ArrayList<EIPPolicyParameter> policies;
 
 	/**
 	 * 所有映射策略集合
 	 */
-	private List<String> allPolicies = Lists.newArrayList();
+	private ArrayList<String> allPolicies;
 
 	public String getInternetIP() {
 		return internetIP;
@@ -77,19 +76,19 @@ public class EIPParameter {
 		this.privateIP = privateIP;
 	}
 
-	public List<EIPPolicyParameter> getPolicies() {
+	public ArrayList<EIPPolicyParameter> getPolicies() {
 		return policies;
 	}
 
-	public void setPolicies(List<EIPPolicyParameter> policies) {
+	public void setPolicies(ArrayList<EIPPolicyParameter> policies) {
 		this.policies = policies;
 	}
 
-	public List<String> getAllPolicies() {
+	public ArrayList<String> getAllPolicies() {
 		return allPolicies;
 	}
 
-	public void setAllPolicies(List<String> allPolicies) {
+	public void setAllPolicies(ArrayList<String> allPolicies) {
 		this.allPolicies = allPolicies;
 	}
 

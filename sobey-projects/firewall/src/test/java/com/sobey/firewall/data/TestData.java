@@ -1,7 +1,6 @@
 package com.sobey.firewall.data;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.google.common.collect.Lists;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
@@ -21,7 +20,7 @@ public class TestData {
 		parameter.setIsp(1);
 		parameter.setPrivateIP("172.28.25.105");
 
-		List<EIPPolicyParameter> policies = Lists.newArrayList();
+		ArrayList<EIPPolicyParameter> policies = Lists.newArrayList();
 
 		EIPPolicyParameter policyParameter = new EIPPolicyParameter();
 		policyParameter.setProtocolText("udp");
@@ -51,13 +50,13 @@ public class TestData {
 		parameter.setVpnUser("liukai01");
 		parameter.setVpnPassword("liukai01@sobey");
 
-		List<String> segments = Lists.newArrayList();
+		ArrayList<String> segments = Lists.newArrayList();
 		String segment = "172.20.17.0";
 		String segment2 = "172.20.18.0";
 		segments.add(segment);
 		segments.add(segment2);
 
-		List<String> ipaddress = Lists.newArrayList();
+		ArrayList<String> ipaddress = Lists.newArrayList();
 		String ip = "172.20.19.1";
 		ipaddress.add(ip);
 

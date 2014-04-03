@@ -1,13 +1,12 @@
 package com.sobey.firewall.webservice.response.dto;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.google.common.collect.Lists;
 import com.sobey.firewall.constans.WsConstants;
 
 /**
@@ -43,12 +42,12 @@ public class VPNUserParameter {
 	/**
 	 * IP
 	 */
-	private List<String> ipaddress = Lists.newArrayList();
+	private ArrayList<String> ipaddress;
 
 	/**
 	 * 网段
 	 */
-	private List<String> segments = Lists.newArrayList();
+	private ArrayList<String> segments;
 
 	/**
 	 * 子网掩码
@@ -81,19 +80,19 @@ public class VPNUserParameter {
 		VlanId = vlanId;
 	}
 
-	public List<String> getIpaddress() {
+	public ArrayList<String> getIpaddress() {
 		return ipaddress;
 	}
 
-	public void setIpaddress(List<String> ipaddress) {
+	public void setIpaddress(ArrayList<String> ipaddress) {
 		this.ipaddress = ipaddress;
 	}
 
-	public List<String> getSegments() {
+	public ArrayList<String> getSegments() {
 		return segments;
 	}
 
-	public void setSegments(List<String> segments) {
+	public void setSegments(ArrayList<String> segments) {
 		this.segments = segments;
 	}
 
