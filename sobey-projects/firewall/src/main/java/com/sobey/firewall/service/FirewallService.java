@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import com.google.common.collect.Lists;
 import com.sobey.core.utils.Collections3;
 import com.sobey.core.utils.PropertiesLoader;
-import com.sobey.firewall.constans.SymbolEnum;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
 import com.sobey.firewall.webservice.response.dto.EIPPolicyParameter;
 import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
@@ -20,6 +19,8 @@ import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
  */
 @Service
 public class FirewallService {
+
+	private static final String DEFAULT_SYMBOL = "\r";
 
 	/**
 	 * 加载applicationContext.propertie文件
@@ -223,7 +224,7 @@ public class FirewallService {
 	 *            (用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public String createEip(EIPParameter parameter, List<String> allPolicies, String symbol) {
+	public String createEip(EIPParameter parameter, List<String> allPolicies) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -235,83 +236,32 @@ public class FirewallService {
 
 			allPolicies.add(vipName);
 
-			sb.append("config firewall vip").append(symbol);
-			sb.append("edit ").append("\"").append(vipName).append("\"").append(symbol);
-			sb.append("set extip ").append(parameter.getInternetIP()).append(symbol);
-			sb.append("set extintf ").append("\"").append(FIREWALL_EXTINTF).append("\"").append(symbol);
-			sb.append("set portforward ").append(FIREWALL_PORTFORWARD).append(symbol);
-			sb.append("set mappedip ").append(parameter.getPrivateIP()).append(symbol);
+			sb.append("config firewall vip").append(DEFAULT_SYMBOL);
+			sb.append("edit ").append("\"").append(vipName).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set extip ").append(parameter.getInternetIP()).append(DEFAULT_SYMBOL);
+			sb.append("set extintf ").append("\"").append(FIREWALL_EXTINTF).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set portforward ").append(FIREWALL_PORTFORWARD).append(DEFAULT_SYMBOL);
+			sb.append("set mappedip ").append(parameter.getPrivateIP()).append(DEFAULT_SYMBOL);
 
 			// 当协议为udp时,增加协议的设置,为tcp时,不需要设置.
 			if ("udp".equalsIgnoreCase(policy.getProtocolText())) {
-				sb.append("set protocol udp").append(symbol);
+				sb.append("set protocol udp").append(DEFAULT_SYMBOL);
 			}
-			sb.append("set extport ").append(policy.getSourcePort()).append(symbol);
-			sb.append("set mappedport ").append(policy.getTargetPort()).append(symbol);
-			sb.append("next").append(symbol);
-			sb.append("end").append(symbol);
-			sb.append(symbol);
+			sb.append("set extport ").append(policy.getSourcePort()).append(DEFAULT_SYMBOL);
+			sb.append("set mappedport ").append(policy.getTargetPort()).append(DEFAULT_SYMBOL);
+			sb.append("next").append(DEFAULT_SYMBOL);
+			sb.append("end").append(DEFAULT_SYMBOL);
+			sb.append(DEFAULT_SYMBOL);
 		}
 
-		sb.append("config firewall vipgrp").append(symbol);
-		sb.append("edit ").append("\"").append(getVipgrpByISP(parameter)).append("\"").append(symbol);
-		sb.append("set interface ").append("\"").append(FIREWALL_EXTINTF).append("\"").append(symbol);
-		sb.append("set member ").append(generateFormatString(allPolicies)).append(symbol);
-		sb.append("end").append(symbol);
-		sb.append("quit").append(symbol);
+		sb.append("config firewall vipgrp").append(DEFAULT_SYMBOL);
+		sb.append("edit ").append("\"").append(getVipgrpByISP(parameter)).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set interface ").append("\"").append(FIREWALL_EXTINTF).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set member ").append(generateFormatString(allPolicies)).append(DEFAULT_SYMBOL);
+		sb.append("end").append(DEFAULT_SYMBOL);
+		sb.append("quit").append(DEFAULT_SYMBOL);
 
 		return sb.toString();
-	}
-
-	/**
-	 * 生成在<b>防火墙</b>执行的创建EIP脚本,默认换行符号<br>
-	 * <b>注意:<br>
-	 * 1.在set member后添加的映射名,是包含了所有租户的EIP的映射名;<br>
-	 * 2.防火墙中的虚拟IP组中的组成员不能为空;<br>
-	 * 3.如果IP名存在,command会报错,需在CMDB中约束</b><br>
-	 * 
-	 * Example:
-	 * 
-	 * <pre>
-	 * config firewall vip
-	 * edit "119.6.200.219-tcp-8080"  
-	 * set extip 119.6.200.219
-	 * set extintf "wan1"	
-	 * set portforward enable
-	 * set mappedip 172.28.25.105
-	 * set protocol udp           
-	 * set extport 8080
-	 * set mappedport 8080
-	 * next
-	 * end
-	 * 
-	 * config firewall vip
-	 * edit "119.6.200.219-tcp-80"  
-	 * set extip 119.6.200.219
-	 * set extintf "wan1"	
-	 * set portforward enable
-	 * set mappedip 172.28.25.105
-	 * set protocol udp           
-	 * set extport 80
-	 * set mappedport 80
-	 * next
-	 * end
-	 * 
-	 * config firewall  vipgrp
-	 * edit "CNC_All_Services"
-	 * set interface "wan1"
-	 * set member  "119.6.200.219-tcp-8080" "119.6.200.219-tcp-80"   
-	 * end
-	 * </pre>
-	 * 
-	 * @param parameter
-	 *            {@link EIPParameter}
-	 * @param allPolicies
-	 *            所有EIP的映射策略.
-	 * @return
-	 */
-	public String createEip(EIPParameter parameter, List<String> allPolicies) {
-		return createEip(parameter, allPolicies, SymbolEnum.DEFAULT_SYMBOL.getName());
 	}
 
 	/**
@@ -340,11 +290,9 @@ public class FirewallService {
 	 *            {@link EIPParameter}
 	 * @param allPolicies
 	 *            所有EIP的映射策略.
-	 * @param symbol
-	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public String deleteEip(EIPParameter parameter, List<String> allPolicies, String symbol) {
+	public String deleteEip(EIPParameter parameter, List<String> allPolicies) {
 
 		/*
 		 * 1.获得所有租户的VIP策略组名集合.
@@ -372,55 +320,23 @@ public class FirewallService {
 		System.out.println(generateFormatString(allPolicies));
 
 		// Step.3
-		sb.append("config firewall vipgrp").append(symbol);
-		sb.append("edit ").append("\"").append(getVipgrpByISP(parameter)).append("\"").append(symbol);
-		sb.append("set interface ").append("\"").append(FIREWALL_EXTINTF).append("\"").append(symbol);
-		sb.append("set member ").append(generateFormatString(allPolicies)).append(symbol);
-		sb.append("end").append(symbol);
-		sb.append(symbol);
+		sb.append("config firewall vipgrp").append(DEFAULT_SYMBOL);
+		sb.append("edit ").append("\"").append(getVipgrpByISP(parameter)).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set interface ").append("\"").append(FIREWALL_EXTINTF).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set member ").append(generateFormatString(allPolicies)).append(DEFAULT_SYMBOL);
+		sb.append("end").append(DEFAULT_SYMBOL);
+		sb.append(DEFAULT_SYMBOL);
 
 		// Step.4
 		for (String policy : policies) {
-			sb.append("config firewall vip").append(symbol);
-			sb.append("delet ").append(policy).append(symbol);
-			sb.append("end").append(symbol);
-			sb.append(symbol);
+			sb.append("config firewall vip").append(DEFAULT_SYMBOL);
+			sb.append("delet ").append(policy).append(DEFAULT_SYMBOL);
+			sb.append("end").append(DEFAULT_SYMBOL);
+			sb.append(DEFAULT_SYMBOL);
 		}
-		sb.append("quit").append(symbol);
+		sb.append("quit").append(DEFAULT_SYMBOL);
 
 		return sb.toString();
-	}
-
-	/**
-	 * 生成在<b>防火墙</b>执行的删除EIP脚本,默认换行符号<br>
-	 * <b>注意,在set member后添加的映射名,是包含了所有租户的EIP的映射名</b><br>
-	 * 
-	 * Example:
-	 * 
-	 * <pre>
-	 * config firewall  vipgrp
-	 * edit "CNC_All_Services"
-	 * set interface "wan1"
-	 * set member "119.6.200.219-tcp-8080" "119.6.200.219-tcp-80"   
-	 * end
-	 * 
-	 * config firewall vip
-	 * delet 113.142.30.220-tcp-8082
-	 * end
-	 * 
-	 * config firewall vip
-	 * delet 113.142.30.220-tcp-8083
-	 * end
-	 * </pre>
-	 * 
-	 * @param parameter
-	 *            {@link EIPParameter}
-	 * @param allPolicies
-	 *            所有EIP的映射策略.
-	 * @return
-	 */
-	public String deleteEip(EIPParameter parameter, List<String> allPolicies) {
-		return deleteEip(parameter, allPolicies, SymbolEnum.DEFAULT_SYMBOL.getName());
 	}
 
 	/**
@@ -484,11 +400,9 @@ public class FirewallService {
 	 * 
 	 * @param parameter
 	 *            {@link VPNUserParameter}
-	 * @param symbol
-	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public String createVPNUser(VPNUserParameter parameter, String symbol) {
+	public String createVPNUser(VPNUserParameter parameter) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -501,134 +415,70 @@ public class FirewallService {
 		 */
 
 		for (String ipaddress : parameter.getIpaddress()) {
-			sb.append("config firewall address").append(symbol);
-			sb.append("edit ").append("\"").append(generateAddressNameByIP(ipaddress)).append("\"").append(symbol);
-			sb.append("set subnet ").append(ipaddress).append(" 255.255.255.255").append(symbol);
-			sb.append("next").append(symbol);
-			sb.append("end").append(symbol);
-			sb.append(symbol);
+			sb.append("config firewall address").append(DEFAULT_SYMBOL);
+			sb.append("edit ").append("\"").append(generateAddressNameByIP(ipaddress)).append("\"")
+					.append(DEFAULT_SYMBOL);
+			sb.append("set subnet ").append(ipaddress).append(" 255.255.255.255").append(DEFAULT_SYMBOL);
+			sb.append("next").append(DEFAULT_SYMBOL);
+			sb.append("end").append(DEFAULT_SYMBOL);
+			sb.append(DEFAULT_SYMBOL);
 
 			dstaddrs.add(generateAddressNameByIP(ipaddress));
 		}
 
 		for (String segment : parameter.getSegments()) {
-			sb.append("config firewall address").append(symbol);
-			sb.append("edit ").append("\"").append(generateAddressNameBySegment(segment)).append("\"").append(symbol);
-			sb.append("set subnet ").append(segment).append(" 255.255.255.0").append(symbol);
-			sb.append("next").append(symbol);
-			sb.append("end").append(symbol);
-			sb.append(symbol);
+			sb.append("config firewall address").append(DEFAULT_SYMBOL);
+			sb.append("edit ").append("\"").append(generateAddressNameBySegment(segment)).append("\"")
+					.append(DEFAULT_SYMBOL);
+			sb.append("set subnet ").append(segment).append(" 255.255.255.0").append(DEFAULT_SYMBOL);
+			sb.append("next").append(DEFAULT_SYMBOL);
+			sb.append("end").append(DEFAULT_SYMBOL);
+			sb.append(DEFAULT_SYMBOL);
 
 			dstaddrs.add(generateAddressNameBySegment(segment));
 		}
 
-		sb.append("config user local").append(symbol);
-		sb.append("edit ").append("\"").append(parameter.getVpnUser()).append("\"").append(symbol);
-		sb.append("set type password ").append(symbol);
-		sb.append("edit passwd ").append(parameter.getVpnPassword()).append(symbol);
-		sb.append("next").append(symbol);
-		sb.append("end").append(symbol);
-		sb.append(symbol);
+		sb.append("config user local").append(DEFAULT_SYMBOL);
+		sb.append("edit ").append("\"").append(parameter.getVpnUser()).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set type password ").append(DEFAULT_SYMBOL);
+		sb.append("edit passwd ").append(parameter.getVpnPassword()).append(DEFAULT_SYMBOL);
+		sb.append("next").append(DEFAULT_SYMBOL);
+		sb.append("end").append(DEFAULT_SYMBOL);
+		sb.append(DEFAULT_SYMBOL);
 
-		sb.append("config user group").append(symbol);
-		sb.append("edit ").append("\"").append(generateVlanGroupName(parameter)).append("\"").append(symbol);
-		sb.append("set sslvpn-portal ").append("\"").append(FIREWALL_SSLVPN_PORTAL).append("\"").append(symbol);
-		sb.append("set member ").append("\"").append(parameter.getVpnUser()).append("\"").append(symbol);
-		sb.append("next").append(symbol);
-		sb.append("end").append(symbol);
-		sb.append(symbol);
+		sb.append("config user group").append(DEFAULT_SYMBOL);
+		sb.append("edit ").append("\"").append(generateVlanGroupName(parameter)).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set sslvpn-portal ").append("\"").append(FIREWALL_SSLVPN_PORTAL).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set member ").append("\"").append(parameter.getVpnUser()).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("next").append(DEFAULT_SYMBOL);
+		sb.append("end").append(DEFAULT_SYMBOL);
+		sb.append(DEFAULT_SYMBOL);
 
-		sb.append("config firewall policy").append(symbol);
-		sb.append("edit ").append(parameter.getFirewallPolicyId()).append(symbol);
-		sb.append("set srcintf ").append("\"").append(FIREWALL_SRCINTF).append("\"").append(symbol);
-		sb.append("set dstintf ").append("\"").append(FIREWALL_DSTINTF).append("\"").append(symbol);
-		sb.append("set srcaddr ").append("\"").append(FIREWALL_SRCADDR).append("\"").append(symbol);
-		sb.append("set dstaddr ").append(generateFormatString(dstaddrs)).append(symbol);
-		sb.append("set action ssl-vpn").append(symbol);
-		sb.append(symbol);
+		sb.append("config firewall policy").append(DEFAULT_SYMBOL);
+		sb.append("edit ").append(parameter.getFirewallPolicyId()).append(DEFAULT_SYMBOL);
+		sb.append("set srcintf ").append("\"").append(FIREWALL_SRCINTF).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set dstintf ").append("\"").append(FIREWALL_DSTINTF).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set srcaddr ").append("\"").append(FIREWALL_SRCADDR).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set dstaddr ").append(generateFormatString(dstaddrs)).append(DEFAULT_SYMBOL);
+		sb.append("set action ssl-vpn").append(DEFAULT_SYMBOL);
+		sb.append(DEFAULT_SYMBOL);
 
-		sb.append("config identity-based-policy").append(symbol);
-		sb.append("edit ").append(FIREWALL_IDENTITY_BASED_POLICY_ID).append(symbol);
-		sb.append("set schedule ").append("\"").append(FIREWALL_SCHEDULE).append("\"").append(symbol);
-		sb.append("set groups ").append("\"").append(generateVlanGroupName(parameter)).append("\"").append(symbol);
-		sb.append("set service ").append("\"").append(FIREWALL_SERVICE).append("\"").append(symbol);
-		sb.append("next").append(symbol);
-		sb.append("end").append(symbol);
-		sb.append(symbol);
+		sb.append("config identity-based-policy").append(DEFAULT_SYMBOL);
+		sb.append("edit ").append(FIREWALL_IDENTITY_BASED_POLICY_ID).append(DEFAULT_SYMBOL);
+		sb.append("set schedule ").append("\"").append(FIREWALL_SCHEDULE).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set groups ").append("\"").append(generateVlanGroupName(parameter)).append("\"")
+				.append(DEFAULT_SYMBOL);
+		sb.append("set service ").append("\"").append(FIREWALL_SERVICE).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("next").append(DEFAULT_SYMBOL);
+		sb.append("end").append(DEFAULT_SYMBOL);
+		sb.append(DEFAULT_SYMBOL);
 
-		sb.append("next").append(symbol);
-		sb.append("end").append(symbol);
-		sb.append("quit").append(symbol);
-		sb.append(symbol);
+		sb.append("next").append(DEFAULT_SYMBOL);
+		sb.append("end").append(DEFAULT_SYMBOL);
+		sb.append("quit").append(DEFAULT_SYMBOL);
+		sb.append(DEFAULT_SYMBOL);
 
 		return sb.toString();
-	}
-
-	/**
-	 * 
-	 * 生成在<b>防火墙</b>执行的创建VPN User脚本,默认换行符号<br>
-	 * 
-	 * Example:
-	 * 
-	 * <pre>
-	 * config firewall address
-	 * edit "172.20.19.1/32"
-	 * set subnet 172.20.19.1 255.255.255.255
-	 * next
-	 * end
-	 * 
-	 * config firewall address
-	 * edit "172.20.17.0/24"
-	 * set subnet 172.20.17.0 255.255.255.0
-	 * next
-	 * end
-	 * 
-	 * config firewall address
-	 * edit "172.20.18.0/24"
-	 * set subnet 172.20.18.0 255.255.255.0
-	 * next
-	 * end
-	 * 
-	 * config user local
-	 * edit "liukai"
-	 * set type password 
-	 * edit passwd liukai@sobey
-	 * next
-	 * end
-	 * 
-	 * config user group
-	 * edit "vlan80-gr"
-	 * set sslvpn-portal "full-access"
-	 * set member "liukai"
-	 * next
-	 * end
-	 * 
-	 * config firewall policy
-	 * edit 2000
-	 * set srcintf "wan1"
-	 * set dstintf "internal"
-	 * set srcaddr "all"
-	 * set dstaddr "172.20.19.1/32" "172.20.17.0/24" "172.20.18.0/24" 
-	 * set action ssl-vpn
-	 * 
-	 * config identity-based-policy
-	 * edit 1
-	 * set schedule "always"
-	 * set groups "vlan80-gr"
-	 * set service "ANY"
-	 * next
-	 * end
-	 * 
-	 * next
-	 * end
-	 * </pre>
-	 * 
-	 * @param parameter
-	 *            {@link VPNUserParameter}
-	 * @return
-	 */
-	public String createVPNUser(VPNUserParameter parameter) {
-		return createVPNUser(parameter, SymbolEnum.DEFAULT_SYMBOL.getName());
 	}
 
 	/**
@@ -683,11 +533,9 @@ public class FirewallService {
 	 * 
 	 * @param parameter
 	 *            {@link VPNUserParameter}
-	 * @param symbol
-	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public String changeAccesssAddressIntoVPNUser(VPNUserParameter parameter, String symbol) {
+	public String changeAccesssAddressIntoVPNUser(VPNUserParameter parameter) {
 
 		/*
 		 * 1.增加要访问的地址段
@@ -707,111 +555,56 @@ public class FirewallService {
 		 * 如果是网关,则接下来的两个参数应该为: 网关 和 255.255.255.0
 		 */
 		for (String ipaddress : parameter.getIpaddress()) {
-			sb.append("config firewall address").append(symbol);
-			sb.append("edit ").append("\"").append(generateAddressNameByIP(ipaddress)).append("\"").append(symbol);
-			sb.append("set subnet ").append(ipaddress).append(" 255.255.255.255").append(symbol);
-			sb.append("next").append(symbol);
-			sb.append("end").append(symbol);
-			sb.append(symbol);
+			sb.append("config firewall address").append(DEFAULT_SYMBOL);
+			sb.append("edit ").append("\"").append(generateAddressNameByIP(ipaddress)).append("\"")
+					.append(DEFAULT_SYMBOL);
+			sb.append("set subnet ").append(ipaddress).append(" 255.255.255.255").append(DEFAULT_SYMBOL);
+			sb.append("next").append(DEFAULT_SYMBOL);
+			sb.append("end").append(DEFAULT_SYMBOL);
+			sb.append(DEFAULT_SYMBOL);
 
 			dstaddrs.add(generateAddressNameByIP(ipaddress));
 		}
 
 		for (String segment : parameter.getSegments()) {
-			sb.append("config firewall address").append(symbol);
-			sb.append("edit ").append("\"").append(generateAddressNameBySegment(segment)).append("\"").append(symbol);
-			sb.append("set subnet ").append(segment).append(" 255.255.255.0").append(symbol);
-			sb.append("next").append(symbol);
-			sb.append("end").append(symbol);
-			sb.append(symbol);
+			sb.append("config firewall address").append(DEFAULT_SYMBOL);
+			sb.append("edit ").append("\"").append(generateAddressNameBySegment(segment)).append("\"")
+					.append(DEFAULT_SYMBOL);
+			sb.append("set subnet ").append(segment).append(" 255.255.255.0").append(DEFAULT_SYMBOL);
+			sb.append("next").append(DEFAULT_SYMBOL);
+			sb.append("end").append(DEFAULT_SYMBOL);
+			sb.append(DEFAULT_SYMBOL);
 
 			dstaddrs.add(generateAddressNameBySegment(segment));
 		}
 
 		// Step.2
-		sb.append("config firewall policy").append(symbol);
-		sb.append("edit ").append(parameter.getFirewallPolicyId()).append(symbol);
-		sb.append("set srcintf ").append("\"").append(FIREWALL_SRCINTF).append("\"").append(symbol);
-		sb.append("set dstintf ").append("\"").append(FIREWALL_DSTINTF).append("\"").append(symbol);
-		sb.append("set srcaddr ").append("\"").append(FIREWALL_SRCADDR).append("\"").append(symbol);
-		sb.append("set dstaddr ").append(generateFormatString(dstaddrs)).append(symbol);
+		sb.append("config firewall policy").append(DEFAULT_SYMBOL);
+		sb.append("edit ").append(parameter.getFirewallPolicyId()).append(DEFAULT_SYMBOL);
+		sb.append("set srcintf ").append("\"").append(FIREWALL_SRCINTF).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set dstintf ").append("\"").append(FIREWALL_DSTINTF).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set srcaddr ").append("\"").append(FIREWALL_SRCADDR).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set dstaddr ").append(generateFormatString(dstaddrs)).append(DEFAULT_SYMBOL);
 
-		sb.append("set action ssl-vpn").append(symbol);
-		sb.append(symbol);
+		sb.append("set action ssl-vpn").append(DEFAULT_SYMBOL);
+		sb.append(DEFAULT_SYMBOL);
 
-		sb.append("config identity-based-policy").append(symbol);
-		sb.append("edit ").append(FIREWALL_IDENTITY_BASED_POLICY_ID).append(symbol);
-		sb.append("set schedule ").append("\"").append(FIREWALL_SCHEDULE).append("\"").append(symbol);
-		sb.append("set groups ").append("\"").append(generateVlanGroupName(parameter)).append("\"").append(symbol);
-		sb.append("set service ").append("\"").append(FIREWALL_SERVICE).append("\"").append(symbol);
-		sb.append("next").append(symbol);
-		sb.append("end").append(symbol);
-		sb.append(symbol);
+		sb.append("config identity-based-policy").append(DEFAULT_SYMBOL);
+		sb.append("edit ").append(FIREWALL_IDENTITY_BASED_POLICY_ID).append(DEFAULT_SYMBOL);
+		sb.append("set schedule ").append("\"").append(FIREWALL_SCHEDULE).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set groups ").append("\"").append(generateVlanGroupName(parameter)).append("\"")
+				.append(DEFAULT_SYMBOL);
+		sb.append("set service ").append("\"").append(FIREWALL_SERVICE).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("next").append(DEFAULT_SYMBOL);
+		sb.append("end").append(DEFAULT_SYMBOL);
+		sb.append(DEFAULT_SYMBOL);
 
-		sb.append("next").append(symbol);
-		sb.append("end").append(symbol);
-		sb.append("quit").append(symbol);
-		sb.append(symbol);
+		sb.append("next").append(DEFAULT_SYMBOL);
+		sb.append("end").append(DEFAULT_SYMBOL);
+		sb.append("quit").append(DEFAULT_SYMBOL);
+		sb.append(DEFAULT_SYMBOL);
 
 		return sb.toString();
-	}
-
-	/**
-	 * 
-	 * 生成在<b>防火墙</b>执行的在VPNUser组增加一个IP或网段的脚本,默认换行符号<br>
-	 * 
-	 * <b>注:segments 和 ipaddress 集合中,包含的应该是用户所有的segment和ip.<br>
-	 * 调用接口前,如果想执行新增操作,需要查询出用户所有的可访问段集合,再将新增的访问段add至集合.<br>
-	 * 如果想执行删除操作,需要查询出用户所有的可访问段集合,再将需要删除的的访问段remove出集合.<br>
-	 * </b>
-	 * 
-	 * Example:
-	 * 
-	 * <pre>
-	 * config firewall address
-	 * edit "172.20.19.1/32"
-	 * set subnet 172.20.19.1 255.255.255.255
-	 * next
-	 * end
-	 * 
-	 * config firewall address
-	 * edit "172.20.17.0/24"
-	 * set subnet 172.20.17.0 255.255.255.0
-	 * next
-	 * end
-	 * 
-	 * config firewall address
-	 * edit "172.20.18.0/24"
-	 * set subnet 172.20.18.0 255.255.255.0
-	 * next
-	 * end
-	 * 
-	 * config firewall policy
-	 * edit 2000
-	 * set srcintf "wan1"
-	 * set dstintf "internal"
-	 * set srcaddr "all"
-	 * set dstaddr "172.20.19.1/32" "172.20.17.0/24" "172.20.18.0/24"
-	 * set action ssl-vpn
-	 * 
-	 * config identity-based-policy
-	 * edit 1
-	 * set schedule "always"
-	 * set groups "vlan80-gr"
-	 * set service "ANY"
-	 * next
-	 * end
-	 * 
-	 * next
-	 * end
-	 * </pre>
-	 * 
-	 * @param parameter
-	 *            {@link VPNUserParameter}
-	 * @return
-	 */
-	public String changeAccesssAddressIntoVPNUser(VPNUserParameter parameter) {
-		return changeAccesssAddressIntoVPNUser(parameter, SymbolEnum.DEFAULT_SYMBOL.getName());
 	}
 
 	/**
@@ -847,11 +640,9 @@ public class FirewallService {
 	 * 
 	 * @param parameter
 	 *            {@link VPNUserParameter}
-	 * @param symbol
-	 *            换行符号(用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public String deleteVPNUser(VPNUserParameter parameter, String symbol) {
+	public String deleteVPNUser(VPNUserParameter parameter) {
 
 		/*
 		 * 1.删除租户VPN策略
@@ -883,75 +674,34 @@ public class FirewallService {
 		}
 
 		// Step.1
-		sb.append("config firewall policy").append(symbol);
-		sb.append("delete ").append(parameter.getFirewallPolicyId()).append(symbol);
-		sb.append("end").append(symbol);
-		sb.append(symbol);
+		sb.append("config firewall policy").append(DEFAULT_SYMBOL);
+		sb.append("delete ").append(parameter.getFirewallPolicyId()).append(DEFAULT_SYMBOL);
+		sb.append("end").append(DEFAULT_SYMBOL);
+		sb.append(DEFAULT_SYMBOL);
 
 		// Step.2
-		sb.append("config user group").append(symbol);
-		sb.append("delete ").append(generateVlanGroupName(parameter)).append(symbol);
-		sb.append("end").append(symbol);
-		sb.append(symbol);
+		sb.append("config user group").append(DEFAULT_SYMBOL);
+		sb.append("delete ").append(generateVlanGroupName(parameter)).append(DEFAULT_SYMBOL);
+		sb.append("end").append(DEFAULT_SYMBOL);
+		sb.append(DEFAULT_SYMBOL);
 
 		// Step.3
-		sb.append("config user local").append(symbol);
-		sb.append("delete ").append(parameter.getVpnUser()).append(symbol);
-		sb.append("end").append(symbol);
-		sb.append(symbol);
+		sb.append("config user local").append(DEFAULT_SYMBOL);
+		sb.append("delete ").append(parameter.getVpnUser()).append(DEFAULT_SYMBOL);
+		sb.append("end").append(DEFAULT_SYMBOL);
+		sb.append(DEFAULT_SYMBOL);
 
 		// step.4
 		for (String address : addressList) {
-			sb.append("config firewall address").append(symbol);
-			sb.append("delete ").append(address).append(symbol);
-			sb.append("end").append(symbol);
-			sb.append(symbol);
+			sb.append("config firewall address").append(DEFAULT_SYMBOL);
+			sb.append("delete ").append(address).append(DEFAULT_SYMBOL);
+			sb.append("end").append(DEFAULT_SYMBOL);
+			sb.append(DEFAULT_SYMBOL);
 		}
 
-		sb.append("quit").append(symbol);
+		sb.append("quit").append(DEFAULT_SYMBOL);
 
 		return sb.toString();
-	}
-
-	/**
-	 * 生成在<b>防火墙</b>执行的删除VPNUser的脚本,默认换行符号<br>
-	 * 
-	 * Example:
-	 * 
-	 * <pre>
-	 * config firewall policy
-	 * delete 2000
-	 * end
-	 * 
-	 * config user group
-	 * delete vlan80-gr
-	 * end
-	 * 
-	 * config user local
-	 * delete liukai
-	 * end
-	 * 
-	 * config firewall address
-	 * delete 172.20.19.1/32
-	 * end
-	 * 
-	 * config firewall address
-	 * delete 172.20.17.0/24
-	 * end
-	 * 
-	 * config firewall address
-	 * delete 172.20.18.0/24
-	 * end
-	 * </pre>
-	 * 
-	 * @param parameter
-	 *            {@link VPNUserParameter}
-	 * @param symbol
-	 *            换行符号(用于区分在scrip或web中的显示效果)
-	 * @return
-	 */
-	public String deleteVPNUser(VPNUserParameter parameter) {
-		return deleteVPNUser(parameter, SymbolEnum.DEFAULT_SYMBOL.getName());
 	}
 
 }
