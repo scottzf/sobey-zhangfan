@@ -2,7 +2,6 @@ package com.sobey.firewall.webservice;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import javax.jws.WebParam;
 import javax.jws.WebService;
@@ -47,12 +46,11 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 	}
 
 	@Override
-	public WSResult createEIPByFirewall(@WebParam(name = "eipParameter") EIPParameter eipParameter,
-			@WebParam(name = "allPolicies") List<String> allPolicies) {
+	public WSResult createEIPByFirewall(@WebParam(name = "eipParameter") EIPParameter eipParameter) {
 
 		WSResult result = new WSResult();
 
-		String command = service.createEip(eipParameter, allPolicies);
+		String command = service.createEip(eipParameter);
 
 		String filePath = getFilePath(eipParameter.getPrivateIP());
 
@@ -72,12 +70,11 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 	}
 
 	@Override
-	public WSResult deleteEIPByFirewall(@WebParam(name = "eipParameter") EIPParameter eipParameter,
-			@WebParam(name = "allPolicies") List<String> allPolicies) {
+	public WSResult deleteEIPByFirewall(@WebParam(name = "eipParameter") EIPParameter eipParameter) {
 
 		WSResult result = new WSResult();
 
-		String command = service.deleteEip(eipParameter, allPolicies);
+		String command = service.deleteEip(eipParameter);
 
 		String filePath = getFilePath(eipParameter.getPrivateIP());
 

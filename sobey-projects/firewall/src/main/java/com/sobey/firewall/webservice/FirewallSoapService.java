@@ -1,7 +1,5 @@
 package com.sobey.firewall.webservice;
 
-import java.util.List;
-
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
@@ -24,24 +22,18 @@ public interface FirewallSoapService {
 	 * 
 	 * @param eipParameter
 	 *            {@link EIPParameter}
-	 * @param allPolicies
-	 *            所有EIP的映射策略.
 	 * @return
 	 */
-	WSResult createEIPByFirewall(@WebParam(name = "eipParameter") EIPParameter eipParameter,
-			@WebParam(name = "allPolicies") List<String> allPolicies);
+	WSResult createEIPByFirewall(@WebParam(name = "eipParameter") EIPParameter eipParameter);
 
 	/**
 	 * 在防火墙上执行脚本，删除EIP
 	 * 
 	 * @param eipParameter
 	 *            {@link EIPParameter}
-	 * @param allPolicies
-	 *            所有EIP的映射策略,从CMDBuild中读取,在后台进行过滤
 	 * @return
 	 */
-	WSResult deleteEIPByFirewall(@WebParam(name = "eipParameter") EIPParameter eipParameter,
-			@WebParam(name = "allPolicies") List<String> allPolicies);
+	WSResult deleteEIPByFirewall(@WebParam(name = "eipParameter") EIPParameter eipParameter);
 
 	/**
 	 * 在防火墙上执行脚本，创建VPN User

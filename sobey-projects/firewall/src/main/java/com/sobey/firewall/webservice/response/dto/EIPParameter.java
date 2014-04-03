@@ -18,6 +18,7 @@ import com.sobey.firewall.constans.WsConstants;
  * privateIP	内网IP
  * policyParameters	映射策略集合
  * isp		ISP运营商 0: 中国电信 1:中国联通
+ * allPolicies	所有映射策略集合
  * </pre>
  * 
  * @author Administrator
@@ -46,6 +47,11 @@ public class EIPParameter {
 	 * 映射策略集合
 	 */
 	private List<EIPPolicyParameter> policies = Lists.newArrayList();
+
+	/**
+	 * 所有映射策略集合
+	 */
+	private List<String> allPolicies = Lists.newArrayList();
 
 	public String getInternetIP() {
 		return internetIP;
@@ -77,6 +83,14 @@ public class EIPParameter {
 
 	public void setPolicies(List<EIPPolicyParameter> policies) {
 		this.policies = policies;
+	}
+
+	public List<String> getAllPolicies() {
+		return allPolicies;
+	}
+
+	public void setAllPolicies(List<String> allPolicies) {
+		this.allPolicies = allPolicies;
 	}
 
 	/**

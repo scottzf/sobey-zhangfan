@@ -31,14 +31,12 @@ public class EipTest implements PbulicProperties {
 	@Autowired
 	private FirewallService service;
 
-	// @Test
+	@Test
 	public void createEip() throws IOException {
 
 		EIPParameter parameter = TestData.randomEIPParameter();
 
-		List<String> memberList = Lists.newArrayList();
-
-		String command = service.createEip(parameter, memberList);
+		String command = service.createEip(parameter);
 
 		System.out.println(command);
 
@@ -59,7 +57,9 @@ public class EipTest implements PbulicProperties {
 		allPolicies.add("119.6.200.219-tcp-80");
 		allPolicies.add("119.6.200.219-udp-8080");
 
-		String command = service.deleteEip(parameter, allPolicies);
+		parameter.getAllPolicies().addAll(allPolicies);
+
+		String command = service.deleteEip(parameter);
 
 		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command, FILE_PATH);
 

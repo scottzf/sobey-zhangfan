@@ -1,5 +1,6 @@
 package com.sobey.firewall.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -11,8 +12,11 @@ public class TestData {
 
 	public static EIPParameter randomEIPParameter() {
 
+		ArrayList<String> allPolicies = Lists.newArrayList();
+
 		EIPParameter parameter = new EIPParameter();
 
+		parameter.setAllPolicies(allPolicies);
 		parameter.setInternetIP("119.6.200.219");
 		parameter.setIsp(1);
 		parameter.setPrivateIP("172.28.25.105");

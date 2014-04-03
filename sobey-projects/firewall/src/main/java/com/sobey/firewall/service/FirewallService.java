@@ -224,7 +224,7 @@ public class FirewallService {
 	 *            (用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public String createEip(EIPParameter parameter, List<String> allPolicies) {
+	public String createEip(EIPParameter parameter) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -234,7 +234,7 @@ public class FirewallService {
 			String vipName = generateVIPMappingName(parameter.getInternetIP(), policy.getProtocolText(),
 					policy.getTargetPort());
 
-			allPolicies.add(vipName);
+			parameter.getAllPolicies().add(vipName);
 
 			sb.append("config firewall vip").append(DEFAULT_SYMBOL);
 			sb.append("edit ").append("\"").append(vipName).append("\"").append(DEFAULT_SYMBOL);
@@ -257,7 +257,7 @@ public class FirewallService {
 		sb.append("config firewall vipgrp").append(DEFAULT_SYMBOL);
 		sb.append("edit ").append("\"").append(getVipgrpByISP(parameter)).append("\"").append(DEFAULT_SYMBOL);
 		sb.append("set interface ").append("\"").append(FIREWALL_EXTINTF).append("\"").append(DEFAULT_SYMBOL);
-		sb.append("set member ").append(generateFormatString(allPolicies)).append(DEFAULT_SYMBOL);
+		sb.append("set member ").append(generateFormatString(parameter.getAllPolicies())).append(DEFAULT_SYMBOL);
 		sb.append("end").append(DEFAULT_SYMBOL);
 		sb.append("quit").append(DEFAULT_SYMBOL);
 
@@ -292,7 +292,7 @@ public class FirewallService {
 	 *            所有EIP的映射策略.
 	 * @return
 	 */
-	public String deleteEip(EIPParameter parameter, List<String> allPolicies) {
+	public String deleteEip(EIPParameter parameter) {
 
 		/*
 		 * 1.获得所有租户的VIP策略组名集合.
@@ -315,15 +315,13 @@ public class FirewallService {
 		}
 
 		// Step.2 从所有的映射策略中移除要删除的eip映射策略.
-		allPolicies.removeAll(policies);
-
-		System.out.println(generateFormatString(allPolicies));
+		parameter.getAllPolicies().removeAll(policies);
 
 		// Step.3
 		sb.append("config firewall vipgrp").append(DEFAULT_SYMBOL);
 		sb.append("edit ").append("\"").append(getVipgrpByISP(parameter)).append("\"").append(DEFAULT_SYMBOL);
 		sb.append("set interface ").append("\"").append(FIREWALL_EXTINTF).append("\"").append(DEFAULT_SYMBOL);
-		sb.append("set member ").append(generateFormatString(allPolicies)).append(DEFAULT_SYMBOL);
+		sb.append("set member ").append(generateFormatString(parameter.getAllPolicies())).append(DEFAULT_SYMBOL);
 		sb.append("end").append(DEFAULT_SYMBOL);
 		sb.append(DEFAULT_SYMBOL);
 
