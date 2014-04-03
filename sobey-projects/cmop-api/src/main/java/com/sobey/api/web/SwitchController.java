@@ -1,5 +1,7 @@
 package com.sobey.api.web;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sobey.api.service.SwitchService;
+import com.sobey.generate.switches.ESGParameter;
+import com.sobey.generate.switches.RuleParameter;
 import com.sobey.generate.switches.VlanParameter;
 import com.sobey.generate.switches.WSResult;
 
@@ -86,6 +90,103 @@ public class SwitchController {
 		redirectAttributes.addFlashAttribute("message", message);
 
 		return "redirect:/switch/delete/vlan/";
+	}
+
+	/**
+	 * 跳转到Esg页面
+	 */
+	@RequestMapping(value = "/create/esg/")
+	public String createEsgPage() {
+		return "switch/createEsg";
+	}
+
+	/**
+	 * 创建一个Esg
+	 */
+	@RequestMapping(value = "/create/esg/", method = RequestMethod.POST)
+	public String createEsg(@RequestParam(value = "aclNumber") Integer aclNumber,
+			@RequestParam(value = "vlanId") Integer vlanId, @RequestParam(value = "desc") String desc,
+			@RequestParam(value = "permitsDestination") String[] permitsDestination,
+			@RequestParam(value = "permitsDestinationNetMask") String[] permitsDestinationNetMask,
+			@RequestParam(value = "permitsSource") String[] permitsSource,
+			@RequestParam(value = "permitsSourceNetMask") String[] permitsSourceNetMask,
+			@RequestParam(value = "denysDestination") String[] denysDestination,
+			@RequestParam(value = "denysDestinationNetMask") String[] denysDestinationNetMask,
+			@RequestParam(value = "denysSource") String[] denysSource,
+			@RequestParam(value = "denysSourceNetMask") String[] denysSourceNetMask,
+			RedirectAttributes redirectAttributes) {
+
+		ESGParameter esgParameter = new ESGParameter();
+		ArrayList<RuleParameter> permits = new ArrayList<>();
+
+		for (int i = 0; i < permitsDestination.length; i++) {
+			RuleParameter ruleParameter = new RuleParameter();
+			ruleParameter.setDestination(permitsDestination[i]);
+			ruleParameter.setDestinationNetMask(permitsDestinationNetMask[i]);
+			ruleParameter.setSource(permitsSource[i]);
+			ruleParameter.setSourceNetMask(permitsSourceNetMask[i]);
+			permits.add(ruleParameter);
+		}
+
+		ArrayList<RuleParameter> denys = new ArrayList<>();
+
+		for (int i = 0; i < denysDestination.length; i++) {
+			RuleParameter ruleParameter = new RuleParameter();
+			ruleParameter.setDestination(denysDestination[i]);
+			ruleParameter.setDestinationNetMask(denysDestinationNetMask[i]);
+			ruleParameter.setSource(denysSource[i]);
+			ruleParameter.setSourceNetMask(denysSourceNetMask[i]);
+			denys.add(ruleParameter);
+		}
+
+		esgParameter.setAclNumber(aclNumber);
+		esgParameter.setVlanId(vlanId);
+		esgParameter.setDesc(desc);
+		esgParameter.getPermits().addAll(permits);
+		esgParameter.getDenys().addAll(denys);
+
+		String message = "";
+
+		WSResult wsResult = service.createEsg(esgParameter);
+
+		if (wsResult.getCode().equals("0")) {
+			message = "Esg创建成功";
+		} else {
+			message = wsResult.getMessage();
+		}
+
+		redirectAttributes.addFlashAttribute("message", message);
+
+		return "redirect:/switch/create/esg/";
+	}
+
+	/**
+	 * 跳转到删除Esg页面
+	 */
+	@RequestMapping(value = "/delete/esg/")
+	public String deleteEsgPage() {
+		return "switch/deleteEsg";
+	}
+
+	/**
+	 * 删除Esg
+	 */
+	@RequestMapping(value = "/delete/esg/", method = RequestMethod.POST)
+	public String deleteEsg(@RequestParam(value = "aclNumber") Integer aclNumber, RedirectAttributes redirectAttributes) {
+
+		String message = "";
+
+		WSResult wsResult = service.deleteEsg(aclNumber);
+
+		if (wsResult.getCode().equals("0")) {
+			message = "Esg删除成功";
+		} else {
+			message = wsResult.getMessage();
+		}
+
+		redirectAttributes.addFlashAttribute("message", message);
+
+		return "redirect:/switch/delete/esg/";
 	}
 
 }

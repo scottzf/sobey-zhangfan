@@ -42,6 +42,8 @@
 					<ul class="dropdown-menu">
 						<li><a href="${ctx}/switch/create/vlan/">创建Vlan</a></li>
 						<li><a href="${ctx}/switch/delete/vlan/">删除Vlan</a></li>
+						<li><a href="${ctx}/switch/create/esg/">创建Esg</a></li>
+						<li><a href="${ctx}/switch/delete/esg/">删除Esg</a></li>
 					</ul></li>
 			</ul>
 		</div>

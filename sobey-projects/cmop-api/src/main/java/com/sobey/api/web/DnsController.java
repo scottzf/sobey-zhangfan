@@ -1,7 +1,6 @@
 package com.sobey.api.web;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -65,7 +64,7 @@ public class DnsController {
 			@RequestParam(value = "publicIPs") String[] publicIPs,
 			@RequestParam(value = "protocols") String[] protocols, RedirectAttributes redirectAttributes) {
 
-		List<DNSPublicIPParameter> publicIPParameters = new ArrayList<DNSPublicIPParameter>();
+		ArrayList<DNSPublicIPParameter> publicIPParameters = new ArrayList<DNSPublicIPParameter>();
 
 		for (int i = 0; i < protocols.length; i++) {
 
@@ -116,7 +115,7 @@ public class DnsController {
 			@RequestParam(value = "publicIPs") String[] publicIPs,
 			@RequestParam(value = "protocols") String[] protocols, RedirectAttributes redirectAttributes) {
 
-		List<DNSPublicIPParameter> publicIPParameters = new ArrayList<DNSPublicIPParameter>();
+		ArrayList<DNSPublicIPParameter> publicIPParameters = new ArrayList<DNSPublicIPParameter>();
 
 		for (int i = 0; i < protocols.length; i++) {
 
