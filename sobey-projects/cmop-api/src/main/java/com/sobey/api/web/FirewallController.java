@@ -149,14 +149,14 @@ public class FirewallController {
 	 */
 	@RequestMapping(value = "/create/vpn/", method = RequestMethod.POST)
 	public String createVPN(@RequestParam(value = "firewallPolicyId") Integer firewallPolicyId,
-			@RequestParam(value = "VlanId") Integer VlanId, @RequestParam(value = "netMask") String netMask,
+			@RequestParam(value = "vlanId") Integer vlanId, @RequestParam(value = "netMask") String netMask,
 			@RequestParam(value = "vpnUser") String vpnUser, @RequestParam(value = "vpnPassword") String vpnPassword,
 			@RequestParam(value = "ipaddress") String[] ipaddress, @RequestParam(value = "segments") String[] segments,
 			RedirectAttributes redirectAttributes) {
 
 		VPNUserParameter vpnUserParameter = new VPNUserParameter();
 		vpnUserParameter.setFirewallPolicyId(firewallPolicyId);
-		vpnUserParameter.setVlanId(VlanId);
+		vpnUserParameter.setVlanId(vlanId);
 		vpnUserParameter.setNetMask(netMask);
 		vpnUserParameter.setVpnUser(vpnUser);
 		vpnUserParameter.setVpnPassword(vpnPassword);
@@ -190,14 +190,14 @@ public class FirewallController {
 	 */
 	@RequestMapping(value = "/delete/vpn/", method = RequestMethod.POST)
 	public String deleteVPN(@RequestParam(value = "firewallPolicyId") Integer firewallPolicyId,
-			@RequestParam(value = "VlanId") Integer VlanId, @RequestParam(value = "netMask") String netMask,
+			@RequestParam(value = "vlanId") Integer vlanId, @RequestParam(value = "netMask") String netMask,
 			@RequestParam(value = "vpnUser") String vpnUser, @RequestParam(value = "vpnPassword") String vpnPassword,
 			@RequestParam(value = "ipaddress") String[] ipaddress, @RequestParam(value = "segments") String[] segments,
 			RedirectAttributes redirectAttributes) {
 
 		VPNUserParameter vpnUserParameter = new VPNUserParameter();
 		vpnUserParameter.setFirewallPolicyId(firewallPolicyId);
-		vpnUserParameter.setVlanId(VlanId);
+		vpnUserParameter.setVlanId(vlanId);
 		vpnUserParameter.setNetMask(netMask);
 		vpnUserParameter.setVpnUser(vpnUser);
 		vpnUserParameter.setVpnPassword(vpnPassword);
@@ -223,7 +223,7 @@ public class FirewallController {
 	 */
 	@RequestMapping(value = "/change/vpn/")
 	public String changeVPNPage() {
-		return "firewall/deleteVPN";
+		return "firewall/changeVPN";
 	}
 
 	/**
@@ -231,14 +231,14 @@ public class FirewallController {
 	 */
 	@RequestMapping(value = "/change/vpn/", method = RequestMethod.POST)
 	public String changeVPN(@RequestParam(value = "firewallPolicyId") Integer firewallPolicyId,
-			@RequestParam(value = "VlanId") Integer VlanId, @RequestParam(value = "netMask") String netMask,
+			@RequestParam(value = "vlanId") Integer vlanId, @RequestParam(value = "netMask") String netMask,
 			@RequestParam(value = "vpnUser") String vpnUser, @RequestParam(value = "vpnPassword") String vpnPassword,
 			@RequestParam(value = "ipaddress") String[] ipaddress, @RequestParam(value = "segments") String[] segments,
 			RedirectAttributes redirectAttributes) {
 
 		VPNUserParameter vpnUserParameter = new VPNUserParameter();
 		vpnUserParameter.setFirewallPolicyId(firewallPolicyId);
-		vpnUserParameter.setVlanId(VlanId);
+		vpnUserParameter.setVlanId(vlanId);
 		vpnUserParameter.setNetMask(netMask);
 		vpnUserParameter.setVpnUser(vpnUser);
 		vpnUserParameter.setVpnPassword(vpnPassword);
