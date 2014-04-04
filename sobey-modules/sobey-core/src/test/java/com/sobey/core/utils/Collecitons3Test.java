@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 
 public class Collecitons3Test {
 
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void convertElementPropertyToString() {
 		TestBean3 bean1 = new TestBean3();
@@ -22,6 +23,7 @@ public class Collecitons3Test {
 		assertEquals("1,2", Collections3.extractToString(list, "id", ","));
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test
 	public void convertElementPropertyToList() {
 		TestBean3 bean1 = new TestBean3();

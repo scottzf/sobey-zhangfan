@@ -81,9 +81,7 @@ public class Reflections {
 	}
 
 	/**
-	 * 直接调用对象方法, 无视private/protected修饰符.
-	 * 用于一次性调用的情况，否则应使用getAccessibleMethod()函数获得Method后反复调用.
-	 * 同时匹配方法名+参数类型，
+	 * 直接调用对象方法, 无视private/protected修饰符. 用于一次性调用的情况，否则应使用getAccessibleMethod()函数获得Method后反复调用. 同时匹配方法名+参数类型，
 	 */
 	public static Object invokeMethod(final Object obj, final String methodName, final Class<?>[] parameterTypes,
 			final Object[] args) {
@@ -100,8 +98,7 @@ public class Reflections {
 	}
 
 	/**
-	 * 直接调用对象方法, 无视private/protected修饰符，
-	 * 用于一次性调用的情况，否则应使用getAccessibleMethodByName()函数获得Method后反复调用.
+	 * 直接调用对象方法, 无视private/protected修饰符， 用于一次性调用的情况，否则应使用getAccessibleMethodByName()函数获得Method后反复调用.
 	 * 只匹配函数名，如果有多个同名函数调用第一个。
 	 */
 	public static Object invokeMethodByName(final Object obj, final String methodName, final Object[] args) {
@@ -138,9 +135,7 @@ public class Reflections {
 	}
 
 	/**
-	 * 循环向上转型, 获取对象的DeclaredMethod,并强制设置为可访问.
-	 * 如向上转型到Object仍无法找到, 返回null.
-	 * 匹配函数名+参数类型。
+	 * 循环向上转型, 获取对象的DeclaredMethod,并强制设置为可访问. 如向上转型到Object仍无法找到, 返回null. 匹配函数名+参数类型。
 	 * 
 	 * 用于方法需要被多次调用的情况. 先使用本函数先取得Method,然后调用Method.invoke(Object obj, Object... args)
 	 */
@@ -162,9 +157,7 @@ public class Reflections {
 	}
 
 	/**
-	 * 循环向上转型, 获取对象的DeclaredMethod,并强制设置为可访问.
-	 * 如向上转型到Object仍无法找到, 返回null.
-	 * 只匹配函数名。
+	 * 循环向上转型, 获取对象的DeclaredMethod,并强制设置为可访问. 如向上转型到Object仍无法找到, 返回null. 只匹配函数名。
 	 * 
 	 * 用于方法需要被多次调用的情况. 先使用本函数先取得Method,然后调用Method.invoke(Object obj, Object... args)
 	 */
@@ -205,28 +198,33 @@ public class Reflections {
 	}
 
 	/**
-	 * 通过反射, 获得Class定义中声明的泛型参数的类型, 注意泛型必须定义在父类处
-	 * 如无法找到, 返回Object.class.
-	 * eg.
-	 * public UserDao extends HibernateDao<User>
+	 * 通过反射, 获得Class定义中声明的泛型参数的类型, 注意泛型必须定义在父类处 如无法找到, 返回Object.class. eg.
 	 * 
-	 * @param clazz The class to introspect
+	 * <pre>
+	 * public UserDao extends HibernateDao<User>
+	 * </pre>
+	 * 
+	 * @param clazz
+	 *            The class to introspect
 	 * @return the first generic declaration, or Object.class if cannot be determined
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T> Class<T> getClassGenricType(final Class clazz) {
 		return getClassGenricType(clazz, 0);
 	}
 
 	/**
-	 * 通过反射, 获得Class定义中声明的父类的泛型参数的类型.
-	 * 如无法找到, 返回Object.class.
+	 * 通过反射, 获得Class定义中声明的父类的泛型参数的类型. 如无法找到, 返回Object.class.
 	 * 
 	 * 如public UserDao extends HibernateDao<User,Long>
 	 * 
-	 * @param clazz clazz The class to introspect
-	 * @param index the Index of the generic ddeclaration,start from 0.
+	 * @param clazz
+	 *            clazz The class to introspect
+	 * @param index
+	 *            the Index of the generic ddeclaration,start from 0.
 	 * @return the index generic declaration, or Object.class if cannot be determined
 	 */
+	@SuppressWarnings("rawtypes")
 	public static Class getClassGenricType(final Class clazz, final int index) {
 
 		Type genType = clazz.getGenericSuperclass();
@@ -251,6 +249,7 @@ public class Reflections {
 		return (Class) params[index];
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static Class<?> getUserClass(Object instance) {
 		Validate.notNull(instance, "Instance must not be null");
 		Class clazz = instance.getClass();

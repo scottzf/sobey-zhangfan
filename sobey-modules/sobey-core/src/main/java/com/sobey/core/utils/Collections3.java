@@ -24,10 +24,14 @@ public class Collections3 {
 	/**
 	 * 提取集合中的对象的两个属性(通过Getter函数), 组合成Map.
 	 * 
-	 * @param collection 来源集合.
-	 * @param keyPropertyName 要提取为Map中的Key值的属性名.
-	 * @param valuePropertyName 要提取为Map中的Value值的属性名.
+	 * @param collection
+	 *            来源集合.
+	 * @param keyPropertyName
+	 *            要提取为Map中的Key值的属性名.
+	 * @param valuePropertyName
+	 *            要提取为Map中的Value值的属性名.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Map extractToMap(final Collection collection, final String keyPropertyName,
 			final String valuePropertyName) {
 		Map map = new HashMap(collection.size());
@@ -47,9 +51,12 @@ public class Collections3 {
 	/**
 	 * 提取集合中的对象的一个属性(通过Getter函数), 组合成List.
 	 * 
-	 * @param collection 来源集合.
-	 * @param propertyName 要提取的属性名.
+	 * @param collection
+	 *            来源集合.
+	 * @param propertyName
+	 *            要提取的属性名.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static List extractToList(final Collection collection, final String propertyName) {
 		List list = new ArrayList(collection.size());
 
@@ -67,10 +74,14 @@ public class Collections3 {
 	/**
 	 * 提取集合中的对象的一个属性(通过Getter函数), 组合成由分割符分隔的字符串.
 	 * 
-	 * @param collection 来源集合.
-	 * @param propertyName 要提取的属性名.
-	 * @param separator 分隔符.
+	 * @param collection
+	 *            来源集合.
+	 * @param propertyName
+	 *            要提取的属性名.
+	 * @param separator
+	 *            分隔符.
 	 */
+	@SuppressWarnings("rawtypes")
 	public static String extractToString(final Collection collection, final String propertyName, final String separator) {
 		List list = extractToList(collection, propertyName);
 		return StringUtils.join(list, separator);
@@ -79,6 +90,7 @@ public class Collections3 {
 	/**
 	 * 转换Collection所有元素(通过toString())为String, 中间以 separator分隔。
 	 */
+	@SuppressWarnings("rawtypes")
 	public static String convertToString(final Collection collection, final String separator) {
 		return StringUtils.join(collection, separator);
 	}
@@ -86,6 +98,7 @@ public class Collections3 {
 	/**
 	 * 转换Collection所有元素(通过toString())为String, 每个元素的前面加入prefix，后面加入postfix，如<div>mymessage</div>。
 	 */
+	@SuppressWarnings("rawtypes")
 	public static String convertToString(final Collection collection, final String prefix, final String postfix) {
 		StringBuilder builder = new StringBuilder();
 		for (Object o : collection) {
@@ -97,6 +110,7 @@ public class Collections3 {
 	/**
 	 * 判断是否为空.
 	 */
+	@SuppressWarnings("rawtypes")
 	public static boolean isEmpty(Collection collection) {
 		return ((collection == null) || collection.isEmpty());
 	}
@@ -104,6 +118,7 @@ public class Collections3 {
 	/**
 	 * 判断是否为空.
 	 */
+	@SuppressWarnings("rawtypes")
 	public static boolean isNotEmpty(Collection collection) {
 		return ((collection != null) && !(collection.isEmpty()));
 	}

@@ -29,6 +29,7 @@ public class ExceptionsTest {
 		System.out.println(stack);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void isCausedBy() {
 		IOException ioexception = new IOException("my exception");

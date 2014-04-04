@@ -67,7 +67,8 @@ public class Servlets {
 	 * 
 	 * 如果无修改, checkIfModify返回false ,设置304 not modify status.
 	 * 
-	 * @param lastModified 内容的最后修改时间.
+	 * @param lastModified
+	 *            内容的最后修改时间.
 	 */
 	public static boolean checkIfModifiedSince(HttpServletRequest request, HttpServletResponse response,
 			long lastModified) {
@@ -84,7 +85,8 @@ public class Servlets {
 	 * 
 	 * 如果Etag有效, checkIfNoneMatch返回false, 设置304 not modify status.
 	 * 
-	 * @param etag 内容的ETag.
+	 * @param etag
+	 *            内容的ETag.
 	 */
 	public static boolean checkIfNoneMatchEtag(HttpServletRequest request, HttpServletResponse response, String etag) {
 		String headerValue = request.getHeader(HttpHeaders.IF_NONE_MATCH);
@@ -115,7 +117,8 @@ public class Servlets {
 	/**
 	 * 设置让浏览器弹出下载对话框的Header.
 	 * 
-	 * @param fileName 下载后的文件名.
+	 * @param fileName
+	 *            下载后的文件名.
 	 */
 	public static void setFileDownloadHeader(HttpServletResponse response, String fileName) {
 		try {
@@ -131,6 +134,7 @@ public class Servlets {
 	 * 
 	 * 返回的结果的Parameter名已去除前缀.
 	 */
+	@SuppressWarnings("rawtypes")
 	public static Map<String, Object> getParametersStartingWith(ServletRequest request, String prefix) {
 		Validate.notNull(request, "Request must not be null");
 		Enumeration paramNames = request.getParameterNames();

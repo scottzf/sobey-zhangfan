@@ -15,8 +15,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
- * 测试Jackson对Object,Map,List,数组,枚举,日期类等的持久化.
- * 更多测试见showcase中的JsonDemo.
+ * 测试Jackson对Object,Map,List,数组,枚举,日期类等的持久化. 更多测试见showcase中的JsonDemo.
  * 
  * @author calvin
  */
@@ -65,6 +64,7 @@ public class JsonMapperTest {
 	/**
 	 * 从Json字符串反序列化对象/集合.
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void fromJson() throws Exception {
 		// Bean
@@ -101,6 +101,7 @@ public class JsonMapperTest {
 	/**
 	 * 测试传入空对象,空字符串,Empty的集合,"null"字符串的结果.
 	 */
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void nullAndEmpty() {
 		// toJson测试 //
