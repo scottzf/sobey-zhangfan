@@ -31,7 +31,7 @@ public class DNSTest extends TestCase {
 		assertTrue(service.createDns(parameter));
 	}
 
-	// @Test
+	@Test
 	public void deleteDns() {
 		DNSParameter parameter = TestData.randomDNSParameter();
 		assertTrue(service.deleteDns(parameter));
