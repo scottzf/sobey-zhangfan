@@ -14,6 +14,7 @@ import com.sobey.api.service.LoadbalancerService;
 import com.sobey.generate.loadbalancer.ELBParameter;
 import com.sobey.generate.loadbalancer.ELBPolicyParameter;
 import com.sobey.generate.loadbalancer.ELBPublicIPParameter;
+import com.sobey.generate.loadbalancer.WSResult;
 
 /**
  * Loadbalancer 模块
@@ -86,11 +87,12 @@ public class LoadbalancerController {
 		elbParameter.getPublicIPs().addAll(publicIPParameters);
 
 		String message = "";
+		WSResult wsResult = service.createElb(elbParameter);
 
-		if (service.createElb(elbParameter).getCode().equals("0")) {
+		if (wsResult.getCode().equals("0")) {
 			message = "Elb创建成功";
 		} else {
-			message = "Elb创建失败";
+			message = wsResult.getMessage();
 		}
 
 		redirectAttributes.addFlashAttribute("message", message);
@@ -135,11 +137,12 @@ public class LoadbalancerController {
 		elbParameter.getPublicIPs().addAll(publicIPParameters);
 
 		String message = "";
+		WSResult wsResult = service.deleteElb(elbParameter);
 
-		if (service.deleteElb(elbParameter).getCode().equals("0")) {
+		if (wsResult.getCode().equals("0")) {
 			message = "Elb删除成功";
 		} else {
-			message = "Elb删除失败";
+			message = wsResult.getMessage();
 		}
 
 		redirectAttributes.addFlashAttribute("message", message);

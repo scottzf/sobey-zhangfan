@@ -30,7 +30,7 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 		boolean falg = service.cloneVM(cloneVMParameter);
 
 		if (!falg) {
-			result.setCode(WSResult.SYSTEM_ERROR);
+			result.setError(WSResult.SYSTEM_ERROR, "克隆失败");
 		}
 
 		return result;
@@ -44,7 +44,7 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 		boolean falg = service.destroyVM(destroyVMParameter);
 
 		if (!falg) {
-			result.setCode(WSResult.SYSTEM_ERROR);
+			result.setError(WSResult.SYSTEM_ERROR, "销毁失败");
 		}
 
 		return result;
@@ -58,7 +58,7 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 		boolean falg = service.reconfigVM(reconfigVMParameter);
 
 		if (!falg) {
-			result.setCode(WSResult.SYSTEM_ERROR);
+			result.setError(WSResult.SYSTEM_ERROR, "配置更改失败");
 		}
 
 		return result;
@@ -72,7 +72,7 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 		boolean falg = service.powerVM(powerVMParameter);
 
 		if (!falg) {
-			result.setCode(WSResult.SYSTEM_ERROR);
+			result.setError(WSResult.SYSTEM_ERROR, "电源操作失败");
 		}
 
 		return result;

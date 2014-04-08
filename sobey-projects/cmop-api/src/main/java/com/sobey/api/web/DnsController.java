@@ -13,6 +13,7 @@ import com.sobey.api.service.DnsService;
 import com.sobey.generate.dns.DNSParameter;
 import com.sobey.generate.dns.DNSPolicyParameter;
 import com.sobey.generate.dns.DNSPublicIPParameter;
+import com.sobey.generate.dns.WSResult;
 
 /**
  * Dns 模块
@@ -87,11 +88,12 @@ public class DnsController {
 		dnsParameter.getPublicIPs().addAll(publicIPParameters);
 
 		String message = "";
+		WSResult wsResult = service.createDNS(dnsParameter);
 
-		if (service.createDNS(dnsParameter).getCode().equals("0")) {
+		if (wsResult.getCode().equals("0")) {
 			message = "Dns创建成功";
 		} else {
-			message = "Dns创建失败";
+			message = wsResult.getMessage();
 		}
 
 		redirectAttributes.addFlashAttribute("message", message);
@@ -138,11 +140,12 @@ public class DnsController {
 		dnsParameter.getPublicIPs().addAll(publicIPParameters);
 
 		String message = "";
+		WSResult wsResult = service.deleteDNS(dnsParameter);
 
-		if (service.deleteDNS(dnsParameter).getCode().equals("0")) {
+		if (wsResult.getCode().equals("0")) {
 			message = "Dns删除成功";
 		} else {
-			message = "Dns删除失败";
+			message = wsResult.getMessage();
 		}
 
 		redirectAttributes.addFlashAttribute("message", message);

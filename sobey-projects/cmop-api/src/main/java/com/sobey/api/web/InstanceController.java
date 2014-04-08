@@ -13,6 +13,7 @@ import com.sobey.generate.instance.CloneVMParameter;
 import com.sobey.generate.instance.DestroyVMParameter;
 import com.sobey.generate.instance.PowerVMParameter;
 import com.sobey.generate.instance.ReconfigVMParameter;
+import com.sobey.generate.instance.WSResult;
 
 /**
  * Instance 模块
@@ -56,11 +57,12 @@ public class InstanceController {
 		cloneVMParameter.setVMTemplateOS("Linux");
 
 		String message = "";
+		WSResult wsResult = service.cloneVM(cloneVMParameter);
 
-		if (service.cloneVM(cloneVMParameter).getCode().equals("0")) {
+		if (wsResult.getCode().equals("0")) {
 			message = "克隆成功";
 		} else {
-			message = "克隆失败";
+			message = wsResult.getMessage();
 		}
 
 		redirectAttributes.addFlashAttribute("message", message);
@@ -86,11 +88,12 @@ public class InstanceController {
 		destroyVMParameter.setVMName(vmName);
 
 		String message = "";
+		WSResult wsResult = service.desoroyVM(destroyVMParameter);
 
-		if (service.desoroyVM(destroyVMParameter).getCode().equals("0")) {
+		if (wsResult.getCode().equals("0")) {
 			message = "销毁成功";
 		} else {
-			message = "销毁失败";
+			message = wsResult.getMessage();
 		}
 
 		redirectAttributes.addFlashAttribute("message", message);
@@ -118,11 +121,12 @@ public class InstanceController {
 		powerVMParameter.setPowerOperation(operation);
 
 		String message = "";
+		WSResult wsResult = service.powerVM(powerVMParameter);
 
-		if (service.powerVM(powerVMParameter).getCode().equals("0")) {
+		if (wsResult.getCode().equals("0")) {
 			message = "电源操作成功";
 		} else {
-			message = "电源操作失败";
+			message = wsResult.getMessage();
 		}
 
 		redirectAttributes.addFlashAttribute("message", message);
@@ -152,11 +156,12 @@ public class InstanceController {
 		reconfigVMParameter.setMemoryMB(memoryMB);
 
 		String message = "";
+		WSResult wsResult = service.reconfigVM(reconfigVMParameter);
 
-		if (service.reconfigVM(reconfigVMParameter).getCode().equals("0")) {
+		if (wsResult.getCode().equals("0")) {
 			message = "配置修改成功";
 		} else {
-			message = "配置修改失败";
+			message = wsResult.getMessage();
 		}
 
 		redirectAttributes.addFlashAttribute("message", message);

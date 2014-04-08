@@ -26,7 +26,7 @@ public class LoadbalancerSoapServiceImpl implements LoadbalancerSoapService {
 		boolean falg = service.createElb(elbParameter);
 
 		if (!falg) {
-			result.setCode(WSResult.SYSTEM_ERROR);
+			result.setError(WSResult.SYSTEM_ERROR, "Elb创建失败");
 		}
 
 		return result;
@@ -41,7 +41,7 @@ public class LoadbalancerSoapServiceImpl implements LoadbalancerSoapService {
 		boolean falg = service.deleteElb(elbParameter);
 
 		if (!falg) {
-			result.setCode(WSResult.SYSTEM_ERROR);
+			result.setError(WSResult.SYSTEM_ERROR, "Elb删除失败");
 		}
 
 		return result;
