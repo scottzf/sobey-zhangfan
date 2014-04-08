@@ -76,7 +76,7 @@ public class StorageController {
 	}
 
 	/**
-	 * 删除Storage
+	 * Delete Storage
 	 */
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	public String delete(@RequestParam(value = "volumeName") String volumeName, RedirectAttributes redirectAttributes) {
@@ -100,7 +100,7 @@ public class StorageController {
 	}
 
 	/**
-	 * 跳转到mount storage页面
+	 * 跳转到Mount storage页面
 	 */
 	@RequestMapping(value = "/mount")
 	public String mountPage() {
@@ -108,7 +108,7 @@ public class StorageController {
 	}
 
 	/**
-	 * mount Storage
+	 * Mount Storage
 	 */
 	@RequestMapping(value = "/mount", method = RequestMethod.POST)
 	public String mount(@RequestParam(value = "volumeName") String volumeName,
@@ -135,7 +135,7 @@ public class StorageController {
 	}
 
 	/**
-	 * 跳转到umount Storage页面
+	 * 跳转到Umount Storage页面
 	 */
 	@RequestMapping(value = "/umount")
 	public String umountPage() {
@@ -143,7 +143,7 @@ public class StorageController {
 	}
 
 	/**
-	 * umount Storage
+	 * Umount Storage
 	 */
 	@RequestMapping(value = "/umount", method = RequestMethod.POST)
 	public String umount(@RequestParam(value = "clientIPaddress") String clientIPaddress,
@@ -167,7 +167,7 @@ public class StorageController {
 	}
 
 	/**
-	 * 跳转到remount Storage页面
+	 * 跳转到Remount Storage页面
 	 */
 	@RequestMapping(value = "/remount")
 	public String remountPage() {
@@ -175,7 +175,7 @@ public class StorageController {
 	}
 
 	/**
-	 * remount Storage
+	 * Remount Storage
 	 */
 	@RequestMapping(value = "/remount", method = RequestMethod.POST)
 	public String remount(@RequestParam(value = "volumeName") String volumeName,

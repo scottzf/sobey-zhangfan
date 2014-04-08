@@ -54,6 +54,15 @@
 						<li><a href="${ctx}/firewall/delete/vpn/">删除VPN</a></li>
 						<li><a href="${ctx}/firewall/change/vpn/">更改VPN</a></li>
 					</ul></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">Firewall<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="${ctx}/storage/create/">创建Es3</a></li>
+						<li><a href="${ctx}/storage/delete/">删除Es3</a></li>
+						<li><a href="${ctx}/storage/mount/">挂载Es3</a></li>
+						<li><a href="${ctx}/storage/umount/">卸载Es3</a></li>
+						<li><a href="${ctx}/storage/remount/">更改Es3</a></li>
+					</ul></li>
 			</ul>
 		</div>
 		<!--/.nav-collapse -->
