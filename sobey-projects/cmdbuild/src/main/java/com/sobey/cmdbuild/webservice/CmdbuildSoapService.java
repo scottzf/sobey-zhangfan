@@ -1,7 +1,6 @@
 package com.sobey.cmdbuild.webservice;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.jws.WebParam;
 import javax.jws.WebService;
@@ -54,6 +53,7 @@ import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
+import com.sobey.cmdbuild.webservice.response.result.SearchParams;
 
 /**
  * CMDBuild模块对外暴露的唯一的webservice接口.
@@ -70,11 +70,11 @@ public interface CmdbuildSoapService {
 
 	DTOResult<LookUpDTO> findLookUp(@WebParam(name = "id") Integer id);
 
-	DTOResult<LookUpDTO> findLookUpByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<LookUpDTO> findLookUpByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	DTOListResult<LookUpDTO> getLookUpList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<LookUpDTO> getLookUpList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<LookUpDTO> getLookUpPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<LookUpDTO> getLookUpPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	/*************************************************
@@ -87,7 +87,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<CompanyDTO> findCompany(@WebParam(name = "id") Integer id);
 
-	DTOResult<CompanyDTO> findCompanyByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<CompanyDTO> findCompanyByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createCompany(@WebParam(name = "companyDTO") CompanyDTO companyDTO);
 
@@ -95,10 +95,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteCompany(@WebParam(name = "id") Integer id);
 
-	DTOListResult<CompanyDTO> getCompanyList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<CompanyDTO> getCompanyList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<CompanyDTO> getCompanyPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<CompanyDTO> getCompanyPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -107,7 +106,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<TenantsDTO> findTenants(@WebParam(name = "id") Integer id);
 
-	DTOResult<TenantsDTO> findTenantsByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<TenantsDTO> findTenantsByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createTenants(@WebParam(name = "tenantsDTO") TenantsDTO tenantsDTO);
 
@@ -115,10 +114,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteTenants(@WebParam(name = "id") Integer id);
 
-	DTOListResult<TenantsDTO> getTenantsList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<TenantsDTO> getTenantsList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<TenantsDTO> getTenantsPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<TenantsDTO> getTenantsPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -127,7 +125,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<TagDTO> findTag(@WebParam(name = "id") Integer id);
 
-	DTOResult<TagDTO> findTagByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<TagDTO> findTagByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createTag(@WebParam(name = "tagDTO") TagDTO tagDTO);
 
@@ -135,9 +133,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteTag(@WebParam(name = "id") Integer id);
 
-	DTOListResult<TagDTO> getTagList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<TagDTO> getTagList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<TagDTO> getTagPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<TagDTO> getTagPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -146,7 +144,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<IdcDTO> findIdc(@WebParam(name = "id") Integer id);
 
-	DTOResult<IdcDTO> findIdcByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<IdcDTO> findIdcByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createIdc(@WebParam(name = "idcDTO") IdcDTO idcDTO);
 
@@ -154,9 +152,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteIdc(@WebParam(name = "id") Integer id);
 
-	DTOListResult<IdcDTO> getIdcList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<IdcDTO> getIdcList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<IdcDTO> getIdcPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<IdcDTO> getIdcPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -165,7 +163,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<RackDTO> findRack(@WebParam(name = "id") Integer id);
 
-	DTOResult<RackDTO> findRackByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<RackDTO> findRackByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createRack(@WebParam(name = "rackDTO") RackDTO rackDTO);
 
@@ -173,9 +171,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteRack(@WebParam(name = "id") Integer id);
 
-	DTOListResult<RackDTO> getRackList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<RackDTO> getRackList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<RackDTO> getRackPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<RackDTO> getRackPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	/*************************************************
@@ -188,7 +186,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<DeviceSpecDTO> findDeviceSpec(@WebParam(name = "id") Integer id);
 
-	DTOResult<DeviceSpecDTO> findDeviceSpecByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<DeviceSpecDTO> findDeviceSpecByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createDeviceSpec(@WebParam(name = "deviceSpecDTO") DeviceSpecDTO deviceSpecDTO);
 
@@ -197,10 +195,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteDeviceSpec(@WebParam(name = "id") Integer id);
 
-	DTOListResult<DeviceSpecDTO> getDeviceSpecList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<DeviceSpecDTO> getDeviceSpecList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<DeviceSpecDTO> getDeviceSpecPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<DeviceSpecDTO> getDeviceSpecPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -209,7 +206,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<EcsSpecDTO> findEcsSpec(@WebParam(name = "id") Integer id);
 
-	DTOResult<EcsSpecDTO> findEcsSpecByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<EcsSpecDTO> findEcsSpecByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createEcsSpec(@WebParam(name = "ecsSpecDTO") EcsSpecDTO ecsSpecDTO);
 
@@ -217,10 +214,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteEcsSpec(@WebParam(name = "id") Integer id);
 
-	DTOListResult<EcsSpecDTO> getEcsSpecList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<EcsSpecDTO> getEcsSpecList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<EcsSpecDTO> getEcsSpecPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<EcsSpecDTO> getEcsSpecPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -229,7 +225,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<EipSpecDTO> findEipSpec(@WebParam(name = "id") Integer id);
 
-	DTOResult<EipSpecDTO> findEipSpecByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<EipSpecDTO> findEipSpecByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createEipSpec(@WebParam(name = "eipSpecDTO") EipSpecDTO eipSpecDTO);
 
@@ -237,10 +233,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteEipSpec(@WebParam(name = "id") Integer id);
 
-	DTOListResult<EipSpecDTO> getEipSpecList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<EipSpecDTO> getEipSpecList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<EipSpecDTO> getEipSpecPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<EipSpecDTO> getEipSpecPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -249,7 +244,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<Es3SpecDTO> findEs3Spec(@WebParam(name = "id") Integer id);
 
-	DTOResult<Es3SpecDTO> findEs3SpecByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<Es3SpecDTO> findEs3SpecByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createEs3Spec(@WebParam(name = "es3SpecDTO") Es3SpecDTO es3SpecDTO);
 
@@ -257,10 +252,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteEs3Spec(@WebParam(name = "id") Integer id);
 
-	DTOListResult<Es3SpecDTO> getEs3SpecList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<Es3SpecDTO> getEs3SpecList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<Es3SpecDTO> getEs3SpecPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<Es3SpecDTO> getEs3SpecPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -269,7 +263,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<EcsDTO> findEcs(@WebParam(name = "id") Integer id);
 
-	DTOResult<EcsDTO> findEcsByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<EcsDTO> findEcsByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createEcs(@WebParam(name = "ecsDTO") EcsDTO ecsDTO);
 
@@ -277,9 +271,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteEcs(@WebParam(name = "id") Integer id);
 
-	DTOListResult<EcsDTO> getEcsList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<EcsDTO> getEcsList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<EcsDTO> getEcsPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<EcsDTO> getEcsPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -288,7 +282,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<Cs2DTO> findCs2(@WebParam(name = "id") Integer id);
 
-	DTOResult<Cs2DTO> findCs2ByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<Cs2DTO> findCs2ByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createCs2(@WebParam(name = "cs2DTO") Cs2DTO cs2DTO);
 
@@ -296,9 +290,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteCs2(@WebParam(name = "id") Integer id);
 
-	DTOListResult<Cs2DTO> getCs2List(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<Cs2DTO> getCs2List(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<Cs2DTO> getCs2Pagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<Cs2DTO> getCs2Pagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -307,7 +301,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<As2DTO> findAs2(@WebParam(name = "id") Integer id);
 
-	DTOResult<As2DTO> findAs2ByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<As2DTO> findAs2ByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createAs2(@WebParam(name = "as2DTO") As2DTO as2DTO);
 
@@ -315,9 +309,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteAs2(@WebParam(name = "id") Integer id);
 
-	DTOListResult<As2DTO> getAs2List(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<As2DTO> getAs2List(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<As2DTO> getAs2Pagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<As2DTO> getAs2Pagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -326,7 +320,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<EipDTO> findEip(@WebParam(name = "id") Integer id);
 
-	DTOResult<EipDTO> findEipByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<EipDTO> findEipByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createEip(@WebParam(name = "eipDTO") EipDTO eipDTO);
 
@@ -334,9 +328,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteEip(@WebParam(name = "id") Integer id);
 
-	DTOListResult<EipDTO> getEipList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<EipDTO> getEipList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<EipDTO> getEipPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<EipDTO> getEipPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -345,7 +339,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<EipPolicyDTO> findEipPolicy(@WebParam(name = "id") Integer id);
 
-	DTOResult<EipPolicyDTO> findEipPolicyByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<EipPolicyDTO> findEipPolicyByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createEipPolicy(@WebParam(name = "eipPolicyDTO") EipPolicyDTO eipPolicyDTO);
 
@@ -354,10 +348,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteEipPolicy(@WebParam(name = "id") Integer id);
 
-	DTOListResult<EipPolicyDTO> getEipPolicyList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<EipPolicyDTO> getEipPolicyList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<EipPolicyDTO> getEipPolicyPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<EipPolicyDTO> getEipPolicyPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -366,7 +359,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<ElbDTO> findElb(@WebParam(name = "id") Integer id);
 
-	DTOResult<ElbDTO> findElbByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<ElbDTO> findElbByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createElb(@WebParam(name = "elbDTO") ElbDTO elbDTO);
 
@@ -374,9 +367,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteElb(@WebParam(name = "id") Integer id);
 
-	DTOListResult<ElbDTO> getElbList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<ElbDTO> getElbList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<ElbDTO> getElbPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<ElbDTO> getElbPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -385,7 +378,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<ElbPolicyDTO> findElbPolicy(@WebParam(name = "id") Integer id);
 
-	DTOResult<ElbPolicyDTO> findElbPolicyByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<ElbPolicyDTO> findElbPolicyByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createElbPolicy(@WebParam(name = "elbPolicyDTO") ElbPolicyDTO elbPolicyDTO);
 
@@ -394,10 +387,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteElbPolicy(@WebParam(name = "id") Integer id);
 
-	DTOListResult<ElbPolicyDTO> getElbPolicyList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<ElbPolicyDTO> getElbPolicyList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<ElbPolicyDTO> getElbPolicyPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<ElbPolicyDTO> getElbPolicyPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -406,7 +398,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<DnsDTO> findDns(@WebParam(name = "id") Integer id);
 
-	DTOResult<DnsDTO> findDnsByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<DnsDTO> findDnsByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createDns(@WebParam(name = "dnsDTO") DnsDTO DnsDTO);
 
@@ -414,9 +406,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteDns(@WebParam(name = "id") Integer id);
 
-	DTOListResult<DnsDTO> getDnsList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<DnsDTO> getDnsList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<DnsDTO> getDnsPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<DnsDTO> getDnsPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -425,7 +417,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<DnsPolicyDTO> findDnsPolicy(@WebParam(name = "id") Integer id);
 
-	DTOResult<DnsPolicyDTO> findDnsPolicyByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<DnsPolicyDTO> findDnsPolicyByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createDnsPolicy(@WebParam(name = "dnsPolicyDTO") DnsPolicyDTO dnsPolicyDTO);
 
@@ -434,10 +426,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteDnsPolicy(@WebParam(name = "id") Integer id);
 
-	DTOListResult<DnsPolicyDTO> getDnsPolicyList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<DnsPolicyDTO> getDnsPolicyList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<DnsPolicyDTO> getDnsPolicyPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<DnsPolicyDTO> getDnsPolicyPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -446,7 +437,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<EsgDTO> findEsg(@WebParam(name = "id") Integer id);
 
-	DTOResult<EsgDTO> findEsgByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<EsgDTO> findEsgByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createEsg(@WebParam(name = "esgDTO") EsgDTO esgDTO);
 
@@ -454,9 +445,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteEsg(@WebParam(name = "id") Integer id);
 
-	DTOListResult<EsgDTO> getEsgList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<EsgDTO> getEsgList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<EsgDTO> getEsgPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<EsgDTO> getEsgPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -465,7 +456,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<EsgPolicyDTO> findEsgPolicy(@WebParam(name = "id") Integer id);
 
-	DTOResult<EsgPolicyDTO> findEsgPolicyByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<EsgPolicyDTO> findEsgPolicyByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createEsgPolicy(@WebParam(name = "esgPolicyDTO") EsgPolicyDTO esgPolicyDTO);
 
@@ -474,10 +465,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteEsgPolicy(@WebParam(name = "id") Integer id);
 
-	DTOListResult<EsgPolicyDTO> getEsgPolicyList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<EsgPolicyDTO> getEsgPolicyList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<EsgPolicyDTO> getEsgPolicyPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<EsgPolicyDTO> getEsgPolicyPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -486,7 +476,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<VpnDTO> findVpn(@WebParam(name = "id") Integer id);
 
-	DTOResult<VpnDTO> findVpnByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<VpnDTO> findVpnByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createVpn(@WebParam(name = "vpnDTO") VpnDTO vpnDTO);
 
@@ -494,9 +484,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteVpn(@WebParam(name = "id") Integer id);
 
-	DTOListResult<VpnDTO> getVpnList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<VpnDTO> getVpnList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<VpnDTO> getVpnPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<VpnDTO> getVpnPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -505,7 +495,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<GroupPolicyDTO> findGroupPolicy(@WebParam(name = "id") Integer id);
 
-	DTOResult<GroupPolicyDTO> findGroupPolicyByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<GroupPolicyDTO> findGroupPolicyByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createGroupPolicy(@WebParam(name = "groupPolicyDTO") GroupPolicyDTO groupPolicyDTO);
 
@@ -514,10 +504,10 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteGroupPolicy(@WebParam(name = "id") Integer id);
 
-	DTOListResult<GroupPolicyDTO> getGroupPolicyList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<GroupPolicyDTO> getGroupPolicyList(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	PaginationResult<GroupPolicyDTO> getGroupPolicyPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+			@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -616,7 +606,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<FimasDTO> findFimas(@WebParam(name = "id") Integer id);
 
-	DTOResult<FimasDTO> findFimasByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<FimasDTO> findFimasByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createFimas(@WebParam(name = "fimasDTO") FimasDTO fimasDTO);
 
@@ -624,9 +614,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteFimas(@WebParam(name = "id") Integer id);
 
-	DTOListResult<FimasDTO> getFimasList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<FimasDTO> getFimasList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<FimasDTO> getFimasPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<FimasDTO> getFimasPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -635,7 +625,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<FimasBoxDTO> findFimasBox(@WebParam(name = "id") Integer id);
 
-	DTOResult<FimasBoxDTO> findFimasBoxByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<FimasBoxDTO> findFimasBoxByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createFimasBox(@WebParam(name = "fimasBoxDTO") FimasBoxDTO fimasBoxDTO);
 
@@ -643,10 +633,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteFimasBox(@WebParam(name = "id") Integer id);
 
-	DTOListResult<FimasBoxDTO> getFimasBoxList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<FimasBoxDTO> getFimasBoxList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<FimasBoxDTO> getFimasBoxPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<FimasBoxDTO> getFimasBoxPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -655,7 +644,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<FimasPortDTO> findFimasPort(@WebParam(name = "id") Integer id);
 
-	DTOResult<FimasPortDTO> findFimasPortByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<FimasPortDTO> findFimasPortByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createFimasPort(@WebParam(name = "fimasPortDTO") FimasPortDTO fimasPortDTO);
 
@@ -664,10 +653,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteFimasPort(@WebParam(name = "id") Integer id);
 
-	DTOListResult<FimasPortDTO> getFimasPortList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<FimasPortDTO> getFimasPortList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<FimasPortDTO> getFimasPortPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<FimasPortDTO> getFimasPortPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -676,7 +664,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<FirewallDTO> findFirewall(@WebParam(name = "id") Integer id);
 
-	DTOResult<FirewallDTO> findFirewallByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<FirewallDTO> findFirewallByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createFirewall(@WebParam(name = "firewallDTO") FirewallDTO firewallDTO);
 
@@ -684,10 +672,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteFirewall(@WebParam(name = "id") Integer id);
 
-	DTOListResult<FirewallDTO> getFirewallList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<FirewallDTO> getFirewallList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<FirewallDTO> getFirewallPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<FirewallDTO> getFirewallPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -696,8 +683,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<FirewallPortDTO> findFirewallPort(@WebParam(name = "id") Integer id);
 
-	DTOResult<FirewallPortDTO> findFirewallPortByParams(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<FirewallPortDTO> findFirewallPortByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createFirewallPort(@WebParam(name = "firewallPortDTO") FirewallPortDTO firewallPortDTO);
 
@@ -706,10 +692,10 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteFirewallPort(@WebParam(name = "id") Integer id);
 
-	DTOListResult<FirewallPortDTO> getFirewallPortList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<FirewallPortDTO> getFirewallPortList(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	PaginationResult<FirewallPortDTO> getFirewallPortPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+			@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -718,7 +704,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<HardDiskDTO> findHardDisk(@WebParam(name = "id") Integer id);
 
-	DTOResult<HardDiskDTO> findHardDiskByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<HardDiskDTO> findHardDiskByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createHardDisk(@WebParam(name = "hardDiskDTO") HardDiskDTO hardDiskDTO);
 
@@ -726,10 +712,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteHardDisk(@WebParam(name = "id") Integer id);
 
-	DTOListResult<HardDiskDTO> getHardDiskList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<HardDiskDTO> getHardDiskList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<HardDiskDTO> getHardDiskPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<HardDiskDTO> getHardDiskPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -738,7 +723,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<IpaddressDTO> findIpaddress(@WebParam(name = "id") Integer id);
 
-	DTOResult<IpaddressDTO> findIpaddressByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<IpaddressDTO> findIpaddressByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createIpaddress(@WebParam(name = "ipaddressDTO") IpaddressDTO ipaddressDTO);
 
@@ -747,10 +732,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteIpaddress(@WebParam(name = "id") Integer id);
 
-	DTOListResult<IpaddressDTO> getIpaddressList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<IpaddressDTO> getIpaddressList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<IpaddressDTO> getIpaddressPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<IpaddressDTO> getIpaddressPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	/**
@@ -786,8 +770,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<LoadBalancerDTO> findLoadBalancer(@WebParam(name = "id") Integer id);
 
-	DTOResult<LoadBalancerDTO> findLoadBalancerByParams(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<LoadBalancerDTO> findLoadBalancerByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createLoadBalancer(@WebParam(name = "loadBalancerDTO") LoadBalancerDTO loadBalancerDTO);
 
@@ -796,10 +779,10 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteLoadBalancer(@WebParam(name = "id") Integer id);
 
-	DTOListResult<LoadBalancerDTO> getLoadBalancerList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<LoadBalancerDTO> getLoadBalancerList(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	PaginationResult<LoadBalancerDTO> getLoadBalancerPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+			@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -809,7 +792,7 @@ public interface CmdbuildSoapService {
 	DTOResult<LoadBalancerPortDTO> findLoadBalancerPort(@WebParam(name = "id") Integer id);
 
 	DTOResult<LoadBalancerPortDTO> findLoadBalancerPortByParams(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams);
+			@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createLoadBalancerPort(@WebParam(name = "loadBalancerPortDTO") LoadBalancerPortDTO loadBalancerPortDTO);
 
@@ -819,10 +802,10 @@ public interface CmdbuildSoapService {
 	IdResult deleteLoadBalancerPort(@WebParam(name = "id") Integer id);
 
 	DTOListResult<LoadBalancerPortDTO> getLoadBalancerPortList(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams);
+			@WebParam(name = "searchParams") SearchParams searchParams);
 
 	PaginationResult<LoadBalancerPortDTO> getLoadBalancerPortPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+			@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -831,7 +814,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<MemoryDTO> findMemory(@WebParam(name = "id") Integer id);
 
-	DTOResult<MemoryDTO> findMemoryByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<MemoryDTO> findMemoryByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createMemory(@WebParam(name = "memoryDTO") MemoryDTO memoryDTO);
 
@@ -839,9 +822,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteMemory(@WebParam(name = "id") Integer id);
 
-	DTOListResult<MemoryDTO> getMemoryList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<MemoryDTO> getMemoryList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<MemoryDTO> getMemoryPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<MemoryDTO> getMemoryPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -850,7 +833,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<NetappBoxDTO> findNetappBox(@WebParam(name = "id") Integer id);
 
-	DTOResult<NetappBoxDTO> findNetappBoxByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<NetappBoxDTO> findNetappBoxByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createNetappBox(@WebParam(name = "netappBoxDTO") NetappBoxDTO netappBoxDTO);
 
@@ -859,10 +842,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteNetappBox(@WebParam(name = "id") Integer id);
 
-	DTOListResult<NetappBoxDTO> getNetappBoxList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<NetappBoxDTO> getNetappBoxList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<NetappBoxDTO> getNetappBoxPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<NetappBoxDTO> getNetappBoxPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -872,7 +854,7 @@ public interface CmdbuildSoapService {
 	DTOResult<NetappControllerDTO> findNetappController(@WebParam(name = "id") Integer id);
 
 	DTOResult<NetappControllerDTO> findNetappControllerByParams(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams);
+			@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createNetappController(@WebParam(name = "netappControllerDTO") NetappControllerDTO netappControllerDTO);
 
@@ -882,10 +864,10 @@ public interface CmdbuildSoapService {
 	IdResult deleteNetappController(@WebParam(name = "id") Integer id);
 
 	DTOListResult<NetappControllerDTO> getNetappControllerList(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams);
+			@WebParam(name = "searchParams") SearchParams searchParams);
 
 	PaginationResult<NetappControllerDTO> getNetappControllerPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+			@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -894,7 +876,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<NetappPortDTO> findNetappPort(@WebParam(name = "id") Integer id);
 
-	DTOResult<NetappPortDTO> findNetappPortByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<NetappPortDTO> findNetappPortByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createNetappPort(@WebParam(name = "netappPortDTO") NetappPortDTO netappPortDTO);
 
@@ -903,10 +885,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteNetappPort(@WebParam(name = "id") Integer id);
 
-	DTOListResult<NetappPortDTO> getNetappPortList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<NetappPortDTO> getNetappPortList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<NetappPortDTO> getNetappPortPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<NetappPortDTO> getNetappPortPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -915,7 +896,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<NicDTO> findNic(@WebParam(name = "id") Integer id);
 
-	DTOResult<NicDTO> findNicByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<NicDTO> findNicByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createNic(@WebParam(name = "nicDTO") NicDTO nicDTO);
 
@@ -923,9 +904,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteNic(@WebParam(name = "id") Integer id);
 
-	DTOListResult<NicDTO> getNicList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<NicDTO> getNicList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<NicDTO> getNicPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<NicDTO> getNicPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -934,7 +915,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<NicPortDTO> findNicPort(@WebParam(name = "id") Integer id);
 
-	DTOResult<NicPortDTO> findNicPortByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<NicPortDTO> findNicPortByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createNicPort(@WebParam(name = "nicPortDTO") NicPortDTO nicPortDTO);
 
@@ -942,10 +923,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteNicPort(@WebParam(name = "id") Integer id);
 
-	DTOListResult<NicPortDTO> getNicPortList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<NicPortDTO> getNicPortList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<NicPortDTO> getNicPortPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<NicPortDTO> getNicPortPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -954,7 +934,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<ServerDTO> findServer(@WebParam(name = "id") Integer id);
 
-	DTOResult<ServerDTO> findServerByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<ServerDTO> findServerByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createServer(@WebParam(name = "serverDTO") ServerDTO serverDTO);
 
@@ -962,9 +942,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteServer(@WebParam(name = "id") Integer id);
 
-	DTOListResult<ServerDTO> getServerList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<ServerDTO> getServerList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<ServerDTO> getServerPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<ServerDTO> getServerPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -973,7 +953,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<ServerPortDTO> findServerPort(@WebParam(name = "id") Integer id);
 
-	DTOResult<ServerPortDTO> findServerPortByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<ServerPortDTO> findServerPortByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createServerPort(@WebParam(name = "serverPortDTO") ServerPortDTO serverPortDTO);
 
@@ -982,10 +962,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteServerPort(@WebParam(name = "id") Integer id);
 
-	DTOListResult<ServerPortDTO> getServerPortList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<ServerPortDTO> getServerPortList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<ServerPortDTO> getServerPortPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<ServerPortDTO> getServerPortPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -994,7 +973,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<SwitchesDTO> findSwitches(@WebParam(name = "id") Integer id);
 
-	DTOResult<SwitchesDTO> findSwitchesByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<SwitchesDTO> findSwitchesByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createSwitches(@WebParam(name = "switchesDTO") SwitchesDTO switchesDTO);
 
@@ -1002,10 +981,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteSwitches(@WebParam(name = "id") Integer id);
 
-	DTOListResult<SwitchesDTO> getSwitchesList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<SwitchesDTO> getSwitchesList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<SwitchesDTO> getSwitchesPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<SwitchesDTO> getSwitchesPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -1014,7 +992,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<SwitchPortDTO> findSwitchPort(@WebParam(name = "id") Integer id);
 
-	DTOResult<SwitchPortDTO> findSwitchPortByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<SwitchPortDTO> findSwitchPortByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createSwitchPort(@WebParam(name = "switchPortDTO") SwitchPortDTO switchPortDTO);
 
@@ -1023,10 +1001,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteSwitchPort(@WebParam(name = "id") Integer id);
 
-	DTOListResult<SwitchPortDTO> getSwitchPortList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<SwitchPortDTO> getSwitchPortList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<SwitchPortDTO> getSwitchPortPagination(
-			@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<SwitchPortDTO> getSwitchPortPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -1035,7 +1012,7 @@ public interface CmdbuildSoapService {
 
 	DTOResult<VlanDTO> findVlan(@WebParam(name = "id") Integer id);
 
-	DTOResult<VlanDTO> findVlanByParams(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOResult<VlanDTO> findVlanByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createVlan(@WebParam(name = "vlanDTO") VlanDTO vlanDTO);
 
@@ -1043,9 +1020,9 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteVlan(@WebParam(name = "id") Integer id);
 
-	DTOListResult<VlanDTO> getVlanList(@WebParam(name = "searchParams") Map<String, Object> searchParams);
+	DTOListResult<VlanDTO> getVlanList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<VlanDTO> getVlanPagination(@WebParam(name = "searchParams") Map<String, Object> searchParams,
+	PaginationResult<VlanDTO> getVlanPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	/**

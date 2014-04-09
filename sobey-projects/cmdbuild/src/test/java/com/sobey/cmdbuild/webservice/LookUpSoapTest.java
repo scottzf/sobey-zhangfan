@@ -3,9 +3,6 @@ package com.sobey.cmdbuild.webservice;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,13 +11,13 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
-import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.constants.LookUpTypeEnum;
 import com.sobey.cmdbuild.webservice.response.dto.LookUpDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
+import com.sobey.cmdbuild.webservice.response.result.SearchParams;
 
 /**
  * LookUp SOAP服务的功能测试, 测试主要的接口调用.
@@ -42,9 +39,9 @@ public class LookUpSoapTest extends BaseFunctionalTestCase {
 		DTOResult<LookUpDTO> response = cmdbuildSoapService.findLookUp(id);
 		assertEquals("CentOS 6.4 64bit", response.getDto().getDescription());
 
-		Map<String, Object> searchParams = Maps.newHashMap();
-		searchParams.put("EQ_type", LookUpTypeEnum.Image.name());
-		searchParams.put("EQ_description", "CentOS 6.4 64bit");
+		SearchParams searchParams = new SearchParams();
+		searchParams.getParamsMap().put("EQ_type", LookUpTypeEnum.Image.name());
+		searchParams.getParamsMap().put("EQ_description", "CentOS 6.4 64bit");
 
 		DTOResult<LookUpDTO> responseParams = cmdbuildSoapService.findLookUpByParams(searchParams);
 		assertEquals("CentOS 6.4 64bit", responseParams.getDto().getDescription());
@@ -53,8 +50,8 @@ public class LookUpSoapTest extends BaseFunctionalTestCase {
 	@Test
 	@Ignore
 	public void getList() {
-		Map<String, Object> searchParams = Maps.newHashMap();
-		searchParams.put("EQ_type", LookUpTypeEnum.Image.name());
+		SearchParams searchParams = new SearchParams();
+		searchParams.getParamsMap().put("EQ_type", LookUpTypeEnum.Image.name());
 
 		DTOListResult<LookUpDTO> result = cmdbuildSoapService.getLookUpList(searchParams);
 		System.out.println("获得集合数量:" + result.getDtos().size());
@@ -65,7 +62,7 @@ public class LookUpSoapTest extends BaseFunctionalTestCase {
 	@Ignore
 	public void getPagination() {
 
-		Map<String, Object> searchParams = new HashMap<String, Object>();
+		SearchParams searchParams = new SearchParams();
 
 		PaginationResult<LookUpDTO> result = cmdbuildSoapService.getLookUpPagination(searchParams, 2, 10);
 

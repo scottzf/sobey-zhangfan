@@ -3,9 +3,7 @@ package com.sobey.cmdbuild.webservice.infrastructure;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -15,7 +13,6 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
-import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
 import com.sobey.cmdbuild.entity.Ipaddress;
@@ -24,6 +21,7 @@ import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
+import com.sobey.cmdbuild.webservice.response.result.SearchParams;
 import com.sobey.core.mapper.BeanMapper;
 import com.sobey.test.data.RandomData;
 
@@ -81,9 +79,8 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 	public void testFindIpaddress() {
 		System.out.println(code + ">>>>>>>>>>>>>");
 
-		Map<String, Object> searchParams = Maps.newHashMap();
-
-		searchParams.put("EQ_code", code);
+		SearchParams searchParams = new SearchParams();
+		searchParams.getParamsMap().put("EQ_code", code);
 
 		DTOResult<IpaddressDTO> responseParams = cmdbuildSoapService.findIpaddressByParams(searchParams);
 
@@ -103,7 +100,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testGetIpaddressList() {
 
-		Map<String, Object> searchParams = Maps.newHashMap();
+		SearchParams searchParams = new SearchParams();
 
 		DTOListResult<IpaddressDTO> result = cmdbuildSoapService.getIpaddressList(searchParams);
 
@@ -161,7 +158,7 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testGetIpaddressPagination() {
 
-		Map<String, Object> searchParams = new HashMap<String, Object>();
+		SearchParams searchParams = new SearchParams();
 
 		PaginationResult<IpaddressDTO> result = cmdbuildSoapService.getIpaddressPagination(searchParams, 1, 10);
 
@@ -193,9 +190,10 @@ public class IpaddressSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testInsertIPAddress2() {
 
+		SearchParams searchParams = new SearchParams();
+
 		// 已有的IP
-		List<IpaddressDTO> list = cmdbuildSoapService.getIpaddressPagination(new HashMap<String, Object>(), 1, 5)
-				.getGetContent();
+		List<IpaddressDTO> list = cmdbuildSoapService.getIpaddressPagination(searchParams, 1, 5).getGetContent();
 
 		// 将随机数据插入IPList
 		list.addAll(BeanMapper.mapList(TestData.randomIpaddressList(5), IpaddressDTO.class));

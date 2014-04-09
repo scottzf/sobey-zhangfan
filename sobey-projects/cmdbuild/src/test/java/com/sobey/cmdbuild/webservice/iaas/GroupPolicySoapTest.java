@@ -3,9 +3,6 @@ package com.sobey.cmdbuild.webservice.iaas;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -13,7 +10,6 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
-import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
 import com.sobey.cmdbuild.entity.GroupPolicy;
@@ -22,6 +18,7 @@ import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
+import com.sobey.cmdbuild.webservice.response.result.SearchParams;
 import com.sobey.core.mapper.BeanMapper;
 import com.sobey.test.data.RandomData;
 
@@ -49,9 +46,8 @@ public class GroupPolicySoapTest extends BaseFunctionalTestCase {
 	public void testFindGroupPolicy() {
 		System.out.println(code + ">>>>>>>>>>>>>");
 
-		Map<String, Object> searchParams = Maps.newHashMap();
-
-		searchParams.put("EQ_code", code);
+		SearchParams searchParams = new SearchParams();
+		searchParams.getParamsMap().put("EQ_code", code);
 
 		DTOResult<GroupPolicyDTO> responseParams = cmdbuildSoapService.findGroupPolicyByParams(searchParams);
 
@@ -71,7 +67,7 @@ public class GroupPolicySoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testGetGroupPolicyList() {
 
-		Map<String, Object> searchParams = Maps.newHashMap();
+		SearchParams searchParams = new SearchParams();
 
 		DTOListResult<GroupPolicyDTO> result = cmdbuildSoapService.getGroupPolicyList(searchParams);
 
@@ -129,7 +125,7 @@ public class GroupPolicySoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testGetGroupPolicyPagination() {
 
-		Map<String, Object> searchParams = new HashMap<String, Object>();
+		SearchParams searchParams = new SearchParams();
 
 		PaginationResult<GroupPolicyDTO> result = cmdbuildSoapService.getGroupPolicyPagination(searchParams, 1, 10);
 

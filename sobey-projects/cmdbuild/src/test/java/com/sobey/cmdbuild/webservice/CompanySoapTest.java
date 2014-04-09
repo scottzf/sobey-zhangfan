@@ -3,9 +3,6 @@ package com.sobey.cmdbuild.webservice;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +11,6 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
-import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
 import com.sobey.cmdbuild.entity.Company;
@@ -23,6 +19,7 @@ import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
+import com.sobey.cmdbuild.webservice.response.result.SearchParams;
 import com.sobey.core.mapper.BeanMapper;
 
 /**
@@ -41,12 +38,12 @@ public class CompanySoapTest extends BaseFunctionalTestCase {
 	@Ignore
 	public void find() {
 
-		Integer id = 85;
+		Integer id = 117122;
 		DTOResult<CompanyDTO> response = cmdbuildSoapService.findCompany(id);
 		assertEquals("code9701", response.getDto().getCode());
 
-		Map<String, Object> searchParams = Maps.newHashMap();
-		searchParams.put("EQ_zip", "zip");
+		SearchParams searchParams = new SearchParams();
+		searchParams.getParamsMap().put("EQ_zip", "zip");
 		DTOResult<CompanyDTO> responseParams = cmdbuildSoapService.findCompanyByParams(searchParams);
 		assertEquals("code9701", responseParams.getDto().getCode());
 	}
@@ -54,14 +51,14 @@ public class CompanySoapTest extends BaseFunctionalTestCase {
 	@Test
 	@Ignore
 	public void getList() {
-		Map<String, Object> searchParams = Maps.newHashMap();
+		SearchParams searchParams = new SearchParams();
 		DTOListResult<CompanyDTO> result = cmdbuildSoapService.getCompanyList(searchParams);
 		System.out.println("获得集合数量:" + result.getDtos().size());
 		assertEquals("0", result.getCode());
 	}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void save() {
 		Company company = TestData.randomCompany();
 		CompanyDTO companyDTO = BeanMapper.map(company, CompanyDTO.class);
@@ -83,9 +80,9 @@ public class CompanySoapTest extends BaseFunctionalTestCase {
 	}
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void delete() {
-		Integer id = 86;
+		Integer id = 117124;
 		IdResult response = cmdbuildSoapService.deleteCompany(id);
 		assertNotNull(response.getId());
 	}
@@ -94,7 +91,7 @@ public class CompanySoapTest extends BaseFunctionalTestCase {
 	@Ignore
 	public void getPagination() {
 
-		Map<String, Object> searchParams = new HashMap<String, Object>();
+		SearchParams searchParams = new SearchParams();
 
 		PaginationResult<CompanyDTO> result = cmdbuildSoapService.getCompanyPagination(searchParams, 1, 10);
 

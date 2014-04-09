@@ -14,22 +14,25 @@ cd ..\
 echo [Step 2] Start all sobey projects.
 cd sobey-projects\cmdbuild
 
-cd ..\instance
-start "Instance" %MVN% clean tomcat:run -Dmaven.tomcat.port=8081
-if errorlevel 1 goto error
 
-cd ..\dns
-start "DNS" %MVN% clean tomcat:run -Dmaven.tomcat.port=8085
-if errorlevel 1 goto error
 
-rem 注释end
-goto start  
 
 cd ..\cmdbuild
 start "CMDBuild" %MVN% clean clean tomcat:run -Dmaven.tomcat.port=8080
 if errorlevel 1 goto error
 
+rem 注释end
+goto start  
 
+
+cd ..\instance
+start "Instance" %MVN% clean tomcat:run -Dmaven.tomcat.port=8081
+if errorlevel 1 goto error
+
+
+cd ..\dns
+start "DNS" %MVN% clean tomcat:run -Dmaven.tomcat.port=8085
+if errorlevel 1 goto error
 
  
 cd ..\switch
@@ -43,8 +46,6 @@ if errorlevel 1 goto error
 cd ..\storage
 start "Storage" %MVN% clean tomcat:run -Dmaven.tomcat.port=8084
 if errorlevel 1 goto error
-
-
 
 
 cd ..\loadbalancer

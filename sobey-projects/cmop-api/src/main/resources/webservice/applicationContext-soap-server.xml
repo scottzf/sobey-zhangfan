@@ -19,6 +19,9 @@
 
 	<!-- WebService Client inject -->
 
+	<jaxws:client id="cmdbuildSoapService" serviceClass="com.sobey.generate.cmdbuild.CmdbuildSoapService"
+		address="http://localhost:8080/cmdbuild/cxf/soap/cmdbuildSoapService?wsdl" />
+
 	<jaxws:client id="instanceSoapService" serviceClass="com.sobey.generate.instance.InstanceSoapService"
 		address="http://localhost:8081/instance/cxf/soap/instanceSoapService?wsdl" />
 
