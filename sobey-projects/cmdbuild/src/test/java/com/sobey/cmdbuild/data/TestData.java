@@ -74,7 +74,7 @@ public class TestData {
 		tenants.setPhone(RandomData.randomName("phone"));
 		tenants.setRemark(RandomData.randomName("remark"));
 		tenants.setAccontBalance(RandomData.randomDouble());
-		tenants.setCompany(85);
+		tenants.setCompany(117122);
 		tenants.setPassword(RandomData.randomName("password"));
 		tenants.setEmail(RandomData.randomName("email"));
 		return tenants;
@@ -87,7 +87,7 @@ public class TestData {
 		tag.setDescription(RandomData.randomName("description"));
 
 		tag.setRemark(RandomData.randomName("remark"));
-		tag.setTenants(89);
+		tag.setTenants(117129);
 		return tag;
 	}
 
@@ -172,7 +172,6 @@ public class TestData {
 		eip.setCode(RandomData.randomName("code10"));
 		eip.setDescription(RandomData.randomName("description"));
 		eip.setPrice(RandomData.randomDouble());
-
 		eip.setRemark(RandomData.randomName("remark"));
 		eip.setBrand(0);
 
@@ -478,8 +477,8 @@ public class TestData {
 		cs2.setFimas(0);
 		cs2.setIpaddress(0);
 		cs2.setRemark(RandomData.randomName("remark"));
-		cs2.setTag(0);
-		cs2.setTenants(116);
+		cs2.setTag(117132);
+		cs2.setTenants(117129);
 		return cs2;
 	}
 
@@ -490,8 +489,8 @@ public class TestData {
 		as2.setIpaddress(0);
 		as2.setNetAppController(0);
 		as2.setRemark(RandomData.randomName("remark"));
-		as2.setTag(0);
-		as2.setTenants(116);
+		as2.setTag(117132);
+		as2.setTenants(117129);
 		as2.setVolumePath(RandomData.randomName("volumePath"));
 		as2.setVolumeType(0);
 		return as2;
@@ -500,12 +499,15 @@ public class TestData {
 	public static Eip randomEip() {
 		Eip eip = new Eip();
 		eip.setBandwidth(1024);
-		eip.setEipSpec(0);
-		eip.setEipStatus(0);
-		eip.setIpaddress(0);
+		eip.setEipSpec(117135);
+		eip.setEipStatus(58);
+		eip.setIpaddress(563);
 		eip.setRemark(RandomData.randomName("remark"));
-		eip.setTag(0);
-		eip.setTenants(116);
+		eip.setCode(RandomData.randomName("code"));
+		eip.setDescription(RandomData.randomName("description"));
+		eip.setTag(117132);
+		eip.setTenants(117129);
+
 		return eip;
 	}
 
@@ -514,8 +516,8 @@ public class TestData {
 		elb.setIpaddress(0);
 		elb.setIsSession(true);
 		elb.setRemark(RandomData.randomName("remark"));
-		elb.setTag(0);
-		elb.setTenants(116);
+		elb.setTag(117132);
+		elb.setTenants(117129);
 		return elb;
 	}
 
@@ -523,10 +525,13 @@ public class TestData {
 		Dns dns = new Dns();
 		dns.setCnameDomain(RandomData.randomName("cnameDomain"));
 		dns.setDomainName(RandomData.randomName("domainName"));
-		dns.setDomainType(0);
+		dns.setDomainType(62);
 		dns.setRemark(RandomData.randomName("remark"));
-		dns.setTag(0);
-		dns.setTenants(116);
+		dns.setTag(117132);
+		dns.setTenants(117129);
+		dns.setCode(RandomData.randomName("code"));
+		dns.setDescription(RandomData.randomName("desc"));
+
 		return dns;
 	}
 
@@ -539,7 +544,7 @@ public class TestData {
 		esg.setAclNumber(2000);
 		esg.setIsPublic(true);
 		esg.setTag(92);
-		esg.setTenants(89);
+		esg.setTenants(117129);
 		return esg;
 	}
 
@@ -559,8 +564,8 @@ public class TestData {
 	public static Vpn randomVpn() {
 		Vpn vpn = new Vpn();
 		vpn.setRemark(RandomData.randomName("remark"));
-		vpn.setTag(0);
-		vpn.setTenants(116);
+		vpn.setTag(117132);
+		vpn.setTenants(117129);
 		vpn.setVpnName(RandomData.randomName("vpnName"));
 		vpn.setVpnPassword(RandomData.randomName("vpnPassword"));
 		return vpn;
@@ -569,7 +574,7 @@ public class TestData {
 	public static GroupPolicy randomGroupPolicy() {
 		GroupPolicy groupPolicy = new GroupPolicy();
 		groupPolicy.setRemark(RandomData.randomName("remark"));
-		groupPolicy.setTenants(116);
+		groupPolicy.setTenants(117129);
 		return groupPolicy;
 	}
 
@@ -579,8 +584,8 @@ public class TestData {
 		ecs.setCode(RandomData.randomName("code"));
 		ecs.setDescription(RandomData.randomName("description"));
 		ecs.setRemark(RandomData.randomName("remark"));
-		ecs.setTag(92);
-		ecs.setTenants(89);
+		ecs.setTag(117132);
+		ecs.setTenants(117129);
 		return ecs;
 	}
 

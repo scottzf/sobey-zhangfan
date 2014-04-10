@@ -2755,6 +2755,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Map<String, Object> paramsMap = Maps.newHashMap();
 
 			paramsMap.put("EQ_code", eipDTO.getCode());
+			System.out.println(comm.eipService.findEip(paramsMap));
 
 			Validate.isTrue(comm.eipService.findEip(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 

@@ -36,7 +36,7 @@ import com.sobey.core.mapper.BeanMapper;
 public class TenantsSoapTest extends BaseFunctionalTestCase {
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void find() {
 		Integer id = 87;
 		DTOResult<TenantsDTO> response = cmdbuildSoapService.findTenants(id);
@@ -53,7 +53,7 @@ public class TenantsSoapTest extends BaseFunctionalTestCase {
 	}
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void save() {
 		Tenants tenants = TestData.randomTenants();
 		TenantsDTO TenantsDTO = BeanMapper.map(tenants, TenantsDTO.class);

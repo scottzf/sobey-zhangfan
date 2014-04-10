@@ -3,6 +3,8 @@ package com.sobey.cmdbuild.webservice.iaas;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.HashMap;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -30,7 +32,7 @@ public class DnsSoapTest extends BaseFunctionalTestCase {
 
 	private String code = "";
 
-	@Test
+	// @Test
 	public void testAll() {
 		testCreateDns();
 		testFindDns();
@@ -47,7 +49,9 @@ public class DnsSoapTest extends BaseFunctionalTestCase {
 		System.out.println(code + ">>>>>>>>>>>>>");
 
 		SearchParams searchParams = new SearchParams();
-		searchParams.getParamsMap().put("EQ_code", code);
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("EQ_code", code);
+		searchParams.setParamsMap(paramsMap);
 
 		DTOResult<DnsDTO> responseParams = cmdbuildSoapService.findDnsByParams(searchParams);
 
@@ -77,7 +81,10 @@ public class DnsSoapTest extends BaseFunctionalTestCase {
 
 	}
 
-	// @Test
+	/**
+	 * 
+	 */
+	@Test
 	// @Ignore
 	public void testCreateDns() {
 
@@ -86,6 +93,22 @@ public class DnsSoapTest extends BaseFunctionalTestCase {
 		DnsDTO dnsDTO = BeanMapper.map(dns, DnsDTO.class);
 
 		IdResult response = cmdbuildSoapService.createDns(dnsDTO);
+
+		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("EQ_code", "code8590");
+		searchParams.setParamsMap(paramsMap);
+
+		// DTOResult<DnsDTO> dtoResult = cmdbuildSoapService.findDnsByParams(searchParams);
+		//
+		// // System.err.println("code2:"+dnsDTO.getCode());
+		// int eipId = 117154;
+		// int dnsId = dtoResult.getDto().getId();
+		// System.out.println("*********************");
+		// System.out.println(dnsId);
+		// System.out.println("*********************");
+		//
+		// cmdbuildSoapService.createMapEipDns(eipId, dnsId);
 
 		assertNotNull(response.getId());
 

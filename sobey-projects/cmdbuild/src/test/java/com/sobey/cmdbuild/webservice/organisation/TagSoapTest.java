@@ -53,7 +53,7 @@ public class TagSoapTest extends BaseFunctionalTestCase {
 	}
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void save() {
 		Tag tag = TestData.randomTag();
 		TagDTO tagDTO = BeanMapper.map(tag, TagDTO.class);

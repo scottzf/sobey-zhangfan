@@ -3,6 +3,8 @@ package com.sobey.cmdbuild.webservice.iaas;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.HashMap;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -47,7 +49,9 @@ public class Cs2SoapTest extends BaseFunctionalTestCase {
 		System.out.println(code + ">>>>>>>>>>>>>");
 
 		SearchParams searchParams = new SearchParams();
-		searchParams.getParamsMap().put("EQ_code", code);
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("EQ_code", code);
+		searchParams.setParamsMap(paramsMap);
 
 		DTOResult<Cs2DTO> responseParams = cmdbuildSoapService.findCs2ByParams(searchParams);
 

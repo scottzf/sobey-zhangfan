@@ -3,6 +3,8 @@ package com.sobey.cmdbuild.webservice.financial;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.HashMap;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -30,7 +32,7 @@ public class EipSpecSoapTest extends BaseFunctionalTestCase {
 
 	private String code = "";
 
-	@Test
+	// @Test
 	public void testAll() {
 		testCreateEipSpec();
 		testFindEipSpec();
@@ -47,7 +49,9 @@ public class EipSpecSoapTest extends BaseFunctionalTestCase {
 		System.out.println(code + ">>>>>>>>>>>>>");
 
 		SearchParams searchParams = new SearchParams();
-		searchParams.getParamsMap().put("EQ_code", code);
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("EQ_code", code);
+		searchParams.setParamsMap(paramsMap);
 
 		DTOResult<EipSpecDTO> responseParams = cmdbuildSoapService.findEipSpecByParams(searchParams);
 
@@ -77,7 +81,7 @@ public class EipSpecSoapTest extends BaseFunctionalTestCase {
 
 	}
 
-	// @Test
+	@Test
 	// @Ignore
 	public void testCreateEipSpec() {
 

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.junit.Test;
@@ -50,7 +51,9 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 		System.out.println(code + ">>>>>>>>>>>>>");
 
 		SearchParams searchParams = new SearchParams();
-		searchParams.getParamsMap().put("EQ_code", code);
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("EQ_code", code);
+		searchParams.setParamsMap(paramsMap);
 
 		DTOResult<VlanDTO> responseParams = cmdbuildSoapService.findVlanByParams(searchParams);
 
@@ -71,7 +74,9 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 	public void testGetVlanList() {
 
 		SearchParams searchParams = new SearchParams();
-		searchParams.getParamsMap().put("EQ_code", code);
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("EQ_code", code);
+		searchParams.setParamsMap(paramsMap);
 
 		DTOListResult<VlanDTO> result = cmdbuildSoapService.getVlanList(searchParams);
 

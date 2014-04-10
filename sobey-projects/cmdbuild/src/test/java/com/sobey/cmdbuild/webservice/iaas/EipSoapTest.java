@@ -3,6 +3,8 @@ package com.sobey.cmdbuild.webservice.iaas;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.HashMap;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -30,7 +32,7 @@ public class EipSoapTest extends BaseFunctionalTestCase {
 
 	private String code = "";
 
-	@Test
+	// @Test
 	public void testAll() {
 		testCreateEip();
 		testFindEip();
@@ -47,7 +49,9 @@ public class EipSoapTest extends BaseFunctionalTestCase {
 		System.out.println(code + ">>>>>>>>>>>>>");
 
 		SearchParams searchParams = new SearchParams();
-		searchParams.getParamsMap().put("EQ_code", code);
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("EQ_code", code);
+		searchParams.setParamsMap(paramsMap);
 
 		DTOResult<EipDTO> responseParams = cmdbuildSoapService.findEipByParams(searchParams);
 
@@ -68,7 +72,9 @@ public class EipSoapTest extends BaseFunctionalTestCase {
 	public void testGetEipList() {
 
 		SearchParams searchParams = new SearchParams();
-		searchParams.getParamsMap().put("EQ_code", code);
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("EQ_code", code);
+		searchParams.setParamsMap(paramsMap);
 
 		DTOListResult<EipDTO> result = cmdbuildSoapService.getEipList(searchParams);
 
@@ -78,7 +84,7 @@ public class EipSoapTest extends BaseFunctionalTestCase {
 
 	}
 
-	// @Test
+	@Test
 	// @Ignore
 	public void testCreateEip() {
 
@@ -127,7 +133,9 @@ public class EipSoapTest extends BaseFunctionalTestCase {
 	public void testGetEipPagination() {
 
 		SearchParams searchParams = new SearchParams();
-		searchParams.getParamsMap().put("EQ_code", code);
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("EQ_code", code);
+		searchParams.setParamsMap(paramsMap);
 
 		PaginationResult<EipDTO> result = cmdbuildSoapService.getEipPagination(searchParams, 1, 10);
 
