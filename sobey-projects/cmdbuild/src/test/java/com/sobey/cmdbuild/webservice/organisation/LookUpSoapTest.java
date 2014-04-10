@@ -1,4 +1,4 @@
-package com.sobey.cmdbuild.webservice;
+package com.sobey.cmdbuild.webservice.organisation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
