@@ -485,6 +485,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			// 将DTO对象转换至Entity对象
 			Tenants tenants = BeanMapper.map(tenantsDTO, Tenants.class);
 			tenants.setUser(DEFAULT_USER);
+			tenants.setId(0);
 
 			BeanValidators.validateWithException(validator, tenants);
 
@@ -689,6 +690,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			// 将DTO对象转换至Entity对象
 			Tag tag = BeanMapper.map(tagDTO, Tag.class);
 			tag.setUser(DEFAULT_USER);
+			tag.setId(0);
 
 			BeanValidators.validateWithException(validator, tag);
 
@@ -878,6 +880,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			// 将DTO对象转换至Entity对象
 			Idc idc = BeanMapper.map(idcDTO, Idc.class);
 			idc.setUser(DEFAULT_USER);
+			idc.setId(0);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, idc);
@@ -1086,6 +1089,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			// 将DTO对象转换至Entity对象
 			Rack rack = BeanMapper.map(rackDTO, Rack.class);
 			rack.setUser(DEFAULT_USER);
+			rack.setId(0);
 
 			BeanValidators.validateWithException(validator, rack);
 
@@ -1292,6 +1296,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			DeviceSpec deviceSpec = BeanMapper.map(deviceSpecDTO, DeviceSpec.class);
 			deviceSpec.setIdClass(TableNameUtil.getTableName(DeviceSpec.class));
 			deviceSpec.setUser(DEFAULT_USER);
+			deviceSpec.setId(0);
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, deviceSpec);
@@ -1501,6 +1506,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			ecsSpec.setUser(DEFAULT_USER);
 			ecsSpec.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			ecsSpec.setIdClass(TableNameUtil.getTableName(EcsSpec.class));
+			ecsSpec.setId(0);
 
 			BeanValidators.validateWithException(validator, ecsSpec);
 
@@ -1705,6 +1711,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			EipSpec eipSpec = BeanMapper.map(eipSpecDTO, EipSpec.class);
 			eipSpec.setUser(DEFAULT_USER);
 			eipSpec.setIdClass(TableNameUtil.getTableName(EipSpec.class));
+			eipSpec.setId(0);
 
 			BeanValidators.validateWithException(validator, eipSpec);
 
@@ -1909,6 +1916,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Es3Spec es3Spec = BeanMapper.map(es3SpecDTO, Es3Spec.class);
 			es3Spec.setUser(DEFAULT_USER);
 			es3Spec.setIdClass(TableNameUtil.getTableName(Es3Spec.class));
+			es3Spec.setId(0);
 
 			BeanValidators.validateWithException(validator, es3Spec);
 
@@ -2122,6 +2130,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			cs2.setUser(DEFAULT_USER);
 			cs2.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			cs2.setId(0);
 
 			BeanValidators.validateWithException(validator, cs2);
 
@@ -2330,6 +2339,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			as2.setIdClass(TableNameUtil.getTableName(As2.class));
 			as2.setUser(DEFAULT_USER);
 			as2.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			as2.setId(0);
 
 			BeanValidators.validateWithException(validator, as2);
 
@@ -2542,6 +2552,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			ecs.setIdClass(TableNameUtil.getTableName(Ecs.class));
 			ecs.setUser(DEFAULT_USER);
 			ecs.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			ecs.setId(0);
 
 			BeanValidators.validateWithException(validator, ecs);
 
@@ -2752,6 +2763,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			eip.setIdClass(TableNameUtil.getTableName(Eip.class));
 			eip.setUser(DEFAULT_USER);
 			eip.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			eip.setId(0);
 
 			BeanValidators.validateWithException(validator, eip);
 
@@ -2947,6 +2959,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			EipPolicy eipPolicy = BeanMapper.map(eipPolicyDTO, EipPolicy.class);
 			eipPolicy.setUser(DEFAULT_USER);
 			eipPolicy.setIdClass(TableNameUtil.getTableName(EipPolicy.class));
+			eipPolicy.setId(0);
 
 			BeanValidators.validateWithException(validator, eipPolicy);
 
@@ -3158,6 +3171,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			elb.setIdClass(TableNameUtil.getTableName(Elb.class));
 			elb.setUser(DEFAULT_USER);
 			elb.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			elb.setId(0);
 
 			BeanValidators.validateWithException(validator, elb);
 
@@ -3354,6 +3368,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			ElbPolicy elbPolicy = BeanMapper.map(elbPolicyDTO, ElbPolicy.class);
 			elbPolicy.setUser(DEFAULT_USER);
 			elbPolicy.setIdClass(TableNameUtil.getTableName(DnsPolicy.class));
+			elbPolicy.setId(0);
 
 			BeanValidators.validateWithException(validator, elbPolicy);
 
@@ -3570,6 +3585,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			dns.setIdClass(TableNameUtil.getTableName(Dns.class));
 			dns.setUser(DEFAULT_USER);
 			dns.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			dns.setId(0);
 
 			BeanValidators.validateWithException(validator, dns);
 
@@ -3763,6 +3779,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			DnsPolicy dnsPolicy = BeanMapper.map(dnsPolicyDTO, DnsPolicy.class);
 			dnsPolicy.setUser(DEFAULT_USER);
 			dnsPolicy.setIdClass(TableNameUtil.getTableName(DnsPolicy.class));
+			dnsPolicy.setId(0);
 
 			BeanValidators.validateWithException(validator, dnsPolicy);
 
@@ -3971,6 +3988,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			esg.setIdClass(TableNameUtil.getTableName(Esg.class));
 			esg.setUser(DEFAULT_USER);
 			esg.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			esg.setId(0);
 
 			BeanValidators.validateWithException(validator, esg);
 
@@ -4164,6 +4182,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			EsgPolicy esgPolicy = BeanMapper.map(esgPolicyDTO, EsgPolicy.class);
 			esgPolicy.setUser(DEFAULT_USER);
 			esgPolicy.setIdClass(TableNameUtil.getTableName(EsgPolicy.class));
+			esgPolicy.setId(0);
 
 			BeanValidators.validateWithException(validator, esgPolicy);
 
@@ -4371,6 +4390,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			vpn.setIdClass(TableNameUtil.getTableName(Vpn.class));
 			vpn.setUser(DEFAULT_USER);
 			vpn.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			vpn.setId(0);
 
 			BeanValidators.validateWithException(validator, vpn);
 
@@ -4567,6 +4587,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			groupPolicy.setIdClass(TableNameUtil.getTableName(GroupPolicy.class));
 			groupPolicy.setUser(DEFAULT_USER);
 			groupPolicy.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			groupPolicy.setId(0);
 
 			BeanValidators.validateWithException(validator, groupPolicy);
 
@@ -4757,9 +4778,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			MapEcsAs2 map = new MapEcsAs2();
 
+			map.setId(0);
 			map.setIdObj1(ecsId);
 			map.setIdObj2(as2Id);
-			map.setId(0);
 			map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
 			map.setIdClass2(TableNameUtil.getTableName(As2.class));
 			map.setUser(DEFAULT_USER);
@@ -4816,9 +4837,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			MapEcsCs2 map = new MapEcsCs2();
 
+			map.setId(0);
 			map.setIdObj1(ecsId);
 			map.setIdObj2(cs2Id);
-			map.setId(0);
 			map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
 			map.setIdClass2(TableNameUtil.getTableName(Cs2.class));
 			map.setUser(DEFAULT_USER);
@@ -4875,9 +4896,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			MapEcsEip map = new MapEcsEip();
 
+			map.setId(0);
 			map.setIdObj1(ecsId);
 			map.setIdObj2(eipId);
-			map.setId(0);
 			map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
 			map.setIdClass2(TableNameUtil.getTableName(Eip.class));
 			map.setUser(DEFAULT_USER);
@@ -4934,9 +4955,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			MapEcsElb map = new MapEcsElb();
 
+			map.setId(0);
 			map.setIdObj1(ecsId);
 			map.setIdObj2(elbId);
-			map.setId(0);
 			map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
 			map.setIdClass2(TableNameUtil.getTableName(Elb.class));
 			map.setUser(DEFAULT_USER);
@@ -4993,9 +5014,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			MapEipElb map = new MapEipElb();
 
+			map.setId(0);
 			map.setIdObj1(eipId);
 			map.setIdObj2(elbId);
-			map.setId(0);
 			map.setIdClass1(TableNameUtil.getTableName(Eip.class));
 			map.setIdClass2(TableNameUtil.getTableName(Elb.class));
 			map.setUser(DEFAULT_USER);
@@ -5052,9 +5073,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			MapEipDns map = new MapEipDns();
 
+			map.setId(0);
 			map.setIdObj1(eipId);
 			map.setIdObj2(dnsId);
-			map.setId(0);
 			map.setIdClass1(TableNameUtil.getTableName(Eip.class));
 			map.setIdClass2(TableNameUtil.getTableName(Dns.class));
 			map.setUser(DEFAULT_USER);
@@ -5112,9 +5133,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			MapGroupPolicyVlan map = new MapGroupPolicyVlan();
 
+			map.setId(0);
 			map.setIdObj1(groupPolicyId);
 			map.setIdObj2(vlanId);
-			map.setId(0);
 			map.setIdClass1(TableNameUtil.getTableName(GroupPolicy.class));
 			map.setIdClass2(TableNameUtil.getTableName(Vlan.class));
 			map.setUser(DEFAULT_USER);
@@ -5173,9 +5194,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			MapGroupPolicyIpaddress map = new MapGroupPolicyIpaddress();
 
+			map.setId(0);
 			map.setIdObj1(groupPolicyId);
 			map.setIdObj2(ipaddressId);
-			map.setId(0);
 			map.setIdClass1(TableNameUtil.getTableName(GroupPolicy.class));
 			map.setIdClass2(TableNameUtil.getTableName(Ipaddress.class));
 			map.setUser(DEFAULT_USER);
@@ -5234,9 +5255,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			MapVpnGroupPolicy map = new MapVpnGroupPolicy();
 
+			map.setId(0);
 			map.setIdObj1(vpnId);
 			map.setIdObj2(groupPolicyId);
-			map.setId(0);
 			map.setIdClass1(TableNameUtil.getTableName(Vpn.class));
 			map.setIdClass2(TableNameUtil.getTableName(GroupPolicy.class));
 			map.setUser(DEFAULT_USER);
@@ -5369,6 +5390,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			fimas.setUser(DEFAULT_USER);
 			fimas.setIdClass(TableNameUtil.getTableName(Fimas.class));
+			fimas.setId(0);
 
 			BeanValidators.validateWithException(validator, fimas);
 
@@ -5582,6 +5604,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			fimasBox.setUser(DEFAULT_USER);
 			fimasBox.setIdClass(TableNameUtil.getTableName(FimasBox.class));
 			fimasBox.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			fimasBox.setId(0);
 
 			BeanValidators.validateWithException(validator, fimasBox);
 
@@ -5787,6 +5810,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			fimasPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			fimasPort.setUser(DEFAULT_USER);
 			fimasPort.setIdClass(TableNameUtil.getTableName(FimasPort.class));
+			fimasPort.setId(0);
 
 			BeanValidators.validateWithException(validator, fimasPort);
 
@@ -5994,6 +6018,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			firewall.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			firewall.setUser(DEFAULT_USER);
 			firewall.setIdClass(TableNameUtil.getTableName(Firewall.class));
+			firewall.setId(0);
 
 			BeanValidators.validateWithException(validator, firewall);
 
@@ -6199,6 +6224,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			firewallPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			firewallPort.setUser(DEFAULT_USER);
 			firewallPort.setIdClass(TableNameUtil.getTableName(FirewallPort.class));
+			firewallPort.setId(0);
 
 			BeanValidators.validateWithException(validator, firewallPort);
 
@@ -6412,6 +6438,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			hardDisk.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			hardDisk.setUser(DEFAULT_USER);
 			hardDisk.setIdClass(TableNameUtil.getTableName(HardDisk.class));
+			hardDisk.setId(0);
 
 			BeanValidators.validateWithException(validator, hardDisk);
 
@@ -6625,6 +6652,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			ipaddress.setIpaddressStatus(LookUpConstants.IPAddressStatus.未使用.getValue());
 			ipaddress.setIdClass(TableNameUtil.getTableName(Ipaddress.class));
 			ipaddress.setUser(DEFAULT_USER);
+			ipaddress.setId(0);
 
 			comm.ipaddressService.saveOrUpdate(ipaddress);
 
@@ -6933,6 +6961,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			loadBalancer.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			loadBalancer.setUser(DEFAULT_USER);
 			loadBalancer.setIdClass(TableNameUtil.getTableName(LoadBalancer.class));
+			loadBalancer.setId(0);
 
 			BeanValidators.validateWithException(validator, loadBalancer);
 
@@ -7142,6 +7171,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			loadBalancerPort.setIdClass(TableNameUtil.getTableName(LoadBalancerPort.class));
 			loadBalancerPort.setUser(DEFAULT_USER);
 			loadBalancerPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			loadBalancerPort.setId(0);
 
 			BeanValidators.validateWithException(validator, loadBalancerPort);
 
@@ -7357,6 +7387,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			memory.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			memory.setUser(DEFAULT_USER);
 			memory.setIdClass(TableNameUtil.getTableName(Memory.class));
+			memory.setId(0);
 
 			BeanValidators.validateWithException(validator, memory);
 
@@ -7570,6 +7601,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			netappBox.setUser(DEFAULT_USER);
 			netappBox.setIdClass(TableNameUtil.getTableName(NetappBox.class));
 			netappBox.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			netappBox.setId(0);
 
 			BeanValidators.validateWithException(validator, netappBox);
 
@@ -7780,6 +7812,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			netappController.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			netappController.setUser(DEFAULT_USER);
 			netappController.setIdClass(TableNameUtil.getTableName(NetappController.class));
+			netappController.setId(0);
 
 			BeanValidators.validateWithException(validator, netappController);
 
@@ -7987,6 +8020,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			netappPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			netappPort.setUser(DEFAULT_USER);
 			netappPort.setIdClass(TableNameUtil.getTableName(NetappPort.class));
+			netappPort.setId(0);
 
 			BeanValidators.validateWithException(validator, netappPort);
 
@@ -8199,6 +8233,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			nic.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			nic.setUser(DEFAULT_USER);
 			nic.setIdClass(TableNameUtil.getTableName(Nic.class));
+			nic.setId(0);
 
 			BeanValidators.validateWithException(validator, nic);
 
@@ -8400,6 +8435,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			nicPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			nicPort.setUser(DEFAULT_USER);
 			nicPort.setIdClass(TableNameUtil.getTableName(NicPort.class));
+			nicPort.setId(0);
 
 			BeanValidators.validateWithException(validator, nicPort);
 
@@ -8607,6 +8643,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			server.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			server.setUser(DEFAULT_USER);
 			server.setIdClass(TableNameUtil.getTableName(Server.class));
+			server.setId(0);
 
 			BeanValidators.validateWithException(validator, server);
 
@@ -8810,6 +8847,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			serverPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			serverPort.setUser(DEFAULT_USER);
 			serverPort.setIdClass(TableNameUtil.getTableName(ServerPort.class));
+			serverPort.setId(0);
 
 			BeanValidators.validateWithException(validator, serverPort);
 
@@ -9017,6 +9055,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			switches.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			switches.setUser(DEFAULT_USER);
 			switches.setIdClass(TableNameUtil.getTableName(Switches.class));
+			switches.setId(0);
 
 			BeanValidators.validateWithException(validator, switches);
 
@@ -9223,6 +9262,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			switchPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			switchPort.setUser(DEFAULT_USER);
 			switchPort.setIdClass(TableNameUtil.getTableName(SwitchPort.class));
+			switchPort.setId(0);
 
 			BeanValidators.validateWithException(validator, switchPort);
 
@@ -9426,6 +9466,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			vlan.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			vlan.setIdClass(TableNameUtil.getTableName(Vlan.class));
 			vlan.setUser(DEFAULT_USER);
+			vlan.setId(0);
 
 			BeanValidators.validateWithException(validator, vlan);
 
