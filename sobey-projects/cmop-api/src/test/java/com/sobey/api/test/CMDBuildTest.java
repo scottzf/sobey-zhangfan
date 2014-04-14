@@ -1,6 +1,7 @@
 package com.sobey.api.test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -13,11 +14,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.sobey.api.data.CMDBuildTestData;
 import com.sobey.api.service.CmdbuildService;
+import com.sobey.api.service.InstanceService;
+import com.sobey.api.utils.CMDBuildUtil;
 import com.sobey.generate.cmdbuild.CompanyDTO;
 import com.sobey.generate.cmdbuild.DTOResult;
+import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.SearchParams;
 import com.sobey.generate.cmdbuild.SearchParams.ParamsMap;
 import com.sobey.generate.cmdbuild.SearchParams.ParamsMap.Entry;
+import com.sobey.generate.cmdbuild.ServerDTO;
 import com.sobey.generate.cmdbuild.WSResult;
 
 /**
@@ -32,6 +37,53 @@ public class CMDBuildTest extends TestCase {
 
 	@Autowired
 	private CmdbuildService service;
+
+	@Autowired
+	private InstanceService instanceService;
+
+	@Test
+	public void test() {
+
+		// 从vcenter中获得关联关系. 遍历Map
+
+		HashMap<String, String> vcenterMap = instanceService.relationVM();
+
+		for (java.util.Map.Entry<String, String> entry : vcenterMap.entrySet()) {
+
+			HashMap<String, String> ecsMap = new HashMap<String, String>();
+			ecsMap.put("EQ_code", entry.getKey());
+
+			DTOResult dtoResult = service.findEcs(CMDBuildUtil.wrapperSearchParams(ecsMap));
+
+			EcsDTO ecsDTO = (EcsDTO) dtoResult.getDto();
+
+			ServerDTO serverDTO = (ServerDTO) service.findServer(ecsDTO.getServer()).getDto();
+
+			if (!entry.getValue().equals(serverDTO.getCode())) {
+
+				System.out.println(entry.getKey());
+				System.err.println("vcenter中对应的宿主机:" + entry.getValue());
+				System.err.println("CMDBuild中对应的宿主机:" + serverDTO.getCode());
+
+				HashMap<String, String> serverMap = new HashMap<String, String>();
+				serverMap.put("EQ_code", entry.getValue());
+
+				ServerDTO serverDTO2 = (ServerDTO) service.findServer(CMDBuildUtil.wrapperSearchParams(serverMap))
+						.getDto();
+
+				ecsDTO.setServer(serverDTO2.getId());
+				service.updateEcs(ecsDTO.getId(), ecsDTO);
+
+			}
+
+		}
+
+	}
+
+	// @Test
+	public void syncVMTest() {
+
+	}
 
 	// @Test
 	public void createCompanyTest() {
@@ -53,7 +105,7 @@ public class CMDBuildTest extends TestCase {
 
 	}
 
-	@Test
+	// @Test
 	public void updateCompanyTest() {
 
 		Integer id = 117125;

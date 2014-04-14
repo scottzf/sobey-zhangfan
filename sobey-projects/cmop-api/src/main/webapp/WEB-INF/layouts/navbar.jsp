@@ -24,6 +24,7 @@
 						<li><a href="${ctx}/instance/reconfig/">虚拟机配置管理</a></li>
 						<li><a href="${ctx}/instance/destroy/">虚拟机销毁</a></li>
 						<li><a href="${ctx}/instance/relation/">主机、虚拟机关联关系</a></li>
+						<li><a href="${ctx}/instance/sync/">同步关联关系</a></li>
 					</ul></li>
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown">Dns<b class="caret"></b></a>

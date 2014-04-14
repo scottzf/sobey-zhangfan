@@ -191,4 +191,25 @@ public class InstanceController {
 		return "redirect:/instance/relation/";
 	}
 
+	/**
+	 * 跳转到同步主机、虚拟机的关联关系页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/sync")
+	public String syncPage(Model model) {
+		return "instance/sync";
+	}
+
+	/**
+	 * 同步主机、虚拟机的关联关系
+	 */
+	@RequestMapping(value = "/sync", method = RequestMethod.POST)
+	public String sync(RedirectAttributes redirectAttributes) {
+
+		redirectAttributes.addFlashAttribute("message", service.syncVM());
+
+		return "redirect:/instance/sync/";
+	}
+
 }
