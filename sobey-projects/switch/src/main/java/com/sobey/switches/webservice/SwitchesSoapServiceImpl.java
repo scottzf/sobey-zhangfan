@@ -64,12 +64,12 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 
 		WSResult result = new WSResult();
 
-		String accessCommand = service.createVlanOnAccessLayer(vlanParameter.getVlanId(), vlanParameter.getGateway(),
+		String accessCommand = service.createVlanOnCoreLayer(vlanParameter.getVlanId(), vlanParameter.getGateway(),
 				vlanParameter.getNetMask());
 
 		String filePath = getFilePath(vlanParameter.getVlanId().toString());
 
-		TelnetUtil.execCommand(ACCESS_IP, ACCESS_USERNAME, ACCESS_PASSWORD, accessCommand, filePath);
+		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, accessCommand, filePath);
 
 		try {
 
@@ -100,7 +100,7 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 
 		String filePath = getFilePath(vlanId.toString());
 
-		TelnetUtil.execCommand(ACCESS_IP, ACCESS_USERNAME, ACCESS_PASSWORD, accessCommand, filePath);
+		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, accessCommand, filePath);
 
 		try {
 
