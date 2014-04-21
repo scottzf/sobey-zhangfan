@@ -64,7 +64,7 @@ public class NagiosDao {
 			result.setIpaddress(rs.getString("name1"));
 			result.setItem(rs.getString("name2"));
 			result.setStartTime(rs.getTimestamp("start_time"));
-			result.setEndTime(rs.getDate("end_time"));
+			result.setEndTime(rs.getTimestamp("end_time"));
 			result.setOutput(rs.getString("output"));
 			return result;
 		}
