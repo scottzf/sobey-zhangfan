@@ -31,11 +31,11 @@
 ###需要导入vijava的jar包
 * mvn install:install-file -Dfile=D:\vijava55b20130927.jar -DgroupId=com.vmware -DartifactId=vijava -Dversion=55b20130927 -Dpackaging=jar
 
-###部署要点
-* 需要分布式部署，注意生成wsdl文件的URL路径需要和cmop-api中webservice配置文件中的URL路径相同。
-* 正确的部署流程应该是：
-1.将各个项目在不同的实例中启动后，保存wsdl文件
-2.将wsdl文件拷贝至cmop-api项目中的WSDL文件夹下
-3.修改cmop-api项目applicationContext-soap-server.xml文件中需要实现webservice的service URL
-4.执行generate-sources.bat
-5.启动cmop-api
+###部署
+ 需要分布式部署，注意生成wsdl文件的URL路径需要和cmop-api中webservice配置文件中的URL路径相同。正确的部署流程应该是：
+
+1. 将各个项目在不同的实例中启动后，保存wsdl文件
+2. 将wsdl文件拷贝至cmop-api项目中的WSDL文件夹下
+3. 修改cmop-api项目applicationContext-soap-server.xml文件中需要实现webservice的service URL
+4. 执行generate-sources.bat
+5. 启动cmop-api
