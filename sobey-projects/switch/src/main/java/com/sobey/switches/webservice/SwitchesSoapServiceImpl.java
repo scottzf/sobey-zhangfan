@@ -35,8 +35,11 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 	private static final String CORE_PASSWORD = CORE_LOADER.getProperty("CORE_PASSWORD");
 
 	/* 接入层交换机,可能有数量不定的接入层交换机,待后续优化 */
+	@SuppressWarnings("unused")
 	private static final String ACCESS_IP = ACCESS_LOADER.getProperty("ACCESS_IP");
+	@SuppressWarnings("unused")
 	private static final String ACCESS_USERNAME = ACCESS_LOADER.getProperty("ACCESS_USERNAME");
+	@SuppressWarnings("unused")
 	private static final String ACCESS_PASSWORD = ACCESS_LOADER.getProperty("ACCESS_PASSWORD");
 
 	/**
