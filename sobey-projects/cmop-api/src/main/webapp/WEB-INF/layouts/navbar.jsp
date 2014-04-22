@@ -64,6 +64,11 @@
 						<li><a href="${ctx}/storage/umount/">卸载Es3</a></li>
 						<li><a href="${ctx}/storage/remount/">更改Es3</a></li>
 					</ul></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">Monitor<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="${ctx}/monitor/ping/">Ping</a></li>
+					</ul></li>
 			</ul>
 		</div>
 		<!--/.nav-collapse -->
