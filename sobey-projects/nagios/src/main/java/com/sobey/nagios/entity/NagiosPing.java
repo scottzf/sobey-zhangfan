@@ -1,16 +1,14 @@
 package com.sobey.nagios.entity;
 
-import java.util.Date;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class NagiosPing {
 
 	private String ipaddress;
 
-	private Date startTime;
+	private String startTime;
 
-	private Date endTime;
+	private String endTime;
 
 	private String packetLoss;
 
@@ -24,19 +22,19 @@ public class NagiosPing {
 		this.ipaddress = ipaddress;
 	}
 
-	public Date getStartTime() {
+	public String getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(Date startTime) {
+	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
 
-	public Date getEndTime() {
+	public String getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(Date endTime) {
+	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
 

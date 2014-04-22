@@ -1,5 +1,7 @@
 package com.sobey.nagios.util;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.sobey.nagios.entity.NagiosCPULoad;
@@ -25,6 +27,16 @@ import com.sobey.nagios.entity.NagiosUpTime;
 public class AnalyzeUtil {
 
 	/**
+	 * 截取日期字段.将最后的".0"去掉
+	 * 
+	 * @param date
+	 * @return
+	 */
+	private static String subDateTime(Date date) {
+		return StringUtils.substring(date.toString(), 0, date.toString().length() - 2);
+	}
+
+	/**
 	 * 对ping的output解析
 	 * 
 	 * @param result
@@ -48,8 +60,8 @@ public class AnalyzeUtil {
 		ping.setIpaddress(result.getIpaddress());
 		ping.setPacketLoss(StringUtils.remove(StringUtils.trim(StringUtils.split(array[0], "=")[1]), "%"));
 		ping.setRta(StringUtils.remove(StringUtils.trim(StringUtils.split(array[1], "=")[1]), " ms"));
-		ping.setStartTime(result.getStartTime());
-		ping.setEndTime(result.getEndTime());
+		ping.setStartTime(subDateTime(result.getStartTime()));
+		ping.setEndTime(subDateTime(result.getEndTime()));
 
 		return ping;
 	}
@@ -85,9 +97,9 @@ public class AnalyzeUtil {
 		}
 
 		users.setIpaddress(result.getIpaddress());
-		users.setStartTime(result.getStartTime());
-		users.setEndTime(result.getEndTime());
 		users.setUsers(Integer.valueOf(userNumber));
+		users.setStartTime(subDateTime(result.getStartTime()));
+		users.setEndTime(subDateTime(result.getEndTime()));
 
 		return users;
 	}
@@ -112,12 +124,12 @@ public class AnalyzeUtil {
 		NagiosEth eth = new NagiosEth();
 
 		eth.setIpaddress(result.getIpaddress());
-		eth.setStartTime(result.getStartTime());
-		eth.setEndTime(result.getEndTime());
 		eth.setTrafficIn(array[0]);
 		eth.setTrafficOut(array[1]);
 		eth.setTrafficTotal(array[2]);
 		eth.setInterval(StringUtils.remove(StringUtils.substringAfterLast(result.getOutput(), "is "), "s"));
+		eth.setStartTime(subDateTime(result.getStartTime()));
+		eth.setEndTime(subDateTime(result.getEndTime()));
 
 		return eth;
 	}
@@ -142,9 +154,9 @@ public class AnalyzeUtil {
 		NagiosTotalProcesses totalProcesses = new NagiosTotalProcesses();
 
 		totalProcesses.setIpaddress(result.getIpaddress());
-		totalProcesses.setStartTime(result.getStartTime());
-		totalProcesses.setEndTime(result.getEndTime());
 		totalProcesses.setProcesses(array[2] != null ? Integer.valueOf(array[2]) : 0);
+		totalProcesses.setStartTime(subDateTime(result.getStartTime()));
+		totalProcesses.setEndTime(subDateTime(result.getEndTime()));
 
 		return totalProcesses;
 	}
@@ -170,8 +182,8 @@ public class AnalyzeUtil {
 		NagiosCPULoad cpuLoad = new NagiosCPULoad();
 
 		cpuLoad.setIpaddress(result.getIpaddress());
-		cpuLoad.setStartTime(result.getStartTime());
-		cpuLoad.setEndTime(result.getEndTime());
+		cpuLoad.setStartTime(subDateTime(result.getStartTime()));
+		cpuLoad.setEndTime(subDateTime(result.getEndTime()));
 		cpuLoad.setAverage5(array[0]);
 		cpuLoad.setAverage10(array[1]);
 		cpuLoad.setAverage15(array[2]);
@@ -197,8 +209,8 @@ public class AnalyzeUtil {
 		NagiosRootPartition rootPartition = new NagiosRootPartition();
 
 		rootPartition.setIpaddress(result.getIpaddress());
-		rootPartition.setStartTime(result.getStartTime());
-		rootPartition.setEndTime(result.getEndTime());
+		rootPartition.setStartTime(subDateTime(result.getStartTime()));
+		rootPartition.setEndTime(subDateTime(result.getEndTime()));
 		rootPartition.setFreeSpace(StringUtils.substringsBetween(result.getOutput(), "/ ", " MB")[0]);
 		rootPartition.setFreePer(StringUtils.substringsBetween(result.getOutput(), "(", "%")[0]);
 		rootPartition.setInode(StringUtils.substringsBetween(result.getOutput(), "=", "%")[0]);
@@ -224,8 +236,8 @@ public class AnalyzeUtil {
 		NagiosSwapUsage swapUsage = new NagiosSwapUsage();
 
 		swapUsage.setIpaddress(result.getIpaddress());
-		swapUsage.setStartTime(result.getStartTime());
-		swapUsage.setEndTime(result.getEndTime());
+		swapUsage.setStartTime(subDateTime(result.getStartTime()));
+		swapUsage.setEndTime(subDateTime(result.getEndTime()));
 		swapUsage.setFreePer(StringUtils.substringsBetween(result.getOutput(), "- ", "%")[0]);
 		swapUsage.setTotalSpace(StringUtils.substringsBetween(result.getOutput(), "(", " MB")[0]);
 		swapUsage.setFreeSpace(StringUtils.substringsBetween(result.getOutput(), "of ", " MB")[0]);
@@ -251,8 +263,8 @@ public class AnalyzeUtil {
 		NagiosCPUNumber cpuNumber = new NagiosCPUNumber();
 
 		cpuNumber.setIpaddress(result.getIpaddress());
-		cpuNumber.setStartTime(result.getStartTime());
-		cpuNumber.setEndTime(result.getEndTime());
+		cpuNumber.setStartTime(subDateTime(result.getStartTime()));
+		cpuNumber.setEndTime(subDateTime(result.getEndTime()));
 		cpuNumber.setCpuNumber(Integer.valueOf(StringUtils.split(result.getOutput(), ":")[1]));
 
 		return cpuNumber;
@@ -276,8 +288,8 @@ public class AnalyzeUtil {
 		NagiosDiskIO diskIO = new NagiosDiskIO();
 
 		diskIO.setIpaddress(result.getIpaddress());
-		diskIO.setStartTime(result.getStartTime());
-		diskIO.setEndTime(result.getEndTime());
+		diskIO.setStartTime(subDateTime(result.getStartTime()));
+		diskIO.setEndTime(subDateTime(result.getEndTime()));
 		diskIO.setTps(StringUtils.substringsBetween(result.getOutput(), "tps=", " KB_read")[0]);
 		diskIO.setRead(StringUtils.substringsBetween(result.getOutput(), "KB_read/s=", " KB_written")[0]);
 		diskIO.setWrite(StringUtils.substringAfter(result.getOutput(), "written/s="));
@@ -303,8 +315,8 @@ public class AnalyzeUtil {
 		NagiosMemoryLoad memoryLoad = new NagiosMemoryLoad();
 
 		memoryLoad.setIpaddress(result.getIpaddress());
-		memoryLoad.setStartTime(result.getStartTime());
-		memoryLoad.setEndTime(result.getEndTime());
+		memoryLoad.setStartTime(subDateTime(result.getStartTime()));
+		memoryLoad.setEndTime(subDateTime(result.getEndTime()));
 		memoryLoad.setUsedPer(StringUtils.substringsBetween(result.getOutput(), "used: ", "%")[0]);
 		memoryLoad.setUserd(StringUtils.substringsBetween(result.getOutput(), "(", " /")[0]);
 		memoryLoad.setTotal(StringUtils.substringsBetween(result.getOutput(), "/ ", " kB)")[0]);
@@ -328,8 +340,8 @@ public class AnalyzeUtil {
 		NagiosSystemOS systemOS = new NagiosSystemOS();
 
 		systemOS.setIpaddress(result.getIpaddress());
-		systemOS.setStartTime(result.getStartTime());
-		systemOS.setEndTime(result.getEndTime());
+		systemOS.setStartTime(subDateTime(result.getStartTime()));
+		systemOS.setEndTime(subDateTime(result.getEndTime()));
 		systemOS.setSystemOS(result.getOutput());
 
 		return systemOS;
@@ -351,8 +363,8 @@ public class AnalyzeUtil {
 		NagiosUpTime upTime = new NagiosUpTime();
 
 		upTime.setIpaddress(result.getIpaddress());
-		upTime.setStartTime(result.getStartTime());
-		upTime.setEndTime(result.getEndTime());
+		upTime.setStartTime(subDateTime(result.getStartTime()));
+		upTime.setEndTime(subDateTime(result.getEndTime()));
 		upTime.setUpTime(result.getOutput());
 
 		return upTime;
