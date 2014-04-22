@@ -32,7 +32,7 @@ public class LoadbalancerController {
 	/**
 	 * 跳转到Loadbalancer页面
 	 */
-	@RequestMapping(value = "/create")
+	@RequestMapping(value = "/create/")
 	public String createPage() {
 		return "loadbalancer/create";
 	}
@@ -61,7 +61,7 @@ public class LoadbalancerController {
 	/**
 	 * 创建一个Loadbalancer
 	 */
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/create/", method = RequestMethod.POST)
 	public String create(@RequestParam(value = "vip") String vip,
 			@RequestParam(value = "publicIPs") String[] publicIPs,
 			@RequestParam(value = "protocols") String[] protocols, RedirectAttributes redirectAttributes) {
@@ -103,7 +103,7 @@ public class LoadbalancerController {
 	/**
 	 * 跳转到删除Loadbalancer页面
 	 */
-	@RequestMapping(value = "/delete")
+	@RequestMapping(value = "/delete/")
 	public String deletePage() {
 		return "loadbalancer/delete";
 	}
@@ -111,7 +111,7 @@ public class LoadbalancerController {
 	/**
 	 * 删除Loadbalancer
 	 */
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@RequestMapping(value = "/delete/", method = RequestMethod.POST)
 	public String delete(@RequestParam(value = "vip") String vip,
 			@RequestParam(value = "publicIPs") String[] publicIPs,
 			@RequestParam(value = "protocols") String[] protocols, RedirectAttributes redirectAttributes) {

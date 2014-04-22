@@ -31,7 +31,7 @@ public class InstanceController {
 	/**
 	 * 跳转到克隆页面
 	 */
-	@RequestMapping(value = "/clone")
+	@RequestMapping(value = "/clone/")
 	public String clonePage() {
 		return "instance/clone";
 	}
@@ -39,7 +39,7 @@ public class InstanceController {
 	/**
 	 * 克隆一个虚拟机
 	 */
-	@RequestMapping(value = "/clone", method = RequestMethod.POST)
+	@RequestMapping(value = "/clone/", method = RequestMethod.POST)
 	public String clone(@RequestParam(value = "description") String description,
 			@RequestParam(value = "gateway") String gateway, @RequestParam(value = "ipaddress") String ipaddress,
 			@RequestParam(value = "subNetMask") String subNetMask, @RequestParam(value = "vmName") String vmName,
@@ -73,7 +73,7 @@ public class InstanceController {
 	/**
 	 * 跳转到销毁虚拟机页面
 	 */
-	@RequestMapping(value = "/destroy")
+	@RequestMapping(value = "/destroy/")
 	public String destroyPage() {
 		return "instance/destroy";
 	}
@@ -81,7 +81,7 @@ public class InstanceController {
 	/**
 	 * 销毁虚拟机
 	 */
-	@RequestMapping(value = "/destroy", method = RequestMethod.POST)
+	@RequestMapping(value = "/destroy/", method = RequestMethod.POST)
 	public String destroy(@RequestParam(value = "vmName") String vmName, RedirectAttributes redirectAttributes) {
 
 		DestroyVMParameter destroyVMParameter = new DestroyVMParameter();
@@ -104,7 +104,7 @@ public class InstanceController {
 	/**
 	 * 跳转到虚拟机电源页面
 	 */
-	@RequestMapping(value = "/power")
+	@RequestMapping(value = "/power/")
 	public String powerPage() {
 		return "instance/power";
 	}
@@ -112,7 +112,7 @@ public class InstanceController {
 	/**
 	 * 对虚拟机进行电源操作
 	 */
-	@RequestMapping(value = "/power", method = RequestMethod.POST)
+	@RequestMapping(value = "/power/", method = RequestMethod.POST)
 	public String power(@RequestParam(value = "vmName") String vmName,
 			@RequestParam(value = "operation") String operation, RedirectAttributes redirectAttributes) {
 
@@ -137,7 +137,7 @@ public class InstanceController {
 	/**
 	 * 跳转到虚拟机配置页面
 	 */
-	@RequestMapping(value = "/reconfig")
+	@RequestMapping(value = "/reconfig/")
 	public String reconfigPage() {
 		return "instance/reconfig";
 	}
@@ -145,7 +145,7 @@ public class InstanceController {
 	/**
 	 * 修改虚拟机配置
 	 */
-	@RequestMapping(value = "/reconfig", method = RequestMethod.POST)
+	@RequestMapping(value = "/reconfig/", method = RequestMethod.POST)
 	public String reconfig(@RequestParam(value = "vmName") String vmName,
 			@RequestParam(value = "cpuNumber") Integer cpuNumber, @RequestParam(value = "memoryMB") Long memoryMB,
 			RedirectAttributes redirectAttributes) {
@@ -174,7 +174,7 @@ public class InstanceController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/relation")
+	@RequestMapping(value = "/relation/")
 	public String relationPage(Model model) {
 		model.addAttribute("relations", service.relationVM());
 		return "instance/relation";
@@ -183,7 +183,7 @@ public class InstanceController {
 	/**
 	 * 刷新主机、虚拟机的关联关系
 	 */
-	@RequestMapping(value = "/relation", method = RequestMethod.POST)
+	@RequestMapping(value = "/relation/", method = RequestMethod.POST)
 	public String relation(RedirectAttributes redirectAttributes) {
 
 		redirectAttributes.addFlashAttribute("relations", service.relationVM());
@@ -196,7 +196,7 @@ public class InstanceController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/sync")
+	@RequestMapping(value = "/sync/")
 	public String syncPage(Model model) {
 		return "instance/sync";
 	}
@@ -204,7 +204,7 @@ public class InstanceController {
 	/**
 	 * 同步主机、虚拟机的关联关系
 	 */
-	@RequestMapping(value = "/sync", method = RequestMethod.POST)
+	@RequestMapping(value = "/sync/", method = RequestMethod.POST)
 	public String sync(RedirectAttributes redirectAttributes) {
 
 		redirectAttributes.addFlashAttribute("message", service.syncVM());

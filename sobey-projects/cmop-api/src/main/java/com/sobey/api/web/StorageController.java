@@ -33,7 +33,7 @@ public class StorageController {
 	/**
 	 * 跳转到Storage页面
 	 */
-	@RequestMapping(value = "/create")
+	@RequestMapping(value = "/create/")
 	public String createPage() {
 		return "storage/create";
 	}
@@ -41,7 +41,7 @@ public class StorageController {
 	/**
 	 * 创建一个Storage
 	 */
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/create/", method = RequestMethod.POST)
 	public String create(@RequestParam(value = "volumeName") String volumeName,
 			@RequestParam(value = "volumeSize") String volumeSize,
 			@RequestParam(value = "clientIPaddress") String clientIPaddress, RedirectAttributes redirectAttributes) {
@@ -70,7 +70,7 @@ public class StorageController {
 	/**
 	 * 跳转到删除Storage页面
 	 */
-	@RequestMapping(value = "/delete")
+	@RequestMapping(value = "/delete/")
 	public String deletePage() {
 		return "storage/delete";
 	}
@@ -78,7 +78,7 @@ public class StorageController {
 	/**
 	 * Delete Storage
 	 */
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@RequestMapping(value = "/delete/", method = RequestMethod.POST)
 	public String delete(@RequestParam(value = "volumeName") String volumeName, RedirectAttributes redirectAttributes) {
 
 		DeleteEs3Parameter deleteEs3Parameter = new DeleteEs3Parameter();
@@ -102,7 +102,7 @@ public class StorageController {
 	/**
 	 * 跳转到Mount storage页面
 	 */
-	@RequestMapping(value = "/mount")
+	@RequestMapping(value = "/mount/")
 	public String mountPage() {
 		return "storage/mount";
 	}
@@ -110,7 +110,7 @@ public class StorageController {
 	/**
 	 * Mount Storage
 	 */
-	@RequestMapping(value = "/mount", method = RequestMethod.POST)
+	@RequestMapping(value = "/mount/", method = RequestMethod.POST)
 	public String mount(@RequestParam(value = "volumeName") String volumeName,
 			@RequestParam(value = "clientIPaddress") String clientIPaddress,
 			@RequestParam(value = "netAppIPaddress") String netAppIPaddress, RedirectAttributes redirectAttributes) {
@@ -137,7 +137,7 @@ public class StorageController {
 	/**
 	 * 跳转到Umount Storage页面
 	 */
-	@RequestMapping(value = "/umount")
+	@RequestMapping(value = "/umount/")
 	public String umountPage() {
 		return "storage/umount";
 	}
@@ -145,7 +145,7 @@ public class StorageController {
 	/**
 	 * Umount Storage
 	 */
-	@RequestMapping(value = "/umount", method = RequestMethod.POST)
+	@RequestMapping(value = "/umount/", method = RequestMethod.POST)
 	public String umount(@RequestParam(value = "clientIPaddress") String clientIPaddress,
 			RedirectAttributes redirectAttributes) {
 
@@ -169,7 +169,7 @@ public class StorageController {
 	/**
 	 * 跳转到Remount Storage页面
 	 */
-	@RequestMapping(value = "/remount")
+	@RequestMapping(value = "/remount/")
 	public String remountPage() {
 		return "storage/remount";
 	}
@@ -177,7 +177,7 @@ public class StorageController {
 	/**
 	 * Remount Storage
 	 */
-	@RequestMapping(value = "/remount", method = RequestMethod.POST)
+	@RequestMapping(value = "/remount/", method = RequestMethod.POST)
 	public String remount(@RequestParam(value = "volumeName") String volumeName,
 			@RequestParam(value = "beforeClientIPaddress") String[] beforeClientIPaddress,
 			@RequestParam(value = "afterClientIPaddress") String[] afterClientIPaddress,

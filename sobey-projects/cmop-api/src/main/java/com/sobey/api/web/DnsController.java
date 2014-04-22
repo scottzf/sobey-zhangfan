@@ -31,7 +31,7 @@ public class DnsController {
 	/**
 	 * 跳转到Dns页面
 	 */
-	@RequestMapping(value = "/create")
+	@RequestMapping(value = "/create/")
 	public String createPage() {
 		return "dns/create";
 	}
@@ -60,7 +60,7 @@ public class DnsController {
 	/**
 	 * 创建一个Dns
 	 */
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/create/", method = RequestMethod.POST)
 	public String create(@RequestParam(value = "domianName") String domianName,
 			@RequestParam(value = "publicIPs") String[] publicIPs,
 			@RequestParam(value = "protocols") String[] protocols, RedirectAttributes redirectAttributes) {
@@ -104,7 +104,7 @@ public class DnsController {
 	/**
 	 * 跳转到删除Dns页面
 	 */
-	@RequestMapping(value = "/delete")
+	@RequestMapping(value = "/delete/")
 	public String deletePage() {
 		return "dns/delete";
 	}
@@ -112,7 +112,7 @@ public class DnsController {
 	/**
 	 * 删除Dns
 	 */
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@RequestMapping(value = "/delete/", method = RequestMethod.POST)
 	public String delete(@RequestParam(value = "domianName") String domianName,
 			@RequestParam(value = "publicIPs") String[] publicIPs,
 			@RequestParam(value = "protocols") String[] protocols, RedirectAttributes redirectAttributes) {
