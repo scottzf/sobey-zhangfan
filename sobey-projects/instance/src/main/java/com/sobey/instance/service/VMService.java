@@ -136,11 +136,11 @@ public class VMService {
 			cspec.setEncryptionKey(specManager.getEncryptionKey());
 
 			// 设置ResourcePool
-			// pool为10.10.1.40的宿主机.暂时写死
+			// 宿主机.暂时写死.宿主机的Value可以在VMTest中的PrintInventory方法查出来.
 			ManagedObjectReference pool = new ManagedObjectReference();
-			pool.set_value("resgroup-18");
+			pool.set_value("resgroup-8");
 			pool.setType("ResourcePool");
-			pool.setVal("resgroup-18");
+			pool.setVal("resgroup-8");
 
 			VirtualMachineRelocateSpec relocateSpec = new VirtualMachineRelocateSpec();
 			relocateSpec.setPool(pool);

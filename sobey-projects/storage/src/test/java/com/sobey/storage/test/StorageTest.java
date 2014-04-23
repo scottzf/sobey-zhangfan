@@ -40,7 +40,7 @@ public class StorageTest extends TestCase implements PbulicProperties {
 
 	private static String FILE_PATH = "logs/TerminalInfo.txt";
 
-	// @Test
+	@Test
 	public void CreateVolume() throws IOException {
 
 		CreateEs3Parameter parameter = TestData.randomCreateEs3Parameter();
@@ -54,7 +54,7 @@ public class StorageTest extends TestCase implements PbulicProperties {
 		assertEquals(TerminalResultHandle.ResultHandle(result, MethodEnum.create).getCode(), WSResult.SYSTEM_ERROR);
 	}
 
-	// @Test
+	@Test
 	public void DeleteVolume() throws IOException {
 		DeleteEs3Parameter parameter = TestData.randomDeleteEs3Parameter();
 		String command = service.deleteEs3(parameter);
@@ -68,7 +68,7 @@ public class StorageTest extends TestCase implements PbulicProperties {
 
 	}
 
-	// @Test
+	@Test
 	public void MountVolume() throws IOException {
 		MountEs3Parameter parameter = TestData.randomMountEs3Parameter();
 		String command = service.mountEs3(parameter);
@@ -82,7 +82,7 @@ public class StorageTest extends TestCase implements PbulicProperties {
 		assertEquals(TerminalResultHandle.ResultHandle(result, MethodEnum.mount).getCode(), WSResult.SYSTEM_ERROR);
 	}
 
-	// @Test
+	@Test
 	public void UmountVolume() throws IOException {
 		UmountEs3Parameter parameter = TestData.randomUmountEs3Parameter();
 		String command = service.umountEs3(parameter);

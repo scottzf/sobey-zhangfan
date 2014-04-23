@@ -59,24 +59,16 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 
 		String filePath = getFilePath(createEs3Parameter.getVolumeName());
 
-		boolean isconnect = JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command, filePath);
+		JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command, filePath);
 
-		// 判断是否连接交换机
-		if (!isconnect) {
+		try {
 
-			try {
+			String resultStr = FileUtils.readFileToString(new File(filePath));
 
-				String resultStr = FileUtils.readFileToString(new File(filePath));
+			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.create);
 
-				result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.create);
-
-			} catch (IOException e) {
-				result.setDefaultError();
-			}
-
-		} else {
-			result.setCode(WSResult.SYSTEM_ERROR);
-			result.setMessage("交换机未连接,请联系管理员");
+		} catch (IOException e) {
+			result.setDefaultError();
 		}
 
 		return result;
@@ -91,24 +83,16 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 
 		String filePath = getFilePath(deleteEs3Parameter.getVolumeName());
 
-		boolean isconnect = JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command, filePath);
+		JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command, filePath);
 
-		// 判断是否连接交换机
-		if (!isconnect) {
+		try {
 
-			try {
+			String resultStr = FileUtils.readFileToString(new File(filePath));
 
-				String resultStr = FileUtils.readFileToString(new File(filePath));
+			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.delete);
 
-				result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.delete);
-
-			} catch (IOException e) {
-				result.setDefaultError();
-			}
-
-		} else {
-			result.setCode(WSResult.SYSTEM_ERROR);
-			result.setMessage("交换机未连接,请联系管理员");
+		} catch (IOException e) {
+			result.setDefaultError();
 		}
 
 		return result;
@@ -124,24 +108,16 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 
 		String filePath = getFilePath(mountEs3Parameter.getVolumeName());
 
-		boolean isconnect = JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command, filePath);
+		JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command, filePath);
 
-		// 判断是否连接交换机
-		if (!isconnect) {
+		try {
 
-			try {
+			String resultStr = FileUtils.readFileToString(new File(filePath));
 
-				String resultStr = FileUtils.readFileToString(new File(filePath));
+			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.mount);
 
-				result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.mount);
-
-			} catch (IOException e) {
-				result.setDefaultError();
-			}
-
-		} else {
-			result.setCode(WSResult.SYSTEM_ERROR);
-			result.setMessage("交换机未连接,请联系管理员");
+		} catch (IOException e) {
+			result.setDefaultError();
 		}
 
 		return result;
@@ -157,24 +133,16 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 
 		String filePath = getFilePath(umountEs3Parameter.getClientIPaddress());
 
-		boolean isconnect = JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command, filePath);
+		JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command, filePath);
 
-		// 判断是否连接交换机
-		if (!isconnect) {
+		try {
 
-			try {
+			String resultStr = FileUtils.readFileToString(new File(filePath));
 
-				String resultStr = FileUtils.readFileToString(new File(filePath));
+			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.umount);
 
-				result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.umount);
-
-			} catch (IOException e) {
-				result.setDefaultError();
-			}
-
-		} else {
-			result.setCode(WSResult.SYSTEM_ERROR);
-			result.setMessage("交换机未连接,请联系管理员");
+		} catch (IOException e) {
+			result.setDefaultError();
 		}
 
 		return result;
@@ -190,24 +158,16 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 
 		String filePath = getFilePath(remountEs3Parameter.getVolumeName());
 
-		boolean isconnect = JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command, filePath);
+		JschUtil.execCommand(STORAGE_IP, STORAGE_USERNAME, STORAGE_PASSWORD, command, filePath);
 
-		// 判断是否连接交换机
-		if (!isconnect) {
+		try {
 
-			try {
+			String resultStr = FileUtils.readFileToString(new File(filePath));
 
-				String resultStr = FileUtils.readFileToString(new File(filePath));
+			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.remount);
 
-				result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.remount);
-
-			} catch (IOException e) {
-				result.setDefaultError();
-			}
-
-		} else {
-			result.setCode(WSResult.SYSTEM_ERROR);
-			result.setMessage("交换机未连接,请联系管理员");
+		} catch (IOException e) {
+			result.setDefaultError();
 		}
 
 		return result;

@@ -33,7 +33,7 @@ public class StorageTest extends TestCase {
 		assertEquals(result.getCode(), "0");
 	}
 
-	// @Test
+	@Test
 	public void deleteEs3Test() {
 		WSResult result = service.deleteEs3(StorageTestData.randomDeleteEs3Parameter());
 
@@ -41,7 +41,7 @@ public class StorageTest extends TestCase {
 		assertEquals(result.getCode(), "0");
 	}
 
-	// @Test
+	@Test
 	public void mountEs3Test() {
 		WSResult result = service.mountEs3(StorageTestData.randomMountEs3Parameter());
 
@@ -49,7 +49,7 @@ public class StorageTest extends TestCase {
 		assertEquals(result.getCode(), "0");
 	}
 
-	// @Test
+	@Test
 	public void umountEs3Test() {
 		WSResult result = service.umountEs3(StorageTestData.randomUmountEs3Parameter());
 
@@ -57,7 +57,7 @@ public class StorageTest extends TestCase {
 		assertEquals(result.getCode(), "0");
 	}
 
-	// @Test
+	@Test
 	public void remountEs3Test() {
 		WSResult result = service.remountEs3(StorageTestData.randomRemountEs3Parameter());
 

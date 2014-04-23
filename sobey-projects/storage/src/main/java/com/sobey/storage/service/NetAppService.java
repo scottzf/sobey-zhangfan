@@ -25,7 +25,7 @@ public class NetAppService {
 	 * eg:
 	 * 
 	 * <pre>
-	 *  /root/sc/createvol.sh liukai 20 10.10.1.6
+	 *  /root/sc/create.sh liukai 20 10.10.1.6
 	 * </pre>
 	 * 
 	 * @param parameter
@@ -34,7 +34,7 @@ public class NetAppService {
 	 */
 	public String createEs3(CreateEs3Parameter parameter) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("/root/sc/createvol.sh ").append(parameter.getVolumeName()).append(" ")
+		sb.append("/root/sc/create.sh ").append(parameter.getVolumeName()).append(" ")
 				.append(parameter.getVolumeSize()).append(" ").append(parameter.getClientIPaddress()).append(" \n");
 		return sb.toString();
 	}
@@ -44,7 +44,7 @@ public class NetAppService {
 	 * eg:
 	 * 
 	 * <pre>
-	 * /root/sc/delvol.sh liukai
+	 * /root/sc/del.sh liukai
 	 * </pre>
 	 * 
 	 * @param parameter
@@ -53,7 +53,7 @@ public class NetAppService {
 	 */
 	public String deleteEs3(DeleteEs3Parameter parameter) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("/root/sc/delvol.sh ").append(parameter.getVolumeName()).append(" \n");
+		sb.append("/root/sc/del.sh ").append(parameter.getVolumeName()).append(" \n");
 		return sb.toString();
 	}
 

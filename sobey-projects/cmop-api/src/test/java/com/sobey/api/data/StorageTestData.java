@@ -17,7 +17,7 @@ public class StorageTestData {
 
 		parameter.setVolumeName("liukai");
 		parameter.setVolumeSize("20");
-		parameter.setClientIPaddress("10.10.1.42");
+		parameter.setClientIPaddress("10.10.2.42");
 
 		return parameter;
 	}
@@ -36,8 +36,8 @@ public class StorageTestData {
 		MountEs3Parameter parameter = new MountEs3Parameter();
 
 		parameter.setVolumeName("liukai");
-		parameter.setNetAppIPaddress("10.10.1.6");
-		parameter.setClientIPaddress("10.10.1.42");
+		parameter.setNetAppIPaddress("10.10.2.34");
+		parameter.setClientIPaddress("10.10.2.42");
 
 		return parameter;
 
@@ -47,7 +47,7 @@ public class StorageTestData {
 
 		UmountEs3Parameter parameter = new UmountEs3Parameter();
 
-		parameter.setClientIPaddress("10.10.1.42");
+		parameter.setClientIPaddress("10.10.2.42");
 
 		return parameter;
 	}
@@ -59,13 +59,13 @@ public class StorageTestData {
 		parameter.setVolumeName("liukai");
 
 		List<String> beforeClientIPaddress = new ArrayList<String>();
-		beforeClientIPaddress.add("10.10.1.6");
+		beforeClientIPaddress.add("10.10.2.34");
 		beforeClientIPaddress.add("10.10.1.42");
 
 		List<String> afterClientIPaddress = new ArrayList<String>();
-		afterClientIPaddress.add("10.10.1.6");
-		afterClientIPaddress.add("10.10.1.41");
-		afterClientIPaddress.add("10.10.1.42");
+		afterClientIPaddress.add("10.10.2.34");
+		afterClientIPaddress.add("10.10.2.41");
+		afterClientIPaddress.add("10.10.2.42");
 
 		parameter.getBeforeClientIPaddress().addAll(beforeClientIPaddress);
 		parameter.getAfterClientIPaddress().addAll(afterClientIPaddress);
