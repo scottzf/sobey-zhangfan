@@ -26,7 +26,7 @@
 * 执行generate-sources.bat,即可生成webservice客户端代码
 
 ###需要导入netscaler的SDK包
-* mvn install:install-file -Dfile=D:\nitro.jar -DgroupId=com.citrix.netscaler -DartifactId=nitro -Dversion=9.3 -Dpackaging=jar
+* mvn install:install-file -Dfile=D:\nitro.jar -DgroupId=com.citrix.netscaler -DartifactId=nitro -Dversion=10.1 -Dpackaging=jar
 
 ###需要导入vijava的jar包
 * mvn install:install-file -Dfile=D:\vijava55b20130927.jar -DgroupId=com.vmware -DartifactId=vijava -Dversion=55b20130927 -Dpackaging=jar
