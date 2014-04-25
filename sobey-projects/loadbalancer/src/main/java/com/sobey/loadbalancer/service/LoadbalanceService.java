@@ -3,25 +3,29 @@ package com.sobey.loadbalancer.service;
 import java.util.HashSet;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.citrix.netscaler.nitro.exception.nitro_exception;
-import com.citrix.netscaler.nitro.resource.base.base_response;
 import com.citrix.netscaler.nitro.resource.config.basic.server;
 import com.citrix.netscaler.nitro.resource.config.basic.service;
+import com.citrix.netscaler.nitro.resource.config.basic.servicegroup;
 import com.citrix.netscaler.nitro.resource.config.basic.servicegroup_servicegroupmember_binding;
-import com.citrix.netscaler.nitro.resource.config.lb.lbmonitor;
 import com.citrix.netscaler.nitro.resource.config.lb.lbvserver;
 import com.citrix.netscaler.nitro.resource.config.lb.lbvserver_service_binding;
 import com.citrix.netscaler.nitro.resource.config.ns.nsconfig;
 import com.citrix.netscaler.nitro.service.nitro_service;
+import com.citrix.netscaler.nitro.service.nitro_service.OnerrorEnum;
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.loadbalancer.webservice.response.dto.ELBParameter;
 import com.sobey.loadbalancer.webservice.response.dto.ELBPolicyParameter;
 import com.sobey.loadbalancer.webservice.response.dto.ELBPublicIPParameter;
 
 @Service
-public class NitroService {
+public class LoadbalanceService {
+
+	private static Logger logger = LoggerFactory.getLogger(LoadbalanceService.class);
 
 	/**
 	 * 加载applicationContext.propertie文件
@@ -85,122 +89,133 @@ public class NitroService {
 	 */
 	public boolean createElb(ELBParameter elbParameter) {
 
-		nitro_service ns_session = null;
+		nitro_service client = null;
 
 		try {
 
-			ns_session = new nitro_service(LOADBALANCER_IP, LOADBALANCER_PROTOCOL); // 创建nitro的session
-			ns_session.login(LOADBALANCER_USERNAME, LOADBALANCER_PASSWORD);// 登录
-
-			nsconfig.save(ns_session);
+			client = new nitro_service(LOADBALANCER_IP, LOADBALANCER_PROTOCOL); // 创建nitro的session
+			client.set_credential(LOADBALANCER_USERNAME, LOADBALANCER_PASSWORD);
+			client.set_onerror(OnerrorEnum.CONTINUE);
+			client.set_warning(true);
+			client.set_certvalidation(false);
+			client.set_hostnameverification(false);
+			client.login();
 
 			// Step.1 创建Virtual Servers
-			createlbvserver(ns_session, elbParameter);
+			add_lbvserver(client, elbParameter);
 
-			// // Step.2 创建Servers
-			createServicegroupServicegroupmemberBinding(ns_session, elbParameter);
+			// 添加servicegroup,但只用于初始化,只需执行一次即可
+			// add_servicegroup(client, elbParameter);
 
-			// Step.3 创建Services
-			createService(ns_session, elbParameter);
+			// Step.2 创建Servers
+			bind_servicegroup_server(client, elbParameter);
 
-			// Step.4 创建lbvserverServiceBinding
-			createlbvserverServiceBinding(ns_session, elbParameter);
+			// // Step.3 创建Service
+			add_service(client, elbParameter);
 
-			// Step.5 绑定 lb monitor
-			createlbmonitor(ns_session, elbParameter);
+			// // Step.4 创建lbvserverServiceBinding
+			addlbvserver_bindings(client, elbParameter);
 
-			ns_session.logout();// 登出
+			// Step.5 保存配置
+			saveconfig(client);
+
+			client.logout();// 登出
 
 		} catch (nitro_exception e) {
-			System.out.println("设备链接失败");
+			logger.info("Exception::createElb::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
 			return false;
 		} catch (Exception e) {
-			System.out.println("登录失败");
+			logger.info("Exception::createElb::message=" + e);
 			return false;
 		}
-		ns_session.set_timeout(3600);
 		return true;
 	}
 
 	public boolean deleteElb(ELBParameter elbParameter) {
 
-		nitro_service ns_session = null;
+		nitro_service client = null;
 
 		try {
 
-			ns_session = new nitro_service(LOADBALANCER_IP, LOADBALANCER_PROTOCOL); // 创建nitro的session
-			ns_session.login(LOADBALANCER_USERNAME, LOADBALANCER_PASSWORD);// 登录
-
-			nsconfig.save(ns_session);
+			client = new nitro_service(LOADBALANCER_IP, LOADBALANCER_PROTOCOL); // 创建nitro的session
+			client.set_credential(LOADBALANCER_USERNAME, LOADBALANCER_PASSWORD);
+			client.set_onerror(OnerrorEnum.CONTINUE);
+			client.set_warning(true);
+			client.set_certvalidation(false);
+			client.set_hostnameverification(false);
+			client.login();
 
 			// step.1 删除service
-			deleteService(ns_session, elbParameter);
+			rm_service(client, elbParameter);
 
 			// step.2 删除lbvserver
-			deletelbvserver(ns_session, elbParameter);
+			rm_lbvserver(client, elbParameter);
 
 			// step.3 删除server
-			deleteServer(ns_session, elbParameter);
+			rm_server(client, elbParameter);
 
-			// step.4 删除lb monitor
-			deletemonitor(ns_session, elbParameter);
+			// Step.5 保存配置
+			saveconfig(client);
 
-			ns_session.logout();// 登出
+			client.logout();// 登出
 
 		} catch (nitro_exception e) {
-			System.out.println("设备链接失败");
+			logger.info("Exception::deleteElb::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
 			return false;
 		} catch (Exception e) {
-			System.out.println("登录失败");
+			logger.info("Exception::deleteElb::message=" + e);
 			return false;
 		}
-		ns_session.set_timeout(3600);
 		return true;
 	}
 
 	/**
-	 * 删除lb monitor
+	 * 保存配置
 	 * 
-	 * @param ns_session
-	 * @param elbParameter
-	 * @throws Exception
+	 * @param service
 	 */
-	private void deletemonitor(nitro_service ns_session, ELBParameter elbParameter) throws Exception {
-		for (ELBPublicIPParameter ipParameter : elbParameter.getPublicIPs()) {
-			for (ELBPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
-				lbmonitor mon = new lbmonitor();
-				mon.set_monitorname(generateServiceName(ipParameter.getIpaddress(), policyParameter.getProtocolText(),
-						policyParameter.getSourcePort()));
-				mon.set_type(policyParameter.getProtocolText());
-				lbmonitor.delete(ns_session, mon);
-			}
+	private static void saveconfig(nitro_service service) {
+
+		try {
+			nsconfig.save(service);
+		} catch (nitro_exception e) {
+			logger.info("Exception::saveconfig::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::saveconfig::message=" + e);
 		}
+
 	}
 
 	/**
 	 * 删除server
 	 * 
-	 * @param ns_session
+	 * @param service
 	 * @param elbParameter
-	 * @throws Exception
 	 */
-	private void deleteServer(nitro_service ns_session, ELBParameter elbParameter) throws Exception {
-		for (ELBPublicIPParameter ipParameter : elbParameter.getPublicIPs()) {
-			server.delete(ns_session, ipParameter.getIpaddress());
+	private void rm_server(nitro_service service, ELBParameter elbParameter) {
+		try {
+
+			for (ELBPublicIPParameter ipParameter : elbParameter.getPublicIPs()) {
+				server.delete(service, ipParameter.getIpaddress());
+			}
+
+		} catch (nitro_exception e) {
+			logger.info("Exception::rm_server::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::rm_server::message=" + e);
 		}
 	}
 
 	/**
 	 * 删除lbvserver
 	 * 
-	 * @param ns_session
+	 * @param service
 	 * @param elbParameter
-	 * @throws Exception
 	 */
-	private void deletelbvserver(nitro_service ns_session, ELBParameter elbParameter) throws Exception {
+	private void rm_lbvserver(nitro_service service, ELBParameter elbParameter) {
 
-		HashSet<String> set = new HashSet<String>();
 		// 将重复的去掉
+		HashSet<String> set = new HashSet<String>();
 		for (ELBPublicIPParameter ipParameter : elbParameter.getPublicIPs()) {
 			for (ELBPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
 				set.add(generateServiceName(elbParameter.getVip(), policyParameter.getProtocolText(),
@@ -208,80 +223,84 @@ public class NitroService {
 			}
 		}
 
-		for (String serviceName : set) {
-			lbvserver.delete(ns_session, serviceName);
+		try {
+
+			for (String serviceName : set) {
+				lbvserver.delete(service, serviceName);
+			}
+
+		} catch (nitro_exception e) {
+			logger.info("Exception::rm_lbvserver::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::rm_lbvserver::message=" + e);
 		}
 	}
 
 	/**
 	 * 删除service
 	 * 
-	 * @param ns_session
+	 * @param ns_service
 	 * @param elbParameter
-	 * @throws Exception
 	 */
-	private void deleteService(nitro_service ns_session, ELBParameter elbParameter) throws Exception {
+	private void rm_service(nitro_service ns_service, ELBParameter elbParameter) {
 
-		for (ELBPublicIPParameter ipParameter : elbParameter.getPublicIPs()) {
-			for (ELBPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
-				service.delete(
-						ns_session,
-						generateServiceName(ipParameter.getIpaddress(), policyParameter.getProtocolText(),
-								policyParameter.getSourcePort()));
+		try {
+
+			for (ELBPublicIPParameter ipParameter : elbParameter.getPublicIPs()) {
+				for (ELBPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
+					service.delete(
+							ns_service,
+							generateServiceName(ipParameter.getIpaddress(), policyParameter.getProtocolText(),
+									policyParameter.getSourcePort()));
+				}
 			}
+
+		} catch (nitro_exception e) {
+			logger.info("Exception::rm_service::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::rm_service::message=" + e);
 		}
 	}
 
 	/**
-	 * 创建lbvserverServiceBinding
+	 * 绑定vserver和service
 	 * 
-	 * @param ns_session
+	 * @param service
 	 * @param elbParameter
-	 * @throws Exception
 	 */
-	private void createlbvserverServiceBinding(nitro_service ns_session, ELBParameter elbParameter) throws Exception {
-		for (ELBPublicIPParameter ipParameter : elbParameter.getPublicIPs()) {
-			for (ELBPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
-				lbvserver_service_binding bindsvc = new lbvserver_service_binding();
-				bindsvc = new lbvserver_service_binding();
-				bindsvc.set_name(generateServiceName(elbParameter.getVip(), policyParameter.getProtocolText(),
-						policyParameter.getSourcePort()));
-				bindsvc.set_servicename(generateServiceName(ipParameter.getIpaddress(),
-						policyParameter.getProtocolText(), policyParameter.getSourcePort()));
-				bindsvc.set_weight((long) 20);
+	private void addlbvserver_bindings(nitro_service service, ELBParameter elbParameter) {
 
-				lbvserver_service_binding.add(ns_session, bindsvc);
-			}
-		}
-	}
+		try {
+			for (ELBPublicIPParameter ipParameter : elbParameter.getPublicIPs()) {
+				for (ELBPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
 
-	/**
-	 * 绑定 lb monitor
-	 * 
-	 * @param ns_session
-	 * @param elbParameter
-	 * @throws Exception
-	 */
-	private void createlbmonitor(nitro_service ns_session, ELBParameter elbParameter) throws Exception {
-		for (ELBPublicIPParameter ipParameter : elbParameter.getPublicIPs()) {
-			for (ELBPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
-				lbmonitor monitor = new lbmonitor();
-				monitor.set_monitorname(generateServiceName(ipParameter.getIpaddress(),
-						policyParameter.getProtocolText(), policyParameter.getSourcePort()));
-				monitor.set_type(policyParameter.getProtocolText());
-				lbmonitor.add(ns_session, monitor);
+					lbvserver_service_binding bindsvc = new lbvserver_service_binding();
+
+					bindsvc.set_name(generateServiceName(elbParameter.getVip(), policyParameter.getProtocolText(),
+							policyParameter.getSourcePort()));
+					bindsvc.set_servicename(generateServiceName(ipParameter.getIpaddress(),
+							policyParameter.getProtocolText(), policyParameter.getSourcePort()));
+					bindsvc.set_weight((long) 30);
+
+					lbvserver_service_binding.add(service, bindsvc);
+				}
 			}
+
+		} catch (nitro_exception e) {
+			logger.info("Exception::addlbvserver_bindings::errorcode=" + e.getErrorCode() + ",message="
+					+ e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::addlbvserver_bindings::message=" + e);
 		}
 	}
 
 	/**
 	 * 创建Virtual Servers
 	 * 
-	 * @param ns_session
+	 * @param service
 	 * @param elbParameter
-	 * @throws Exception
 	 */
-	private static void createlbvserver(nitro_service ns_session, ELBParameter elbParameter) throws Exception {
+	private static void add_lbvserver(nitro_service service, ELBParameter elbParameter) {
 
 		// 将重复的去掉
 		HashSet<String> set = new HashSet<String>();
@@ -292,59 +311,105 @@ public class NitroService {
 			}
 		}
 
-		for (String serviceName : set) {
-			lbvserver newlb = new lbvserver();
-			newlb.set_name(serviceName);
-			newlb.set_servicetype(StringUtils.split(serviceName, "-")[1]);
-			newlb.set_ipv46(StringUtils.split(serviceName, "-")[0]);
-			newlb.set_port(Integer.valueOf(StringUtils.split(serviceName, "-")[2]));
-			newlb.set_persistencetype(LOADBALANCER_PERSISTENCETYPE);
-			newlb.set_lbmethod(LOADBALANCER_LBMETHOD);
-			newlb.set_clttimeout(Integer.valueOf(LOADBALANCER_CLTTIMEOUT));
-			lbvserver.add(ns_session, newlb);
+		try {
+
+			for (String serviceName : set) {
+				lbvserver obj = new lbvserver();
+				obj.set_name(serviceName);
+				obj.set_servicetype(StringUtils.split(serviceName, "-")[1]);
+				obj.set_ipv46(StringUtils.split(serviceName, "-")[0]);
+				obj.set_port(Integer.valueOf(StringUtils.split(serviceName, "-")[2]));
+				obj.set_persistencetype(LOADBALANCER_PERSISTENCETYPE);
+				obj.set_lbmethod(LOADBALANCER_LBMETHOD);
+				obj.set_clttimeout(Integer.valueOf(LOADBALANCER_CLTTIMEOUT));
+				lbvserver.add(service, obj);
+			}
+
+		} catch (nitro_exception e) {
+			logger.info("Exception::add_lbvserver::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::add_lbvserver::message=" + e);
 		}
+
 	}
 
 	/**
 	 * 创建Servers
 	 * 
-	 * @param ns_session
+	 * @param service
 	 * @param elbParameter
-	 * @throws Exception
 	 */
-	private static void createServicegroupServicegroupmemberBinding(nitro_service ns_session, ELBParameter elbParameter)
-			throws Exception {
+	private static void bind_servicegroup_server(nitro_service service, ELBParameter elbParameter) {
 
-		for (ELBPublicIPParameter ipParameter : elbParameter.getPublicIPs()) {
+		try {
 
-			servicegroup_servicegroupmember_binding obj = new servicegroup_servicegroupmember_binding();
-			obj.set_servicegroupname(LOADBALANCER_SERVICEGROUPNAME);
-			obj.set_ip(ipParameter.getIpaddress());
-			obj.set_port(Integer.valueOf(LOADBALANCER_DEFAULT_SERVER_PORT));
-			servicegroup_servicegroupmember_binding.add(ns_session, obj);
+			for (ELBPublicIPParameter ipParameter : elbParameter.getPublicIPs()) {
+
+				servicegroup_servicegroupmember_binding obj = new servicegroup_servicegroupmember_binding();
+				obj.set_servicegroupname(LOADBALANCER_SERVICEGROUPNAME);
+				obj.set_ip(ipParameter.getIpaddress());
+				obj.set_port(Integer.valueOf(LOADBALANCER_DEFAULT_SERVER_PORT));
+				servicegroup_servicegroupmember_binding.add(service, obj);
+			}
+
+		} catch (nitro_exception e) {
+			logger.info("Exception::bind_servicegroup_server::errorcode=" + e.getErrorCode() + ",message="
+					+ e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::bind_servicegroup_server::message=" + e);
 		}
+
 	}
 
 	/**
-	 * 创建gslb vserver
+	 * 添加servicegroup,但只用于初始化,只需执行一次即可
 	 * 
-	 * @param ns_session
+	 * @param service
 	 * @param elbParameter
-	 * @throws Exception
 	 */
 	@SuppressWarnings("unused")
-	private static void createService(nitro_service ns_session, ELBParameter elbParameter) throws Exception {
-		for (ELBPublicIPParameter ipParameter : elbParameter.getPublicIPs()) {
-			for (ELBPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
-				service svc = new service();
-				svc.set_name(generateServiceName(ipParameter.getIpaddress(), policyParameter.getProtocolText(),
-						policyParameter.getSourcePort()));
-				svc.set_ip(ipParameter.getIpaddress());
-				svc.set_port(policyParameter.getSourcePort());
-				svc.set_servicetype(policyParameter.getProtocolText());
-				base_response result = service.add(ns_session, svc);
-			}
+	private static void add_servicegroup(nitro_service service, ELBParameter elbParameter) {
+		try {
+			servicegroup grp = new servicegroup();
+			grp.set_servicegroupname(LOADBALANCER_SERVICEGROUPNAME);
+			grp.set_servicetype(servicegroup.servicetypeEnum.HTTP);
+			servicegroup.add(service, grp);
+		} catch (nitro_exception e) {
+			logger.info("Exception::add_servicegroup::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::add_servicegroup::message=" + e);
 		}
+
+	}
+
+	/**
+	 * 创建service
+	 * 
+	 * @param ns_service
+	 * @param elbParameter
+	 */
+	private static void add_service(nitro_service ns_service, ELBParameter elbParameter) {
+
+		try {
+			for (ELBPublicIPParameter ipParameter : elbParameter.getPublicIPs()) {
+				for (ELBPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
+
+					service svc = new service();
+					svc.set_name(generateServiceName(ipParameter.getIpaddress(), policyParameter.getProtocolText(),
+							policyParameter.getSourcePort()));
+					svc.set_ip(ipParameter.getIpaddress());
+					svc.set_port(policyParameter.getSourcePort());
+					svc.set_servicetype(policyParameter.getProtocolText());
+					service.add(ns_service, svc);
+
+				}
+			}
+		} catch (nitro_exception e) {
+			logger.info("Exception::add_service::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::add_service::message=" + e);
+		}
+
 	}
 
 	/**

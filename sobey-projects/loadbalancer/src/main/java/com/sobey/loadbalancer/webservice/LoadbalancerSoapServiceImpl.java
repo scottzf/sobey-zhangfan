@@ -7,7 +7,7 @@ import org.apache.cxf.feature.Features;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sobey.loadbalancer.constans.WsConstants;
-import com.sobey.loadbalancer.service.NitroService;
+import com.sobey.loadbalancer.service.LoadbalanceService;
 import com.sobey.loadbalancer.webservice.response.dto.ELBParameter;
 import com.sobey.loadbalancer.webservice.response.result.WSResult;
 
@@ -16,7 +16,7 @@ import com.sobey.loadbalancer.webservice.response.result.WSResult;
 public class LoadbalancerSoapServiceImpl implements LoadbalancerSoapService {
 
 	@Autowired
-	public NitroService service;
+	public LoadbalanceService service;
 
 	@Override
 	public WSResult createELBByLoadbalancer(@WebParam(name = "elbParameter") ELBParameter elbParameter) {
