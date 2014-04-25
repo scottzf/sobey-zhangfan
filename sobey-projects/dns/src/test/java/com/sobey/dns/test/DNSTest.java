@@ -26,15 +26,15 @@ public class DNSTest extends TestCase {
 	private NitroService service;
 
 	@Test
-	public void createDns() {
+	public void createGSLB() {
 		DNSParameter parameter = TestData.randomDNSParameter();
-		assertTrue(service.createDns(parameter));
+		assertTrue(service.createGSLB(parameter));
 	}
 
 	@Test
-	public void deleteDns() {
+	public void deleteGSLB() {
 		DNSParameter parameter = TestData.randomDNSParameter();
-		assertTrue(service.deleteDns(parameter));
+		assertTrue(service.deleteGSLB(parameter));
 	}
 
 }

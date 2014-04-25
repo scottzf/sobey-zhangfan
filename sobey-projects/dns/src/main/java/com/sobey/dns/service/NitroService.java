@@ -1,17 +1,18 @@
 package com.sobey.dns.service;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.citrix.netscaler.nitro.exception.nitro_exception;
-import com.citrix.netscaler.nitro.resource.config.basic.server;
-import com.citrix.netscaler.nitro.resource.config.basic.servicegroup_servicegroupmember_binding;
 import com.citrix.netscaler.nitro.resource.config.gslb.gslbservice;
 import com.citrix.netscaler.nitro.resource.config.gslb.gslbvserver;
 import com.citrix.netscaler.nitro.resource.config.gslb.gslbvserver_domain_binding;
 import com.citrix.netscaler.nitro.resource.config.gslb.gslbvserver_gslbservice_binding;
 import com.citrix.netscaler.nitro.resource.config.ns.nsconfig;
 import com.citrix.netscaler.nitro.service.nitro_service;
+import com.citrix.netscaler.nitro.service.nitro_service.OnerrorEnum;
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.dns.webservice.response.dto.DNSParameter;
 import com.sobey.dns.webservice.response.dto.DNSPolicyParameter;
@@ -19,6 +20,8 @@ import com.sobey.dns.webservice.response.dto.DNSPublicIPParameter;
 
 @Service
 public class NitroService {
+
+	private static Logger logger = LoggerFactory.getLogger(NitroService.class);
 
 	/**
 	 * 加载applicationContext.propertie文件
@@ -48,11 +51,13 @@ public class NitroService {
 	/**
 	 * server默认端口 80
 	 */
+	@SuppressWarnings("unused")
 	private static final String DNS_DEFAULT_SERVER_PORT = DNS_LOADER.getProperty("DNS_DEFAULT_SERVER_PORT");
 
 	/**
 	 * servicegroupname
 	 */
+	@SuppressWarnings("unused")
 	private static final String DNS_SERVICEGROUPNAME = DNS_LOADER.getProperty("DNS_SERVICEGROUPNAME");
 
 	/**
@@ -101,80 +106,87 @@ public class NitroService {
 	private static final String DNS_APPFLOWLOG = DNS_LOADER.getProperty("DNS_APPFLOWLOG");
 
 	/**
-	 * 创建DNS
+	 * 创建域名类型为GSLB的DNS
 	 * 
 	 * @param dnsParameter
 	 * @return
 	 */
-	public boolean createDns(DNSParameter dnsParameter) {
+	public boolean createGSLB(DNSParameter dnsParameter) {
 
-		nitro_service ns_session = null;
+		nitro_service client = null;
 
 		try {
 
-			ns_session = new nitro_service(DNS_IP, DNS_PROTOCOL); // 创建nitro的session
-			ns_session.login(DNS_USERNAME, DNS_PASSWORD);// 登录
+			client = new nitro_service(DNS_IP, DNS_PROTOCOL); // 创建nitro的session
+			client.set_credential(DNS_USERNAME, DNS_PASSWORD);
+			client.set_onerror(OnerrorEnum.CONTINUE);
+			client.set_warning(true);
+			client.set_certvalidation(false);
+			client.set_hostnameverification(false);
+			client.login();
 
-			nsconfig.save(ns_session);
+			// Step.1 创建vserver
+			add_gslb_vserver(client, dnsParameter);
 
-			// Step.1 创建Servers
-			createSevers(ns_session, dnsParameter);
+			// Step.2 创建Service
+			add_gslb_service(client, dnsParameter);
 
-			// Step.2 创建gslb service
-			createGslbService(ns_session, dnsParameter);
-
-			// Step.3 创建gslb vserver
-			createGslbvserver(ns_session, dnsParameter);
+			// Step.3 将vserver和serviceName绑定
+			bind_gslbvserver_gslbservice(client, dnsParameter);
 
 			// Step.4 将vserver和domainName绑定
-			createGslbvserverDomainBinding(ns_session, dnsParameter);
+			bind_gslbvs_domain(client, dnsParameter);
 
-			// Step.5 将vserver和serviceName绑定
-			createGslbvserverGslbserviceBinding(ns_session, dnsParameter);
+			// Step.5 保存配置
+			saveconfig(client);
 
-			ns_session.logout();// 登出
+			client.logout();// 登出
 
 		} catch (nitro_exception e) {
-			System.out.println("设备链接失败");
+			logger.info("Exception::createGSLB::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
 			return false;
 		} catch (Exception e) {
-			System.out.println("登录失败");
+			logger.info("Exception::createGSLB::message=" + e);
 			return false;
 		}
-		ns_session.set_timeout(3600);
 		return true;
 	}
 
-	public boolean deleteDns(DNSParameter dnsParameter) {
+	public boolean deleteGSLB(DNSParameter dnsParameter) {
 
-		nitro_service ns_session = null;
+		nitro_service client = null;
 
 		try {
 
-			ns_session = new nitro_service(DNS_IP, DNS_PROTOCOL); // 创建nitro的session
-			ns_session.login(DNS_USERNAME, DNS_PASSWORD);// 登录
+			client = new nitro_service(DNS_IP, DNS_PROTOCOL); // 创建nitro的session
+			client.set_credential(DNS_USERNAME, DNS_PASSWORD);
+			client.set_onerror(OnerrorEnum.CONTINUE);
+			client.set_warning(true);
+			client.set_certvalidation(false);
+			client.set_hostnameverification(false);
+			client.login();
 
-			nsconfig.save(ns_session);
-
-			// Step.1 删除gslb Service
-			deleteGslbService(ns_session, dnsParameter);
+			// Step.1 解除vserver和domainName绑定
+			unbind_gslbvserver_gslbservice(client, dnsParameter);
 
 			// Step.2 删除gslb vserver
-			deleteGslbvserver(ns_session, dnsParameter);
+			rm_gslb_vserver(client, dnsParameter);
 
-			// Step.3 删除lb Servers
-			deleteServers(ns_session, dnsParameter);
+			// Step.3 删除gslb Service
+			rm_gslb_service(client, dnsParameter);
 
-			ns_session.logout();// 登出
+			// Step.4 保存配置
+			saveconfig(client);
+
+			client.logout();// 登出
 
 		} catch (nitro_exception e) {
-			System.out.println("设备链接失败");
+			logger.info("Exception::deleteGSLB::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
 			return false;
 		} catch (Exception e) {
-			System.out.println("登录失败");
+			logger.info("Exception::deleteGSLB::message=" + e);
 			return false;
 		}
-		ns_session.set_timeout(3600);
 		return true;
 	}
 
@@ -185,14 +197,23 @@ public class NitroService {
 	 * @param dnsParameter
 	 * @throws Exception
 	 */
-	private static void deleteGslbService(nitro_service ns_session, DNSParameter dnsParameter) throws Exception {
-		for (DNSPublicIPParameter ipParameter : dnsParameter.getPublicIPs()) {
-			for (DNSPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
-				gslbservice.delete(ns_session,
-						gslbservice.get(ns_session, generateServiceName(ipParameter, policyParameter)));
+	private static void rm_gslb_service(nitro_service service, DNSParameter dnsParameter) throws Exception {
 
+		try {
+
+			for (DNSPublicIPParameter ipParameter : dnsParameter.getPublicIPs()) {
+				for (DNSPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
+					gslbservice.delete(service,
+							gslbservice.get(service, generateServiceName(ipParameter, policyParameter)));
+				}
 			}
+
+		} catch (nitro_exception e) {
+			logger.info("Exception::rm_gslb_service::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::rm_gslb_service::message=" + e);
 		}
+
 	}
 
 	/**
@@ -202,38 +223,18 @@ public class NitroService {
 	 * @param dnsParameter
 	 * @throws Exception
 	 */
-	private static void deleteGslbvserver(nitro_service ns_session, DNSParameter dnsParameter) throws Exception {
-		gslbvserver.delete(ns_session, gslbvserver.get(ns_session, dnsParameter.getDomianName()));
-	}
+	private static void rm_gslb_vserver(nitro_service service, DNSParameter dnsParameter) {
 
-	/**
-	 * 删除lb Servers
-	 * 
-	 * @param ns_session
-	 * @param dnsParameter
-	 * @throws Exception
-	 */
-	private static void deleteServers(nitro_service ns_session, DNSParameter dnsParameter) throws Exception {
-		for (DNSPublicIPParameter ipParameter : dnsParameter.getPublicIPs()) {
-			server.delete(ns_session, ipParameter.getIpaddress());
-		}
-	}
+		try {
 
-	/**
-	 * 创建Servers
-	 * 
-	 * @param ns_session
-	 * @param serverIP
-	 * @throws Exception
-	 */
-	private static void createSevers(nitro_service ns_session, DNSParameter dnsParameter) throws Exception {
-		for (DNSPublicIPParameter ipParameter : dnsParameter.getPublicIPs()) {
-			servicegroup_servicegroupmember_binding obj = new servicegroup_servicegroupmember_binding();
-			obj.set_servicegroupname(DNS_SERVICEGROUPNAME);
-			obj.set_port(Integer.valueOf(DNS_DEFAULT_SERVER_PORT));
-			obj.set_ip(ipParameter.getIpaddress());
-			servicegroup_servicegroupmember_binding.add(ns_session, obj);
+			gslbvserver.delete(service, gslbvserver.get(service, dnsParameter.getDomianName()));
+
+		} catch (nitro_exception e) {
+			logger.info("Exception::rm_gslb_vserver::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::rm_gslb_vserver::message=" + e);
 		}
+
 	}
 
 	/**
@@ -243,31 +244,39 @@ public class NitroService {
 	 * @param dnsParameter
 	 * @throws Exception
 	 */
-	private static void createGslbService(nitro_service ns_session, DNSParameter dnsParameter) throws Exception {
+	private static void add_gslb_service(nitro_service service, DNSParameter dnsParameter) throws Exception {
 
-		for (DNSPublicIPParameter ipParameter : dnsParameter.getPublicIPs()) {
+		try {
 
-			for (DNSPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
+			for (DNSPublicIPParameter ipParameter : dnsParameter.getPublicIPs()) {
 
-				gslbservice gsvc = new gslbservice();
+				for (DNSPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
 
-				gsvc.set_servername(ipParameter.getIpaddress());
-				gsvc.set_servicename(generateServiceName(ipParameter, policyParameter));
-				gsvc.set_ipaddress(ipParameter.getIpaddress());
-				gsvc.set_servicetype(policyParameter.getProtocolText());
-				gsvc.set_publicip(ipParameter.getIpaddress());
-				gsvc.set_port(policyParameter.getTargetPort());
-				gsvc.set_sitename(generateSiteName(ipParameter));
-				gsvc.set_maxclient(Integer.valueOf(DNS_MAXCLIENT));
-				gsvc.set_clttimeout(Integer.valueOf(DNS_CLTTIMEOUT));
-				gsvc.set_svrtimeout(Integer.valueOf(DNS_SVRTIMEOUT));
-				gsvc.set_downstateflush(DNS_DOWNSTATEFLUSH);
+					gslbservice gsvc = new gslbservice();
 
-				gslbservice.add(ns_session, gsvc);
+					gsvc.set_servicename(generateServiceName(ipParameter, policyParameter));
+					gsvc.set_ip(ipParameter.getIpaddress());
+					gsvc.set_maxclient(Integer.valueOf(DNS_MAXCLIENT));
+					gsvc.set_port(policyParameter.getTargetPort());
+					gsvc.set_sitename(generateSiteName(ipParameter));
+					gsvc.set_servicetype(policyParameter.getProtocolText());
+
+					gsvc.set_clttimeout(Integer.valueOf(DNS_CLTTIMEOUT));
+					gsvc.set_svrtimeout(Integer.valueOf(DNS_SVRTIMEOUT));
+					gsvc.set_downstateflush(DNS_DOWNSTATEFLUSH);
+
+					gslbservice.add(service, gsvc);
+
+				}
 
 			}
 
+		} catch (nitro_exception e) {
+			logger.info("Exception::add_gslb_service::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::add_gslb_service::message=" + e);
 		}
+
 	}
 
 	/**
@@ -277,7 +286,7 @@ public class NitroService {
 	 * @param dnsParameter
 	 * @throws Exception
 	 */
-	private static void createGslbvserver(nitro_service ns_session, DNSParameter dnsParameter) throws Exception {
+	private static void add_gslb_vserver(nitro_service service, DNSParameter dnsParameter) throws Exception {
 
 		// vserver协议必须和service的协议相同,
 		String servicetype = "";
@@ -287,13 +296,41 @@ public class NitroService {
 		}
 
 		gslbvserver gv = new gslbvserver();
-		gv.set_name(dnsParameter.getDomianName());
-		gv.set_servicetype(servicetype);
-		gv.set_lbmethod(DNS_LBMETHOD);
-		gv.set_backuplbmethod(DNS_BACKUPLBMETHOD);
-		gv.set_tolerance(Integer.valueOf(DNS_TOLERANCE));
-		gv.set_appflowlog(DNS_APPFLOWLOG);
-		gslbvserver.add(ns_session, gv);
+
+		try {
+
+			gv.set_name(dnsParameter.getDomianName());
+			gv.set_servicetype(servicetype);
+			gv.set_lbmethod(DNS_LBMETHOD);
+			gv.set_backuplbmethod(DNS_BACKUPLBMETHOD);
+			gv.set_tolerance(Integer.valueOf(DNS_TOLERANCE));
+			gv.set_appflowlog(DNS_APPFLOWLOG);
+
+			gslbvserver.add(service, gv);
+
+		} catch (nitro_exception e) {
+			logger.info("Exception::add_gslb_vserver::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::add_gslb_vserver::message=" + e);
+		}
+
+	}
+
+	/**
+	 * 保存配置
+	 * 
+	 * @param service
+	 */
+	private static void saveconfig(nitro_service service) {
+
+		try {
+			nsconfig.save(service);
+		} catch (nitro_exception e) {
+			logger.info("Exception::saveconfig::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::saveconfig::message=" + e);
+		}
+
 	}
 
 	/**
@@ -303,13 +340,46 @@ public class NitroService {
 	 * @param dnsParameter
 	 * @throws Exception
 	 */
-	private static void createGslbvserverDomainBinding(nitro_service ns_session, DNSParameter dnsParameter)
-			throws Exception {
-		gslbvserver_domain_binding gd = new gslbvserver_domain_binding();
-		gd.set_name(dnsParameter.getDomianName());
-		gd.set_domainname(dnsParameter.getDomianName());
-		gd.set_ttl(Integer.valueOf(DNS_TTL));
-		gslbvserver_domain_binding.add(ns_session, gd);
+	private static void bind_gslbvs_domain(nitro_service service, DNSParameter dnsParameter) throws Exception {
+
+		try {
+			gslbvserver_domain_binding obj = new gslbvserver_domain_binding();
+			obj.set_name(dnsParameter.getDomianName());
+			obj.set_domainname(dnsParameter.getDomianName());
+			obj.set_ttl(Integer.valueOf(DNS_TTL));
+			gslbvserver_domain_binding.add(service, obj);
+		} catch (nitro_exception e) {
+			logger.info("Exception::bind_gslbvs_domain::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::bind_gslbvs_domain::message=" + e);
+		}
+
+	}
+
+	/**
+	 * 解除vserver和domainName绑定
+	 * 
+	 * @param service
+	 * @param dnsParameter
+	 */
+	private static void unbind_gslbvserver_gslbservice(nitro_service service, DNSParameter dnsParameter) {
+
+		try {
+			for (DNSPublicIPParameter ipParameter : dnsParameter.getPublicIPs()) {
+				for (DNSPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
+					gslbvserver_gslbservice_binding obj = new gslbvserver_gslbservice_binding();
+					obj.set_name(dnsParameter.getDomianName());
+					obj.set_servicename(generateServiceName(ipParameter, policyParameter));
+					gslbvserver_gslbservice_binding.delete(service, obj);
+				}
+			}
+
+		} catch (nitro_exception e) {
+			logger.info("Exception::unbind_gslbvserver_gslbservice::errorcode=" + e.getErrorCode() + ",message="
+					+ e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::unbind_gslbvserver_gslbservice::message=" + e);
+		}
 	}
 
 	/**
@@ -319,24 +389,26 @@ public class NitroService {
 	 * @param dnsParameter
 	 * @throws Exception
 	 */
-	private static void createGslbvserverGslbserviceBinding(nitro_service ns_session, DNSParameter dnsParameter)
-			throws Exception {
+	private static void bind_gslbvserver_gslbservice(nitro_service service, DNSParameter dnsParameter) throws Exception {
 
-		for (DNSPublicIPParameter ipParameter : dnsParameter.getPublicIPs()) {
+		try {
+			for (DNSPublicIPParameter ipParameter : dnsParameter.getPublicIPs()) {
 
-			for (DNSPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
-
-				gslbvserver_gslbservice_binding gs = new gslbvserver_gslbservice_binding();
-
-				gs = new gslbvserver_gslbservice_binding();
-				gs.set_servicename(generateServiceName(ipParameter, policyParameter));
-				gs.set_name(dnsParameter.getDomianName());
-				gs.set_weight(1);
-
-				gslbvserver_gslbservice_binding.add(ns_session, gs);
-
+				for (DNSPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
+					gslbvserver_gslbservice_binding obj = new gslbvserver_gslbservice_binding();
+					obj.set_name(dnsParameter.getDomianName());
+					obj.set_servicename(generateServiceName(ipParameter, policyParameter));
+					gslbvserver_gslbservice_binding.add(service, obj);
+				}
 			}
+
+		} catch (nitro_exception e) {
+			logger.info("Exception::bind_gslbvserver_gslbservice::errorcode=" + e.getErrorCode() + ",message="
+					+ e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::bind_gslbvserver_gslbservice::message=" + e);
 		}
+
 	}
 
 	/**

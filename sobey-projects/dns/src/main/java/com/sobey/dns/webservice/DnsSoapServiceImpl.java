@@ -21,7 +21,7 @@ public class DnsSoapServiceImpl implements DnsSoapService {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.createDns(dnsParameter);
+		boolean falg = service.createGSLB(dnsParameter);
 
 		if (!falg) {
 			result.setError(WSResult.SYSTEM_ERROR, "DNS创建失败");
@@ -35,7 +35,7 @@ public class DnsSoapServiceImpl implements DnsSoapService {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.deleteDns(dnsParameter);
+		boolean falg = service.deleteGSLB(dnsParameter);
 
 		if (!falg) {
 			result.setError(WSResult.SYSTEM_ERROR, "DNS删除失败");
