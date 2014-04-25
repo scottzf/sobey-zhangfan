@@ -6,7 +6,7 @@ import javax.jws.WebService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sobey.dns.constans.WsConstants;
-import com.sobey.dns.service.NitroService;
+import com.sobey.dns.service.DnsService;
 import com.sobey.dns.webservice.response.dto.DNSParameter;
 import com.sobey.dns.webservice.response.result.WSResult;
 
@@ -14,7 +14,7 @@ import com.sobey.dns.webservice.response.result.WSResult;
 public class DnsSoapServiceImpl implements DnsSoapService {
 
 	@Autowired
-	public NitroService service;
+	public DnsService service;
 
 	@Override
 	public WSResult createDNSByDNS(@WebParam(name = "dnsParameter") DNSParameter dnsParameter) {

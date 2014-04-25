@@ -19,9 +19,9 @@ import com.sobey.dns.webservice.response.dto.DNSPolicyParameter;
 import com.sobey.dns.webservice.response.dto.DNSPublicIPParameter;
 
 @Service
-public class NitroService {
+public class DnsService {
 
-	private static Logger logger = LoggerFactory.getLogger(NitroService.class);
+	private static Logger logger = LoggerFactory.getLogger(DnsService.class);
 
 	/**
 	 * 加载applicationContext.propertie文件
