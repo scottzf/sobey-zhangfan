@@ -193,11 +193,10 @@ public class DnsService {
 	/**
 	 * 删除gslb Service
 	 * 
-	 * @param ns_session
+	 * @param service
 	 * @param dnsParameter
-	 * @throws Exception
 	 */
-	private static void rm_gslb_service(nitro_service service, DNSParameter dnsParameter) throws Exception {
+	private static void rm_gslb_service(nitro_service service, DNSParameter dnsParameter) {
 
 		try {
 
@@ -219,9 +218,8 @@ public class DnsService {
 	/**
 	 * 删除gslb vserver
 	 * 
-	 * @param ns_session
+	 * @param service
 	 * @param dnsParameter
-	 * @throws Exception
 	 */
 	private static void rm_gslb_vserver(nitro_service service, DNSParameter dnsParameter) {
 
@@ -240,11 +238,10 @@ public class DnsService {
 	/**
 	 * 创建gslb service
 	 * 
-	 * @param ns_session
+	 * @param service
 	 * @param dnsParameter
-	 * @throws Exception
 	 */
-	private static void add_gslb_service(nitro_service service, DNSParameter dnsParameter) throws Exception {
+	private static void add_gslb_service(nitro_service service, DNSParameter dnsParameter) {
 
 		try {
 
@@ -282,11 +279,10 @@ public class DnsService {
 	/**
 	 * 创建gslb vserver
 	 * 
-	 * @param ns_session
+	 * @param service
 	 * @param dnsParameter
-	 * @throws Exception
 	 */
-	private static void add_gslb_vserver(nitro_service service, DNSParameter dnsParameter) throws Exception {
+	private static void add_gslb_vserver(nitro_service service, DNSParameter dnsParameter) {
 
 		// vserver协议必须和service的协议相同,
 		String servicetype = "";
@@ -336,11 +332,10 @@ public class DnsService {
 	/**
 	 * 将vserver和domainName绑定
 	 * 
-	 * @param ns_session
+	 * @param service
 	 * @param dnsParameter
-	 * @throws Exception
 	 */
-	private static void bind_gslbvs_domain(nitro_service service, DNSParameter dnsParameter) throws Exception {
+	private static void bind_gslbvs_domain(nitro_service service, DNSParameter dnsParameter) {
 
 		try {
 			gslbvserver_domain_binding obj = new gslbvserver_domain_binding();
@@ -385,11 +380,10 @@ public class DnsService {
 	/**
 	 * 将vserver和serviceName绑定
 	 * 
-	 * @param ns_session
+	 * @param service
 	 * @param dnsParameter
-	 * @throws Exception
 	 */
-	private static void bind_gslbvserver_gslbservice(nitro_service service, DNSParameter dnsParameter) throws Exception {
+	private static void bind_gslbvserver_gslbservice(nitro_service service, DNSParameter dnsParameter) {
 
 		try {
 			for (DNSPublicIPParameter ipParameter : dnsParameter.getPublicIPs()) {
