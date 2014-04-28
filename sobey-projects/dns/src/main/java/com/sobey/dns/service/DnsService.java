@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.citrix.netscaler.nitro.exception.nitro_exception;
 import com.citrix.netscaler.nitro.resource.config.gslb.gslbservice;
+import com.citrix.netscaler.nitro.resource.config.gslb.gslbservice_lbmonitor_binding;
 import com.citrix.netscaler.nitro.resource.config.gslb.gslbvserver;
 import com.citrix.netscaler.nitro.resource.config.gslb.gslbvserver_domain_binding;
 import com.citrix.netscaler.nitro.resource.config.gslb.gslbvserver_gslbservice_binding;
@@ -137,6 +138,9 @@ public class DnsService {
 			// Step.4 将vserver和domainName绑定
 			bind_gslbvs_domain(client, dnsParameter);
 
+			// Step.5 绑定监控
+			bind_gslbservice_lbmonitor(client, dnsParameter);
+
 			// Step.5 保存配置
 			saveconfig(client);
 
@@ -233,6 +237,39 @@ public class DnsService {
 			logger.info("Exception::rm_gslb_vserver::message=" + e);
 		}
 
+	}
+
+	/**
+	 * 绑定监控
+	 * 
+	 * @param service
+	 * @param dnsParameter
+	 */
+	private static void bind_gslbservice_lbmonitor(nitro_service service, DNSParameter dnsParameter) {
+
+		try {
+
+			for (DNSPublicIPParameter ipParameter : dnsParameter.getPublicIPs()) {
+
+				for (DNSPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
+
+					gslbservice_lbmonitor_binding binding = new gslbservice_lbmonitor_binding();
+
+					binding.set_monitor_name("tcp");
+					binding.set_servicename(generateServiceName(ipParameter, policyParameter));
+
+					gslbservice_lbmonitor_binding.add(service, binding);
+
+				}
+
+			}
+
+		} catch (nitro_exception e) {
+			logger.info("Exception::bind_gslbservice_lbmonitor::errorcode=" + e.getErrorCode() + ",message="
+					+ e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::bind_gslbservice_lbmonitor::message=" + e);
+		}
 	}
 
 	/**

@@ -12,6 +12,7 @@ import com.citrix.netscaler.nitro.resource.config.basic.server;
 import com.citrix.netscaler.nitro.resource.config.basic.service;
 import com.citrix.netscaler.nitro.resource.config.basic.servicegroup;
 import com.citrix.netscaler.nitro.resource.config.basic.servicegroup_servicegroupmember_binding;
+import com.citrix.netscaler.nitro.resource.config.lb.lbmonitor_service_binding;
 import com.citrix.netscaler.nitro.resource.config.lb.lbvserver;
 import com.citrix.netscaler.nitro.resource.config.lb.lbvserver_service_binding;
 import com.citrix.netscaler.nitro.resource.config.ns.nsconfig;
@@ -110,13 +111,16 @@ public class LoadbalanceService {
 			// Step.2 创建Servers
 			bind_servicegroup_server(client, elbParameter);
 
-			// // Step.3 创建Service
+			// Step.3 创建Service
 			add_service(client, elbParameter);
 
-			// // Step.4 创建lbvserverServiceBinding
+			// Step.4 创建lbvserverServiceBinding
 			addlbvserver_bindings(client, elbParameter);
 
-			// Step.5 保存配置
+			// Step.5 添加监控
+			bind_lbmonitor_service(client, elbParameter);
+
+			// Step.6 保存配置
 			saveconfig(client);
 
 			client.logout();// 登出
@@ -167,6 +171,34 @@ public class LoadbalanceService {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * 添加监控
+	 * 
+	 * @param client
+	 */
+	public void bind_lbmonitor_service(nitro_service service, ELBParameter elbParameter) {
+
+		try {
+
+			for (ELBPublicIPParameter ipParameter : elbParameter.getPublicIPs()) {
+				for (ELBPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
+
+					lbmonitor_service_binding binding = new lbmonitor_service_binding();
+					binding.set_servicename(generateServiceName(ipParameter.getIpaddress(),
+							policyParameter.getProtocolText(), policyParameter.getSourcePort()));
+					binding.set_monitorname("tcp");
+					lbmonitor_service_binding.add(service, binding);
+				}
+			}
+
+		} catch (nitro_exception e) {
+			System.out.println("Exception::bind_lbmonitor_service::errorcode=" + e.getErrorCode() + ",message="
+					+ e.getMessage());
+		} catch (Exception e) {
+			System.err.println("Exception::bind_lbmonitor_service::message=" + e);
+		}
 	}
 
 	/**
