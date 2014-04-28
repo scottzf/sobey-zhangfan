@@ -8,6 +8,12 @@ import com.sobey.generate.cmdbuild.SearchParams;
 import com.sobey.generate.cmdbuild.SearchParams.ParamsMap;
 import com.sobey.generate.cmdbuild.SearchParams.ParamsMap.Entry;
 
+/**
+ * CMDBuild相关的一些帮助方法.
+ * 
+ * @author Administrator
+ *
+ */
 public class CMDBuildUtil {
 
 	/**

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sobey.api.service.DnsService;
+import com.sobey.api.utils.NetworkUtil;
 import com.sobey.generate.dns.DNSParameter;
 import com.sobey.generate.dns.DNSPolicyParameter;
 import com.sobey.generate.dns.DNSPublicIPParameter;
@@ -37,27 +38,6 @@ public class DnsController {
 	}
 
 	/**
-	 * 根据协议获得默认的端口.
-	 * 
-	 * <pre>
-	 * HTTP:80
-	 * HTTPS:443
-	 * </pre>
-	 * 
-	 * @param protocol
-	 * @return
-	 */
-	private Integer getPortFromProtocol(String protocol) {
-
-		if ("HTTPS".equals(protocol.toUpperCase())) {
-			return 443;
-		} else {
-			return 80;
-		}
-
-	}
-
-	/**
 	 * 创建一个Dns
 	 */
 	@RequestMapping(value = "/create/", method = RequestMethod.POST)
@@ -71,8 +51,8 @@ public class DnsController {
 
 			DNSPolicyParameter policyParameter = new DNSPolicyParameter();
 			policyParameter.setProtocolText(protocols[i]);
-			policyParameter.setSourcePort(getPortFromProtocol(protocols[i]));
-			policyParameter.setTargetPort(getPortFromProtocol(protocols[i]));
+			policyParameter.setSourcePort(NetworkUtil.getPortFromProtocol(protocols[i]));
+			policyParameter.setTargetPort(NetworkUtil.getPortFromProtocol(protocols[i]));
 
 			DNSPublicIPParameter publicIPParameter = new DNSPublicIPParameter();
 			publicIPParameter.setIpaddress(publicIPs[i]);
@@ -123,8 +103,8 @@ public class DnsController {
 
 			DNSPolicyParameter policyParameter = new DNSPolicyParameter();
 			policyParameter.setProtocolText(protocols[i]);
-			policyParameter.setSourcePort(getPortFromProtocol(protocols[i]));
-			policyParameter.setTargetPort(getPortFromProtocol(protocols[i]));
+			policyParameter.setSourcePort(NetworkUtil.getPortFromProtocol(protocols[i]));
+			policyParameter.setTargetPort(NetworkUtil.getPortFromProtocol(protocols[i]));
 
 			DNSPublicIPParameter publicIPParameter = new DNSPublicIPParameter();
 			publicIPParameter.setIpaddress(publicIPs[i]);

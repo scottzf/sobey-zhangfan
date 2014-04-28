@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sobey.api.service.LoadbalancerService;
+import com.sobey.api.utils.NetworkUtil;
 import com.sobey.generate.loadbalancer.ELBParameter;
 import com.sobey.generate.loadbalancer.ELBPolicyParameter;
 import com.sobey.generate.loadbalancer.ELBPublicIPParameter;
@@ -38,27 +39,6 @@ public class LoadbalancerController {
 	}
 
 	/**
-	 * 根据协议获得默认的端口.
-	 * 
-	 * <pre>
-	 * HTTP:80
-	 * HTTPS:443
-	 * </pre>
-	 * 
-	 * @param protocol
-	 * @return
-	 */
-	private Integer getPortFromProtocol(String protocol) {
-
-		if ("HTTPS".equals(protocol.toUpperCase())) {
-			return 443;
-		} else {
-			return 80;
-		}
-
-	}
-
-	/**
 	 * 创建一个Loadbalancer
 	 */
 	@RequestMapping(value = "/create/", method = RequestMethod.POST)
@@ -72,8 +52,8 @@ public class LoadbalancerController {
 
 			ELBPolicyParameter policyParameter = new ELBPolicyParameter();
 			policyParameter.setProtocolText(protocols[i]);
-			policyParameter.setSourcePort(getPortFromProtocol(protocols[i]));
-			policyParameter.setTargetPort(getPortFromProtocol(protocols[i]));
+			policyParameter.setSourcePort(NetworkUtil.getPortFromProtocol(protocols[i]));
+			policyParameter.setTargetPort(NetworkUtil.getPortFromProtocol(protocols[i]));
 
 			ELBPublicIPParameter publicIPParameter = new ELBPublicIPParameter();
 			publicIPParameter.setIpaddress(publicIPs[i]);
@@ -122,8 +102,8 @@ public class LoadbalancerController {
 
 			ELBPolicyParameter policyParameter = new ELBPolicyParameter();
 			policyParameter.setProtocolText(protocols[i]);
-			policyParameter.setSourcePort(getPortFromProtocol(protocols[i]));
-			policyParameter.setTargetPort(getPortFromProtocol(protocols[i]));
+			policyParameter.setSourcePort(NetworkUtil.getPortFromProtocol(protocols[i]));
+			policyParameter.setTargetPort(NetworkUtil.getPortFromProtocol(protocols[i]));
 
 			ELBPublicIPParameter publicIPParameter = new ELBPublicIPParameter();
 			publicIPParameter.setIpaddress(publicIPs[i]);
