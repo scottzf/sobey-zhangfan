@@ -72,7 +72,7 @@ public class NetAppService {
 	public String mountEs3(MountEs3Parameter parameter) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("/root/sc/mountdisk.sh ").append(parameter.getClientIPaddress()).append(" ")
-				.append(parameter.getNetAppIPaddress()).append(" ").append(parameter.getVolumeName()).append(" \n");
+				.append(parameter.getNetAppIPaddress()).append(" ").append(parameter.getVolumeName()).append("\n");
 		return sb.toString();
 	}
 

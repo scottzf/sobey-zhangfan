@@ -62,7 +62,7 @@ public class JschUtil {
 
 			channel.connect(15 * 1000);
 
-			Thread.sleep(7 * 1000);
+			Thread.sleep(18 * 1000);
 
 			channel.disconnect();
 			session.disconnect();
@@ -124,7 +124,7 @@ public class JschUtil {
 
 			channel.connect(15 * 1000);
 
-			Thread.sleep(7 * 1000);
+			Thread.sleep(18 * 1000);
 
 			channel.disconnect();
 			session.disconnect();
