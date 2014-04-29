@@ -136,7 +136,9 @@ public class VMService {
 			cspec.setEncryptionKey(specManager.getEncryptionKey());
 
 			// 设置ResourcePool
-			// 宿主机.暂时写死.宿主机的Value可以在VMTest中的PrintInventory方法查出来.
+			/**
+			 * 重要:宿主机暂时写死.宿主机的Value可以在VMTest中的PrintInventory方法查出来.
+			 */
 			ManagedObjectReference pool = new ManagedObjectReference();
 			pool.set_value("resgroup-8");
 			pool.setType("ResourcePool");
