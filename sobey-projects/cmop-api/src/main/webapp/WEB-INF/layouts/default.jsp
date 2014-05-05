@@ -18,12 +18,33 @@
 <link rel="stylesheet" 	href="${ctx}/static/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet"	href="${ctx}/static/bootstrap/css/sticky-footer-navbar.css">
 <link rel="stylesheet"	href="${ctx}/static/jquery-ui/css/jquery-ui-1.10.4.custom.min.css">
+<link rel="stylesheet"	href="${ctx}/static/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.css">
+<link rel="stylesheet" href="${ctx}/static/jqplot/jquery.jqplot.min.css">
+
+<style>
+.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
+.ui-timepicker-div dl { text-align: left; }
+.ui-timepicker-div dl dt { float: left; clear:left; padding: 0 0 0 5px; }
+.ui-timepicker-div dl dd { margin: 0 10px 10px 45%; }
+.ui-timepicker-div td { font-size: 90%; }
+.ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
+
+.ui-timepicker-rtl{ direction: rtl; }
+.ui-timepicker-rtl dl { text-align: right; padding: 0 5px 0 0; }
+.ui-timepicker-rtl dl dt{ float: right; clear: right; }
+.ui-timepicker-rtl dl dd { margin: 0 45% 10px 10px; }
+</style>
 
 <!-- Le javascript -->
 <script src="${ctx}/static/jquery/jquery-1.11.0.min.js"></script>
 <script src="${ctx}/static/bootstrap/js/bootstrap.min.js"></script>
 <script src="${ctx}/static/jquery-ui/js/jquery-ui-1.10.4.custom.min.js"></script>
 <script src="${ctx}/static/jquery-ui/js/jquery.ui.datepicker-zh-CN.js"></script>
+
+<script src="${ctx}/static/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.js"></script>
+<script src="${ctx}/static/jquery-timepicker-addon/jquery-ui-timepicker-zh-CN.js"></script>
+<script src="${ctx}/static/jqplot/jquery.jqplot.min.js"></script>
+<script src="${ctx}/static/jqplot/excanvas.min.js"></script>
 
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
