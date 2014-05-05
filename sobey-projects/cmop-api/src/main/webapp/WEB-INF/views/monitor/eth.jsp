@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Ping Demo</title>
+<title>Eth Demo</title>
 
 <script src="${ctx}/static/jqplot/plugins/jqplot.cursor.min.js"></script>
 <script	src="${ctx}/static/jqplot/plugins/jqplot.dateAxisRenderer.min.js"></script>
@@ -49,13 +49,25 @@
 		
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<div id="monitor-rta" style="height: 200px; width: 600px;"></div>
+				<div id="monitor-eth-trafficIn" style="height: 200px; width: 600px;"></div>
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<div id="monitor-packetLoss" style="height: 200px; width: 600px;"></div>
+				<div id="monitor-eth-trafficOut" style="height: 200px; width: 600px;"></div>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<div id="monitor-eth-trafficTotal" style="height: 200px; width: 600px;"></div>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<div id="monitor-eth-interval" style="height: 200px; width: 600px;"></div>
 			</div>
 		</div>
 		
@@ -68,7 +80,7 @@
 			 
 				$.ajax({
 					type : "POST",
-					url : "${ctx}/monitor/ping/",
+					url : "${ctx}/monitor/eth/",
 					dataType : "json",
 					data : {
 						ipaddress: $("#ipaddress").val() ,
@@ -78,38 +90,55 @@
 					success : function(msg) {
 						
 						//为满足jqplot数据格式,对json数据进行解析、处理.
-						var rtaResult = [];
-						var packetLossResult = [];
+						var inResult = [], outResult = [],totalResult = [],intervalResult = [];
 
 						for ( var o in msg) {
 							for ( var ping in msg[o]) {
-								var temp = [],temp1=[];
+								
+								var temp = [],temp1=[],temp2=[],temp3=[];
+								
 								temp.push(msg[o][ping].endTime);
-								temp.push(msg[o][ping].rta);
-								rtaResult.push(temp);
+								temp.push(msg[o][ping].trafficIn);
+								inResult.push(temp);
 								
 								temp1.push(msg[o][ping].endTime);
-								temp1.push(msg[o][ping].packetLoss);
-								packetLossResult.push(temp1);
+								temp1.push(msg[o][ping].trafficOut);
+								outResult.push(temp1);
+								
+								temp2.push(msg[o][ping].endTime);
+								temp2.push(msg[o][ping].trafficTotal);
+								totalResult.push(temp2);
+								
+								temp3.push(msg[o][ping].endTime);
+								temp3.push(msg[o][ping].interval);
+								intervalResult.push(temp3);
 							}
 						}
-						
+						 
 						//如果查询没有结果,给一个0的初始值
 						var intiArray = [];
 						intiArray.push(0);
 						intiArray.push(0);
 						
-						if(rtaResult.length == 0 ){
-							rtaResult.push(intiArray);
+						if(inResult.length == 0 ){
+							inResult.push(intiArray);
 						}
 						
-						if(packetLossResult.length == 0 ){
-							packetLossResult.push(intiArray);
+						if(outResult.length == 0 ){
+							outResult.push(intiArray);
+						}
+						
+						if(totalResult.length == 0 ){
+							totalResult.push(intiArray);
+						}
+						
+						if(intervalResult.length == 0 ){
+							intervalResult.push(intiArray);
 						}
 
-						$.jqplot('monitor-rta', [ rtaResult ], {
-							title : 'Ping, RTA.',
-							series : [ {label : 'Ping, RTA.',neighborThreshold : -1	} ],
+						$.jqplot('monitor-eth-trafficIn', [ inResult ], {
+							title : 'Eth, TrafficIn.',
+							series : [ {label : 'Eth, TrafficIn.',neighborThreshold : -1	} ],
 							axes : {
 								xaxis : {
 									renderer : $.jqplot.DateAxisRenderer,
@@ -118,15 +147,15 @@
 								},
 								yaxis : {
 									renderer : $.jqplot.LogAxisRenderer,
-									tickOptions : {	suffix : 'ms'}
+									tickOptions : {	suffix : 'MB'}
 								}
 							},
 							cursor : {show : true,zoom : true	}
 						});
 						
-						$.jqplot('monitor-packetLoss', [ packetLossResult ], {
-							title : 'Ping, PacketLoss.',
-							series : [ {label : 'Ping, PacketLoss.',neighborThreshold : -1	} ],
+						$.jqplot('monitor-eth-trafficOut', [ outResult ], {
+							title : 'Eth, TrafficOut.',
+							series : [ {label : 'Eth, TrafficOut.',neighborThreshold : -1	} ],
 							axes : {
 								xaxis : {
 									renderer : $.jqplot.DateAxisRenderer,
@@ -135,7 +164,41 @@
 								},
 								yaxis : {
 									renderer : $.jqplot.LogAxisRenderer,
-									tickOptions : {	suffix : '%'}
+									tickOptions : {	suffix : 'MB'}
+								}
+							},
+							cursor : {show : true,zoom : true	}
+						});
+						
+						$.jqplot('monitor-eth-trafficTotal', [ totalResult ], {
+							title : 'Eth, TrafficTotal.',
+							series : [ {label : 'Eth, TrafficTotal.',neighborThreshold : -1	} ],
+							axes : {
+								xaxis : {
+									renderer : $.jqplot.DateAxisRenderer,
+									tickRenderer : $.jqplot.CanvasAxisTickRenderer,
+									tickOptions : {	angle : -30,formatString : '%Y-%m-%d %H:%M:%S'}
+								},
+								yaxis : {
+									renderer : $.jqplot.LogAxisRenderer,
+									tickOptions : {	suffix : 'MB'}
+								}
+							},
+							cursor : {show : true,zoom : true	}
+						});
+						
+						$.jqplot('monitor-eth-interval', [ intervalResult ], {
+							title : 'Eth, Interval.',
+							series : [ {label : 'Eth, Interval.',neighborThreshold : -1	} ],
+							axes : {
+								xaxis : {
+									renderer : $.jqplot.DateAxisRenderer,
+									tickRenderer : $.jqplot.CanvasAxisTickRenderer,
+									tickOptions : {	angle : -30,formatString : '%Y-%m-%d %H:%M:%S'}
+								},
+								yaxis : {
+									renderer : $.jqplot.LogAxisRenderer,
+									tickOptions : {	suffix : 's'}
 								}
 							},
 							cursor : {show : true,zoom : true	}

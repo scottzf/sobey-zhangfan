@@ -153,7 +153,7 @@ public class NagiosTest {
 		}
 	}
 
-	// @Test
+	@Test
 	public void ethTest() {
 
 		NagiosEthDTO dto = service.getNagiosEth(IPADDRESS, STARTTIME, ENDTIME);

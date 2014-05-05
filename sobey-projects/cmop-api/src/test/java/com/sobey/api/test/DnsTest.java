@@ -29,7 +29,7 @@ public class DnsTest extends TestCase {
 		assertEquals(service.createDNS(DNSTestData.randomDNSParameter()).getCode(), "0");
 	}
 
-	 @Test
+	@Test
 	public void deleteDNSTest() {
 		assertEquals(service.deleteDNS(DNSTestData.randomDNSParameter()).getCode(), "0");
 	}

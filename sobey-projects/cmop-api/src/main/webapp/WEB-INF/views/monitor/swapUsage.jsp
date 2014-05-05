@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Ping Demo</title>
+<title>SwapUsage Demo</title>
 
 <script src="${ctx}/static/jqplot/plugins/jqplot.cursor.min.js"></script>
 <script	src="${ctx}/static/jqplot/plugins/jqplot.dateAxisRenderer.min.js"></script>
@@ -49,15 +49,22 @@
 		
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<div id="monitor-rta" style="height: 200px; width: 600px;"></div>
+				<div id="monitor-swapUsage-freeSpace" style="height: 200px; width: 600px;"></div>
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<div id="monitor-packetLoss" style="height: 200px; width: 600px;"></div>
+				<div id="monitor-swapUsage-freePer" style="height: 200px; width: 600px;"></div>
 			</div>
 		</div>
+		
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<div id="monitor-swapUsage-totalSpace" style="height: 200px; width: 600px;"></div>
+			</div>
+		</div>
+		
 		
 	</form>
 
@@ -68,7 +75,7 @@
 			 
 				$.ajax({
 					type : "POST",
-					url : "${ctx}/monitor/ping/",
+					url : "${ctx}/monitor/swapUsage/",
 					dataType : "json",
 					data : {
 						ipaddress: $("#ipaddress").val() ,
@@ -78,38 +85,49 @@
 					success : function(msg) {
 						
 						//为满足jqplot数据格式,对json数据进行解析、处理.
-						var rtaResult = [];
-						var packetLossResult = [];
+						var freeSpaceResult = [],freePerResult = [],totalSpaceResult = [];
 
 						for ( var o in msg) {
 							for ( var ping in msg[o]) {
-								var temp = [],temp1=[];
+								
+								var temp = [],temp1=[],temp2=[];
+								
 								temp.push(msg[o][ping].endTime);
-								temp.push(msg[o][ping].rta);
-								rtaResult.push(temp);
+								temp.push(msg[o][ping].freeSpace);
+								freeSpaceResult.push(temp);
 								
 								temp1.push(msg[o][ping].endTime);
-								temp1.push(msg[o][ping].packetLoss);
-								packetLossResult.push(temp1);
+								temp1.push(msg[o][ping].freePer);
+								freePerResult.push(temp1);
+								
+								temp2.push(msg[o][ping].endTime);
+								temp2.push(msg[o][ping].totalSpace);
+								totalSpaceResult.push(temp2);
+								
 							}
 						}
-						
+						 
 						//如果查询没有结果,给一个0的初始值
 						var intiArray = [];
 						intiArray.push(0);
 						intiArray.push(0);
 						
-						if(rtaResult.length == 0 ){
-							rtaResult.push(intiArray);
+						if(freeSpaceResult.length == 0 ){
+							freeSpaceResult.push(intiArray);
 						}
 						
-						if(packetLossResult.length == 0 ){
-							packetLossResult.push(intiArray);
+						if(freePerResult.length == 0 ){
+							freePerResult.push(intiArray);
 						}
+						
+						if(totalSpaceResult.length == 0 ){
+							totalSpaceResult.push(intiArray);
+						}
+						
 
-						$.jqplot('monitor-rta', [ rtaResult ], {
-							title : 'Ping, RTA.',
-							series : [ {label : 'Ping, RTA.',neighborThreshold : -1	} ],
+						$.jqplot('monitor-swapUsage-freeSpace', [ freeSpaceResult ], {
+							title : 'SwapUsage, FreeSpace.',
+							series : [ {label : 'SwapUsage, FreeSpace.',neighborThreshold : -1	} ],
 							axes : {
 								xaxis : {
 									renderer : $.jqplot.DateAxisRenderer,
@@ -118,15 +136,15 @@
 								},
 								yaxis : {
 									renderer : $.jqplot.LogAxisRenderer,
-									tickOptions : {	suffix : 'ms'}
+									tickOptions : {	suffix : 'MB'}
 								}
 							},
 							cursor : {show : true,zoom : true	}
 						});
 						
-						$.jqplot('monitor-packetLoss', [ packetLossResult ], {
-							title : 'Ping, PacketLoss.',
-							series : [ {label : 'Ping, PacketLoss.',neighborThreshold : -1	} ],
+						$.jqplot('monitor-swapUsage-freePer', [ freePerResult ], {
+							title : 'SwapUsage, FreePer.',
+							series : [ {label : 'SwapUsage, FreePer.',neighborThreshold : -1	} ],
 							axes : {
 								xaxis : {
 									renderer : $.jqplot.DateAxisRenderer,
@@ -140,6 +158,24 @@
 							},
 							cursor : {show : true,zoom : true	}
 						});
+						
+						$.jqplot('monitor-swapUsage-totalSpace', [ totalSpaceResult ], {
+							title : 'SwapUsage, TotalSpace.',
+							series : [ {label : 'SwapUsage, TotalSpace.',neighborThreshold : -1	} ],
+							axes : {
+								xaxis : {
+									renderer : $.jqplot.DateAxisRenderer,
+									tickRenderer : $.jqplot.CanvasAxisTickRenderer,
+									tickOptions : {	angle : -30,formatString : '%Y-%m-%d %H:%M:%S'}
+								},
+								yaxis : {
+									renderer : $.jqplot.LogAxisRenderer,
+									tickOptions : {	suffix : 'MB'}
+								}
+							},
+							cursor : {show : true,zoom : true	}
+						});
+						
 						
 					}
 

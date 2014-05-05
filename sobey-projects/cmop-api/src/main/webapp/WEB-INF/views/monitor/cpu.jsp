@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Ping Demo</title>
+<title>CPULoad Demo</title>
 
 <script src="${ctx}/static/jqplot/plugins/jqplot.cursor.min.js"></script>
 <script	src="${ctx}/static/jqplot/plugins/jqplot.dateAxisRenderer.min.js"></script>
@@ -49,13 +49,19 @@
 		
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<div id="monitor-rta" style="height: 200px; width: 600px;"></div>
+				<div id="monitor-cpu-average5" style="height: 200px; width: 600px;"></div>
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<div id="monitor-packetLoss" style="height: 200px; width: 600px;"></div>
+				<div id="monitor-cpu-average10" style="height: 200px; width: 600px;"></div>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<div id="monitor-cpu-average15" style="height: 200px; width: 600px;"></div>
 			</div>
 		</div>
 		
@@ -68,7 +74,7 @@
 			 
 				$.ajax({
 					type : "POST",
-					url : "${ctx}/monitor/ping/",
+					url : "${ctx}/monitor/cpu/",
 					dataType : "json",
 					data : {
 						ipaddress: $("#ipaddress").val() ,
@@ -78,19 +84,25 @@
 					success : function(msg) {
 						
 						//为满足jqplot数据格式,对json数据进行解析、处理.
-						var rtaResult = [];
-						var packetLossResult = [];
-
+						var average5Result = [],average10Result = [],average15Result = [];
+						
 						for ( var o in msg) {
 							for ( var ping in msg[o]) {
-								var temp = [],temp1=[];
+								
+								var temp = [],temp1=[],temp2=[];
+								
 								temp.push(msg[o][ping].endTime);
-								temp.push(msg[o][ping].rta);
-								rtaResult.push(temp);
+								temp.push(msg[o][ping].average5);
+								average5Result.push(temp);
 								
 								temp1.push(msg[o][ping].endTime);
-								temp1.push(msg[o][ping].packetLoss);
-								packetLossResult.push(temp1);
+								temp1.push(msg[o][ping].average10);
+								average10Result.push(temp1);
+								
+								temp2.push(msg[o][ping].endTime);
+								temp2.push(msg[o][ping].average15);
+								average15Result.push(temp2);
+								
 							}
 						}
 						
@@ -99,17 +111,21 @@
 						intiArray.push(0);
 						intiArray.push(0);
 						
-						if(rtaResult.length == 0 ){
-							rtaResult.push(intiArray);
+						if(average5Result.length == 0 ){
+							average5Result.push(intiArray);
 						}
 						
-						if(packetLossResult.length == 0 ){
-							packetLossResult.push(intiArray);
+						if(average10Result.length == 0 ){
+							average10Result.push(intiArray);
+						}
+						
+						if(average15Result.length == 0 ){
+							average15Result.push(intiArray);
 						}
 
-						$.jqplot('monitor-rta', [ rtaResult ], {
-							title : 'Ping, RTA.',
-							series : [ {label : 'Ping, RTA.',neighborThreshold : -1	} ],
+						$.jqplot('monitor-cpu-average5', [ average5Result ], {
+							title : 'CPULoad, Average5.',
+							series : [ {label : 'CPULoad, Average5.',neighborThreshold : -1	} ],
 							axes : {
 								xaxis : {
 									renderer : $.jqplot.DateAxisRenderer,
@@ -118,15 +134,32 @@
 								},
 								yaxis : {
 									renderer : $.jqplot.LogAxisRenderer,
-									tickOptions : {	suffix : 'ms'}
+									tickOptions : {	suffix : '%'}
 								}
 							},
 							cursor : {show : true,zoom : true	}
 						});
 						
-						$.jqplot('monitor-packetLoss', [ packetLossResult ], {
-							title : 'Ping, PacketLoss.',
-							series : [ {label : 'Ping, PacketLoss.',neighborThreshold : -1	} ],
+						$.jqplot('monitor-cpu-average10', [ average10Result ], {
+							title : 'CPULoad, Average10.',
+							series : [ {label : 'CPULoad, Average10.',neighborThreshold : -1	} ],
+							axes : {
+								xaxis : {
+									renderer : $.jqplot.DateAxisRenderer,
+									tickRenderer : $.jqplot.CanvasAxisTickRenderer,
+									tickOptions : {	angle : -30,formatString : '%Y-%m-%d %H:%M:%S'}
+								},
+								yaxis : {
+									renderer : $.jqplot.LogAxisRenderer,
+									tickOptions : {	suffix : '%'}
+								}
+							},
+							cursor : {show : true,zoom : true	}
+						});
+						
+						$.jqplot('monitor-cpu-average15', [ average15Result ], {
+							title : 'CPULoad, Average15.',
+							series : [ {label : 'CPULoad, Average15.',neighborThreshold : -1	} ],
 							axes : {
 								xaxis : {
 									renderer : $.jqplot.DateAxisRenderer,

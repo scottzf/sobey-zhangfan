@@ -66,15 +66,15 @@ public class NagiosService {
 	}
 
 	public NagiosTotalProcessesDTO getNagiosTotalProcesses(String ipaddress, String startDate, String endDate) {
-		return service.getNagiosTotalProcesse(ipaddress, ipaddress, endDate);
+		return service.getNagiosTotalProcesse(ipaddress, startDate, endDate);
 	}
 
 	public NagiosEthDTO getNagiosEth(String ipaddress, String startDate, String endDate) {
-		return service.getNagiosEth(ipaddress, ipaddress, endDate);
+		return service.getNagiosEth(ipaddress, startDate, endDate);
 	}
 
 	public NagiosCurrentUsersDTO getNagiosCurrentUsers(String ipaddress, String startDate, String endDate) {
-		return service.getNagiosCurrentUsers(ipaddress, ipaddress, endDate);
+		return service.getNagiosCurrentUsers(ipaddress, startDate, endDate);
 	}
 
 }

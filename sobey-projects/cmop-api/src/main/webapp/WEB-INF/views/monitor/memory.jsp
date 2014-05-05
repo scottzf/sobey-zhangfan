@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Ping Demo</title>
+<title>Memory Demo</title>
 
 <script src="${ctx}/static/jqplot/plugins/jqplot.cursor.min.js"></script>
 <script	src="${ctx}/static/jqplot/plugins/jqplot.dateAxisRenderer.min.js"></script>
@@ -49,13 +49,19 @@
 		
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<div id="monitor-rta" style="height: 200px; width: 600px;"></div>
+				<div id="monitor-memory-total" style="height: 200px; width: 600px;"></div>
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<div id="monitor-packetLoss" style="height: 200px; width: 600px;"></div>
+				<div id="monitor-memory-used" style="height: 200px; width: 600px;"></div>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<div id="monitor-memory-usedPer" style="height: 200px; width: 600px;"></div>
 			</div>
 		</div>
 		
@@ -68,7 +74,7 @@
 			 
 				$.ajax({
 					type : "POST",
-					url : "${ctx}/monitor/ping/",
+					url : "${ctx}/monitor/memory/",
 					dataType : "json",
 					data : {
 						ipaddress: $("#ipaddress").val() ,
@@ -78,19 +84,25 @@
 					success : function(msg) {
 						
 						//为满足jqplot数据格式,对json数据进行解析、处理.
-						var rtaResult = [];
-						var packetLossResult = [];
-
+						var totalResult = [],usedResult = [],usedPerResult = [];
+						
 						for ( var o in msg) {
 							for ( var ping in msg[o]) {
-								var temp = [],temp1=[];
+								
+								var temp = [],temp1=[],temp2=[];
+								
 								temp.push(msg[o][ping].endTime);
-								temp.push(msg[o][ping].rta);
-								rtaResult.push(temp);
+								temp.push(msg[o][ping].total);
+								totalResult.push(temp);
 								
 								temp1.push(msg[o][ping].endTime);
-								temp1.push(msg[o][ping].packetLoss);
-								packetLossResult.push(temp1);
+								temp1.push(msg[o][ping].used);
+								usedResult.push(temp1);
+								
+								temp2.push(msg[o][ping].endTime);
+								temp2.push(msg[o][ping].usedPer);
+								usedPerResult.push(temp2);
+								
 							}
 						}
 						
@@ -99,17 +111,21 @@
 						intiArray.push(0);
 						intiArray.push(0);
 						
-						if(rtaResult.length == 0 ){
-							rtaResult.push(intiArray);
+						if(totalResult.length == 0 ){
+							totalResult.push(intiArray);
 						}
 						
-						if(packetLossResult.length == 0 ){
-							packetLossResult.push(intiArray);
+						if(usedResult.length == 0 ){
+							usedResult.push(intiArray);
+						}
+						
+						if(usedPerResult.length == 0 ){
+							usedPerResult.push(intiArray);
 						}
 
-						$.jqplot('monitor-rta', [ rtaResult ], {
-							title : 'Ping, RTA.',
-							series : [ {label : 'Ping, RTA.',neighborThreshold : -1	} ],
+						$.jqplot('monitor-memory-total', [ totalResult ], {
+							title : 'Memory, Total.',
+							series : [ {label : 'Memory, Total.',neighborThreshold : -1	} ],
 							axes : {
 								xaxis : {
 									renderer : $.jqplot.DateAxisRenderer,
@@ -118,15 +134,32 @@
 								},
 								yaxis : {
 									renderer : $.jqplot.LogAxisRenderer,
-									tickOptions : {	suffix : 'ms'}
+									tickOptions : {	suffix : 'KB'}
 								}
 							},
 							cursor : {show : true,zoom : true	}
 						});
 						
-						$.jqplot('monitor-packetLoss', [ packetLossResult ], {
-							title : 'Ping, PacketLoss.',
-							series : [ {label : 'Ping, PacketLoss.',neighborThreshold : -1	} ],
+						$.jqplot('monitor-memory-used', [ usedResult ], {
+							title : 'Memory, Used.',
+							series : [ {label : 'Memory, Used.',neighborThreshold : -1	} ],
+							axes : {
+								xaxis : {
+									renderer : $.jqplot.DateAxisRenderer,
+									tickRenderer : $.jqplot.CanvasAxisTickRenderer,
+									tickOptions : {	angle : -30,formatString : '%Y-%m-%d %H:%M:%S'}
+								},
+								yaxis : {
+									renderer : $.jqplot.LogAxisRenderer,
+									tickOptions : {	suffix : 'KB'}
+								}
+							},
+							cursor : {show : true,zoom : true	}
+						});
+						
+						$.jqplot('monitor-memory-usedPer', [ usedPerResult ], {
+							title : 'Memory, UsedPer.',
+							series : [ {label : 'Memory, UsedPer.',neighborThreshold : -1	} ],
 							axes : {
 								xaxis : {
 									renderer : $.jqplot.DateAxisRenderer,
