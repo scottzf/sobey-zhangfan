@@ -318,7 +318,7 @@ public class AnalyzeUtil {
 		memoryLoad.setStartTime(subDateTime(result.getStartTime()));
 		memoryLoad.setEndTime(subDateTime(result.getEndTime()));
 		memoryLoad.setUsedPer(StringUtils.substringsBetween(result.getOutput(), "used: ", "%")[0]);
-		memoryLoad.setUserd(StringUtils.substringsBetween(result.getOutput(), "(", " /")[0]);
+		memoryLoad.setUsed(StringUtils.substringsBetween(result.getOutput(), "(", " /")[0]);
 		memoryLoad.setTotal(StringUtils.substringsBetween(result.getOutput(), "/ ", " kB)")[0]);
 
 		return memoryLoad;

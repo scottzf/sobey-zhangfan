@@ -73,7 +73,7 @@ public class NagiosTest {
 
 		for (NagiosMemoryLoad memoryLoad : dto.getNagiosMemoryLoads()) {
 			System.out.println(memoryLoad.getUsedPer());
-			System.out.println(memoryLoad.getUserd());
+			System.out.println(memoryLoad.getUsed());
 			System.out.println(memoryLoad.getTotal());
 			System.out.println("***************");
 		}

@@ -159,8 +159,8 @@
       <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
       <xs:element minOccurs="0" name="startTime" type="xs:string"/>
       <xs:element minOccurs="0" name="total" type="xs:string"/>
+      <xs:element minOccurs="0" name="used" type="xs:string"/>
       <xs:element minOccurs="0" name="usedPer" type="xs:string"/>
-      <xs:element minOccurs="0" name="userd" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 

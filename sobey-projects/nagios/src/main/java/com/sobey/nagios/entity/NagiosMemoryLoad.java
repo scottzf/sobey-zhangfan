@@ -12,7 +12,7 @@ public class NagiosMemoryLoad {
 
 	private String UsedPer;
 
-	private String Userd;
+	private String Used;
 
 	private String Total;
 
@@ -48,12 +48,12 @@ public class NagiosMemoryLoad {
 		UsedPer = usedPer;
 	}
 
-	public String getUserd() {
-		return Userd;
+	public String getUsed() {
+		return Used;
 	}
 
-	public void setUserd(String userd) {
-		Userd = userd;
+	public void setUsed(String used) {
+		Used = used;
 	}
 
 	public String getTotal() {
