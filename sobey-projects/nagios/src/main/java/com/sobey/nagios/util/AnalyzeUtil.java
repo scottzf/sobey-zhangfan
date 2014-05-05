@@ -57,11 +57,14 @@ public class AnalyzeUtil {
 		NagiosPing ping = new NagiosPing();
 
 		String[] array = StringUtils.split(StringUtils.split(result.getOutput(), "|")[0], ",");
-		ping.setIpaddress(result.getIpaddress());
-		ping.setPacketLoss(StringUtils.remove(StringUtils.trim(StringUtils.split(array[0], "=")[1]), "%"));
-		ping.setRta(StringUtils.remove(StringUtils.trim(StringUtils.split(array[1], "=")[1]), " ms"));
-		ping.setStartTime(subDateTime(result.getStartTime()));
-		ping.setEndTime(subDateTime(result.getEndTime()));
+
+		if (array != null) {
+			ping.setIpaddress(result.getIpaddress());
+			ping.setPacketLoss(StringUtils.remove(StringUtils.trim(StringUtils.split(array[0], "=")[1]), "%"));
+			ping.setRta(StringUtils.remove(StringUtils.trim(StringUtils.split(array[1], "=")[1]), " ms"));
+			ping.setStartTime(subDateTime(result.getStartTime()));
+			ping.setEndTime(subDateTime(result.getEndTime()));
+		}
 
 		return ping;
 	}
@@ -132,7 +135,7 @@ public class AnalyzeUtil {
 			eth.setStartTime(subDateTime(result.getStartTime()));
 			eth.setEndTime(subDateTime(result.getEndTime()));
 		}
-		
+
 		return eth;
 	}
 
@@ -155,10 +158,12 @@ public class AnalyzeUtil {
 
 		NagiosTotalProcesses totalProcesses = new NagiosTotalProcesses();
 
-		totalProcesses.setIpaddress(result.getIpaddress());
-		totalProcesses.setProcesses(array[2] != null ? Integer.valueOf(array[2]) : 0);
-		totalProcesses.setStartTime(subDateTime(result.getStartTime()));
-		totalProcesses.setEndTime(subDateTime(result.getEndTime()));
+		if (array != null) {
+			totalProcesses.setIpaddress(result.getIpaddress());
+			totalProcesses.setProcesses(array[2] != null ? Integer.valueOf(array[2]) : 0);
+			totalProcesses.setStartTime(subDateTime(result.getStartTime()));
+			totalProcesses.setEndTime(subDateTime(result.getEndTime()));
+		}
 
 		return totalProcesses;
 	}
@@ -183,12 +188,14 @@ public class AnalyzeUtil {
 
 		NagiosCPULoad cpuLoad = new NagiosCPULoad();
 
-		cpuLoad.setIpaddress(result.getIpaddress());
-		cpuLoad.setStartTime(subDateTime(result.getStartTime()));
-		cpuLoad.setEndTime(subDateTime(result.getEndTime()));
-		cpuLoad.setAverage5(array[0]);
-		cpuLoad.setAverage10(array[1]);
-		cpuLoad.setAverage15(array[2]);
+		if (array != null) {
+			cpuLoad.setIpaddress(result.getIpaddress());
+			cpuLoad.setStartTime(subDateTime(result.getStartTime()));
+			cpuLoad.setEndTime(subDateTime(result.getEndTime()));
+			cpuLoad.setAverage5(array[0]);
+			cpuLoad.setAverage10(array[1]);
+			cpuLoad.setAverage15(array[2]);
+		}
 
 		return cpuLoad;
 	}
