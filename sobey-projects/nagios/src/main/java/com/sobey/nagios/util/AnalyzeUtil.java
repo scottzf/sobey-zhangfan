@@ -123,14 +123,16 @@ public class AnalyzeUtil {
 
 		NagiosEth eth = new NagiosEth();
 
-		eth.setIpaddress(result.getIpaddress());
-		eth.setTrafficIn(array[0]);
-		eth.setTrafficOut(array[1]);
-		eth.setTrafficTotal(array[2]);
-		eth.setInterval(StringUtils.remove(StringUtils.substringAfterLast(result.getOutput(), "is "), "s"));
-		eth.setStartTime(subDateTime(result.getStartTime()));
-		eth.setEndTime(subDateTime(result.getEndTime()));
-
+		if (array != null) {
+			eth.setIpaddress(result.getIpaddress());
+			eth.setTrafficIn(array[0]);
+			eth.setTrafficOut(array[1]);
+			eth.setTrafficTotal(array[2]);
+			eth.setInterval(StringUtils.remove(StringUtils.substringAfterLast(result.getOutput(), "is "), "s"));
+			eth.setStartTime(subDateTime(result.getStartTime()));
+			eth.setEndTime(subDateTime(result.getEndTime()));
+		}
+		
 		return eth;
 	}
 
