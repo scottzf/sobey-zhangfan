@@ -18,7 +18,7 @@ public class TestData {
 		parameter.setvMName("liukai");
 		parameter.setvMSUserName("徽州");
 		parameter.setvMTemplateName("CnetOS6.5");
-		parameter.setvMTemplateOS("Linux"); //Windows 
+		parameter.setvMTemplateOS("Linux"); // Windows
 		return parameter;
 	}
 

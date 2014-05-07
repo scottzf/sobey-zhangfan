@@ -3,8 +3,12 @@ package com.sobey.instance.service;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Maps;
@@ -27,13 +31,22 @@ import com.vmware.vim25.CustomizationSpecItem;
 import com.vmware.vim25.InvalidProperty;
 import com.vmware.vim25.ManagedObjectReference;
 import com.vmware.vim25.RuntimeFault;
+import com.vmware.vim25.VirtualDevice;
+import com.vmware.vim25.VirtualDeviceConfigSpec;
+import com.vmware.vim25.VirtualDeviceConfigSpecOperation;
+import com.vmware.vim25.VirtualDeviceConnectInfo;
+import com.vmware.vim25.VirtualEthernetCard;
+import com.vmware.vim25.VirtualEthernetCardNetworkBackingInfo;
+import com.vmware.vim25.VirtualHardware;
 import com.vmware.vim25.VirtualMachineCloneSpec;
 import com.vmware.vim25.VirtualMachineConfigSpec;
 import com.vmware.vim25.VirtualMachineRelocateSpec;
 import com.vmware.vim25.mo.CustomizationSpecManager;
+import com.vmware.vim25.mo.Datacenter;
 import com.vmware.vim25.mo.Folder;
 import com.vmware.vim25.mo.InventoryNavigator;
 import com.vmware.vim25.mo.ManagedEntity;
+import com.vmware.vim25.mo.Network;
 import com.vmware.vim25.mo.ResourcePool;
 import com.vmware.vim25.mo.ServiceInstance;
 import com.vmware.vim25.mo.Task;
@@ -41,6 +54,8 @@ import com.vmware.vim25.mo.VirtualMachine;
 
 @Service
 public class VMService {
+
+	private static Logger logger = LoggerFactory.getLogger(VMService.class);
 
 	/**
 	 * 加载applicationContext.propertie文件
@@ -64,7 +79,120 @@ public class VMService {
 	 */
 	private static final String INSTANCE_PASSWORD = INSTANCE_LOADER.getProperty("INSTANCE_PASSWORD");
 
-	@SuppressWarnings("deprecation")
+	/**
+	 * 为虚拟机设置网络适配器相关信息:设备状态设置为已连接、网络标签、虚拟机的备注.
+	 * 
+	 * @param vm
+	 * @param networkName
+	 * @param annotation
+	 */
+	private void setVirtualMachineNetwork(VirtualMachine vm, String networkName, String annotation) {
+
+		ArrayList<VirtualEthernetCard> nics = new ArrayList<VirtualEthernetCard>();
+
+		try {
+
+			VirtualHardware hardware = vm.getConfig().hardware;
+			VirtualDevice[] devices = hardware.getDevice();
+
+			for (VirtualDevice each : devices) {
+				if (each instanceof VirtualEthernetCard) {
+					nics.add((VirtualEthernetCard) each);
+				}
+			}
+
+			for (VirtualEthernetCard each : nics) {
+
+				// 设备状态设置为:已连接
+				VirtualDeviceConnectInfo connectable = each.getConnectable();
+				connectable.setConnected(true);
+				each.setConnectable(connectable);
+
+				VirtualEthernetCardNetworkBackingInfo backing = new VirtualEthernetCardNetworkBackingInfo();
+
+				// 根据网络适配器名字找到该网络对象
+				Network network = getNetworkFromString(networkName);
+
+				if (network != null) {
+
+					// 设置网络链接->网络标签
+					backing.setNetwork(network.getMOR());
+					backing.setDeviceName(network.getName());
+					each.setBacking(backing);
+
+					VirtualDeviceConfigSpec vdcs = new VirtualDeviceConfigSpec();
+
+					vdcs.setOperation(VirtualDeviceConfigSpecOperation.edit);
+					vdcs.setDevice(each);
+
+					VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
+
+					vmConfigSpec.setDeviceChange(new VirtualDeviceConfigSpec[] { vdcs });
+
+					// 为VM添加注释
+					vmConfigSpec.setAnnotation(annotation);
+
+					Task changeNetwork = vm.reconfigVM_Task(vmConfigSpec);
+					if (changeNetwork.waitForTask() != Task.SUCCESS) {
+						logger.info(vm.getName() + " could not be changed to \"" + network.getName() + "\"");
+					}
+
+				} else {
+					logger.info("Error in changing network label. network 不存在");
+				}
+			}
+
+		}
+
+		catch (Exception e) {
+			logger.info("setVirtualMachineNetwork::Exception:" + e);
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 根据名称获得数据中的网络设备对象.
+	 * 
+	 * @param name
+	 *            网络设备器名称
+	 * @return
+	 * @throws RemoteException
+	 * @throws MalformedURLException
+	 */
+	private Network getNetworkFromString(String name) throws RemoteException, MalformedURLException {
+
+		Network network = null;
+		Datacenter dc = null;
+		List<Network> networks = new ArrayList<Network>();
+
+		Folder rootFolder = getServiceInstance().getRootFolder();
+
+		ManagedEntity[] datacenters = rootFolder.getChildEntity();
+
+		// 获得数据中心
+		for (int i = 0; i < datacenters.length; i++) {
+			if (datacenters[i] instanceof Datacenter) {
+				dc = (Datacenter) datacenters[i];
+				break;
+			}
+		}
+
+		// 获得网络
+		for (ManagedEntity entity : dc.getNetworkFolder().getChildEntity()) {
+			if (entity instanceof Network) {
+				networks.add(((Network) entity));
+			}
+		}
+
+		for (Network each : networks) {
+			if (each.getName().equals(name)) {
+				network = each;
+			}
+		}
+
+		return network;
+	}
+
 	public boolean cloneVM(CloneVMParameter parameter) {
 
 		try {
@@ -155,24 +283,29 @@ public class VMService {
 
 			Task task = vm.cloneVM_Task((Folder) vm.getParent(), parameter.getvMName(), cloneSpec);
 
-			String status = task.waitForMe();
-			if (status != Task.SUCCESS) {
-				System.out.println("Failure -: VM cannot be cloned");
+			if (task.waitForTask() != Task.SUCCESS) {
+				logger.info("Failure -: VM cannot be cloned");
 				return false;
 			}
 
-			// 为VM添加注释
-			VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
-			vmConfigSpec.setAnnotation(parameter.getDescription());
-			vm.reconfigVM_Task(vmConfigSpec);
+			// 为虚拟机设置网络适配器相关信息:设备状态设置为已连接、网络标签、虚拟机的备注.
+			setVirtualMachineNetwork(getVirtualMachine(si, parameter.getvMName()), "VM Network",
+					parameter.getDescription());
 
 		} catch (InvalidProperty e) {
+			logger.info("cloneVM::InvalidProperty:" + e);
 			return false;
 		} catch (RuntimeFault e) {
+			logger.info("cloneVM::RuntimeFault:" + e);
 			return false;
 		} catch (RemoteException e) {
+			logger.info("cloneVM::RemoteException:" + e);
 			return false;
 		} catch (MalformedURLException e) {
+			logger.info("cloneVM::MalformedURLException:" + e);
+			return false;
+		} catch (InterruptedException e) {
+			logger.info("cloneVM::InterruptedException:" + e);
 			return false;
 		}
 
@@ -203,15 +336,16 @@ public class VMService {
 			vm.destroy_Task();
 
 		} catch (RemoteException e) {
+			logger.info("destroyVM::RemoteException:" + e);
 			return false;
 		} catch (MalformedURLException e) {
+			logger.info("destroyVM::MalformedURLException:" + e);
 			return false;
 		}
 
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
 	public boolean reconfigVM(ReconfigVMParameter parameter) {
 
 		try {
@@ -226,15 +360,19 @@ public class VMService {
 
 			Task task = vm.reconfigVM_Task(vmConfigSpec);
 
-			String status = task.waitForMe();
-			if (status != Task.SUCCESS) {
-				System.out.println("Failure -: VM cannot be cloned");
+			if (task.waitForTask() != Task.SUCCESS) {
+				logger.info("Failure -: VM cannot be cloned");
 				return false;
 			}
 
 		} catch (RemoteException e) {
+			logger.info("reconfigVM::RemoteException:" + e);
 			return false;
 		} catch (MalformedURLException e) {
+			logger.info("reconfigVM::MalformedURLException:" + e);
+			return false;
+		} catch (InterruptedException e) {
+			logger.info("reconfigVM::InterruptedException:" + e);
 			return false;
 		}
 
@@ -242,7 +380,6 @@ public class VMService {
 
 	}
 
-	@SuppressWarnings("deprecation")
 	public boolean powerVM(PowerVMParameter parameter) {
 
 		try {
@@ -260,21 +397,21 @@ public class VMService {
 			} else if ("poweron".equalsIgnoreCase(parameter.getPowerOperation())) {
 
 				Task task = vm.powerOnVM_Task(null);
-				if (task.waitForMe() != Task.SUCCESS) {
+				if (task.waitForTask() != Task.SUCCESS) {
 					return false;
 				}
 
 			} else if ("poweroff".equalsIgnoreCase(parameter.getPowerOperation())) {
 
 				Task task = vm.powerOffVM_Task();
-				if (task.waitForMe() != Task.SUCCESS) {
+				if (task.waitForTask() != Task.SUCCESS) {
 					return false;
 				}
 
 			} else if ("reset".equalsIgnoreCase(parameter.getPowerOperation())) {
 
 				Task task = vm.resetVM_Task();
-				if (task.waitForMe() != Task.SUCCESS) {
+				if (task.waitForTask() != Task.SUCCESS) {
 					return false;
 				}
 
@@ -285,14 +422,14 @@ public class VMService {
 			} else if ("suspend".equalsIgnoreCase(parameter.getPowerOperation())) {
 
 				Task task = vm.suspendVM_Task();
-				if (task.waitForMe() != Task.SUCCESS) {
+				if (task.waitForTask() != Task.SUCCESS) {
 					return false;
 				}
 
 			} else if ("shutdown".equalsIgnoreCase(parameter.getPowerOperation())) {
 
 				Task task = vm.suspendVM_Task();
-				if (task.waitForMe() != Task.SUCCESS) {
+				if (task.waitForTask() != Task.SUCCESS) {
 					return false;
 				}
 
@@ -303,8 +440,13 @@ public class VMService {
 			logout(si);
 
 		} catch (RemoteException e) {
+			logger.info("powerVM::RemoteException:" + e);
 			return false;
 		} catch (MalformedURLException e) {
+			logger.info("powerVM::MalformedURLException:" + e);
+			return false;
+		} catch (InterruptedException e) {
+			logger.info("powerVM::InterruptedException:" + e);
 			return false;
 		}
 
@@ -346,9 +488,9 @@ public class VMService {
 			}
 
 		} catch (RemoteException e) {
-			e.printStackTrace();
+			logger.info("RelationVMParameter::RemoteException:" + e);
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.info("RelationVMParameter::MalformedURLException:" + e);
 		}
 
 		RelationVMParameter parameter = new RelationVMParameter();
