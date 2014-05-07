@@ -77,7 +77,7 @@ public class VMTest extends TestCase {
 		assertTrue(service.cloneVM(parameter));
 	}
 
-	// @Test
+	@Test
 	public void destroyVM() {
 		DestroyVMParameter parameter = TestData.randomDestroyVMParameter();
 		assertTrue(service.destroyVM(parameter));
@@ -89,13 +89,13 @@ public class VMTest extends TestCase {
 		assertTrue(service.reconfigVM(parameter));
 	}
 
-	 @Test
+	@Test
 	public void powerVM() {
 		PowerVMParameter parameter = TestData.randomPowerVMParameter();
 		assertTrue(service.powerVM(parameter));
 	}
 
-	// @Test
+	@Test
 	public void getVM() {
 		RelationVMParameter parameter = service.getVMAndHostRelation();
 		for (Entry<String, String> element : parameter.getRelationMaps().entrySet()) {
