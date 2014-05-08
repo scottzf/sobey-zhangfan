@@ -1,5 +1,8 @@
 package com.sobey.nagios.test;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +45,24 @@ public class NagiosTest {
 	private static final String IPADDRESS = "172.20.34.1";
 	private static final String STARTTIME = "2014-01-16 15:00:00";
 	private static final String ENDTIME = "2014-01-16 15:30:00";
+
+	@Test
+	public void extractIPByRegexTest() {
+
+		String ipAddress = "xa_flgbdst_0.0.0.0";
+
+		String regex = "(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
+
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(ipAddress);
+
+		if (matcher.find()) {
+			System.err.println(matcher.group());
+		} else {
+			System.out.println("字符串无IP地址,格式不符");
+		}
+
+	}
 
 	@Test
 	public void upTimeTets() {
