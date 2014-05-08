@@ -33,17 +33,17 @@ public class NagiosDao {
 	/**
 	 * 获得nagios数据库中的数据.
 	 * 
-	 * @param itemId
+	 * @param itemName
 	 * @param ipaddress
 	 * @param startDate
 	 * @param endDate
 	 * @return
 	 */
-	public List<NagiosResult> getNagiosResult(String itemId, String ipaddress, String startDate, String endDate) {
+	public List<NagiosResult> getNagiosResult(String itemName, String ipaddress, String startDate, String endDate) {
 		String sql = "SELECT T2.name1,T2.name2,T1.start_time,T1.end_time,T1.output FROM nagios_servicechecks T1,nagios_objects T2"
-				+ " WHERE T2.object_id = T1.service_object_id AND command_object_id = 0 AND T2.object_id = "
-				+ itemId
-				+ " AND T2.name1 = '" + ipaddress + "'";
+				+ " WHERE T2.object_id = T1.service_object_id AND command_object_id = 0 AND T2.name2 = '"
+				+ itemName
+				+ "' AND T2.name1 = '" + ipaddress + "'";
 
 		if (StringUtils.isNotBlank(startDate)) {
 			sql += "AND T1.end_time >='" + startDate + "'";

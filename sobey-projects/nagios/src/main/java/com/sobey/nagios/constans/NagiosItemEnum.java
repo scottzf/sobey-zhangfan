@@ -8,18 +8,19 @@ package com.sobey.nagios.constans;
  */
 public enum NagiosItemEnum {
 
-	Current_Load("1384"), Current_Users("1385"), Ping("1386"), Root_Partition("1387"), Swap_Usage("1388"), Total_Processes(
-			"1389"), CPU_Num("1390"), DiskIO("1393"), Eth("1394"), Mem_Size("1395"), System_OS("1396"), Uptime("1397");
+	Current_Load("Current Load"), Current_Users("Current Users"), Ping("PING"), Root_Partition("Root Partition"), Swap_Usage(
+			"Swap Usage"), Total_Processes("Total Processes"), CPU_Num("cpu_num"), DiskIO("diskIO"), Eth("eth"), Mem_Size(
+			"mem_size"), System_OS("system_os"), Uptime("Uptime");
 
-	private String itemId;
+	private String itemName;
 
-	private NagiosItemEnum(String itemId) {
-		this.itemId = itemId;
+	private NagiosItemEnum(String itemName) {
+		this.itemName = itemName;
 	}
 
 	@Override
 	public String toString() {
-		return String.valueOf(this.itemId);
+		return String.valueOf(this.itemName);
 	}
 
 }
