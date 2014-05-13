@@ -29,28 +29,28 @@ public class VMTest extends TestCase {
 	@Autowired
 	private InstanceService service;
 
-	// @Test
+	@Test
 	public void desoroyVM() {
 		DestroyVMParameter destroyVMParameter = new DestroyVMParameter();
 		destroyVMParameter.setVMName("liukai");
 		assertEquals(service.desoroyVM(destroyVMParameter).getCode(), "0");
 	}
 
-	// @Test
+	@Test
 	public void cloneVM() {
 		CloneVMParameter cloneVMParameter = new CloneVMParameter();
 		cloneVMParameter.setDescription("这个一个API测试程序");
-		cloneVMParameter.setGateway("10.10.1.0");
+		cloneVMParameter.setGateway("10.10.2.255");
 		cloneVMParameter.setIpaddress("10.10.1.80");
 		cloneVMParameter.setSubNetMask("255.255.255.0");
 		cloneVMParameter.setVMName("liukai");
 		cloneVMParameter.setVMSUserName("徽州");
-		cloneVMParameter.setVMTemplateName("CentOS");
+		cloneVMParameter.setVMTemplateName("CnetOS6.5");
 		cloneVMParameter.setVMTemplateOS("Linux");
 		assertEquals(service.cloneVM(cloneVMParameter).getCode(), "0");
 	}
 
-	// @Test
+	@Test
 	public void powerVM() {
 		PowerVMParameter powerVMParameter = new PowerVMParameter();
 		powerVMParameter.setVMName("liukai");
@@ -58,7 +58,7 @@ public class VMTest extends TestCase {
 		assertEquals(service.powerVM(powerVMParameter).getCode(), "0");
 	}
 
-	// @Test
+	@Test
 	public void reconfigVM() {
 		ReconfigVMParameter reconfigVMParameter = new ReconfigVMParameter();
 		reconfigVMParameter.setVMName("liukai");
@@ -72,6 +72,11 @@ public class VMTest extends TestCase {
 		for (Entry<String, String> entry : service.relationVM().entrySet()) {
 			System.out.println(entry.getValue() + " : " + entry.getKey());
 		}
+	}
+
+	@Test
+	public void sync() {
+		service.syncVM();
 	}
 
 }
