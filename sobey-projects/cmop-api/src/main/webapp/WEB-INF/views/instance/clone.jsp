@@ -15,7 +15,7 @@
 			<div class="col-sm-10">
 
 				<input type="text" class="form-control" id="vmName" name="vmName"
-					placeholder="规格" value="Sobey">
+					placeholder="虚拟机名" value="Sobey">
 			</div>
 		</div>
 
@@ -25,14 +25,6 @@
 				<select id="vmTemplateOS" name="vmTemplateOS">
 					<option value="CnetOS6.5">CnetOS6.5</option>
 				</select>
-			</div>
-		</div>
-
-		<div class="form-group">
-			<label for="vmTemplateOS" class="col-sm-2 control-label">VMTemplateOS</label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" id="vmTemplateOS"
-					name="vmTemplateOS" placeholder="" value="Sobey">
 			</div>
 		</div>
 
@@ -48,7 +40,7 @@
 			<label for="gateway" class="col-sm-2 control-label">Gateway</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="gateway" name="gateway"
-					placeholder="网关" value="10.10.1.0">
+					placeholder="网关" value="10.10.2.255">
 			</div>
 		</div>
 

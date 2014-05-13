@@ -14,7 +14,7 @@
 			<label for="vmName" class="col-sm-2 control-label">VMName</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="vmName" name="vmName"
-					placeholder="虚拟机名称">
+					placeholder="虚拟机名称" value="Sobey">
 			</div>
 		</div>
 
