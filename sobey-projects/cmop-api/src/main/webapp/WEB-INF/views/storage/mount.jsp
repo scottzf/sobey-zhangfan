@@ -14,7 +14,7 @@
 			<label for="volumeName" class="col-sm-2 control-label">VolumeName</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="volumeName"
-					name="volumeName" placeholder="卷名">
+					name="volumeName" placeholder="卷名" value="sobey">
 			</div>
 		</div>
 
@@ -22,7 +22,7 @@
 			<label for="clientIPaddress" class="col-sm-2 control-label">ClientIPaddress</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="clientIPaddress"
-					name="clientIPaddress" placeholder="客户端IP">
+					name="clientIPaddress" placeholder="客户端IP" value="10.10.2.81">
 			</div>
 		</div>
 
@@ -30,7 +30,7 @@
 			<label for="netAppIPaddress" class="col-sm-2 control-label">NetAppIPaddress</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="netAppIPaddress"
-					name="netAppIPaddress" placeholder="Netapp IP">
+					name="netAppIPaddress" placeholder="Netapp IP" value="10.10.2.34">
 			</div>
 		</div>
 

@@ -14,7 +14,7 @@
 			<label for="domianName" class="col-sm-2 control-label">DomianName</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="domianName"
-					name="domianName" placeholder="域名">
+					name="domianName" placeholder="域名" value="mdnftp.sobeycache.com">
 			</div>
 		</div>
 
@@ -22,7 +22,7 @@
 			<label for="domianName" class="col-sm-2 control-label">Policy</label>
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="publicIPs"
-					placeholder="IP地址">
+					placeholder="公网IP地址">
 			</div>
 
 			<div class="col-sm-2">

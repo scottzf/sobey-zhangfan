@@ -14,7 +14,7 @@
 			<label for="firewallPolicyId" class="col-sm-2 control-label">FirewallPolicyId</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="firewallPolicyId"
-					name="firewallPolicyId" placeholder="Firewall Policy Id">
+					name="firewallPolicyId" placeholder="Firewall Policy Id" value="2000">
 			</div>
 		</div>
 
@@ -22,7 +22,7 @@
 			<label for="vlanId" class="col-sm-2 control-label">VlanId</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="vlanId" name="vlanId"
-					placeholder="Vlan Id">
+					placeholder="Vlan Id" value="80">
 			</div>
 		</div>
 
@@ -30,7 +30,7 @@
 			<label for="netMask" class="col-sm-2 control-label">NetMask</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="netMask" name="netMask"
-					placeholder="子网掩码">
+					placeholder="子网掩码" value="255.255.255.0">
 			</div>
 		</div>
 
@@ -38,7 +38,7 @@
 			<label for="vpnUser" class="col-sm-2 control-label">VPN User</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="vpnUser" name="vpnUser"
-					placeholder="VPN账户名">
+					placeholder="VPN账户名" value="sobey_vpn">
 			</div>
 		</div>
 
@@ -47,7 +47,7 @@
 				Password</label>
 			<div class="col-sm-10">
 				<input type="password" class="form-control" id="vpnPassword"
-					name="vpnPassword" placeholder="VPN密码">
+					name="vpnPassword" placeholder="VPN密码" value="123456">
 			</div>
 		</div>
 

@@ -14,7 +14,7 @@
 			<label for="aclNumber" class="col-sm-2 control-label">AclNumber</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="aclNumber"
-					name="aclNumber" placeholder="aclNumber 3000起">
+					name="aclNumber" placeholder="aclNumber 3000起" value="3000">
 			</div>
 		</div>
 
@@ -22,7 +22,7 @@
 			<label for="vlanId" class="col-sm-2 control-label">VlanId</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="vlanId" name="vlanId"
-					placeholder="Vlan Id">
+					placeholder="Vlan Id" value="80">
 			</div>
 		</div>
 
@@ -30,23 +30,13 @@
 			<label for="desc" class="col-sm-2 control-label">Description</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="desc" name="desc"
-					placeholder="说明">
+					placeholder="说明" value="Esg的测试">
 			</div>
 		</div>
 
 		<div class="form-group clone">
 
 			<label for="Permit" class="col-sm-2 control-label">Permit</label>
-
-			<div class="col-sm-2">
-				<input type="text" class="form-control" name="permitsDestination"
-					placeholder="Destination">
-			</div>
-
-			<div class="col-sm-2">
-				<input type="text" class="form-control"
-					name="permitsDestinationNetMask" placeholder="NetMask">
-			</div>
 
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="permitsSource"
@@ -58,6 +48,16 @@
 					placeholder="SourceNetMask">
 			</div>
 
+			<div class="col-sm-2">
+				<input type="text" class="form-control" name="permitsDestination"
+					placeholder="Destination">
+			</div>
+
+			<div class="col-sm-2">
+				<input type="text" class="form-control"
+					name="permitsDestinationNetMask" placeholder="NetMask">
+			</div>
+
 			<div class="col-sm-1">
 				<button type="button" class="btn btn-default clone">Add
 					Policy</button>
@@ -67,20 +67,11 @@
 					Policy</button>
 			</div>
 		</div>
-		
+
 		<div class="form-group clone">
 
 			<label for="Deny" class="col-sm-2 control-label">Deny</label>
 
-			<div class="col-sm-2">
-				<input type="text" class="form-control" name="denysDestination"
-					placeholder="Destination">
-			</div>
-
-			<div class="col-sm-2">
-				<input type="text" class="form-control"
-					name="denysDestinationNetMask" placeholder="NetMask">
-			</div>
 
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="denysSource"
@@ -90,6 +81,16 @@
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="denysSourceNetMask"
 					placeholder="SourceNetMask">
+			</div>
+
+			<div class="col-sm-2">
+				<input type="text" class="form-control" name="denysDestination"
+					placeholder="Destination">
+			</div>
+
+			<div class="col-sm-2">
+				<input type="text" class="form-control"
+					name="denysDestinationNetMask" placeholder="NetMask">
 			</div>
 
 			<div class="col-sm-1">

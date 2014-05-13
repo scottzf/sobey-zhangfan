@@ -14,7 +14,7 @@
 			<label for="volumeName" class="col-sm-2 control-label">VolumeName</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="volumeName"
-					name="volumeName" placeholder="卷名">
+					name="volumeName" placeholder="卷名" value="sobey">
 			</div>
 		</div>
 

@@ -14,7 +14,7 @@
 			<label for="vlanId" class="col-sm-2 control-label">VlanId</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="vlanId" name="vlanId"
-					placeholder="Vlan Id">
+					placeholder="Vlan Id" value="80">
 			</div>
 		</div>
 

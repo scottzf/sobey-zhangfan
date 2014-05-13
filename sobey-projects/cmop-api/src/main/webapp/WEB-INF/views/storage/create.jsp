@@ -14,7 +14,7 @@
 			<label for="volumeName" class="col-sm-2 control-label">VolumeName</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="volumeName"
-					name="volumeName" placeholder="卷名">
+					name="volumeName" placeholder="卷名" value="sobey">
 			</div>
 		</div>
 
@@ -22,7 +22,7 @@
 			<label for="volumeSize" class="col-sm-2 control-label">VolumeSize</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="volumeSize"
-					name="volumeSize" placeholder="卷大小(MB)">
+					name="volumeSize" placeholder="卷大小(MB)" value="20">
 			</div>
 		</div>
 
@@ -30,7 +30,7 @@
 			<label for="volumeSize" class="col-sm-2 control-label">ClientIPaddress</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="clientIPaddress"
-					name="clientIPaddress" placeholder="客户端IP">
+					name="clientIPaddress" placeholder="客户端IP" value="10.10.2.81">
 			</div>
 		</div>
 

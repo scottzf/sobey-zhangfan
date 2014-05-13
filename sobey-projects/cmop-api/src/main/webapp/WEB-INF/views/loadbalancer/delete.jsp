@@ -14,7 +14,7 @@
 			<label for="domianName" class="col-sm-2 control-label">VIP</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="vip"
-					name="vip" placeholder="虚拟IP">
+					name="vip" placeholder="虚拟IP" value="10.0.8.72">
 			</div>
 		</div>
 
