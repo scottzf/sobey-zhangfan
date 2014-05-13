@@ -17,6 +17,7 @@ import com.sobey.nagios.entity.NagiosEth;
 import com.sobey.nagios.entity.NagiosMemoryLoad;
 import com.sobey.nagios.entity.NagiosPing;
 import com.sobey.nagios.entity.NagiosRootPartition;
+import com.sobey.nagios.entity.NagiosStream;
 import com.sobey.nagios.entity.NagiosSwapUsage;
 import com.sobey.nagios.entity.NagiosSystemOS;
 import com.sobey.nagios.entity.NagiosTotalProcesses;
@@ -30,6 +31,7 @@ import com.sobey.nagios.webservice.response.dto.NagiosEthDTO;
 import com.sobey.nagios.webservice.response.dto.NagiosMemoryLoadDTO;
 import com.sobey.nagios.webservice.response.dto.NagiosPingDTO;
 import com.sobey.nagios.webservice.response.dto.NagiosRootPartitionDTO;
+import com.sobey.nagios.webservice.response.dto.NagiosStreamDTO;
 import com.sobey.nagios.webservice.response.dto.NagiosSwapUsageDTO;
 import com.sobey.nagios.webservice.response.dto.NagiosSystemOSDTO;
 import com.sobey.nagios.webservice.response.dto.NagiosTotalProcessesDTO;
@@ -48,6 +50,14 @@ public class NagiosTest {
 
 	@Test
 	public void extractIPByRegexTest() {
+
+		NagiosStreamDTO dto = service.stream();
+
+		for (NagiosStream stream : dto.getNagiosStreams()) {
+			System.out.println(stream.getHostName());
+			System.out.println(stream.getServiceName());
+
+		}
 
 		String ipAddress = "xa_flgbdst_0.0.0.0";
 

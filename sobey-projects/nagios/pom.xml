@@ -27,7 +27,7 @@
 			<groupId>com.sobey</groupId>
 			<artifactId>sobey-core</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.sobey</groupId>
 			<artifactId>sobey-extension</artifactId>
@@ -74,7 +74,7 @@
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-frontend-jaxws</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-transports-http</artifactId>
@@ -92,6 +92,12 @@
 			<artifactId>activemq-core</artifactId>
 		</dependency>
 		<!-- JMS end -->
+
+		<dependency>
+			<groupId>net.sf.dozer</groupId>
+			<artifactId>dozer</artifactId>
+			<optional>true</optional>
+		</dependency>
 
 		<!-- LOGGING begin -->
 		<dependency>
@@ -128,17 +134,17 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sobey.core.mapper.BeanMapper;
 import com.sobey.nagios.constans.NagiosItemEnum;
 import com.sobey.nagios.dao.NagiosDao;
 import com.sobey.nagios.entity.NagiosCPULoad;
@@ -17,6 +18,8 @@ import com.sobey.nagios.entity.NagiosMemoryLoad;
 import com.sobey.nagios.entity.NagiosPing;
 import com.sobey.nagios.entity.NagiosResult;
 import com.sobey.nagios.entity.NagiosRootPartition;
+import com.sobey.nagios.entity.NagiosStream;
+import com.sobey.nagios.entity.NagiosStreamResult;
 import com.sobey.nagios.entity.NagiosSwapUsage;
 import com.sobey.nagios.entity.NagiosSystemOS;
 import com.sobey.nagios.entity.NagiosTotalProcesses;
@@ -30,6 +33,7 @@ import com.sobey.nagios.webservice.response.dto.NagiosEthDTO;
 import com.sobey.nagios.webservice.response.dto.NagiosMemoryLoadDTO;
 import com.sobey.nagios.webservice.response.dto.NagiosPingDTO;
 import com.sobey.nagios.webservice.response.dto.NagiosRootPartitionDTO;
+import com.sobey.nagios.webservice.response.dto.NagiosStreamDTO;
 import com.sobey.nagios.webservice.response.dto.NagiosSwapUsageDTO;
 import com.sobey.nagios.webservice.response.dto.NagiosSystemOSDTO;
 import com.sobey.nagios.webservice.response.dto.NagiosTotalProcessesDTO;
@@ -46,6 +50,21 @@ public class NagiosService {
 
 	@Autowired
 	private NagiosDao dao;
+
+	public NagiosStreamDTO stream() {
+
+		List<NagiosStreamResult> results = dao.getNagiosStreamResult();
+
+		ArrayList<NagiosStream> streams = new ArrayList<NagiosStream>();
+
+		streams = (ArrayList<NagiosStream>) BeanMapper.mapList(results, NagiosStream.class);
+
+		NagiosStreamDTO dto = new NagiosStreamDTO();
+
+		dto.setNagiosStreams(streams);
+
+		return dto;
+	}
 
 	public NagiosPingDTO ping(String ipaddress, String startDate, String endDate) {
 
