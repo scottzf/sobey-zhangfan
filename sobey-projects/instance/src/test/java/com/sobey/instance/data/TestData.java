@@ -17,8 +17,14 @@ public class TestData {
 		parameter.setSubNetMask("255.255.255.0");
 		parameter.setvMName("liukai");
 		parameter.setvMSUserName("徽州");
+
+		// Linux
 		parameter.setvMTemplateName("CnetOS6.5");
-		parameter.setvMTemplateOS("Linux"); // Windows
+		parameter.setvMTemplateOS("Linux");
+
+		// Windows
+		// parameter.setvMTemplateName("WinServer2008R2");
+		// parameter.setvMTemplateOS("Windows");
 		return parameter;
 	}
 

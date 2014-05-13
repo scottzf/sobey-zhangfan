@@ -22,12 +22,20 @@ import com.vmware.vim25.CustomizationAdapterMapping;
 import com.vmware.vim25.CustomizationFixedIp;
 import com.vmware.vim25.CustomizationFixedName;
 import com.vmware.vim25.CustomizationGlobalIPSettings;
+import com.vmware.vim25.CustomizationGuiUnattended;
 import com.vmware.vim25.CustomizationIPSettings;
+import com.vmware.vim25.CustomizationIdentification;
+import com.vmware.vim25.CustomizationLicenseDataMode;
+import com.vmware.vim25.CustomizationLicenseFilePrintData;
 import com.vmware.vim25.CustomizationLinuxOptions;
 import com.vmware.vim25.CustomizationLinuxPrep;
 import com.vmware.vim25.CustomizationSpec;
 import com.vmware.vim25.CustomizationSpecInfo;
 import com.vmware.vim25.CustomizationSpecItem;
+import com.vmware.vim25.CustomizationSysprep;
+import com.vmware.vim25.CustomizationSysprepRebootOption;
+import com.vmware.vim25.CustomizationUserData;
+import com.vmware.vim25.CustomizationWinOptions;
 import com.vmware.vim25.InvalidProperty;
 import com.vmware.vim25.ManagedObjectReference;
 import com.vmware.vim25.RuntimeFault;
@@ -248,18 +256,60 @@ public class VMService {
 			computerName.setName("cmop");// 无法确认VM用户名是否能为中文,目前暂定为所有都是cmop
 
 			CustomizationAdapterMapping[] nicSettingMap = new CustomizationAdapterMapping[] { adaptorMap };
-			CustomizationLinuxOptions linuxOptions = new CustomizationLinuxOptions();
-			CustomizationLinuxPrep cLinuxPrep = new CustomizationLinuxPrep();
-			cLinuxPrep.setDomain("sobeyc.com");
-			cLinuxPrep.setHostName(computerName);
-			cLinuxPrep.setHwClockUTC(true);
-			cLinuxPrep.setTimeZone("Asia/Shanghai");
 
 			CustomizationSpecManager specManager = si.getCustomizationSpecManager();
 
+			if ("Linux".equals(parameter.getvMTemplateOS())) {
+
+				CustomizationLinuxOptions linuxOptions = new CustomizationLinuxOptions();
+				CustomizationLinuxPrep cLinuxPrep = new CustomizationLinuxPrep();
+				cLinuxPrep.setDomain("sobeyc.com");
+				cLinuxPrep.setHostName(computerName);
+				cLinuxPrep.setHwClockUTC(true);
+				cLinuxPrep.setTimeZone("Asia/Shanghai");
+
+				cspec.setOptions(linuxOptions);
+				cspec.setIdentity(cLinuxPrep);
+
+			} else if ("Windows".equals(parameter.getvMTemplateOS())) {
+
+				CustomizationWinOptions winOptions = new CustomizationWinOptions();
+				CustomizationSysprep cWinSysprep = new CustomizationSysprep();
+
+				CustomizationGuiUnattended guiUnattended = new CustomizationGuiUnattended();
+				guiUnattended.setAutoLogon(false);
+				guiUnattended.setAutoLogonCount(1);
+				guiUnattended.setTimeZone(235);
+				cWinSysprep.setGuiUnattended(guiUnattended);
+
+				CustomizationUserData userData = new CustomizationUserData();
+				userData.setProductId("");
+				userData.setFullName("Sobey");
+				userData.setOrgName("Sobey");
+				userData.setComputerName(computerName);
+				cWinSysprep.setUserData(userData);
+
+				// Windows Server 2000, 2003 必须
+				CustomizationLicenseFilePrintData printData = new CustomizationLicenseFilePrintData();
+				printData.setAutoMode(CustomizationLicenseDataMode.perSeat);
+				cWinSysprep.setLicenseFilePrintData(printData);
+
+				CustomizationIdentification identification = new CustomizationIdentification();
+				identification.setJoinWorkgroup("Sobey");
+				cWinSysprep.setIdentification(identification);
+
+				winOptions.setReboot(CustomizationSysprepRebootOption.shutdown);
+				winOptions.setChangeSID(true);
+				winOptions.setDeleteAccounts(false);
+
+				cspec.setOptions(winOptions);
+				cspec.setIdentity(cWinSysprep);
+
+			} else {
+				return false;
+			}
+
 			cspec.setGlobalIPSettings(gIP);
-			cspec.setOptions(linuxOptions);
-			cspec.setIdentity(cLinuxPrep);
 			cspec.setNicSettingMap(nicSettingMap);
 			cspec.setEncryptionKey(specManager.getEncryptionKey());
 
