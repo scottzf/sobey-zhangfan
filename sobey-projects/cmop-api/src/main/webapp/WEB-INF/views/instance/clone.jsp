@@ -32,7 +32,7 @@
 			<label for="ipaddress" class="col-sm-2 control-label">Ipaddress</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="ipaddress"
-					name="ipaddress" placeholder="ip地址" value="10.10.1.80">
+					name="ipaddress" placeholder="ip地址" value="10.10.2.80">
 			</div>
 		</div>
 
@@ -40,7 +40,7 @@
 			<label for="gateway" class="col-sm-2 control-label">Gateway</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="gateway" name="gateway"
-					placeholder="网关" value="10.10.2.255">
+					placeholder="网关" value="10.10.2.1">
 			</div>
 		</div>
 

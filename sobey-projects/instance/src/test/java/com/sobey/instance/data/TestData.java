@@ -12,7 +12,7 @@ public class TestData {
 		CloneVMParameter parameter = new CloneVMParameter();
 
 		parameter.setDescription("这个一个API测试程序");
-		parameter.setGateway("10.10.2.255");
+		parameter.setGateway("10.10.2.1");
 		parameter.setIpaddress("10.10.2.81");
 		parameter.setSubNetMask("255.255.255.0");
 		parameter.setvMName("liukai");

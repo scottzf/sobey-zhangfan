@@ -235,7 +235,7 @@ public class VMService {
 			specItem.setSpec(cspec);
 
 			// dns列表
-			String dnsList[] = new String[] { "10.193.16.105", "8.8.8.8" };
+			String dnsList[] = new String[] { "8.8.8.8" };
 			String ipAddress = parameter.getIpaddress(); // 自定义的内网IP
 			String subNetMask = parameter.getSubNetMask();
 

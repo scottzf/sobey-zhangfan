@@ -30,7 +30,7 @@
 			<label for="volumeSize" class="col-sm-2 control-label">ClientIPaddress</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="clientIPaddress"
-					name="clientIPaddress" placeholder="客户端IP" value="10.10.2.81">
+					name="clientIPaddress" placeholder="客户端IP" value="10.10.2.80">
 			</div>
 		</div>
 
