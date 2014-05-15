@@ -12,15 +12,15 @@
 
 		<div class="form-group">
 			<label for="internetIP" class="col-sm-2 control-label">InternetIP</label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" id="internetIP"
+			<div class="col-sm-4">
+				<input type="text" class="form-control" id="internetIP" readonly="readonly"
 					name="internetIP" placeholder="公网IP" value="119.6.200.219">
 			</div>
 		</div>
 
 		<div class="form-group">
 			<label for="isp" class="col-sm-2 control-label">ISP</label>
-			<div class="col-sm-10">
+			<div class="col-sm-4">
 				<select name="isp" class="form-control">
 					<option value="1">中国联通</option>
 					<option value="0">中国电信</option>
@@ -30,9 +30,9 @@
 
 		<div class="form-group">
 			<label for="internetIP" class="col-sm-2 control-label">PrivateIP</label>
-			<div class="col-sm-10">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="privateIP"
-					name="privateIP" placeholder="内网IP" value="172.28.25.105">
+					name="privateIP" placeholder="内网IP" value="10.0.8.72">
 			</div>
 		</div>
 
@@ -68,7 +68,7 @@
 
 
 		<div class="form-group">
-			<div class="col-sm-offset-2 col-sm-10">
+			<div class="col-sm-offset-2 col-sm-4">
 				<button type="submit" class="btn btn-primary">Delete</button>
 			</div>
 		</div>

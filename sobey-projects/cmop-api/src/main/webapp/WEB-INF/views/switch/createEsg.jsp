@@ -12,7 +12,7 @@
 
 		<div class="form-group">
 			<label for="aclNumber" class="col-sm-2 control-label">AclNumber</label>
-			<div class="col-sm-10">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="aclNumber"
 					name="aclNumber" placeholder="aclNumber 3000起" value="3000">
 			</div>
@@ -20,7 +20,7 @@
 
 		<div class="form-group">
 			<label for="vlanId" class="col-sm-2 control-label">VlanId</label>
-			<div class="col-sm-10">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="vlanId" name="vlanId"
 					placeholder="Vlan Id" value="80">
 			</div>
@@ -28,7 +28,7 @@
 
 		<div class="form-group">
 			<label for="desc" class="col-sm-2 control-label">Description</label>
-			<div class="col-sm-10">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="desc" name="desc"
 					placeholder="说明" value="Esg的测试">
 			</div>
@@ -105,7 +105,7 @@
 
 
 		<div class="form-group">
-			<div class="col-sm-offset-2 col-sm-10">
+			<div class="col-sm-offset-2 col-sm-4">
 				<button type="submit" class="btn btn-primary">Create</button>
 			</div>
 		</div>

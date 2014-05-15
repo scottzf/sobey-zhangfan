@@ -29,7 +29,7 @@
 			<label for="startDate" class="col-sm-2 control-label">开始时间</label>
 			<div class="col-sm-2">
 				<input type="text" class="form-control datepicker" readonly="readonly" id="startDate" name="startDate"
-					placeholder="开始时间">
+					placeholder="开始时间" value="2014-01-15 08:30">
 			</div>
 		</div>
 		
@@ -37,19 +37,19 @@
 			<label for="endDate" class="col-sm-2 control-label">结束时间</label>
 			<div class="col-sm-2">
 				<input type="text" class="form-control datepicker" readonly="readonly" id="endDate" name="endDate"
-					placeholder="结束时间">
+					placeholder="结束时间" value="2014-01-15 12:30">
 			</div>
 		</div>
 
 		<div class="form-group">
-			<div class="col-sm-offset-2 col-sm-10">
+			<div class="col-sm-offset-2 col-sm-4">
 				<button type="button" class="btn btn-primary">Search</button>
 			</div>
 		</div>
 		
 		
 		<div class="form-group">
-			<div class="col-sm-offset-2 col-sm-10">
+			<div class="col-sm-offset-2 col-sm-4">
 				<div id="monitor-totalProcesses" style="height: 200px; width: 600px;"></div>
 			</div>
 		</div>

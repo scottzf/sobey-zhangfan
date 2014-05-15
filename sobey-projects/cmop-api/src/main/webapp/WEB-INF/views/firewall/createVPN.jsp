@@ -12,31 +12,32 @@
 
 		<div class="form-group">
 			<label for="firewallPolicyId" class="col-sm-2 control-label">FirewallPolicyId</label>
-			<div class="col-sm-10">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="firewallPolicyId"
-					name="firewallPolicyId" placeholder="Firewall Policy Id" value="2000">
+					name="firewallPolicyId" placeholder="Firewall Policy Id"
+					value="2000" readonly="readonly">
 			</div>
 		</div>
 
 		<div class="form-group">
 			<label for="vlanId" class="col-sm-2 control-label">VlanId</label>
-			<div class="col-sm-10">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="vlanId" name="vlanId"
-					placeholder="Vlan Id" value="80">
+					readonly="readonly" placeholder="Vlan Id" value="80">
 			</div>
 		</div>
 
 		<div class="form-group">
 			<label for="netMask" class="col-sm-2 control-label">NetMask</label>
-			<div class="col-sm-10">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="netMask" name="netMask"
-					placeholder="子网掩码" value="255.255.255.0">
+					readonly="readonly" placeholder="子网掩码" value="255.255.255.0">
 			</div>
 		</div>
 
 		<div class="form-group">
 			<label for="vpnUser" class="col-sm-2 control-label">VPN User</label>
-			<div class="col-sm-10">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="vpnUser" name="vpnUser"
 					placeholder="VPN账户名" value="sobey_vpn">
 			</div>
@@ -45,8 +46,8 @@
 		<div class="form-group">
 			<label for="vpnPassword" class="col-sm-2 control-label">VPN
 				Password</label>
-				
-			<div class="col-sm-10">
+
+			<div class="col-sm-4">
 				<input type="password" class="form-control" id="vpnPassword"
 					name="vpnPassword" placeholder="VPN密码" value="123456">
 			</div>
@@ -89,7 +90,7 @@
 		</div>
 
 		<div class="form-group">
-			<div class="col-sm-offset-2 col-sm-10">
+			<div class="col-sm-offset-2 col-sm-4">
 				<button type="submit" class="btn btn-primary">Create</button>
 			</div>
 		</div>

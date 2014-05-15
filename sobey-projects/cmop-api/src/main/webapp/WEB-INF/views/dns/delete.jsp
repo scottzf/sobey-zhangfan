@@ -12,9 +12,10 @@
 
 		<div class="form-group">
 			<label for="domianName" class="col-sm-2 control-label">DomianName</label>
-			<div class="col-sm-10">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="domianName"
-					name="domianName" placeholder="域名" value="mdnftp.sobeycache.com">
+					name="domianName" placeholder="域名" value="mdnftp.sobeycache.com"
+					readonly="readonly">
 			</div>
 		</div>
 
@@ -22,7 +23,7 @@
 			<label for="domianName" class="col-sm-2 control-label">Policy</label>
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="publicIPs"
-					placeholder="公网IP地址">
+					placeholder="公网IP地址" value="119.6.200.219">
 			</div>
 
 			<div class="col-sm-2">
@@ -44,7 +45,7 @@
 
 
 		<div class="form-group">
-			<div class="col-sm-offset-2 col-sm-10">
+			<div class="col-sm-offset-2 col-sm-4">
 				<button type="submit" class="btn btn-primary">Delete</button>
 			</div>
 		</div>

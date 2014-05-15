@@ -12,8 +12,8 @@
 
 		<div class="form-group">
 			<label for="domianName" class="col-sm-2 control-label">VIP</label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" id="vip"
+			<div class="col-sm-4">
+				<input type="text" class="form-control" id="vip" readonly="readonly"
 					name="vip" placeholder="虚拟IP" value="10.0.8.72">
 			</div>
 		</div>
@@ -21,7 +21,7 @@
 		<div class="form-group clone">
 			<label for="domianName" class="col-sm-2 control-label">Policy</label>
 			<div class="col-sm-2">
-				<input type="text" class="form-control" name="publicIPs"
+				<input type="text" class="form-control" name="publicIPs" value="10.10.2.80"
 					placeholder="IP地址">
 			</div>
 
@@ -44,7 +44,7 @@
 
 
 		<div class="form-group">
-			<div class="col-sm-offset-2 col-sm-10">
+			<div class="col-sm-offset-2 col-sm-4">
 				<button type="submit" class="btn btn-primary">Delete</button>
 			</div>
 		</div>

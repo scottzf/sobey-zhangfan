@@ -19,12 +19,12 @@ public class TestData {
 		parameter.setvMSUserName("徽州");
 
 		// Linux
-		parameter.setvMTemplateName("CnetOS6.5");
-		parameter.setvMTemplateOS("Linux");
+//		parameter.setvMTemplateName("CnetOS6.5");
+//		parameter.setvMTemplateOS("Linux");
 
 		// Windows
-		// parameter.setvMTemplateName("WinServer2008R2");
-		// parameter.setvMTemplateOS("Windows");
+		 parameter.setvMTemplateName("WinServer2008R2");
+		 parameter.setvMTemplateOS("Windows");
 		return parameter;
 	}
 
