@@ -43,7 +43,8 @@ public class InstanceController {
 	public String clone(@RequestParam(value = "description") String description,
 			@RequestParam(value = "gateway") String gateway, @RequestParam(value = "ipaddress") String ipaddress,
 			@RequestParam(value = "subNetMask") String subNetMask, @RequestParam(value = "vmName") String vmName,
-			@RequestParam(value = "vmTemplateOS") String vmTemplateOS, RedirectAttributes redirectAttributes) {
+			@RequestParam(value = "vmTemplateOS") String vmTemplateOS,
+			@RequestParam(value = "datacenter") String datacenter, RedirectAttributes redirectAttributes) {
 
 		CloneVMParameter cloneVMParameter = new CloneVMParameter();
 		cloneVMParameter.setDescription(description);
@@ -52,6 +53,7 @@ public class InstanceController {
 		cloneVMParameter.setVMName(vmName);
 		cloneVMParameter.setSubNetMask(subNetMask);
 		cloneVMParameter.setVMTemplateName(vmTemplateOS);
+		cloneVMParameter.setDatacenter(datacenter);
 
 		cloneVMParameter.setVMSUserName("Sobey");
 		cloneVMParameter.setVMTemplateOS("Linux");
@@ -82,10 +84,12 @@ public class InstanceController {
 	 * 销毁虚拟机
 	 */
 	@RequestMapping(value = "/destroy/", method = RequestMethod.POST)
-	public String destroy(@RequestParam(value = "vmName") String vmName, RedirectAttributes redirectAttributes) {
+	public String destroy(@RequestParam(value = "vmName") String vmName,
+			@RequestParam(value = "datacenter") String datacenter, RedirectAttributes redirectAttributes) {
 
 		DestroyVMParameter destroyVMParameter = new DestroyVMParameter();
 		destroyVMParameter.setVMName(vmName);
+		destroyVMParameter.setDatacenter(datacenter);
 
 		String message = "";
 		WSResult wsResult = service.desoroyVM(destroyVMParameter);
@@ -114,11 +118,13 @@ public class InstanceController {
 	 */
 	@RequestMapping(value = "/power/", method = RequestMethod.POST)
 	public String power(@RequestParam(value = "vmName") String vmName,
-			@RequestParam(value = "operation") String operation, RedirectAttributes redirectAttributes) {
+			@RequestParam(value = "operation") String operation, @RequestParam(value = "datacenter") String datacenter,
+			RedirectAttributes redirectAttributes) {
 
 		PowerVMParameter powerVMParameter = new PowerVMParameter();
 		powerVMParameter.setVMName(vmName);
 		powerVMParameter.setPowerOperation(operation);
+		powerVMParameter.setDatacenter(datacenter);
 
 		String message = "";
 		WSResult wsResult = service.powerVM(powerVMParameter);
@@ -148,12 +154,13 @@ public class InstanceController {
 	@RequestMapping(value = "/reconfig/", method = RequestMethod.POST)
 	public String reconfig(@RequestParam(value = "vmName") String vmName,
 			@RequestParam(value = "cpuNumber") Integer cpuNumber, @RequestParam(value = "memoryMB") Long memoryMB,
-			RedirectAttributes redirectAttributes) {
+			@RequestParam(value = "datacenter") String datacenter, RedirectAttributes redirectAttributes) {
 
 		ReconfigVMParameter reconfigVMParameter = new ReconfigVMParameter();
 		reconfigVMParameter.setVMName(vmName);
 		reconfigVMParameter.setCPUNumber(cpuNumber);
 		reconfigVMParameter.setMemoryMB(memoryMB);
+		reconfigVMParameter.setDatacenter(datacenter);
 
 		String message = "";
 		WSResult wsResult = service.reconfigVM(reconfigVMParameter);
@@ -176,7 +183,6 @@ public class InstanceController {
 	 */
 	@RequestMapping(value = "/relation/")
 	public String relationPage(Model model) {
-		model.addAttribute("relations", service.relationVM());
 		return "instance/relation";
 	}
 
@@ -184,9 +190,9 @@ public class InstanceController {
 	 * 刷新主机、虚拟机的关联关系
 	 */
 	@RequestMapping(value = "/relation/", method = RequestMethod.POST)
-	public String relation(RedirectAttributes redirectAttributes) {
+	public String relation(@RequestParam(value = "datacenter") String datacenter, RedirectAttributes redirectAttributes) {
 
-		redirectAttributes.addFlashAttribute("relations", service.relationVM());
+		redirectAttributes.addFlashAttribute("relations", service.relationVM(datacenter));
 
 		return "redirect:/instance/relation/";
 	}
@@ -205,9 +211,9 @@ public class InstanceController {
 	 * 同步主机、虚拟机的关联关系
 	 */
 	@RequestMapping(value = "/sync/", method = RequestMethod.POST)
-	public String sync(RedirectAttributes redirectAttributes) {
+	public String sync(@RequestParam(value = "datacenter") String datacenter, RedirectAttributes redirectAttributes) {
 
-		redirectAttributes.addFlashAttribute("message", service.syncVM());
+		redirectAttributes.addFlashAttribute("message", service.syncVM(datacenter));
 
 		return "redirect:/instance/sync/";
 	}

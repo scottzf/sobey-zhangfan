@@ -79,8 +79,8 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	}
 
 	@Override
-	public RelationVMParameter getVMAndHostRelationByInstance() {
-		return service.getVMAndHostRelation();
+	public RelationVMParameter getVMAndHostRelationByInstance(@WebParam(name = "datacenter") String datacenter) {
+		return service.getVMAndHostRelation(datacenter);
 	}
 
 }

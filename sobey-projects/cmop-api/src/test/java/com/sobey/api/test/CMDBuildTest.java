@@ -41,12 +41,14 @@ public class CMDBuildTest extends TestCase {
 	@Autowired
 	private InstanceService instanceService;
 
+	private static String DATACENTER = "XA";
+
 	@Test
 	public void test() {
 
 		// 从vcenter中获得关联关系. 遍历Map
 
-		HashMap<String, String> vcenterMap = instanceService.relationVM();
+		HashMap<String, String> vcenterMap = instanceService.relationVM(DATACENTER);
 
 		for (java.util.Map.Entry<String, String> entry : vcenterMap.entrySet()) {
 
@@ -80,12 +82,7 @@ public class CMDBuildTest extends TestCase {
 
 	}
 
-	// @Test
-	public void syncVMTest() {
-
-	}
-
-	// @Test
+	@Test
 	public void createCompanyTest() {
 
 		CompanyDTO companyDTO = CMDBuildTestData.randomCompany();
@@ -96,7 +93,7 @@ public class CMDBuildTest extends TestCase {
 
 	}
 
-	// @Test
+	@Test
 	public void deleteCompanyTest() {
 
 		WSResult wsResult = service.deleteCompany(117124);
@@ -105,7 +102,7 @@ public class CMDBuildTest extends TestCase {
 
 	}
 
-	// @Test
+	@Test
 	public void updateCompanyTest() {
 
 		Integer id = 117125;
@@ -121,7 +118,7 @@ public class CMDBuildTest extends TestCase {
 
 	}
 
-	// @Test
+	@Test
 	public void findCompanyTest() {
 
 		List<Entry> entries = new ArrayList<Entry>();

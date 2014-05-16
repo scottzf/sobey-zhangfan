@@ -29,10 +29,13 @@ public class VMTest extends TestCase {
 	@Autowired
 	private InstanceService service;
 
+	private static String DATACENTER = "XA";
+
 	@Test
 	public void desoroyVM() {
 		DestroyVMParameter destroyVMParameter = new DestroyVMParameter();
 		destroyVMParameter.setVMName("liukai");
+		destroyVMParameter.setDatacenter(DATACENTER);
 		assertEquals(service.desoroyVM(destroyVMParameter).getCode(), "0");
 	}
 
@@ -40,6 +43,7 @@ public class VMTest extends TestCase {
 	public void cloneVM() {
 		CloneVMParameter cloneVMParameter = new CloneVMParameter();
 		cloneVMParameter.setDescription("这个一个API测试程序");
+		cloneVMParameter.setDatacenter(DATACENTER);
 		cloneVMParameter.setGateway("10.10.2.255");
 		cloneVMParameter.setIpaddress("10.10.1.80");
 		cloneVMParameter.setSubNetMask("255.255.255.0");
@@ -54,6 +58,7 @@ public class VMTest extends TestCase {
 	public void powerVM() {
 		PowerVMParameter powerVMParameter = new PowerVMParameter();
 		powerVMParameter.setVMName("liukai");
+		powerVMParameter.setDatacenter(DATACENTER);
 		powerVMParameter.setPowerOperation("poweron");
 		assertEquals(service.powerVM(powerVMParameter).getCode(), "0");
 	}
@@ -64,19 +69,20 @@ public class VMTest extends TestCase {
 		reconfigVMParameter.setVMName("liukai");
 		reconfigVMParameter.setCPUNumber(4);
 		reconfigVMParameter.setMemoryMB(4096L);
+		reconfigVMParameter.setDatacenter(DATACENTER);
 		assertEquals(service.reconfigVM(reconfigVMParameter).getCode(), "0");
 	}
 
 	@Test
 	public void relationVMTest() {
-		for (Entry<String, String> entry : service.relationVM().entrySet()) {
+		for (Entry<String, String> entry : service.relationVM(DATACENTER).entrySet()) {
 			System.out.println(entry.getValue() + " : " + entry.getKey());
 		}
 	}
 
 	@Test
 	public void sync() {
-		service.syncVM();
+		service.syncVM(DATACENTER);
 	}
 
 }

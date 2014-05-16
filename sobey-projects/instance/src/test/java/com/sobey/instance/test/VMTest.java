@@ -97,7 +97,7 @@ public class VMTest extends TestCase {
 
 	@Test
 	public void getVM() {
-		RelationVMParameter parameter = service.getVMAndHostRelation();
+		RelationVMParameter parameter = service.getVMAndHostRelation("XA");
 		for (Entry<String, String> element : parameter.getRelationMaps().entrySet()) {
 			System.out.println("VM:" + element.getKey());
 			System.out.println("Host:" + element.getValue());

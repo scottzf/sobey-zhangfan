@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Maps;
 import com.sobey.core.utils.PropertiesLoader;
+import com.sobey.instance.constans.DataCenterEnum;
 import com.sobey.instance.webservice.response.dto.CloneVMParameter;
 import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
@@ -29,6 +30,7 @@ import com.vmware.vim25.CustomizationLicenseDataMode;
 import com.vmware.vim25.CustomizationLicenseFilePrintData;
 import com.vmware.vim25.CustomizationLinuxOptions;
 import com.vmware.vim25.CustomizationLinuxPrep;
+import com.vmware.vim25.CustomizationPassword;
 import com.vmware.vim25.CustomizationSpec;
 import com.vmware.vim25.CustomizationSpecInfo;
 import com.vmware.vim25.CustomizationSpecItem;
@@ -73,19 +75,41 @@ public class VMService {
 	/* 脚本参数 */
 
 	/**
+	 * windows模板默认密码.
+	 */
+	private static final String WINDOWS_DEFAULT_PASSWORD = INSTANCE_LOADER.getProperty("WINDOWS_DEFAULT_PASSWORD");
+
+	/********** 成都 ***********/
+	/**
 	 * IP
 	 */
-	private static final String INSTANCE_IP = INSTANCE_LOADER.getProperty("INSTANCE_IP");
+	private static final String INSTANCE_IP_CD = INSTANCE_LOADER.getProperty("INSTANCE_IP_CD");
 
 	/**
 	 * Username
 	 */
-	private static final String INSTANCE_USERNAME = INSTANCE_LOADER.getProperty("INSTANCE_USERNAME");
+	private static final String INSTANCE_USERNAME_CD = INSTANCE_LOADER.getProperty("INSTANCE_USERNAME_CD");
 
 	/**
 	 * password
 	 */
-	private static final String INSTANCE_PASSWORD = INSTANCE_LOADER.getProperty("INSTANCE_PASSWORD");
+	private static final String INSTANCE_PASSWORD_CD = INSTANCE_LOADER.getProperty("INSTANCE_PASSWORD_CD");
+
+	/********** 西安 ***********/
+	/**
+	 * IP
+	 */
+	private static final String INSTANCE_IP_XA = INSTANCE_LOADER.getProperty("INSTANCE_IP_XA");
+
+	/**
+	 * Username
+	 */
+	private static final String INSTANCE_USERNAME_XA = INSTANCE_LOADER.getProperty("INSTANCE_USERNAME_XA");
+
+	/**
+	 * password
+	 */
+	private static final String INSTANCE_PASSWORD_XA = INSTANCE_LOADER.getProperty("INSTANCE_PASSWORD_XA");
 
 	/**
 	 * 为虚拟机设置网络适配器相关信息:设备状态设置为已连接、网络标签、虚拟机的备注.
@@ -94,7 +118,7 @@ public class VMService {
 	 * @param networkName
 	 * @param annotation
 	 */
-	private void setVirtualMachineNetwork(VirtualMachine vm, String networkName, String annotation) {
+	private void setVirtualMachineNetwork(VirtualMachine vm, String networkName, CloneVMParameter parameter) {
 
 		ArrayList<VirtualEthernetCard> nics = new ArrayList<VirtualEthernetCard>();
 
@@ -119,7 +143,7 @@ public class VMService {
 				VirtualEthernetCardNetworkBackingInfo backing = new VirtualEthernetCardNetworkBackingInfo();
 
 				// 根据网络适配器名字找到该网络对象
-				Network network = getNetworkFromString(networkName);
+				Network network = getNetworkFromString(networkName, parameter.getDatacenter());
 
 				if (network != null) {
 
@@ -138,7 +162,7 @@ public class VMService {
 					vmConfigSpec.setDeviceChange(new VirtualDeviceConfigSpec[] { vdcs });
 
 					// 为VM添加注释
-					vmConfigSpec.setAnnotation(annotation);
+					vmConfigSpec.setAnnotation(parameter.getDescription());
 
 					Task changeNetwork = vm.reconfigVM_Task(vmConfigSpec);
 					if (changeNetwork.waitForTask() != Task.SUCCESS) {
@@ -163,17 +187,19 @@ public class VMService {
 	 * 
 	 * @param name
 	 *            网络设备器名称
+	 * @param name
+	 *            数据中心名
 	 * @return
 	 * @throws RemoteException
 	 * @throws MalformedURLException
 	 */
-	private Network getNetworkFromString(String name) throws RemoteException, MalformedURLException {
+	private Network getNetworkFromString(String name, String datacenter) throws RemoteException, MalformedURLException {
 
 		Network network = null;
 		Datacenter dc = null;
 		List<Network> networks = new ArrayList<Network>();
 
-		Folder rootFolder = getServiceInstance().getRootFolder();
+		Folder rootFolder = getServiceInstance(datacenter).getRootFolder();
 
 		ManagedEntity[] datacenters = rootFolder.getChildEntity();
 
@@ -205,7 +231,7 @@ public class VMService {
 
 		try {
 
-			ServiceInstance si = getServiceInstance();
+			ServiceInstance si = getServiceInstance(parameter.getDatacenter());
 
 			VirtualMachine vm = getVirtualMachine(si, parameter.getvMTemplateName());
 
@@ -279,7 +305,12 @@ public class VMService {
 				CustomizationGuiUnattended guiUnattended = new CustomizationGuiUnattended();
 				guiUnattended.setAutoLogon(false);
 				guiUnattended.setAutoLogonCount(1);
-				guiUnattended.setTimeZone(235);
+				guiUnattended.setTimeZone(234); // http://worldtime.io/current/yonghe_taipei_county_taiwan_234/125649
+
+				CustomizationPassword password = new CustomizationPassword();
+				password.setValue(WINDOWS_DEFAULT_PASSWORD);
+				password.setPlainText(true);
+				guiUnattended.setPassword(password);
 				cWinSysprep.setGuiUnattended(guiUnattended);
 
 				CustomizationUserData userData = new CustomizationUserData();
@@ -315,7 +346,9 @@ public class VMService {
 
 			// 设置ResourcePool
 			/**
-			 * 重要:宿主机暂时写死.宿主机的Value可以在VMTest中的PrintInventory方法查出来.
+			 * TODO 重要:宿主机暂时写死,宿主机的Value可以在VMTest中的PrintInventory方法查出来.
+			 * 
+			 * 后期应该做到CMDBuild查询宿主机的负载能力,找出负载最低的宿主机, 并根据名称查出ManagedObjectReference对象的value.
 			 */
 			ManagedObjectReference pool = new ManagedObjectReference();
 			pool.set_value("resgroup-8");
@@ -339,8 +372,7 @@ public class VMService {
 			}
 
 			// 为虚拟机设置网络适配器相关信息:设备状态设置为已连接、网络标签、虚拟机的备注.
-			setVirtualMachineNetwork(getVirtualMachine(si, parameter.getvMName()), "VM Network",
-					parameter.getDescription());
+			setVirtualMachineNetwork(getVirtualMachine(si, parameter.getvMName()), "VM Network", parameter);
 
 		} catch (InvalidProperty e) {
 			logger.info("cloneVM::InvalidProperty:" + e);
@@ -373,7 +405,7 @@ public class VMService {
 
 		try {
 
-			ServiceInstance si = getServiceInstance();
+			ServiceInstance si = getServiceInstance(parameter.getDatacenter());
 
 			VirtualMachine vm = (VirtualMachine) new InventoryNavigator(si.getRootFolder()).searchManagedEntity(
 					"VirtualMachine", parameter.getvMName());
@@ -400,7 +432,7 @@ public class VMService {
 
 		try {
 
-			ServiceInstance si = getServiceInstance();
+			ServiceInstance si = getServiceInstance(parameter.getDatacenter());
 			VirtualMachine vm = getVirtualMachine(si, parameter.getvMName());
 
 			VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
@@ -434,7 +466,7 @@ public class VMService {
 
 		try {
 
-			ServiceInstance si = getServiceInstance();
+			ServiceInstance si = getServiceInstance(parameter.getDatacenter());
 			VirtualMachine vm = getVirtualMachine(si, parameter.getvMName());
 
 			if (vm == null) {
@@ -512,13 +544,13 @@ public class VMService {
 	 * 
 	 * @return
 	 */
-	public RelationVMParameter getVMAndHostRelation() {
+	public RelationVMParameter getVMAndHostRelation(String datacenter) {
 
 		HashMap<String, String> map = Maps.newHashMap();
 
 		try {
 
-			ServiceInstance si = getServiceInstance();
+			ServiceInstance si = getServiceInstance(datacenter);
 
 			ManagedEntity[] mes = new InventoryNavigator(si.getRootFolder()).searchManagedEntities("VirtualMachine");
 			if (mes == null || mes.length == 0) {
@@ -555,8 +587,15 @@ public class VMService {
 	 * @throws RemoteException
 	 * @throws MalformedURLException
 	 */
-	private ServiceInstance getServiceInstance() throws RemoteException, MalformedURLException {
-		return new ServiceInstance(new URL(INSTANCE_IP), INSTANCE_USERNAME, INSTANCE_PASSWORD, true);
+	private ServiceInstance getServiceInstance(String datacenter) throws RemoteException, MalformedURLException {
+
+		if (DataCenterEnum.CD.toString().equalsIgnoreCase(datacenter)) {
+			return new ServiceInstance(new URL(INSTANCE_IP_CD), INSTANCE_USERNAME_CD, INSTANCE_PASSWORD_CD, true);
+		} else if (DataCenterEnum.XA.toString().equalsIgnoreCase(datacenter)) {
+			return new ServiceInstance(new URL(INSTANCE_IP_XA), INSTANCE_USERNAME_XA, INSTANCE_PASSWORD_XA, true);
+		}
+
+		return null;
 	}
 
 	/**

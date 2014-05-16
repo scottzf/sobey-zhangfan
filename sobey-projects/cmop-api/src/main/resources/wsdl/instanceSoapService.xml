@@ -41,6 +41,7 @@
 
   <xs:complexType name="CloneVMParameter">
     <xs:sequence>
+      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
       <xs:element minOccurs="0" name="description" type="xs:string"/>
       <xs:element minOccurs="0" name="gateway" type="xs:string"/>
       <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
@@ -73,6 +74,7 @@
 
   <xs:complexType name="DestroyVMParameter">
     <xs:sequence>
+      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
       <xs:element minOccurs="0" name="vMName" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
@@ -91,6 +93,7 @@
 
   <xs:complexType name="ReconfigVMParameter">
     <xs:sequence>
+      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
       <xs:element minOccurs="0" name="memoryMB" type="xs:long"/>
       <xs:element minOccurs="0" name="cPUNumber" type="xs:int"/>
       <xs:element minOccurs="0" name="vMName" type="xs:string"/>
@@ -111,6 +114,7 @@
 
   <xs:complexType name="PowerVMParameter">
     <xs:sequence>
+      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
       <xs:element minOccurs="0" name="powerOperation" type="xs:string"/>
       <xs:element minOccurs="0" name="vMName" type="xs:string"/>
     </xs:sequence>
@@ -123,7 +127,9 @@
   </xs:complexType>
 
   <xs:complexType name="getVMAndHostRelationByInstance">
-    <xs:sequence/>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="getVMAndHostRelationByInstanceResponse">
@@ -134,6 +140,7 @@
 
   <xs:complexType name="RelationVMParameter">
     <xs:sequence>
+      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
       <xs:element name="relationMaps">
         <xs:complexType>
           <xs:sequence>

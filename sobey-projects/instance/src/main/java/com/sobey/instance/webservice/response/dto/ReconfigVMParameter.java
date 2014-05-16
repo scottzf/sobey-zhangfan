@@ -14,6 +14,7 @@ public class ReconfigVMParameter {
 	private String vMName;
 	private Long memoryMB;
 	private Integer cPUNumber;
+	private String datacenter;
 
 	public String getvMName() {
 		return vMName;
@@ -37,6 +38,14 @@ public class ReconfigVMParameter {
 
 	public void setcPUNumber(Integer cPUNumber) {
 		this.cPUNumber = cPUNumber;
+	}
+
+	public String getDatacenter() {
+		return datacenter;
+	}
+
+	public void setDatacenter(String datacenter) {
+		this.datacenter = datacenter;
 	}
 
 	/**

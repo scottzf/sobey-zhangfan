@@ -62,6 +62,6 @@ public interface InstanceSoapService {
 	 * 
 	 * @return
 	 */
-	RelationVMParameter getVMAndHostRelationByInstance();
+	RelationVMParameter getVMAndHostRelationByInstance(@WebParam(name = "datacenter") String datacenter);
 
 }

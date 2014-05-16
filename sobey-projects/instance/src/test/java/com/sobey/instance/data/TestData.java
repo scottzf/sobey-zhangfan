@@ -13,18 +13,19 @@ public class TestData {
 
 		parameter.setDescription("这个一个API测试程序");
 		parameter.setGateway("10.10.2.1");
-		parameter.setIpaddress("10.10.2.81");
+		parameter.setIpaddress("10.10.2.90");
 		parameter.setSubNetMask("255.255.255.0");
-		parameter.setvMName("liukai");
-		parameter.setvMSUserName("徽州");
+		parameter.setvMName("DeploySever-1");
+		parameter.setvMSUserName("Sobey");
+		parameter.setDatacenter("XA");
 
 		// Linux
-//		parameter.setvMTemplateName("CnetOS6.5");
-//		parameter.setvMTemplateOS("Linux");
+		// parameter.setvMTemplateName("CnetOS6.5");
+		// parameter.setvMTemplateOS("Linux");
 
 		// Windows
-		 parameter.setvMTemplateName("WinServer2008R2");
-		 parameter.setvMTemplateOS("Windows");
+		parameter.setvMTemplateName("WinServer2008R2");
+		parameter.setvMTemplateOS("Windows");
 		return parameter;
 	}
 
@@ -32,11 +33,13 @@ public class TestData {
 
 		DestroyVMParameter parameter = new DestroyVMParameter();
 		parameter.setvMName("liukai");
+		parameter.setDatacenter("XA");
 		return parameter;
 	}
 
 	public static ReconfigVMParameter randomReconfigVMParameter() {
 		ReconfigVMParameter parameter = new ReconfigVMParameter();
+		parameter.setDatacenter("XA");
 		parameter.setvMName("liukai");
 		parameter.setcPUNumber(4);
 		parameter.setMemoryMB(4096L);
@@ -45,6 +48,7 @@ public class TestData {
 
 	public static PowerVMParameter randomPowerVMParameter() {
 		PowerVMParameter parameter = new PowerVMParameter();
+		parameter.setDatacenter("XA");
 		parameter.setvMName("liukai");
 		parameter.setPowerOperation("poweroff");
 		return parameter;

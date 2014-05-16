@@ -36,13 +36,13 @@ public class InstanceService {
 		return service.destroyVMByInstance(destroyVMParameter);
 	}
 
-	public HashMap<String, String> relationVM() {
+	public HashMap<String, String> relationVM(String datacenter) {
 
 		HashMap<String, String> map = new HashMap<String, String>();
 
 		// 将RelationVMParameter转换成HashMap
 
-		for (Entry entry : service.getVMAndHostRelationByInstance().getRelationMaps().getEntry()) {
+		for (Entry entry : service.getVMAndHostRelationByInstance(datacenter).getRelationMaps().getEntry()) {
 			map.put(entry.getKey(), entry.getValue());
 		}
 
@@ -64,12 +64,12 @@ public class InstanceService {
 	/**
 	 * 同步vcenter和CMDBuild数据
 	 */
-	public String syncVM() {
+	public String syncVM(String datacenter) {
 
 		StringBuffer sb = new StringBuffer();
 
 		// 从vcenter中获得VM和Host的关联关系
-		HashMap<String, String> vcenterMap = relationVM();
+		HashMap<String, String> vcenterMap = relationVM(datacenter);
 
 		for (java.util.Map.Entry<String, String> entry : vcenterMap.entrySet()) {
 

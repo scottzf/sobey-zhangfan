@@ -19,7 +19,16 @@ import com.sobey.instance.constans.WsConstants;
 @XmlType(name = "RelationVMParameter", namespace = WsConstants.NS)
 public class RelationVMParameter {
 
+	private String datacenter;
 	private HashMap<String, String> relationMaps;
+
+	public String getDatacenter() {
+		return datacenter;
+	}
+
+	public void setDatacenter(String datacenter) {
+		this.datacenter = datacenter;
+	}
 
 	public HashMap<String, String> getRelationMaps() {
 		return relationMaps;

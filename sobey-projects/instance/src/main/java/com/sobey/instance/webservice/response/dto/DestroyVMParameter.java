@@ -12,6 +12,7 @@ import com.sobey.instance.constans.WsConstants;
 public class DestroyVMParameter {
 
 	private String vMName;
+	private String datacenter;
 
 	public String getvMName() {
 		return vMName;
@@ -19,6 +20,14 @@ public class DestroyVMParameter {
 
 	public void setvMName(String vMName) {
 		this.vMName = vMName;
+	}
+
+	public String getDatacenter() {
+		return datacenter;
+	}
+
+	public void setDatacenter(String datacenter) {
+		this.datacenter = datacenter;
 	}
 
 	/**
