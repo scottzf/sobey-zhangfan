@@ -305,7 +305,7 @@ public class VMService {
 				CustomizationGuiUnattended guiUnattended = new CustomizationGuiUnattended();
 				guiUnattended.setAutoLogon(false);
 				guiUnattended.setAutoLogonCount(1);
-				guiUnattended.setTimeZone(234); // http://worldtime.io/current/yonghe_taipei_county_taiwan_234/125649
+				guiUnattended.setTimeZone(210); // http://msdn.microsoft.com/en-us/library/ms912391%28v=winembedded.11%29.aspx
 
 				CustomizationPassword password = new CustomizationPassword();
 				password.setValue(WINDOWS_DEFAULT_PASSWORD);
@@ -337,6 +337,7 @@ public class VMService {
 				cspec.setIdentity(cWinSysprep);
 
 			} else {
+				logger.info("cloneVM::OS类型不正确");
 				return false;
 			}
 
