@@ -1,5 +1,6 @@
 package com.sobey.instance.data;
 
+import com.sobey.instance.constans.DataCenterEnum;
 import com.sobey.instance.webservice.response.dto.CloneVMParameter;
 import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
@@ -17,7 +18,7 @@ public class TestData {
 		parameter.setSubNetMask("255.255.255.0");
 		parameter.setvMName("DeploySever-1");
 		parameter.setvMSUserName("Sobey");
-		parameter.setDatacenter("XA");
+		parameter.setDatacenter(DataCenterEnum.XA.toString());
 
 		// Linux
 		// parameter.setvMTemplateName("CnetOS6.5");
@@ -33,13 +34,13 @@ public class TestData {
 
 		DestroyVMParameter parameter = new DestroyVMParameter();
 		parameter.setvMName("liukai");
-		parameter.setDatacenter("XA");
+		parameter.setDatacenter(DataCenterEnum.XA.toString());
 		return parameter;
 	}
 
 	public static ReconfigVMParameter randomReconfigVMParameter() {
 		ReconfigVMParameter parameter = new ReconfigVMParameter();
-		parameter.setDatacenter("XA");
+		parameter.setDatacenter(DataCenterEnum.XA.toString());
 		parameter.setvMName("liukai");
 		parameter.setcPUNumber(4);
 		parameter.setMemoryMB(4096L);
@@ -48,7 +49,7 @@ public class TestData {
 
 	public static PowerVMParameter randomPowerVMParameter() {
 		PowerVMParameter parameter = new PowerVMParameter();
-		parameter.setDatacenter("XA");
+		parameter.setDatacenter(DataCenterEnum.XA.toString());
 		parameter.setvMName("liukai");
 		parameter.setPowerOperation("poweroff");
 		return parameter;
