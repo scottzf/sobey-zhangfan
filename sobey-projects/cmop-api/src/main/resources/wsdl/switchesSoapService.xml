@@ -13,25 +13,33 @@
 
   <xs:element name="createESGBySwtichResponse" type="tns:createESGBySwtichResponse"/>
 
-  <xs:element name="createVlanBySwtich" type="tns:createVlanBySwtich"/>
+  <xs:element name="createVlanByAccessSwtich" type="tns:createVlanByAccessSwtich"/>
 
-  <xs:element name="createVlanBySwtichResponse" type="tns:createVlanBySwtichResponse"/>
+  <xs:element name="createVlanByAccessSwtichResponse" type="tns:createVlanByAccessSwtichResponse"/>
+
+  <xs:element name="createVlanByCoreSwtich" type="tns:createVlanByCoreSwtich"/>
+
+  <xs:element name="createVlanByCoreSwtichResponse" type="tns:createVlanByCoreSwtichResponse"/>
 
   <xs:element name="deleteESGBySwtich" type="tns:deleteESGBySwtich"/>
 
   <xs:element name="deleteESGBySwtichResponse" type="tns:deleteESGBySwtichResponse"/>
 
-  <xs:element name="deleteVlanBySwtich" type="tns:deleteVlanBySwtich"/>
+  <xs:element name="deleteVlanByAccessSwtich" type="tns:deleteVlanByAccessSwtich"/>
 
-  <xs:element name="deleteVlanBySwtichResponse" type="tns:deleteVlanBySwtichResponse"/>
+  <xs:element name="deleteVlanByAccessSwtichResponse" type="tns:deleteVlanByAccessSwtichResponse"/>
 
-  <xs:complexType name="deleteESGBySwtich">
+  <xs:element name="deleteVlanByCoreSwtich" type="tns:deleteVlanByCoreSwtich"/>
+
+  <xs:element name="deleteVlanByCoreSwtichResponse" type="tns:deleteVlanByCoreSwtichResponse"/>
+
+  <xs:complexType name="deleteVlanByCoreSwtich">
     <xs:sequence>
-      <xs:element minOccurs="0" name="aclNumber" type="xs:int"/>
+      <xs:element minOccurs="0" name="vlanId" type="xs:int"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="deleteESGBySwtichResponse">
+  <xs:complexType name="deleteVlanByCoreSwtichResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
     </xs:sequence>
@@ -44,7 +52,7 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="createVlanBySwtich">
+  <xs:complexType name="createVlanByAccessSwtich">
     <xs:sequence>
       <xs:element minOccurs="0" name="vlanParameter" type="tns:VlanParameter"/>
     </xs:sequence>
@@ -58,19 +66,43 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="createVlanBySwtichResponse">
+  <xs:complexType name="createVlanByAccessSwtichResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="deleteVlanBySwtich">
+  <xs:complexType name="deleteESGBySwtich">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="aclNumber" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteESGBySwtichResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteVlanByAccessSwtich">
     <xs:sequence>
       <xs:element minOccurs="0" name="vlanId" type="xs:int"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="deleteVlanBySwtichResponse">
+  <xs:complexType name="deleteVlanByAccessSwtichResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createVlanByCoreSwtich">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="vlanParameter" type="tns:VlanParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createVlanByCoreSwtichResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
     </xs:sequence>
@@ -121,20 +153,36 @@
     <wsdl:part element="tns:deleteESGBySwtich" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="deleteVlanBySwtichResponse">
-    <wsdl:part element="tns:deleteVlanBySwtichResponse" name="parameters">
+  <wsdl:message name="createVlanByAccessSwtichResponse">
+    <wsdl:part element="tns:createVlanByAccessSwtichResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="createVlanBySwtichResponse">
-    <wsdl:part element="tns:createVlanBySwtichResponse" name="parameters">
+  <wsdl:message name="createVlanByCoreSwtich">
+    <wsdl:part element="tns:createVlanByCoreSwtich" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="createVlanBySwtich">
-    <wsdl:part element="tns:createVlanBySwtich" name="parameters">
+  <wsdl:message name="deleteVlanByAccessSwtich">
+    <wsdl:part element="tns:deleteVlanByAccessSwtich" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="deleteVlanBySwtich">
-    <wsdl:part element="tns:deleteVlanBySwtich" name="parameters">
+  <wsdl:message name="deleteVlanByAccessSwtichResponse">
+    <wsdl:part element="tns:deleteVlanByAccessSwtichResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createVlanByAccessSwtich">
+    <wsdl:part element="tns:createVlanByAccessSwtich" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteVlanByCoreSwtich">
+    <wsdl:part element="tns:deleteVlanByCoreSwtich" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteVlanByCoreSwtichResponse">
+    <wsdl:part element="tns:deleteVlanByCoreSwtichResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createVlanByCoreSwtichResponse">
+    <wsdl:part element="tns:createVlanByCoreSwtichResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createESGBySwtichResponse">
@@ -142,22 +190,34 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="SwitchesSoapService">
+    <wsdl:operation name="deleteVlanByCoreSwtich">
+      <wsdl:input message="tns:deleteVlanByCoreSwtich" name="deleteVlanByCoreSwtich">
+    </wsdl:input>
+      <wsdl:output message="tns:deleteVlanByCoreSwtichResponse" name="deleteVlanByCoreSwtichResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createVlanByAccessSwtich">
+      <wsdl:input message="tns:createVlanByAccessSwtich" name="createVlanByAccessSwtich">
+    </wsdl:input>
+      <wsdl:output message="tns:createVlanByAccessSwtichResponse" name="createVlanByAccessSwtichResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="deleteESGBySwtich">
       <wsdl:input message="tns:deleteESGBySwtich" name="deleteESGBySwtich">
     </wsdl:input>
       <wsdl:output message="tns:deleteESGBySwtichResponse" name="deleteESGBySwtichResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="createVlanBySwtich">
-      <wsdl:input message="tns:createVlanBySwtich" name="createVlanBySwtich">
+    <wsdl:operation name="deleteVlanByAccessSwtich">
+      <wsdl:input message="tns:deleteVlanByAccessSwtich" name="deleteVlanByAccessSwtich">
     </wsdl:input>
-      <wsdl:output message="tns:createVlanBySwtichResponse" name="createVlanBySwtichResponse">
+      <wsdl:output message="tns:deleteVlanByAccessSwtichResponse" name="deleteVlanByAccessSwtichResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="deleteVlanBySwtich">
-      <wsdl:input message="tns:deleteVlanBySwtich" name="deleteVlanBySwtich">
+    <wsdl:operation name="createVlanByCoreSwtich">
+      <wsdl:input message="tns:createVlanByCoreSwtich" name="createVlanByCoreSwtich">
     </wsdl:input>
-      <wsdl:output message="tns:deleteVlanBySwtichResponse" name="deleteVlanBySwtichResponse">
+      <wsdl:output message="tns:createVlanByCoreSwtichResponse" name="createVlanByCoreSwtichResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="createESGBySwtich">
@@ -169,6 +229,24 @@
   </wsdl:portType>
   <wsdl:binding name="SwitchesSoapServiceSoapBinding" type="tns:SwitchesSoapService">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="createVlanByAccessSwtich">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createVlanByAccessSwtich">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createVlanByAccessSwtichResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteVlanByCoreSwtich">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteVlanByCoreSwtich">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteVlanByCoreSwtichResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="deleteESGBySwtich">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="deleteESGBySwtich">
@@ -178,21 +256,21 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="createVlanBySwtich">
+    <wsdl:operation name="deleteVlanByAccessSwtich">
       <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="createVlanBySwtich">
+      <wsdl:input name="deleteVlanByAccessSwtich">
         <soap:body use="literal"/>
       </wsdl:input>
-      <wsdl:output name="createVlanBySwtichResponse">
+      <wsdl:output name="deleteVlanByAccessSwtichResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="deleteVlanBySwtich">
+    <wsdl:operation name="createVlanByCoreSwtich">
       <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="deleteVlanBySwtich">
+      <wsdl:input name="createVlanByCoreSwtich">
         <soap:body use="literal"/>
       </wsdl:input>
-      <wsdl:output name="deleteVlanBySwtichResponse">
+      <wsdl:output name="createVlanByCoreSwtichResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>

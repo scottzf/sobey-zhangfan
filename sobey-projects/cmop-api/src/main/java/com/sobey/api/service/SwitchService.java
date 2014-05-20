@@ -20,12 +20,20 @@ public class SwitchService {
 	@Autowired
 	private SwitchesSoapService service;
 
-	public WSResult createVlan(VlanParameter vlanParameter) {
-		return service.createVlanBySwtich(vlanParameter);
+	public WSResult createVlanInCore(VlanParameter vlanParameter) {
+		return service.createVlanByCoreSwtich(vlanParameter);
 	}
 
-	public WSResult deleteVlan(Integer vlanId) {
-		return service.deleteVlanBySwtich(vlanId);
+	public WSResult deleteVlanInCore(Integer vlanId) {
+		return service.deleteVlanByCoreSwtich(vlanId);
+	}
+
+	public WSResult createVlanInAccess(VlanParameter vlanParameter) {
+		return service.createVlanByAccessSwtich(vlanParameter);
+	}
+
+	public WSResult deleteVlanInAccess(Integer vlanId) {
+		return service.deleteVlanByAccessSwtich(vlanId);
 	}
 
 	public WSResult createEsg(ESGParameter esgParameter) {

@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Vlan Create Demo</title>
+<title>Core Vlan Create Demo</title>
 </head>
 
 <body>

@@ -28,7 +28,7 @@ public class SwitchTest extends TestCase {
 	@Test
 	public void createVlanTest() {
 
-		WSResult result = service.createVlan(SwitchTestData.randomVlanParameter());
+		WSResult result = service.createVlanInCore(SwitchTestData.randomVlanParameter());
 
 		System.out.println(result.getMessage());
 		assertEquals(result.getCode(), "0");
@@ -37,7 +37,7 @@ public class SwitchTest extends TestCase {
 	@Test
 	public void deleteVlanTest() {
 
-		WSResult result = service.deleteVlan(80);
+		WSResult result = service.deleteVlanInCore(80);
 
 		System.out.println(result.getMessage());
 		assertEquals(result.getCode(), "0");

@@ -19,8 +19,10 @@
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown">Switch<b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="${ctx}/switch/create/vlan/">创建Vlan</a></li>
-						<li><a href="${ctx}/switch/delete/vlan/">删除Vlan</a></li>
+						<li><a href="${ctx}/switch/create/vlan/core/">创建核心Vlan</a></li>
+						<li><a href="${ctx}/switch/delete/vlan/core/">删除核心Vlan</a></li>
+						<li><a href="${ctx}/switch/create/vlan/access/">创建接入Vlan</a></li>
+						<li><a href="${ctx}/switch/delete/vlan/access/">删除接入Vlan</a></li>
 						<li><a href="${ctx}/switch/create/esg/">创建Esg</a></li>
 						<li><a href="${ctx}/switch/delete/esg/">删除Esg</a></li>
 					</ul></li>

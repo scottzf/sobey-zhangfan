@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Vlan Delete Demo</title>
+<title>Access Vlan Create Demo</title>
 </head>
 
 <body>
@@ -18,10 +18,9 @@
 			</div>
 		</div>
 
-
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Delete</button>
+				<button type="submit" class="btn btn-primary">Create</button>
 			</div>
 		</div>
 	</form>

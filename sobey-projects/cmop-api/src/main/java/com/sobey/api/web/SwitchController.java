@@ -31,16 +31,16 @@ public class SwitchController {
 	/**
 	 * 跳转到Vlan页面
 	 */
-	@RequestMapping(value = "/create/vlan/")
-	public String createVlanPage() {
-		return "switch/createVlan";
+	@RequestMapping(value = "/create/vlan/core/")
+	public String createVlanInCorePage() {
+		return "switch/createVlanInCore";
 	}
 
 	/**
-	 * 创建一个Vlan
+	 * 在核心交换机创建一个Vlan
 	 */
-	@RequestMapping(value = "/create/vlan/", method = RequestMethod.POST)
-	public String createVlan(@RequestParam(value = "vlanId") Integer vlanId,
+	@RequestMapping(value = "/create/vlan/core/", method = RequestMethod.POST)
+	public String createVlanInCore(@RequestParam(value = "vlanId") Integer vlanId,
 			@RequestParam(value = "gateway") String gateway, @RequestParam(value = "netMask") String netMask,
 			RedirectAttributes redirectAttributes) {
 
@@ -50,7 +50,7 @@ public class SwitchController {
 		vlanParameter.setNetMask(netMask);
 
 		String message = "";
-		WSResult wsResult = service.createVlan(vlanParameter);
+		WSResult wsResult = service.createVlanInCore(vlanParameter);
 
 		if (wsResult.getCode().equals("0")) {
 			message = "Vlan创建成功";
@@ -60,26 +60,26 @@ public class SwitchController {
 
 		redirectAttributes.addFlashAttribute("message", message);
 
-		return "redirect:/switch/create/vlan/";
+		return "redirect:/switch/create/vlan/core/";
 	}
 
 	/**
 	 * 跳转到删除Vlan页面
 	 */
-	@RequestMapping(value = "/delete/vlan/")
-	public String deleteVlanPage() {
-		return "switch/deleteVlan";
+	@RequestMapping(value = "/delete/vlan/core/")
+	public String deleteVlanInCorePage() {
+		return "switch/deleteVlanInCore";
 	}
 
 	/**
-	 * 删除Vlan
+	 * 在核心交换机删除Vlan
 	 */
-	@RequestMapping(value = "/delete/vlan/", method = RequestMethod.POST)
-	public String deleteVlan(@RequestParam(value = "vlanId") Integer vlanId, RedirectAttributes redirectAttributes) {
+	@RequestMapping(value = "/delete/vlan/core/", method = RequestMethod.POST)
+	public String deleteVlanInCore(@RequestParam(value = "vlanId") Integer vlanId, RedirectAttributes redirectAttributes) {
 
 		String message = "";
 
-		WSResult wsResult = service.deleteVlan(vlanId);
+		WSResult wsResult = service.deleteVlanInCore(vlanId);
 
 		if (wsResult.getCode().equals("0")) {
 			message = "Vlan删除成功";
@@ -89,7 +89,70 @@ public class SwitchController {
 
 		redirectAttributes.addFlashAttribute("message", message);
 
-		return "redirect:/switch/delete/vlan/";
+		return "redirect:/switch/delete/vlan/core/";
+	}
+
+	/**
+	 * 跳转到Vlan页面
+	 */
+	@RequestMapping(value = "/create/vlan/access/")
+	public String createVlanInAccessPage() {
+		return "switch/createVlanInAccess";
+	}
+
+	/**
+	 * 在核心交换机创建一个Vlan
+	 */
+	@RequestMapping(value = "/create/vlan/access/", method = RequestMethod.POST)
+	public String createVlanInAccess(@RequestParam(value = "vlanId") Integer vlanId,
+
+	RedirectAttributes redirectAttributes) {
+
+		VlanParameter vlanParameter = new VlanParameter();
+		vlanParameter.setVlanId(vlanId);
+
+		String message = "";
+		WSResult wsResult = service.createVlanInAccess(vlanParameter);
+
+		if (wsResult.getCode().equals("0")) {
+			message = "Vlan创建成功";
+		} else {
+			message = wsResult.getMessage();
+		}
+
+		redirectAttributes.addFlashAttribute("message", message);
+
+		return "redirect:/switch/create/vlan/access/";
+	}
+
+	/**
+	 * 跳转到删除Vlan页面
+	 */
+	@RequestMapping(value = "/delete/vlan/access/")
+	public String deleteVlanInAccessPage() {
+		return "switch/deleteVlanInAccess";
+	}
+
+	/**
+	 * 在接入交换机删除Vlan
+	 */
+	@RequestMapping(value = "/delete/vlan/access/", method = RequestMethod.POST)
+	public String deleteVlanInAccess(@RequestParam(value = "vlanId") Integer vlanId,
+			RedirectAttributes redirectAttributes) {
+
+		String message = "";
+
+		WSResult wsResult = service.deleteVlanInAccess(vlanId);
+
+		if (wsResult.getCode().equals("0")) {
+			message = "Vlan删除成功";
+		} else {
+			message = wsResult.getMessage();
+		}
+
+		redirectAttributes.addFlashAttribute("message", message);
+
+		return "redirect:/switch/delete/vlan/access/";
 	}
 
 	/**

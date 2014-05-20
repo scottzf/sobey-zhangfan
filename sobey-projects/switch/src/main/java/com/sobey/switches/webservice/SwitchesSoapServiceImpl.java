@@ -7,6 +7,7 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.feature.Features;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -34,13 +35,15 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 	private static final String CORE_USERNAME = CORE_LOADER.getProperty("CORE_USERNAME");
 	private static final String CORE_PASSWORD = CORE_LOADER.getProperty("CORE_PASSWORD");
 
-	/* 接入层交换机,可能有数量不定的接入层交换机,待后续优化 */
-	@SuppressWarnings("unused")
+	/* 接入层交换机,可能有数量不定的接入层交换机 */
 	private static final String ACCESS_IP = ACCESS_LOADER.getProperty("ACCESS_IP");
-	@SuppressWarnings("unused")
 	private static final String ACCESS_USERNAME = ACCESS_LOADER.getProperty("ACCESS_USERNAME");
-	@SuppressWarnings("unused")
 	private static final String ACCESS_PASSWORD = ACCESS_LOADER.getProperty("ACCESS_PASSWORD");
+
+	/**
+	 * access配置文件中,不同交换机之间的分割符号.
+	 */
+	private static final String SEPARATOR_CHARS = ",";
 
 	/**
 	 * 获得文件的相对路径,文件名自定义.
@@ -50,29 +53,22 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 	 */
 	private static String getFilePath(String input) {
 		return "logs/" + input + ".txt";
-
 	}
 
 	@Autowired
 	private SwitchService service;
 
 	@Override
-	public WSResult createVlanBySwtich(@WebParam(name = "vlanParameter") VlanParameter vlanParameter) {
-
-		/*
-		 * Vlan创建的顺序是先在若干个交换机上执行脚本,然后在一个核心交换机上执行脚本.
-		 * 
-		 * 测试环境没有区分核心和接入层,目前Vlan暂时将设备当成接入层交换机
-		 */
+	public WSResult createVlanByCoreSwtich(@WebParam(name = "vlanParameter") VlanParameter vlanParameter) {
 
 		WSResult result = new WSResult();
 
-		String accessCommand = service.createVlanOnCoreLayer(vlanParameter.getVlanId(), vlanParameter.getGateway(),
+		String command = service.createVlanOnCoreLayer(vlanParameter.getVlanId(), vlanParameter.getGateway(),
 				vlanParameter.getNetMask());
 
 		String filePath = getFilePath(vlanParameter.getVlanId().toString());
 
-		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, accessCommand, filePath);
+		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, command, filePath);
 
 		try {
 
@@ -85,25 +81,18 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 		}
 
 		return result;
-
 	}
 
 	@Override
-	public WSResult deleteVlanBySwtich(@WebParam(name = "vlanId") Integer vlanId) {
-
-		/*
-		 * Vlan创建的顺序是先在若干个交换机上执行脚本,然后在一个核心交换机上执行脚本.
-		 * 
-		 * 测试环境没有区分核心和接入层,目前Vlan暂时将设备当成接入层交换机
-		 */
+	public WSResult deleteVlanByCoreSwtich(@WebParam(name = "vlanId") Integer vlanId) {
 
 		WSResult result = new WSResult();
 
-		String accessCommand = service.deleteVlanOnAccessLayer(vlanId);
+		String command = service.deleteVlanOnAccessLayer(vlanId);
 
 		String filePath = getFilePath(vlanId.toString());
 
-		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, accessCommand, filePath);
+		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, command, filePath);
 
 		try {
 
@@ -116,7 +105,6 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 		}
 
 		return result;
-
 	}
 
 	@Override
@@ -175,6 +163,79 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.deleteAcl);
 
 		} catch (IOException e) {
+			result.setDefaultError();
+		}
+
+		return result;
+	}
+
+	@Override
+	public WSResult createVlanByAccessSwtich(VlanParameter vlanParameter) {
+
+		WSResult result = new WSResult();
+
+		String command = service.createVlanOnAccessLayer(vlanParameter.getVlanId(), vlanParameter.getGateway(),
+				vlanParameter.getNetMask());
+
+		try {
+
+			String[] ips = StringUtils.split(ACCESS_IP, SEPARATOR_CHARS);
+			String[] names = StringUtils.split(ACCESS_USERNAME, SEPARATOR_CHARS);
+			String[] passwords = StringUtils.split(ACCESS_PASSWORD, SEPARATOR_CHARS);
+
+			for (int i = 0; i < ips.length; i++) {
+
+				// Format:接入层交换机IP地址 - VlanId
+				String filePath = getFilePath(ips[i] + "-" + vlanParameter.getVlanId().toString() + "-" + i);
+
+				TelnetUtil.execCommand(ips[i], names[i], passwords[i], command, filePath);
+
+				String resultStr = FileUtils.readFileToString(new File(filePath));
+				result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.createVlan);
+
+				// 每次执行完成,暂停2s,避免nonsocket的错误
+				Thread.sleep(2000);
+			}
+
+		} catch (IOException e) {
+			result.setDefaultError();
+		} catch (InterruptedException e) {
+			result.setDefaultError();
+		}
+
+		return result;
+	}
+
+	@Override
+	public WSResult deleteVlanByAccessSwtich(Integer vlanId) {
+
+		WSResult result = new WSResult();
+
+		String command = service.deleteVlanOnAccessLayer(vlanId);
+
+		try {
+
+			String[] ips = StringUtils.split(ACCESS_IP, SEPARATOR_CHARS);
+			String[] names = StringUtils.split(ACCESS_USERNAME, SEPARATOR_CHARS);
+			String[] passwords = StringUtils.split(ACCESS_PASSWORD, SEPARATOR_CHARS);
+
+			for (int i = 0; i < ips.length; i++) {
+
+				// Format:接入层交换机IP地址 - VlanId
+				String filePath = getFilePath(ips[i] + "-" + vlanId.toString() + "-" + i);
+
+				TelnetUtil.execCommand(ips[i], names[i], passwords[i], command, filePath);
+
+				String resultStr = FileUtils.readFileToString(new File(filePath));
+				result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.deleteVlan);
+
+				// 每次执行完成,暂停2s,避免nonsocket的错误
+				Thread.sleep(2000);
+			}
+
+		} catch (IOException e) {
+			result.setDefaultError();
+		} catch (InterruptedException e) {
 			result.setDefaultError();
 		}
 
