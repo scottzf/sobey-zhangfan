@@ -14,8 +14,7 @@
 			<label for="domianName" class="col-sm-2 control-label">DomianName</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="domianName"
-					name="domianName" placeholder="域名" value="mdnftp.sobeycache.com"
-					readonly="readonly">
+					name="domianName" placeholder="域名" value="mdnftp.sobeycache.com">
 			</div>
 		</div>
 

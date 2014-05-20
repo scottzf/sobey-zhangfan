@@ -14,14 +14,15 @@
 			<label for="firewallPolicyId" class="col-sm-2 control-label">FirewallPolicyId</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="firewallPolicyId"
-					name="firewallPolicyId" placeholder="Firewall Policy Id" value="2000" readonly="readonly">
+					name="firewallPolicyId" placeholder="Firewall Policy Id"
+					value="2000">
 			</div>
 		</div>
 
 		<div class="form-group">
 			<label for="vlanId" class="col-sm-2 control-label">VlanId</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="vlanId" name="vlanId" readonly="readonly"
+				<input type="text" class="form-control" id="vlanId" name="vlanId"
 					placeholder="Vlan Id" value="80">
 			</div>
 		</div>
@@ -29,7 +30,7 @@
 		<div class="form-group">
 			<label for="netMask" class="col-sm-2 control-label">NetMask</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="netMask" name="netMask" readonly="readonly"
+				<input type="text" class="form-control" id="netMask" name="netMask"
 					placeholder="子网掩码" value="255.255.255.0">
 			</div>
 		</div>

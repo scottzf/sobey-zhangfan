@@ -13,7 +13,7 @@
 		<div class="form-group">
 			<label for="internetIP" class="col-sm-2 control-label">InternetIP</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="internetIP" readonly="readonly"
+				<input type="text" class="form-control" id="internetIP"  
 					name="internetIP" placeholder="公网IP" value="119.6.200.219">
 			</div>
 		</div>

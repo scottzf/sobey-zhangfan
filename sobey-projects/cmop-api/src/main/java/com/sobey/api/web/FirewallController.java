@@ -66,7 +66,7 @@ public class FirewallController {
 
 		// 获得所有的策略.必须有个默认的策略,不能为null,否则webservice接口会报错"Fault occurred while processing."
 		ArrayList<String> allPolicies = Lists.newArrayList();
-		allPolicies.add("192.168.1.1");
+		allPolicies.add("119.6.200.219-udp-8080");
 		eipParameter.getAllPolicies().addAll(allPolicies);
 
 		String message = "";
@@ -119,7 +119,7 @@ public class FirewallController {
 
 		// 获得所有的策略.必须有个默认的策略,不能为null,否则webservice接口会报错"Fault occurred while processing."
 		ArrayList<String> allPolicies = Lists.newArrayList();
-		allPolicies.add("192.168.1.1");
+		allPolicies.add("119.6.200.219-udp-8080");
 		eipParameter.getAllPolicies().addAll(allPolicies);
 
 		String message = "";

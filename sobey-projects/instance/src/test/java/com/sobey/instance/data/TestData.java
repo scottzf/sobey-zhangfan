@@ -14,19 +14,19 @@ public class TestData {
 
 		parameter.setDescription("这个一个API测试程序");
 		parameter.setGateway("10.10.2.1");
-		parameter.setIpaddress("10.10.2.90");
+		parameter.setIpaddress("10.10.2.81");
 		parameter.setSubNetMask("255.255.255.0");
-		parameter.setvMName("DeploySever-1");
+		parameter.setvMName("Sobey_Test");
 		parameter.setvMSUserName("Sobey");
 		parameter.setDatacenter(DataCenterEnum.XA.toString());
 
 		// Linux
-		// parameter.setvMTemplateName("CnetOS6.5");
-		// parameter.setvMTemplateOS("Linux");
+		parameter.setvMTemplateName("CnetOS6.5");
+		parameter.setvMTemplateOS("Linux");
 
 		// Windows
-		parameter.setvMTemplateName("WinServer2008R2");
-		parameter.setvMTemplateOS("Windows");
+		// parameter.setvMTemplateName("WinServer2008R2");
+		// parameter.setvMTemplateOS("Windows");
 		return parameter;
 	}
 

@@ -50,7 +50,7 @@
 			<label for="ipaddress" class="col-sm-2 control-label">Ipaddress</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="ipaddress"
-					readonly="readonly" name="ipaddress" placeholder="ip地址"
+					 name="ipaddress" placeholder="ip地址"
 					value="10.10.2.80">
 			</div>
 		</div>
@@ -59,7 +59,7 @@
 			<label for="gateway" class="col-sm-2 control-label">Gateway</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="gateway" name="gateway"
-					readonly="readonly" placeholder="网关" value="10.10.2.1">
+					 placeholder="网关" value="10.10.2.1">
 			</div>
 		</div>
 
@@ -67,7 +67,7 @@
 			<label for="subNetMask" class="col-sm-2 control-label">SubNetMask</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="subNetMask"
-					readonly="readonly" name="subNetMask" placeholder="子网掩码"
+					 name="subNetMask" placeholder="子网掩码"
 					value="255.255.255.0">
 			</div>
 		</div>

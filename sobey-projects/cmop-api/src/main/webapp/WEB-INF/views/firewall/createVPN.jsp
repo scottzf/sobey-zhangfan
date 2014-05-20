@@ -15,7 +15,7 @@
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="firewallPolicyId"
 					name="firewallPolicyId" placeholder="Firewall Policy Id"
-					value="2000" readonly="readonly">
+					value="2000">
 			</div>
 		</div>
 
@@ -23,7 +23,7 @@
 			<label for="vlanId" class="col-sm-2 control-label">VlanId</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="vlanId" name="vlanId"
-					readonly="readonly" placeholder="Vlan Id" value="80">
+					placeholder="Vlan Id" value="80">
 			</div>
 		</div>
 
@@ -31,7 +31,7 @@
 			<label for="netMask" class="col-sm-2 control-label">NetMask</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="netMask" name="netMask"
-					readonly="readonly" placeholder="子网掩码" value="255.255.255.0">
+					placeholder="子网掩码" value="255.255.255.0">
 			</div>
 		</div>
 
