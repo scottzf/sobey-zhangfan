@@ -388,7 +388,7 @@ public class FirewallService {
 	 * edit 1
 	 * set schedule "always"
 	 * set groups "vlan80-gr"
-	 * set service "ANY"
+	 * set service "ALL"
 	 * next
 	 * end
 	 * 
@@ -467,6 +467,7 @@ public class FirewallService {
 		sb.append("set groups ").append("\"").append(generateVlanGroupName(parameter)).append("\"")
 				.append(DEFAULT_SYMBOL);
 		sb.append("set service ").append("\"").append(FIREWALL_SERVICE).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set sslvpn-portal  \"full-access\"").append(DEFAULT_SYMBOL);
 		sb.append("next").append(DEFAULT_SYMBOL);
 		sb.append("end").append(DEFAULT_SYMBOL);
 		sb.append(DEFAULT_SYMBOL);
@@ -593,6 +594,8 @@ public class FirewallService {
 		sb.append("set groups ").append("\"").append(generateVlanGroupName(parameter)).append("\"")
 				.append(DEFAULT_SYMBOL);
 		sb.append("set service ").append("\"").append(FIREWALL_SERVICE).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set sslvpn-portal  \"full-access\"").append(DEFAULT_SYMBOL);
+
 		sb.append("next").append(DEFAULT_SYMBOL);
 		sb.append("end").append(DEFAULT_SYMBOL);
 		sb.append(DEFAULT_SYMBOL);
