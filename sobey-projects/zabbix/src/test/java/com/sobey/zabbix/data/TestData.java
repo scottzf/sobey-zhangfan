@@ -11,8 +11,8 @@ public class TestData {
 
 		Params params = new Params();
 
-		params.setUser("print");
-		params.setPassword("print");
+		params.setUser("admin");
+		params.setPassword("mvp4");
 
 		authenticate.setId("0");
 		authenticate.setJsonrpc("2.0");
