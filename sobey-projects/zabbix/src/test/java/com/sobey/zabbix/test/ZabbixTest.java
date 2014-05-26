@@ -51,6 +51,8 @@ public class ZabbixTest extends TestCase {
 
 			createTrigger(templateId, name);
 		}
+		
+		System.out.println("Over!");
 	}
 
 	@Test
@@ -198,7 +200,7 @@ public class ZabbixTest extends TestCase {
 		jsonObj.put("params",
 				(new JSONObject().put("name", name).put("applications", arr).put("key_", name).put("hostid", hostid)
 						.put("valuemapid", "14").put("value_type", "3").put("interfaceid", "0").put("type", 0).put(
-						"delay", 120)));
+						"delay", 300)));
 
 		System.out.println(executeZabbixMethod(jsonObj));
 	}
