@@ -365,7 +365,7 @@ public class FirewallService {
 	 * config user local
 	 * edit "liukai"
 	 * set type password 
-	 * edit passwd liukai@sobey
+	 * set passwd liukai@sobey
 	 * next
 	 * end
 	 * 
@@ -439,14 +439,14 @@ public class FirewallService {
 		sb.append("config user local").append(DEFAULT_SYMBOL);
 		sb.append("edit ").append("\"").append(parameter.getVpnUser()).append("\"").append(DEFAULT_SYMBOL);
 		sb.append("set type password ").append(DEFAULT_SYMBOL);
-		sb.append("edit passwd ").append(parameter.getVpnPassword()).append(DEFAULT_SYMBOL);
+		sb.append("set passwd ").append(parameter.getVpnPassword()).append(DEFAULT_SYMBOL);
 		sb.append("next").append(DEFAULT_SYMBOL);
 		sb.append("end").append(DEFAULT_SYMBOL);
 		sb.append(DEFAULT_SYMBOL);
 
 		sb.append("config user group").append(DEFAULT_SYMBOL);
 		sb.append("edit ").append("\"").append(generateVlanGroupName(parameter)).append("\"").append(DEFAULT_SYMBOL);
-		sb.append("set sslvpn-portal ").append("\"").append(FIREWALL_SSLVPN_PORTAL).append("\"").append(DEFAULT_SYMBOL);
+		// sb.append("set sslvpn-portal ").append("\"").append(FIREWALL_SSLVPN_PORTAL).append("\"").append(DEFAULT_SYMBOL);
 		sb.append("set member ").append("\"").append(parameter.getVpnUser()).append("\"").append(DEFAULT_SYMBOL);
 		sb.append("next").append(DEFAULT_SYMBOL);
 		sb.append("end").append(DEFAULT_SYMBOL);
