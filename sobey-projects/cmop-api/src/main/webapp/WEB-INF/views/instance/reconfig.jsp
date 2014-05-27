@@ -9,7 +9,11 @@
 <body>
 
 	<form class="form-horizontal" role="form" method="post" action=".">
-	
+
+		<div class="page-header">
+			<h3>虚拟机配置更新页面</h3>
+		</div>
+
 		<div class="form-group">
 			<label for="datacenter" class="col-sm-2 control-label">Date
 				Center</label>

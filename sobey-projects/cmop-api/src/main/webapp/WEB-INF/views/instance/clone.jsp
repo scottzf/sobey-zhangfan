@@ -10,6 +10,10 @@
 
 	<form class="form-horizontal" role="form" method="post" action=".">
 
+		<div class="page-header">
+			<h3>创建虚拟机页面</h3>
+		</div>
+
 		<div class="form-group">
 			<label for="datacenter" class="col-sm-2 control-label">Date
 				Center</label>
@@ -50,8 +54,7 @@
 			<label for="ipaddress" class="col-sm-2 control-label">Ipaddress</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="ipaddress"
-					 name="ipaddress" placeholder="ip地址"
-					value="10.10.2.80">
+					name="ipaddress" placeholder="ip地址" value="10.10.2.80">
 			</div>
 		</div>
 
@@ -59,7 +62,7 @@
 			<label for="gateway" class="col-sm-2 control-label">Gateway</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="gateway" name="gateway"
-					 placeholder="网关" value="10.10.2.1">
+					placeholder="网关" value="10.10.2.1">
 			</div>
 		</div>
 
@@ -67,8 +70,7 @@
 			<label for="subNetMask" class="col-sm-2 control-label">SubNetMask</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="subNetMask"
-					 name="subNetMask" placeholder="子网掩码"
-					value="255.255.255.0">
+					name="subNetMask" placeholder="子网掩码" value="255.255.255.0">
 			</div>
 		</div>
 

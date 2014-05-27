@@ -10,6 +10,10 @@
 
 	<form class="form-horizontal" role="form" method="post" action=".">
 
+		<div class="page-header">
+			<h3>卷挂载页面</h3>
+		</div>
+
 		<div class="form-group">
 			<label for="volumeName" class="col-sm-2 control-label">VolumeName</label>
 			<div class="col-sm-4">
@@ -27,18 +31,11 @@
 		</div>
 
 		<div class="form-group">
-			<label for="clientIPaddress" class="col-sm-2 control-label">挂载点</label>
-			<div class="col-sm-4">
-				<input type="text" class="form-control" id="clientIPaddress"
-					name="clientIPaddress" placeholder="挂载点" value="123">
-			</div>
-		</div>
-
-		<div class="form-group">
 			<label for="netAppIPaddress" class="col-sm-2 control-label">NetAppIPaddress</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="netAppIPaddress"
-					name="netAppIPaddress" placeholder="Netapp IP" value="10.10.2.34" readonly="readonly">
+					name="netAppIPaddress" placeholder="Netapp IP" value="10.10.2.34"
+					readonly="readonly">
 			</div>
 		</div>
 

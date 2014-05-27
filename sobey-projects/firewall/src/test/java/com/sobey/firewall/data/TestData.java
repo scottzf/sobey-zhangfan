@@ -51,13 +51,13 @@ public class TestData {
 		parameter.setVpnPassword("liukai01@sobey");
 
 		ArrayList<String> segments = Lists.newArrayList();
-		String segment = "172.20.17.0";
+		String segment = "172.18.1.0";
 		String segment2 = "172.20.18.0";
 		segments.add(segment);
-		segments.add(segment2);
+//		segments.add(segment2);
 
 		ArrayList<String> ipaddress = Lists.newArrayList();
-		String ip = "172.20.19.1";
+		String ip = "172.18.1.1";
 		ipaddress.add(ip);
 
 		parameter.setSegments(segments);

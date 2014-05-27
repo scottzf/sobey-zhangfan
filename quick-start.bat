@@ -14,9 +14,6 @@ cd ..\
 echo [Step 2] Start all sobey projects.
 cd sobey-projects\cmdbuild
 
-
-
-
 cd ..\cmdbuild
 start "CMDBuild" %MVN% clean clean tomcat:run -Dmaven.tomcat.port=8080
 if errorlevel 1 goto error

@@ -10,6 +10,10 @@
 
 	<form class="form-horizontal" role="form" method="post" action=".">
 
+		<div class="page-header">
+			<h3>修改VPN账号页面</h3>
+		</div>
+
 		<div class="form-group">
 			<label for="firewallPolicyId" class="col-sm-2 control-label">FirewallPolicyId</label>
 			<div class="col-sm-4">
@@ -59,7 +63,7 @@
 
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="segments"
-					placeholder="网段">
+					value="10.10.2.0" placeholder="网段">
 			</div>
 
 			<div class="col-sm-1">
@@ -78,7 +82,7 @@
 
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="ipaddress"
-					placeholder="IP地址">
+					value="10.10.2.80" placeholder="IP地址">
 			</div>
 
 			<div class="col-sm-1">

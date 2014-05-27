@@ -10,6 +10,10 @@
 
 	<form class="form-horizontal" role="form" method="post" action=".">
 
+		<div class="page-header">
+			<h3>核心交换机删除Vlan页面</h3>
+		</div>
+
 		<div class="form-group">
 			<label for="vlanId" class="col-sm-2 control-label">VlanId</label>
 			<div class="col-sm-4">

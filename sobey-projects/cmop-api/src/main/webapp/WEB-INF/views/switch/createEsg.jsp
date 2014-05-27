@@ -10,6 +10,10 @@
 
 	<form class="form-horizontal" role="form" method="post" action=".">
 
+		<div class="page-header">
+			<h3>安全组ESG创建页面</h3>
+		</div>
+
 		<div class="form-group">
 			<label for="aclNumber" class="col-sm-2 control-label">AclNumber</label>
 			<div class="col-sm-4">
@@ -40,22 +44,23 @@
 
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="permitsSource"
-					placeholder="Source">
+					placeholder="Source" value="172.18.1.1">
 			</div>
 
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="permitsSourceNetMask"
-					placeholder="SourceNetMask">
+					placeholder="SourceNetMask" value="0.0.0.0">
 			</div>
 
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="permitsDestination"
-					placeholder="Destination">
+					placeholder="Destination" value="172.20.0.13">
 			</div>
 
 			<div class="col-sm-2">
 				<input type="text" class="form-control"
-					name="permitsDestinationNetMask" placeholder="NetMask">
+					name="permitsDestinationNetMask" placeholder="NetMask"
+					value="0.0.0.0">
 			</div>
 
 			<div class="col-sm-1">
@@ -75,21 +80,21 @@
 
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="denysSource"
-					placeholder="Source">
+					value="172.18.1.1" placeholder="Source">
 			</div>
 
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="denysSourceNetMask"
-					placeholder="SourceNetMask">
+					value="0.0.0.255" placeholder="SourceNetMask">
 			</div>
 
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="denysDestination"
-					placeholder="Destination">
+					value="172.30.0.0" placeholder="Destination">
 			</div>
 
 			<div class="col-sm-2">
-				<input type="text" class="form-control"
+				<input type="text" class="form-control" value="0.0.0.255"
 					name="denysDestinationNetMask" placeholder="NetMask">
 			</div>
 

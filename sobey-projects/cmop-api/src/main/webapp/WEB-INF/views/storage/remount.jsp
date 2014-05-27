@@ -3,12 +3,16 @@
 
 <html>
 <head>
-<title>Storage Remount Demo</title>
+<title>Storage Change Demo</title>
 </head>
 
 <body>
 
 	<form class="form-horizontal" role="form" method="post" action=".">
+
+		<div class="page-header">
+			<h3>允许卷挂载配置页面</h3>
+		</div>
 
 		<div class="form-group">
 			<label for="volumeName" class="col-sm-2 control-label">VolumeName</label>
@@ -58,7 +62,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Remount</button>
+				<button type="submit" class="btn btn-primary">Change</button>
 			</div>
 		</div>
 	</form>

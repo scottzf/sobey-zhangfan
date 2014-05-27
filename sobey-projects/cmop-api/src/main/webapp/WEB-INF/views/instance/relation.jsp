@@ -10,6 +10,10 @@
 
 	<form class="form-horizontal" role="form" method="post" action=".">
 
+		<div class="page-header">
+			<h3>主机、虚拟机关联关系页面</h3>
+		</div>
+
 		<div class="form-group">
 			<label for="datacenter" class="col-sm-2 control-label">Date
 				Center</label>

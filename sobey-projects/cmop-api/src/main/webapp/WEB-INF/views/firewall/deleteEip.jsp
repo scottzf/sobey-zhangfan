@@ -10,10 +10,14 @@
 
 	<form class="form-horizontal" role="form" method="post" action=".">
 
+		<div class="page-header">
+			<h3>删除EIP页面</h3>
+		</div>
+
 		<div class="form-group">
 			<label for="internetIP" class="col-sm-2 control-label">InternetIP</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="internetIP"  
+				<input type="text" class="form-control" id="internetIP"
 					name="internetIP" placeholder="公网IP" value="119.6.200.219">
 			</div>
 		</div>
