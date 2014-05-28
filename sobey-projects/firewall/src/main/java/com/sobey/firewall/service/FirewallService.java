@@ -50,11 +50,6 @@ public class FirewallService {
 	private static final String FIREWALL_CTC = FIREWALL_LOADER.getProperty("FIREWALL_CTC");
 
 	/**
-	 * sslvpn-portal
-	 */
-	private static final String FIREWALL_SSLVPN_PORTAL = FIREWALL_LOADER.getProperty("FIREWALL_SSLVPN_PORTAL");
-
-	/**
 	 * srcintf
 	 */
 	private static final String FIREWALL_SRCINTF = FIREWALL_LOADER.getProperty("FIREWALL_SRCINTF");

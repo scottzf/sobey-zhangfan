@@ -52,9 +52,7 @@ public class TestData {
 
 		ArrayList<String> segments = Lists.newArrayList();
 		String segment = "172.18.1.0";
-		String segment2 = "172.20.18.0";
 		segments.add(segment);
-//		segments.add(segment2);
 
 		ArrayList<String> ipaddress = Lists.newArrayList();
 		String ip = "172.18.1.1";
