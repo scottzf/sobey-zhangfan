@@ -21,7 +21,7 @@ public class TestData {
 		parameter.setDatacenter(DataCenterEnum.XA.toString());
 
 		// Linux
-		parameter.setvMTemplateName("CnetOS6.5");
+		parameter.setvMTemplateName("CentOSTmp");
 		parameter.setvMTemplateOS("Linux");
 
 		// Windows

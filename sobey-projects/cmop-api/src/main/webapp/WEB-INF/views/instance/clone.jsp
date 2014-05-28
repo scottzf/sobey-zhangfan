@@ -37,7 +37,7 @@
 			<label for="operation" class="col-sm-2 control-label">VMTemplateOS</label>
 			<div class="col-sm-4">
 				<select id="vmTemplateOS" name="vmTemplateOS" class="form-control">
-					<option value="CnetOS6.5">CnetOS6.5</option>
+					<option value="CentOSTmp">CnetOS6.5</option>
 				</select>
 			</div>
 		</div>

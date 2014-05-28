@@ -44,12 +44,12 @@ public class VMTest extends TestCase {
 		CloneVMParameter cloneVMParameter = new CloneVMParameter();
 		cloneVMParameter.setDescription("这个一个API测试程序");
 		cloneVMParameter.setDatacenter(DATACENTER);
-		cloneVMParameter.setGateway("10.10.2.255");
-		cloneVMParameter.setIpaddress("10.10.1.80");
+		cloneVMParameter.setGateway("10.10.2.1");
+		cloneVMParameter.setIpaddress("10.10.2.90");
 		cloneVMParameter.setSubNetMask("255.255.255.0");
 		cloneVMParameter.setVMName("liukai");
-		cloneVMParameter.setVMSUserName("徽州");
-		cloneVMParameter.setVMTemplateName("CnetOS6.5");
+		cloneVMParameter.setVMSUserName("cmop");
+		cloneVMParameter.setVMTemplateName("CnetOSTmp");
 		cloneVMParameter.setVMTemplateOS("Linux");
 		assertEquals(service.cloneVM(cloneVMParameter).getCode(), "0");
 	}
