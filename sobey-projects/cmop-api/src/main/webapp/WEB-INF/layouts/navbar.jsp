@@ -70,14 +70,7 @@
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown">Monitor<b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="${ctx}/monitor/ping/">Ping</a></li>
-						<li><a href="${ctx}/monitor/memory/">Memory</a></li>
-						<li><a href="${ctx}/monitor/eth/">Eth</a></li>
-						<li><a href="${ctx}/monitor/rootPartition/">RootPartition</a></li>
-						<li><a href="${ctx}/monitor/swapUsage/">SwapUsage</a></li>
-						<li><a href="${ctx}/monitor/processes/">TotalProcesses</a></li>
-						<li><a href="${ctx}/monitor/diskIO/">DiskIO</a></li>
-						<li><a href="${ctx}/monitor/cpu/">CPULoad</a></li>
+						<li><a href="${ctx}/zabbix/">Zabbix</a></li>
 					</ul></li>
 			</ul>
 		</div>

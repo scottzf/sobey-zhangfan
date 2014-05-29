@@ -384,7 +384,7 @@
 									<wsdl>${basedir}/src/main/resources/wsdl/instanceSoapService.xml</wsdl>
 								</wsdlOption>
 								<wsdlOption>
-									<wsdl>${basedir}/src/main/resources/wsdl/nagiosSoapService.xml</wsdl>
+									<wsdl>${basedir}/src/main/resources/wsdl/zabbixSoapService.xml</wsdl>
 								</wsdlOption>
 								<wsdlOption>
 									<wsdl>${basedir}/src/main/resources/wsdl/loadbalancerSoapService.xml</wsdl>
