@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -29,17 +30,27 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sobey.core.mapper.JsonMapper;
+import com.sobey.zabbix.constans.ItemEnum;
 import com.sobey.zabbix.data.TestData;
 import com.sobey.zabbix.entity.Authenticate;
 import com.sobey.zabbix.entity.ZItem;
+import com.sobey.zabbix.service.ZabbixApiService;
 
-@ContextConfiguration({ "classpath:applicationContext.xml" })
+@ContextConfiguration({ "classpath:applicationContext.xml", "classpath:applicationContext-zabbix.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ZabbixTest extends TestCase {
 
 	private static String ZABBIX_API_URL = "http://113.142.30.36:82/zabbix/api_jsonrpc.php";
-
+	
+	@Autowired
+	public ZabbixApiService service;
+	
 	@Test
+	public void test(){
+		System.out.println(service.getItem("10.10.2.111", ItemEnum.Free_disk_space_on.getName()));
+	}
+
+	// @Test
 	public void insert() throws IOException {
 
 		String templateId = getTemplateId("streaming"); // 模板Id
@@ -51,24 +62,54 @@ public class ZabbixTest extends TestCase {
 
 			createTrigger(templateId, name);
 		}
-		
+
 		System.out.println("Over!");
 	}
 
-	@Test
-	public void zabbixAPITest() throws JsonGenerationException, JsonMappingException, IOException, JSONException {
+	// @Test
+	public void getTemplate() throws JSONException, IOException {
 
 		/**
 		 * 注意模板和host是写在一个表中的.
 		 */
-		String hostId = getHostId("172.20.0.28");
-		System.out.println(hostId);
-
-		// ZItem item = getItem(hostId, "vm.memory.size[total]");
-
 		String templateId = getTemplateId("streaming"); // 模板Id
 		getItem(templateId);
 		getTrigger(templateId);
+
+	}
+
+//	@Test
+	public void zabbixAPITest() throws JsonGenerationException, JsonMappingException, IOException, JSONException {
+
+		String hostId = getHostId("10.10.2.111");
+
+		System.out.println("hostId:"+hostId);
+
+		ZItem item = getItem(hostId, ItemEnum.traffic_in.getName());
+		System.out.println(item.getLastValue());
+		System.out.println(item.getUnits());
+
+
+	}
+
+	public static String deleteHost(String hostId) throws JSONException, IOException {
+
+		String[] arr = new String[1];
+		arr[0] = hostId;
+
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("jsonrpc", "2.0");
+		jsonObj.put("method", "host.delete");
+		jsonObj.put("id", 0);
+		jsonObj.put("auth", getToken());
+
+		jsonObj.put("params", arr);
+
+		String resStr = executeZabbixMethod(jsonObj);
+
+		JsonNode node = new ObjectMapper().readTree(resStr);
+
+		return subResult(node, "hostids");
 
 	}
 
@@ -122,6 +163,8 @@ public class ZabbixTest extends TestCase {
 
 		String resStr = executeZabbixMethod(jsonObj);
 
+		System.err.println(resStr);
+
 		JsonNode node = new ObjectMapper().readTree(resStr);
 
 		ZItem item = new ZItem();
@@ -130,7 +173,7 @@ public class ZabbixTest extends TestCase {
 		item.setInventoryLink(subResult(node, "inventory_link"));
 		item.setPassword(subResult(node, "password"));
 		item.setUserName(subResult(node, "username"));
-		item.setLastlogSize(subResult(node, "lastlogSize"));
+		item.setLastlogSize(subResult(node, "lastlogsize"));
 		item.setDataType(subResult(node, "data_type"));
 		item.setDescription(subResult(node, "description"));
 		item.setTrapperHosts(subResult(node, "trapper_hosts"));
@@ -140,16 +183,16 @@ public class ZabbixTest extends TestCase {
 		item.setDelta(subResult(node, "delta"));
 		item.setmTime(subResult(node, "mtime"));
 		item.setLastclock(subResult(node, "lastclock"));
-		item.setLastValue(subResult(node, "lastValue"));
+		item.setLastValue(subResult(node, "lastvalue"));
 		item.setDelay(subResult(node, "delay"));
 		item.setTrends(subResult(node, "trends"));
 		item.setValueType(subResult(node, "value_type"));
 		item.setPort(subResult(node, "port"));
-		item.setAuthType(subResult(node, "authType"));
+		item.setAuthType(subResult(node, "authtype"));
 		item.setLastns(subResult(node, "lastns"));
-		item.setItemId(subResult(node, "itemId"));
-		item.setPublicKey(subResult(node, "publicKey"));
-		item.setPrevValue(subResult(node, "prevValue"));
+		item.setItemId(subResult(node, "itemid"));
+		item.setPublicKey(subResult(node, "publickey"));
+		item.setPrevValue(subResult(node, "prevvalue"));
 		item.setName(subResult(node, "name"));
 		item.setFlags(subResult(node, "flags"));
 		item.setTemplateId(subResult(node, "templateid"));
@@ -259,8 +302,6 @@ public class ZabbixTest extends TestCase {
 				(new JSONObject().put("filter", (new JSONObject()).put("name", name)).put("output", "extend")));
 
 		String resStr = executeZabbixMethod(jsonObj);
-
-		System.err.println(resStr);
 
 		JsonNode node = new ObjectMapper().readTree(resStr);
 

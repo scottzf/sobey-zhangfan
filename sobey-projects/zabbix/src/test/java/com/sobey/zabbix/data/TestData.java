@@ -7,17 +7,12 @@ public class TestData {
 
 	public static Authenticate randomAuthenticate() {
 
-		Authenticate authenticate = new Authenticate();
-
 		Params params = new Params();
 
 		params.setUser("admin");
 		params.setPassword("mvp4");
 
-		authenticate.setId("0");
-		authenticate.setJsonrpc("2.0");
-		authenticate.setMethod("user.login");
-		authenticate.setParams(params);
+		Authenticate authenticate = new Authenticate(params);
 
 		return authenticate;
 	}

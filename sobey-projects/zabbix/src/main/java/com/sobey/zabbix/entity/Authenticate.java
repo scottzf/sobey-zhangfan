@@ -7,6 +7,13 @@ public class Authenticate {
 	private String jsonrpc;
 	private Params params;
 
+	public Authenticate(Params params) {
+		this.id = "0";
+		this.method = "user.login";
+		this.jsonrpc = "2.0";
+		this.params = params;
+	}
+
 	public String getId() {
 		return id;
 	}
