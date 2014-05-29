@@ -5,7 +5,7 @@ cd %~dp0
 cd ..
 
 set MAVEN_OPTS=%MAVEN_OPTS% -XX:MaxPermSize=128m
-call mvn clean tomcat:run -Dmaven.tomcat.port=8087
+call mvn clean tomcat:run -Dmaven.tomcat.port=8089
 
 cd bin
 pause
