@@ -52,6 +52,8 @@ public class VlanTest extends TestCase implements PbulicProperties {
 		String result = FileUtils.readFileToString(new File(FILE_PATH));
 
 		System.out.println(result);
+
+		assertTrue(result.contains("Error: The IP address you entered overlaps with another interface!"));
 	}
 
 	@Test

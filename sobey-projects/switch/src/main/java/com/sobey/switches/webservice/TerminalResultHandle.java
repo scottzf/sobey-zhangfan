@@ -17,7 +17,8 @@ public class TerminalResultHandle {
 	 * 创建Acl之前需要Vlan
 	 */
 	public static final String CREATEACL_ERROR = "This VLAN must exist before creating the Interface VLAN";
-	private static final String VLAN_ERROR = "VLAN(s) do(es) not exist.";
+	public static final String VLAN_ERROR = "VLAN(s) do(es) not exist.";
+	public static final String IP_OVERLAPS_ERROR = "Error: The IP address you entered overlaps with another interface!";
 
 	public static WSResult ResultHandle(String info, MethodEnum methodEnum) {
 
@@ -26,7 +27,9 @@ public class TerminalResultHandle {
 		switch (methodEnum) {
 		case createVlan:
 
-			// 如果有vlan,交换机不会报错,需要在CMDB中进行约束.
+			if (info.contains(IP_OVERLAPS_ERROR)) {
+				result.setError(WSResult.SYSTEM_ERROR, "IP在交换机中已存在");
+			}
 
 			break;
 		case deleteVlan:
