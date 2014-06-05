@@ -20,6 +20,7 @@ public class CloneVMParameter {
 	private String datacenter;
 	private String vMSUserName;
 	private String description;
+	private Integer vlanId;
 
 	public String getvMTemplateName() {
 		return vMTemplateName;
@@ -91,6 +92,14 @@ public class CloneVMParameter {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Integer getVlanId() {
+		return vlanId;
+	}
+
+	public void setVlanId(Integer vlanId) {
+		this.vlanId = vlanId;
 	}
 
 	/**
