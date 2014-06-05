@@ -33,6 +33,11 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 			result.setError(WSResult.SYSTEM_ERROR, "克隆失败");
 		}
 
+		if (service.changeVlan(cloneVMParameter.getDatacenter(), cloneVMParameter.getvMName(),
+				cloneVMParameter.getVlanId())) {
+			result.setError(WSResult.SYSTEM_ERROR, "Vlan分配失败");
+		}
+
 		return result;
 	}
 
