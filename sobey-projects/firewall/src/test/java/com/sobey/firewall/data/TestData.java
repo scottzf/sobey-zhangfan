@@ -13,27 +13,22 @@ public class TestData {
 
 		ArrayList<String> allPolicies = Lists.newArrayList();
 
-		EIPParameter parameter = new EIPParameter();
+		allPolicies.add("119.6.200.204");
 
+		EIPParameter parameter = new EIPParameter();
 		parameter.setAllPolicies(allPolicies);
-		parameter.setInternetIP("119.6.200.219");
+		parameter.setInternetIP("119.6.200.203");
 		parameter.setIsp(1);
-		parameter.setPrivateIP("172.28.25.105");
+		parameter.setPrivateIP("10.10.2.51");
 
 		ArrayList<EIPPolicyParameter> policies = Lists.newArrayList();
 
 		EIPPolicyParameter policyParameter = new EIPPolicyParameter();
-		policyParameter.setProtocolText("udp");
-		policyParameter.setSourcePort(8080);
-		policyParameter.setTargetPort(8080);
-
-		EIPPolicyParameter policyParameter2 = new EIPPolicyParameter();
-		policyParameter2.setProtocolText("tcp");
-		policyParameter2.setSourcePort(80);
-		policyParameter2.setTargetPort(80);
+		policyParameter.setProtocolText("tcp");
+		policyParameter.setSourcePort(80);
+		policyParameter.setTargetPort(80);
 
 		policies.add(policyParameter);
-		// policies.add(policyParameter2);
 
 		parameter.setPolicies(policies);
 

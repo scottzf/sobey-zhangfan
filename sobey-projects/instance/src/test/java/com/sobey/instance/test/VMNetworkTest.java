@@ -88,7 +88,7 @@ public class VMNetworkTest extends TestCase {
 				.searchManagedEntity("DistributedVirtualSwitch", "DSwitch");
 
 		if (dvs != null) {
-			createDVSPortGroup(dvs, 2, "vlan2");
+			createDVSPortGroup(dvs, 101, "vlan101");
 		}
 	}
 

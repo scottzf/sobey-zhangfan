@@ -2,6 +2,7 @@ package com.sobey.firewall.webservice;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.jws.WebParam;
 import javax.jws.WebService;
@@ -9,6 +10,7 @@ import javax.jws.WebService;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.common.collect.Lists;
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.core.utils.TelnetUtil;
 import com.sobey.firewall.constans.MethodEnum;
@@ -50,6 +52,11 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 
 		WSResult result = new WSResult();
 
+		// TODO 用于测试环境临时加入的一条
+		ArrayList<String> allPolicies = Lists.newArrayList();
+		allPolicies.add("119.6.200.204");
+		eipParameter.setAllPolicies(allPolicies);
+
 		String command = service.createEip(eipParameter);
 
 		String filePath = getFilePath(eipParameter.getPrivateIP());
@@ -73,6 +80,11 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 	public WSResult deleteEIPByFirewall(@WebParam(name = "eipParameter") EIPParameter eipParameter) {
 
 		WSResult result = new WSResult();
+
+		// TODO 用于测试环境临时加入的一条
+		ArrayList<String> allPolicies = Lists.newArrayList();
+		allPolicies.add("119.6.200.204");
+		eipParameter.setAllPolicies(allPolicies);
 
 		String command = service.deleteEip(eipParameter);
 
