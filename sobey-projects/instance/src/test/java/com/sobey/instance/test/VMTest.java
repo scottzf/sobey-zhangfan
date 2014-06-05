@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.sobey.instance.constans.DataCenterEnum;
 import com.sobey.instance.data.TestData;
 import com.sobey.instance.service.VMService;
 import com.sobey.instance.webservice.response.dto.CloneVMParameter;
@@ -74,7 +75,13 @@ public class VMTest extends TestCase {
 	@Test
 	public void cloneVM() {
 		CloneVMParameter parameter = TestData.randomCloneVMParameter();
-		assertTrue(service.cloneVM(parameter));
+		service.cloneVM(parameter);
+		service.changeVlan(parameter.getDatacenter(), parameter.getvMName(), parameter.getVlanId());
+	}
+
+	@Test
+	public void changeVlan() {
+		service.changeVlan(DataCenterEnum.XA.toString(), "Sobey123", 100);
 	}
 
 	@Test
