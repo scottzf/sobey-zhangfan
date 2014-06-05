@@ -43,7 +43,7 @@ public class InstanceController {
 	public String clone(@RequestParam(value = "description") String description,
 			@RequestParam(value = "gateway") String gateway, @RequestParam(value = "ipaddress") String ipaddress,
 			@RequestParam(value = "subNetMask") String subNetMask, @RequestParam(value = "vmName") String vmName,
-			@RequestParam(value = "vmTemplateOS") String vmTemplateOS,
+			@RequestParam(value = "vmTemplateOS") String vmTemplateOS, @RequestParam(value = "vlanId") Integer vlanId,
 			@RequestParam(value = "datacenter") String datacenter, RedirectAttributes redirectAttributes) {
 
 		CloneVMParameter cloneVMParameter = new CloneVMParameter();
@@ -54,6 +54,7 @@ public class InstanceController {
 		cloneVMParameter.setSubNetMask(subNetMask);
 		cloneVMParameter.setVMTemplateName(vmTemplateOS);
 		cloneVMParameter.setDatacenter(datacenter);
+		cloneVMParameter.setVlanId(vlanId);
 
 		cloneVMParameter.setVMSUserName("Sobey");
 		cloneVMParameter.setVMTemplateOS("Linux");

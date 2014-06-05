@@ -46,6 +46,7 @@
       <xs:element minOccurs="0" name="gateway" type="xs:string"/>
       <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
       <xs:element minOccurs="0" name="subNetMask" type="xs:string"/>
+      <xs:element minOccurs="0" name="vlanId" type="xs:int"/>
       <xs:element minOccurs="0" name="vMName" type="xs:string"/>
       <xs:element minOccurs="0" name="vMSUserName" type="xs:string"/>
       <xs:element minOccurs="0" name="vMTemplateName" type="xs:string"/>
