@@ -38,21 +38,30 @@ import com.vmware.vim25.CustomizationSysprep;
 import com.vmware.vim25.CustomizationSysprepRebootOption;
 import com.vmware.vim25.CustomizationUserData;
 import com.vmware.vim25.CustomizationWinOptions;
+import com.vmware.vim25.DVPortgroupConfigSpec;
+import com.vmware.vim25.DistributedVirtualSwitchPortConnection;
 import com.vmware.vim25.InvalidProperty;
 import com.vmware.vim25.ManagedObjectReference;
 import com.vmware.vim25.RuntimeFault;
+import com.vmware.vim25.TaskInfo;
+import com.vmware.vim25.TaskInfoState;
+import com.vmware.vim25.VMwareDVSPortSetting;
 import com.vmware.vim25.VirtualDevice;
 import com.vmware.vim25.VirtualDeviceConfigSpec;
 import com.vmware.vim25.VirtualDeviceConfigSpecOperation;
 import com.vmware.vim25.VirtualDeviceConnectInfo;
 import com.vmware.vim25.VirtualEthernetCard;
-import com.vmware.vim25.VirtualEthernetCardNetworkBackingInfo;
-import com.vmware.vim25.VirtualHardware;
+import com.vmware.vim25.VirtualEthernetCardDistributedVirtualPortBackingInfo;
 import com.vmware.vim25.VirtualMachineCloneSpec;
+import com.vmware.vim25.VirtualMachineConfigInfo;
 import com.vmware.vim25.VirtualMachineConfigSpec;
 import com.vmware.vim25.VirtualMachineRelocateSpec;
+import com.vmware.vim25.VirtualVmxnet3;
+import com.vmware.vim25.VmwareDistributedVirtualSwitchVlanIdSpec;
 import com.vmware.vim25.mo.CustomizationSpecManager;
 import com.vmware.vim25.mo.Datacenter;
+import com.vmware.vim25.mo.DistributedVirtualPortgroup;
+import com.vmware.vim25.mo.DistributedVirtualSwitch;
 import com.vmware.vim25.mo.Folder;
 import com.vmware.vim25.mo.InventoryNavigator;
 import com.vmware.vim25.mo.ManagedEntity;
@@ -112,119 +121,277 @@ public class VMService {
 	private static final String INSTANCE_PASSWORD_XA = INSTANCE_LOADER.getProperty("INSTANCE_PASSWORD_XA");
 
 	/**
-	 * 为虚拟机设置网络适配器相关信息:设备状态设置为已连接、网络标签、虚拟机的备注.
-	 * 
-	 * @param vm
-	 * @param networkName
-	 * @param annotation
+	 * 网卡名
 	 */
-	private void setVirtualMachineNetwork(VirtualMachine vm, String networkName, CloneVMParameter parameter) {
+	private static final String INSTANCE_NIC_NAME = INSTANCE_LOADER.getProperty("INSTANCE_NIC_NAME");
 
-		ArrayList<VirtualEthernetCard> nics = new ArrayList<VirtualEthernetCard>();
+	/**
+	 * 分布式交换机名
+	 */
+	private static final String INSTANCE_DVS_NAME = INSTANCE_LOADER.getProperty("INSTANCE_DVS_NAME");
+
+	public boolean addDVSPortGroup(Integer vlanId, String datacenter) {
+
+		boolean flag = false;
+
+		// 先判断vcneter中是否有该端口组
+		if (getNetworkList(datacenter).contains(getPortGroupName(vlanId))) {
+			return flag;
+		}
 
 		try {
 
-			VirtualHardware hardware = vm.getConfig().hardware;
-			VirtualDevice[] devices = hardware.getDevice();
+			ServiceInstance si = getServiceInstance(datacenter);
 
-			for (VirtualDevice each : devices) {
-				if (each instanceof VirtualEthernetCard) {
-					nics.add((VirtualEthernetCard) each);
-				}
+			DistributedVirtualSwitch dvs = (DistributedVirtualSwitch) new InventoryNavigator(si.getRootFolder())
+					.searchManagedEntity("DistributedVirtualSwitch", INSTANCE_DVS_NAME);
+
+			if (dvs == null) {
+				return flag;
 			}
 
-			for (VirtualEthernetCard each : nics) {
+			// create port group under this DVS
+			DVPortgroupConfigSpec[] dvpgs = new DVPortgroupConfigSpec[1];
+			dvpgs[0] = new DVPortgroupConfigSpec();
+			dvpgs[0].setName(getPortGroupName(vlanId));
+			dvpgs[0].setNumPorts(128);
+			dvpgs[0].setType("earlyBinding");
+			VMwareDVSPortSetting vport = new VMwareDVSPortSetting();
+			dvpgs[0].setDefaultPortConfig(vport);
 
-				// 设备状态设置为:已连接
-				VirtualDeviceConnectInfo connectable = each.getConnectable();
-				connectable.setConnected(true);
-				each.setConnectable(connectable);
+			VmwareDistributedVirtualSwitchVlanIdSpec vlan = new VmwareDistributedVirtualSwitchVlanIdSpec();
+			vport.setVlan(vlan);
+			vlan.setInherited(false);
+			vlan.setVlanId(vlanId);
 
-				VirtualEthernetCardNetworkBackingInfo backing = new VirtualEthernetCardNetworkBackingInfo();
+			Task task_pg = dvs.addDVPortgroup_Task(dvpgs);
 
-				// 根据网络适配器名字找到该网络对象
-				Network network = getNetworkFromString(networkName, parameter.getDatacenter());
+			TaskInfo ti = waitFor(task_pg);
 
-				if (network != null) {
-
-					// 设置网络链接->网络标签
-					backing.setNetwork(network.getMOR());
-					backing.setDeviceName(network.getName());
-					each.setBacking(backing);
-
-					VirtualDeviceConfigSpec vdcs = new VirtualDeviceConfigSpec();
-
-					vdcs.setOperation(VirtualDeviceConfigSpecOperation.edit);
-					vdcs.setDevice(each);
-
-					VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
-
-					vmConfigSpec.setDeviceChange(new VirtualDeviceConfigSpec[] { vdcs });
-
-					// 为VM添加注释
-					vmConfigSpec.setAnnotation(parameter.getDescription());
-
-					Task changeNetwork = vm.reconfigVM_Task(vmConfigSpec);
-					if (changeNetwork.waitForTask() != Task.SUCCESS) {
-						logger.info(vm.getName() + " could not be changed to \"" + network.getName() + "\"");
-					}
-
-				} else {
-					logger.info("Error in changing network label. network 不存在");
-				}
+			if (ti.getState() == TaskInfoState.error) {
+				System.out.println("Failed to create a new DVS.");
+				return flag;
 			}
+			System.out.println("A new DVS port group has been created successfully.");
 
+		} catch (RemoteException e) {
+			logger.info("RemoteException::addDVSPortGroup::" + e);
+		} catch (MalformedURLException e) {
+			logger.info("MalformedURLException::addDVSPortGroup::" + e);
+		} catch (InterruptedException e) {
+			logger.info("InterruptedException::addDVSPortGroup::" + e);
 		}
 
-		catch (Exception e) {
-			logger.info("setVirtualMachineNetwork::Exception:" + e);
-			e.printStackTrace();
+		return true;
+
+	}
+
+	private static TaskInfo waitFor(Task task) throws RemoteException, InterruptedException {
+		while (true) {
+			TaskInfo ti = task.getTaskInfo();
+			TaskInfoState state = ti.getState();
+			if (state == TaskInfoState.success || state == TaskInfoState.error) {
+				return ti;
+			}
+			Thread.sleep(1000);
 		}
 	}
 
 	/**
-	 * 根据名称获得数据中的网络设备对象.
+	 * 所有的网络设备名称的集合
 	 * 
-	 * @param name
-	 *            网络设备器名称
-	 * @param name
-	 *            数据中心名
+	 * @param datacenter
+	 *            数据中心
 	 * @return
-	 * @throws RemoteException
-	 * @throws MalformedURLException
 	 */
-	private Network getNetworkFromString(String name, String datacenter) throws RemoteException, MalformedURLException {
+	private List<String> getNetworkList(String datacenter) {
 
-		Network network = null;
+		List<String> list = new ArrayList<String>();
 		Datacenter dc = null;
 		List<Network> networks = new ArrayList<Network>();
 
-		Folder rootFolder = getServiceInstance(datacenter).getRootFolder();
+		Folder rootFolder;
+		try {
 
-		ManagedEntity[] datacenters = rootFolder.getChildEntity();
+			rootFolder = getServiceInstance(datacenter).getRootFolder();
 
-		// 获得数据中心
-		for (int i = 0; i < datacenters.length; i++) {
-			if (datacenters[i] instanceof Datacenter) {
-				dc = (Datacenter) datacenters[i];
-				break;
+			ManagedEntity[] datacenters = rootFolder.getChildEntity();
+
+			// 获得数据中心
+			for (int i = 0; i < datacenters.length; i++) {
+				if (datacenters[i] instanceof Datacenter) {
+					dc = (Datacenter) datacenters[i];
+					break;
+				}
 			}
+
+			// 获得网络
+			for (ManagedEntity entity : dc.getNetworkFolder().getChildEntity()) {
+				if (entity instanceof Network) {
+					networks.add(((Network) entity));
+				}
+			}
+
+			for (Network each : networks) {
+				list.add(each.getName());
+			}
+
+		} catch (RemoteException | MalformedURLException e) {
+			logger.info("Exception::getNetworkList::" + e);
 		}
 
-		// 获得网络
-		for (ManagedEntity entity : dc.getNetworkFolder().getChildEntity()) {
-			if (entity instanceof Network) {
-				networks.add(((Network) entity));
+		return list;
+	}
+
+	/**
+	 * 
+	 * 
+	 * @param vmName
+	 *            虚拟机名
+	 * @param portGroupName
+	 *            分布式端口组名
+	 * @param nicName
+	 *            网卡名(一般是默认的,名字由配置文件中读取)
+	 * @return
+	 */
+
+	/**
+	 * 为虚拟机分配分布式端口组
+	 * 
+	 * @param datacenter
+	 *            数据中心
+	 * @param vmName
+	 *            虚拟机名
+	 * @param vlanId
+	 *            vlan Id
+	 * @return
+	 */
+	public boolean changeVlan(String datacenter, String vmName, Integer vlanId) {
+
+		boolean retVal = false;
+
+		String portGroupName = getPortGroupName(vlanId);
+
+		try {
+			ServiceInstance si = getServiceInstance(datacenter);
+
+			VirtualMachine vm = getVirtualMachine(si, vmName);
+
+			Folder rootFolder = si.getRootFolder();
+
+			Network network = (Network) new InventoryNavigator(rootFolder)
+					.searchManagedEntity("Network", portGroupName);
+
+			if (network == null) {
+				logger.info("Error::changeVlan::Could not find network," + portGroupName + " 不存在");
+				return retVal;
 			}
+
+			ManagedEntity[] entity = new InventoryNavigator(rootFolder)
+					.searchManagedEntities("DistributedVirtualSwitch");
+
+			DistributedVirtualSwitch dvs = null;
+			String key = "";
+			boolean found = false;
+
+			for (ManagedEntity me : entity) {
+
+				if (me instanceof DistributedVirtualSwitch) {
+
+					DistributedVirtualSwitch tmpDvs = (DistributedVirtualSwitch) me;
+					DistributedVirtualPortgroup[] vpgs = tmpDvs.getPortgroup();
+
+					for (DistributedVirtualPortgroup vpg : vpgs) {
+						// 查找是否有分布式端口组.
+						if (portGroupName.equals(vpg.getName())) {
+							key = vpg.getConfig().getKey();
+							dvs = tmpDvs;
+							found = true;
+							break;
+						}
+					}
+
+					if (found) {
+						break;
+					}
+				}
+			}
+
+			VirtualMachineConfigSpec vmSpec = new VirtualMachineConfigSpec();
+
+			VirtualMachineConfigInfo vmConfigInfo = vm.getConfig();
+
+			String uuid = dvs.getConfig().getUuid();
+
+			ArrayList<VirtualDeviceConfigSpec> nicSpecList = new ArrayList<VirtualDeviceConfigSpec>();
+
+			VirtualDevice[] vds = vmConfigInfo.getHardware().getDevice();
+			for (VirtualDevice vd : vds) {
+				if (vd instanceof VirtualEthernetCard) {
+
+					VirtualDeviceConfigSpec nicSpec = new VirtualDeviceConfigSpec();
+					nicSpec.setOperation(VirtualDeviceConfigSpecOperation.edit);
+
+					VirtualEthernetCard nic = (VirtualEthernetCard) vd;
+
+					if (nic.getDeviceInfo().getLabel().equalsIgnoreCase(INSTANCE_NIC_NAME)) {
+
+						VirtualEthernetCard newNic = new VirtualVmxnet3();
+						newNic.setKey(nic.getKey());
+						newNic.setDeviceInfo(nic.getDeviceInfo());
+
+						newNic.getDeviceInfo().setLabel(INSTANCE_NIC_NAME);
+
+						VirtualEthernetCardDistributedVirtualPortBackingInfo backing9 = new VirtualEthernetCardDistributedVirtualPortBackingInfo();
+
+						DistributedVirtualSwitchPortConnection port10 = new DistributedVirtualSwitchPortConnection();
+						port10.setSwitchUuid(uuid);
+						port10.setPortgroupKey(key);
+						backing9.setPort(port10);
+
+						newNic.setBacking(backing9);
+						newNic.setAddressType("assigned");
+						newNic.setMacAddress(nic.getMacAddress());
+						newNic.setControllerKey(nic.getControllerKey());
+						newNic.setUnitNumber(nic.getUnitNumber());
+
+						VirtualDeviceConnectInfo connectable11 = new VirtualDeviceConnectInfo();
+						connectable11.startConnected = true;
+						connectable11.allowGuestControl = true;
+						connectable11.connected = true;
+						connectable11.status = "untried";
+
+						newNic.setConnectable(connectable11);
+
+						System.out.println("Setting UUID: " + uuid);
+						System.out.println("Setting portgroupKey: " + key);
+
+						nicSpec.setDevice(newNic);
+
+						nicSpecList.add(nicSpec);
+
+					}
+
+				}
+			}
+
+			VirtualDeviceConfigSpec[] configSpec = new VirtualDeviceConfigSpec[nicSpecList.size()];
+			nicSpecList.toArray(configSpec);
+
+			vmSpec.setDeviceChange(configSpec);
+
+			Task vmTask = vm.reconfigVM_Task(vmSpec);
+
+			String result = vmTask.waitForTask();
+
+			retVal = result.equals(Task.SUCCESS);
+
+		} catch (Exception e) {
+			logger.info("Exception::changeVlan::" + e);
 		}
 
-		for (Network each : networks) {
-			if (each.getName().equals(name)) {
-				network = each;
-			}
-		}
+		return retVal;
 
-		return network;
 	}
 
 	public boolean cloneVM(CloneVMParameter parameter) {
@@ -373,7 +540,6 @@ public class VMService {
 			}
 
 			// 为虚拟机设置网络适配器相关信息:设备状态设置为已连接、网络标签、虚拟机的备注.
-			setVirtualMachineNetwork(getVirtualMachine(si, parameter.getvMName()), "VM Network", parameter);
 
 		} catch (InvalidProperty e) {
 			logger.info("cloneVM::InvalidProperty:" + e);
@@ -393,6 +559,18 @@ public class VMService {
 		}
 
 		return true;
+	}
+
+	/**
+	 * 返回vcneter中分布式端口组名.
+	 * 
+	 * 分布式端口组名是按 vlan+Id 的格式组成
+	 * 
+	 * @param vlanId
+	 * @return
+	 */
+	private static String getPortGroupName(Integer vlanId) {
+		return "vlan" + vlanId;
 	}
 
 	/**
