@@ -47,7 +47,7 @@ public class ZabbixTest extends TestCase {
 	@Autowired
 	public ZabbixApiService service;
 
-	@Test
+	// @Test
 	public void test() throws JSONException, IOException {
 		// System.out.println(service.getItem("10.10.2.111", ItemEnum.Free_disk_space_on.getName()));
 
@@ -67,17 +67,22 @@ public class ZabbixTest extends TestCase {
 
 	}
 
-	// @Test
+	@Test
 	public void insert() throws IOException {
 
 		String templateId = getTemplateId("streaming"); // 模板Id
 
-		List<String> list = FileUtils.readLines(new File("D:\\command2.txt"));
+		List<String> list = FileUtils.readLines(new File("D:\\sour.txt"));
+
+		System.out.println(list.size());
+
 		for (String name : list) {
 
-			createItem(templateId, name);
+			String[] arr = StringUtils.split(name, ":");
 
-			createTrigger(templateId, name);
+			// createItem(templateId, name);
+			createItem(templateId, arr[1], arr[0]);
+			createTrigger(templateId, arr[1], arr[0]);
 		}
 
 		System.out.println("Over!");
@@ -306,22 +311,27 @@ public class ZabbixTest extends TestCase {
 	 * @throws IOException
 	 */
 	public static void createItem(String hostid, String name) throws JSONException, IOException {
+		createItem(hostid, name, name);
+	}
 
-		String[] arr = new String[1];
-		arr[0] = "1455";
+	public static void createItem(String hostid, String name, String key) throws JSONException, IOException {
 
 		// mdn1 1546
 		// mdn2 1548
+		// sour 1550
+		String[] applications = new String[1];
+		applications[0] = "1550";
 
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("id", 0);
 		jsonObj.put("auth", getToken());
 		jsonObj.put("jsonrpc", "2.0");
 		jsonObj.put("method", "item.create");
-		jsonObj.put("params",
-				(new JSONObject().put("name", name).put("applications", arr).put("key_", name).put("hostid", hostid)
-						.put("valuemapid", "14").put("value_type", "3").put("interfaceid", "0").put("type", 0).put(
-						"delay", 300)));
+		jsonObj.put(
+				"params",
+				(new JSONObject().put("name", name).put("applications", applications).put("key_", key)
+						.put("hostid", hostid).put("valuemapid", "14").put("value_type", "3").put("interfaceid", "0")
+						.put("type", 0).put("delay", 300)));
 
 		System.out.println(executeZabbixMethod(jsonObj));
 	}
@@ -340,17 +350,19 @@ public class ZabbixTest extends TestCase {
 		System.out.println(executeZabbixMethod(jsonObj));
 	}
 
-	public static void createTrigger(String hostid, String description) throws IOException {
+	public static void createTrigger(String hostid, String name, String key) throws IOException {
 
-		String expression = "{streaming:" + description + ".last(#5,0)}=0";
+		String expression = "{streaming:" + key + ".last(#5,0)}=0";
 
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("id", 0);
 		jsonObj.put("auth", getToken());
 		jsonObj.put("jsonrpc", "2.0");
 		jsonObj.put("method", "trigger.create");
-		jsonObj.put("params", (new JSONObject()).put("description", description + " err").put("expression", expression)
-				.put("priority", 3).put("hostids", hostid));
+		jsonObj.put(
+				"params",
+				(new JSONObject()).put("description", name).put("expression", expression).put("priority", 3)
+						.put("hostids", hostid));
 		System.out.println(executeZabbixMethod(jsonObj));
 	}
 
