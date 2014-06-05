@@ -76,6 +76,11 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 
 			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.createVlan);
 
+			// 如果报错,则将已插入的vlan删除.
+			if (resultStr.contains(TerminalResultHandle.IP_OVERLAPS_ERROR)) {
+				deleteVlanByCoreSwtich(vlanParameter.getVlanId());
+			}
+
 		} catch (IOException e) {
 			result.setDefaultError();
 		}
