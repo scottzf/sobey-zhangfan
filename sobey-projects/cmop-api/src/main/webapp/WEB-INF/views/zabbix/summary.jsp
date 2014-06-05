@@ -18,7 +18,7 @@
 			<label for="" ipaddress"" class="col-sm-2 control-label">Ipaddress</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="ipaddress"
-					name="ipaddress" placeholder="监控设备名称" value="10.10.2.111">
+					name="ipaddress" placeholder="监控设备名称" value="10.10.100.1">
 			</div>
 		</div>
 
@@ -26,47 +26,47 @@
 			<div class="col-sm-4">
 				<p class="form-control-static">${CPU_load_avg1}</p>
 			</div>
-			
+
 			<div class="col-sm-4">
 				<p class="form-control-static">${CPU_load_avg5}</p>
 			</div>
-			
+
 			<div class="col-sm-4">
 				<p class="form-control-static">${CPU_load_avg15}</p>
 			</div>
-			
+
 			<div class="col-sm-4">
 				<p class="form-control-static">${traffic_in}</p>
 			</div>
-			
+
 			<div class="col-sm-4">
 				<p class="form-control-static">${traffic_out}</p>
 			</div>
-			
+
 			<div class="col-sm-4">
 				<p class="form-control-static">${Free_disk_space_on}</p>
 			</div>
-			
+
 			<div class="col-sm-4">
 				<p class="form-control-static">${Total_disk_space_on}</p>
 			</div>
-			
+
 			<div class="col-sm-4">
 				<p class="form-control-static">${Available_memory}</p>
 			</div>
-			
+
 			<div class="col-sm-4">
 				<p class="form-control-static">${check_readk}</p>
 			</div>
-			
+
 			<div class="col-sm-4">
 				<p class="form-control-static">${check_writek}</p>
 			</div>
-			
+
 			<div class="col-sm-4">
 				<p class="form-control-static">${check_tps}</p>
 			</div>
-			
+
 		</div>
 
 		<div class="form-group">

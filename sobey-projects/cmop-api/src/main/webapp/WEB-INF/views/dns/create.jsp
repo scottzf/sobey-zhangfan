@@ -15,7 +15,7 @@
 		</div>
 
 		<div class="form-group">
-			<label for="domianName" class="col-sm-2 control-label">DomianName</label>
+			<label for="domianName" class="col-sm-2 control-label">域名</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="domianName"
 					name="domianName" placeholder="域名" value="cmoptest.sobeycache.com">
@@ -23,10 +23,10 @@
 		</div>
 
 		<div class="form-group clone">
-			<label for="domianName" class="col-sm-2 control-label">Policy</label>
+			<label for="domianName" class="col-sm-2 control-label">公网IP</label>
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="publicIPs"
-					placeholder="公网IP地址" value="119.6.200.219">
+					placeholder="公网IP地址" value="119.6.200.204">
 			</div>
 
 			<div class="col-sm-2">
@@ -37,15 +37,13 @@
 			</div>
 
 			<div class="col-sm-1">
-				<button type="button" class="btn btn-default clone">Add
-					Policy</button>
+				<button type="button" class="btn btn-default clone">Add</button>
 			</div>
 			<div class="col-sm-1">
 				<button type="button" class="btn btn-warning clone">Delete
-					Policy</button>
+				</button>
 			</div>
 		</div>
-
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">

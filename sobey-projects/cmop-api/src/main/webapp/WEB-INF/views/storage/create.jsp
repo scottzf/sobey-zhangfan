@@ -15,7 +15,7 @@
 		</div>
 
 		<div class="form-group">
-			<label for="volumeName" class="col-sm-2 control-label">VolumeName</label>
+			<label for="volumeName" class="col-sm-2 control-label">卷名</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="volumeName"
 					name="volumeName" placeholder="卷名" value="sobey">
@@ -23,7 +23,7 @@
 		</div>
 
 		<div class="form-group">
-			<label for="volumeSize" class="col-sm-2 control-label">VolumeSize</label>
+			<label for="volumeSize" class="col-sm-2 control-label">卷大小</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="volumeSize"
 					name="volumeSize" placeholder="卷大小(MB)" value="20">
@@ -31,10 +31,10 @@
 		</div>
 
 		<div class="form-group">
-			<label for="volumeSize" class="col-sm-2 control-label">ClientIPaddress</label>
+			<label for="volumeSize" class="col-sm-2 control-label">挂载目标IP</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="clientIPaddress"
-					name="clientIPaddress" placeholder="客户端IP" value="10.10.2.80">
+					name="clientIPaddress" placeholder="客户端IP" value="10.10.100.1">
 			</div>
 		</div>
 

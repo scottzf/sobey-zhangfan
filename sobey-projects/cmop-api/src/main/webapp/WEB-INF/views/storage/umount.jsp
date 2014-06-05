@@ -15,10 +15,10 @@
 		</div>
 
 		<div class="form-group">
-			<label for="clientIPaddress" class="col-sm-2 control-label">ClientIPaddress</label>
+			<label for="clientIPaddress" class="col-sm-2 control-label">挂载目标IP</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="clientIPaddress"
-					name="clientIPaddress" placeholder="客户端IP" value="10.10.2.80">
+					name="clientIPaddress" placeholder="客户端IP" value="10.10.100.1">
 			</div>
 		</div>
 

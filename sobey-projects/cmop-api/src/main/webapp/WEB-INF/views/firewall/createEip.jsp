@@ -9,16 +9,16 @@
 <body>
 
 	<form class="form-horizontal" role="form" method="post" action=".">
-	
+
 		<div class="page-header">
 			<h3>创建EIP页面</h3>
 		</div>
 
 		<div class="form-group">
-			<label for="internetIP" class="col-sm-2 control-label">InternetIP</label>
+			<label for="internetIP" class="col-sm-2 control-label">公网IP</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="internetIP"  
-					name="internetIP" placeholder="公网IP" value="119.6.200.219">
+				<input type="text" class="form-control" id="internetIP"
+					name="internetIP" placeholder="公网IP" value="119.6.200.204">
 			</div>
 		</div>
 
@@ -33,20 +33,20 @@
 		</div>
 
 		<div class="form-group">
-			<label for="internetIP" class="col-sm-2 control-label">PrivateIP</label>
+			<label for="internetIP" class="col-sm-2 control-label">内网IP</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="privateIP"
-					name="privateIP" placeholder="内网IP" value="10.0.8.72">
+					name="privateIP" placeholder="内网IP" value="10.10.2.51">
 			</div>
 		</div>
 
 		<div class="form-group clone">
-			<label for="domianName" class="col-sm-2 control-label">Policy</label>
+			<label for="domianName" class="col-sm-2 control-label">端口策略</label>
 
 			<div class="col-sm-2">
 				<select name="protocolTexts" class="form-control">
-					<option value="udp">udp</option>
 					<option value="tcp">tcp</option>
+					<option value="udp">udp</option>
 				</select>
 			</div>
 
@@ -61,15 +61,13 @@
 			</div>
 
 			<div class="col-sm-1">
-				<button type="button" class="btn btn-default clone">Add
-					Policy</button>
+				<button type="button" class="btn btn-default clone">Add</button>
 			</div>
 			<div class="col-sm-1">
 				<button type="button" class="btn btn-warning clone">Delete
-					Policy</button>
+				</button>
 			</div>
 		</div>
-
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">

@@ -15,7 +15,7 @@
 		</div>
 
 		<div class="form-group">
-			<label for="volumeName" class="col-sm-2 control-label">VolumeName</label>
+			<label for="volumeName" class="col-sm-2 control-label">卷名</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="volumeName"
 					name="volumeName" placeholder="卷名" value="sobey">
@@ -24,39 +24,37 @@
 
 		<div class="form-group clone">
 
-			<label for="before" class="col-sm-2 control-label">Before</label>
+			<label for="before" class="col-sm-2 control-label">更改前的客户端IP</label>
 
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="beforeClientIPaddress"
-					placeholder="更改前的客户端IP">
+					value="10.10.100.1" placeholder="更改前的客户端IP">
 			</div>
 
 			<div class="col-sm-1">
-				<button type="button" class="btn btn-default clone">Add
-					Policy</button>
+				<button type="button" class="btn btn-default clone">Add</button>
 			</div>
 			<div class="col-sm-1">
 				<button type="button" class="btn btn-warning clone">Delete
-					Policy</button>
+				</button>
 			</div>
 		</div>
 
 		<div class="form-group clone">
 
-			<label for="after" class="col-sm-2 control-label">After</label>
+			<label for="after" class="col-sm-2 control-label">更改后的客户端IP</label>
 
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="afterClientIPaddress"
-					placeholder="更改后的客户端IP">
+					value="10.10.100.2" placeholder="更改后的客户端IP">
 			</div>
 
 			<div class="col-sm-1">
-				<button type="button" class="btn btn-default clone">Add
-					Policy</button>
+				<button type="button" class="btn btn-default clone">Add</button>
 			</div>
 			<div class="col-sm-1">
 				<button type="button" class="btn btn-warning clone">Delete
-					Policy</button>
+				</button>
 			</div>
 		</div>
 

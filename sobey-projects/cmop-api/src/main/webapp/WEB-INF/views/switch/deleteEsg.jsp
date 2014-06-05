@@ -16,7 +16,7 @@
 		</div>
 
 		<div class="form-group">
-			<label for="aclNumber" class="col-sm-2 control-label">AclNumber</label>
+			<label for="aclNumber" class="col-sm-2 control-label">Acl Number</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="aclNumber"
 					name="aclNumber" placeholder="AclNumber" value="3000">
