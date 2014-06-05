@@ -48,14 +48,14 @@ public class TestData {
 		parameter.setNetMask("255.255.255.0");
 		parameter.setVlanId(80);
 		parameter.setVpnUser("liukai01");
-		parameter.setVpnPassword("liukai01@sobey");
+		parameter.setVpnPassword("123456");
 
 		ArrayList<String> segments = Lists.newArrayList();
-		String segment = "172.18.1.0";
+		String segment = "10.10.2.1";
 		segments.add(segment);
 
 		ArrayList<String> ipaddress = Lists.newArrayList();
-		String ip = "172.18.1.1";
+		String ip = "10.10.2.25";
 		ipaddress.add(ip);
 
 		parameter.setSegments(segments);

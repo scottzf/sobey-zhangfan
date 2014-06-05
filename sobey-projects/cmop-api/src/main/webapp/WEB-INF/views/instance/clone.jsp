@@ -15,8 +15,7 @@
 		</div>
 
 		<div class="form-group">
-			<label for="datacenter" class="col-sm-2 control-label">Date
-				Center</label>
+			<label for="datacenter" class="col-sm-2 control-label">数据中心</label>
 			<div class="col-sm-4">
 				<select id="datacenter" name="datacenter" class="form-control">
 					<option value="xa">西安</option>
@@ -26,7 +25,7 @@
 		</div>
 
 		<div class="form-group">
-			<label for="vmName" class="col-sm-2 control-label">VMName</label>
+			<label for="vmName" class="col-sm-2 control-label">虚拟机名称</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="vmName" name="vmName"
 					placeholder="虚拟机名" value="Sobey">
@@ -37,7 +36,7 @@
 			<label for="operation" class="col-sm-2 control-label">VMTemplateOS</label>
 			<div class="col-sm-4">
 				<select id="vmTemplateOS" name="vmTemplateOS" class="form-control">
-					<option value="CentOSTmp">CnetOS6.5</option>
+					<option value="CnetOS6.5">CnetOS6.5</option>
 				</select>
 			</div>
 		</div>
@@ -54,7 +53,7 @@
 			<label for="ipaddress" class="col-sm-2 control-label">Ipaddress</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="ipaddress"
-					name="ipaddress" placeholder="ip地址" value="10.10.2.80">
+					name="ipaddress" placeholder="ip地址" value="172.21.1.1">
 			</div>
 		</div>
 
@@ -62,7 +61,7 @@
 			<label for="gateway" class="col-sm-2 control-label">Gateway</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="gateway" name="gateway"
-					placeholder="网关" value="10.10.2.1">
+					placeholder="网关" value="172.21.1.254">
 			</div>
 		</div>
 
