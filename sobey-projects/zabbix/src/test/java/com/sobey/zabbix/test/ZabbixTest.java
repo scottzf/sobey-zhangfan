@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import junit.framework.TestCase;
 
@@ -41,13 +43,28 @@ import com.sobey.zabbix.service.ZabbixApiService;
 public class ZabbixTest extends TestCase {
 
 	private static String ZABBIX_API_URL = "http://113.142.30.36:82/zabbix/api_jsonrpc.php";
-	
+
 	@Autowired
 	public ZabbixApiService service;
-	
+
 	@Test
-	public void test(){
-		System.out.println(service.getItem("10.10.2.111", ItemEnum.Free_disk_space_on.getName()));
+	public void test() throws JSONException, IOException {
+		// System.out.println(service.getItem("10.10.2.111", ItemEnum.Free_disk_space_on.getName()));
+
+		HashMap<String, String> map = getDrule("cdtest");
+
+		String druleid = "";
+		String iprange = "";
+
+		for (Entry<String, String> entity : map.entrySet()) {
+			druleid = entity.getKey();
+			iprange = entity.getValue();
+		}
+
+		System.out.println(iprange + ",10.10.100.1");
+
+		updateDrule(druleid, iprange, "cdtest");
+
 	}
 
 	// @Test
@@ -78,18 +95,76 @@ public class ZabbixTest extends TestCase {
 
 	}
 
-//	@Test
+	// @Test
 	public void zabbixAPITest() throws JsonGenerationException, JsonMappingException, IOException, JSONException {
 
 		String hostId = getHostId("10.10.2.111");
 
-		System.out.println("hostId:"+hostId);
+		System.out.println("hostId:" + hostId);
 
 		ZItem item = getItem(hostId, ItemEnum.traffic_in.getName());
 		System.out.println(item.getLastValue());
 		System.out.println(item.getUnits());
 
+	}
 
+	public static HashMap<String, String> getDrule(String name) throws JSONException, IOException {
+
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("jsonrpc", "2.0");
+		jsonObj.put("method", "drule.get");
+		jsonObj.put("id", 0);
+		jsonObj.put("auth", getToken());
+
+		jsonObj.put("params",
+				(new JSONObject().put("filter", (new JSONObject()).put("name", name)).put("output", "extend")));
+
+		String resStr = executeZabbixMethod(jsonObj);
+
+		JsonNode node = new ObjectMapper().readTree(resStr);
+
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put(subResult(node, "druleid"), subResult(node, "iprange"));
+
+		return map;
+	}
+
+	public static String updateDrule(String druleid, String iprange, String name) throws JSONException, IOException {
+
+		// https://www.zabbix.com/documentation/2.2/manual/discovery/network_discovery/rule
+
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("jsonrpc", "2.0");
+		jsonObj.put("method", "drule.update");
+		jsonObj.put("id", 0);
+		jsonObj.put("auth", getToken());
+
+		jsonObj.put("params", (new JSONObject().put("druleid", druleid)).put("iprange", iprange));
+
+		System.out.println(jsonObj);
+		String resStr = executeZabbixMethod(jsonObj);
+		System.err.println(resStr);
+
+		JsonNode node = new ObjectMapper().readTree(resStr);
+
+		return subResult(node, "druleids");
+	}
+
+	public static String getDcheck(String druleid) throws JSONException, IOException {
+
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("jsonrpc", "2.0");
+		jsonObj.put("method", "dcheck.get");
+		jsonObj.put("id", 0);
+		jsonObj.put("auth", getToken());
+
+		jsonObj.put("params", (new JSONObject().put("druleids", druleid)).put("output", "extend"));
+
+		String resStr = executeZabbixMethod(jsonObj);
+
+		JsonNode node = new ObjectMapper().readTree(resStr);
+
+		return subResult(node, "dcheckid");
 	}
 
 	public static String deleteHost(String hostId) throws JSONException, IOException {
@@ -234,6 +309,9 @@ public class ZabbixTest extends TestCase {
 
 		String[] arr = new String[1];
 		arr[0] = "1455";
+
+		// mdn1 1546
+		// mdn2 1548
 
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("id", 0);
