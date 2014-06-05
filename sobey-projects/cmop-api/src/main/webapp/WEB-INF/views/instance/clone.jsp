@@ -33,16 +33,16 @@
 		</div>
 
 		<div class="form-group">
-			<label for="operation" class="col-sm-2 control-label">VMTemplateOS</label>
+			<label for="operation" class="col-sm-2 control-label">规格</label>
 			<div class="col-sm-4">
 				<select id="vmTemplateOS" name="vmTemplateOS" class="form-control">
-					<option value="CnetOS6.5">CnetOS6.5</option>
+					<option value="CnetOS6.5">CnetOS6.5 4GB CPUx2</option>
 				</select>
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label for="description" class="col-sm-2 control-label">Description</label>
+			<label for="description" class="col-sm-2 control-label">虚拟机备注</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="description"
 					name="description" placeholder="备注" value="CMOP v2.0 Demo">
@@ -53,20 +53,29 @@
 			<label for="ipaddress" class="col-sm-2 control-label">Ipaddress</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="ipaddress"
-					name="ipaddress" placeholder="ip地址" value="172.21.1.1">
+					name="ipaddress" placeholder="ip地址" value="10.10.100.1">
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label for="gateway" class="col-sm-2 control-label">Gateway</label>
+			<label for="gateway" class="col-sm-2 control-label">Vlan</label>
+			<div class="col-sm-4">
+				<input type="text" class="form-control" id="vlanId" name="vlanId"
+					placeholder="vlanId" value="100">
+			</div>
+		</div>
+
+
+		<div class="form-group">
+			<label for="gateway" class="col-sm-2 control-label">网关</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="gateway" name="gateway"
-					placeholder="网关" value="172.21.1.254">
+					placeholder="网关" value="10.10.100.254">
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label for="subNetMask" class="col-sm-2 control-label">SubNetMask</label>
+			<label for="subNetMask" class="col-sm-2 control-label">子网掩码</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="subNetMask"
 					name="subNetMask" placeholder="子网掩码" value="255.255.255.0">

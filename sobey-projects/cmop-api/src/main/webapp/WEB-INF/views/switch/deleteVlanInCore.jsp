@@ -15,10 +15,10 @@
 		</div>
 
 		<div class="form-group">
-			<label for="vlanId" class="col-sm-2 control-label">VlanId</label>
+			<label for="vlanId" class="col-sm-2 control-label">Vlan Id</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="vlanId" name="vlanId"
-					placeholder="Vlan Id" value="80">
+					placeholder="Vlan Id" value="100">
 			</div>
 		</div>
 
