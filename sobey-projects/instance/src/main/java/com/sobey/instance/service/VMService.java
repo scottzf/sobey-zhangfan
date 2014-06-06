@@ -134,7 +134,7 @@ public class VMService {
 
 		boolean flag = false;
 
-		// 先判断vcneter中是否有该端口组
+		// 先判断vcneter中是否有该端口组.如果有则返回false.
 		if (getNetworkList(datacenter).contains(getPortGroupName(vlanId))) {
 			return flag;
 		}
@@ -169,10 +169,9 @@ public class VMService {
 			TaskInfo ti = waitFor(task_pg);
 
 			if (ti.getState() == TaskInfoState.error) {
-				System.out.println("Failed to create a new DVS.");
+				logger.info("Failed to create a new DVS. Vlan Id is:" + vlanId);
 				return flag;
 			}
-			System.out.println("A new DVS port group has been created successfully.");
 
 		} catch (RemoteException e) {
 			logger.info("RemoteException::addDVSPortGroup::" + e);
@@ -391,7 +390,6 @@ public class VMService {
 		}
 
 		return retVal;
-
 	}
 
 	public boolean cloneVM(CloneVMParameter parameter) {

@@ -27,9 +27,9 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.cloneVM(cloneVMParameter);
+		boolean flag = service.cloneVM(cloneVMParameter);
 
-		if (!falg) {
+		if (!flag) {
 			result.setError(WSResult.SYSTEM_ERROR, "克隆失败");
 		}
 
@@ -46,9 +46,9 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.destroyVM(destroyVMParameter);
+		boolean flag = service.destroyVM(destroyVMParameter);
 
-		if (!falg) {
+		if (!flag) {
 			result.setError(WSResult.SYSTEM_ERROR, "销毁失败");
 		}
 
@@ -60,9 +60,9 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.reconfigVM(reconfigVMParameter);
+		boolean flag = service.reconfigVM(reconfigVMParameter);
 
-		if (!falg) {
+		if (!flag) {
 			result.setError(WSResult.SYSTEM_ERROR, "配置更改失败");
 		}
 
@@ -74,9 +74,9 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.powerVM(powerVMParameter);
+		boolean flag = service.powerVM(powerVMParameter);
 
-		if (!falg) {
+		if (!flag) {
 			result.setError(WSResult.SYSTEM_ERROR, "电源操作失败");
 		}
 
@@ -86,6 +86,19 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	@Override
 	public RelationVMParameter getVMAndHostRelationByInstance(@WebParam(name = "datacenter") String datacenter) {
 		return service.getVMAndHostRelation(datacenter);
+	}
+
+	@Override
+	public WSResult createPortGroupByInstance(Integer vlanId, String datacenter) {
+
+		WSResult result = new WSResult();
+		boolean flag = service.addDVSPortGroup(vlanId, datacenter);
+
+		if (!flag) {
+			result.setError(WSResult.SYSTEM_ERROR, "分布式端口组创建失败");
+		}
+
+		return result;
 	}
 
 }
