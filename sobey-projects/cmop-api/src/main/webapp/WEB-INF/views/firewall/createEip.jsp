@@ -18,7 +18,7 @@
 			<label for="internetIP" class="col-sm-2 control-label">公网IP</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="internetIP"
-					name="internetIP" placeholder="公网IP" value="119.6.200.204">
+					name="internetIP" placeholder="公网IP" value="119.6.200.203">
 			</div>
 		</div>
 

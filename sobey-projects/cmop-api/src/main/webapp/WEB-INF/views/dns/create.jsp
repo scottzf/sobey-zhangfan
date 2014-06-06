@@ -26,7 +26,7 @@
 			<label for="domianName" class="col-sm-2 control-label">公网IP</label>
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="publicIPs"
-					placeholder="公网IP地址" value="119.6.200.204">
+					placeholder="公网IP地址" value="119.6.200.203">
 			</div>
 
 			<div class="col-sm-2">
