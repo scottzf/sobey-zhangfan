@@ -35,6 +35,7 @@
 						<li><a href="${ctx}/instance/destroy/">虚拟机销毁</a></li>
 						<li><a href="${ctx}/instance/relation/">主机、虚拟机关联关系</a></li>
 						<li><a href="${ctx}/instance/sync/">同步关联关系</a></li>
+						<li><a href="${ctx}/instance/portGroup/">创建分布式端口</a></li>
 					</ul></li>
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"

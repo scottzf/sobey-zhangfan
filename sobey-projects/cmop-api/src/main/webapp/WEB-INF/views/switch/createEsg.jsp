@@ -80,21 +80,21 @@
 
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="denysSource"
-					value="10.10.100.2" placeholder="Source">
+					value="10.10.100.0" placeholder="Source">
 			</div>
 
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="denysSourceNetMask"
-					value="0.0.0.0" placeholder="SourceNetMask">
+					value="0.0.0.255" placeholder="SourceNetMask">
 			</div>
 
 			<div class="col-sm-2">
 				<input type="text" class="form-control" name="denysDestination"
-					value="10.10.101.1" placeholder="Destination">
+					value="10.10.101.0" placeholder="Destination">
 			</div>
 
 			<div class="col-sm-2">
-				<input type="text" class="form-control" value="0.0.0.0"
+				<input type="text" class="form-control" value="0.0.0.255"
 					name="denysDestinationNetMask" placeholder="NetMask">
 			</div>
 

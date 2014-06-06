@@ -32,6 +32,10 @@ public class InstanceService {
 	@Autowired
 	private InstanceSoapService service;
 
+	public WSResult createPortGroup(Integer vlanId, String datacenter) {
+		return service.createPortGroupByInstance(vlanId, datacenter);
+	}
+
 	public WSResult desoroyVM(DestroyVMParameter destroyVMParameter) {
 		return service.destroyVMByInstance(destroyVMParameter);
 	}

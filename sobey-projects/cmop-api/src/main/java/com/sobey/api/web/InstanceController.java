@@ -62,7 +62,7 @@ public class InstanceController {
 		String message = "";
 		WSResult wsResult = service.cloneVM(cloneVMParameter);
 
-		if (wsResult.getCode().equals("0")) {
+		if ("0".equals(wsResult.getCode())) {
 			message = "克隆成功";
 		} else {
 			message = wsResult.getMessage();
@@ -95,7 +95,7 @@ public class InstanceController {
 		String message = "";
 		WSResult wsResult = service.desoroyVM(destroyVMParameter);
 
-		if (wsResult.getCode().equals("0")) {
+		if ("0".equals(wsResult.getCode())) {
 			message = "销毁成功";
 		} else {
 			message = wsResult.getMessage();
@@ -130,7 +130,7 @@ public class InstanceController {
 		String message = "";
 		WSResult wsResult = service.powerVM(powerVMParameter);
 
-		if (wsResult.getCode().equals("0")) {
+		if ("0".equals(wsResult.getCode())) {
 			message = "电源操作成功";
 		} else {
 			message = wsResult.getMessage();
@@ -166,7 +166,7 @@ public class InstanceController {
 		String message = "";
 		WSResult wsResult = service.reconfigVM(reconfigVMParameter);
 
-		if (wsResult.getCode().equals("0")) {
+		if ("0".equals(wsResult.getCode())) {
 			message = "配置修改成功";
 		} else {
 			message = wsResult.getMessage();
@@ -217,6 +217,37 @@ public class InstanceController {
 		redirectAttributes.addFlashAttribute("message", service.syncVM(datacenter));
 
 		return "redirect:/instance/sync/";
+	}
+
+	/**
+	 * 跳转到创建PortGroup页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/portGroup/")
+	public String portGroupPage(Model model) {
+		return "instance/portGroup";
+	}
+
+	/**
+	 * 创建PortGroup
+	 */
+	@RequestMapping(value = "/portGroup/", method = RequestMethod.POST)
+	public String portGroup(@RequestParam(value = "vlanId") Integer vlanId,
+			@RequestParam(value = "datacenter") String datacenter, RedirectAttributes redirectAttributes) {
+
+		String message = "";
+		WSResult wsResult = service.createPortGroup(vlanId, datacenter);
+
+		if ("0".equals(wsResult.getCode())) {
+			message = "分布式端口组创建成功";
+		} else {
+			message = wsResult.getMessage();
+		}
+
+		redirectAttributes.addFlashAttribute("message", message);
+
+		return "redirect:/instance/portGroup/";
 	}
 
 }

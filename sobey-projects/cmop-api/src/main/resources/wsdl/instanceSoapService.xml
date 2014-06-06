@@ -17,6 +17,10 @@
 
   <xs:element name="cloneVMByInstanceResponse" type="tns:cloneVMByInstanceResponse"/>
 
+  <xs:element name="createPortGroupByInstance" type="tns:createPortGroupByInstance"/>
+
+  <xs:element name="createPortGroupByInstanceResponse" type="tns:createPortGroupByInstanceResponse"/>
+
   <xs:element name="destroyVMByInstance" type="tns:destroyVMByInstance"/>
 
   <xs:element name="destroyVMByInstanceResponse" type="tns:destroyVMByInstanceResponse"/>
@@ -86,6 +90,39 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="powerVMByInstance">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="powerVMParameter" type="tns:PowerVMParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="PowerVMParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
+      <xs:element minOccurs="0" name="powerOperation" type="xs:string"/>
+      <xs:element minOccurs="0" name="vMName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="powerVMByInstanceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createPortGroupByInstance">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="vlanId" type="xs:int"/>
+      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createPortGroupByInstanceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="reconfigVMByInstance">
     <xs:sequence>
       <xs:element minOccurs="0" name="reconfigVMParameter" type="tns:ReconfigVMParameter"/>
@@ -102,26 +139,6 @@
   </xs:complexType>
 
   <xs:complexType name="reconfigVMByInstanceResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="powerVMByInstance">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="powerVMParameter" type="tns:PowerVMParameter"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="PowerVMParameter">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
-      <xs:element minOccurs="0" name="powerOperation" type="xs:string"/>
-      <xs:element minOccurs="0" name="vMName" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="powerVMByInstanceResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
     </xs:sequence>
@@ -161,6 +178,10 @@
 
 </xs:schema>
   </wsdl:types>
+  <wsdl:message name="createPortGroupByInstance">
+    <wsdl:part element="tns:createPortGroupByInstance" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="destroyVMByInstance">
     <wsdl:part element="tns:destroyVMByInstance" name="parameters">
     </wsdl:part>
@@ -179,6 +200,10 @@
   </wsdl:message>
   <wsdl:message name="destroyVMByInstanceResponse">
     <wsdl:part element="tns:destroyVMByInstanceResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createPortGroupByInstanceResponse">
+    <wsdl:part element="tns:createPortGroupByInstanceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="cloneVMByInstance">
@@ -214,16 +239,22 @@
       <wsdl:output message="tns:destroyVMByInstanceResponse" name="destroyVMByInstanceResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="reconfigVMByInstance">
-      <wsdl:input message="tns:reconfigVMByInstance" name="reconfigVMByInstance">
-    </wsdl:input>
-      <wsdl:output message="tns:reconfigVMByInstanceResponse" name="reconfigVMByInstanceResponse">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="powerVMByInstance">
       <wsdl:input message="tns:powerVMByInstance" name="powerVMByInstance">
     </wsdl:input>
       <wsdl:output message="tns:powerVMByInstanceResponse" name="powerVMByInstanceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createPortGroupByInstance">
+      <wsdl:input message="tns:createPortGroupByInstance" name="createPortGroupByInstance">
+    </wsdl:input>
+      <wsdl:output message="tns:createPortGroupByInstanceResponse" name="createPortGroupByInstanceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="reconfigVMByInstance">
+      <wsdl:input message="tns:reconfigVMByInstance" name="reconfigVMByInstance">
+    </wsdl:input>
+      <wsdl:output message="tns:reconfigVMByInstanceResponse" name="reconfigVMByInstanceResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getVMAndHostRelationByInstance">
@@ -253,6 +284,24 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="createPortGroupByInstance">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createPortGroupByInstance">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createPortGroupByInstanceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="powerVMByInstance">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="powerVMByInstance">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="powerVMByInstanceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="reconfigVMByInstance">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="reconfigVMByInstance">
@@ -268,15 +317,6 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getVMAndHostRelationByInstanceResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="powerVMByInstance">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="powerVMByInstance">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="powerVMByInstanceResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
