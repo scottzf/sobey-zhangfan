@@ -47,6 +47,14 @@ public class ZabbixTest extends TestCase {
 	@Autowired
 	public ZabbixApiService service;
 
+	@Test
+	public void test1() throws JSONException, IOException {
+
+		String templateId = getTemplateId("streaming"); // 模板Id
+		System.out.println(templateId);
+		System.out.println(getApplicationId("mdn1", templateId));
+	}
+
 	// @Test
 	public void test() throws JSONException, IOException {
 		// System.out.println(service.getItem("10.10.2.111", ItemEnum.Free_disk_space_on.getName()));
@@ -312,6 +320,26 @@ public class ZabbixTest extends TestCase {
 	 */
 	public static void createItem(String hostid, String name) throws JSONException, IOException {
 		createItem(hostid, name, name);
+	}
+
+	public static String getApplicationId(String application, String hostId) throws IOException, JSONException {
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("jsonrpc", "2.0");
+		jsonObj.put("method", "application.get");
+		jsonObj.put("id", 0);
+		jsonObj.put("auth", getToken());
+
+		jsonObj.put("params",
+				(new JSONObject().put("filter", (new JSONObject()).putOpt("name", application)).put("output", "extend")
+						.put("hostids", hostId)));
+
+		System.out.println(jsonObj);
+		String resStr = executeZabbixMethod(jsonObj);
+		System.err.println(resStr);
+
+		JsonNode node = new ObjectMapper().readTree(resStr);
+
+		return subResult(node, "applicationid");
 	}
 
 	public static void createItem(String hostid, String name, String key) throws JSONException, IOException {
