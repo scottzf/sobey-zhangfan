@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +12,6 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
-import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
 import com.sobey.cmdbuild.entity.Eip;
@@ -22,6 +20,7 @@ import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
+import com.sobey.cmdbuild.webservice.response.result.SearchParams;
 import com.sobey.core.mapper.BeanMapper;
 import com.sobey.test.data.RandomData;
 
@@ -33,7 +32,7 @@ public class EipSoapTest extends BaseFunctionalTestCase {
 
 	private String code = "";
 
-	@Test
+	// @Test
 	public void testAll() {
 		testCreateEip();
 		testFindEip();
@@ -49,9 +48,10 @@ public class EipSoapTest extends BaseFunctionalTestCase {
 	public void testFindEip() {
 		System.out.println(code + ">>>>>>>>>>>>>");
 
-		Map<String, Object> searchParams = Maps.newHashMap();
-
-		searchParams.put("EQ_code", code);
+		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("EQ_code", code);
+		searchParams.setParamsMap(paramsMap);
 
 		DTOResult<EipDTO> responseParams = cmdbuildSoapService.findEipByParams(searchParams);
 
@@ -71,7 +71,10 @@ public class EipSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testGetEipList() {
 
-		Map<String, Object> searchParams = Maps.newHashMap();
+		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("EQ_code", code);
+		searchParams.setParamsMap(paramsMap);
 
 		DTOListResult<EipDTO> result = cmdbuildSoapService.getEipList(searchParams);
 
@@ -81,7 +84,7 @@ public class EipSoapTest extends BaseFunctionalTestCase {
 
 	}
 
-	// @Test
+	@Test
 	// @Ignore
 	public void testCreateEip() {
 
@@ -129,7 +132,10 @@ public class EipSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testGetEipPagination() {
 
-		Map<String, Object> searchParams = new HashMap<String, Object>();
+		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("EQ_code", code);
+		searchParams.setParamsMap(paramsMap);
 
 		PaginationResult<EipDTO> result = cmdbuildSoapService.getEipPagination(searchParams, 1, 10);
 

@@ -141,6 +141,7 @@ public class JaxbMapperTest {
 			this.id = id;
 		}
 
+		@SuppressWarnings("unused")
 		public String getName() {
 			return name;
 		}
@@ -155,6 +156,7 @@ public class JaxbMapperTest {
 			return password;
 		}
 
+		@SuppressWarnings("unused")
 		public void setPassword(String password) {
 			this.password = password;
 		}
@@ -166,6 +168,7 @@ public class JaxbMapperTest {
 			return interests;
 		}
 
+		@SuppressWarnings("unused")
 		public void setInterests(List<String> interests) {
 			this.interests = interests;
 		}

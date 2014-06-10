@@ -9,7 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.sobey.dns.data.TestData;
-import com.sobey.dns.service.NitroService;
+import com.sobey.dns.service.DnsService;
 import com.sobey.dns.webservice.response.dto.DNSParameter;
 
 /**
@@ -23,18 +23,18 @@ import com.sobey.dns.webservice.response.dto.DNSParameter;
 public class DNSTest extends TestCase {
 
 	@Autowired
-	private NitroService service;
+	private DnsService service;
 
 	@Test
-	public void createDns() {
+	public void createGSLB() {
 		DNSParameter parameter = TestData.randomDNSParameter();
-		assertTrue(service.createDns(parameter));
+		assertTrue(service.createGSLB(parameter));
 	}
 
 	@Test
-	public void deleteDns() {
+	public void deleteGSLB() {
 		DNSParameter parameter = TestData.randomDNSParameter();
-		assertTrue(service.deleteDns(parameter));
+		assertTrue(service.deleteGSLB(parameter));
 	}
 
 }

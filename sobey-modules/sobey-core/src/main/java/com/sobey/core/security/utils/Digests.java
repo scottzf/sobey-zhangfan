@@ -65,7 +65,8 @@ public class Digests {
 	/**
 	 * 生成随机的Byte[]作为salt.
 	 * 
-	 * @param numBytes byte数组的大小
+	 * @param numBytes
+	 *            byte数组的大小
 	 */
 	public static byte[] generateSalt(int numBytes) {
 		Validate.isTrue(numBytes > 0, "numBytes argument must be a positive integer (1 or larger)", numBytes);

@@ -153,11 +153,13 @@ public class ReflectionsTest {
 			return publicField;
 		}
 
+		@SuppressWarnings("unused")
 		private String privateMethod(String text) {
 			return "hello " + text;
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static class TestBean2 extends ParentBean {
 	}
 

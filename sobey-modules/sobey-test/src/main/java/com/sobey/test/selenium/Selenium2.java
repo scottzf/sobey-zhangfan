@@ -216,8 +216,7 @@ public class Selenium2 {
 	}
 
 	/**
-	 * 返回Select Element,可搭配多种后续的Select操作.
-	 * eg. s.getSelect(by).selectByValue(value);
+	 * 返回Select Element,可搭配多种后续的Select操作. eg. s.getSelect(by).selectByValue(value);
 	 */
 	public Select getSelect(By by) {
 		return new Select(driver.findElement(by));
@@ -302,6 +301,7 @@ public class Selenium2 {
 	/**
 	 * 等待Element的内容为text, 使用默认timeout时间.
 	 */
+	@SuppressWarnings("deprecation")
 	public void waitForTextPresent(By by, String text) {
 		waitForCondition(ExpectedConditions.textToBePresentInElement(by, text), DEFAULT_WAIT_TIME);
 	}
@@ -309,6 +309,7 @@ public class Selenium2 {
 	/**
 	 * 等待Element的内容为text, timeout单位为秒.
 	 */
+	@SuppressWarnings("deprecation")
 	public void waitForTextPresent(By by, String text, int timeout) {
 		waitForCondition(ExpectedConditions.textToBePresentInElement(by, text), timeout);
 	}

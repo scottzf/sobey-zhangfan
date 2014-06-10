@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://dns.generate.sobey.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="DnsSoapService" targetNamespace="http://dns.generate.sobey.com">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://dns.generate.sobey.com" elementFormDefault="unqualified" targetNamespace="http://dns.generate.sobey.com" version="1.0">
+
+  <xs:element name="DNSParameter" type="tns:DNSParameter"/>
+
+  <xs:element name="DNSPolicyParameter" type="tns:DNSPolicyParameter"/>
+
+  <xs:element name="DNSPublicIPParameter" type="tns:DNSPublicIPParameter"/>
+
+  <xs:element name="createDNSByDNS" type="tns:createDNSByDNS"/>
+
+  <xs:element name="createDNSByDNSResponse" type="tns:createDNSByDNSResponse"/>
+
+  <xs:element name="deleteDNSByDNS" type="tns:deleteDNSByDNS"/>
+
+  <xs:element name="deleteDNSByDNSResponse" type="tns:deleteDNSByDNSResponse"/>
+
+  <xs:complexType name="deleteDNSByDNS">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="dnsParameter" type="tns:DNSParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DNSParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="domianName" type="xs:string"/>
+      <xs:element minOccurs="0" name="domianType" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="publicIPs" nillable="true" type="tns:DNSPublicIPParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DNSPublicIPParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="policyParameters" nillable="true" type="tns:DNSPolicyParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DNSPolicyParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="protocolText" type="xs:string"/>
+      <xs:element minOccurs="0" name="sourcePort" type="xs:int"/>
+      <xs:element minOccurs="0" name="targetPort" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteDNSByDNSResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="WSResult">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="code" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createDNSByDNS">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="dnsParameter" type="tns:DNSParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createDNSByDNSResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="createDNSByDNSResponse">
+    <wsdl:part element="tns:createDNSByDNSResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteDNSByDNS">
+    <wsdl:part element="tns:deleteDNSByDNS" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteDNSByDNSResponse">
+    <wsdl:part element="tns:deleteDNSByDNSResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createDNSByDNS">
+    <wsdl:part element="tns:createDNSByDNS" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="DnsSoapService">
+    <wsdl:operation name="deleteDNSByDNS">
+      <wsdl:input message="tns:deleteDNSByDNS" name="deleteDNSByDNS">
+    </wsdl:input>
+      <wsdl:output message="tns:deleteDNSByDNSResponse" name="deleteDNSByDNSResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createDNSByDNS">
+      <wsdl:input message="tns:createDNSByDNS" name="createDNSByDNS">
+    </wsdl:input>
+      <wsdl:output message="tns:createDNSByDNSResponse" name="createDNSByDNSResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DnsSoapServiceSoapBinding" type="tns:DnsSoapService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="deleteDNSByDNS">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteDNSByDNS">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteDNSByDNSResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createDNSByDNS">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createDNSByDNS">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createDNSByDNSResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DnsSoapService">
+    <wsdl:port binding="tns:DnsSoapServiceSoapBinding" name="DnsSoapServiceImplPort">
+      <soap:address location="http://localhost:8085/dns/cxf/soap/dnsSoapService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

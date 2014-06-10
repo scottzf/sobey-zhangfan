@@ -9,7 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.sobey.loadbalancer.data.TestData;
-import com.sobey.loadbalancer.service.NitroService;
+import com.sobey.loadbalancer.service.LoadbalanceService;
 import com.sobey.loadbalancer.webservice.response.dto.ELBParameter;
 
 /**
@@ -23,7 +23,7 @@ import com.sobey.loadbalancer.webservice.response.dto.ELBParameter;
 public class ElbTest extends TestCase {
 
 	@Autowired
-	private NitroService service;
+	private LoadbalanceService service;
 
 	@Test
 	public void createElb() {

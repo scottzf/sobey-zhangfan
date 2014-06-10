@@ -1,13 +1,12 @@
 package com.sobey.loadbalancer.webservice.response.dto;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.google.common.collect.Lists;
 import com.sobey.loadbalancer.constans.WsConstants;
 
 /**
@@ -30,7 +29,7 @@ public class ELBParameter {
 	/**
 	 * 公网IP集合
 	 */
-	private List<ELBPublicIPParameter> publicIPs = Lists.newArrayList();
+	private ArrayList<ELBPublicIPParameter> publicIPs;
 
 	public String getVip() {
 		return vip;
@@ -40,11 +39,11 @@ public class ELBParameter {
 		this.vip = vip;
 	}
 
-	public List<ELBPublicIPParameter> getPublicIPs() {
+	public ArrayList<ELBPublicIPParameter> getPublicIPs() {
 		return publicIPs;
 	}
 
-	public void setPublicIPs(List<ELBPublicIPParameter> publicIPs) {
+	public void setPublicIPs(ArrayList<ELBPublicIPParameter> publicIPs) {
 		this.publicIPs = publicIPs;
 	}
 

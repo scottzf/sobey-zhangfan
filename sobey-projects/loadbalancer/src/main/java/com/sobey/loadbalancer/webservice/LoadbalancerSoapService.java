@@ -23,7 +23,7 @@ public interface LoadbalancerSoapService {
 	 *            {@link ELBParameter}
 	 * @return
 	 */
-	WSResult createELBByLoadbalancer(@WebParam(name = "ELBParameter") ELBParameter parameter);
+	WSResult createELBByLoadbalancer(@WebParam(name = "elbParameter") ELBParameter elbParameter);
 
 	/**
 	 * 在Loadbalancer上删除ELB
@@ -32,6 +32,6 @@ public interface LoadbalancerSoapService {
 	 *            {@link ELBParameter}
 	 * @return
 	 */
-	WSResult deleteELBByLoadbalancer(@WebParam(name = "ELBParameter") ELBParameter parameter);
+	WSResult deleteELBByLoadbalancer(@WebParam(name = "elbParameter") ELBParameter elbParameter);
 
 }

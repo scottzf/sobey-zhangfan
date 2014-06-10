@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://storage.generate.sobey.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="StorageSoapService" targetNamespace="http://storage.generate.sobey.com">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://storage.generate.sobey.com" elementFormDefault="unqualified" targetNamespace="http://storage.generate.sobey.com" version="1.0">
+
+  <xs:element name="CreateEs3Parameter" type="tns:CreateEs3Parameter"/>
+
+  <xs:element name="DeleteEs3Parameter" type="tns:DeleteEs3Parameter"/>
+
+  <xs:element name="MountEs3Parameter" type="tns:MountEs3Parameter"/>
+
+  <xs:element name="RemountEs3Parameter" type="tns:RemountEs3Parameter"/>
+
+  <xs:element name="UmountEs3Parameter" type="tns:UmountEs3Parameter"/>
+
+  <xs:element name="createEs3ByStorage" type="tns:createEs3ByStorage"/>
+
+  <xs:element name="createEs3ByStorageResponse" type="tns:createEs3ByStorageResponse"/>
+
+  <xs:element name="deleteEs3ByStorage" type="tns:deleteEs3ByStorage"/>
+
+  <xs:element name="deleteEs3ByStorageResponse" type="tns:deleteEs3ByStorageResponse"/>
+
+  <xs:element name="mountEs3ByStorage" type="tns:mountEs3ByStorage"/>
+
+  <xs:element name="mountEs3ByStorageResponse" type="tns:mountEs3ByStorageResponse"/>
+
+  <xs:element name="remountEs3ByStorage" type="tns:remountEs3ByStorage"/>
+
+  <xs:element name="remountEs3ByStorageResponse" type="tns:remountEs3ByStorageResponse"/>
+
+  <xs:element name="umountEs3ByStorage" type="tns:umountEs3ByStorage"/>
+
+  <xs:element name="umountEs3ByStorageResponse" type="tns:umountEs3ByStorageResponse"/>
+
+  <xs:complexType name="remountEs3ByStorage">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="remountEs3Parameter" type="tns:RemountEs3Parameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RemountEs3Parameter">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="afterClientIPaddress" nillable="true" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="beforeClientIPaddress" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="volumeName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="remountEs3ByStorageResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="WSResult">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="code" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="mountEs3ByStorage">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="mountEs3Parameter" type="tns:MountEs3Parameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="MountEs3Parameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="clientIPaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="netAppIPaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="volumeName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="mountEs3ByStorageResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="umountEs3ByStorage">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="umountEs3Parameter" type="tns:UmountEs3Parameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="UmountEs3Parameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="clientIPaddress" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="umountEs3ByStorageResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteEs3ByStorage">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="deleteEs3Parameter" type="tns:DeleteEs3Parameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DeleteEs3Parameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="volumeName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteEs3ByStorageResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createEs3ByStorage">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="createEs3Parameter" type="tns:CreateEs3Parameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="CreateEs3Parameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="clientIPaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="volumeName" type="xs:string"/>
+      <xs:element minOccurs="0" name="volumeSize" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createEs3ByStorageResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="umountEs3ByStorageResponse">
+    <wsdl:part element="tns:umountEs3ByStorageResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteEs3ByStorage">
+    <wsdl:part element="tns:deleteEs3ByStorage" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="remountEs3ByStorageResponse">
+    <wsdl:part element="tns:remountEs3ByStorageResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="remountEs3ByStorage">
+    <wsdl:part element="tns:remountEs3ByStorage" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="umountEs3ByStorage">
+    <wsdl:part element="tns:umountEs3ByStorage" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="mountEs3ByStorageResponse">
+    <wsdl:part element="tns:mountEs3ByStorageResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createEs3ByStorageResponse">
+    <wsdl:part element="tns:createEs3ByStorageResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createEs3ByStorage">
+    <wsdl:part element="tns:createEs3ByStorage" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteEs3ByStorageResponse">
+    <wsdl:part element="tns:deleteEs3ByStorageResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="mountEs3ByStorage">
+    <wsdl:part element="tns:mountEs3ByStorage" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="StorageSoapService">
+    <wsdl:operation name="remountEs3ByStorage">
+      <wsdl:input message="tns:remountEs3ByStorage" name="remountEs3ByStorage">
+    </wsdl:input>
+      <wsdl:output message="tns:remountEs3ByStorageResponse" name="remountEs3ByStorageResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="mountEs3ByStorage">
+      <wsdl:input message="tns:mountEs3ByStorage" name="mountEs3ByStorage">
+    </wsdl:input>
+      <wsdl:output message="tns:mountEs3ByStorageResponse" name="mountEs3ByStorageResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="umountEs3ByStorage">
+      <wsdl:input message="tns:umountEs3ByStorage" name="umountEs3ByStorage">
+    </wsdl:input>
+      <wsdl:output message="tns:umountEs3ByStorageResponse" name="umountEs3ByStorageResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteEs3ByStorage">
+      <wsdl:input message="tns:deleteEs3ByStorage" name="deleteEs3ByStorage">
+    </wsdl:input>
+      <wsdl:output message="tns:deleteEs3ByStorageResponse" name="deleteEs3ByStorageResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createEs3ByStorage">
+      <wsdl:input message="tns:createEs3ByStorage" name="createEs3ByStorage">
+    </wsdl:input>
+      <wsdl:output message="tns:createEs3ByStorageResponse" name="createEs3ByStorageResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="StorageSoapServiceSoapBinding" type="tns:StorageSoapService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="mountEs3ByStorage">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="mountEs3ByStorage">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="mountEs3ByStorageResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="remountEs3ByStorage">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="remountEs3ByStorage">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="remountEs3ByStorageResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="umountEs3ByStorage">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="umountEs3ByStorage">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="umountEs3ByStorageResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteEs3ByStorage">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteEs3ByStorage">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteEs3ByStorageResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createEs3ByStorage">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createEs3ByStorage">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createEs3ByStorageResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="StorageSoapService">
+    <wsdl:port binding="tns:StorageSoapServiceSoapBinding" name="StorageSoapServiceImplPort">
+      <soap:address location="http://localhost:8084/storage/cxf/soap/storageSoapService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

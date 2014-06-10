@@ -1,9 +1,14 @@
 package com.sobey.core.utils;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.telnet.EchoOptionHandler;
 import org.apache.commons.net.telnet.SuppressGAOptionHandler;
 import org.apache.commons.net.telnet.TelnetClient;
@@ -22,10 +27,14 @@ public class TelnetUtil implements Runnable, TelnetNotificationHandler {
 
 	private static TelnetClient tc = null;
 
-	@SuppressWarnings("unused")
 	private InputStream in;
 
 	private PrintStream out;
+
+	/**
+	 * 终端输出
+	 */
+	// public static TerminalInfo terminalInfo = null;
 
 	/**
 	 * 默认端口
@@ -34,6 +43,28 @@ public class TelnetUtil implements Runnable, TelnetNotificationHandler {
 
 	public TelnetUtil() {
 		super();
+	}
+
+	/**
+	 * 用于以telnet方式远程执行脚本,并创建一个txt文件保存执行脚本后的终端信息.
+	 * 
+	 * @param ip
+	 *            主机IP地址
+	 * @param port
+	 *            IP的端口
+	 * @param username
+	 *            登录名
+	 * @param password
+	 *            登录密码
+	 * @param command
+	 *            脚本字符串
+	 * @param filePath
+	 *            文件保存内容,推荐用相对路径. eg:logs/TerminalInfo.txt
+	 */
+	public static void execCommand(String ip, Integer port, String username, String password, String command,
+			String filePath) {
+		Thread t = new Thread(new TelnetUtil(ip, port, username, password, command, filePath));
+		t.start();
 	}
 
 	/**
@@ -51,8 +82,7 @@ public class TelnetUtil implements Runnable, TelnetNotificationHandler {
 	 *            脚本字符串
 	 */
 	public static void execCommand(String ip, Integer port, String username, String password, String command) {
-		Thread t = new Thread(new TelnetUtil(ip, port, username, password, command));
-		t.start();
+		execCommand(ip, port, username, password, command, null);
 	}
 
 	/**
@@ -68,14 +98,45 @@ public class TelnetUtil implements Runnable, TelnetNotificationHandler {
 	 *            脚本字符串
 	 */
 	public static void execCommand(String ip, String username, String password, String command) {
-		execCommand(ip, default_port, username, password, command);
+		execCommand(ip, default_port, username, password, command, null);
 	}
 
-	public TelnetUtil(String ip, Integer port, String username, String password, String command) {
+	/**
+	 * 用于以telnet方式远程执行脚本. 默认端口为 23,并创建一个txt文件保存执行脚本后的终端信息.
+	 * 
+	 * @param ip
+	 *            主机IP地址
+	 * @param username
+	 *            登录名
+	 * @param password
+	 *            登录密码
+	 * @param command
+	 *            脚本字符串
+	 * @param filePath
+	 *            文件保存内容,推荐用相对路径. eg:logs/TerminalInfo.txt
+	 */
+	public static void execCommand(String ip, String username, String password, String command, String filePath) {
+		execCommand(ip, default_port, username, password, command, filePath);
+	}
+
+	public TelnetUtil(String ip, Integer port, String username, String password, String command, String filePath) {
+
 		if (intconnect(ip, port)) {
+
 			write(username);
 			write(password);
 			write(command);
+
+			// 获得终端显示的字符串,并将其写入文本中.
+			try {
+				if (StringUtils.isNotBlank(filePath)) {
+					File outputFileName = new File(filePath);
+					FileUtils.writeStringToFile(outputFileName, readUntil());
+					disconnect();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -146,9 +207,42 @@ public class TelnetUtil implements Runnable, TelnetNotificationHandler {
 				tc.disconnect();
 			} catch (IOException e1) {
 				e1.printStackTrace();
+				return true;
 			}
 			return false;
 		}
+	}
+
+	private void disconnect() throws IOException {
+
+		if (out != null) {
+			out.close();
+		}
+		if (in != null) {
+			in.close();
+		}
+		tc.disconnect();
+
+	}
+
+	public String readUntil() {
+
+		StringBuilder sb = new StringBuilder();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		String line; // 用来保存每行读取的内容
+		try {
+			line = reader.readLine();
+			while (line != null) { // 如果 line 为空说明读完了
+				sb.append(line); // 将读到的内容添加到 buffer 中
+				sb.append("\n"); // 添加换行符
+				line = reader.readLine(); // 读取下一行
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return sb.toString();
 	}
 
 }

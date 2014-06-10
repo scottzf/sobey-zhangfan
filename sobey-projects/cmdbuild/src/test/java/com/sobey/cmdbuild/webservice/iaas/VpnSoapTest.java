@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +12,6 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
-import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
 import com.sobey.cmdbuild.entity.Vpn;
@@ -22,6 +20,7 @@ import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
+import com.sobey.cmdbuild.webservice.response.result.SearchParams;
 import com.sobey.core.mapper.BeanMapper;
 import com.sobey.test.data.RandomData;
 
@@ -49,9 +48,10 @@ public class VpnSoapTest extends BaseFunctionalTestCase {
 	public void testFindVpn() {
 		System.out.println(code + ">>>>>>>>>>>>>");
 
-		Map<String, Object> searchParams = Maps.newHashMap();
-
-		searchParams.put("EQ_code", code);
+		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("EQ_code", code);
+		searchParams.setParamsMap(paramsMap);
 
 		DTOResult<VpnDTO> responseParams = cmdbuildSoapService.findVpnByParams(searchParams);
 
@@ -71,7 +71,7 @@ public class VpnSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testGetVpnList() {
 
-		Map<String, Object> searchParams = Maps.newHashMap();
+		SearchParams searchParams = new SearchParams();
 
 		DTOListResult<VpnDTO> result = cmdbuildSoapService.getVpnList(searchParams);
 
@@ -129,7 +129,7 @@ public class VpnSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testGetVpnPagination() {
 
-		Map<String, Object> searchParams = new HashMap<String, Object>();
+		SearchParams searchParams = new SearchParams();
 
 		PaginationResult<VpnDTO> result = cmdbuildSoapService.getVpnPagination(searchParams, 1, 10);
 

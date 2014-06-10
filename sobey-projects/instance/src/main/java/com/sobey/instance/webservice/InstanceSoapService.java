@@ -23,7 +23,7 @@ public interface InstanceSoapService {
 	/**
 	 * 调用vcenter接口,clone虚拟机
 	 * 
-	 * @param parameter
+	 * @param cloneVMParameter
 	 *            {@link CloneVMParameter}
 	 * @return
 	 */
@@ -32,7 +32,7 @@ public interface InstanceSoapService {
 	/**
 	 * 调用vcenter接口,销毁虚拟机
 	 * 
-	 * @param parameter
+	 * @param destroyVMParameter
 	 *            {@link CloneVMParameter}
 	 * @return
 	 */
@@ -41,7 +41,7 @@ public interface InstanceSoapService {
 	/**
 	 * 调用vcenter接口,修改虚拟机配置
 	 * 
-	 * @param parameter
+	 * @param reconfigVMParameter
 	 *            {@link CloneVMParameter}
 	 * @return
 	 */
@@ -50,7 +50,7 @@ public interface InstanceSoapService {
 	/**
 	 * 调用vcenter接口,对虚拟机进行电源操作
 	 * 
-	 * @param parameter
+	 * @param powerVMParameter
 	 *            {@link CloneVMParameter}
 	 * @return
 	 */
@@ -62,6 +62,18 @@ public interface InstanceSoapService {
 	 * 
 	 * @return
 	 */
-	RelationVMParameter getVMAndHostRelationByInstance();
+	RelationVMParameter getVMAndHostRelationByInstance(@WebParam(name = "datacenter") String datacenter);
+
+	/**
+	 * 调用vcenter接口,创建分布式端口组
+	 * 
+	 * @param vlanId
+	 *            Vlan Id
+	 * @param datacenter
+	 *            数据中心
+	 * @return
+	 */
+	WSResult createPortGroupByInstance(@WebParam(name = "vlanId") Integer vlanId,
+			@WebParam(name = "datacenter") String datacenter);
 
 }

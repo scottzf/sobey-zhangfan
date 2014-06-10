@@ -1,5 +1,6 @@
 package com.sobey.instance.data;
 
+import com.sobey.instance.constans.DataCenterEnum;
 import com.sobey.instance.webservice.response.dto.CloneVMParameter;
 import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
@@ -12,13 +13,21 @@ public class TestData {
 		CloneVMParameter parameter = new CloneVMParameter();
 
 		parameter.setDescription("这个一个API测试程序");
-		parameter.setGateway("10.10.1.0");
-		parameter.setIpaddress("10.10.1.80");
+		parameter.setGateway("10.10.100.1");
+		parameter.setIpaddress("10.10.100.2");
 		parameter.setSubNetMask("255.255.255.0");
-		parameter.setvMName("liukai");
-		parameter.setvMSUserName("徽州");
-		parameter.setvMTemplateName("CentOS");
+		parameter.setvMName("10.10.100.2");
+		parameter.setvMSUserName("Sobey");
+		parameter.setVlanId(100);
+		parameter.setDatacenter(DataCenterEnum.XA.toString());
+
+		// Linux
+		parameter.setvMTemplateName("CnetOS6.5");
 		parameter.setvMTemplateOS("Linux");
+
+		// Windows
+		// parameter.setvMTemplateName("WinServer2008R2");
+		// parameter.setvMTemplateOS("Windows");
 		return parameter;
 	}
 
@@ -26,11 +35,13 @@ public class TestData {
 
 		DestroyVMParameter parameter = new DestroyVMParameter();
 		parameter.setvMName("liukai");
+		parameter.setDatacenter(DataCenterEnum.XA.toString());
 		return parameter;
 	}
 
 	public static ReconfigVMParameter randomReconfigVMParameter() {
 		ReconfigVMParameter parameter = new ReconfigVMParameter();
+		parameter.setDatacenter(DataCenterEnum.XA.toString());
 		parameter.setvMName("liukai");
 		parameter.setcPUNumber(4);
 		parameter.setMemoryMB(4096L);
@@ -39,6 +50,7 @@ public class TestData {
 
 	public static PowerVMParameter randomPowerVMParameter() {
 		PowerVMParameter parameter = new PowerVMParameter();
+		parameter.setDatacenter(DataCenterEnum.XA.toString());
 		parameter.setvMName("liukai");
 		parameter.setPowerOperation("poweroff");
 		return parameter;

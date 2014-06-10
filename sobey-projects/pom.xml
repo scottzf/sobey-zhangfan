@@ -23,5 +23,6 @@
 		<module>dns</module>
 		<module>nagios</module>
 		<module>cmop-api</module>
+		<module>zabbix</module>
 	</modules>
 </project>

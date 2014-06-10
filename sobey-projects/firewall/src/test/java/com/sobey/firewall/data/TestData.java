@@ -1,6 +1,6 @@
 package com.sobey.firewall.data;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import com.google.common.collect.Lists;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
@@ -11,26 +11,24 @@ public class TestData {
 
 	public static EIPParameter randomEIPParameter() {
 
+		ArrayList<String> allPolicies = Lists.newArrayList();
+
+		allPolicies.add("119.6.200.204");
+
 		EIPParameter parameter = new EIPParameter();
-
-		parameter.setInternetIP("119.6.200.219");
+		parameter.setAllPolicies(allPolicies);
+		parameter.setInternetIP("119.6.200.203");
 		parameter.setIsp(1);
-		parameter.setPrivateIP("172.28.25.105");
+		parameter.setPrivateIP("10.10.2.51");
 
-		List<EIPPolicyParameter> policies = Lists.newArrayList();
+		ArrayList<EIPPolicyParameter> policies = Lists.newArrayList();
 
 		EIPPolicyParameter policyParameter = new EIPPolicyParameter();
-		policyParameter.setProtocolText("udp");
-		policyParameter.setSourcePort(8080);
-		policyParameter.setTargetPort(8080);
-
-		EIPPolicyParameter policyParameter2 = new EIPPolicyParameter();
-		policyParameter2.setProtocolText("tcp");
-		policyParameter2.setSourcePort(80);
-		policyParameter2.setTargetPort(80);
+		policyParameter.setProtocolText("tcp");
+		policyParameter.setSourcePort(80);
+		policyParameter.setTargetPort(80);
 
 		policies.add(policyParameter);
-		// policies.add(policyParameter2);
 
 		parameter.setPolicies(policies);
 
@@ -45,16 +43,14 @@ public class TestData {
 		parameter.setNetMask("255.255.255.0");
 		parameter.setVlanId(80);
 		parameter.setVpnUser("liukai01");
-		parameter.setVpnPassword("liukai01@sobey");
+		parameter.setVpnPassword("123456");
 
-		List<String> segments = Lists.newArrayList();
-		String segment = "172.20.17.0";
-		String segment2 = "172.20.18.0";
+		ArrayList<String> segments = Lists.newArrayList();
+		String segment = "10.10.2.1";
 		segments.add(segment);
-		segments.add(segment2);
 
-		List<String> ipaddress = Lists.newArrayList();
-		String ip = "172.20.19.1";
+		ArrayList<String> ipaddress = Lists.newArrayList();
+		String ip = "10.10.2.25";
 		ipaddress.add(ip);
 
 		parameter.setSegments(segments);

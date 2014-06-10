@@ -1,6 +1,6 @@
 package com.sobey.dns.data;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import com.google.common.collect.Lists;
 import com.sobey.dns.webservice.response.dto.DNSParameter;
@@ -11,9 +11,9 @@ public class TestData {
 
 	public static DNSParameter randomDNSParameter() {
 
-		List<DNSPublicIPParameter> publicIPs = Lists.newArrayList();
-		List<DNSPolicyParameter> policyParameters = Lists.newArrayList();
-		List<DNSPolicyParameter> policyParameters2 = Lists.newArrayList();
+		ArrayList<DNSPublicIPParameter> publicIPs = Lists.newArrayList();
+		ArrayList<DNSPolicyParameter> policyParameters = Lists.newArrayList();
+		ArrayList<DNSPolicyParameter> policyParameters2 = Lists.newArrayList();
 
 		DNSPolicyParameter policyParameter = new DNSPolicyParameter();
 		policyParameter.setProtocolText("tcp");

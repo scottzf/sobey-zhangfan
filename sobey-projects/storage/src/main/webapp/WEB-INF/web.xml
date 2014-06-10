@@ -8,7 +8,7 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
 			classpath*:/applicationContext.xml,
-			classpath*:/applicationContext-storge.xml
+			classpath*:/applicationContext-storage.xml
 		</param-value>
 	</context-param>
 	<context-param>
@@ -60,9 +60,5 @@
 		<servlet-name>CXFServlet</servlet-name>
 		<url-pattern>/cxf/*</url-pattern>
 	</servlet-mapping>
-
-	<session-config>
-		<session-timeout>120</session-timeout>
-	</session-config>
 
 </web-app>

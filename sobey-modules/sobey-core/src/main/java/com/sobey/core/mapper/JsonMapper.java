@@ -59,9 +59,7 @@ public class JsonMapper {
 	}
 
 	/**
-	 * Object可以是POJO，也可以是Collection或数组。
-	 * 如果对象为Null, 返回"null".
-	 * 如果集合为空集合, 返回"[]".
+	 * Object可以是POJO，也可以是Collection或数组。 如果对象为Null, 返回"null". 如果集合为空集合, 返回"[]".
 	 */
 	public String toJson(Object object) {
 
@@ -76,8 +74,7 @@ public class JsonMapper {
 	/**
 	 * 反序列化POJO或简单Collection如List<String>.
 	 * 
-	 * 如果JSON字符串为Null或"null"字符串, 返回Null.
-	 * 如果JSON字符串为"[]", 返回空集合.
+	 * 如果JSON字符串为Null或"null"字符串, 返回Null. 如果JSON字符串为"[]", 返回空集合.
 	 * 
 	 * 如需反序列化复杂Collection如List<MyBean>, 请使用fromJson(String, JavaType)
 	 * 
@@ -101,6 +98,7 @@ public class JsonMapper {
 	 * 
 	 * @see #createCollectionType(Class, Class...)
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> T fromJson(String jsonString, JavaType javaType) {
 		if (StringUtils.isEmpty(jsonString)) {
 			return null;
@@ -117,6 +115,7 @@ public class JsonMapper {
 	/**
 	 * 构造Collection类型.
 	 */
+	@SuppressWarnings("rawtypes")
 	public JavaType contructCollectionType(Class<? extends Collection> collectionClass, Class<?> elementClass) {
 		return mapper.getTypeFactory().constructCollectionType(collectionClass, elementClass);
 	}
@@ -124,12 +123,13 @@ public class JsonMapper {
 	/**
 	 * 构造Map类型.
 	 */
+	@SuppressWarnings("rawtypes")
 	public JavaType contructMapType(Class<? extends Map> mapClass, Class<?> keyClass, Class<?> valueClass) {
 		return mapper.getTypeFactory().constructMapType(mapClass, keyClass, valueClass);
 	}
 
 	/**
-	 * 当JSON里只含有Bean的部分屬性時，更新一個已存在Bean，只覆蓋該部分的屬性.
+	 * 当JSON里只含有Bean的部分属性时，更新一个已存在Bean，只覆盖该部分的属性。
 	 */
 	public void update(String jsonString, Object object) {
 		try {
@@ -142,16 +142,17 @@ public class JsonMapper {
 	}
 
 	/**
-	 * 輸出JSONP格式數據.
+	 * 输出JSONP格式数据。
 	 */
 	public String toJsonP(String functionName, Object object) {
 		return toJson(new JSONPObject(functionName, object));
 	}
 
 	/**
-	 * 設定是否使用Enum的toString函數來讀寫Enum,
-	 * 為False時時使用Enum的name()函數來讀寫Enum, 默認為False.
-	 * 注意本函數一定要在Mapper創建後, 所有的讀寫動作之前調用.
+	 * 
+	 * 设定是否使用Enum的toString函数来读写Enum， 为False时是使用Enum的name()函数来读写Enum，默认为False。
+	 * 
+	 * 注意本函数一定要在Mapper创建后，所有的读写动作之前调用。
 	 */
 	public void enableEnumUseToString() {
 		mapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
@@ -159,8 +160,7 @@ public class JsonMapper {
 	}
 
 	/**
-	 * 支持使用Jaxb的Annotation，使得POJO上的annotation不用与Jackson耦合。
-	 * 默认会先查找jaxb的annotation，如果找不到再找jackson的。
+	 * 支持使用Jaxb的Annotation，使得POJO上的annotation不用与Jackson耦合。 默认会先查找jaxb的annotation，如果找不到再找jackson的。
 	 */
 	public void enableJaxbAnnotation() {
 		JaxbAnnotationModule module = new JaxbAnnotationModule();

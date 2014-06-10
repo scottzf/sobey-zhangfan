@@ -1,6 +1,6 @@
 package com.sobey.loadbalancer.data;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import com.google.common.collect.Lists;
 import com.sobey.loadbalancer.webservice.response.dto.ELBParameter;
@@ -11,9 +11,9 @@ public class TestData {
 
 	public static ELBParameter randomELBParameter() {
 
-		List<ELBPublicIPParameter> publicIPs = Lists.newArrayList();
-		List<ELBPolicyParameter> policyParameters = Lists.newArrayList();
-		List<ELBPolicyParameter> policyParameters2 = Lists.newArrayList();
+		ArrayList<ELBPublicIPParameter> publicIPs = Lists.newArrayList();
+		ArrayList<ELBPolicyParameter> policyParameters = Lists.newArrayList();
+		ArrayList<ELBPolicyParameter> policyParameters2 = Lists.newArrayList();
 
 		ELBPolicyParameter policyParameter = new ELBPolicyParameter();
 		policyParameter.setProtocolText("tcp");

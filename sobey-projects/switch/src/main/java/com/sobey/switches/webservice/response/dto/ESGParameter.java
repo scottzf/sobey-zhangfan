@@ -1,13 +1,12 @@
 package com.sobey.switches.webservice.response.dto;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.google.common.collect.Lists;
 import com.sobey.switches.constans.WsConstants;
 
 /**
@@ -46,12 +45,12 @@ public class ESGParameter {
 	/**
 	 * 许可ip列表(必须有,数量不固定)
 	 */
-	private List<RuleParameter> permits = Lists.newArrayList();
+	private ArrayList<RuleParameter> permits;
 
 	/**
 	 * 拒绝ip列表(必须有,数量不固定)
 	 */
-	private List<RuleParameter> denys = Lists.newArrayList();;
+	private ArrayList<RuleParameter> denys;
 
 	public Integer getAclNumber() {
 		return aclNumber;
@@ -77,19 +76,19 @@ public class ESGParameter {
 		this.desc = desc;
 	}
 
-	public List<RuleParameter> getPermits() {
+	public ArrayList<RuleParameter> getPermits() {
 		return permits;
 	}
 
-	public void setPermits(List<RuleParameter> permits) {
+	public void setPermits(ArrayList<RuleParameter> permits) {
 		this.permits = permits;
 	}
 
-	public List<RuleParameter> getDenys() {
+	public ArrayList<RuleParameter> getDenys() {
 		return denys;
 	}
 
-	public void setDenys(List<RuleParameter> denys) {
+	public void setDenys(ArrayList<RuleParameter> denys) {
 		this.denys = denys;
 	}
 

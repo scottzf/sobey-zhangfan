@@ -34,6 +34,7 @@ public class BeanValidatorsTest extends SpringContextTestCase {
 		Locale.setDefault(Locale.ENGLISH);
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void validate() {
 
@@ -59,6 +60,7 @@ public class BeanValidatorsTest extends SpringContextTestCase {
 		assertTrue(result.contains("name may not be empty"));
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void validateWithException() {
 		Customer customer = new Customer();
@@ -85,6 +87,7 @@ public class BeanValidatorsTest extends SpringContextTestCase {
 			return name;
 		}
 
+		@SuppressWarnings("unused")
 		public void setName(String name) {
 			this.name = name;
 		}

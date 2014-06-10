@@ -6,7 +6,7 @@ import javax.jws.WebService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sobey.dns.constans.WsConstants;
-import com.sobey.dns.service.NitroService;
+import com.sobey.dns.service.DnsService;
 import com.sobey.dns.webservice.response.dto.DNSParameter;
 import com.sobey.dns.webservice.response.result.WSResult;
 
@@ -14,31 +14,31 @@ import com.sobey.dns.webservice.response.result.WSResult;
 public class DnsSoapServiceImpl implements DnsSoapService {
 
 	@Autowired
-	public NitroService service;
+	public DnsService service;
 
 	@Override
-	public WSResult createDNSByDNS(@WebParam(name = "DNSParameter") DNSParameter parameter) {
+	public WSResult createDNSByDNS(@WebParam(name = "dnsParameter") DNSParameter dnsParameter) {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.createDns(parameter);
+		boolean flag = service.createGSLB(dnsParameter);
 
-		if (!falg) {
-			result.setCode(WSResult.PARAMETER_ERROR);
+		if (!flag) {
+			result.setError(WSResult.SYSTEM_ERROR, "DNS创建失败");
 		}
 
 		return result;
 	}
 
 	@Override
-	public WSResult deleteDNSByDNS(@WebParam(name = "DNSParameter") DNSParameter parameter) {
+	public WSResult deleteDNSByDNS(@WebParam(name = "dnsParameter") DNSParameter dnsParameter) {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.deleteDns(parameter);
+		boolean flag = service.deleteGSLB(dnsParameter);
 
-		if (!falg) {
-			result.setCode(WSResult.PARAMETER_ERROR);
+		if (!flag) {
+			result.setError(WSResult.SYSTEM_ERROR, "DNS删除失败");
 		}
 
 		return result;

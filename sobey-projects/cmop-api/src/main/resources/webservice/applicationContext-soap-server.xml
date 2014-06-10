@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:jaxws="http://cxf.apache.org/jaxws"
-	xsi:schemaLocation="http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd"
+	xmlns:http-conf="http://cxf.apache.org/transports/http/configuration" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd"
 	default-lazy-init="true">
 
 	<description>Apache CXF的 SOAP Web Service配置</description>
 
 	<!-- WebService Service -->
+
+	<http-conf:conduit name="*.http-conduit">
+		<http-conf:client ConnectionTimeout="60000" ReceiveTimeout="600000" />
+	</http-conf:conduit>
 
 	<!-- jax-ws endpoint定义 -->
 	<jaxws:endpoint address="/api/dnsSoapService">
@@ -19,7 +23,30 @@
 
 	<!-- WebService Client inject -->
 
+	<jaxws:client id="cmdbuildSoapService" serviceClass="com.sobey.generate.cmdbuild.CmdbuildSoapService"
+		address="http://localhost:8080/cmdbuild/cxf/soap/cmdbuildSoapService?wsdl" />
+
 	<jaxws:client id="instanceSoapService" serviceClass="com.sobey.generate.instance.InstanceSoapService"
 		address="http://localhost:8081/instance/cxf/soap/instanceSoapService?wsdl" />
+
+	<jaxws:client id="switchesSoapService" serviceClass="com.sobey.generate.switches.SwitchesSoapService"
+		address="http://localhost:8082/switch/cxf/soap/switchesSoapService?wsdl" />
+
+	<jaxws:client id="firewallSoapService" serviceClass="com.sobey.generate.firewall.FirewallSoapService"
+		address="http://localhost:8083/firewall/cxf/soap/firewallSoapService?wsdl" />
+
+	<jaxws:client id="storageSoapService" serviceClass="com.sobey.generate.storage.StorageSoapService"
+		address="http://localhost:8084/storage/cxf/soap/storageSoapService?wsdl" />
+
+	<jaxws:client id="dnsSoapService" serviceClass="com.sobey.generate.dns.DnsSoapService" address="http://localhost:8085/dns/cxf/soap/dnsSoapService?wsdl" />
+
+	<jaxws:client id="loadbalancerSoapService" serviceClass="com.sobey.generate.loadbalancer.LoadbalancerSoapService"
+		address="http://localhost:8086/loadbalancer/cxf/soap/loadbalancerSoapService?wsdl" />
+
+	<jaxws:client id="zabbixSoapService" serviceClass="com.sobey.generate.zabbix.ZabbixSoapService"
+		address="http://localhost:8087/zabbix/cxf/soap/zabbixSoapService?wsdl" />
+		
+	<jaxws:client id="nagiosSoapService" serviceClass="com.sobey.generate.nagios.NagiosSoapService"
+		address="http://localhost:8089/nagios/cxf/soap/nagiosSoapService?wsdl" />
 
 </beans>

@@ -17,8 +17,10 @@ public class CloneVMParameter {
 	private String ipaddress;
 	private String gateway;
 	private String subNetMask;
+	private String datacenter;
 	private String vMSUserName;
 	private String description;
+	private Integer vlanId;
 
 	public String getvMTemplateName() {
 		return vMTemplateName;
@@ -68,6 +70,14 @@ public class CloneVMParameter {
 		this.subNetMask = subNetMask;
 	}
 
+	public String getDatacenter() {
+		return datacenter;
+	}
+
+	public void setDatacenter(String datacenter) {
+		this.datacenter = datacenter;
+	}
+
 	public String getvMSUserName() {
 		return vMSUserName;
 	}
@@ -82,6 +92,14 @@ public class CloneVMParameter {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Integer getVlanId() {
+		return vlanId;
+	}
+
+	public void setVlanId(Integer vlanId) {
+		this.vlanId = vlanId;
 	}
 
 	/**

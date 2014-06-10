@@ -12,6 +12,7 @@ public class DataFixtures {
 
 	private static ResourceLoader resourceLoader = new DefaultResourceLoader();
 
+	@SuppressWarnings("deprecation")
 	public static void executeScript(DataSource dataSource, String... sqlResourcePaths) throws DataAccessException {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 

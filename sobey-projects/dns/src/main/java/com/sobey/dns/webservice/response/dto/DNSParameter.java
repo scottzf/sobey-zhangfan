@@ -1,13 +1,12 @@
 package com.sobey.dns.webservice.response.dto;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.google.common.collect.Lists;
 import com.sobey.dns.constans.WsConstants;
 
 /**
@@ -39,7 +38,7 @@ public class DNSParameter {
 	/**
 	 * 公网IP集合
 	 */
-	private List<DNSPublicIPParameter> publicIPs = Lists.newArrayList();
+	private ArrayList<DNSPublicIPParameter> publicIPs;
 
 	public String getDomianName() {
 		return domianName;
@@ -57,11 +56,11 @@ public class DNSParameter {
 		this.domianType = domianType;
 	}
 
-	public List<DNSPublicIPParameter> getPublicIPs() {
+	public ArrayList<DNSPublicIPParameter> getPublicIPs() {
 		return publicIPs;
 	}
 
-	public void setPublicIPs(List<DNSPublicIPParameter> publicIPs) {
+	public void setPublicIPs(ArrayList<DNSPublicIPParameter> publicIPs) {
 		this.publicIPs = publicIPs;
 	}
 

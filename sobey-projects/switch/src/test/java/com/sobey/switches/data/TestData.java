@@ -1,6 +1,6 @@
 package com.sobey.switches.data;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import com.google.common.collect.Lists;
 import com.sobey.switches.webservice.response.dto.ESGParameter;
@@ -28,7 +28,7 @@ public class TestData {
 		parameter.setAclNumber(3000);
 		parameter.setDesc("test ESG");
 
-		List<RuleParameter> permits = Lists.newArrayList();
+		ArrayList<RuleParameter> permits = Lists.newArrayList();
 
 		RuleParameter rule1 = new RuleParameter();
 		rule1.setSource("172.20.27.0");
@@ -46,7 +46,7 @@ public class TestData {
 
 		parameter.setPermits(permits);
 
-		List<RuleParameter> denys = Lists.newArrayList();
+		ArrayList<RuleParameter> denys = Lists.newArrayList();
 
 		RuleParameter rule3 = new RuleParameter();
 		rule3.setSource("172.20.27.0");

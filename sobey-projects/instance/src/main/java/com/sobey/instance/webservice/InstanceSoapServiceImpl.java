@@ -23,64 +23,82 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	public VMService service;
 
 	@Override
-	public WSResult cloneVMByInstance(@WebParam(name = "CloneVMParameter") CloneVMParameter parameter) {
+	public WSResult cloneVMByInstance(@WebParam(name = "cloneVMParameter") CloneVMParameter cloneVMParameter) {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.cloneVM(parameter);
+		boolean flag = service.cloneVM(cloneVMParameter);
 
-		if (!falg) {
-			result.setCode(WSResult.SYSTEM_ERROR);
+		if (!flag) {
+			result.setError(WSResult.SYSTEM_ERROR, "克隆失败");
+		}
+
+		if (!service.changeVlan(cloneVMParameter.getDatacenter(), cloneVMParameter.getvMName(),
+				cloneVMParameter.getVlanId())) {
+			result.setError(WSResult.SYSTEM_ERROR, "Vlan分配失败");
 		}
 
 		return result;
 	}
 
 	@Override
-	public WSResult destroyVMByInstance(@WebParam(name = "DestroyVMParameter") DestroyVMParameter parameter) {
+	public WSResult destroyVMByInstance(@WebParam(name = "destroyVMParameter") DestroyVMParameter destroyVMParameter) {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.destroyVM(parameter);
+		boolean flag = service.destroyVM(destroyVMParameter);
 
-		if (!falg) {
-			result.setCode(WSResult.SYSTEM_ERROR);
+		if (!flag) {
+			result.setError(WSResult.SYSTEM_ERROR, "销毁失败");
 		}
 
 		return result;
 	}
 
 	@Override
-	public WSResult reconfigVMByInstance(@WebParam(name = "ReconfigVMParameter") ReconfigVMParameter parameter) {
+	public WSResult reconfigVMByInstance(@WebParam(name = "reconfigVMParameter") ReconfigVMParameter reconfigVMParameter) {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.reconfigVM(parameter);
+		boolean flag = service.reconfigVM(reconfigVMParameter);
 
-		if (!falg) {
-			result.setCode(WSResult.SYSTEM_ERROR);
+		if (!flag) {
+			result.setError(WSResult.SYSTEM_ERROR, "配置更改失败");
 		}
 
 		return result;
 	}
 
 	@Override
-	public WSResult powerVMByInstance(@WebParam(name = "PowerVMParameter") PowerVMParameter parameter) {
+	public WSResult powerVMByInstance(@WebParam(name = "powerVMParameter") PowerVMParameter powerVMParameter) {
 
 		WSResult result = new WSResult();
 
-		boolean falg = service.powerVM(parameter);
+		boolean flag = service.powerVM(powerVMParameter);
 
-		if (!falg) {
-			result.setCode(WSResult.SYSTEM_ERROR);
+		if (!flag) {
+			result.setError(WSResult.SYSTEM_ERROR, "电源操作失败");
 		}
 
 		return result;
 	}
 
 	@Override
-	public RelationVMParameter getVMAndHostRelationByInstance() {
-		return service.getVMAndHostRelation();
+	public RelationVMParameter getVMAndHostRelationByInstance(@WebParam(name = "datacenter") String datacenter) {
+		return service.getVMAndHostRelation(datacenter);
+	}
+
+	@Override
+	public WSResult createPortGroupByInstance(Integer vlanId, String datacenter) {
+
+		WSResult result = new WSResult();
+		boolean flag = service.addDVSPortGroup(vlanId, datacenter);
+
+		if (!flag) {
+			result.setError(WSResult.SYSTEM_ERROR, "分布式端口组创建失败");
+		}
+
+		return result;
 	}
 
 }

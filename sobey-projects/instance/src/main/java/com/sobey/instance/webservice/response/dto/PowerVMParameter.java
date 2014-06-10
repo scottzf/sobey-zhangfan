@@ -13,6 +13,7 @@ public class PowerVMParameter {
 
 	private String vMName;
 	private String powerOperation;
+	private String datacenter;
 
 	public String getvMName() {
 		return vMName;
@@ -28,6 +29,14 @@ public class PowerVMParameter {
 
 	public void setPowerOperation(String powerOperation) {
 		this.powerOperation = powerOperation;
+	}
+
+	public String getDatacenter() {
+		return datacenter;
+	}
+
+	public void setDatacenter(String datacenter) {
+		this.datacenter = datacenter;
 	}
 
 	/**

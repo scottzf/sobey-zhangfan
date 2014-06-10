@@ -25,6 +25,7 @@ public class Hibernates {
 
 	/**
 	 * 从DataSoure中取出connection, 根据connection的metadata中的jdbcUrl判断Dialect类型.
+	 * 
 	 * 仅支持Oracle, H2, MySql, PostgreSql, SQLServer，如需更多数据库类型，请仿照此类自行编写。
 	 */
 	public static String getDialect(DataSource dataSource) {

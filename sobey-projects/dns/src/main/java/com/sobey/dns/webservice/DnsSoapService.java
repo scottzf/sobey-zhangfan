@@ -19,19 +19,19 @@ public interface DnsSoapService {
 	/**
 	 * 在DNS上创建DNS
 	 * 
-	 * @param parameter
+	 * @param dnsParameter
 	 *            {@link DNSParameter}
 	 * @return
 	 */
-	WSResult createDNSByDNS(@WebParam(name = "DNSParameter") DNSParameter parameter);
+	WSResult createDNSByDNS(@WebParam(name = "dnsParameter") DNSParameter dnsParameter);
 
 	/**
 	 * 在DNS上删除DNS
 	 * 
-	 * @param parameter
+	 * @param dnsParameter
 	 *            {@link DNSParameter}
 	 * @return
 	 */
-	WSResult deleteDNSByDNS(@WebParam(name = "DNSParameter") DNSParameter parameter);
+	WSResult deleteDNSByDNS(@WebParam(name = "dnsParameter") DNSParameter dnsParameter);
 
 }
