@@ -157,8 +157,7 @@ public class ZabbixApiDao {
 
 		JsonNode node = new ObjectMapper().readTree(resStr);
 
-		return node.findValues("hostid").size() != 0 ? StringUtils.remove(node.findValues("hostid").get(1).toString(),
-				"\"") : "";
+		return subResult(node, "hostid");
 	}
 
 	/**
@@ -213,7 +212,7 @@ public class ZabbixApiDao {
 
 		JsonNode node = new ObjectMapper().readTree(resultStr);
 
-		return StringUtils.remove(node.get("result").toString(), "\"");
+		return subResult(node, "result");
 
 	}
 

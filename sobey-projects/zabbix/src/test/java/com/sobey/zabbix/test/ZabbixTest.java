@@ -47,7 +47,7 @@ public class ZabbixTest extends TestCase {
 	@Autowired
 	public ZabbixApiService service;
 
-	@Test
+	// @Test
 	public void test1() throws JSONException, IOException {
 
 		String templateId = getTemplateId("streaming"); // 模板Id
@@ -75,7 +75,7 @@ public class ZabbixTest extends TestCase {
 
 	}
 
-	@Test
+	// @Test
 	public void insert() throws IOException {
 
 		String templateId = getTemplateId("streaming"); // 模板Id
@@ -108,7 +108,7 @@ public class ZabbixTest extends TestCase {
 
 	}
 
-	// @Test
+	@Test
 	public void zabbixAPITest() throws JsonGenerationException, JsonMappingException, IOException, JSONException {
 
 		String hostId = getHostId("10.10.2.111");
@@ -423,8 +423,7 @@ public class ZabbixTest extends TestCase {
 
 		JsonNode node = new ObjectMapper().readTree(resStr);
 
-		return node.findValues("hostid").size() != 0 ? StringUtils.remove(node.findValues("hostid").get(1).toString(),
-				"\"") : "";
+		return subResult(node, "hostid");
 	}
 
 	/**
@@ -474,7 +473,8 @@ public class ZabbixTest extends TestCase {
 
 		JsonNode node = new ObjectMapper().readTree(resultStr);
 
-		return StringUtils.remove(node.get("result").toString(), "\"");
+		return subResult(node, "result");
+//		return StringUtils.remove(node.get("result").toString(), "\"");
 
 	}
 
