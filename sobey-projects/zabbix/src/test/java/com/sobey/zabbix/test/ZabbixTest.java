@@ -474,8 +474,6 @@ public class ZabbixTest extends TestCase {
 		JsonNode node = new ObjectMapper().readTree(resultStr);
 
 		return subResult(node, "result");
-//		return StringUtils.remove(node.get("result").toString(), "\"");
-
 	}
 
 	/**
