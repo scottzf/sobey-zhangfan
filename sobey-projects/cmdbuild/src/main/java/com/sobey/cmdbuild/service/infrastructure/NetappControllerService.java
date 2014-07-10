@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
-import com.sobey.cmdbuild.entity.NetappController;
+import com.sobey.cmdbuild.entity.Storage;
 import com.sobey.cmdbuild.repository.NetappControllerDao;
 import com.sobey.cmdbuild.service.BasicSevcie;
 import com.sobey.cmdbuild.webservice.response.dto.NetappControllerDTO;
@@ -35,7 +35,7 @@ public class NetappControllerService extends BasicSevcie {
 	 * @param id
 	 * @return NetappController
 	 */
-	public NetappController findNetappController(Integer id) {
+	public Storage findNetappController(Integer id) {
 		return netappControllerDao.findOne(id);
 	}
 
@@ -52,17 +52,17 @@ public class NetappControllerService extends BasicSevcie {
 	 *            动态查询条件Map
 	 * @return NetappController
 	 */
-	public NetappController findNetappController(Map<String, Object> searchParams) {
+	public Storage findNetappController(Map<String, Object> searchParams) {
 		return netappControllerDao.findOne(buildSpecification(searchParams));
 	}
 
 	/**
 	 * 新增、保存对象
 	 * 
-	 * @param NetappController
+	 * @param Storage
 	 * @return NetappController
 	 */
-	public NetappController saveOrUpdate(NetappController netappController) {
+	public Storage saveOrUpdate(Storage netappController) {
 		return netappControllerDao.save(netappController);
 	}
 
@@ -87,7 +87,7 @@ public class NetappControllerService extends BasicSevcie {
 	 * @param searchParams
 	 *            动态查询条件Map * @return List<NetappController>
 	 */
-	public List<NetappController> getNetappControllerList(Map<String, Object> searchParams) {
+	public List<Storage> getNetappControllerList(Map<String, Object> searchParams) {
 		return netappControllerDao.findAll(buildSpecification(searchParams));
 	}
 
@@ -99,12 +99,11 @@ public class NetappControllerService extends BasicSevcie {
 	 * @param pageSize
 	 * @return Page<NetappController>
 	 */
-	private Page<NetappController> getNetappControllerPage(Map<String, Object> searchParams, int pageNumber,
-			int pageSize) {
+	private Page<Storage> getNetappControllerPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
 
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
-		Specification<NetappController> spec = buildSpecification(searchParams);
+		Specification<Storage> spec = buildSpecification(searchParams);
 
 		return netappControllerDao.findAll(spec, pageRequest);
 	}
@@ -117,13 +116,13 @@ public class NetappControllerService extends BasicSevcie {
 	 * @param searchParams
 	 * @return Specification<NetappController>
 	 */
-	private Specification<NetappController> buildSpecification(Map<String, Object> searchParams) {
+	private Specification<Storage> buildSpecification(Map<String, Object> searchParams) {
 
 		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
 
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 
-		return DynamicSpecifications.bySearchFilter(filters.values(), NetappController.class);
+		return DynamicSpecifications.bySearchFilter(filters.values(), Storage.class);
 	}
 
 	/**
@@ -142,7 +141,7 @@ public class NetappControllerService extends BasicSevcie {
 	public PaginationResult<NetappControllerDTO> getNetappControllerDTOPagination(Map<String, Object> searchParams,
 			int pageNumber, int pageSize) {
 
-		Page<NetappController> page = getNetappControllerPage(searchParams, pageNumber, pageSize);
+		Page<Storage> page = getNetappControllerPage(searchParams, pageNumber, pageSize);
 
 		List<NetappControllerDTO> dtos = BeanMapper.mapList(page.getContent(), NetappControllerDTO.class);
 

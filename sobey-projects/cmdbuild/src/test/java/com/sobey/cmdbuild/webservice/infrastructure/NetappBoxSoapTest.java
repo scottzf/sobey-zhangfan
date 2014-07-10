@@ -14,7 +14,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
-import com.sobey.cmdbuild.entity.NetappBox;
+import com.sobey.cmdbuild.entity.StorageBox;
 import com.sobey.cmdbuild.webservice.response.dto.NetappBoxDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
@@ -85,7 +85,7 @@ public class NetappBoxSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testCreateNetappBox() {
 
-		NetappBox netappBox = TestData.randomNetappBox();
+		StorageBox netappBox = TestData.randomNetappBox();
 
 		NetappBoxDTO netappBoxDTO = BeanMapper.map(netappBox, NetappBoxDTO.class);
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
-import com.sobey.cmdbuild.entity.MapEcsCs2;
+import com.sobey.cmdbuild.entity.MapEcsEs3;
 import com.sobey.cmdbuild.repository.MapEcsCs2Dao;
 import com.sobey.cmdbuild.service.BasicSevcie;
 import com.sobey.core.persistence.DynamicSpecifications;
@@ -31,7 +31,7 @@ public class MapEcsCs2Service extends BasicSevcie {
 	 * @param id
 	 * @return MapEcsCs2
 	 */
-	public MapEcsCs2 findMapEcsCs2(Integer id) {
+	public MapEcsEs3 findMapEcsCs2(Integer id) {
 		return mapEcsCs2Dao.findOne(id);
 	}
 
@@ -48,17 +48,17 @@ public class MapEcsCs2Service extends BasicSevcie {
 	 *            动态查询条件Map
 	 * @return MapEcsCs2
 	 */
-	public MapEcsCs2 findMapEcsCs2(Map<String, Object> searchParams) {
+	public MapEcsEs3 findMapEcsCs2(Map<String, Object> searchParams) {
 		return mapEcsCs2Dao.findOne(buildSpecification(searchParams));
 	}
 
 	/**
 	 * 新增、保存对象
 	 * 
-	 * @param MapEcsCs2
+	 * @param MapEcsEs3
 	 * @return MapEcsCs2
 	 */
-	public MapEcsCs2 saveOrUpdate(MapEcsCs2 mapEcsCs2) {
+	public MapEcsEs3 saveOrUpdate(MapEcsEs3 mapEcsCs2) {
 		return mapEcsCs2Dao.save(mapEcsCs2);
 	}
 
@@ -84,7 +84,7 @@ public class MapEcsCs2Service extends BasicSevcie {
 	 *            动态查询条件Map
 	 * @return List<MapEcsCs2>
 	 */
-	public List<MapEcsCs2> getMapEcsCs2List(Map<String, Object> searchParams) {
+	public List<MapEcsEs3> getMapEcsCs2List(Map<String, Object> searchParams) {
 		return mapEcsCs2Dao.findAll(buildSpecification(searchParams));
 	}
 
@@ -96,13 +96,13 @@ public class MapEcsCs2Service extends BasicSevcie {
 	 * @param searchParams
 	 * @return Specification<MapEcsCs2>
 	 */
-	private Specification<MapEcsCs2> buildSpecification(Map<String, Object> searchParams) {
+	private Specification<MapEcsEs3> buildSpecification(Map<String, Object> searchParams) {
 
 		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
 
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 
-		return DynamicSpecifications.bySearchFilter(filters.values(), MapEcsCs2.class);
+		return DynamicSpecifications.bySearchFilter(filters.values(), MapEcsEs3.class);
 	}
 
 }

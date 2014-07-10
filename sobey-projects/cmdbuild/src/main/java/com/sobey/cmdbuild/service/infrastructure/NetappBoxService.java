@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
-import com.sobey.cmdbuild.entity.NetappBox;
+import com.sobey.cmdbuild.entity.StorageBox;
 import com.sobey.cmdbuild.repository.NetappBoxDao;
 import com.sobey.cmdbuild.service.BasicSevcie;
 import com.sobey.cmdbuild.webservice.response.dto.NetappBoxDTO;
@@ -35,7 +35,7 @@ public class NetappBoxService extends BasicSevcie {
 	 * @param id
 	 * @return NetappBox
 	 */
-	public NetappBox findNetappBox(Integer id) {
+	public StorageBox findNetappBox(Integer id) {
 		return netappBoxDao.findOne(id);
 	}
 
@@ -52,17 +52,17 @@ public class NetappBoxService extends BasicSevcie {
 	 *            动态查询条件Map
 	 * @return NetappBox
 	 */
-	public NetappBox findNetappBox(Map<String, Object> searchParams) {
+	public StorageBox findNetappBox(Map<String, Object> searchParams) {
 		return netappBoxDao.findOne(buildSpecification(searchParams));
 	}
 
 	/**
 	 * 新增、保存对象
 	 * 
-	 * @param NetappBox
+	 * @param StorageBox
 	 * @return NetappBox
 	 */
-	public NetappBox saveOrUpdate(NetappBox netappBox) {
+	public StorageBox saveOrUpdate(StorageBox netappBox) {
 		return netappBoxDao.save(netappBox);
 	}
 
@@ -87,7 +87,7 @@ public class NetappBoxService extends BasicSevcie {
 	 * @param searchParams
 	 *            动态查询条件Map * @return List<NetappBox>
 	 */
-	public List<NetappBox> getNetappBoxList(Map<String, Object> searchParams) {
+	public List<StorageBox> getNetappBoxList(Map<String, Object> searchParams) {
 		return netappBoxDao.findAll(buildSpecification(searchParams));
 	}
 
@@ -99,11 +99,11 @@ public class NetappBoxService extends BasicSevcie {
 	 * @param pageSize
 	 * @return Page<NetappBox>
 	 */
-	private Page<NetappBox> getNetappBoxPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
+	private Page<StorageBox> getNetappBoxPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
 
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
-		Specification<NetappBox> spec = buildSpecification(searchParams);
+		Specification<StorageBox> spec = buildSpecification(searchParams);
 
 		return netappBoxDao.findAll(spec, pageRequest);
 	}
@@ -116,13 +116,13 @@ public class NetappBoxService extends BasicSevcie {
 	 * @param searchParams
 	 * @return Specification<NetappBox>
 	 */
-	private Specification<NetappBox> buildSpecification(Map<String, Object> searchParams) {
+	private Specification<StorageBox> buildSpecification(Map<String, Object> searchParams) {
 
 		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
 
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 
-		return DynamicSpecifications.bySearchFilter(filters.values(), NetappBox.class);
+		return DynamicSpecifications.bySearchFilter(filters.values(), StorageBox.class);
 	}
 
 	/**
@@ -141,7 +141,7 @@ public class NetappBoxService extends BasicSevcie {
 	public PaginationResult<NetappBoxDTO> getNetappBoxDTOPagination(Map<String, Object> searchParams, int pageNumber,
 			int pageSize) {
 
-		Page<NetappBox> page = getNetappBoxPage(searchParams, pageNumber, pageSize);
+		Page<StorageBox> page = getNetappBoxPage(searchParams, pageNumber, pageSize);
 
 		List<NetappBoxDTO> dtos = BeanMapper.mapList(page.getContent(), NetappBoxDTO.class);
 

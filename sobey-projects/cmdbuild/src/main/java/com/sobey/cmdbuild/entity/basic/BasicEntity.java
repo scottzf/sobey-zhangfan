@@ -1,4 +1,4 @@
-package com.sobey.cmdbuild.entity;
+package com.sobey.cmdbuild.entity.basic;
 
 import java.util.Date;
 
@@ -11,7 +11,7 @@ import javax.persistence.TemporalType;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- * Basic Entity 基本类 所有的entity皆继承该抽象类.
+ * Basic Entity 基本类. 所有的entity皆继承该抽象类,具体参数说明请查看《CMDB属性列表》
  * 
  * <br>
  * 

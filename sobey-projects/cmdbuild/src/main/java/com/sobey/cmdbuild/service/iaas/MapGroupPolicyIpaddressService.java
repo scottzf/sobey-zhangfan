@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
-import com.sobey.cmdbuild.entity.MapGroupPolicyIpaddress;
 import com.sobey.cmdbuild.repository.MapGroupPolicyIpaddressDao;
 import com.sobey.cmdbuild.service.BasicSevcie;
 import com.sobey.core.persistence.DynamicSpecifications;

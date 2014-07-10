@@ -14,7 +14,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
-import com.sobey.cmdbuild.entity.NetappController;
+import com.sobey.cmdbuild.entity.Storage;
 import com.sobey.cmdbuild.webservice.response.dto.NetappControllerDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
@@ -88,7 +88,7 @@ public class NetappControllerSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testCreateNetappController() {
 
-		NetappController netappController = TestData.randomNetappController();
+		Storage netappController = TestData.randomNetappController();
 
 		NetappControllerDTO netappControllerDTO = BeanMapper.map(netappController, NetappControllerDTO.class);
 

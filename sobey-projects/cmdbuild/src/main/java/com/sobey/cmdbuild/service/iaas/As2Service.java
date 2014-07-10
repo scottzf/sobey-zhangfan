@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
-import com.sobey.cmdbuild.entity.As2;
+import com.sobey.cmdbuild.entity.Es3;
 import com.sobey.cmdbuild.repository.As2Dao;
 import com.sobey.cmdbuild.service.BasicSevcie;
 import com.sobey.cmdbuild.webservice.response.dto.As2DTO;
@@ -35,7 +35,7 @@ public class As2Service extends BasicSevcie {
 	 * @param id
 	 * @return As2
 	 */
-	public As2 findAs2(Integer id) {
+	public Es3 findAs2(Integer id) {
 		return as2Dao.findOne(id);
 	}
 
@@ -52,17 +52,17 @@ public class As2Service extends BasicSevcie {
 	 *            动态查询条件Map
 	 * @return As2
 	 */
-	public As2 findAs2(Map<String, Object> searchParams) {
+	public Es3 findAs2(Map<String, Object> searchParams) {
 		return as2Dao.findOne(buildSpecification(searchParams));
 	}
 
 	/**
 	 * 新增、保存对象
 	 * 
-	 * @param As2
+	 * @param Es3
 	 * @return As2
 	 */
-	public As2 saveOrUpdate(As2 as2) {
+	public Es3 saveOrUpdate(Es3 as2) {
 		return as2Dao.save(as2);
 	}
 
@@ -87,7 +87,7 @@ public class As2Service extends BasicSevcie {
 	 * @param searchParams
 	 *            动态查询条件Map * @return List<As2>
 	 */
-	public List<As2> getAs2List(Map<String, Object> searchParams) {
+	public List<Es3> getAs2List(Map<String, Object> searchParams) {
 		return as2Dao.findAll(buildSpecification(searchParams));
 	}
 
@@ -99,11 +99,11 @@ public class As2Service extends BasicSevcie {
 	 * @param pageSize
 	 * @return Page<As2>
 	 */
-	private Page<As2> getAs2Page(Map<String, Object> searchParams, int pageNumber, int pageSize) {
+	private Page<Es3> getAs2Page(Map<String, Object> searchParams, int pageNumber, int pageSize) {
 
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
-		Specification<As2> spec = buildSpecification(searchParams);
+		Specification<Es3> spec = buildSpecification(searchParams);
 
 		return as2Dao.findAll(spec, pageRequest);
 	}
@@ -116,13 +116,13 @@ public class As2Service extends BasicSevcie {
 	 * @param searchParams
 	 * @return Specification<As2>
 	 */
-	private Specification<As2> buildSpecification(Map<String, Object> searchParams) {
+	private Specification<Es3> buildSpecification(Map<String, Object> searchParams) {
 
 		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
 
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 
-		return DynamicSpecifications.bySearchFilter(filters.values(), As2.class);
+		return DynamicSpecifications.bySearchFilter(filters.values(), Es3.class);
 	}
 
 	/**
@@ -140,7 +140,7 @@ public class As2Service extends BasicSevcie {
 	 */
 	public PaginationResult<As2DTO> getAs2DTOPagination(Map<String, Object> searchParams, int pageNumber, int pageSize) {
 
-		Page<As2> page = getAs2Page(searchParams, pageNumber, pageSize);
+		Page<Es3> page = getAs2Page(searchParams, pageNumber, pageSize);
 
 		List<As2DTO> dtos = BeanMapper.mapList(page.getContent(), As2DTO.class);
 

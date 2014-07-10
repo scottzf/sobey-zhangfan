@@ -14,7 +14,6 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
-import com.sobey.cmdbuild.entity.GroupPolicy;
 import com.sobey.cmdbuild.webservice.response.dto.GroupPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;

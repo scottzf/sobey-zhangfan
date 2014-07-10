@@ -5,9 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.sobey.cmdbuild.constants.LookUpConstants;
-import com.sobey.cmdbuild.entity.As2;
-import com.sobey.cmdbuild.entity.Company;
-import com.sobey.cmdbuild.entity.Cs2;
 import com.sobey.cmdbuild.entity.DeviceSpec;
 import com.sobey.cmdbuild.entity.Dns;
 import com.sobey.cmdbuild.entity.Ecs;
@@ -15,29 +12,26 @@ import com.sobey.cmdbuild.entity.EcsSpec;
 import com.sobey.cmdbuild.entity.Eip;
 import com.sobey.cmdbuild.entity.EipSpec;
 import com.sobey.cmdbuild.entity.Elb;
+import com.sobey.cmdbuild.entity.Es3;
 import com.sobey.cmdbuild.entity.Es3Spec;
 import com.sobey.cmdbuild.entity.Esg;
 import com.sobey.cmdbuild.entity.EsgPolicy;
-import com.sobey.cmdbuild.entity.Fimas;
-import com.sobey.cmdbuild.entity.FimasBox;
-import com.sobey.cmdbuild.entity.FimasPort;
 import com.sobey.cmdbuild.entity.Firewall;
 import com.sobey.cmdbuild.entity.FirewallPort;
-import com.sobey.cmdbuild.entity.GroupPolicy;
 import com.sobey.cmdbuild.entity.HardDisk;
 import com.sobey.cmdbuild.entity.Idc;
 import com.sobey.cmdbuild.entity.Ipaddress;
 import com.sobey.cmdbuild.entity.LoadBalancer;
 import com.sobey.cmdbuild.entity.LoadBalancerPort;
 import com.sobey.cmdbuild.entity.Memory;
-import com.sobey.cmdbuild.entity.NetappBox;
-import com.sobey.cmdbuild.entity.NetappController;
-import com.sobey.cmdbuild.entity.NetappPort;
 import com.sobey.cmdbuild.entity.Nic;
 import com.sobey.cmdbuild.entity.NicPort;
 import com.sobey.cmdbuild.entity.Rack;
 import com.sobey.cmdbuild.entity.Server;
 import com.sobey.cmdbuild.entity.ServerPort;
+import com.sobey.cmdbuild.entity.Storage;
+import com.sobey.cmdbuild.entity.StorageBox;
+import com.sobey.cmdbuild.entity.StoragePort;
 import com.sobey.cmdbuild.entity.SwitchPort;
 import com.sobey.cmdbuild.entity.Switches;
 import com.sobey.cmdbuild.entity.Tag;
@@ -337,9 +331,9 @@ public class TestData {
 		return memory;
 	}
 
-	public static NetappBox randomNetappBox() {
+	public static StorageBox randomNetappBox() {
 
-		NetappBox netappBox = new NetappBox();
+		StorageBox netappBox = new StorageBox();
 
 		netappBox.setId(0);
 		netappBox.setCode(RandomData.randomName("code"));
@@ -360,17 +354,17 @@ public class TestData {
 		return netappBox;
 	}
 
-	public static NetappController randomNetappController() {
-		NetappController netappController = new NetappController();
+	public static Storage randomNetappController() {
+		Storage netappController = new Storage();
 		netappController.setId(0);
 		netappController.setCode(RandomData.randomName("code"));
 		netappController.setDescription(RandomData.randomName("description"));
 		return netappController;
 	}
 
-	public static NetappPort randomNetappPort() {
+	public static StoragePort randomNetappPort() {
 
-		NetappPort netappPort = new NetappPort();
+		StoragePort netappPort = new StoragePort();
 
 		netappPort.setId(0);
 		netappPort.setCode(RandomData.randomName("code"));
@@ -482,8 +476,8 @@ public class TestData {
 		return cs2;
 	}
 
-	public static As2 randomAs2() {
-		As2 as2 = new As2();
+	public static Es3 randomAs2() {
+		Es3 as2 = new Es3();
 		as2.setDiskSize(1024);
 		as2.setEs3Spec(0);
 		as2.setIpaddress(0);

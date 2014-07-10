@@ -14,7 +14,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
-import com.sobey.cmdbuild.entity.As2;
+import com.sobey.cmdbuild.entity.Es3;
 import com.sobey.cmdbuild.webservice.response.dto.As2DTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
@@ -85,7 +85,7 @@ public class As2SoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testCreateAs2() {
 
-		As2 as2 = TestData.randomAs2();
+		Es3 as2 = TestData.randomAs2();
 
 		As2DTO as2DTO = BeanMapper.map(as2, As2DTO.class);
 

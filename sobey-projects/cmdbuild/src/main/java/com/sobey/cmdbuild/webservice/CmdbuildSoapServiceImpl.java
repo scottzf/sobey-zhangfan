@@ -16,9 +16,6 @@ import com.sobey.cmdbuild.constants.CMDBuildConstants;
 import com.sobey.cmdbuild.constants.ERROR;
 import com.sobey.cmdbuild.constants.LookUpConstants;
 import com.sobey.cmdbuild.constants.WsConstants;
-import com.sobey.cmdbuild.entity.As2;
-import com.sobey.cmdbuild.entity.Company;
-import com.sobey.cmdbuild.entity.Cs2;
 import com.sobey.cmdbuild.entity.DeviceSpec;
 import com.sobey.cmdbuild.entity.Dns;
 import com.sobey.cmdbuild.entity.DnsPolicy;
@@ -29,40 +26,34 @@ import com.sobey.cmdbuild.entity.EipPolicy;
 import com.sobey.cmdbuild.entity.EipSpec;
 import com.sobey.cmdbuild.entity.Elb;
 import com.sobey.cmdbuild.entity.ElbPolicy;
+import com.sobey.cmdbuild.entity.Es3;
 import com.sobey.cmdbuild.entity.Es3Spec;
 import com.sobey.cmdbuild.entity.Esg;
 import com.sobey.cmdbuild.entity.EsgPolicy;
-import com.sobey.cmdbuild.entity.Fimas;
-import com.sobey.cmdbuild.entity.FimasBox;
-import com.sobey.cmdbuild.entity.FimasPort;
 import com.sobey.cmdbuild.entity.Firewall;
 import com.sobey.cmdbuild.entity.FirewallPort;
-import com.sobey.cmdbuild.entity.GroupPolicy;
 import com.sobey.cmdbuild.entity.HardDisk;
 import com.sobey.cmdbuild.entity.Idc;
 import com.sobey.cmdbuild.entity.Ipaddress;
 import com.sobey.cmdbuild.entity.LoadBalancer;
 import com.sobey.cmdbuild.entity.LoadBalancerPort;
 import com.sobey.cmdbuild.entity.LookUp;
-import com.sobey.cmdbuild.entity.MapEcsAs2;
-import com.sobey.cmdbuild.entity.MapEcsCs2;
+import com.sobey.cmdbuild.entity.Log;
+import com.sobey.cmdbuild.entity.MapEcsEs3;
 import com.sobey.cmdbuild.entity.MapEcsEip;
 import com.sobey.cmdbuild.entity.MapEcsElb;
 import com.sobey.cmdbuild.entity.MapEcsEsg;
 import com.sobey.cmdbuild.entity.MapEipDns;
 import com.sobey.cmdbuild.entity.MapEipElb;
-import com.sobey.cmdbuild.entity.MapGroupPolicyIpaddress;
-import com.sobey.cmdbuild.entity.MapGroupPolicyVlan;
-import com.sobey.cmdbuild.entity.MapVpnGroupPolicy;
 import com.sobey.cmdbuild.entity.Memory;
-import com.sobey.cmdbuild.entity.NetappBox;
-import com.sobey.cmdbuild.entity.NetappController;
-import com.sobey.cmdbuild.entity.NetappPort;
 import com.sobey.cmdbuild.entity.Nic;
 import com.sobey.cmdbuild.entity.NicPort;
 import com.sobey.cmdbuild.entity.Rack;
 import com.sobey.cmdbuild.entity.Server;
 import com.sobey.cmdbuild.entity.ServerPort;
+import com.sobey.cmdbuild.entity.Storage;
+import com.sobey.cmdbuild.entity.StorageBox;
+import com.sobey.cmdbuild.entity.StoragePort;
 import com.sobey.cmdbuild.entity.SwitchPort;
 import com.sobey.cmdbuild.entity.Switches;
 import com.sobey.cmdbuild.entity.Tag;
@@ -2254,7 +2245,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
-			As2 as2 = comm.as2Service.findAs2(id);
+			Es3 as2 = comm.as2Service.findAs2(id);
 
 			Validate.notNull(as2, ERROR.OBJECT_NULL);
 
@@ -2290,7 +2281,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(searchParams, ERROR.INPUT_NULL);
 
-			As2 as2 = comm.as2Service.findAs2(searchParams.getParamsMap());
+			Es3 as2 = comm.as2Service.findAs2(searchParams.getParamsMap());
 
 			Validate.notNull(as2, ERROR.OBJECT_NULL);
 
@@ -2334,9 +2325,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.isTrue(comm.as2Service.findAs2(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
-			As2 as2 = BeanMapper.map(as2DTO, As2.class);
+			Es3 as2 = BeanMapper.map(as2DTO, Es3.class);
 
-			as2.setIdClass(TableNameUtil.getTableName(As2.class));
+			as2.setIdClass(TableNameUtil.getTableName(Es3.class));
 			as2.setUser(DEFAULT_USER);
 			as2.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			as2.setId(0);
@@ -2363,7 +2354,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(as2DTO, ERROR.INPUT_NULL);
 
-			As2 as2 = comm.as2Service.findAs2(id);
+			Es3 as2 = comm.as2Service.findAs2(id);
 
 			Map<String, Object> paramsMap = Maps.newHashMap();
 
@@ -2374,9 +2365,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 					ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
-			BeanMapper.copy(BeanMapper.map(as2DTO, As2.class), as2);
+			BeanMapper.copy(BeanMapper.map(as2DTO, Es3.class), as2);
 
-			as2.setIdClass(TableNameUtil.getTableName(As2.class));
+			as2.setIdClass(TableNameUtil.getTableName(Es3.class));
 			as2.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			as2.setUser(DEFAULT_USER);
 
@@ -2403,11 +2394,11 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
-			As2 as2 = comm.as2Service.findAs2(id);
+			Es3 as2 = comm.as2Service.findAs2(id);
 
 			Validate.notNull(as2, ERROR.OBJECT_NULL);
 
-			as2.setIdClass(TableNameUtil.getTableName(As2.class));
+			as2.setIdClass(TableNameUtil.getTableName(Es3.class));
 			as2.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.as2Service.saveOrUpdate(as2);
@@ -4777,13 +4768,13 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 		try {
 
-			MapEcsAs2 map = new MapEcsAs2();
+			Log map = new Log();
 
 			map.setId(0);
 			map.setIdObj1(ecsId);
 			map.setIdObj2(as2Id);
 			map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
-			map.setIdClass2(TableNameUtil.getTableName(As2.class));
+			map.setIdClass2(TableNameUtil.getTableName(Es3.class));
 			map.setUser(DEFAULT_USER);
 			map.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 
@@ -4812,7 +4803,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			paramsMap.put("EQ_idObj1", ecsId);
 			paramsMap.put("EQ_idObj2", as2Id);
 
-			MapEcsAs2 map = comm.mapEcsAs2Service.findMapEcsAs2(paramsMap);
+			Log map = comm.mapEcsAs2Service.findMapEcsAs2(paramsMap);
 
 			Validate.notNull(map, ERROR.OBJECT_NULL);
 
@@ -4836,7 +4827,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 		try {
 
-			MapEcsCs2 map = new MapEcsCs2();
+			MapEcsEs3 map = new MapEcsEs3();
 
 			map.setId(0);
 			map.setIdObj1(ecsId);
@@ -4871,7 +4862,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			paramsMap.put("EQ_idObj1", ecsId);
 			paramsMap.put("EQ_idObj2", cs2Id);
 
-			MapEcsCs2 map = comm.mapEcsCs2Service.findMapEcsCs2(paramsMap);
+			MapEcsEs3 map = comm.mapEcsCs2Service.findMapEcsCs2(paramsMap);
 
 			Validate.notNull(map, ERROR.OBJECT_NULL);
 
@@ -7517,7 +7508,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
-			NetappBox netappBox = comm.netappBoxService.findNetappBox(id);
+			StorageBox netappBox = comm.netappBoxService.findNetappBox(id);
 
 			Validate.notNull(netappBox, ERROR.OBJECT_NULL);
 
@@ -7553,7 +7544,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(searchParams, ERROR.INPUT_NULL);
 
-			NetappBox netappBox = comm.netappBoxService.findNetappBox(searchParams.getParamsMap());
+			StorageBox netappBox = comm.netappBoxService.findNetappBox(searchParams.getParamsMap());
 
 			Validate.notNull(netappBox, ERROR.OBJECT_NULL);
 
@@ -7597,10 +7588,10 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.isTrue(comm.netappBoxService.findNetappBox(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
-			NetappBox netappBox = BeanMapper.map(netappBoxDTO, NetappBox.class);
+			StorageBox netappBox = BeanMapper.map(netappBoxDTO, StorageBox.class);
 
 			netappBox.setUser(DEFAULT_USER);
-			netappBox.setIdClass(TableNameUtil.getTableName(NetappBox.class));
+			netappBox.setIdClass(TableNameUtil.getTableName(StorageBox.class));
 			netappBox.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			netappBox.setId(0);
 
@@ -7627,7 +7618,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(netappBoxDTO, ERROR.INPUT_NULL);
 
-			NetappBox netappBox = comm.netappBoxService.findNetappBox(id);
+			StorageBox netappBox = comm.netappBoxService.findNetappBox(id);
 
 			Map<String, Object> paramsMap = Maps.newHashMap();
 
@@ -7639,9 +7630,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 							|| netappBox.getCode().equals(netappBoxDTO.getCode()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
-			BeanMapper.copy(BeanMapper.map(netappBoxDTO, NetappBox.class), netappBox);
+			BeanMapper.copy(BeanMapper.map(netappBoxDTO, StorageBox.class), netappBox);
 
-			netappBox.setIdClass(TableNameUtil.getTableName(NetappBox.class));
+			netappBox.setIdClass(TableNameUtil.getTableName(StorageBox.class));
 			netappBox.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			netappBox.setUser(DEFAULT_USER);
 
@@ -7668,11 +7659,11 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
-			NetappBox netappBox = comm.netappBoxService.findNetappBox(id);
+			StorageBox netappBox = comm.netappBoxService.findNetappBox(id);
 
 			Validate.notNull(netappBox, ERROR.OBJECT_NULL);
 
-			netappBox.setIdClass(TableNameUtil.getTableName(NetappBox.class));
+			netappBox.setIdClass(TableNameUtil.getTableName(StorageBox.class));
 			netappBox.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.netappBoxService.saveOrUpdate(netappBox);
@@ -7732,7 +7723,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
-			NetappController netappController = comm.netappControllerService.findNetappController(id);
+			Storage netappController = comm.netappControllerService.findNetappController(id);
 
 			Validate.notNull(netappController, ERROR.OBJECT_NULL);
 
@@ -7765,8 +7756,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(searchParams, ERROR.INPUT_NULL);
 
-			NetappController netappController = comm.netappControllerService.findNetappController(searchParams
-					.getParamsMap());
+			Storage netappController = comm.netappControllerService.findNetappController(searchParams.getParamsMap());
 
 			Validate.notNull(netappController, ERROR.OBJECT_NULL);
 
@@ -7808,11 +7798,11 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Validate.isTrue(comm.netappControllerService.findNetappController(paramsMap) == null,
 					ERROR.OBJECT_DUPLICATE);
 
-			NetappController netappController = BeanMapper.map(netappControllerDTO, NetappController.class);
+			Storage netappController = BeanMapper.map(netappControllerDTO, Storage.class);
 
 			netappController.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			netappController.setUser(DEFAULT_USER);
-			netappController.setIdClass(TableNameUtil.getTableName(NetappController.class));
+			netappController.setIdClass(TableNameUtil.getTableName(Storage.class));
 			netappController.setId(0);
 
 			BeanValidators.validateWithException(validator, netappController);
@@ -7838,7 +7828,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(netappControllerDTO, ERROR.INPUT_NULL);
 
-			NetappController netappController = comm.netappControllerService.findNetappController(id);
+			Storage netappController = comm.netappControllerService.findNetappController(id);
 
 			Map<String, Object> paramsMap = Maps.newHashMap();
 
@@ -7849,9 +7839,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 					|| netappController.getCode().equals(netappControllerDTO.getCode()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
-			BeanMapper.copy(BeanMapper.map(netappControllerDTO, NetappController.class), netappController);
+			BeanMapper.copy(BeanMapper.map(netappControllerDTO, Storage.class), netappController);
 
-			netappController.setIdClass(TableNameUtil.getTableName(NetappController.class));
+			netappController.setIdClass(TableNameUtil.getTableName(Storage.class));
 			netappController.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			netappController.setUser(DEFAULT_USER);
 
@@ -7878,11 +7868,11 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
-			NetappController netappController = comm.netappControllerService.findNetappController(id);
+			Storage netappController = comm.netappControllerService.findNetappController(id);
 
 			Validate.notNull(netappController, ERROR.OBJECT_NULL);
 
-			netappController.setIdClass(TableNameUtil.getTableName(NetappController.class));
+			netappController.setIdClass(TableNameUtil.getTableName(Storage.class));
 
 			netappController.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
@@ -7946,7 +7936,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
-			NetappPort netappPort = comm.netappPortService.findNetappPort(id);
+			StoragePort netappPort = comm.netappPortService.findNetappPort(id);
 
 			Validate.notNull(netappPort, ERROR.OBJECT_NULL);
 
@@ -7977,7 +7967,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(searchParams, ERROR.INPUT_NULL);
 
-			NetappPort netappPort = comm.netappPortService.findNetappPort(searchParams.getParamsMap());
+			StoragePort netappPort = comm.netappPortService.findNetappPort(searchParams.getParamsMap());
 
 			Validate.notNull(netappPort, ERROR.OBJECT_NULL);
 
@@ -8016,11 +8006,11 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.isTrue(comm.netappPortService.findNetappPort(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
-			NetappPort netappPort = BeanMapper.map(netappPortDTO, NetappPort.class);
+			StoragePort netappPort = BeanMapper.map(netappPortDTO, StoragePort.class);
 
 			netappPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			netappPort.setUser(DEFAULT_USER);
-			netappPort.setIdClass(TableNameUtil.getTableName(NetappPort.class));
+			netappPort.setIdClass(TableNameUtil.getTableName(StoragePort.class));
 			netappPort.setId(0);
 
 			BeanValidators.validateWithException(validator, netappPort);
@@ -8046,7 +8036,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(netappPortDTO, ERROR.INPUT_NULL);
 
-			NetappPort netappPort = comm.netappPortService.findNetappPort(id);
+			StoragePort netappPort = comm.netappPortService.findNetappPort(id);
 
 			Map<String, Object> paramsMap = Maps.newHashMap();
 
@@ -8058,9 +8048,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 							|| netappPort.getCode().equals(netappPortDTO.getCode()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
-			BeanMapper.copy(BeanMapper.map(netappPortDTO, NetappPort.class), netappPort);
+			BeanMapper.copy(BeanMapper.map(netappPortDTO, StoragePort.class), netappPort);
 
-			netappPort.setIdClass(TableNameUtil.getTableName(NetappPort.class));
+			netappPort.setIdClass(TableNameUtil.getTableName(StoragePort.class));
 			netappPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
 			netappPort.setUser(DEFAULT_USER);
 
@@ -8087,11 +8077,11 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
-			NetappPort netappPort = comm.netappPortService.findNetappPort(id);
+			StoragePort netappPort = comm.netappPortService.findNetappPort(id);
 
 			Validate.notNull(netappPort, ERROR.OBJECT_NULL);
 
-			netappPort.setIdClass(TableNameUtil.getTableName(NetappPort.class));
+			netappPort.setIdClass(TableNameUtil.getTableName(StoragePort.class));
 
 			netappPort.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 

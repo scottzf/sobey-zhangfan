@@ -1,17 +1,25 @@
-package com.sobey.cmdbuild.entity;
+package com.sobey.cmdbuild.entity.basic;
 
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-@Entity
-@Table(name = "\"Map_groupPolicy_ipaddress\"", schema = "public")
-public class MapGroupPolicyIpaddress {
+/**
+ * Map的基本Entity
+ * 
+ * <p>
+ * 多对多映射关系的中间表
+ * </p>
+ * 
+ * @author Administrator
+ *
+ */
+@MappedSuperclass
+public abstract class MapBasic {
 
 	protected Integer id;
 	protected String idClass1;

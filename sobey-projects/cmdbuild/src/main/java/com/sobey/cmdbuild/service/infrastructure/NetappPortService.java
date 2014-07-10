@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
-import com.sobey.cmdbuild.entity.NetappPort;
+import com.sobey.cmdbuild.entity.StoragePort;
 import com.sobey.cmdbuild.repository.NetappPortDao;
 import com.sobey.cmdbuild.service.BasicSevcie;
 import com.sobey.cmdbuild.webservice.response.dto.NetappPortDTO;
@@ -35,7 +35,7 @@ public class NetappPortService extends BasicSevcie {
 	 * @param id
 	 * @return NetappPort
 	 */
-	public NetappPort findNetappPort(Integer id) {
+	public StoragePort findNetappPort(Integer id) {
 		return netappPortDao.findOne(id);
 	}
 
@@ -52,17 +52,17 @@ public class NetappPortService extends BasicSevcie {
 	 *            动态查询条件Map
 	 * @return NetappPort
 	 */
-	public NetappPort findNetappPort(Map<String, Object> searchParams) {
+	public StoragePort findNetappPort(Map<String, Object> searchParams) {
 		return netappPortDao.findOne(buildSpecification(searchParams));
 	}
 
 	/**
 	 * 新增、保存对象
 	 * 
-	 * @param NetappPort
+	 * @param StoragePort
 	 * @return NetappPort
 	 */
-	public NetappPort saveOrUpdate(NetappPort netappPort) {
+	public StoragePort saveOrUpdate(StoragePort netappPort) {
 		return netappPortDao.save(netappPort);
 	}
 
@@ -87,7 +87,7 @@ public class NetappPortService extends BasicSevcie {
 	 * @param searchParams
 	 *            动态查询条件Map * @return List<NetappPort>
 	 */
-	public List<NetappPort> getNetappPortList(Map<String, Object> searchParams) {
+	public List<StoragePort> getNetappPortList(Map<String, Object> searchParams) {
 		return netappPortDao.findAll(buildSpecification(searchParams));
 	}
 
@@ -99,11 +99,11 @@ public class NetappPortService extends BasicSevcie {
 	 * @param pageSize
 	 * @return Page<NetappPort>
 	 */
-	private Page<NetappPort> getNetappPortPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
+	private Page<StoragePort> getNetappPortPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
 
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
-		Specification<NetappPort> spec = buildSpecification(searchParams);
+		Specification<StoragePort> spec = buildSpecification(searchParams);
 
 		return netappPortDao.findAll(spec, pageRequest);
 	}
@@ -116,13 +116,13 @@ public class NetappPortService extends BasicSevcie {
 	 * @param searchParams
 	 * @return Specification<NetappPort>
 	 */
-	private Specification<NetappPort> buildSpecification(Map<String, Object> searchParams) {
+	private Specification<StoragePort> buildSpecification(Map<String, Object> searchParams) {
 
 		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
 
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 
-		return DynamicSpecifications.bySearchFilter(filters.values(), NetappPort.class);
+		return DynamicSpecifications.bySearchFilter(filters.values(), StoragePort.class);
 	}
 
 	/**
@@ -141,7 +141,7 @@ public class NetappPortService extends BasicSevcie {
 	public PaginationResult<NetappPortDTO> getNetappPortDTOPagination(Map<String, Object> searchParams, int pageNumber,
 			int pageSize) {
 
-		Page<NetappPort> page = getNetappPortPage(searchParams, pageNumber, pageSize);
+		Page<StoragePort> page = getNetappPortPage(searchParams, pageNumber, pageSize);
 
 		List<NetappPortDTO> dtos = BeanMapper.mapList(page.getContent(), NetappPortDTO.class);
 

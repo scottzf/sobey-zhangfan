@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import com.sobey.cmdbuild.entity.basic.BasicEntity;
+
 @Entity
 @Table(name = "\"LookUp\"", schema = "public")
 public class LookUp extends BasicEntity {

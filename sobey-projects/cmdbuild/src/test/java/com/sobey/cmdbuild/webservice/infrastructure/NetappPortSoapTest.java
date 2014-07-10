@@ -14,7 +14,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
-import com.sobey.cmdbuild.entity.NetappPort;
+import com.sobey.cmdbuild.entity.StoragePort;
 import com.sobey.cmdbuild.webservice.response.dto.NetappPortDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
@@ -85,7 +85,7 @@ public class NetappPortSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testCreateNetappPort() {
 
-		NetappPort netappPort = TestData.randomNetappPort();
+		StoragePort netappPort = TestData.randomNetappPort();
 
 		NetappPortDTO netappPortDTO = BeanMapper.map(netappPort, NetappPortDTO.class);
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
-import com.sobey.cmdbuild.entity.MapEcsAs2;
+import com.sobey.cmdbuild.entity.Log;
 import com.sobey.cmdbuild.repository.MapEcsAs2Dao;
 import com.sobey.cmdbuild.service.BasicSevcie;
 import com.sobey.core.persistence.DynamicSpecifications;
@@ -31,7 +31,7 @@ public class MapEcsAs2Service extends BasicSevcie {
 	 * @param id
 	 * @return MapEcsAs2
 	 */
-	public MapEcsAs2 findMapEcsAs2(Integer id) {
+	public Log findMapEcsAs2(Integer id) {
 		return mapEcsAs2Dao.findOne(id);
 	}
 
@@ -48,17 +48,17 @@ public class MapEcsAs2Service extends BasicSevcie {
 	 *            动态查询条件Map
 	 * @return MapEcsAs2
 	 */
-	public MapEcsAs2 findMapEcsAs2(Map<String, Object> searchParams) {
+	public Log findMapEcsAs2(Map<String, Object> searchParams) {
 		return mapEcsAs2Dao.findOne(buildSpecification(searchParams));
 	}
 
 	/**
 	 * 新增、保存对象
 	 * 
-	 * @param MapEcsAs2
+	 * @param Log
 	 * @return MapEcsAs2
 	 */
-	public MapEcsAs2 saveOrUpdate(MapEcsAs2 mapEcsAs2) {
+	public Log saveOrUpdate(Log mapEcsAs2) {
 		return mapEcsAs2Dao.save(mapEcsAs2);
 	}
 
@@ -84,7 +84,7 @@ public class MapEcsAs2Service extends BasicSevcie {
 	 *            动态查询条件Map
 	 * @return List<MapEcsAs2>
 	 */
-	public List<MapEcsAs2> getMapEcsAs2List(Map<String, Object> searchParams) {
+	public List<Log> getMapEcsAs2List(Map<String, Object> searchParams) {
 		return mapEcsAs2Dao.findAll(buildSpecification(searchParams));
 	}
 
@@ -96,13 +96,13 @@ public class MapEcsAs2Service extends BasicSevcie {
 	 * @param searchParams
 	 * @return Specification<MapEcsAs2>
 	 */
-	private Specification<MapEcsAs2> buildSpecification(Map<String, Object> searchParams) {
+	private Specification<Log> buildSpecification(Map<String, Object> searchParams) {
 
 		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
 
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 
-		return DynamicSpecifications.bySearchFilter(filters.values(), MapEcsAs2.class);
+		return DynamicSpecifications.bySearchFilter(filters.values(), Log.class);
 	}
 
 }

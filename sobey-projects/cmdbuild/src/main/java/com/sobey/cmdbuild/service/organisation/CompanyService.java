@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
-import com.sobey.cmdbuild.entity.Company;
 import com.sobey.cmdbuild.repository.CompanyDao;
 import com.sobey.cmdbuild.service.BasicSevcie;
 import com.sobey.cmdbuild.webservice.response.dto.CompanyDTO;
