@@ -483,6 +483,16 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteMapEipDns(@WebParam(name = "eipId") Integer eipId, @WebParam(name = "dnsId") Integer dnsId);
 
+	// ==============================//
+	// ======= MapTagService ========//
+	// ==============================//
+
+	IdResult createMapTagService(@WebParam(name = "tagId") Integer tagId,
+			@WebParam(name = "serviceId") Integer serviceId);
+
+	IdResult deleteMapTagService(@WebParam(name = "tagId") Integer tagId,
+			@WebParam(name = "serviceId") Integer serviceId);
+
 	/*************************************************
 	 *************** Infrastructure ******************
 	 *************************************************/
