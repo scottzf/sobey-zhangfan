@@ -14,7 +14,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
-import com.sobey.cmdbuild.webservice.response.dto.Cs2DTO;
+import com.sobey.cmdbuild.webservice.response.dto.LogDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
@@ -52,13 +52,13 @@ public class Cs2SoapTest extends BaseFunctionalTestCase {
 		paramsMap.put("EQ_code", code);
 		searchParams.setParamsMap(paramsMap);
 
-		DTOResult<Cs2DTO> responseParams = cmdbuildSoapService.findCs2ByParams(searchParams);
+		DTOResult<LogDTO> responseParams = cmdbuildSoapService.findCs2ByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<Cs2DTO> response = cmdbuildSoapService.findCs2(id);
+		DTOResult<LogDTO> response = cmdbuildSoapService.findCs2(id);
 
 		assertNotNull(response);
 
@@ -72,7 +72,7 @@ public class Cs2SoapTest extends BaseFunctionalTestCase {
 
 		SearchParams searchParams = new SearchParams();
 
-		DTOListResult<Cs2DTO> result = cmdbuildSoapService.getCs2List(searchParams);
+		DTOListResult<LogDTO> result = cmdbuildSoapService.getCs2List(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -86,7 +86,7 @@ public class Cs2SoapTest extends BaseFunctionalTestCase {
 
 		Cs2 cs2 = TestData.randomCs2();
 
-		Cs2DTO cs2DTO = BeanMapper.map(cs2, Cs2DTO.class);
+		LogDTO cs2DTO = BeanMapper.map(cs2, LogDTO.class);
 
 		IdResult response = cmdbuildSoapService.createCs2(cs2DTO);
 
@@ -100,9 +100,9 @@ public class Cs2SoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateCs2() {
 
-		DTOResult<Cs2DTO> response = cmdbuildSoapService.findCs2(id);
+		DTOResult<LogDTO> response = cmdbuildSoapService.findCs2(id);
 
-		Cs2DTO cs2DTO = response.getDto();
+		LogDTO cs2DTO = response.getDto();
 
 		cs2DTO.setCode(RandomData.randomName("code"));
 
@@ -130,7 +130,7 @@ public class Cs2SoapTest extends BaseFunctionalTestCase {
 
 		SearchParams searchParams = new SearchParams();
 
-		PaginationResult<Cs2DTO> result = cmdbuildSoapService.getCs2Pagination(searchParams, 1, 10);
+		PaginationResult<LogDTO> result = cmdbuildSoapService.getCs2Pagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

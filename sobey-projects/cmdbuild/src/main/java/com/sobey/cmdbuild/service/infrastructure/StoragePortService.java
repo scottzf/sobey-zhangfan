@@ -11,24 +11,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
-import com.sobey.cmdbuild.entity.Ipaddress;
-import com.sobey.cmdbuild.repository.IpaddressDao;
+import com.sobey.cmdbuild.entity.StoragePort;
+import com.sobey.cmdbuild.repository.StoragePortDao;
 import com.sobey.cmdbuild.service.BasicSevcie;
-import com.sobey.cmdbuild.webservice.response.dto.IpaddressDTO;
+import com.sobey.cmdbuild.webservice.response.dto.StoragePortDTO;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.core.mapper.BeanMapper;
 import com.sobey.core.persistence.DynamicSpecifications;
 import com.sobey.core.persistence.SearchFilter;
 
 /**
- * Ipaddress的service类.
+ * StoragePort的service类.
  */
 @Service
 @Transactional
-public class IpaddressService extends BasicSevcie {
-	
+public class StoragePortService extends BasicSevcie {
+
 	@Autowired
-	private IpaddressDao ipaddressDao;
+	private StoragePortDao storagePortDao;
 
 	/**
 	 * 创建动态查询条件组合.
@@ -36,15 +36,15 @@ public class IpaddressService extends BasicSevcie {
 	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
 	 * 
 	 * @param searchParams
-	 * @return Specification<Ipaddress>
+	 * @return Specification<StoragePort>
 	 */
-	private Specification<Ipaddress> buildSpecification(Map<String, Object> searchParams) {
+	private Specification<StoragePort> buildSpecification(Map<String, Object> searchParams) {
 
 		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
 
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 
-		return DynamicSpecifications.bySearchFilter(filters.values(), Ipaddress.class);
+		return DynamicSpecifications.bySearchFilter(filters.values(), StoragePort.class);
 	}
 
 	/**
@@ -52,18 +52,18 @@ public class IpaddressService extends BasicSevcie {
 	 * 
 	 * @param id
 	 */
-	public void deleteIpaddress(Integer id) {
-		ipaddressDao.delete(id);
+	public void deleteStoragePort(Integer id) {
+		storagePortDao.delete(id);
 	}
 
 	/**
 	 * 根据ID获得对象
 	 * 
 	 * @param id
-	 * @return Ipaddress
+	 * @return StoragePort
 	 */
-	public Ipaddress findIpaddress(Integer id) {
-		return ipaddressDao.findOne(id);
+	public StoragePort findStoragePort(Integer id) {
+		return storagePortDao.findOne(id);
 	}
 
 	/**
@@ -77,14 +77,14 @@ public class IpaddressService extends BasicSevcie {
 	 * 
 	 * @param searchParams
 	 *            动态查询条件Map
-	 * @return Ipaddress
+	 * @return StoragePort
 	 */
-	public Ipaddress findIpaddress(Map<String, Object> searchParams) {
-		return ipaddressDao.findOne(buildSpecification(searchParams));
+	public StoragePort findStoragePort(Map<String, Object> searchParams) {
+		return storagePortDao.findOne(buildSpecification(searchParams));
 	}
 
 	/**
-	 * IpaddressDTO webservice分页查询.
+	 * StoragePortDTO webservice分页查询.
 	 * 
 	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
 	 * 
@@ -94,14 +94,14 @@ public class IpaddressService extends BasicSevcie {
 	 *            当前页数,最小为1.
 	 * @param pageSize
 	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<IpaddressDTO>
+	 * @return PaginationResult<StoragePortDTO>
 	 */
-	public PaginationResult<IpaddressDTO> getIpaddressDTOPagination(Map<String, Object> searchParams, int pageNumber,
-			int pageSize) {
+	public PaginationResult<StoragePortDTO> getStoragePortDTOPagination(Map<String, Object> searchParams,
+			int pageNumber, int pageSize) {
 
-		Page<Ipaddress> page = getIpaddressPage(searchParams, pageNumber, pageSize);
+		Page<StoragePort> page = getStoragePortPage(searchParams, pageNumber, pageSize);
 
-		List<IpaddressDTO> dtos = BeanMapper.mapList(page.getContent(), IpaddressDTO.class);
+		List<StoragePortDTO> dtos = BeanMapper.mapList(page.getContent(), StoragePortDTO.class);
 
 		return fillPaginationResult(page, dtos);
 	}
@@ -117,10 +117,10 @@ public class IpaddressService extends BasicSevcie {
 	 * 
 	 * @param searchParams
 	 *            动态查询条件Map
-	 * @return List<Ipaddress>
+	 * @return List<StoragePort>
 	 */
-	public List<Ipaddress> getIpaddressList(Map<String, Object> searchParams) {
-		return ipaddressDao.findAll(buildSpecification(searchParams));
+	public List<StoragePort> getStoragePortList(Map<String, Object> searchParams) {
+		return storagePortDao.findAll(buildSpecification(searchParams));
 	}
 
 	/**
@@ -129,28 +129,24 @@ public class IpaddressService extends BasicSevcie {
 	 * @param searchParams
 	 * @param pageNumber
 	 * @param pageSize
-	 * @return Page<Ipaddress>
+	 * @return Page<StoragePort>
 	 */
-	private Page<Ipaddress> getIpaddressPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
+	private Page<StoragePort> getStoragePortPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
 
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
-		Specification<Ipaddress> spec = buildSpecification(searchParams);
+		Specification<StoragePort> spec = buildSpecification(searchParams);
 
-		return ipaddressDao.findAll(spec, pageRequest);
-	}
-
-	public Iterable<Ipaddress> saveAll(List<Ipaddress> ipaddresses) {
-		return ipaddressDao.save(ipaddresses);
+		return storagePortDao.findAll(spec, pageRequest);
 	}
 
 	/**
 	 * 新增、保存对象
 	 * 
-	 * @param Ipaddress
-	 * @return Ipaddress
+	 * @param StoragePort
+	 * @return StoragePort
 	 */
-	public Ipaddress saveOrUpdate(Ipaddress ipaddress) {
-		return ipaddressDao.save(ipaddress);
+	public StoragePort saveOrUpdate(StoragePort StoragePort) {
+		return storagePortDao.save(StoragePort);
 	}
 }

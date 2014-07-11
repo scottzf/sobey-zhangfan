@@ -26,8 +26,35 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class EipService extends BasicSevcie {
+
 	@Autowired
 	private EipDao eipDao;
+
+	/**
+	 * 创建动态查询条件组合.
+	 * 
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
+	 * 
+	 * @param searchParams
+	 * @return Specification<Eip>
+	 */
+	private Specification<Eip> buildSpecification(Map<String, Object> searchParams) {
+
+		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), Eip.class);
+	}
+
+	/**
+	 * 根据ID删除对象
+	 * 
+	 * @param id
+	 */
+	public void deleteEip(Integer id) {
+		eipDao.delete(id);
+	}
 
 	/**
 	 * 根据ID获得对象
@@ -57,22 +84,25 @@ public class EipService extends BasicSevcie {
 	}
 
 	/**
-	 * 新增、保存对象
+	 * EipDTO webservice分页查询.
 	 * 
-	 * @param Eip
-	 * @return Eip
+	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
+	 * 
+	 * @param searchParams
+	 *            查询语句Map.
+	 * @param pageNumber
+	 *            当前页数,最小为1.
+	 * @param pageSize
+	 *            当前页大小,如每页为10行
+	 * @return PaginationResult<EipDTO>
 	 */
-	public Eip saveOrUpdate(Eip eip) {
-		return eipDao.save(eip);
-	}
+	public PaginationResult<EipDTO> getEipDTOPagination(Map<String, Object> searchParams, int pageNumber, int pageSize) {
 
-	/**
-	 * 根据ID删除对象
-	 * 
-	 * @param id
-	 */
-	public void deleteEip(Integer id) {
-		eipDao.delete(id);
+		Page<Eip> page = getEipPage(searchParams, pageNumber, pageSize);
+
+		List<EipDTO> dtos = BeanMapper.mapList(page.getContent(), EipDTO.class);
+
+		return fillPaginationResult(page, dtos);
 	}
 
 	/**
@@ -85,7 +115,8 @@ public class EipService extends BasicSevcie {
 	 * </pre>
 	 * 
 	 * @param searchParams
-	 *            动态查询条件Map * @return List<Eip>
+	 *            动态查询条件Map
+	 * @return List<Eip>
 	 */
 	public List<Eip> getEipList(Map<String, Object> searchParams) {
 		return eipDao.findAll(buildSpecification(searchParams));
@@ -109,41 +140,12 @@ public class EipService extends BasicSevcie {
 	}
 
 	/**
-	 * 创建动态查询条件组合.
+	 * 新增、保存对象
 	 * 
-	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
-	 * 
-	 * @param searchParams
-	 * @return Specification<Eip>
+	 * @param Eip
+	 * @return Eip
 	 */
-	private Specification<Eip> buildSpecification(Map<String, Object> searchParams) {
-
-		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
-
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-
-		return DynamicSpecifications.bySearchFilter(filters.values(), Eip.class);
-	}
-
-	/**
-	 * EipDTO webservice分页查询.
-	 * 
-	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
-	 * 
-	 * @param searchParams
-	 *            查询语句Map.
-	 * @param pageNumber
-	 *            当前页数,最小为1.
-	 * @param pageSize
-	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<EipDTO>
-	 */
-	public PaginationResult<EipDTO> getEipDTOPagination(Map<String, Object> searchParams, int pageNumber, int pageSize) {
-
-		Page<Eip> page = getEipPage(searchParams, pageNumber, pageSize);
-
-		List<EipDTO> dtos = BeanMapper.mapList(page.getContent(), EipDTO.class);
-
-		return fillPaginationResult(page, dtos);
+	public Eip saveOrUpdate(Eip eip) {
+		return eipDao.save(eip);
 	}
 }

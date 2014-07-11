@@ -15,7 +15,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
 import com.sobey.cmdbuild.entity.StorageBox;
-import com.sobey.cmdbuild.webservice.response.dto.NetappBoxDTO;
+import com.sobey.cmdbuild.webservice.response.dto.StorageBoxDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
@@ -53,13 +53,13 @@ public class NetappBoxSoapTest extends BaseFunctionalTestCase {
 		paramsMap.put("EQ_code", code);
 		searchParams.setParamsMap(paramsMap);
 
-		DTOResult<NetappBoxDTO> responseParams = cmdbuildSoapService.findNetappBoxByParams(searchParams);
+		DTOResult<StorageBoxDTO> responseParams = cmdbuildSoapService.findNetappBoxByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<NetappBoxDTO> response = cmdbuildSoapService.findNetappBox(id);
+		DTOResult<StorageBoxDTO> response = cmdbuildSoapService.findNetappBox(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class NetappBoxSoapTest extends BaseFunctionalTestCase {
 
 		SearchParams searchParams = new SearchParams();
 
-		DTOListResult<NetappBoxDTO> result = cmdbuildSoapService.getNetappBoxList(searchParams);
+		DTOListResult<StorageBoxDTO> result = cmdbuildSoapService.getNetappBoxList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -87,7 +87,7 @@ public class NetappBoxSoapTest extends BaseFunctionalTestCase {
 
 		StorageBox netappBox = TestData.randomNetappBox();
 
-		NetappBoxDTO netappBoxDTO = BeanMapper.map(netappBox, NetappBoxDTO.class);
+		StorageBoxDTO netappBoxDTO = BeanMapper.map(netappBox, StorageBoxDTO.class);
 
 		IdResult response = cmdbuildSoapService.createNetappBox(netappBoxDTO);
 
@@ -101,9 +101,9 @@ public class NetappBoxSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateNetappBox() {
 
-		DTOResult<NetappBoxDTO> response = cmdbuildSoapService.findNetappBox(id);
+		DTOResult<StorageBoxDTO> response = cmdbuildSoapService.findNetappBox(id);
 
-		NetappBoxDTO netappBoxDTO = response.getDto();
+		StorageBoxDTO netappBoxDTO = response.getDto();
 
 		netappBoxDTO.setCode(RandomData.randomName("code"));
 
@@ -131,7 +131,7 @@ public class NetappBoxSoapTest extends BaseFunctionalTestCase {
 
 		SearchParams searchParams = new SearchParams();
 
-		PaginationResult<NetappBoxDTO> result = cmdbuildSoapService.getNetappBoxPagination(searchParams, 1, 10);
+		PaginationResult<StorageBoxDTO> result = cmdbuildSoapService.getNetappBoxPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

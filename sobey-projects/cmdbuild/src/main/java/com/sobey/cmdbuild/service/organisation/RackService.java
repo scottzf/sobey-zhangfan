@@ -26,8 +26,35 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class RackService extends BasicSevcie {
+
 	@Autowired
 	private RackDao rackDao;
+
+	/**
+	 * 创建动态查询条件组合.
+	 * 
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
+	 * 
+	 * @param searchParams
+	 * @return Specification<Rack>
+	 */
+	private Specification<Rack> buildSpecification(Map<String, Object> searchParams) {
+
+		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), Rack.class);
+	}
+
+	/**
+	 * 根据ID删除对象
+	 * 
+	 * @param id
+	 */
+	public void deleteRack(Integer id) {
+		rackDao.delete(id);
+	}
 
 	/**
 	 * 根据ID获得对象
@@ -57,22 +84,25 @@ public class RackService extends BasicSevcie {
 	}
 
 	/**
-	 * 新增、保存对象
+	 * RackDTO webservice分页查询.
 	 * 
-	 * @param Rack
-	 * @return Rack
+	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
+	 * 
+	 * @param searchParams
+	 *            查询语句Map.
+	 * @param pageNumber
+	 *            当前页数,最小为1.
+	 * @param pageSize
+	 *            当前页大小,如每页为10行
+	 * @return PaginationResult<RackDTO>
 	 */
-	public Rack saveOrUpdate(Rack rack) {
-		return rackDao.save(rack);
-	}
+	public PaginationResult<RackDTO> getRackDTOPagination(Map<String, Object> searchParams, int pageNumber, int pageSize) {
 
-	/**
-	 * 根据ID删除对象
-	 * 
-	 * @param id
-	 */
-	public void deleteRack(Integer id) {
-		rackDao.delete(id);
+		Page<Rack> page = getRackPage(searchParams, pageNumber, pageSize);
+
+		List<RackDTO> dtos = BeanMapper.mapList(page.getContent(), RackDTO.class);
+
+		return fillPaginationResult(page, dtos);
 	}
 
 	/**
@@ -85,7 +115,8 @@ public class RackService extends BasicSevcie {
 	 * </pre>
 	 * 
 	 * @param searchParams
-	 *            动态查询条件Map * @return List<Rack>
+	 *            动态查询条件Map
+	 * @return List<Rack>
 	 */
 	public List<Rack> getRackList(Map<String, Object> searchParams) {
 		return rackDao.findAll(buildSpecification(searchParams));
@@ -109,41 +140,12 @@ public class RackService extends BasicSevcie {
 	}
 
 	/**
-	 * 创建动态查询条件组合.
+	 * 新增、保存对象
 	 * 
-	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
-	 * 
-	 * @param searchParams
-	 * @return Specification<Rack>
+	 * @param Rack
+	 * @return Rack
 	 */
-	private Specification<Rack> buildSpecification(Map<String, Object> searchParams) {
-
-		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
-
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-
-		return DynamicSpecifications.bySearchFilter(filters.values(), Rack.class);
-	}
-
-	/**
-	 * RackDTO webservice分页查询.
-	 * 
-	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
-	 * 
-	 * @param searchParams
-	 *            查询语句Map.
-	 * @param pageNumber
-	 *            当前页数,最小为1.
-	 * @param pageSize
-	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<RackDTO>
-	 */
-	public PaginationResult<RackDTO> getRackDTOPagination(Map<String, Object> searchParams, int pageNumber, int pageSize) {
-
-		Page<Rack> page = getRackPage(searchParams, pageNumber, pageSize);
-
-		List<RackDTO> dtos = BeanMapper.mapList(page.getContent(), RackDTO.class);
-
-		return fillPaginationResult(page, dtos);
+	public Rack saveOrUpdate(Rack rack) {
+		return rackDao.save(rack);
 	}
 }

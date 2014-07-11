@@ -31,6 +31,32 @@ public class DnsPolicyService extends BasicSevcie {
 	private DnsPolicyDao dnsPolicyDao;
 
 	/**
+	 * 创建动态查询条件组合.
+	 * 
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
+	 * 
+	 * @param searchParams
+	 * @return Specification<DnsPolicy>
+	 */
+	private Specification<DnsPolicy> buildSpecification(Map<String, Object> searchParams) {
+
+		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), DnsPolicy.class);
+	}
+
+	/**
+	 * 根据ID删除对象
+	 * 
+	 * @param id
+	 */
+	public void deleteDnsPolicy(Integer id) {
+		dnsPolicyDao.delete(id);
+	}
+
+	/**
 	 * 根据ID获得对象
 	 * 
 	 * @param id
@@ -58,22 +84,26 @@ public class DnsPolicyService extends BasicSevcie {
 	}
 
 	/**
-	 * 新增、保存对象
+	 * DnsPolicyDTO webservice分页查询.
 	 * 
-	 * @param dnsPolicy
-	 * @return DnsPolicy
+	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
+	 * 
+	 * @param searchParams
+	 *            查询语句Map.
+	 * @param pageNumber
+	 *            当前页数,最小为1.
+	 * @param pageSize
+	 *            当前页大小,如每页为10行
+	 * @return PaginationResult<DnsPolicyDTO>
 	 */
-	public DnsPolicy saveOrUpdate(DnsPolicy dnsPolicy) {
-		return dnsPolicyDao.save(dnsPolicy);
-	}
+	public PaginationResult<DnsPolicyDTO> getDnsPolicyDTOPagination(Map<String, Object> searchParams, int pageNumber,
+			int pageSize) {
 
-	/**
-	 * 根据ID删除对象
-	 * 
-	 * @param id
-	 */
-	public void deleteDnsPolicy(Integer id) {
-		dnsPolicyDao.delete(id);
+		Page<DnsPolicy> page = getDnsPolicyPage(searchParams, pageNumber, pageSize);
+
+		List<DnsPolicyDTO> dtos = BeanMapper.mapList(page.getContent(), DnsPolicyDTO.class);
+
+		return fillPaginationResult(page, dtos);
 	}
 
 	/**
@@ -86,7 +116,8 @@ public class DnsPolicyService extends BasicSevcie {
 	 * </pre>
 	 * 
 	 * @param searchParams
-	 *            动态查询条件Map * @return List<DnsPolicy>
+	 *            动态查询条件Map
+	 * @return List<DnsPolicy>
 	 */
 	public List<DnsPolicy> getDnsPolicyList(Map<String, Object> searchParams) {
 		return dnsPolicyDao.findAll(buildSpecification(searchParams));
@@ -110,42 +141,12 @@ public class DnsPolicyService extends BasicSevcie {
 	}
 
 	/**
-	 * 创建动态查询条件组合.
+	 * 新增、保存对象
 	 * 
-	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
-	 * 
-	 * @param searchParams
-	 * @return Specification<DnsPolicy>
+	 * @param dnsPolicy
+	 * @return DnsPolicy
 	 */
-	private Specification<DnsPolicy> buildSpecification(Map<String, Object> searchParams) {
-
-		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
-
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-
-		return DynamicSpecifications.bySearchFilter(filters.values(), DnsPolicy.class);
-	}
-
-	/**
-	 * DnsPolicyDTO webservice分页查询.
-	 * 
-	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
-	 * 
-	 * @param searchParams
-	 *            查询语句Map.
-	 * @param pageNumber
-	 *            当前页数,最小为1.
-	 * @param pageSize
-	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<DnsPolicyDTO>
-	 */
-	public PaginationResult<DnsPolicyDTO> getDnsPolicyDTOPagination(Map<String, Object> searchParams, int pageNumber,
-			int pageSize) {
-
-		Page<DnsPolicy> page = getDnsPolicyPage(searchParams, pageNumber, pageSize);
-
-		List<DnsPolicyDTO> dtos = BeanMapper.mapList(page.getContent(), DnsPolicyDTO.class);
-
-		return fillPaginationResult(page, dtos);
+	public DnsPolicy saveOrUpdate(DnsPolicy dnsPolicy) {
+		return dnsPolicyDao.save(dnsPolicy);
 	}
 }

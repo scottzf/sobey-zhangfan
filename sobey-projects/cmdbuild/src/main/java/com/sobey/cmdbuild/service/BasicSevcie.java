@@ -26,26 +26,6 @@ public class BasicSevcie {
 	protected CommonService comm;
 
 	/**
-	 * 
-	 * 由Page属性填充成满足webservice分页的PaginationResult对象
-	 * 
-	 * @param page
-	 *            entity的Page对象
-	 * @param dtos
-	 *            entity的dto集合
-	 * @return
-	 */
-	protected <T, V> PaginationResult<T> fillPaginationResult(Page<V> page, List<T> dtos) {
-
-		PaginationResult<T> paginationResult = new PaginationResult<T>(page.getNumber(), page.getSize(),
-				page.getTotalPages(), page.getNumberOfElements(), page.getNumberOfElements(), page.hasPreviousPage(),
-				page.isFirstPage(), page.hasNextPage(), page.isLastPage(), dtos);
-
-		return paginationResult;
-
-	}
-
-	/**
 	 * 创建分页请求. 默认以id为DESC 倒序查询
 	 * 
 	 * @param pageNumber
@@ -69,6 +49,25 @@ public class BasicSevcie {
 	 */
 	protected PageRequest buildPageRequest(int pageNumber, int pagzSize, Sort sort) {
 		return new PageRequest(pageNumber - 1, pagzSize, sort);
+	}
+
+	/**
+	 * 
+	 * 由Page属性填充成满足webservice分页的PaginationResult对象
+	 * 
+	 * @param page
+	 *            entity的Page对象
+	 * @param dtos
+	 *            entity的dto集合
+	 * @return
+	 */
+	protected <T, V> PaginationResult<T> fillPaginationResult(Page<V> page, List<T> dtos) {
+
+		PaginationResult<T> paginationResult = new PaginationResult<T>(page.getNumber(), page.getSize(),
+				page.getTotalPages(), page.getNumberOfElements(), page.getNumberOfElements(), page.hasPreviousPage(),
+				page.isFirstPage(), page.hasNextPage(), page.isLastPage(), dtos);
+
+		return paginationResult;
 	}
 
 }

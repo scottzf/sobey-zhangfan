@@ -28,8 +28,8 @@ public class DynamicSpecificationTest extends SpringTransactionalTestCase {
 	public void fineRackByFilter() {
 		// EQ
 		SearchFilter filter = new SearchFilter("code", Operator.EQ, "管理员");
-		List<Rack> Racks = RackDao.findAll(DynamicSpecifications.bySearchFilter(Lists.newArrayList(filter),
-				Rack.class));
+		List<Rack> Racks = RackDao
+				.findAll(DynamicSpecifications.bySearchFilter(Lists.newArrayList(filter), Rack.class));
 		assertEquals(1, Racks.size());
 
 		// LIKE
@@ -74,8 +74,7 @@ public class DynamicSpecificationTest extends SpringTransactionalTestCase {
 		assertEquals(1, Racks.size());
 
 		// Empty filters, select all
-		Racks = RackDao.findAll(DynamicSpecifications
-				.bySearchFilter(new ArrayList<SearchFilter>(), Rack.class));
+		Racks = RackDao.findAll(DynamicSpecifications.bySearchFilter(new ArrayList<SearchFilter>(), Rack.class));
 		assertEquals(6, Racks.size());
 
 		Racks = RackDao.findAll(DynamicSpecifications.bySearchFilter(null, Rack.class));
@@ -84,22 +83,19 @@ public class DynamicSpecificationTest extends SpringTransactionalTestCase {
 		// AND 2 Conditions
 		SearchFilter filter1 = new SearchFilter("code", Operator.EQ, "管理员");
 		SearchFilter filter2 = new SearchFilter("description", Operator.LIKE, "min");
-		Racks = RackDao.findAll(DynamicSpecifications.bySearchFilter(Lists.newArrayList(filter1, filter2),
-				Rack.class));
+		Racks = RackDao.findAll(DynamicSpecifications.bySearchFilter(Lists.newArrayList(filter1, filter2), Rack.class));
 		assertEquals(1, Racks.size());
 
 		filter1 = new SearchFilter("code", Operator.EQ, "管理员");
 		filter2 = new SearchFilter("description", Operator.LIKE, "Rack");
-		Racks = RackDao.findAll(DynamicSpecifications.bySearchFilter(Lists.newArrayList(filter1, filter2),
-				Rack.class));
+		Racks = RackDao.findAll(DynamicSpecifications.bySearchFilter(Lists.newArrayList(filter1, filter2), Rack.class));
 		assertEquals(0, Racks.size());
 
 		// 2 conditions on same field
 		filter1 = new SearchFilter("id", Operator.GTE, "1");
 		filter2 = new SearchFilter("id", Operator.LTE, "6");
 
-		Racks = RackDao.findAll(DynamicSpecifications.bySearchFilter(Lists.newArrayList(filter1, filter2),
-				Rack.class));
+		Racks = RackDao.findAll(DynamicSpecifications.bySearchFilter(Lists.newArrayList(filter1, filter2), Rack.class));
 		assertEquals(6, Racks.size());
 
 		// // Nest Attribute

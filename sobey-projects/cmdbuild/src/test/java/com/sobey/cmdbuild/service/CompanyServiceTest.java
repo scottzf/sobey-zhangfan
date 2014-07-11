@@ -13,7 +13,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.data.TestData;
-import com.sobey.cmdbuild.service.organisation.CompanyService;
 import com.sobey.test.spring.SpringTransactionalTestCase;
 
 /**

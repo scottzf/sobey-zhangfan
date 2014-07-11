@@ -3,12 +3,6 @@ package com.sobey.cmdbuild.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sobey.cmdbuild.service.financial.DeviceSpecService;
-import com.sobey.cmdbuild.service.financial.EcsSpecService;
-import com.sobey.cmdbuild.service.financial.EipSpecService;
-import com.sobey.cmdbuild.service.financial.Es3SpecService;
-import com.sobey.cmdbuild.service.iaas.As2Service;
-import com.sobey.cmdbuild.service.iaas.Cs2Service;
 import com.sobey.cmdbuild.service.iaas.DnsPolicyService;
 import com.sobey.cmdbuild.service.iaas.DnsService;
 import com.sobey.cmdbuild.service.iaas.EcsService;
@@ -16,23 +10,17 @@ import com.sobey.cmdbuild.service.iaas.EipPolicyService;
 import com.sobey.cmdbuild.service.iaas.EipService;
 import com.sobey.cmdbuild.service.iaas.ElbPolicyService;
 import com.sobey.cmdbuild.service.iaas.ElbService;
+import com.sobey.cmdbuild.service.iaas.Es3Service;
 import com.sobey.cmdbuild.service.iaas.EsgPolicyService;
 import com.sobey.cmdbuild.service.iaas.EsgService;
-import com.sobey.cmdbuild.service.iaas.GroupPolicyService;
-import com.sobey.cmdbuild.service.iaas.MapEcsAs2Service;
-import com.sobey.cmdbuild.service.iaas.MapEcsCs2Service;
+import com.sobey.cmdbuild.service.iaas.LogService;
 import com.sobey.cmdbuild.service.iaas.MapEcsEipService;
 import com.sobey.cmdbuild.service.iaas.MapEcsElbService;
+import com.sobey.cmdbuild.service.iaas.MapEcsEs3Service;
 import com.sobey.cmdbuild.service.iaas.MapEcsEsgService;
 import com.sobey.cmdbuild.service.iaas.MapEipDnsService;
 import com.sobey.cmdbuild.service.iaas.MapEipElbService;
-import com.sobey.cmdbuild.service.iaas.MapGroupPolicyIpaddressService;
-import com.sobey.cmdbuild.service.iaas.MapGroupPolicyVlanService;
-import com.sobey.cmdbuild.service.iaas.MapVpnGroupPolicyService;
 import com.sobey.cmdbuild.service.iaas.VpnService;
-import com.sobey.cmdbuild.service.infrastructure.FimasBoxService;
-import com.sobey.cmdbuild.service.infrastructure.FimasPortService;
-import com.sobey.cmdbuild.service.infrastructure.FimasService;
 import com.sobey.cmdbuild.service.infrastructure.FirewallPortService;
 import com.sobey.cmdbuild.service.infrastructure.FirewallService;
 import com.sobey.cmdbuild.service.infrastructure.HardDiskService;
@@ -40,22 +28,23 @@ import com.sobey.cmdbuild.service.infrastructure.IpaddressService;
 import com.sobey.cmdbuild.service.infrastructure.LoadBalancerPortService;
 import com.sobey.cmdbuild.service.infrastructure.LoadBalancerService;
 import com.sobey.cmdbuild.service.infrastructure.MemoryService;
-import com.sobey.cmdbuild.service.infrastructure.NetappBoxService;
-import com.sobey.cmdbuild.service.infrastructure.NetappControllerService;
-import com.sobey.cmdbuild.service.infrastructure.NetappPortService;
 import com.sobey.cmdbuild.service.infrastructure.NicPortService;
 import com.sobey.cmdbuild.service.infrastructure.NicService;
 import com.sobey.cmdbuild.service.infrastructure.ServerPortService;
 import com.sobey.cmdbuild.service.infrastructure.ServerService;
+import com.sobey.cmdbuild.service.infrastructure.StorageBoxService;
+import com.sobey.cmdbuild.service.infrastructure.StoragePortService;
+import com.sobey.cmdbuild.service.infrastructure.StorageService;
 import com.sobey.cmdbuild.service.infrastructure.SwitchPortService;
 import com.sobey.cmdbuild.service.infrastructure.SwitchesService;
 import com.sobey.cmdbuild.service.infrastructure.VlanService;
-import com.sobey.cmdbuild.service.organisation.CompanyService;
 import com.sobey.cmdbuild.service.organisation.IdcService;
 import com.sobey.cmdbuild.service.organisation.LookUpService;
 import com.sobey.cmdbuild.service.organisation.RackService;
 import com.sobey.cmdbuild.service.organisation.TagService;
 import com.sobey.cmdbuild.service.organisation.TenantsService;
+import com.sobey.cmdbuild.service.specification.DeviceSpecService;
+import com.sobey.cmdbuild.service.specification.EcsSpecService;
 
 /**
  * Service引用公共类,将所有业务的service方法统一在此类中注入.
@@ -65,15 +54,6 @@ import com.sobey.cmdbuild.service.organisation.TenantsService;
  */
 @Service
 public class CommonService {
-
-	@Autowired
-	public As2Service as2Service;
-
-	@Autowired
-	public CompanyService companyService;
-
-	@Autowired
-	public Cs2Service cs2Service;
 
 	@Autowired
 	public DeviceSpecService deviceSpecService;
@@ -97,16 +77,13 @@ public class CommonService {
 	public EipService eipService;
 
 	@Autowired
-	public EipSpecService eipSpecService;
-
-	@Autowired
 	public ElbPolicyService elbPolicyService;
 
 	@Autowired
 	public ElbService elbService;
 
 	@Autowired
-	public Es3SpecService es3SpecService;
+	public Es3Service es3Service;
 
 	@Autowired
 	public EsgPolicyService esgPolicyService;
@@ -115,22 +92,10 @@ public class CommonService {
 	public EsgService esgService;
 
 	@Autowired
-	public FimasBoxService fimasBoxService;
-
-	@Autowired
-	public FimasPortService fimasPortService;
-
-	@Autowired
-	public FimasService fimasService;
-
-	@Autowired
 	public FirewallPortService firewallPortService;
 
 	@Autowired
 	public FirewallService firewallService;
-
-	@Autowired
-	public GroupPolicyService groupPolicyService;
 
 	@Autowired
 	public HardDiskService hardDiskService;
@@ -148,19 +113,19 @@ public class CommonService {
 	public LoadBalancerService loadBalancerService;
 
 	@Autowired
+	public LogService logService;
+
+	@Autowired
 	public LookUpService lookUpService;
-
-	@Autowired
-	public MapEcsAs2Service mapEcsAs2Service;
-
-	@Autowired
-	public MapEcsCs2Service mapEcsCs2Service;
 
 	@Autowired
 	public MapEcsEipService mapEcsEipService;
 
 	@Autowired
 	public MapEcsElbService mapEcsElbService;
+
+	@Autowired
+	public MapEcsEs3Service mapEcsEs3Service;
 
 	@Autowired
 	public MapEcsEsgService mapEcsEsgService;
@@ -172,25 +137,7 @@ public class CommonService {
 	public MapEipElbService mapEipElbService;
 
 	@Autowired
-	public MapGroupPolicyIpaddressService mapGroupPolicyIpaddressService;
-
-	@Autowired
-	public MapGroupPolicyVlanService mapGroupPolicyVlanService;
-
-	@Autowired
-	public MapVpnGroupPolicyService mapVpnGroupPolicyService;
-
-	@Autowired
 	public MemoryService memoryService;
-
-	@Autowired
-	public NetappBoxService netappBoxService;
-
-	@Autowired
-	public NetappControllerService netappControllerService;
-
-	@Autowired
-	public NetappPortService netappPortService;
 
 	@Autowired
 	public NicPortService nicPortService;
@@ -206,6 +153,15 @@ public class CommonService {
 
 	@Autowired
 	public ServerService serverService;
+
+	@Autowired
+	public StorageBoxService storageBoxService;
+
+	@Autowired
+	public StoragePortService storagePortService;
+
+	@Autowired
+	public StorageService storageService;
 
 	@Autowired
 	public SwitchesService switchesService;

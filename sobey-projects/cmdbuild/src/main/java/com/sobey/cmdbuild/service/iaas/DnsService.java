@@ -26,8 +26,35 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class DnsService extends BasicSevcie {
+
 	@Autowired
 	private DnsDao dnsDao;
+
+	/**
+	 * 创建动态查询条件组合.
+	 * 
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
+	 * 
+	 * @param searchParams
+	 * @return Specification<Dns>
+	 */
+	private Specification<Dns> buildSpecification(Map<String, Object> searchParams) {
+
+		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), Dns.class);
+	}
+
+	/**
+	 * 根据ID删除对象
+	 * 
+	 * @param id
+	 */
+	public void deleteDns(Integer id) {
+		dnsDao.delete(id);
+	}
 
 	/**
 	 * 根据ID获得对象
@@ -57,22 +84,25 @@ public class DnsService extends BasicSevcie {
 	}
 
 	/**
-	 * 新增、保存对象
+	 * DnsDTO webservice分页查询.
 	 * 
-	 * @param Dns
-	 * @return Dns
+	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
+	 * 
+	 * @param searchParams
+	 *            查询语句Map.
+	 * @param pageNumber
+	 *            当前页数,最小为1.
+	 * @param pageSize
+	 *            当前页大小,如每页为10行
+	 * @return PaginationResult<DnsDTO>
 	 */
-	public Dns saveOrUpdate(Dns dns) {
-		return dnsDao.save(dns);
-	}
+	public PaginationResult<DnsDTO> getDnsDTOPagination(Map<String, Object> searchParams, int pageNumber, int pageSize) {
 
-	/**
-	 * 根据ID删除对象
-	 * 
-	 * @param id
-	 */
-	public void deleteDns(Integer id) {
-		dnsDao.delete(id);
+		Page<Dns> page = getDnsPage(searchParams, pageNumber, pageSize);
+
+		List<DnsDTO> dtos = BeanMapper.mapList(page.getContent(), DnsDTO.class);
+
+		return fillPaginationResult(page, dtos);
 	}
 
 	/**
@@ -85,7 +115,8 @@ public class DnsService extends BasicSevcie {
 	 * </pre>
 	 * 
 	 * @param searchParams
-	 *            动态查询条件Map * @return List<Dns>
+	 *            动态查询条件Map
+	 * @return List<Dns>
 	 */
 	public List<Dns> getDnsList(Map<String, Object> searchParams) {
 		return dnsDao.findAll(buildSpecification(searchParams));
@@ -109,41 +140,12 @@ public class DnsService extends BasicSevcie {
 	}
 
 	/**
-	 * 创建动态查询条件组合.
+	 * 新增、保存对象
 	 * 
-	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
-	 * 
-	 * @param searchParams
-	 * @return Specification<Dns>
+	 * @param Dns
+	 * @return Dns
 	 */
-	private Specification<Dns> buildSpecification(Map<String, Object> searchParams) {
-
-		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
-
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-
-		return DynamicSpecifications.bySearchFilter(filters.values(), Dns.class);
-	}
-
-	/**
-	 * DnsDTO webservice分页查询.
-	 * 
-	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
-	 * 
-	 * @param searchParams
-	 *            查询语句Map.
-	 * @param pageNumber
-	 *            当前页数,最小为1.
-	 * @param pageSize
-	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<DnsDTO>
-	 */
-	public PaginationResult<DnsDTO> getDnsDTOPagination(Map<String, Object> searchParams, int pageNumber, int pageSize) {
-
-		Page<Dns> page = getDnsPage(searchParams, pageNumber, pageSize);
-
-		List<DnsDTO> dtos = BeanMapper.mapList(page.getContent(), DnsDTO.class);
-
-		return fillPaginationResult(page, dtos);
+	public Dns saveOrUpdate(Dns dns) {
+		return dnsDao.save(dns);
 	}
 }

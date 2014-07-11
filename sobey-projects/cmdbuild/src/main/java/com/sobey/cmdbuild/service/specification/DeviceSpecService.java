@@ -1,4 +1,4 @@
-package com.sobey.cmdbuild.service.financial;
+package com.sobey.cmdbuild.service.specification;
 
 import java.util.List;
 import java.util.Map;
@@ -26,8 +26,35 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class DeviceSpecService extends BasicSevcie {
+
 	@Autowired
 	private DeviceSpecDao deviceSpecDao;
+
+	/**
+	 * 创建动态查询条件组合.
+	 * 
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
+	 * 
+	 * @param searchParams
+	 * @return Specification<DeviceSpec>
+	 */
+	private Specification<DeviceSpec> buildSpecification(Map<String, Object> searchParams) {
+
+		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), DeviceSpec.class);
+	}
+
+	/**
+	 * 根据ID删除对象
+	 * 
+	 * @param id
+	 */
+	public void deleteDeviceSpec(Integer id) {
+		deviceSpecDao.delete(id);
+	}
 
 	/**
 	 * 根据ID获得对象
@@ -57,22 +84,26 @@ public class DeviceSpecService extends BasicSevcie {
 	}
 
 	/**
-	 * 新增、保存对象
+	 * DeviceSpecDTO webservice分页查询.
 	 * 
-	 * @param DeviceSpec
-	 * @return DeviceSpec
+	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
+	 * 
+	 * @param searchParams
+	 *            查询语句Map.
+	 * @param pageNumber
+	 *            当前页数,最小为1.
+	 * @param pageSize
+	 *            当前页大小,如每页为10行
+	 * @return PaginationResult<DeviceSpecDTO>
 	 */
-	public DeviceSpec saveOrUpdate(DeviceSpec deviceSpec) {
-		return deviceSpecDao.save(deviceSpec);
-	}
+	public PaginationResult<DeviceSpecDTO> getDeviceSpecDTOPagination(Map<String, Object> searchParams, int pageNumber,
+			int pageSize) {
 
-	/**
-	 * 根据ID删除对象
-	 * 
-	 * @param id
-	 */
-	public void deleteDeviceSpec(Integer id) {
-		deviceSpecDao.delete(id);
+		Page<DeviceSpec> page = getDeviceSpecPage(searchParams, pageNumber, pageSize);
+
+		List<DeviceSpecDTO> dtos = BeanMapper.mapList(page.getContent(), DeviceSpecDTO.class);
+
+		return fillPaginationResult(page, dtos);
 	}
 
 	/**
@@ -85,7 +116,8 @@ public class DeviceSpecService extends BasicSevcie {
 	 * </pre>
 	 * 
 	 * @param searchParams
-	 *            动态查询条件Map * @return List<DeviceSpec>
+	 *            动态查询条件Map
+	 * @return List<DeviceSpec>
 	 */
 	public List<DeviceSpec> getDeviceSpecList(Map<String, Object> searchParams) {
 		return deviceSpecDao.findAll(buildSpecification(searchParams));
@@ -109,42 +141,12 @@ public class DeviceSpecService extends BasicSevcie {
 	}
 
 	/**
-	 * 创建动态查询条件组合.
+	 * 新增、保存对象
 	 * 
-	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
-	 * 
-	 * @param searchParams
-	 * @return Specification<DeviceSpec>
+	 * @param DeviceSpec
+	 * @return DeviceSpec
 	 */
-	private Specification<DeviceSpec> buildSpecification(Map<String, Object> searchParams) {
-
-		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
-
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-
-		return DynamicSpecifications.bySearchFilter(filters.values(), DeviceSpec.class);
-	}
-
-	/**
-	 * DeviceSpecDTO webservice分页查询.
-	 * 
-	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
-	 * 
-	 * @param searchParams
-	 *            查询语句Map.
-	 * @param pageNumber
-	 *            当前页数,最小为1.
-	 * @param pageSize
-	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<DeviceSpecDTO>
-	 */
-	public PaginationResult<DeviceSpecDTO> getDeviceSpecDTOPagination(Map<String, Object> searchParams, int pageNumber,
-			int pageSize) {
-
-		Page<DeviceSpec> page = getDeviceSpecPage(searchParams, pageNumber, pageSize);
-
-		List<DeviceSpecDTO> dtos = BeanMapper.mapList(page.getContent(), DeviceSpecDTO.class);
-
-		return fillPaginationResult(page, dtos);
+	public DeviceSpec saveOrUpdate(DeviceSpec deviceSpec) {
+		return deviceSpecDao.save(deviceSpec);
 	}
 }

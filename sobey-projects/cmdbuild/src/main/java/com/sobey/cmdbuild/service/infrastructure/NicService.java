@@ -26,8 +26,35 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class NicService extends BasicSevcie {
+	
 	@Autowired
 	private NicDao nicDao;
+
+	/**
+	 * 创建动态查询条件组合.
+	 * 
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
+	 * 
+	 * @param searchParams
+	 * @return Specification<Nic>
+	 */
+	private Specification<Nic> buildSpecification(Map<String, Object> searchParams) {
+
+		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), Nic.class);
+	}
+
+	/**
+	 * 根据ID删除对象
+	 * 
+	 * @param id
+	 */
+	public void deleteNic(Integer id) {
+		nicDao.delete(id);
+	}
 
 	/**
 	 * 根据ID获得对象
@@ -57,22 +84,25 @@ public class NicService extends BasicSevcie {
 	}
 
 	/**
-	 * 新增、保存对象
+	 * NicDTO webservice分页查询.
 	 * 
-	 * @param Nic
-	 * @return Nic
+	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
+	 * 
+	 * @param searchParams
+	 *            查询语句Map.
+	 * @param pageNumber
+	 *            当前页数,最小为1.
+	 * @param pageSize
+	 *            当前页大小,如每页为10行
+	 * @return PaginationResult<NicDTO>
 	 */
-	public Nic saveOrUpdate(Nic nic) {
-		return nicDao.save(nic);
-	}
+	public PaginationResult<NicDTO> getNicDTOPagination(Map<String, Object> searchParams, int pageNumber, int pageSize) {
 
-	/**
-	 * 根据ID删除对象
-	 * 
-	 * @param id
-	 */
-	public void deleteNic(Integer id) {
-		nicDao.delete(id);
+		Page<Nic> page = getNicPage(searchParams, pageNumber, pageSize);
+
+		List<NicDTO> dtos = BeanMapper.mapList(page.getContent(), NicDTO.class);
+
+		return fillPaginationResult(page, dtos);
 	}
 
 	/**
@@ -85,7 +115,8 @@ public class NicService extends BasicSevcie {
 	 * </pre>
 	 * 
 	 * @param searchParams
-	 *            动态查询条件Map * @return List<Nic>
+	 *            动态查询条件Map
+	 * @return List<Nic>
 	 */
 	public List<Nic> getNicList(Map<String, Object> searchParams) {
 		return nicDao.findAll(buildSpecification(searchParams));
@@ -109,41 +140,12 @@ public class NicService extends BasicSevcie {
 	}
 
 	/**
-	 * 创建动态查询条件组合.
+	 * 新增、保存对象
 	 * 
-	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
-	 * 
-	 * @param searchParams
-	 * @return Specification<Nic>
+	 * @param Nic
+	 * @return Nic
 	 */
-	private Specification<Nic> buildSpecification(Map<String, Object> searchParams) {
-
-		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
-
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-
-		return DynamicSpecifications.bySearchFilter(filters.values(), Nic.class);
-	}
-
-	/**
-	 * NicDTO webservice分页查询.
-	 * 
-	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
-	 * 
-	 * @param searchParams
-	 *            查询语句Map.
-	 * @param pageNumber
-	 *            当前页数,最小为1.
-	 * @param pageSize
-	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<NicDTO>
-	 */
-	public PaginationResult<NicDTO> getNicDTOPagination(Map<String, Object> searchParams, int pageNumber, int pageSize) {
-
-		Page<Nic> page = getNicPage(searchParams, pageNumber, pageSize);
-
-		List<NicDTO> dtos = BeanMapper.mapList(page.getContent(), NicDTO.class);
-
-		return fillPaginationResult(page, dtos);
+	public Nic saveOrUpdate(Nic nic) {
+		return nicDao.save(nic);
 	}
 }

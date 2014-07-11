@@ -6,9 +6,7 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import com.sobey.cmdbuild.constants.WsConstants;
-import com.sobey.cmdbuild.webservice.response.dto.As2DTO;
 import com.sobey.cmdbuild.webservice.response.dto.CompanyDTO;
-import com.sobey.cmdbuild.webservice.response.dto.Cs2DTO;
 import com.sobey.cmdbuild.webservice.response.dto.DeviceSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DnsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DnsPolicyDTO;
@@ -19,6 +17,7 @@ import com.sobey.cmdbuild.webservice.response.dto.EipPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EipSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ElbDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ElbPolicyDTO;
+import com.sobey.cmdbuild.webservice.response.dto.Es3DTO;
 import com.sobey.cmdbuild.webservice.response.dto.Es3SpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EsgDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EsgPolicyDTO;
@@ -33,16 +32,17 @@ import com.sobey.cmdbuild.webservice.response.dto.IdcDTO;
 import com.sobey.cmdbuild.webservice.response.dto.IpaddressDTO;
 import com.sobey.cmdbuild.webservice.response.dto.LoadBalancerDTO;
 import com.sobey.cmdbuild.webservice.response.dto.LoadBalancerPortDTO;
+import com.sobey.cmdbuild.webservice.response.dto.LogDTO;
 import com.sobey.cmdbuild.webservice.response.dto.LookUpDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MemoryDTO;
-import com.sobey.cmdbuild.webservice.response.dto.NetappBoxDTO;
-import com.sobey.cmdbuild.webservice.response.dto.NetappControllerDTO;
-import com.sobey.cmdbuild.webservice.response.dto.NetappPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.NicDTO;
 import com.sobey.cmdbuild.webservice.response.dto.NicPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.RackDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ServerDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ServerPortDTO;
+import com.sobey.cmdbuild.webservice.response.dto.StorageBoxDTO;
+import com.sobey.cmdbuild.webservice.response.dto.StorageDTO;
+import com.sobey.cmdbuild.webservice.response.dto.StoragePortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.SwitchPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.SwitchesDTO;
 import com.sobey.cmdbuild.webservice.response.dto.TagDTO;
@@ -280,38 +280,38 @@ public interface CmdbuildSoapService {
 	// ============ Cs2 =============//
 	// ==============================//
 
-	DTOResult<Cs2DTO> findCs2(@WebParam(name = "id") Integer id);
+	DTOResult<LogDTO> findCs2(@WebParam(name = "id") Integer id);
 
-	DTOResult<Cs2DTO> findCs2ByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOResult<LogDTO> findCs2ByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	IdResult createCs2(@WebParam(name = "cs2DTO") Cs2DTO cs2DTO);
+	IdResult createCs2(@WebParam(name = "cs2DTO") LogDTO cs2DTO);
 
-	IdResult updateCs2(@WebParam(name = "id") Integer id, @WebParam(name = "cs2DTO") Cs2DTO cs2DTO);
+	IdResult updateCs2(@WebParam(name = "id") Integer id, @WebParam(name = "cs2DTO") LogDTO cs2DTO);
 
 	IdResult deleteCs2(@WebParam(name = "id") Integer id);
 
-	DTOListResult<Cs2DTO> getCs2List(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOListResult<LogDTO> getCs2List(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<Cs2DTO> getCs2Pagination(@WebParam(name = "searchParams") SearchParams searchParams,
+	PaginationResult<LogDTO> getCs2Pagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
 	// ============== As2 ===========//
 	// ==============================//
 
-	DTOResult<As2DTO> findAs2(@WebParam(name = "id") Integer id);
+	DTOResult<Es3DTO> findAs2(@WebParam(name = "id") Integer id);
 
-	DTOResult<As2DTO> findAs2ByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOResult<Es3DTO> findAs2ByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	IdResult createAs2(@WebParam(name = "as2DTO") As2DTO as2DTO);
+	IdResult createAs2(@WebParam(name = "as2DTO") Es3DTO as2DTO);
 
-	IdResult updateAs2(@WebParam(name = "id") Integer id, @WebParam(name = "as2DTO") As2DTO as2DTO);
+	IdResult updateAs2(@WebParam(name = "id") Integer id, @WebParam(name = "as2DTO") Es3DTO as2DTO);
 
 	IdResult deleteAs2(@WebParam(name = "id") Integer id);
 
-	DTOListResult<As2DTO> getAs2List(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOListResult<Es3DTO> getAs2List(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<As2DTO> getAs2Pagination(@WebParam(name = "searchParams") SearchParams searchParams,
+	PaginationResult<Es3DTO> getAs2Pagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -831,42 +831,40 @@ public interface CmdbuildSoapService {
 	// ========== NetappBox =========//
 	// ==============================//
 
-	DTOResult<NetappBoxDTO> findNetappBox(@WebParam(name = "id") Integer id);
+	DTOResult<StorageBoxDTO> findNetappBox(@WebParam(name = "id") Integer id);
 
-	DTOResult<NetappBoxDTO> findNetappBoxByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOResult<StorageBoxDTO> findNetappBoxByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	IdResult createNetappBox(@WebParam(name = "netappBoxDTO") NetappBoxDTO netappBoxDTO);
+	IdResult createNetappBox(@WebParam(name = "netappBoxDTO") StorageBoxDTO netappBoxDTO);
 
 	IdResult updateNetappBox(@WebParam(name = "id") Integer id,
-			@WebParam(name = "netappBoxDTO") NetappBoxDTO netappBoxDTO);
+			@WebParam(name = "netappBoxDTO") StorageBoxDTO netappBoxDTO);
 
 	IdResult deleteNetappBox(@WebParam(name = "id") Integer id);
 
-	DTOListResult<NetappBoxDTO> getNetappBoxList(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOListResult<StorageBoxDTO> getNetappBoxList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<NetappBoxDTO> getNetappBoxPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+	PaginationResult<StorageBoxDTO> getNetappBoxPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
 	// ====== NetappController ======//
 	// ==============================//
 
-	DTOResult<NetappControllerDTO> findNetappController(@WebParam(name = "id") Integer id);
+	DTOResult<StorageDTO> findNetappController(@WebParam(name = "id") Integer id);
 
-	DTOResult<NetappControllerDTO> findNetappControllerByParams(
-			@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOResult<StorageDTO> findNetappControllerByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	IdResult createNetappController(@WebParam(name = "netappControllerDTO") NetappControllerDTO netappControllerDTO);
+	IdResult createNetappController(@WebParam(name = "netappControllerDTO") StorageDTO netappControllerDTO);
 
 	IdResult updateNetappController(@WebParam(name = "id") Integer id,
-			@WebParam(name = "netappControllerDTO") NetappControllerDTO netappControllerDTO);
+			@WebParam(name = "netappControllerDTO") StorageDTO netappControllerDTO);
 
 	IdResult deleteNetappController(@WebParam(name = "id") Integer id);
 
-	DTOListResult<NetappControllerDTO> getNetappControllerList(
-			@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOListResult<StorageDTO> getNetappControllerList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<NetappControllerDTO> getNetappControllerPagination(
+	PaginationResult<StorageDTO> getNetappControllerPagination(
 			@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
@@ -874,20 +872,21 @@ public interface CmdbuildSoapService {
 	// ========== NetappPort ========//
 	// ==============================//
 
-	DTOResult<NetappPortDTO> findNetappPort(@WebParam(name = "id") Integer id);
+	DTOResult<StoragePortDTO> findNetappPort(@WebParam(name = "id") Integer id);
 
-	DTOResult<NetappPortDTO> findNetappPortByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOResult<StoragePortDTO> findNetappPortByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	IdResult createNetappPort(@WebParam(name = "netappPortDTO") NetappPortDTO netappPortDTO);
+	IdResult createNetappPort(@WebParam(name = "netappPortDTO") StoragePortDTO netappPortDTO);
 
 	IdResult updateNetappPort(@WebParam(name = "id") Integer id,
-			@WebParam(name = "netappPortDTO") NetappPortDTO netappPortDTO);
+			@WebParam(name = "netappPortDTO") StoragePortDTO netappPortDTO);
 
 	IdResult deleteNetappPort(@WebParam(name = "id") Integer id);
 
-	DTOListResult<NetappPortDTO> getNetappPortList(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOListResult<StoragePortDTO> getNetappPortList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<NetappPortDTO> getNetappPortPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+	PaginationResult<StoragePortDTO> getNetappPortPagination(
+			@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//

@@ -26,6 +26,32 @@ public class MapEcsEipService extends BasicSevcie {
 	private MapEcsEipDao mapEcsEipDao;
 
 	/**
+	 * 创建动态查询条件组合.
+	 * 
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
+	 * 
+	 * @param searchParams
+	 * @return Specification<MapEcsEip>
+	 */
+	private Specification<MapEcsEip> buildSpecification(Map<String, Object> searchParams) {
+
+		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), MapEcsEip.class);
+	}
+
+	/**
+	 * 根据ID删除对象
+	 * 
+	 * @param id
+	 */
+	public void deleteMapEcsEip(Integer id) {
+		mapEcsEipDao.delete(id);
+	}
+
+	/**
 	 * 根据ID获得对象
 	 * 
 	 * @param id
@@ -53,25 +79,6 @@ public class MapEcsEipService extends BasicSevcie {
 	}
 
 	/**
-	 * 新增、保存对象
-	 * 
-	 * @param MapEcsEip
-	 * @return MapEcsEip
-	 */
-	public MapEcsEip saveOrUpdate(MapEcsEip mapEcsEip) {
-		return mapEcsEipDao.save(mapEcsEip);
-	}
-
-	/**
-	 * 根据ID删除对象
-	 * 
-	 * @param id
-	 */
-	public void deleteMapEcsEip(Integer id) {
-		mapEcsEipDao.delete(id);
-	}
-
-	/**
 	 * 根据自定义动态查询条件获得对象集合.
 	 * 
 	 * 将条件查询放入searchParams中. 查询条件可查询{@link SearchFilter}类.
@@ -81,27 +88,21 @@ public class MapEcsEipService extends BasicSevcie {
 	 * </pre>
 	 * 
 	 * @param searchParams
-	 *            动态查询条件Map * @return List<MapEcsEip>
+	 *            动态查询条件Map
+	 * @return List<MapEcsEip>
 	 */
 	public List<MapEcsEip> getMapEcsEipList(Map<String, Object> searchParams) {
 		return mapEcsEipDao.findAll(buildSpecification(searchParams));
 	}
 
 	/**
-	 * 创建动态查询条件组合.
+	 * 新增、保存对象
 	 * 
-	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
-	 * 
-	 * @param searchParams
-	 * @return Specification<MapEcsEip>
+	 * @param MapEcsEip
+	 * @return MapEcsEip
 	 */
-	private Specification<MapEcsEip> buildSpecification(Map<String, Object> searchParams) {
-
-		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
-
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-
-		return DynamicSpecifications.bySearchFilter(filters.values(), MapEcsEip.class);
+	public MapEcsEip saveOrUpdate(MapEcsEip mapEcsEip) {
+		return mapEcsEipDao.save(mapEcsEip);
 	}
 
 }

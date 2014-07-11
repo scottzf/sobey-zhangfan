@@ -15,7 +15,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
 import com.sobey.cmdbuild.entity.Storage;
-import com.sobey.cmdbuild.webservice.response.dto.NetappControllerDTO;
+import com.sobey.cmdbuild.webservice.response.dto.StorageDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
@@ -53,13 +53,13 @@ public class NetappControllerSoapTest extends BaseFunctionalTestCase {
 		paramsMap.put("EQ_code", code);
 		searchParams.setParamsMap(paramsMap);
 
-		DTOResult<NetappControllerDTO> responseParams = cmdbuildSoapService.findNetappControllerByParams(searchParams);
+		DTOResult<StorageDTO> responseParams = cmdbuildSoapService.findNetappControllerByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<NetappControllerDTO> response = cmdbuildSoapService.findNetappController(id);
+		DTOResult<StorageDTO> response = cmdbuildSoapService.findNetappController(id);
 
 		assertNotNull(response);
 
@@ -76,7 +76,7 @@ public class NetappControllerSoapTest extends BaseFunctionalTestCase {
 		paramsMap.put("EQ_code", code);
 		searchParams.setParamsMap(paramsMap);
 
-		DTOListResult<NetappControllerDTO> result = cmdbuildSoapService.getNetappControllerList(searchParams);
+		DTOListResult<StorageDTO> result = cmdbuildSoapService.getNetappControllerList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -90,7 +90,7 @@ public class NetappControllerSoapTest extends BaseFunctionalTestCase {
 
 		Storage netappController = TestData.randomNetappController();
 
-		NetappControllerDTO netappControllerDTO = BeanMapper.map(netappController, NetappControllerDTO.class);
+		StorageDTO netappControllerDTO = BeanMapper.map(netappController, StorageDTO.class);
 
 		IdResult response = cmdbuildSoapService.createNetappController(netappControllerDTO);
 
@@ -104,9 +104,9 @@ public class NetappControllerSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateNetappController() {
 
-		DTOResult<NetappControllerDTO> response = cmdbuildSoapService.findNetappController(id);
+		DTOResult<StorageDTO> response = cmdbuildSoapService.findNetappController(id);
 
-		NetappControllerDTO netappControllerDTO = response.getDto();
+		StorageDTO netappControllerDTO = response.getDto();
 
 		netappControllerDTO.setCode(RandomData.randomName("code"));
 
@@ -134,8 +134,7 @@ public class NetappControllerSoapTest extends BaseFunctionalTestCase {
 
 		SearchParams searchParams = new SearchParams();
 
-		PaginationResult<NetappControllerDTO> result = cmdbuildSoapService.getNetappControllerPagination(searchParams,
-				1, 10);
+		PaginationResult<StorageDTO> result = cmdbuildSoapService.getNetappControllerPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

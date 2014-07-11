@@ -26,8 +26,35 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class TenantsService extends BasicSevcie {
+
 	@Autowired
 	private TenantsDao tenantsDao;
+
+	/**
+	 * 创建动态查询条件组合.
+	 * 
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
+	 * 
+	 * @param searchParams
+	 * @return Specification<Tenants>
+	 */
+	private Specification<Tenants> buildSpecification(Map<String, Object> searchParams) {
+
+		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), Tenants.class);
+	}
+
+	/**
+	 * 根据ID删除对象
+	 * 
+	 * @param id
+	 */
+	public void deleteTenants(Integer id) {
+		tenantsDao.delete(id);
+	}
 
 	/**
 	 * 根据ID获得对象
@@ -57,22 +84,26 @@ public class TenantsService extends BasicSevcie {
 	}
 
 	/**
-	 * 新增、保存对象
+	 * TenantsDTO webservice分页查询.
 	 * 
-	 * @param Tenants
-	 * @return Tenants
+	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
+	 * 
+	 * @param searchParams
+	 *            查询语句Map.
+	 * @param pageNumber
+	 *            当前页数,最小为1.
+	 * @param pageSize
+	 *            当前页大小,如每页为10行
+	 * @return PaginationResult<TenantsDTO>
 	 */
-	public Tenants saveOrUpdate(Tenants tenants) {
-		return tenantsDao.save(tenants);
-	}
+	public PaginationResult<TenantsDTO> getTenantsDTOPagination(Map<String, Object> searchParams, int pageNumber,
+			int pageSize) {
 
-	/**
-	 * 根据ID删除对象
-	 * 
-	 * @param id
-	 */
-	public void deleteTenants(Integer id) {
-		tenantsDao.delete(id);
+		Page<Tenants> page = getTenantsPage(searchParams, pageNumber, pageSize);
+
+		List<TenantsDTO> dtos = BeanMapper.mapList(page.getContent(), TenantsDTO.class);
+
+		return fillPaginationResult(page, dtos);
 	}
 
 	/**
@@ -85,7 +116,8 @@ public class TenantsService extends BasicSevcie {
 	 * </pre>
 	 * 
 	 * @param searchParams
-	 *            动态查询条件Map * @return List<Tenants>
+	 *            动态查询条件Map
+	 * @return List<Tenants>
 	 */
 	public List<Tenants> getTenantsList(Map<String, Object> searchParams) {
 		return tenantsDao.findAll(buildSpecification(searchParams));
@@ -109,42 +141,12 @@ public class TenantsService extends BasicSevcie {
 	}
 
 	/**
-	 * 创建动态查询条件组合.
+	 * 新增、保存对象
 	 * 
-	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
-	 * 
-	 * @param searchParams
-	 * @return Specification<Tenants>
+	 * @param Tenants
+	 * @return Tenants
 	 */
-	private Specification<Tenants> buildSpecification(Map<String, Object> searchParams) {
-
-		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
-
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-
-		return DynamicSpecifications.bySearchFilter(filters.values(), Tenants.class);
-	}
-
-	/**
-	 * TenantsDTO webservice分页查询.
-	 * 
-	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
-	 * 
-	 * @param searchParams
-	 *            查询语句Map.
-	 * @param pageNumber
-	 *            当前页数,最小为1.
-	 * @param pageSize
-	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<TenantsDTO>
-	 */
-	public PaginationResult<TenantsDTO> getTenantsDTOPagination(Map<String, Object> searchParams, int pageNumber,
-			int pageSize) {
-
-		Page<Tenants> page = getTenantsPage(searchParams, pageNumber, pageSize);
-
-		List<TenantsDTO> dtos = BeanMapper.mapList(page.getContent(), TenantsDTO.class);
-
-		return fillPaginationResult(page, dtos);
+	public Tenants saveOrUpdate(Tenants tenants) {
+		return tenantsDao.save(tenants);
 	}
 }

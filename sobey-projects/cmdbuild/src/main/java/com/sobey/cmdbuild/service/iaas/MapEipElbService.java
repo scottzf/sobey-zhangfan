@@ -26,13 +26,29 @@ public class MapEipElbService extends BasicSevcie {
 	private MapEipElbDao mapEipElbDao;
 
 	/**
-	 * 根据ID获得对象
+	 * 创建动态查询条件组合.
+	 * 
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
+	 * 
+	 * @param searchParams
+	 * @return Specification<MapEipElb>
+	 */
+	private Specification<MapEipElb> buildSpecification(Map<String, Object> searchParams) {
+
+		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), MapEipElb.class);
+	}
+
+	/**
+	 * 根据ID删除对象
 	 * 
 	 * @param id
-	 * @return MapEipElb
 	 */
-	public MapEipElb findMapEipElbDao(Integer id) {
-		return mapEipElbDao.findOne(id);
+	public void deleteMapEipElb(Integer id) {
+		mapEipElbDao.delete(id);
 	}
 
 	/**
@@ -53,22 +69,13 @@ public class MapEipElbService extends BasicSevcie {
 	}
 
 	/**
-	 * 新增、保存对象
-	 * 
-	 * @param MapEipElb
-	 * @return MapEipElb
-	 */
-	public MapEipElb saveOrUpdate(MapEipElb mapEipElb) {
-		return mapEipElbDao.save(mapEipElb);
-	}
-
-	/**
-	 * 根据ID删除对象
+	 * 根据ID获得对象
 	 * 
 	 * @param id
+	 * @return MapEipElb
 	 */
-	public void deleteMapEipElb(Integer id) {
-		mapEipElbDao.delete(id);
+	public MapEipElb findMapEipElbDao(Integer id) {
+		return mapEipElbDao.findOne(id);
 	}
 
 	/**
@@ -81,27 +88,21 @@ public class MapEipElbService extends BasicSevcie {
 	 * </pre>
 	 * 
 	 * @param searchParams
-	 *            动态查询条件Map * @return List<MapEipElb>
+	 *            动态查询条件Map
+	 * @return List<MapEipElb>
 	 */
 	public List<MapEipElb> getMapEipElbList(Map<String, Object> searchParams) {
 		return mapEipElbDao.findAll(buildSpecification(searchParams));
 	}
 
 	/**
-	 * 创建动态查询条件组合.
+	 * 新增、保存对象
 	 * 
-	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
-	 * 
-	 * @param searchParams
-	 * @return Specification<MapEipElb>
+	 * @param MapEipElb
+	 * @return MapEipElb
 	 */
-	private Specification<MapEipElb> buildSpecification(Map<String, Object> searchParams) {
-
-		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
-
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-
-		return DynamicSpecifications.bySearchFilter(filters.values(), MapEipElb.class);
+	public MapEipElb saveOrUpdate(MapEipElb mapEipElb) {
+		return mapEipElbDao.save(mapEipElb);
 	}
 
 }

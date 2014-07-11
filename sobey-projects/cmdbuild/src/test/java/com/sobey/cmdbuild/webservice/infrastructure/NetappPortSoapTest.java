@@ -15,7 +15,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
 import com.sobey.cmdbuild.entity.StoragePort;
-import com.sobey.cmdbuild.webservice.response.dto.NetappPortDTO;
+import com.sobey.cmdbuild.webservice.response.dto.StoragePortDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
@@ -53,13 +53,13 @@ public class NetappPortSoapTest extends BaseFunctionalTestCase {
 		paramsMap.put("EQ_code", code);
 		searchParams.setParamsMap(paramsMap);
 
-		DTOResult<NetappPortDTO> responseParams = cmdbuildSoapService.findNetappPortByParams(searchParams);
+		DTOResult<StoragePortDTO> responseParams = cmdbuildSoapService.findNetappPortByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<NetappPortDTO> response = cmdbuildSoapService.findNetappPort(id);
+		DTOResult<StoragePortDTO> response = cmdbuildSoapService.findNetappPort(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class NetappPortSoapTest extends BaseFunctionalTestCase {
 
 		SearchParams searchParams = new SearchParams();
 
-		DTOListResult<NetappPortDTO> result = cmdbuildSoapService.getNetappPortList(searchParams);
+		DTOListResult<StoragePortDTO> result = cmdbuildSoapService.getNetappPortList(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -87,7 +87,7 @@ public class NetappPortSoapTest extends BaseFunctionalTestCase {
 
 		StoragePort netappPort = TestData.randomNetappPort();
 
-		NetappPortDTO netappPortDTO = BeanMapper.map(netappPort, NetappPortDTO.class);
+		StoragePortDTO netappPortDTO = BeanMapper.map(netappPort, StoragePortDTO.class);
 
 		IdResult response = cmdbuildSoapService.createNetappPort(netappPortDTO);
 
@@ -101,9 +101,9 @@ public class NetappPortSoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateNetappPort() {
 
-		DTOResult<NetappPortDTO> response = cmdbuildSoapService.findNetappPort(id);
+		DTOResult<StoragePortDTO> response = cmdbuildSoapService.findNetappPort(id);
 
-		NetappPortDTO netappPortDTO = response.getDto();
+		StoragePortDTO netappPortDTO = response.getDto();
 
 		netappPortDTO.setCode(RandomData.randomName("code"));
 
@@ -131,7 +131,7 @@ public class NetappPortSoapTest extends BaseFunctionalTestCase {
 
 		SearchParams searchParams = new SearchParams();
 
-		PaginationResult<NetappPortDTO> result = cmdbuildSoapService.getNetappPortPagination(searchParams, 1, 10);
+		PaginationResult<StoragePortDTO> result = cmdbuildSoapService.getNetappPortPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

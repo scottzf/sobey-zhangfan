@@ -26,8 +26,35 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class EsgPolicyService extends BasicSevcie {
+
 	@Autowired
 	private EsgPolicyDao esgPolicyDao;
+
+	/**
+	 * 创建动态查询条件组合.
+	 * 
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
+	 * 
+	 * @param searchParams
+	 * @return Specification<EsgPolicy>
+	 */
+	private Specification<EsgPolicy> buildSpecification(Map<String, Object> searchParams) {
+
+		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), EsgPolicy.class);
+	}
+
+	/**
+	 * 根据ID删除对象
+	 * 
+	 * @param id
+	 */
+	public void deleteEsgPolicy(Integer id) {
+		esgPolicyDao.delete(id);
+	}
 
 	/**
 	 * 根据ID获得对象
@@ -57,22 +84,26 @@ public class EsgPolicyService extends BasicSevcie {
 	}
 
 	/**
-	 * 新增、保存对象
+	 * EsgPolicyDTO webservice分页查询.
 	 * 
-	 * @param EsgPolicy
-	 * @return EsgPolicy
+	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
+	 * 
+	 * @param searchParams
+	 *            查询语句Map.
+	 * @param pageNumber
+	 *            当前页数,最小为1.
+	 * @param pageSize
+	 *            当前页大小,如每页为10行
+	 * @return PaginationResult<EsgPolicyDTO>
 	 */
-	public EsgPolicy saveOrUpdate(EsgPolicy esgPolicy) {
-		return esgPolicyDao.save(esgPolicy);
-	}
+	public PaginationResult<EsgPolicyDTO> getEsgPolicyDTOPagination(Map<String, Object> searchParams, int pageNumber,
+			int pageSize) {
 
-	/**
-	 * 根据ID删除对象
-	 * 
-	 * @param id
-	 */
-	public void deleteEsgPolicy(Integer id) {
-		esgPolicyDao.delete(id);
+		Page<EsgPolicy> page = getEsgPolicyPage(searchParams, pageNumber, pageSize);
+
+		List<EsgPolicyDTO> dtos = BeanMapper.mapList(page.getContent(), EsgPolicyDTO.class);
+
+		return fillPaginationResult(page, dtos);
 	}
 
 	/**
@@ -85,7 +116,8 @@ public class EsgPolicyService extends BasicSevcie {
 	 * </pre>
 	 * 
 	 * @param searchParams
-	 *            动态查询条件Map * @return List<EsgPolicy>
+	 *            动态查询条件Map
+	 * @return List<EsgPolicy>
 	 */
 	public List<EsgPolicy> getEsgPolicyList(Map<String, Object> searchParams) {
 		return esgPolicyDao.findAll(buildSpecification(searchParams));
@@ -109,42 +141,12 @@ public class EsgPolicyService extends BasicSevcie {
 	}
 
 	/**
-	 * 创建动态查询条件组合.
+	 * 新增、保存对象
 	 * 
-	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
-	 * 
-	 * @param searchParams
-	 * @return Specification<EsgPolicy>
+	 * @param EsgPolicy
+	 * @return EsgPolicy
 	 */
-	private Specification<EsgPolicy> buildSpecification(Map<String, Object> searchParams) {
-
-		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
-
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-
-		return DynamicSpecifications.bySearchFilter(filters.values(), EsgPolicy.class);
-	}
-
-	/**
-	 * EsgPolicyDTO webservice分页查询.
-	 * 
-	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
-	 * 
-	 * @param searchParams
-	 *            查询语句Map.
-	 * @param pageNumber
-	 *            当前页数,最小为1.
-	 * @param pageSize
-	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<EsgPolicyDTO>
-	 */
-	public PaginationResult<EsgPolicyDTO> getEsgPolicyDTOPagination(Map<String, Object> searchParams, int pageNumber,
-			int pageSize) {
-
-		Page<EsgPolicy> page = getEsgPolicyPage(searchParams, pageNumber, pageSize);
-
-		List<EsgPolicyDTO> dtos = BeanMapper.mapList(page.getContent(), EsgPolicyDTO.class);
-
-		return fillPaginationResult(page, dtos);
+	public EsgPolicy saveOrUpdate(EsgPolicy esgPolicy) {
+		return esgPolicyDao.save(esgPolicy);
 	}
 }

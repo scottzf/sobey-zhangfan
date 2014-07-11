@@ -1,4 +1,4 @@
-package com.sobey.cmdbuild.service.infrastructure;
+package com.sobey.cmdbuild.service.iaas;
 
 import java.util.List;
 import java.util.Map;
@@ -11,24 +11,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
-import com.sobey.cmdbuild.entity.Ipaddress;
-import com.sobey.cmdbuild.repository.IpaddressDao;
+import com.sobey.cmdbuild.entity.Log;
+import com.sobey.cmdbuild.repository.LogDao;
 import com.sobey.cmdbuild.service.BasicSevcie;
-import com.sobey.cmdbuild.webservice.response.dto.IpaddressDTO;
+import com.sobey.cmdbuild.webservice.response.dto.LogDTO;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.core.mapper.BeanMapper;
 import com.sobey.core.persistence.DynamicSpecifications;
 import com.sobey.core.persistence.SearchFilter;
 
 /**
- * Ipaddress的service类.
+ * Log的service类.
  */
 @Service
 @Transactional
-public class IpaddressService extends BasicSevcie {
-	
+public class LogService extends BasicSevcie {
+
 	@Autowired
-	private IpaddressDao ipaddressDao;
+	private LogDao logDao;
 
 	/**
 	 * 创建动态查询条件组合.
@@ -36,15 +36,15 @@ public class IpaddressService extends BasicSevcie {
 	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
 	 * 
 	 * @param searchParams
-	 * @return Specification<Ipaddress>
+	 * @return Specification<Log>
 	 */
-	private Specification<Ipaddress> buildSpecification(Map<String, Object> searchParams) {
+	private Specification<Log> buildSpecification(Map<String, Object> searchParams) {
 
 		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
 
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 
-		return DynamicSpecifications.bySearchFilter(filters.values(), Ipaddress.class);
+		return DynamicSpecifications.bySearchFilter(filters.values(), Log.class);
 	}
 
 	/**
@@ -52,18 +52,18 @@ public class IpaddressService extends BasicSevcie {
 	 * 
 	 * @param id
 	 */
-	public void deleteIpaddress(Integer id) {
-		ipaddressDao.delete(id);
+	public void deleteLog(Integer id) {
+		logDao.delete(id);
 	}
 
 	/**
 	 * 根据ID获得对象
 	 * 
 	 * @param id
-	 * @return Ipaddress
+	 * @return Log
 	 */
-	public Ipaddress findIpaddress(Integer id) {
-		return ipaddressDao.findOne(id);
+	public Log findLog(Integer id) {
+		return logDao.findOne(id);
 	}
 
 	/**
@@ -77,14 +77,14 @@ public class IpaddressService extends BasicSevcie {
 	 * 
 	 * @param searchParams
 	 *            动态查询条件Map
-	 * @return Ipaddress
+	 * @return Log
 	 */
-	public Ipaddress findIpaddress(Map<String, Object> searchParams) {
-		return ipaddressDao.findOne(buildSpecification(searchParams));
+	public Log findLog(Map<String, Object> searchParams) {
+		return logDao.findOne(buildSpecification(searchParams));
 	}
 
 	/**
-	 * IpaddressDTO webservice分页查询.
+	 * LogDTO webservice分页查询.
 	 * 
 	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
 	 * 
@@ -94,14 +94,13 @@ public class IpaddressService extends BasicSevcie {
 	 *            当前页数,最小为1.
 	 * @param pageSize
 	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<IpaddressDTO>
+	 * @return PaginationResult<LogDTO>
 	 */
-	public PaginationResult<IpaddressDTO> getIpaddressDTOPagination(Map<String, Object> searchParams, int pageNumber,
-			int pageSize) {
+	public PaginationResult<LogDTO> getLogDTOPagination(Map<String, Object> searchParams, int pageNumber, int pageSize) {
 
-		Page<Ipaddress> page = getIpaddressPage(searchParams, pageNumber, pageSize);
+		Page<Log> page = getLogPage(searchParams, pageNumber, pageSize);
 
-		List<IpaddressDTO> dtos = BeanMapper.mapList(page.getContent(), IpaddressDTO.class);
+		List<LogDTO> dtos = BeanMapper.mapList(page.getContent(), LogDTO.class);
 
 		return fillPaginationResult(page, dtos);
 	}
@@ -117,10 +116,10 @@ public class IpaddressService extends BasicSevcie {
 	 * 
 	 * @param searchParams
 	 *            动态查询条件Map
-	 * @return List<Ipaddress>
+	 * @return List<Log>
 	 */
-	public List<Ipaddress> getIpaddressList(Map<String, Object> searchParams) {
-		return ipaddressDao.findAll(buildSpecification(searchParams));
+	public List<Log> getLogList(Map<String, Object> searchParams) {
+		return logDao.findAll(buildSpecification(searchParams));
 	}
 
 	/**
@@ -129,28 +128,25 @@ public class IpaddressService extends BasicSevcie {
 	 * @param searchParams
 	 * @param pageNumber
 	 * @param pageSize
-	 * @return Page<Ipaddress>
+	 * @return Page<Log>
 	 */
-	private Page<Ipaddress> getIpaddressPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
+	private Page<Log> getLogPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
 
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
-		Specification<Ipaddress> spec = buildSpecification(searchParams);
+		Specification<Log> spec = buildSpecification(searchParams);
 
-		return ipaddressDao.findAll(spec, pageRequest);
-	}
-
-	public Iterable<Ipaddress> saveAll(List<Ipaddress> ipaddresses) {
-		return ipaddressDao.save(ipaddresses);
+		return logDao.findAll(spec, pageRequest);
 	}
 
 	/**
 	 * 新增、保存对象
 	 * 
-	 * @param Ipaddress
-	 * @return Ipaddress
+	 * @param Log
+	 * @return Log
 	 */
-	public Ipaddress saveOrUpdate(Ipaddress ipaddress) {
-		return ipaddressDao.save(ipaddress);
+	public Log saveOrUpdate(Log log) {
+		return logDao.save(log);
 	}
+
 }

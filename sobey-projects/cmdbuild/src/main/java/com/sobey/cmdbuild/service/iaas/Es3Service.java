@@ -1,4 +1,4 @@
-package com.sobey.cmdbuild.service.infrastructure;
+package com.sobey.cmdbuild.service.iaas;
 
 import java.util.List;
 import java.util.Map;
@@ -11,24 +11,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
-import com.sobey.cmdbuild.entity.Ipaddress;
-import com.sobey.cmdbuild.repository.IpaddressDao;
+import com.sobey.cmdbuild.entity.Es3;
+import com.sobey.cmdbuild.repository.Es3Dao;
 import com.sobey.cmdbuild.service.BasicSevcie;
-import com.sobey.cmdbuild.webservice.response.dto.IpaddressDTO;
+import com.sobey.cmdbuild.webservice.response.dto.Es3DTO;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.core.mapper.BeanMapper;
 import com.sobey.core.persistence.DynamicSpecifications;
 import com.sobey.core.persistence.SearchFilter;
 
 /**
- * Ipaddress的service类.
+ * Es3的service类.
  */
 @Service
 @Transactional
-public class IpaddressService extends BasicSevcie {
-	
+public class Es3Service extends BasicSevcie {
+
 	@Autowired
-	private IpaddressDao ipaddressDao;
+	private Es3Dao es3Dao;
 
 	/**
 	 * 创建动态查询条件组合.
@@ -36,15 +36,15 @@ public class IpaddressService extends BasicSevcie {
 	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
 	 * 
 	 * @param searchParams
-	 * @return Specification<Ipaddress>
+	 * @return Specification<Es3>
 	 */
-	private Specification<Ipaddress> buildSpecification(Map<String, Object> searchParams) {
+	private Specification<Es3> buildSpecification(Map<String, Object> searchParams) {
 
 		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
 
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 
-		return DynamicSpecifications.bySearchFilter(filters.values(), Ipaddress.class);
+		return DynamicSpecifications.bySearchFilter(filters.values(), Es3.class);
 	}
 
 	/**
@@ -52,18 +52,18 @@ public class IpaddressService extends BasicSevcie {
 	 * 
 	 * @param id
 	 */
-	public void deleteIpaddress(Integer id) {
-		ipaddressDao.delete(id);
+	public void deleteEs3(Integer id) {
+		es3Dao.delete(id);
 	}
 
 	/**
 	 * 根据ID获得对象
 	 * 
 	 * @param id
-	 * @return Ipaddress
+	 * @return Es3
 	 */
-	public Ipaddress findIpaddress(Integer id) {
-		return ipaddressDao.findOne(id);
+	public Es3 findEs3(Integer id) {
+		return es3Dao.findOne(id);
 	}
 
 	/**
@@ -77,14 +77,14 @@ public class IpaddressService extends BasicSevcie {
 	 * 
 	 * @param searchParams
 	 *            动态查询条件Map
-	 * @return Ipaddress
+	 * @return Es3
 	 */
-	public Ipaddress findIpaddress(Map<String, Object> searchParams) {
-		return ipaddressDao.findOne(buildSpecification(searchParams));
+	public Es3 findEs3(Map<String, Object> searchParams) {
+		return es3Dao.findOne(buildSpecification(searchParams));
 	}
 
 	/**
-	 * IpaddressDTO webservice分页查询.
+	 * Es3DTO webservice分页查询.
 	 * 
 	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
 	 * 
@@ -94,14 +94,13 @@ public class IpaddressService extends BasicSevcie {
 	 *            当前页数,最小为1.
 	 * @param pageSize
 	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<IpaddressDTO>
+	 * @return PaginationResult<Es3DTO>
 	 */
-	public PaginationResult<IpaddressDTO> getIpaddressDTOPagination(Map<String, Object> searchParams, int pageNumber,
-			int pageSize) {
+	public PaginationResult<Es3DTO> getEs3DTOPagination(Map<String, Object> searchParams, int pageNumber, int pageSize) {
 
-		Page<Ipaddress> page = getIpaddressPage(searchParams, pageNumber, pageSize);
+		Page<Es3> page = getEs3Page(searchParams, pageNumber, pageSize);
 
-		List<IpaddressDTO> dtos = BeanMapper.mapList(page.getContent(), IpaddressDTO.class);
+		List<Es3DTO> dtos = BeanMapper.mapList(page.getContent(), Es3DTO.class);
 
 		return fillPaginationResult(page, dtos);
 	}
@@ -117,10 +116,10 @@ public class IpaddressService extends BasicSevcie {
 	 * 
 	 * @param searchParams
 	 *            动态查询条件Map
-	 * @return List<Ipaddress>
+	 * @return List<Es3>
 	 */
-	public List<Ipaddress> getIpaddressList(Map<String, Object> searchParams) {
-		return ipaddressDao.findAll(buildSpecification(searchParams));
+	public List<Es3> getEs3List(Map<String, Object> searchParams) {
+		return es3Dao.findAll(buildSpecification(searchParams));
 	}
 
 	/**
@@ -129,28 +128,15 @@ public class IpaddressService extends BasicSevcie {
 	 * @param searchParams
 	 * @param pageNumber
 	 * @param pageSize
-	 * @return Page<Ipaddress>
+	 * @return Page<Es3>
 	 */
-	private Page<Ipaddress> getIpaddressPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
+	private Page<Es3> getEs3Page(Map<String, Object> searchParams, int pageNumber, int pageSize) {
 
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
-		Specification<Ipaddress> spec = buildSpecification(searchParams);
+		Specification<Es3> spec = buildSpecification(searchParams);
 
-		return ipaddressDao.findAll(spec, pageRequest);
+		return es3Dao.findAll(spec, pageRequest);
 	}
 
-	public Iterable<Ipaddress> saveAll(List<Ipaddress> ipaddresses) {
-		return ipaddressDao.save(ipaddresses);
-	}
-
-	/**
-	 * 新增、保存对象
-	 * 
-	 * @param Ipaddress
-	 * @return Ipaddress
-	 */
-	public Ipaddress saveOrUpdate(Ipaddress ipaddress) {
-		return ipaddressDao.save(ipaddress);
-	}
 }

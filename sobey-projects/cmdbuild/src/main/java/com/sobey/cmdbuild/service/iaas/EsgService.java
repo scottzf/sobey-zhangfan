@@ -26,8 +26,35 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class EsgService extends BasicSevcie {
+
 	@Autowired
 	private EsgDao esgDao;
+
+	/**
+	 * 创建动态查询条件组合.
+	 * 
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
+	 * 
+	 * @param searchParams
+	 * @return Specification<Esg>
+	 */
+	private Specification<Esg> buildSpecification(Map<String, Object> searchParams) {
+
+		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), Esg.class);
+	}
+
+	/**
+	 * 根据ID删除对象
+	 * 
+	 * @param id
+	 */
+	public void deleteEsg(Integer id) {
+		esgDao.delete(id);
+	}
 
 	/**
 	 * 根据ID获得对象
@@ -57,22 +84,25 @@ public class EsgService extends BasicSevcie {
 	}
 
 	/**
-	 * 新增、保存对象
+	 * EsgDTO webservice分页查询.
 	 * 
-	 * @param Esg
-	 * @return Esg
+	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
+	 * 
+	 * @param searchParams
+	 *            查询语句Map.
+	 * @param pageNumber
+	 *            当前页数,最小为1.
+	 * @param pageSize
+	 *            当前页大小,如每页为10行
+	 * @return PaginationResult<EsgDTO>
 	 */
-	public Esg saveOrUpdate(Esg esg) {
-		return esgDao.save(esg);
-	}
+	public PaginationResult<EsgDTO> getEsgDTOPagination(Map<String, Object> searchParams, int pageNumber, int pageSize) {
 
-	/**
-	 * 根据ID删除对象
-	 * 
-	 * @param id
-	 */
-	public void deleteEsg(Integer id) {
-		esgDao.delete(id);
+		Page<Esg> page = getEsgPage(searchParams, pageNumber, pageSize);
+
+		List<EsgDTO> dtos = BeanMapper.mapList(page.getContent(), EsgDTO.class);
+
+		return fillPaginationResult(page, dtos);
 	}
 
 	/**
@@ -85,7 +115,8 @@ public class EsgService extends BasicSevcie {
 	 * </pre>
 	 * 
 	 * @param searchParams
-	 *            动态查询条件Map * @return List<Esg>
+	 *            动态查询条件Map
+	 * @return List<Esg>
 	 */
 	public List<Esg> getEsgList(Map<String, Object> searchParams) {
 		return esgDao.findAll(buildSpecification(searchParams));
@@ -109,41 +140,12 @@ public class EsgService extends BasicSevcie {
 	}
 
 	/**
-	 * 创建动态查询条件组合.
+	 * 新增、保存对象
 	 * 
-	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
-	 * 
-	 * @param searchParams
-	 * @return Specification<Esg>
+	 * @param Esg
+	 * @return Esg
 	 */
-	private Specification<Esg> buildSpecification(Map<String, Object> searchParams) {
-
-		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
-
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-
-		return DynamicSpecifications.bySearchFilter(filters.values(), Esg.class);
-	}
-
-	/**
-	 * EsgDTO webservice分页查询.
-	 * 
-	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
-	 * 
-	 * @param searchParams
-	 *            查询语句Map.
-	 * @param pageNumber
-	 *            当前页数,最小为1.
-	 * @param pageSize
-	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<EsgDTO>
-	 */
-	public PaginationResult<EsgDTO> getEsgDTOPagination(Map<String, Object> searchParams, int pageNumber, int pageSize) {
-
-		Page<Esg> page = getEsgPage(searchParams, pageNumber, pageSize);
-
-		List<EsgDTO> dtos = BeanMapper.mapList(page.getContent(), EsgDTO.class);
-
-		return fillPaginationResult(page, dtos);
+	public Esg saveOrUpdate(Esg esg) {
+		return esgDao.save(esg);
 	}
 }

@@ -26,8 +26,35 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class ElbPolicyService extends BasicSevcie {
+
 	@Autowired
 	private ElbPolicyDao elbPolicyDao;
+
+	/**
+	 * 创建动态查询条件组合.
+	 * 
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
+	 * 
+	 * @param searchParams
+	 * @return Specification<ElbPolicy>
+	 */
+	private Specification<ElbPolicy> buildSpecification(Map<String, Object> searchParams) {
+
+		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), ElbPolicy.class);
+	}
+
+	/**
+	 * 根据ID删除对象
+	 * 
+	 * @param id
+	 */
+	public void deleteElbPolicy(Integer id) {
+		elbPolicyDao.delete(id);
+	}
 
 	/**
 	 * 根据ID获得对象
@@ -57,22 +84,26 @@ public class ElbPolicyService extends BasicSevcie {
 	}
 
 	/**
-	 * 新增、保存对象
+	 * ElbPolicyDTO webservice分页查询.
 	 * 
-	 * @param ElbPolicy
-	 * @return ElbPolicy
+	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
+	 * 
+	 * @param searchParams
+	 *            查询语句Map.
+	 * @param pageNumber
+	 *            当前页数,最小为1.
+	 * @param pageSize
+	 *            当前页大小,如每页为10行
+	 * @return PaginationResult<ElbPolicyDTO>
 	 */
-	public ElbPolicy saveOrUpdate(ElbPolicy elbPolicy) {
-		return elbPolicyDao.save(elbPolicy);
-	}
+	public PaginationResult<ElbPolicyDTO> getElbPolicyDTOPagination(Map<String, Object> searchParams, int pageNumber,
+			int pageSize) {
 
-	/**
-	 * 根据ID删除对象
-	 * 
-	 * @param id
-	 */
-	public void deleteElbPolicy(Integer id) {
-		elbPolicyDao.delete(id);
+		Page<ElbPolicy> page = getElbPolicyPage(searchParams, pageNumber, pageSize);
+
+		List<ElbPolicyDTO> dtos = BeanMapper.mapList(page.getContent(), ElbPolicyDTO.class);
+
+		return fillPaginationResult(page, dtos);
 	}
 
 	/**
@@ -85,7 +116,8 @@ public class ElbPolicyService extends BasicSevcie {
 	 * </pre>
 	 * 
 	 * @param searchParams
-	 *            动态查询条件Map * @return List<ElbPolicy>
+	 *            动态查询条件Map
+	 * @return List<ElbPolicy>
 	 */
 	public List<ElbPolicy> getElbPolicyList(Map<String, Object> searchParams) {
 		return elbPolicyDao.findAll(buildSpecification(searchParams));
@@ -109,42 +141,12 @@ public class ElbPolicyService extends BasicSevcie {
 	}
 
 	/**
-	 * 创建动态查询条件组合.
+	 * 新增、保存对象
 	 * 
-	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
-	 * 
-	 * @param searchParams
-	 * @return Specification<ElbPolicy>
+	 * @param ElbPolicy
+	 * @return ElbPolicy
 	 */
-	private Specification<ElbPolicy> buildSpecification(Map<String, Object> searchParams) {
-
-		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
-
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-
-		return DynamicSpecifications.bySearchFilter(filters.values(), ElbPolicy.class);
-	}
-
-	/**
-	 * ElbPolicyDTO webservice分页查询.
-	 * 
-	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
-	 * 
-	 * @param searchParams
-	 *            查询语句Map.
-	 * @param pageNumber
-	 *            当前页数,最小为1.
-	 * @param pageSize
-	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<ElbPolicyDTO>
-	 */
-	public PaginationResult<ElbPolicyDTO> getElbPolicyDTOPagination(Map<String, Object> searchParams, int pageNumber,
-			int pageSize) {
-
-		Page<ElbPolicy> page = getElbPolicyPage(searchParams, pageNumber, pageSize);
-
-		List<ElbPolicyDTO> dtos = BeanMapper.mapList(page.getContent(), ElbPolicyDTO.class);
-
-		return fillPaginationResult(page, dtos);
+	public ElbPolicy saveOrUpdate(ElbPolicy elbPolicy) {
+		return elbPolicyDao.save(elbPolicy);
 	}
 }

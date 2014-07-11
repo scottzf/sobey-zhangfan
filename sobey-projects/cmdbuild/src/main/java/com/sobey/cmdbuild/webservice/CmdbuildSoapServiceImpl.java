@@ -23,11 +23,9 @@ import com.sobey.cmdbuild.entity.Ecs;
 import com.sobey.cmdbuild.entity.EcsSpec;
 import com.sobey.cmdbuild.entity.Eip;
 import com.sobey.cmdbuild.entity.EipPolicy;
-import com.sobey.cmdbuild.entity.EipSpec;
 import com.sobey.cmdbuild.entity.Elb;
 import com.sobey.cmdbuild.entity.ElbPolicy;
 import com.sobey.cmdbuild.entity.Es3;
-import com.sobey.cmdbuild.entity.Es3Spec;
 import com.sobey.cmdbuild.entity.Esg;
 import com.sobey.cmdbuild.entity.EsgPolicy;
 import com.sobey.cmdbuild.entity.Firewall;
@@ -37,11 +35,11 @@ import com.sobey.cmdbuild.entity.Idc;
 import com.sobey.cmdbuild.entity.Ipaddress;
 import com.sobey.cmdbuild.entity.LoadBalancer;
 import com.sobey.cmdbuild.entity.LoadBalancerPort;
-import com.sobey.cmdbuild.entity.LookUp;
 import com.sobey.cmdbuild.entity.Log;
-import com.sobey.cmdbuild.entity.MapEcsEs3;
+import com.sobey.cmdbuild.entity.LookUp;
 import com.sobey.cmdbuild.entity.MapEcsEip;
 import com.sobey.cmdbuild.entity.MapEcsElb;
+import com.sobey.cmdbuild.entity.MapEcsEs3;
 import com.sobey.cmdbuild.entity.MapEcsEsg;
 import com.sobey.cmdbuild.entity.MapEipDns;
 import com.sobey.cmdbuild.entity.MapEipElb;
@@ -60,9 +58,7 @@ import com.sobey.cmdbuild.entity.Tag;
 import com.sobey.cmdbuild.entity.Tenants;
 import com.sobey.cmdbuild.entity.Vlan;
 import com.sobey.cmdbuild.entity.Vpn;
-import com.sobey.cmdbuild.webservice.response.dto.As2DTO;
 import com.sobey.cmdbuild.webservice.response.dto.CompanyDTO;
-import com.sobey.cmdbuild.webservice.response.dto.Cs2DTO;
 import com.sobey.cmdbuild.webservice.response.dto.DeviceSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DnsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DnsPolicyDTO;
@@ -73,6 +69,7 @@ import com.sobey.cmdbuild.webservice.response.dto.EipPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EipSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ElbDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ElbPolicyDTO;
+import com.sobey.cmdbuild.webservice.response.dto.Es3DTO;
 import com.sobey.cmdbuild.webservice.response.dto.Es3SpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EsgDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EsgPolicyDTO;
@@ -87,16 +84,17 @@ import com.sobey.cmdbuild.webservice.response.dto.IdcDTO;
 import com.sobey.cmdbuild.webservice.response.dto.IpaddressDTO;
 import com.sobey.cmdbuild.webservice.response.dto.LoadBalancerDTO;
 import com.sobey.cmdbuild.webservice.response.dto.LoadBalancerPortDTO;
+import com.sobey.cmdbuild.webservice.response.dto.LogDTO;
 import com.sobey.cmdbuild.webservice.response.dto.LookUpDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MemoryDTO;
-import com.sobey.cmdbuild.webservice.response.dto.NetappBoxDTO;
-import com.sobey.cmdbuild.webservice.response.dto.NetappControllerDTO;
-import com.sobey.cmdbuild.webservice.response.dto.NetappPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.NicDTO;
 import com.sobey.cmdbuild.webservice.response.dto.NicPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.RackDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ServerDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ServerPortDTO;
+import com.sobey.cmdbuild.webservice.response.dto.StorageBoxDTO;
+import com.sobey.cmdbuild.webservice.response.dto.StorageDTO;
+import com.sobey.cmdbuild.webservice.response.dto.StoragePortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.SwitchPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.SwitchesDTO;
 import com.sobey.cmdbuild.webservice.response.dto.TagDTO;
@@ -2034,9 +2032,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOResult<Cs2DTO> findCs2(@WebParam(name = "id") Integer id) {
+	public DTOResult<LogDTO> findCs2(@WebParam(name = "id") Integer id) {
 
-		DTOResult<Cs2DTO> result = new DTOResult<Cs2DTO>();
+		DTOResult<LogDTO> result = new DTOResult<LogDTO>();
 
 		try {
 
@@ -2046,7 +2044,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(cs2, ERROR.OBJECT_NULL);
 
-			Cs2DTO dto = BeanMapper.map(cs2, Cs2DTO.class);
+			LogDTO dto = BeanMapper.map(cs2, LogDTO.class);
 
 			// Reference
 			dto.setTagDTO(findTag(dto.getTag()).getDto());
@@ -2067,9 +2065,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOResult<Cs2DTO> findCs2ByParams(@WebParam(name = "searchParams") SearchParams searchParams) {
+	public DTOResult<LogDTO> findCs2ByParams(@WebParam(name = "searchParams") SearchParams searchParams) {
 
-		DTOResult<Cs2DTO> result = new DTOResult<Cs2DTO>();
+		DTOResult<LogDTO> result = new DTOResult<LogDTO>();
 
 		try {
 
@@ -2079,7 +2077,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(cs2, ERROR.OBJECT_NULL);
 
-			Cs2DTO dto = BeanMapper.map(cs2, Cs2DTO.class);
+			LogDTO dto = BeanMapper.map(cs2, LogDTO.class);
 
 			// Reference
 			dto.setTagDTO(findTag(dto.getTag()).getDto());
@@ -2100,7 +2098,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public IdResult createCs2(@WebParam(name = "cs2DTO") Cs2DTO cs2DTO) {
+	public IdResult createCs2(@WebParam(name = "cs2DTO") LogDTO cs2DTO) {
 
 		IdResult result = new IdResult();
 
@@ -2137,7 +2135,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public IdResult updateCs2(@WebParam(name = "id") Integer id, @WebParam(name = "cs2DTO") Cs2DTO cs2DTO) {
+	public IdResult updateCs2(@WebParam(name = "id") Integer id, @WebParam(name = "cs2DTO") LogDTO cs2DTO) {
 
 		IdResult result = new IdResult();
 
@@ -2203,10 +2201,10 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public PaginationResult<Cs2DTO> getCs2Pagination(@WebParam(name = "searchParams") SearchParams searchParams,
+	public PaginationResult<LogDTO> getCs2Pagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
 
-		PaginationResult<Cs2DTO> result = new PaginationResult<Cs2DTO>();
+		PaginationResult<LogDTO> result = new PaginationResult<LogDTO>();
 
 		try {
 
@@ -2220,12 +2218,12 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOListResult<Cs2DTO> getCs2List(@WebParam(name = "searchParams") SearchParams searchParams) {
-		DTOListResult<Cs2DTO> result = new DTOListResult<Cs2DTO>();
+	public DTOListResult<LogDTO> getCs2List(@WebParam(name = "searchParams") SearchParams searchParams) {
+		DTOListResult<LogDTO> result = new DTOListResult<LogDTO>();
 
 		try {
 
-			result.setDtos(BeanMapper.mapList(comm.cs2Service.getCs2List(searchParams.getParamsMap()), Cs2DTO.class));
+			result.setDtos(BeanMapper.mapList(comm.cs2Service.getCs2List(searchParams.getParamsMap()), LogDTO.class));
 
 			return result;
 
@@ -2237,9 +2235,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOResult<As2DTO> findAs2(@WebParam(name = "id") Integer id) {
+	public DTOResult<Es3DTO> findAs2(@WebParam(name = "id") Integer id) {
 
-		DTOResult<As2DTO> result = new DTOResult<As2DTO>();
+		DTOResult<Es3DTO> result = new DTOResult<Es3DTO>();
 
 		try {
 
@@ -2249,7 +2247,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(as2, ERROR.OBJECT_NULL);
 
-			As2DTO dto = BeanMapper.map(as2, As2DTO.class);
+			Es3DTO dto = BeanMapper.map(as2, Es3DTO.class);
 
 			// Reference
 			dto.setTagDTO(findTag(dto.getTag()).getDto());
@@ -2273,9 +2271,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOResult<As2DTO> findAs2ByParams(@WebParam(name = "searchParams") SearchParams searchParams) {
+	public DTOResult<Es3DTO> findAs2ByParams(@WebParam(name = "searchParams") SearchParams searchParams) {
 
-		DTOResult<As2DTO> result = new DTOResult<As2DTO>();
+		DTOResult<Es3DTO> result = new DTOResult<Es3DTO>();
 
 		try {
 
@@ -2285,7 +2283,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(as2, ERROR.OBJECT_NULL);
 
-			As2DTO dto = BeanMapper.map(as2, As2DTO.class);
+			Es3DTO dto = BeanMapper.map(as2, Es3DTO.class);
 
 			// Reference
 			dto.setTagDTO(findTag(dto.getTag()).getDto());
@@ -2309,7 +2307,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public IdResult createAs2(@WebParam(name = "as2DTO") As2DTO as2DTO) {
+	public IdResult createAs2(@WebParam(name = "as2DTO") Es3DTO as2DTO) {
 
 		IdResult result = new IdResult();
 
@@ -2346,7 +2344,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public IdResult updateAs2(@WebParam(name = "id") Integer id, @WebParam(name = "as2DTO") As2DTO as2DTO) {
+	public IdResult updateAs2(@WebParam(name = "id") Integer id, @WebParam(name = "as2DTO") Es3DTO as2DTO) {
 
 		IdResult result = new IdResult();
 
@@ -2413,10 +2411,10 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public PaginationResult<As2DTO> getAs2Pagination(@WebParam(name = "searchParams") SearchParams searchParams,
+	public PaginationResult<Es3DTO> getAs2Pagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
 
-		PaginationResult<As2DTO> result = new PaginationResult<As2DTO>();
+		PaginationResult<Es3DTO> result = new PaginationResult<Es3DTO>();
 
 		try {
 
@@ -2430,13 +2428,13 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOListResult<As2DTO> getAs2List(@WebParam(name = "searchParams") SearchParams searchParams) {
+	public DTOListResult<Es3DTO> getAs2List(@WebParam(name = "searchParams") SearchParams searchParams) {
 
-		DTOListResult<As2DTO> result = new DTOListResult<As2DTO>();
+		DTOListResult<Es3DTO> result = new DTOListResult<Es3DTO>();
 
 		try {
 
-			result.setDtos(BeanMapper.mapList(comm.as2Service.getAs2List(searchParams.getParamsMap()), As2DTO.class));
+			result.setDtos(BeanMapper.mapList(comm.as2Service.getAs2List(searchParams.getParamsMap()), Es3DTO.class));
 
 			return result;
 
@@ -7500,9 +7498,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOResult<NetappBoxDTO> findNetappBox(@WebParam(name = "id") Integer id) {
+	public DTOResult<StorageBoxDTO> findNetappBox(@WebParam(name = "id") Integer id) {
 
-		DTOResult<NetappBoxDTO> result = new DTOResult<NetappBoxDTO>();
+		DTOResult<StorageBoxDTO> result = new DTOResult<StorageBoxDTO>();
 
 		try {
 
@@ -7512,7 +7510,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(netappBox, ERROR.OBJECT_NULL);
 
-			NetappBoxDTO dto = BeanMapper.map(netappBox, NetappBoxDTO.class);
+			StorageBoxDTO dto = BeanMapper.map(netappBox, StorageBoxDTO.class);
 
 			// Reference
 			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
@@ -7536,9 +7534,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOResult<NetappBoxDTO> findNetappBoxByParams(@WebParam(name = "searchParams") SearchParams searchParams) {
+	public DTOResult<StorageBoxDTO> findNetappBoxByParams(@WebParam(name = "searchParams") SearchParams searchParams) {
 
-		DTOResult<NetappBoxDTO> result = new DTOResult<NetappBoxDTO>();
+		DTOResult<StorageBoxDTO> result = new DTOResult<StorageBoxDTO>();
 
 		try {
 
@@ -7548,7 +7546,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(netappBox, ERROR.OBJECT_NULL);
 
-			NetappBoxDTO dto = BeanMapper.map(netappBox, NetappBoxDTO.class);
+			StorageBoxDTO dto = BeanMapper.map(netappBox, StorageBoxDTO.class);
 
 			// Reference
 			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
@@ -7572,7 +7570,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public IdResult createNetappBox(@WebParam(name = "netappBoxDTO") NetappBoxDTO netappBoxDTO) {
+	public IdResult createNetappBox(@WebParam(name = "netappBoxDTO") StorageBoxDTO netappBoxDTO) {
 
 		IdResult result = new IdResult();
 
@@ -7610,7 +7608,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public IdResult updateNetappBox(@WebParam(name = "id") Integer id,
-			@WebParam(name = "netappBoxDTO") NetappBoxDTO netappBoxDTO) {
+			@WebParam(name = "netappBoxDTO") StorageBoxDTO netappBoxDTO) {
 
 		IdResult result = new IdResult();
 
@@ -7678,11 +7676,11 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public PaginationResult<NetappBoxDTO> getNetappBoxPagination(
+	public PaginationResult<StorageBoxDTO> getNetappBoxPagination(
 			@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
 
-		PaginationResult<NetappBoxDTO> result = new PaginationResult<NetappBoxDTO>();
+		PaginationResult<StorageBoxDTO> result = new PaginationResult<StorageBoxDTO>();
 
 		try {
 
@@ -7696,14 +7694,14 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOListResult<NetappBoxDTO> getNetappBoxList(@WebParam(name = "searchParams") SearchParams searchParams) {
+	public DTOListResult<StorageBoxDTO> getNetappBoxList(@WebParam(name = "searchParams") SearchParams searchParams) {
 
-		DTOListResult<NetappBoxDTO> result = new DTOListResult<NetappBoxDTO>();
+		DTOListResult<StorageBoxDTO> result = new DTOListResult<StorageBoxDTO>();
 
 		try {
 
 			result.setDtos(BeanMapper.mapList(comm.netappBoxService.getNetappBoxList(searchParams.getParamsMap()),
-					NetappBoxDTO.class));
+					StorageBoxDTO.class));
 
 			return result;
 
@@ -7715,9 +7713,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOResult<NetappControllerDTO> findNetappController(@WebParam(name = "id") Integer id) {
+	public DTOResult<StorageDTO> findNetappController(@WebParam(name = "id") Integer id) {
 
-		DTOResult<NetappControllerDTO> result = new DTOResult<NetappControllerDTO>();
+		DTOResult<StorageDTO> result = new DTOResult<StorageDTO>();
 
 		try {
 
@@ -7727,7 +7725,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(netappController, ERROR.OBJECT_NULL);
 
-			NetappControllerDTO dto = BeanMapper.map(netappController, NetappControllerDTO.class);
+			StorageDTO dto = BeanMapper.map(netappController, StorageDTO.class);
 
 			// Reference
 			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
@@ -7747,10 +7745,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOResult<NetappControllerDTO> findNetappControllerByParams(
-			@WebParam(name = "searchParams") SearchParams searchParams) {
+	public DTOResult<StorageDTO> findNetappControllerByParams(@WebParam(name = "searchParams") SearchParams searchParams) {
 
-		DTOResult<NetappControllerDTO> result = new DTOResult<NetappControllerDTO>();
+		DTOResult<StorageDTO> result = new DTOResult<StorageDTO>();
 
 		try {
 
@@ -7760,7 +7757,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(netappController, ERROR.OBJECT_NULL);
 
-			NetappControllerDTO dto = BeanMapper.map(netappController, NetappControllerDTO.class);
+			StorageDTO dto = BeanMapper.map(netappController, StorageDTO.class);
 
 			// Reference
 			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
@@ -7780,8 +7777,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public IdResult createNetappController(
-			@WebParam(name = "netappControllerDTO") NetappControllerDTO netappControllerDTO) {
+	public IdResult createNetappController(@WebParam(name = "netappControllerDTO") StorageDTO netappControllerDTO) {
 
 		IdResult result = new IdResult();
 
@@ -7820,7 +7816,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public IdResult updateNetappController(@WebParam(name = "id") Integer id,
-			@WebParam(name = "netappControllerDTO") NetappControllerDTO netappControllerDTO) {
+			@WebParam(name = "netappControllerDTO") StorageDTO netappControllerDTO) {
 
 		IdResult result = new IdResult();
 
@@ -7888,11 +7884,11 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public PaginationResult<NetappControllerDTO> getNetappControllerPagination(
+	public PaginationResult<StorageDTO> getNetappControllerPagination(
 			@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
 
-		PaginationResult<NetappControllerDTO> result = new PaginationResult<NetappControllerDTO>();
+		PaginationResult<StorageDTO> result = new PaginationResult<StorageDTO>();
 
 		try {
 
@@ -7907,16 +7903,14 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOListResult<NetappControllerDTO> getNetappControllerList(
-			@WebParam(name = "searchParams") SearchParams searchParams) {
+	public DTOListResult<StorageDTO> getNetappControllerList(@WebParam(name = "searchParams") SearchParams searchParams) {
 
-		DTOListResult<NetappControllerDTO> result = new DTOListResult<NetappControllerDTO>();
+		DTOListResult<StorageDTO> result = new DTOListResult<StorageDTO>();
 
 		try {
 
 			result.setDtos(BeanMapper.mapList(
-					comm.netappControllerService.getNetappControllerList(searchParams.getParamsMap()),
-					NetappControllerDTO.class));
+					comm.netappControllerService.getNetappControllerList(searchParams.getParamsMap()), StorageDTO.class));
 
 			return result;
 
@@ -7928,9 +7922,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOResult<NetappPortDTO> findNetappPort(@WebParam(name = "id") Integer id) {
+	public DTOResult<StoragePortDTO> findNetappPort(@WebParam(name = "id") Integer id) {
 
-		DTOResult<NetappPortDTO> result = new DTOResult<NetappPortDTO>();
+		DTOResult<StoragePortDTO> result = new DTOResult<StoragePortDTO>();
 
 		try {
 
@@ -7940,7 +7934,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(netappPort, ERROR.OBJECT_NULL);
 
-			NetappPortDTO dto = BeanMapper.map(netappPort, NetappPortDTO.class);
+			StoragePortDTO dto = BeanMapper.map(netappPort, StoragePortDTO.class);
 
 			// Reference
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
@@ -7959,9 +7953,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOResult<NetappPortDTO> findNetappPortByParams(@WebParam(name = "searchParams") SearchParams searchParams) {
+	public DTOResult<StoragePortDTO> findNetappPortByParams(@WebParam(name = "searchParams") SearchParams searchParams) {
 
-		DTOResult<NetappPortDTO> result = new DTOResult<NetappPortDTO>();
+		DTOResult<StoragePortDTO> result = new DTOResult<StoragePortDTO>();
 
 		try {
 
@@ -7971,7 +7965,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(netappPort, ERROR.OBJECT_NULL);
 
-			NetappPortDTO dto = BeanMapper.map(netappPort, NetappPortDTO.class);
+			StoragePortDTO dto = BeanMapper.map(netappPort, StoragePortDTO.class);
 
 			// Reference
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
@@ -7990,7 +7984,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public IdResult createNetappPort(@WebParam(name = "netappPortDTO") NetappPortDTO netappPortDTO) {
+	public IdResult createNetappPort(@WebParam(name = "netappPortDTO") StoragePortDTO netappPortDTO) {
 
 		IdResult result = new IdResult();
 
@@ -8028,7 +8022,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public IdResult updateNetappPort(@WebParam(name = "id") Integer id,
-			@WebParam(name = "netappPortDTO") NetappPortDTO netappPortDTO) {
+			@WebParam(name = "netappPortDTO") StoragePortDTO netappPortDTO) {
 
 		IdResult result = new IdResult();
 
@@ -8097,11 +8091,11 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public PaginationResult<NetappPortDTO> getNetappPortPagination(
+	public PaginationResult<StoragePortDTO> getNetappPortPagination(
 			@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize) {
 
-		PaginationResult<NetappPortDTO> result = new PaginationResult<NetappPortDTO>();
+		PaginationResult<StoragePortDTO> result = new PaginationResult<StoragePortDTO>();
 
 		try {
 
@@ -8115,14 +8109,14 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOListResult<NetappPortDTO> getNetappPortList(@WebParam(name = "searchParams") SearchParams searchParams) {
+	public DTOListResult<StoragePortDTO> getNetappPortList(@WebParam(name = "searchParams") SearchParams searchParams) {
 
-		DTOListResult<NetappPortDTO> result = new DTOListResult<NetappPortDTO>();
+		DTOListResult<StoragePortDTO> result = new DTOListResult<StoragePortDTO>();
 
 		try {
 
 			result.setDtos(BeanMapper.mapList(comm.netappPortService.getNetappPortList(searchParams.getParamsMap()),
-					NetappPortDTO.class));
+					StoragePortDTO.class));
 
 			return result;
 

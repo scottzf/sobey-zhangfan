@@ -26,8 +26,33 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class NicPortService extends BasicSevcie {
+	
 	@Autowired
 	private NicPortDao nicPortDao;
+
+	/**
+	 * 创建动态查询条件组合.
+	 * 
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
+	 * 
+	 * @param searchParams
+	 * @return Specification<NicPort>
+	 */
+	private Specification<NicPort> buildSpecification(Map<String, Object> searchParams) {
+
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), NicPort.class);
+	}
+
+	/**
+	 * 根据ID删除对象
+	 * 
+	 * @param id
+	 */
+	public void deleteNicPort(Integer id) {
+		nicPortDao.delete(id);
+	}
 
 	/**
 	 * 根据ID获得对象
@@ -57,22 +82,28 @@ public class NicPortService extends BasicSevcie {
 	}
 
 	/**
-	 * 新增、保存对象
+	 * NicPortDTO webservice分页查询.
 	 * 
-	 * @param NicPort
-	 * @return NicPort
+	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
+	 * 
+	 * @param searchParams
+	 *            查询语句Map.
+	 * @param pageNumber
+	 *            当前页数,最小为1.
+	 * @param pageSize
+	 *            当前页大小,如每页为10行
+	 * @return PaginationResult<NicPortDTO>
 	 */
-	public NicPort saveOrUpdate(NicPort nicPort) {
-		return nicPortDao.save(nicPort);
-	}
+	public PaginationResult<NicPortDTO> getNicPortDTOPagination(Map<String, Object> searchParams, int pageNumber,
+			int pageSize) {
 
-	/**
-	 * 根据ID删除对象
-	 * 
-	 * @param id
-	 */
-	public void deleteNicPort(Integer id) {
-		nicPortDao.delete(id);
+		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
+		Page<NicPort> page = getNicPortPage(searchParams, pageNumber, pageSize);
+
+		List<NicPortDTO> dtos = BeanMapper.mapList(page.getContent(), NicPortDTO.class);
+
+		return fillPaginationResult(page, dtos);
 	}
 
 	/**
@@ -85,7 +116,8 @@ public class NicPortService extends BasicSevcie {
 	 * </pre>
 	 * 
 	 * @param searchParams
-	 *            动态查询条件Map * @return List<NicPort>
+	 *            动态查询条件Map
+	 * @return List<NicPort>
 	 */
 	public List<NicPort> getNicPortList(Map<String, Object> searchParams) {
 
@@ -114,42 +146,12 @@ public class NicPortService extends BasicSevcie {
 	}
 
 	/**
-	 * 创建动态查询条件组合.
+	 * 新增、保存对象
 	 * 
-	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
-	 * 
-	 * @param searchParams
-	 * @return Specification<NicPort>
+	 * @param NicPort
+	 * @return NicPort
 	 */
-	private Specification<NicPort> buildSpecification(Map<String, Object> searchParams) {
-
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-
-		return DynamicSpecifications.bySearchFilter(filters.values(), NicPort.class);
-	}
-
-	/**
-	 * NicPortDTO webservice分页查询.
-	 * 
-	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
-	 * 
-	 * @param searchParams
-	 *            查询语句Map.
-	 * @param pageNumber
-	 *            当前页数,最小为1.
-	 * @param pageSize
-	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<NicPortDTO>
-	 */
-	public PaginationResult<NicPortDTO> getNicPortDTOPagination(Map<String, Object> searchParams, int pageNumber,
-			int pageSize) {
-
-		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
-
-		Page<NicPort> page = getNicPortPage(searchParams, pageNumber, pageSize);
-
-		List<NicPortDTO> dtos = BeanMapper.mapList(page.getContent(), NicPortDTO.class);
-
-		return fillPaginationResult(page, dtos);
+	public NicPort saveOrUpdate(NicPort nicPort) {
+		return nicPortDao.save(nicPort);
 	}
 }

@@ -31,6 +31,32 @@ public class EipPolicyService extends BasicSevcie {
 	private EipPolicyDao eipPolicyDao;
 
 	/**
+	 * 创建动态查询条件组合.
+	 * 
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
+	 * 
+	 * @param searchParams
+	 * @return Specification<EipPolicy>
+	 */
+	private Specification<EipPolicy> buildSpecification(Map<String, Object> searchParams) {
+
+		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), EipPolicy.class);
+	}
+
+	/**
+	 * 根据ID删除对象
+	 * 
+	 * @param id
+	 */
+	public void deleteEipPolicy(Integer id) {
+		eipPolicyDao.delete(id);
+	}
+
+	/**
 	 * 根据ID获得对象
 	 * 
 	 * @param id
@@ -58,22 +84,26 @@ public class EipPolicyService extends BasicSevcie {
 	}
 
 	/**
-	 * 新增、保存对象
+	 * EipPolicyDTO webservice分页查询.
 	 * 
-	 * @param EipPolicy
-	 * @return EipPolicy
+	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
+	 * 
+	 * @param searchParams
+	 *            查询语句Map.
+	 * @param pageNumber
+	 *            当前页数,最小为1.
+	 * @param pageSize
+	 *            当前页大小,如每页为10行
+	 * @return PaginationResult<EipPolicyDTO>
 	 */
-	public EipPolicy saveOrUpdate(EipPolicy eipPolicy) {
-		return eipPolicyDao.save(eipPolicy);
-	}
+	public PaginationResult<EipPolicyDTO> getEipPolicyDTOPagination(Map<String, Object> searchParams, int pageNumber,
+			int pageSize) {
 
-	/**
-	 * 根据ID删除对象
-	 * 
-	 * @param id
-	 */
-	public void deleteEipPolicy(Integer id) {
-		eipPolicyDao.delete(id);
+		Page<EipPolicy> page = getEipPolicyPage(searchParams, pageNumber, pageSize);
+
+		List<EipPolicyDTO> dtos = BeanMapper.mapList(page.getContent(), EipPolicyDTO.class);
+
+		return fillPaginationResult(page, dtos);
 	}
 
 	/**
@@ -86,7 +116,8 @@ public class EipPolicyService extends BasicSevcie {
 	 * </pre>
 	 * 
 	 * @param searchParams
-	 *            动态查询条件Map * @return List<EipPolicy>
+	 *            动态查询条件Map
+	 * @return List<EipPolicy>
 	 */
 	public List<EipPolicy> getEipPolicyList(Map<String, Object> searchParams) {
 		return eipPolicyDao.findAll(buildSpecification(searchParams));
@@ -110,42 +141,12 @@ public class EipPolicyService extends BasicSevcie {
 	}
 
 	/**
-	 * 创建动态查询条件组合.
+	 * 新增、保存对象
 	 * 
-	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
-	 * 
-	 * @param searchParams
-	 * @return Specification<EipPolicy>
+	 * @param EipPolicy
+	 * @return EipPolicy
 	 */
-	private Specification<EipPolicy> buildSpecification(Map<String, Object> searchParams) {
-
-		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
-
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-
-		return DynamicSpecifications.bySearchFilter(filters.values(), EipPolicy.class);
-	}
-
-	/**
-	 * EipPolicyDTO webservice分页查询.
-	 * 
-	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
-	 * 
-	 * @param searchParams
-	 *            查询语句Map.
-	 * @param pageNumber
-	 *            当前页数,最小为1.
-	 * @param pageSize
-	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<EipPolicyDTO>
-	 */
-	public PaginationResult<EipPolicyDTO> getEipPolicyDTOPagination(Map<String, Object> searchParams, int pageNumber,
-			int pageSize) {
-
-		Page<EipPolicy> page = getEipPolicyPage(searchParams, pageNumber, pageSize);
-
-		List<EipPolicyDTO> dtos = BeanMapper.mapList(page.getContent(), EipPolicyDTO.class);
-
-		return fillPaginationResult(page, dtos);
+	public EipPolicy saveOrUpdate(EipPolicy eipPolicy) {
+		return eipPolicyDao.save(eipPolicy);
 	}
 }

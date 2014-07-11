@@ -1,4 +1,4 @@
-package com.sobey.cmdbuild.service.financial;
+package com.sobey.cmdbuild.service.specification;
 
 import java.util.List;
 import java.util.Map;
@@ -26,8 +26,35 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class EcsSpecService extends BasicSevcie {
+
 	@Autowired
 	private EcsSpecDao ecsSpecDao;
+
+	/**
+	 * 创建动态查询条件组合.
+	 * 
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
+	 * 
+	 * @param searchParams
+	 * @return Specification<EcsSpec>
+	 */
+	private Specification<EcsSpec> buildSpecification(Map<String, Object> searchParams) {
+
+		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), EcsSpec.class);
+	}
+
+	/**
+	 * 根据ID删除对象
+	 * 
+	 * @param id
+	 */
+	public void deleteEcsSpec(Integer id) {
+		ecsSpecDao.delete(id);
+	}
 
 	/**
 	 * 根据ID获得对象
@@ -57,22 +84,26 @@ public class EcsSpecService extends BasicSevcie {
 	}
 
 	/**
-	 * 新增、保存对象
+	 * EcsSpecDTO webservice分页查询.
 	 * 
-	 * @param EcsSpec
-	 * @return EcsSpec
+	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
+	 * 
+	 * @param searchParams
+	 *            查询语句Map.
+	 * @param pageNumber
+	 *            当前页数,最小为1.
+	 * @param pageSize
+	 *            当前页大小,如每页为10行
+	 * @return PaginationResult<EcsSpecDTO>
 	 */
-	public EcsSpec saveOrUpdate(EcsSpec ecsSpec) {
-		return ecsSpecDao.save(ecsSpec);
-	}
+	public PaginationResult<EcsSpecDTO> getEcsSpecDTOPagination(Map<String, Object> searchParams, int pageNumber,
+			int pageSize) {
 
-	/**
-	 * 根据ID删除对象
-	 * 
-	 * @param id
-	 */
-	public void deleteEcsSpec(Integer id) {
-		ecsSpecDao.delete(id);
+		Page<EcsSpec> page = getEcsSpecPage(searchParams, pageNumber, pageSize);
+
+		List<EcsSpecDTO> dtos = BeanMapper.mapList(page.getContent(), EcsSpecDTO.class);
+
+		return fillPaginationResult(page, dtos);
 	}
 
 	/**
@@ -85,7 +116,8 @@ public class EcsSpecService extends BasicSevcie {
 	 * </pre>
 	 * 
 	 * @param searchParams
-	 *            动态查询条件Map * @return List<EcsSpec>
+	 *            动态查询条件Map
+	 * @return List<EcsSpec>
 	 */
 	public List<EcsSpec> getEcsSpecList(Map<String, Object> searchParams) {
 		return ecsSpecDao.findAll(buildSpecification(searchParams));
@@ -109,42 +141,12 @@ public class EcsSpecService extends BasicSevcie {
 	}
 
 	/**
-	 * 创建动态查询条件组合.
+	 * 新增、保存对象
 	 * 
-	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
-	 * 
-	 * @param searchParams
-	 * @return Specification<EcsSpec>
+	 * @param EcsSpec
+	 * @return EcsSpec
 	 */
-	private Specification<EcsSpec> buildSpecification(Map<String, Object> searchParams) {
-
-		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
-
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-
-		return DynamicSpecifications.bySearchFilter(filters.values(), EcsSpec.class);
-	}
-
-	/**
-	 * EcsSpecDTO webservice分页查询.
-	 * 
-	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
-	 * 
-	 * @param searchParams
-	 *            查询语句Map.
-	 * @param pageNumber
-	 *            当前页数,最小为1.
-	 * @param pageSize
-	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<EcsSpecDTO>
-	 */
-	public PaginationResult<EcsSpecDTO> getEcsSpecDTOPagination(Map<String, Object> searchParams, int pageNumber,
-			int pageSize) {
-
-		Page<EcsSpec> page = getEcsSpecPage(searchParams, pageNumber, pageSize);
-
-		List<EcsSpecDTO> dtos = BeanMapper.mapList(page.getContent(), EcsSpecDTO.class);
-
-		return fillPaginationResult(page, dtos);
+	public EcsSpec saveOrUpdate(EcsSpec ecsSpec) {
+		return ecsSpecDao.save(ecsSpec);
 	}
 }

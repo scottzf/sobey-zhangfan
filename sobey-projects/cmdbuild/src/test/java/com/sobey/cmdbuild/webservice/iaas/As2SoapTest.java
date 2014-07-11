@@ -15,7 +15,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
 import com.sobey.cmdbuild.entity.Es3;
-import com.sobey.cmdbuild.webservice.response.dto.As2DTO;
+import com.sobey.cmdbuild.webservice.response.dto.Es3DTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
@@ -53,13 +53,13 @@ public class As2SoapTest extends BaseFunctionalTestCase {
 		paramsMap.put("EQ_code", code);
 		searchParams.setParamsMap(paramsMap);
 
-		DTOResult<As2DTO> responseParams = cmdbuildSoapService.findAs2ByParams(searchParams);
+		DTOResult<Es3DTO> responseParams = cmdbuildSoapService.findAs2ByParams(searchParams);
 
 		assertEquals(code, responseParams.getDto().getCode());
 
 		id = responseParams.getDto().getId();// 设置id
 
-		DTOResult<As2DTO> response = cmdbuildSoapService.findAs2(id);
+		DTOResult<Es3DTO> response = cmdbuildSoapService.findAs2(id);
 
 		assertNotNull(response);
 
@@ -73,7 +73,7 @@ public class As2SoapTest extends BaseFunctionalTestCase {
 
 		SearchParams searchParams = new SearchParams();
 
-		DTOListResult<As2DTO> result = cmdbuildSoapService.getAs2List(searchParams);
+		DTOListResult<Es3DTO> result = cmdbuildSoapService.getAs2List(searchParams);
 
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 
@@ -87,7 +87,7 @@ public class As2SoapTest extends BaseFunctionalTestCase {
 
 		Es3 as2 = TestData.randomAs2();
 
-		As2DTO as2DTO = BeanMapper.map(as2, As2DTO.class);
+		Es3DTO as2DTO = BeanMapper.map(as2, Es3DTO.class);
 
 		IdResult response = cmdbuildSoapService.createAs2(as2DTO);
 
@@ -101,9 +101,9 @@ public class As2SoapTest extends BaseFunctionalTestCase {
 	// @Ignore
 	public void testUpdateAs2() {
 
-		DTOResult<As2DTO> response = cmdbuildSoapService.findAs2(id);
+		DTOResult<Es3DTO> response = cmdbuildSoapService.findAs2(id);
 
-		As2DTO as2DTO = response.getDto();
+		Es3DTO as2DTO = response.getDto();
 
 		as2DTO.setCode(RandomData.randomName("code"));
 
@@ -131,7 +131,7 @@ public class As2SoapTest extends BaseFunctionalTestCase {
 
 		SearchParams searchParams = new SearchParams();
 
-		PaginationResult<As2DTO> result = cmdbuildSoapService.getAs2Pagination(searchParams, 1, 10);
+		PaginationResult<Es3DTO> result = cmdbuildSoapService.getAs2Pagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 

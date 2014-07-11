@@ -26,8 +26,35 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class ServerPortService extends BasicSevcie {
+	
 	@Autowired
 	private ServerPortDao serverPortDao;
+
+	/**
+	 * 创建动态查询条件组合.
+	 * 
+	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
+	 * 
+	 * @param searchParams
+	 * @return Specification<ServerPort>
+	 */
+	private Specification<ServerPort> buildSpecification(Map<String, Object> searchParams) {
+
+		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
+
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+
+		return DynamicSpecifications.bySearchFilter(filters.values(), ServerPort.class);
+	}
+
+	/**
+	 * 根据ID删除对象
+	 * 
+	 * @param id
+	 */
+	public void deleteServerPort(Integer id) {
+		serverPortDao.delete(id);
+	}
 
 	/**
 	 * 根据ID获得对象
@@ -57,22 +84,26 @@ public class ServerPortService extends BasicSevcie {
 	}
 
 	/**
-	 * 新增、保存对象
+	 * ServerPortDTO webservice分页查询.
 	 * 
-	 * @param ServerPort
-	 * @return ServerPort
+	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
+	 * 
+	 * @param searchParams
+	 *            查询语句Map.
+	 * @param pageNumber
+	 *            当前页数,最小为1.
+	 * @param pageSize
+	 *            当前页大小,如每页为10行
+	 * @return PaginationResult<ServerPortDTO>
 	 */
-	public ServerPort saveOrUpdate(ServerPort serverPort) {
-		return serverPortDao.save(serverPort);
-	}
+	public PaginationResult<ServerPortDTO> getServerPortDTOPagination(Map<String, Object> searchParams, int pageNumber,
+			int pageSize) {
 
-	/**
-	 * 根据ID删除对象
-	 * 
-	 * @param id
-	 */
-	public void deleteServerPort(Integer id) {
-		serverPortDao.delete(id);
+		Page<ServerPort> page = getServerPortPage(searchParams, pageNumber, pageSize);
+
+		List<ServerPortDTO> dtos = BeanMapper.mapList(page.getContent(), ServerPortDTO.class);
+
+		return fillPaginationResult(page, dtos);
 	}
 
 	/**
@@ -85,7 +116,8 @@ public class ServerPortService extends BasicSevcie {
 	 * </pre>
 	 * 
 	 * @param searchParams
-	 *            动态查询条件Map * @return List<ServerPort>
+	 *            动态查询条件Map
+	 * @return List<ServerPort>
 	 */
 	public List<ServerPort> getServerPortList(Map<String, Object> searchParams) {
 		return serverPortDao.findAll(buildSpecification(searchParams));
@@ -109,42 +141,12 @@ public class ServerPortService extends BasicSevcie {
 	}
 
 	/**
-	 * 创建动态查询条件组合.
+	 * 新增、保存对象
 	 * 
-	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
-	 * 
-	 * @param searchParams
-	 * @return Specification<ServerPort>
+	 * @param ServerPort
+	 * @return ServerPort
 	 */
-	private Specification<ServerPort> buildSpecification(Map<String, Object> searchParams) {
-
-		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
-
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-
-		return DynamicSpecifications.bySearchFilter(filters.values(), ServerPort.class);
-	}
-
-	/**
-	 * ServerPortDTO webservice分页查询.
-	 * 
-	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
-	 * 
-	 * @param searchParams
-	 *            查询语句Map.
-	 * @param pageNumber
-	 *            当前页数,最小为1.
-	 * @param pageSize
-	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<ServerPortDTO>
-	 */
-	public PaginationResult<ServerPortDTO> getServerPortDTOPagination(Map<String, Object> searchParams, int pageNumber,
-			int pageSize) {
-
-		Page<ServerPort> page = getServerPortPage(searchParams, pageNumber, pageSize);
-
-		List<ServerPortDTO> dtos = BeanMapper.mapList(page.getContent(), ServerPortDTO.class);
-
-		return fillPaginationResult(page, dtos);
+	public ServerPort saveOrUpdate(ServerPort serverPort) {
+		return serverPortDao.save(serverPort);
 	}
 }
