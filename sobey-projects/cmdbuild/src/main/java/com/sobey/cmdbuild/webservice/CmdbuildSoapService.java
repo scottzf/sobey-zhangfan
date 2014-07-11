@@ -6,7 +6,6 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import com.sobey.cmdbuild.constants.WsConstants;
-import com.sobey.cmdbuild.webservice.response.dto.CompanyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DeviceSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DnsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DnsPolicyDTO;
@@ -14,19 +13,13 @@ import com.sobey.cmdbuild.webservice.response.dto.EcsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EcsSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EipDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EipPolicyDTO;
-import com.sobey.cmdbuild.webservice.response.dto.EipSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ElbDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ElbPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.Es3DTO;
-import com.sobey.cmdbuild.webservice.response.dto.Es3SpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EsgDTO;
 import com.sobey.cmdbuild.webservice.response.dto.EsgPolicyDTO;
-import com.sobey.cmdbuild.webservice.response.dto.FimasBoxDTO;
-import com.sobey.cmdbuild.webservice.response.dto.FimasDTO;
-import com.sobey.cmdbuild.webservice.response.dto.FimasPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.FirewallDTO;
 import com.sobey.cmdbuild.webservice.response.dto.FirewallPortDTO;
-import com.sobey.cmdbuild.webservice.response.dto.GroupPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.HardDiskDTO;
 import com.sobey.cmdbuild.webservice.response.dto.IdcDTO;
 import com.sobey.cmdbuild.webservice.response.dto.IpaddressDTO;
@@ -80,25 +73,6 @@ public interface CmdbuildSoapService {
 	/*************************************************
 	 *************** Organisation ********************
 	 *************************************************/
-
-	// ==============================//
-	// =========== Comany ===========//
-	// ==============================//
-
-	DTOResult<CompanyDTO> findCompany(@WebParam(name = "id") Integer id);
-
-	DTOResult<CompanyDTO> findCompanyByParams(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	IdResult createCompany(@WebParam(name = "companyDTO") CompanyDTO companyDTO);
-
-	IdResult updateCompany(@WebParam(name = "id") Integer id, @WebParam(name = "companyDTO") CompanyDTO companyDTO);
-
-	IdResult deleteCompany(@WebParam(name = "id") Integer id);
-
-	DTOListResult<CompanyDTO> getCompanyList(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	PaginationResult<CompanyDTO> getCompanyPagination(@WebParam(name = "searchParams") SearchParams searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
 	// =========== Tenants ==========//
@@ -177,7 +151,7 @@ public interface CmdbuildSoapService {
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	/*************************************************
-	 ****************** Financial ********************
+	 ****************** Specification ****************
 	 *************************************************/
 
 	// ==============================//
@@ -219,42 +193,27 @@ public interface CmdbuildSoapService {
 	PaginationResult<EcsSpecDTO> getEcsSpecPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
-	// ==============================//
-	// =========== EipSpec ==========//
-	// ==============================//
-
-	DTOResult<EipSpecDTO> findEipSpec(@WebParam(name = "id") Integer id);
-
-	DTOResult<EipSpecDTO> findEipSpecByParams(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	IdResult createEipSpec(@WebParam(name = "eipSpecDTO") EipSpecDTO eipSpecDTO);
-
-	IdResult updateEipSpec(@WebParam(name = "id") Integer id, @WebParam(name = "eipSpecDTO") EipSpecDTO eipSpecDTO);
-
-	IdResult deleteEipSpec(@WebParam(name = "id") Integer id);
-
-	DTOListResult<EipSpecDTO> getEipSpecList(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	PaginationResult<EipSpecDTO> getEipSpecPagination(@WebParam(name = "searchParams") SearchParams searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+	/*************************************************
+	 ********************** IaaS *********************
+	 *************************************************/
 
 	// ==============================//
-	// ============ Es3Spec =========//
+	// ============ Log =============//
 	// ==============================//
 
-	DTOResult<Es3SpecDTO> findEs3Spec(@WebParam(name = "id") Integer id);
+	DTOResult<LogDTO> findLog(@WebParam(name = "id") Integer id);
 
-	DTOResult<Es3SpecDTO> findEs3SpecByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOResult<LogDTO> findLogByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	IdResult createEs3Spec(@WebParam(name = "es3SpecDTO") Es3SpecDTO es3SpecDTO);
+	IdResult createLog(@WebParam(name = "logDTO") LogDTO logDTO);
 
-	IdResult updateEs3Spec(@WebParam(name = "id") Integer id, @WebParam(name = "es3SpecDTO") Es3SpecDTO es3SpecDTO);
+	IdResult updateLog(@WebParam(name = "id") Integer id, @WebParam(name = "logDTO") LogDTO logDTO);
 
-	IdResult deleteEs3Spec(@WebParam(name = "id") Integer id);
+	IdResult deleteLog(@WebParam(name = "id") Integer id);
 
-	DTOListResult<Es3SpecDTO> getEs3SpecList(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOListResult<LogDTO> getLogList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<Es3SpecDTO> getEs3SpecPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+	PaginationResult<LogDTO> getLogPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -277,41 +236,22 @@ public interface CmdbuildSoapService {
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
-	// ============ Cs2 =============//
+	// ============ Es3 =============//
 	// ==============================//
 
-	DTOResult<LogDTO> findCs2(@WebParam(name = "id") Integer id);
+	DTOResult<Es3DTO> findEs3(@WebParam(name = "id") Integer id);
 
-	DTOResult<LogDTO> findCs2ByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOResult<Es3DTO> findEs3ByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	IdResult createCs2(@WebParam(name = "cs2DTO") LogDTO cs2DTO);
+	IdResult createEs3(@WebParam(name = "es3DTO") Es3DTO es3DTO);
 
-	IdResult updateCs2(@WebParam(name = "id") Integer id, @WebParam(name = "cs2DTO") LogDTO cs2DTO);
+	IdResult updateEs3(@WebParam(name = "id") Integer id, @WebParam(name = "es3DTO") Es3DTO es3DTO);
 
-	IdResult deleteCs2(@WebParam(name = "id") Integer id);
+	IdResult deleteEs3(@WebParam(name = "id") Integer id);
 
-	DTOListResult<LogDTO> getCs2List(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOListResult<Es3DTO> getEs3List(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<LogDTO> getCs2Pagination(@WebParam(name = "searchParams") SearchParams searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
-	// ==============================//
-	// ============== As2 ===========//
-	// ==============================//
-
-	DTOResult<Es3DTO> findAs2(@WebParam(name = "id") Integer id);
-
-	DTOResult<Es3DTO> findAs2ByParams(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	IdResult createAs2(@WebParam(name = "as2DTO") Es3DTO as2DTO);
-
-	IdResult updateAs2(@WebParam(name = "id") Integer id, @WebParam(name = "as2DTO") Es3DTO as2DTO);
-
-	IdResult deleteAs2(@WebParam(name = "id") Integer id);
-
-	DTOListResult<Es3DTO> getAs2List(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	PaginationResult<Es3DTO> getAs2Pagination(@WebParam(name = "searchParams") SearchParams searchParams,
+	PaginationResult<Es3DTO> getEs3Pagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -331,6 +271,82 @@ public interface CmdbuildSoapService {
 	DTOListResult<EipDTO> getEipList(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	PaginationResult<EipDTO> getEipPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// ============ Elb =============//
+	// ==============================//
+
+	DTOResult<ElbDTO> findElb(@WebParam(name = "id") Integer id);
+
+	DTOResult<ElbDTO> findElbByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createElb(@WebParam(name = "elbDTO") ElbDTO elbDTO);
+
+	IdResult updateElb(@WebParam(name = "id") Integer id, @WebParam(name = "elbDTO") ElbDTO elbDTO);
+
+	IdResult deleteElb(@WebParam(name = "id") Integer id);
+
+	DTOListResult<ElbDTO> getElbList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<ElbDTO> getElbPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// ============ Dns =============//
+	// ==============================//
+
+	DTOResult<DnsDTO> findDns(@WebParam(name = "id") Integer id);
+
+	DTOResult<DnsDTO> findDnsByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createDns(@WebParam(name = "dnsDTO") DnsDTO DnsDTO);
+
+	IdResult updateDns(@WebParam(name = "id") Integer id, @WebParam(name = "dnsDTO") DnsDTO DnsDTO);
+
+	IdResult deleteDns(@WebParam(name = "id") Integer id);
+
+	DTOListResult<DnsDTO> getDnsList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<DnsDTO> getDnsPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// ============ Esg =============//
+	// ==============================//
+
+	DTOResult<EsgDTO> findEsg(@WebParam(name = "id") Integer id);
+
+	DTOResult<EsgDTO> findEsgByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createEsg(@WebParam(name = "esgDTO") EsgDTO esgDTO);
+
+	IdResult updateEsg(@WebParam(name = "id") Integer id, @WebParam(name = "esgDTO") EsgDTO esgDTO);
+
+	IdResult deleteEsg(@WebParam(name = "id") Integer id);
+
+	DTOListResult<EsgDTO> getEsgList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<EsgDTO> getEsgPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// ============ Vpn =============//
+	// ==============================//
+
+	DTOResult<VpnDTO> findVpn(@WebParam(name = "id") Integer id);
+
+	DTOResult<VpnDTO> findVpnByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createVpn(@WebParam(name = "vpnDTO") VpnDTO vpnDTO);
+
+	IdResult updateVpn(@WebParam(name = "id") Integer id, @WebParam(name = "vpnDTO") VpnDTO vpnDTO);
+
+	IdResult deleteVpn(@WebParam(name = "id") Integer id);
+
+	DTOListResult<VpnDTO> getVpnList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<VpnDTO> getVpnPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -354,25 +370,6 @@ public interface CmdbuildSoapService {
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
-	// ============ Elb =============//
-	// ==============================//
-
-	DTOResult<ElbDTO> findElb(@WebParam(name = "id") Integer id);
-
-	DTOResult<ElbDTO> findElbByParams(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	IdResult createElb(@WebParam(name = "elbDTO") ElbDTO elbDTO);
-
-	IdResult updateElb(@WebParam(name = "id") Integer id, @WebParam(name = "elbDTO") ElbDTO elbDTO);
-
-	IdResult deleteElb(@WebParam(name = "id") Integer id);
-
-	DTOListResult<ElbDTO> getElbList(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	PaginationResult<ElbDTO> getElbPagination(@WebParam(name = "searchParams") SearchParams searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
-	// ==============================//
 	// ========= ElbPolicy ==========//
 	// ==============================//
 
@@ -390,25 +387,6 @@ public interface CmdbuildSoapService {
 	DTOListResult<ElbPolicyDTO> getElbPolicyList(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	PaginationResult<ElbPolicyDTO> getElbPolicyPagination(@WebParam(name = "searchParams") SearchParams searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
-	// ==============================//
-	// ============ Dns =============//
-	// ==============================//
-
-	DTOResult<DnsDTO> findDns(@WebParam(name = "id") Integer id);
-
-	DTOResult<DnsDTO> findDnsByParams(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	IdResult createDns(@WebParam(name = "dnsDTO") DnsDTO DnsDTO);
-
-	IdResult updateDns(@WebParam(name = "id") Integer id, @WebParam(name = "dnsDTO") DnsDTO DnsDTO);
-
-	IdResult deleteDns(@WebParam(name = "id") Integer id);
-
-	DTOListResult<DnsDTO> getDnsList(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	PaginationResult<DnsDTO> getDnsPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -432,25 +410,6 @@ public interface CmdbuildSoapService {
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
-	// ============ Esg =============//
-	// ==============================//
-
-	DTOResult<EsgDTO> findEsg(@WebParam(name = "id") Integer id);
-
-	DTOResult<EsgDTO> findEsgByParams(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	IdResult createEsg(@WebParam(name = "esgDTO") EsgDTO esgDTO);
-
-	IdResult updateEsg(@WebParam(name = "id") Integer id, @WebParam(name = "esgDTO") EsgDTO esgDTO);
-
-	IdResult deleteEsg(@WebParam(name = "id") Integer id);
-
-	DTOListResult<EsgDTO> getEsgList(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	PaginationResult<EsgDTO> getEsgPagination(@WebParam(name = "searchParams") SearchParams searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
-	// ==============================//
 	// ========= EsgPolicy ==========//
 	// ==============================//
 
@@ -471,46 +430,6 @@ public interface CmdbuildSoapService {
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
-	// ============ Vpn =============//
-	// ==============================//
-
-	DTOResult<VpnDTO> findVpn(@WebParam(name = "id") Integer id);
-
-	DTOResult<VpnDTO> findVpnByParams(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	IdResult createVpn(@WebParam(name = "vpnDTO") VpnDTO vpnDTO);
-
-	IdResult updateVpn(@WebParam(name = "id") Integer id, @WebParam(name = "vpnDTO") VpnDTO vpnDTO);
-
-	IdResult deleteVpn(@WebParam(name = "id") Integer id);
-
-	DTOListResult<VpnDTO> getVpnList(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	PaginationResult<VpnDTO> getVpnPagination(@WebParam(name = "searchParams") SearchParams searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
-	// ==============================//
-	// ========= GroupPolicy ========//
-	// ==============================//
-
-	DTOResult<GroupPolicyDTO> findGroupPolicy(@WebParam(name = "id") Integer id);
-
-	DTOResult<GroupPolicyDTO> findGroupPolicyByParams(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	IdResult createGroupPolicy(@WebParam(name = "groupPolicyDTO") GroupPolicyDTO groupPolicyDTO);
-
-	IdResult updateGroupPolicy(@WebParam(name = "id") Integer id,
-			@WebParam(name = "groupPolicyDTO") GroupPolicyDTO groupPolicyDTO);
-
-	IdResult deleteGroupPolicy(@WebParam(name = "id") Integer id);
-
-	DTOListResult<GroupPolicyDTO> getGroupPolicyList(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	PaginationResult<GroupPolicyDTO> getGroupPolicyPagination(
-			@WebParam(name = "searchParams") SearchParams searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
-	// ==============================//
 	// ========= MapEcsEsg ==========//
 	// ==============================//
 
@@ -519,20 +438,12 @@ public interface CmdbuildSoapService {
 	IdResult deleteMapEcsEsg(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "esgId") Integer esgId);
 
 	// ==============================//
-	// ========= MapEcsAs2 ==========//
+	// ========= MapEcsEs3 ==========//
 	// ==============================//
 
-	IdResult createMapEcsAs2(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "as2Id") Integer as2Id);
+	IdResult createMapEcsEs3(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "es3Id") Integer es3Id);
 
-	IdResult deleteMapEcsAs2(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "as2Id") Integer as2Id);
-
-	// ==============================//
-	// ========= MapEcsCs2 ==========//
-	// ==============================//
-
-	IdResult createMapEcsCs2(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "cs2Id") Integer cs2Id);
-
-	IdResult deleteMapEcsCs2(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "cs2Id") Integer cs2Id);
+	IdResult deleteMapEcsEs3(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "es3Id") Integer es3Id);
 
 	// ==============================//
 	// ========= MapEcsEip ==========//
@@ -566,96 +477,85 @@ public interface CmdbuildSoapService {
 
 	IdResult deleteMapEipDns(@WebParam(name = "eipId") Integer eipId, @WebParam(name = "dnsId") Integer dnsId);
 
-	// ==============================//
-	// ====== MapGroupPolicyVlan ====//
-	// ==============================//
-
-	IdResult createMapGroupPolicyVlan(@WebParam(name = "groupPolicyId") Integer groupPolicyId,
-			@WebParam(name = "vlanId") Integer vlanId);
-
-	IdResult deleteMapGroupPolicyVlan(@WebParam(name = "groupPolicyId") Integer groupPolicyId,
-			@WebParam(name = "vlanId") Integer vlanId);
-
-	// ==============================//
-	// === MapGroupPolicyIpaddress ==//
-	// ==============================//
-
-	IdResult createMapGroupPolicyIpaddress(@WebParam(name = "groupPolicyId") Integer groupPolicyId,
-			@WebParam(name = "ipaddressId") Integer ipaddressId);
-
-	IdResult deleteMapGroupPolicyIpaddress(@WebParam(name = "groupPolicyId") Integer groupPolicyId,
-			@WebParam(name = "ipaddressId") Integer ipaddressId);
-
-	// ==============================//
-	// ====== MapVpnGroupPolicy =====//
-	// ==============================//
-
-	IdResult createMapVpnGroupPolicy(@WebParam(name = "vpnId") Integer vpnId,
-			@WebParam(name = "groupPolicyId") Integer groupPolicyId);
-
-	IdResult deleteMapVpnGroupPolicy(@WebParam(name = "vpnId") Integer vpnId,
-			@WebParam(name = "groupPolicyId") Integer groupPolicyId);
-
 	/*************************************************
 	 *************** Infrastructure ******************
 	 *************************************************/
 
 	// ==============================//
-	// =========== Fimas ============//
+	// ========== HardDisk ==========//
 	// ==============================//
 
-	DTOResult<FimasDTO> findFimas(@WebParam(name = "id") Integer id);
+	DTOResult<HardDiskDTO> findHardDisk(@WebParam(name = "id") Integer id);
 
-	DTOResult<FimasDTO> findFimasByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOResult<HardDiskDTO> findHardDiskByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	IdResult createFimas(@WebParam(name = "fimasDTO") FimasDTO fimasDTO);
+	IdResult createHardDisk(@WebParam(name = "hardDiskDTO") HardDiskDTO hardDiskDTO);
 
-	IdResult updateFimas(@WebParam(name = "id") Integer id, @WebParam(name = "fimasDTO") FimasDTO fimasDTO);
+	IdResult updateHardDisk(@WebParam(name = "id") Integer id, @WebParam(name = "hardDiskDTO") HardDiskDTO hardDiskDTO);
 
-	IdResult deleteFimas(@WebParam(name = "id") Integer id);
+	IdResult deleteHardDisk(@WebParam(name = "id") Integer id);
 
-	DTOListResult<FimasDTO> getFimasList(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOListResult<HardDiskDTO> getHardDiskList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<FimasDTO> getFimasPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+	PaginationResult<HardDiskDTO> getHardDiskPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
-	// ========== FimasBox ==========//
+	// =========== Memory ===========//
 	// ==============================//
 
-	DTOResult<FimasBoxDTO> findFimasBox(@WebParam(name = "id") Integer id);
+	DTOResult<MemoryDTO> findMemory(@WebParam(name = "id") Integer id);
 
-	DTOResult<FimasBoxDTO> findFimasBoxByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOResult<MemoryDTO> findMemoryByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	IdResult createFimasBox(@WebParam(name = "fimasBoxDTO") FimasBoxDTO fimasBoxDTO);
+	IdResult createMemory(@WebParam(name = "memoryDTO") MemoryDTO memoryDTO);
 
-	IdResult updateFimasBox(@WebParam(name = "id") Integer id, @WebParam(name = "fimasBoxDTO") FimasBoxDTO fimasBoxDTO);
+	IdResult updateMemory(@WebParam(name = "id") Integer id, @WebParam(name = "memoryDTO") MemoryDTO memoryDTO);
 
-	IdResult deleteFimasBox(@WebParam(name = "id") Integer id);
+	IdResult deleteMemory(@WebParam(name = "id") Integer id);
 
-	DTOListResult<FimasBoxDTO> getFimasBoxList(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOListResult<MemoryDTO> getMemoryList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<FimasBoxDTO> getFimasBoxPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+	PaginationResult<MemoryDTO> getMemoryPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
-	// ========== FimasPort =========//
+	// ============== Nic ===========//
 	// ==============================//
 
-	DTOResult<FimasPortDTO> findFimasPort(@WebParam(name = "id") Integer id);
+	DTOResult<NicDTO> findNic(@WebParam(name = "id") Integer id);
 
-	DTOResult<FimasPortDTO> findFimasPortByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOResult<NicDTO> findNicByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	IdResult createFimasPort(@WebParam(name = "fimasPortDTO") FimasPortDTO fimasPortDTO);
+	IdResult createNic(@WebParam(name = "nicDTO") NicDTO nicDTO);
 
-	IdResult updateFimasPort(@WebParam(name = "id") Integer id,
-			@WebParam(name = "fimasPortDTO") FimasPortDTO fimasPortDTO);
+	IdResult updateNic(@WebParam(name = "id") Integer id, @WebParam(name = "nicDTO") NicDTO nicDTO);
 
-	IdResult deleteFimasPort(@WebParam(name = "id") Integer id);
+	IdResult deleteNic(@WebParam(name = "id") Integer id);
 
-	DTOListResult<FimasPortDTO> getFimasPortList(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOListResult<NicDTO> getNicList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<FimasPortDTO> getFimasPortPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+	PaginationResult<NicDTO> getNicPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// ========== StorageBox =========//
+	// ==============================//
+
+	DTOResult<StorageBoxDTO> findStorageBox(@WebParam(name = "id") Integer id);
+
+	DTOResult<StorageBoxDTO> findStorageBoxByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createStorageBox(@WebParam(name = "storageBoxDTO") StorageBoxDTO storageBoxDTO);
+
+	IdResult updateStorageBox(@WebParam(name = "id") Integer id,
+			@WebParam(name = "storageBoxDTO") StorageBoxDTO storageBoxDTO);
+
+	IdResult deleteStorageBox(@WebParam(name = "id") Integer id);
+
+	DTOListResult<StorageBoxDTO> getStorageBoxList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<StorageBoxDTO> getStorageBoxPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -678,43 +578,81 @@ public interface CmdbuildSoapService {
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
-	// ======== FirewallPort ========//
+	// ======== LoadBalancer ========//
 	// ==============================//
 
-	DTOResult<FirewallPortDTO> findFirewallPort(@WebParam(name = "id") Integer id);
+	DTOResult<LoadBalancerDTO> findLoadBalancer(@WebParam(name = "id") Integer id);
 
-	DTOResult<FirewallPortDTO> findFirewallPortByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOResult<LoadBalancerDTO> findLoadBalancerByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	IdResult createFirewallPort(@WebParam(name = "firewallPortDTO") FirewallPortDTO firewallPortDTO);
+	IdResult createLoadBalancer(@WebParam(name = "loadBalancerDTO") LoadBalancerDTO loadBalancerDTO);
 
-	IdResult updateFirewallPort(@WebParam(name = "id") Integer id,
-			@WebParam(name = "firewallPortDTO") FirewallPortDTO firewallPortDTO);
+	IdResult updateLoadBalancer(@WebParam(name = "id") Integer id,
+			@WebParam(name = "loadBalancerDTO") LoadBalancerDTO loadBalancerDTO);
 
-	IdResult deleteFirewallPort(@WebParam(name = "id") Integer id);
+	IdResult deleteLoadBalancer(@WebParam(name = "id") Integer id);
 
-	DTOListResult<FirewallPortDTO> getFirewallPortList(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOListResult<LoadBalancerDTO> getLoadBalancerList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<FirewallPortDTO> getFirewallPortPagination(
+	PaginationResult<LoadBalancerDTO> getLoadBalancerPagination(
 			@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
-	// ========== HardDisk ==========//
+	// ============ Server ==========//
 	// ==============================//
 
-	DTOResult<HardDiskDTO> findHardDisk(@WebParam(name = "id") Integer id);
+	DTOResult<ServerDTO> findServer(@WebParam(name = "id") Integer id);
 
-	DTOResult<HardDiskDTO> findHardDiskByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOResult<ServerDTO> findServerByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	IdResult createHardDisk(@WebParam(name = "hardDiskDTO") HardDiskDTO hardDiskDTO);
+	IdResult createServer(@WebParam(name = "serverDTO") ServerDTO serverDTO);
 
-	IdResult updateHardDisk(@WebParam(name = "id") Integer id, @WebParam(name = "hardDiskDTO") HardDiskDTO hardDiskDTO);
+	IdResult updateServer(@WebParam(name = "id") Integer id, @WebParam(name = "serverDTO") ServerDTO serverDTO);
 
-	IdResult deleteHardDisk(@WebParam(name = "id") Integer id);
+	IdResult deleteServer(@WebParam(name = "id") Integer id);
 
-	DTOListResult<HardDiskDTO> getHardDiskList(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOListResult<ServerDTO> getServerList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<HardDiskDTO> getHardDiskPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+	PaginationResult<ServerDTO> getServerPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// ========== Storage ==========//
+	// ==============================//
+
+	DTOResult<StorageDTO> findStorage(@WebParam(name = "id") Integer id);
+
+	DTOResult<StorageDTO> findStorageByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createStorage(@WebParam(name = "storageDTO") StorageDTO storageDTO);
+
+	IdResult updateStorage(@WebParam(name = "id") Integer id, @WebParam(name = "storageDTO") StorageDTO storageDTO);
+
+	IdResult deleteStorage(@WebParam(name = "id") Integer id);
+
+	DTOListResult<StorageDTO> getStorageList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<StorageDTO> getStoragePagination(@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// ============ Switch =========//
+	// ==============================//
+
+	DTOResult<SwitchesDTO> findSwitches(@WebParam(name = "id") Integer id);
+
+	DTOResult<SwitchesDTO> findSwitchesByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createSwitches(@WebParam(name = "switchesDTO") SwitchesDTO switchesDTO);
+
+	IdResult updateSwitches(@WebParam(name = "id") Integer id, @WebParam(name = "switchesDTO") SwitchesDTO switchesDTO);
+
+	IdResult deleteSwitches(@WebParam(name = "id") Integer id);
+
+	DTOListResult<SwitchesDTO> getSwitchesList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<SwitchesDTO> getSwitchesPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -746,42 +684,62 @@ public interface CmdbuildSoapService {
 	IdResult allocateIpaddress(@WebParam(name = "id") Integer id);
 
 	/**
-	 * 批量插入 IPAddress。<br/>
-	 * 先判断是否有相同的 code，如果有相同的 code 则跳过。<br/>
-	 * 初始的状态为“未使用” 。<br/>
+	 * 批量插入 IPAddress
 	 * 
-	 * @param ipaddressDTOList
-	 * @return IdResult
+	 * 先判断是否有相同的 code，如果有相同的 code 则跳过
+	 * 
+	 * 初始的状态为“未使用”
 	 */
 	IdResult insertIpaddress(@WebParam(name = "ipaddressDTOList") List<IpaddressDTO> ipaddressDTOList);
 
 	/**
-	 * 初始化 IPAddress。<br/>
-	 * 将 IPAddress 的状态设置为 “未使用”状态<br/>
-	 * 
-	 * @param id
-	 * @return IdResult
+	 * 初始化 IPAddress , 将 IPAddress 的状态设置为 “未使用”状态
 	 */
 	IdResult initIpaddress(@WebParam(name = "id") Integer id);
 
 	// ==============================//
-	// ======== LoadBalancer ========//
+	// ============ Vlan ============//
 	// ==============================//
 
-	DTOResult<LoadBalancerDTO> findLoadBalancer(@WebParam(name = "id") Integer id);
+	DTOResult<VlanDTO> findVlan(@WebParam(name = "id") Integer id);
 
-	DTOResult<LoadBalancerDTO> findLoadBalancerByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOResult<VlanDTO> findVlanByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	IdResult createLoadBalancer(@WebParam(name = "loadBalancerDTO") LoadBalancerDTO loadBalancerDTO);
+	IdResult createVlan(@WebParam(name = "vlanDTO") VlanDTO vlanDTO);
 
-	IdResult updateLoadBalancer(@WebParam(name = "id") Integer id,
-			@WebParam(name = "loadBalancerDTO") LoadBalancerDTO loadBalancerDTO);
+	IdResult updateVlan(@WebParam(name = "id") Integer id, @WebParam(name = "vlanDTO") VlanDTO vlanDTO);
 
-	IdResult deleteLoadBalancer(@WebParam(name = "id") Integer id);
+	IdResult deleteVlan(@WebParam(name = "id") Integer id);
 
-	DTOListResult<LoadBalancerDTO> getLoadBalancerList(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOListResult<VlanDTO> getVlanList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<LoadBalancerDTO> getLoadBalancerPagination(
+	PaginationResult<VlanDTO> getVlanPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	/**
+	 * 
+	 * 批量插入 Vlan. 先判断是否有相同的 code，如果有相同的 code 则跳过.
+	 */
+	IdResult insertVlan(@WebParam(name = "vlanDTOList") List<VlanDTO> vlanDTOList);
+
+	// ==============================//
+	// ======== FirewallPort ========//
+	// ==============================//
+
+	DTOResult<FirewallPortDTO> findFirewallPort(@WebParam(name = "id") Integer id);
+
+	DTOResult<FirewallPortDTO> findFirewallPortByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createFirewallPort(@WebParam(name = "firewallPortDTO") FirewallPortDTO firewallPortDTO);
+
+	IdResult updateFirewallPort(@WebParam(name = "id") Integer id,
+			@WebParam(name = "firewallPortDTO") FirewallPortDTO firewallPortDTO);
+
+	IdResult deleteFirewallPort(@WebParam(name = "id") Integer id);
+
+	DTOListResult<FirewallPortDTO> getFirewallPortList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<FirewallPortDTO> getFirewallPortPagination(
 			@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
@@ -809,141 +767,24 @@ public interface CmdbuildSoapService {
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
-	// =========== Memory ===========//
+	// ========== StoragePort ========//
 	// ==============================//
 
-	DTOResult<MemoryDTO> findMemory(@WebParam(name = "id") Integer id);
+	DTOResult<StoragePortDTO> findStoragePort(@WebParam(name = "id") Integer id);
 
-	DTOResult<MemoryDTO> findMemoryByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOResult<StoragePortDTO> findStoragePortByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	IdResult createMemory(@WebParam(name = "memoryDTO") MemoryDTO memoryDTO);
+	IdResult createStoragePort(@WebParam(name = "storagePortDTO") StoragePortDTO storagePortDTO);
 
-	IdResult updateMemory(@WebParam(name = "id") Integer id, @WebParam(name = "memoryDTO") MemoryDTO memoryDTO);
+	IdResult updateStoragePort(@WebParam(name = "id") Integer id,
+			@WebParam(name = "storagePortDTO") StoragePortDTO storagePortDTO);
 
-	IdResult deleteMemory(@WebParam(name = "id") Integer id);
+	IdResult deleteStoragePort(@WebParam(name = "id") Integer id);
 
-	DTOListResult<MemoryDTO> getMemoryList(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOListResult<StoragePortDTO> getStoragePortList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<MemoryDTO> getMemoryPagination(@WebParam(name = "searchParams") SearchParams searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
-	// ==============================//
-	// ========== NetappBox =========//
-	// ==============================//
-
-	DTOResult<StorageBoxDTO> findNetappBox(@WebParam(name = "id") Integer id);
-
-	DTOResult<StorageBoxDTO> findNetappBoxByParams(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	IdResult createNetappBox(@WebParam(name = "netappBoxDTO") StorageBoxDTO netappBoxDTO);
-
-	IdResult updateNetappBox(@WebParam(name = "id") Integer id,
-			@WebParam(name = "netappBoxDTO") StorageBoxDTO netappBoxDTO);
-
-	IdResult deleteNetappBox(@WebParam(name = "id") Integer id);
-
-	DTOListResult<StorageBoxDTO> getNetappBoxList(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	PaginationResult<StorageBoxDTO> getNetappBoxPagination(@WebParam(name = "searchParams") SearchParams searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
-	// ==============================//
-	// ====== NetappController ======//
-	// ==============================//
-
-	DTOResult<StorageDTO> findNetappController(@WebParam(name = "id") Integer id);
-
-	DTOResult<StorageDTO> findNetappControllerByParams(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	IdResult createNetappController(@WebParam(name = "netappControllerDTO") StorageDTO netappControllerDTO);
-
-	IdResult updateNetappController(@WebParam(name = "id") Integer id,
-			@WebParam(name = "netappControllerDTO") StorageDTO netappControllerDTO);
-
-	IdResult deleteNetappController(@WebParam(name = "id") Integer id);
-
-	DTOListResult<StorageDTO> getNetappControllerList(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	PaginationResult<StorageDTO> getNetappControllerPagination(
+	PaginationResult<StoragePortDTO> getStoragePortPagination(
 			@WebParam(name = "searchParams") SearchParams searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
-	// ==============================//
-	// ========== NetappPort ========//
-	// ==============================//
-
-	DTOResult<StoragePortDTO> findNetappPort(@WebParam(name = "id") Integer id);
-
-	DTOResult<StoragePortDTO> findNetappPortByParams(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	IdResult createNetappPort(@WebParam(name = "netappPortDTO") StoragePortDTO netappPortDTO);
-
-	IdResult updateNetappPort(@WebParam(name = "id") Integer id,
-			@WebParam(name = "netappPortDTO") StoragePortDTO netappPortDTO);
-
-	IdResult deleteNetappPort(@WebParam(name = "id") Integer id);
-
-	DTOListResult<StoragePortDTO> getNetappPortList(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	PaginationResult<StoragePortDTO> getNetappPortPagination(
-			@WebParam(name = "searchParams") SearchParams searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
-	// ==============================//
-	// ============== Nic ===========//
-	// ==============================//
-
-	DTOResult<NicDTO> findNic(@WebParam(name = "id") Integer id);
-
-	DTOResult<NicDTO> findNicByParams(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	IdResult createNic(@WebParam(name = "nicDTO") NicDTO nicDTO);
-
-	IdResult updateNic(@WebParam(name = "id") Integer id, @WebParam(name = "nicDTO") NicDTO nicDTO);
-
-	IdResult deleteNic(@WebParam(name = "id") Integer id);
-
-	DTOListResult<NicDTO> getNicList(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	PaginationResult<NicDTO> getNicPagination(@WebParam(name = "searchParams") SearchParams searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
-	// ==============================//
-	// ============ NicPort =========//
-	// ==============================//
-
-	DTOResult<NicPortDTO> findNicPort(@WebParam(name = "id") Integer id);
-
-	DTOResult<NicPortDTO> findNicPortByParams(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	IdResult createNicPort(@WebParam(name = "nicPortDTO") NicPortDTO nicPortDTO);
-
-	IdResult updateNicPort(@WebParam(name = "id") Integer id, @WebParam(name = "nicPortDTO") NicPortDTO nicPortDTO);
-
-	IdResult deleteNicPort(@WebParam(name = "id") Integer id);
-
-	DTOListResult<NicPortDTO> getNicPortList(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	PaginationResult<NicPortDTO> getNicPortPagination(@WebParam(name = "searchParams") SearchParams searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
-	// ==============================//
-	// ============ Server ==========//
-	// ==============================//
-
-	DTOResult<ServerDTO> findServer(@WebParam(name = "id") Integer id);
-
-	DTOResult<ServerDTO> findServerByParams(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	IdResult createServer(@WebParam(name = "serverDTO") ServerDTO serverDTO);
-
-	IdResult updateServer(@WebParam(name = "id") Integer id, @WebParam(name = "serverDTO") ServerDTO serverDTO);
-
-	IdResult deleteServer(@WebParam(name = "id") Integer id);
-
-	DTOListResult<ServerDTO> getServerList(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	PaginationResult<ServerDTO> getServerPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
@@ -967,25 +808,6 @@ public interface CmdbuildSoapService {
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
-	// =========== Switches =========//
-	// ==============================//
-
-	DTOResult<SwitchesDTO> findSwitches(@WebParam(name = "id") Integer id);
-
-	DTOResult<SwitchesDTO> findSwitchesByParams(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	IdResult createSwitches(@WebParam(name = "switchesDTO") SwitchesDTO switchesDTO);
-
-	IdResult updateSwitches(@WebParam(name = "id") Integer id, @WebParam(name = "switchesDTO") SwitchesDTO switchesDTO);
-
-	IdResult deleteSwitches(@WebParam(name = "id") Integer id);
-
-	DTOListResult<SwitchesDTO> getSwitchesList(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	PaginationResult<SwitchesDTO> getSwitchesPagination(@WebParam(name = "searchParams") SearchParams searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
-	// ==============================//
 	// ========= SwitchPort =========//
 	// ==============================//
 
@@ -1006,31 +828,22 @@ public interface CmdbuildSoapService {
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
-	// ============ Vlan ============//
+	// ============ NicPort =========//
 	// ==============================//
 
-	DTOResult<VlanDTO> findVlan(@WebParam(name = "id") Integer id);
+	DTOResult<NicPortDTO> findNicPort(@WebParam(name = "id") Integer id);
 
-	DTOResult<VlanDTO> findVlanByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOResult<NicPortDTO> findNicPortByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	IdResult createVlan(@WebParam(name = "vlanDTO") VlanDTO vlanDTO);
+	IdResult createNicPort(@WebParam(name = "nicPortDTO") NicPortDTO nicPortDTO);
 
-	IdResult updateVlan(@WebParam(name = "id") Integer id, @WebParam(name = "vlanDTO") VlanDTO vlanDTO);
+	IdResult updateNicPort(@WebParam(name = "id") Integer id, @WebParam(name = "nicPortDTO") NicPortDTO nicPortDTO);
 
-	IdResult deleteVlan(@WebParam(name = "id") Integer id);
+	IdResult deleteNicPort(@WebParam(name = "id") Integer id);
 
-	DTOListResult<VlanDTO> getVlanList(@WebParam(name = "searchParams") SearchParams searchParams);
+	DTOListResult<NicPortDTO> getNicPortList(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	PaginationResult<VlanDTO> getVlanPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+	PaginationResult<NicPortDTO> getNicPortPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
-	/**
-	 * 
-	 * 批量插入 Vlan. 先判断是否有相同的 code，如果有相同的 code 则跳过.
-	 * 
-	 * @param vlanDTOList
-	 * @return IdResult
-	 */
-	IdResult insertVlan(@WebParam(name = "vlanDTOList") List<VlanDTO> vlanDTOList);
 
 }
