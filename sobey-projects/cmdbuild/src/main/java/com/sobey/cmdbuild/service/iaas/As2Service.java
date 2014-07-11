@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
 import com.sobey.cmdbuild.entity.Es3;
-import com.sobey.cmdbuild.repository.As2Dao;
+import com.sobey.cmdbuild.repository.Es3Dao;
 import com.sobey.cmdbuild.service.BasicSevcie;
 import com.sobey.cmdbuild.webservice.response.dto.As2DTO;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
@@ -27,7 +27,7 @@ import com.sobey.core.persistence.SearchFilter;
 @Transactional
 public class As2Service extends BasicSevcie {
 	@Autowired
-	private As2Dao as2Dao;
+	private Es3Dao as2Dao;
 
 	/**
 	 * 根据ID获得对象

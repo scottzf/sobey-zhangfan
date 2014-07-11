@@ -3,7 +3,9 @@ package com.sobey.cmdbuild.repository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface FimasHistoryDao extends PagingAndSortingRepository<FimasHistory, Integer>,
-		JpaSpecificationExecutor<FimasHistory> {
+import com.sobey.cmdbuild.entity.LogHistory;
+
+public interface LogHistoryDao extends PagingAndSortingRepository<LogHistory, Integer>,
+		JpaSpecificationExecutor<LogHistory> {
 
 }

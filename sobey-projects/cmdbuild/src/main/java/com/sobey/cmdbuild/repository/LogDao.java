@@ -3,8 +3,8 @@ package com.sobey.cmdbuild.repository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import com.sobey.cmdbuild.entity.EipSpec;
+import com.sobey.cmdbuild.entity.Log;
 
-public interface EipSpecDao extends PagingAndSortingRepository<EipSpec, Integer>, JpaSpecificationExecutor<EipSpec> {
+public interface LogDao extends PagingAndSortingRepository<Log, Integer>, JpaSpecificationExecutor<Log> {
 
 }

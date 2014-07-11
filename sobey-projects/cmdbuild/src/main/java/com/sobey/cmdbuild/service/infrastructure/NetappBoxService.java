@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
 import com.sobey.cmdbuild.entity.StorageBox;
-import com.sobey.cmdbuild.repository.NetappBoxDao;
+import com.sobey.cmdbuild.repository.StorageBoxDao;
 import com.sobey.cmdbuild.service.BasicSevcie;
 import com.sobey.cmdbuild.webservice.response.dto.NetappBoxDTO;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
@@ -27,7 +27,7 @@ import com.sobey.core.persistence.SearchFilter;
 @Transactional
 public class NetappBoxService extends BasicSevcie {
 	@Autowired
-	private NetappBoxDao netappBoxDao;
+	private StorageBoxDao netappBoxDao;
 
 	/**
 	 * 根据ID获得对象

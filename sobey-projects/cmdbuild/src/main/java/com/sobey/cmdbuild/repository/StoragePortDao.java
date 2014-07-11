@@ -3,6 +3,9 @@ package com.sobey.cmdbuild.repository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface CompanyDao extends PagingAndSortingRepository<Company, Integer>, JpaSpecificationExecutor<Company> {
+import com.sobey.cmdbuild.entity.StoragePort;
+
+public interface StoragePortDao extends PagingAndSortingRepository<StoragePort, Integer>,
+		JpaSpecificationExecutor<StoragePort> {
 
 }

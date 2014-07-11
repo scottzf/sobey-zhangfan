@@ -3,7 +3,8 @@ package com.sobey.cmdbuild.repository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface FimasPortHistoryDao extends PagingAndSortingRepository<FimasPortHistory, Integer>,
-		JpaSpecificationExecutor<FimasPortHistory> {
+import com.sobey.cmdbuild.entity.Es3;
+
+public interface Es3Dao extends PagingAndSortingRepository<Es3, Integer>, JpaSpecificationExecutor<Es3> {
 
 }

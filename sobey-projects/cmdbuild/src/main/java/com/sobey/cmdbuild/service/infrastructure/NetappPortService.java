@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
 import com.sobey.cmdbuild.entity.StoragePort;
-import com.sobey.cmdbuild.repository.NetappPortDao;
+import com.sobey.cmdbuild.repository.StoragePortDao;
 import com.sobey.cmdbuild.service.BasicSevcie;
 import com.sobey.cmdbuild.webservice.response.dto.NetappPortDTO;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
@@ -27,7 +27,7 @@ import com.sobey.core.persistence.SearchFilter;
 @Transactional
 public class NetappPortService extends BasicSevcie {
 	@Autowired
-	private NetappPortDao netappPortDao;
+	private StoragePortDao netappPortDao;
 
 	/**
 	 * 根据ID获得对象

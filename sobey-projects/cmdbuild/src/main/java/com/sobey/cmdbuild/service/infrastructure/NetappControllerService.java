@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
 import com.sobey.cmdbuild.entity.Storage;
-import com.sobey.cmdbuild.repository.NetappControllerDao;
+import com.sobey.cmdbuild.repository.StorageDao;
 import com.sobey.cmdbuild.service.BasicSevcie;
 import com.sobey.cmdbuild.webservice.response.dto.NetappControllerDTO;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
@@ -27,7 +27,7 @@ import com.sobey.core.persistence.SearchFilter;
 @Transactional
 public class NetappControllerService extends BasicSevcie {
 	@Autowired
-	private NetappControllerDao netappControllerDao;
+	private StorageDao netappControllerDao;
 
 	/**
 	 * 根据ID获得对象

@@ -3,6 +3,9 @@ package com.sobey.cmdbuild.repository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface FimasDao extends PagingAndSortingRepository<Fimas, Integer>, JpaSpecificationExecutor<Fimas> {
+import com.sobey.cmdbuild.entity.MapEcsEs3;
+
+public interface MapEcsEs3Dao extends PagingAndSortingRepository<MapEcsEs3, Integer>,
+		JpaSpecificationExecutor<MapEcsEs3> {
 
 }

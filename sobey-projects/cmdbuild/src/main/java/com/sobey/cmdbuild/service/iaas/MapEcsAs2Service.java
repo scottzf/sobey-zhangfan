@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
 import com.sobey.cmdbuild.entity.Log;
-import com.sobey.cmdbuild.repository.MapEcsAs2Dao;
+import com.sobey.cmdbuild.repository.LogDao;
 import com.sobey.cmdbuild.service.BasicSevcie;
 import com.sobey.core.persistence.DynamicSpecifications;
 import com.sobey.core.persistence.SearchFilter;
@@ -23,7 +23,7 @@ import com.sobey.core.persistence.SearchFilter;
 public class MapEcsAs2Service extends BasicSevcie {
 
 	@Autowired
-	private MapEcsAs2Dao mapEcsAs2Dao;
+	private LogDao mapEcsAs2Dao;
 
 	/**
 	 * 根据ID获得对象
