@@ -1,66 +1,28 @@
 package com.sobey.cmdbuild.webservice.response.dto;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
+import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 
 @XmlRootElement(name = "IdcDTO")
 @XmlType(name = "IdcDTO", namespace = WsConstants.NS)
-public class IdcDTO {
+public class IdcDTO extends BasicDTO {
 
-	private Integer id;
-	private String code;
-	private String description;
-	private Date beginDate;
-	private String remark;
-	private String city;
-	private String zip;
-	private String phone;
 	private String address;
+	private String city;
+	private String phone;
+	private String zip;
 
-	public Integer getId() {
-		return id;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public String getCity() {
@@ -71,14 +33,6 @@ public class IdcDTO {
 		this.city = city;
 	}
 
-	public String getZip() {
-		return zip;
-	}
-
-	public void setZip(String zip) {
-		this.zip = zip;
-	}
-
 	public String getPhone() {
 		return phone;
 	}
@@ -87,12 +41,12 @@ public class IdcDTO {
 		this.phone = phone;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getZip() {
+		return zip;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setZip(String zip) {
+		this.zip = zip;
 	}
 
 	/**

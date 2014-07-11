@@ -1,91 +1,52 @@
 package com.sobey.cmdbuild.webservice.response.dto;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
+import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 
 @XmlRootElement(name = "RackDTO")
 @XmlType(name = "RackDTO", namespace = WsConstants.NS)
-public class RackDTO {
+public class RackDTO extends BasicDTO {
 
-	private Integer id;
-	private String code;
-	private String description;
-	private Date beginDate;
-	private String remark;
-	private Integer idc;
-	private IdcDTO idcDTO;
-	private Integer height;
-	private String heightText;
-	private Integer power;
-	private String powerText;
 	private Integer brand;
 	private String brandText;
-	private String model;
-	private Integer unitNumber;
-	private String sn;
 	private String gdzcSn;
-	private Double price;
+	private Integer height;
+	private String heightText;
+	private Integer idc;
+	private IdcDTO idcDTO;
+	private String model;
+	private Integer power;
+	private String powerText;
+	private String sn;
+	private Integer unitNumber;
 
-	public Integer getId() {
-		return id;
+	public Integer getBrand() {
+		return brand;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setBrand(Integer brand) {
+		this.brand = brand;
 	}
 
-	public String getCode() {
-		return code;
+	public String getBrandText() {
+		return brandText;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setBrandText(String brandText) {
+		this.brandText = brandText;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getGdzcSn() {
+		return gdzcSn;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public Integer getIdc() {
-		return idc;
-	}
-
-	public void setIdc(Integer idc) {
-		this.idc = idc;
-	}
-
-	public IdcDTO getIdcDTO() {
-		return idcDTO;
-	}
-
-	public void setIdcDTO(IdcDTO idcDTO) {
-		this.idcDTO = idcDTO;
+	public void setGdzcSn(String gdzcSn) {
+		this.gdzcSn = gdzcSn;
 	}
 
 	public Integer getHeight() {
@@ -104,6 +65,30 @@ public class RackDTO {
 		this.heightText = heightText;
 	}
 
+	public Integer getIdc() {
+		return idc;
+	}
+
+	public void setIdc(Integer idc) {
+		this.idc = idc;
+	}
+
+	public IdcDTO getIdcDTO() {
+		return idcDTO;
+	}
+
+	public void setIdcDTO(IdcDTO idcDTO) {
+		this.idcDTO = idcDTO;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
 	public Integer getPower() {
 		return power;
 	}
@@ -120,38 +105,6 @@ public class RackDTO {
 		this.powerText = powerText;
 	}
 
-	public Integer getBrand() {
-		return brand;
-	}
-
-	public void setBrand(Integer brand) {
-		this.brand = brand;
-	}
-
-	public String getBrandText() {
-		return brandText;
-	}
-
-	public void setBrandText(String brandText) {
-		this.brandText = brandText;
-	}
-
-	public String getModel() {
-		return model;
-	}
-
-	public void setModel(String model) {
-		this.model = model;
-	}
-
-	public Integer getUnitNumber() {
-		return unitNumber;
-	}
-
-	public void setUnitNumber(Integer unitNumber) {
-		this.unitNumber = unitNumber;
-	}
-
 	public String getSn() {
 		return sn;
 	}
@@ -160,20 +113,12 @@ public class RackDTO {
 		this.sn = sn;
 	}
 
-	public String getGdzcSn() {
-		return gdzcSn;
+	public Integer getUnitNumber() {
+		return unitNumber;
 	}
 
-	public void setGdzcSn(String gdzcSn) {
-		this.gdzcSn = gdzcSn;
-	}
-
-	public Double getPrice() {
-		return price;
-	}
-
-	public void setPrice(Double price) {
-		this.price = price;
+	public void setUnitNumber(Integer unitNumber) {
+		this.unitNumber = unitNumber;
 	}
 
 	/**

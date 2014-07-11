@@ -13,22 +13,22 @@ import com.sobey.cmdbuild.constants.WsConstants;
 @XmlType(name = "LookUpDTO", namespace = WsConstants.NS)
 public class LookUpDTO {
 
-	private Integer id;
+	private Date beginDate;
 	private String code;
 	private String description;
-	private Date beginDate;
-	private String type;
-	private String parentType;
-	private Integer parentId;
-	private Integer number;
+	private Integer id;
 	private Boolean isDefault;
+	private Integer number;
+	private Integer parentId;
+	private String parentType;
+	private String type;
 
-	public Integer getId() {
-		return id;
+	public Date getBeginDate() {
+		return beginDate;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
 	}
 
 	public String getCode() {
@@ -47,36 +47,20 @@ public class LookUpDTO {
 		this.description = description;
 	}
 
-	public Date getBeginDate() {
-		return beginDate;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public String getType() {
-		return type;
+	public Boolean getIsDefault() {
+		return isDefault;
 	}
 
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public String getParentType() {
-		return parentType;
-	}
-
-	public void setParentType(String parentType) {
-		this.parentType = parentType;
-	}
-
-	public Integer getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(Integer parentId) {
-		this.parentId = parentId;
+	public void setIsDefault(Boolean isDefault) {
+		this.isDefault = isDefault;
 	}
 
 	public Integer getNumber() {
@@ -87,12 +71,28 @@ public class LookUpDTO {
 		this.number = number;
 	}
 
-	public Boolean getIsDefault() {
-		return isDefault;
+	public Integer getParentId() {
+		return parentId;
 	}
 
-	public void setIsDefault(Boolean isDefault) {
-		this.isDefault = isDefault;
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
+
+	public String getParentType() {
+		return parentType;
+	}
+
+	public void setParentType(String parentType) {
+		this.parentType = parentType;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	/**

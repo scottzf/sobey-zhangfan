@@ -1,78 +1,63 @@
 package com.sobey.cmdbuild.webservice.response.dto;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
+import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 
 @XmlRootElement(name = "DeviceSpecDTO")
 @XmlType(name = "DeviceSpecDTO", namespace = WsConstants.NS)
-public class DeviceSpecDTO {
+public class DeviceSpecDTO extends BasicDTO {
 
-	private Integer id;
-	private String code;
-	private String description;
-	private Date beginDate;
-	private String remark;
-	private Integer deviceType;
-	private String deviceTypeText;
 	private Integer brand;
 	private String brandText;
-	private Integer power;
-	private String powerText;
-	private Integer maintenance;
-	private String maintenanceText;
+	private String cpuModel;
+	private Integer cpuNumber;
+	private Integer deviceType;
+	private String deviceTypeText;
+	private Integer hdnumber;
 	private Integer hight;
 	private String hightText;
-	private Integer ramNumber;
-	private Integer cpuNumber;
+	private Integer maintenance;
+	private String maintenanceText;
 	private Integer nicNumber;
-	private Integer hdnumber;
-	private String cpuModel;
-	private Double price;
+	private Integer power;
+	private String powerText;
+	private Integer ramNumber;
 
-	public Integer getId() {
-		return id;
+	public Integer getBrand() {
+		return brand;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setBrand(Integer brand) {
+		this.brand = brand;
 	}
 
-	public String getCode() {
-		return code;
+	public String getBrandText() {
+		return brandText;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setBrandText(String brandText) {
+		this.brandText = brandText;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getCpuModel() {
+		return cpuModel;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setCpuModel(String cpuModel) {
+		this.cpuModel = cpuModel;
 	}
 
-	public Date getBeginDate() {
-		return beginDate;
+	public Integer getCpuNumber() {
+		return cpuNumber;
 	}
 
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setCpuNumber(Integer cpuNumber) {
+		this.cpuNumber = cpuNumber;
 	}
 
 	public Integer getDeviceType() {
@@ -91,52 +76,12 @@ public class DeviceSpecDTO {
 		this.deviceTypeText = deviceTypeText;
 	}
 
-	public Integer getBrand() {
-		return brand;
+	public Integer getHdnumber() {
+		return hdnumber;
 	}
 
-	public void setBrand(Integer brand) {
-		this.brand = brand;
-	}
-
-	public String getBrandText() {
-		return brandText;
-	}
-
-	public void setBrandText(String brandText) {
-		this.brandText = brandText;
-	}
-
-	public Integer getPower() {
-		return power;
-	}
-
-	public void setPower(Integer power) {
-		this.power = power;
-	}
-
-	public String getPowerText() {
-		return powerText;
-	}
-
-	public void setPowerText(String powerText) {
-		this.powerText = powerText;
-	}
-
-	public Integer getMaintenance() {
-		return maintenance;
-	}
-
-	public void setMaintenance(Integer maintenance) {
-		this.maintenance = maintenance;
-	}
-
-	public String getMaintenanceText() {
-		return maintenanceText;
-	}
-
-	public void setMaintenanceText(String maintenanceText) {
-		this.maintenanceText = maintenanceText;
+	public void setHdnumber(Integer hdnumber) {
+		this.hdnumber = hdnumber;
 	}
 
 	public Integer getHight() {
@@ -155,20 +100,20 @@ public class DeviceSpecDTO {
 		this.hightText = hightText;
 	}
 
-	public Integer getRamNumber() {
-		return ramNumber;
+	public Integer getMaintenance() {
+		return maintenance;
 	}
 
-	public void setRamNumber(Integer ramNumber) {
-		this.ramNumber = ramNumber;
+	public void setMaintenance(Integer maintenance) {
+		this.maintenance = maintenance;
 	}
 
-	public Integer getCpuNumber() {
-		return cpuNumber;
+	public String getMaintenanceText() {
+		return maintenanceText;
 	}
 
-	public void setCpuNumber(Integer cpuNumber) {
-		this.cpuNumber = cpuNumber;
+	public void setMaintenanceText(String maintenanceText) {
+		this.maintenanceText = maintenanceText;
 	}
 
 	public Integer getNicNumber() {
@@ -179,28 +124,28 @@ public class DeviceSpecDTO {
 		this.nicNumber = nicNumber;
 	}
 
-	public Integer getHdnumber() {
-		return hdnumber;
+	public Integer getPower() {
+		return power;
 	}
 
-	public void setHdnumber(Integer hdnumber) {
-		this.hdnumber = hdnumber;
+	public void setPower(Integer power) {
+		this.power = power;
 	}
 
-	public String getCpuModel() {
-		return cpuModel;
+	public String getPowerText() {
+		return powerText;
 	}
 
-	public void setCpuModel(String cpuModel) {
-		this.cpuModel = cpuModel;
+	public void setPowerText(String powerText) {
+		this.powerText = powerText;
 	}
 
-	public Double getPrice() {
-		return price;
+	public Integer getRamNumber() {
+		return ramNumber;
 	}
 
-	public void setPrice(Double price) {
-		this.price = price;
+	public void setRamNumber(Integer ramNumber) {
+		this.ramNumber = ramNumber;
 	}
 
 	/**

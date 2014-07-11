@@ -1,105 +1,72 @@
 package com.sobey.cmdbuild.webservice.response.dto;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
+import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 
 @XmlRootElement(name = "LogDTO")
 @XmlType(name = "LogDTO", namespace = WsConstants.NS)
-public class LogDTO {
+public class LogDTO extends BasicDTO {
 
-	private Integer id;
-	private String code;
-	private String description;
-	private Date beginDate;
-	private String remark;
-	private Integer tag;
-	private TagDTO tagDTO;
-	private Integer ipaddress;
-	private IpaddressDTO ipaddressDTO;
+	private Integer operateType;
+	private String operateTypeText;
+	private Integer result;
+	private String resultText;
+	private Integer serviceType;
+	private String serviceTypeText;
 	private Integer tenants;
 	private TenantsDTO tenantsDTO;
-	private Integer es3Spec;
-	private Es3SpecDTO es3SpecDTO;
-	private Integer fimas;
-	private FimasDTO fimasDTO;
-	private Double diskSize;
 
-	public Integer getId() {
-		return id;
+	public Integer getOperateType() {
+		return operateType;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setOperateType(Integer operateType) {
+		this.operateType = operateType;
 	}
 
-	public String getCode() {
-		return code;
+	public String getOperateTypeText() {
+		return operateTypeText;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setOperateTypeText(String operateTypeText) {
+		this.operateTypeText = operateTypeText;
 	}
 
-	public String getDescription() {
-		return description;
+	public Integer getResult() {
+		return result;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setResult(Integer result) {
+		this.result = result;
 	}
 
-	public Date getBeginDate() {
-		return beginDate;
+	public String getResultText() {
+		return resultText;
 	}
 
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
+	public void setResultText(String resultText) {
+		this.resultText = resultText;
 	}
 
-	public String getRemark() {
-		return remark;
+	public Integer getServiceType() {
+		return serviceType;
 	}
 
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setServiceType(Integer serviceType) {
+		this.serviceType = serviceType;
 	}
 
-	public Integer getTag() {
-		return tag;
+	public String getServiceTypeText() {
+		return serviceTypeText;
 	}
 
-	public void setTag(Integer tag) {
-		this.tag = tag;
-	}
-
-	public TagDTO getTagDTO() {
-		return tagDTO;
-	}
-
-	public void setTagDTO(TagDTO tagDTO) {
-		this.tagDTO = tagDTO;
-	}
-
-	public Integer getIpaddress() {
-		return ipaddress;
-	}
-
-	public void setIpaddress(Integer ipaddress) {
-		this.ipaddress = ipaddress;
-	}
-
-	public IpaddressDTO getIpaddressDTO() {
-		return ipaddressDTO;
-	}
-
-	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
-		this.ipaddressDTO = ipaddressDTO;
+	public void setServiceTypeText(String serviceTypeText) {
+		this.serviceTypeText = serviceTypeText;
 	}
 
 	public Integer getTenants() {
@@ -116,46 +83,6 @@ public class LogDTO {
 
 	public void setTenantsDTO(TenantsDTO tenantsDTO) {
 		this.tenantsDTO = tenantsDTO;
-	}
-
-	public Integer getEs3Spec() {
-		return es3Spec;
-	}
-
-	public void setEs3Spec(Integer es3Spec) {
-		this.es3Spec = es3Spec;
-	}
-
-	public Es3SpecDTO getEs3SpecDTO() {
-		return es3SpecDTO;
-	}
-
-	public void setEs3SpecDTO(Es3SpecDTO es3SpecDTO) {
-		this.es3SpecDTO = es3SpecDTO;
-	}
-
-	public Integer getFimas() {
-		return fimas;
-	}
-
-	public void setFimas(Integer fimas) {
-		this.fimas = fimas;
-	}
-
-	public FimasDTO getFimasDTO() {
-		return fimasDTO;
-	}
-
-	public void setFimasDTO(FimasDTO fimasDTO) {
-		this.fimasDTO = fimasDTO;
-	}
-
-	public Double getDiskSize() {
-		return diskSize;
-	}
-
-	public void setDiskSize(Double diskSize) {
-		this.diskSize = diskSize;
 	}
 
 	/**

@@ -1,59 +1,22 @@
 package com.sobey.cmdbuild.webservice.response.dto;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
+import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 
 @XmlRootElement(name = "ElbPolicyDTO")
 @XmlType(name = "ElbPolicyDTO", namespace = WsConstants.NS)
-public class ElbPolicyDTO {
+public class ElbPolicyDTO extends BasicDTO {
 
-	private Integer id;
-	private String code;
-	private String description;
-	private Date beginDate;
 	private Integer elb;
+	private Integer elbProtocol;
+	private String elbProtocolText;
 	private Integer sourcePort;
 	private Integer targetPort;
-	private Integer protocol;
-	private String protocolText;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
 
 	public Integer getElb() {
 		return elb;
@@ -61,6 +24,22 @@ public class ElbPolicyDTO {
 
 	public void setElb(Integer elb) {
 		this.elb = elb;
+	}
+
+	public Integer getElbProtocol() {
+		return elbProtocol;
+	}
+
+	public void setElbProtocol(Integer elbProtocol) {
+		this.elbProtocol = elbProtocol;
+	}
+
+	public String getElbProtocolText() {
+		return elbProtocolText;
+	}
+
+	public void setElbProtocolText(String elbProtocolText) {
+		this.elbProtocolText = elbProtocolText;
 	}
 
 	public Integer getSourcePort() {
@@ -77,22 +56,6 @@ public class ElbPolicyDTO {
 
 	public void setTargetPort(Integer targetPort) {
 		this.targetPort = targetPort;
-	}
-
-	public Integer getProtocol() {
-		return protocol;
-	}
-
-	public void setProtocol(Integer protocol) {
-		this.protocol = protocol;
-	}
-
-	public String getProtocolText() {
-		return protocolText;
-	}
-
-	public void setProtocolText(String protocolText) {
-		this.protocolText = protocolText;
 	}
 
 	/**

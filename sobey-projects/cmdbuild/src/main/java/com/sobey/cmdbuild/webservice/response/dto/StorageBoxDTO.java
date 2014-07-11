@@ -1,158 +1,27 @@
 package com.sobey.cmdbuild.webservice.response.dto;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
+import com.sobey.cmdbuild.webservice.response.dto.basic.ComponentBasicDTO;
 
 @XmlRootElement(name = "StorageBoxDTO")
 @XmlType(name = "StorageBoxDTO", namespace = WsConstants.NS)
-public class StorageBoxDTO {
+public class StorageBoxDTO extends ComponentBasicDTO {
 
-	private Integer id;
-	private String code;
-	private String description;
-	private Date beginDate;
-	private String remark;
-	private Integer idc;
-	private IdcDTO idcDTO;
-	private Integer rack;
-	private RackDTO rackDTO;
-	private Integer deviceSpec;
-	private DeviceSpecDTO deviceSpecDTO;
-	private Integer ipaddress;
-	private IpaddressDTO ipaddressDTO;
-	private Integer netappController;
-	private StorageDTO netappControllerDTO;
+	private Integer diskNumber;
 	private Integer diskType;
 	private String diskTypeText;
-	private String site;
-	private Integer diskNumber;
-	private String gdzcSn;
-	private String sn;
 
-	public Integer getId() {
-		return id;
+	public Integer getDiskNumber() {
+		return diskNumber;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public Integer getIdc() {
-		return idc;
-	}
-
-	public void setIdc(Integer idc) {
-		this.idc = idc;
-	}
-
-	public IdcDTO getIdcDTO() {
-		return idcDTO;
-	}
-
-	public void setIdcDTO(IdcDTO idcDTO) {
-		this.idcDTO = idcDTO;
-	}
-
-	public Integer getRack() {
-		return rack;
-	}
-
-	public void setRack(Integer rack) {
-		this.rack = rack;
-	}
-
-	public RackDTO getRackDTO() {
-		return rackDTO;
-	}
-
-	public void setRackDTO(RackDTO rackDTO) {
-		this.rackDTO = rackDTO;
-	}
-
-	public Integer getDeviceSpec() {
-		return deviceSpec;
-	}
-
-	public void setDeviceSpec(Integer deviceSpec) {
-		this.deviceSpec = deviceSpec;
-	}
-
-	public DeviceSpecDTO getDeviceSpecDTO() {
-		return deviceSpecDTO;
-	}
-
-	public void setDeviceSpecDTO(DeviceSpecDTO deviceSpecDTO) {
-		this.deviceSpecDTO = deviceSpecDTO;
-	}
-
-	public Integer getIpaddress() {
-		return ipaddress;
-	}
-
-	public void setIpaddress(Integer ipaddress) {
-		this.ipaddress = ipaddress;
-	}
-
-	public IpaddressDTO getIpaddressDTO() {
-		return ipaddressDTO;
-	}
-
-	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
-		this.ipaddressDTO = ipaddressDTO;
-	}
-
-	public Integer getNetappController() {
-		return netappController;
-	}
-
-	public void setNetappController(Integer netappController) {
-		this.netappController = netappController;
-	}
-
-	public StorageDTO getNetappControllerDTO() {
-		return netappControllerDTO;
-	}
-
-	public void setNetappControllerDTO(StorageDTO netappControllerDTO) {
-		this.netappControllerDTO = netappControllerDTO;
+	public void setDiskNumber(Integer diskNumber) {
+		this.diskNumber = diskNumber;
 	}
 
 	public Integer getDiskType() {
@@ -169,38 +38,6 @@ public class StorageBoxDTO {
 
 	public void setDiskTypeText(String diskTypeText) {
 		this.diskTypeText = diskTypeText;
-	}
-
-	public String getSite() {
-		return site;
-	}
-
-	public void setSite(String site) {
-		this.site = site;
-	}
-
-	public Integer getDiskNumber() {
-		return diskNumber;
-	}
-
-	public void setDiskNumber(Integer diskNumber) {
-		this.diskNumber = diskNumber;
-	}
-
-	public String getGdzcSn() {
-		return gdzcSn;
-	}
-
-	public void setGdzcSn(String gdzcSn) {
-		this.gdzcSn = gdzcSn;
-	}
-
-	public String getSn() {
-		return sn;
-	}
-
-	public void setSn(String sn) {
-		this.sn = sn;
 	}
 
 	/**

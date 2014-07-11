@@ -1,101 +1,19 @@
 package com.sobey.cmdbuild.webservice.response.dto;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
+import com.sobey.cmdbuild.webservice.response.dto.basic.ServiceBasicDTO;
 
 @XmlRootElement(name = "EsgDTO")
 @XmlType(name = "EsgDTO", namespace = WsConstants.NS)
-public class EsgDTO {
+public class EsgDTO extends ServiceBasicDTO {
 
-	private Integer id;
-	private String code;
-	private String description;
-	private Date beginDate;
-	private String remark;
-	private Integer tag;
-	private TagDTO tagDTO;
-	private Integer tenants;
-	private TenantsDTO tenantsDTO;
 	private Integer aclNumber;
-	private Boolean isPublic;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public Integer getTag() {
-		return tag;
-	}
-
-	public void setTag(Integer tag) {
-		this.tag = tag;
-	}
-
-	public TagDTO getTagDTO() {
-		return tagDTO;
-	}
-
-	public void setTagDTO(TagDTO tagDTO) {
-		this.tagDTO = tagDTO;
-	}
-
-	public Integer getTenants() {
-		return tenants;
-	}
-
-	public void setTenants(Integer tenants) {
-		this.tenants = tenants;
-	}
-
-	public TenantsDTO getTenantsDTO() {
-		return tenantsDTO;
-	}
-
-	public void setTenantsDTO(TenantsDTO tenantsDTO) {
-		this.tenantsDTO = tenantsDTO;
-	}
+	private Boolean isDefault;
 
 	public Integer getAclNumber() {
 		return aclNumber;
@@ -105,12 +23,12 @@ public class EsgDTO {
 		this.aclNumber = aclNumber;
 	}
 
-	public Boolean getIsPublic() {
-		return isPublic;
+	public Boolean getIsDefault() {
+		return isDefault;
 	}
 
-	public void setIsPublic(Boolean isPublic) {
-		this.isPublic = isPublic;
+	public void setIsDefault(Boolean isDefault) {
+		this.isDefault = isDefault;
 	}
 
 	/**

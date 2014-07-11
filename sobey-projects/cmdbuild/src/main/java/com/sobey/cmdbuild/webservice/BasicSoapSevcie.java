@@ -22,12 +22,18 @@ public class BasicSoapSevcie {
 	protected static Logger logger = LoggerFactory.getLogger(BasicSoapSevcie.class);
 
 	@Autowired
-	protected Validator validator;
-
-	@Autowired
 	protected CommonService comm;
 
-	protected <T extends WSResult> T handleParameterError(T result, Exception e, String message) {
+	@Autowired
+	protected Validator validator;
+
+	protected <T extends WSResult> T handleGeneralError(T result, Exception e) {
+		logger.error(e.getMessage());
+		result.setDefaultError();
+		return result;
+	}
+
+	protected <T extends WSResult> T handleGeneralError(T result, Exception e, String message) {
 		logger.error(message, e.getMessage());
 		result.setError(WSResult.PARAMETER_ERROR, message);
 		return result;
@@ -39,13 +45,7 @@ public class BasicSoapSevcie {
 		return result;
 	}
 
-	protected <T extends WSResult> T handleGeneralError(T result, Exception e) {
-		logger.error(e.getMessage());
-		result.setDefaultError();
-		return result;
-	}
-
-	protected <T extends WSResult> T handleGeneralError(T result, Exception e, String message) {
+	protected <T extends WSResult> T handleParameterError(T result, Exception e, String message) {
 		logger.error(message, e.getMessage());
 		result.setError(WSResult.PARAMETER_ERROR, message);
 		return result;

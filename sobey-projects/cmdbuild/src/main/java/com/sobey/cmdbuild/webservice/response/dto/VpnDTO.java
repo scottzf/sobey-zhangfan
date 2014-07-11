@@ -1,116 +1,34 @@
 package com.sobey.cmdbuild.webservice.response.dto;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
+import com.sobey.cmdbuild.webservice.response.dto.basic.ServiceBasicDTO;
 
 @XmlRootElement(name = "VpnDTO")
 @XmlType(name = "VpnDTO", namespace = WsConstants.NS)
-public class VpnDTO {
+public class VpnDTO extends ServiceBasicDTO {
 
-	private Integer id;
-	private String code;
-	private String description;
-	private Date beginDate;
-	private String remark;
-	private Integer tenants;
-	private TenantsDTO tenantsDTO;
-	private Integer tag;
-	private TagDTO tagDTO;
-	private String vpnName;
-	private String vpnPassword;
+	private String password;
+	private Integer policyId;
 
-	public Integer getId() {
-		return id;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	public String getCode() {
-		return code;
+	public Integer getPolicyId() {
+		return policyId;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public Integer getTenants() {
-		return tenants;
-	}
-
-	public void setTenants(Integer tenants) {
-		this.tenants = tenants;
-	}
-
-	public TenantsDTO getTenantsDTO() {
-		return tenantsDTO;
-	}
-
-	public void setTenantsDTO(TenantsDTO tenantsDTO) {
-		this.tenantsDTO = tenantsDTO;
-	}
-
-	public Integer getTag() {
-		return tag;
-	}
-
-	public void setTag(Integer tag) {
-		this.tag = tag;
-	}
-
-	public TagDTO getTagDTO() {
-		return tagDTO;
-	}
-
-	public void setTagDTO(TagDTO tagDTO) {
-		this.tagDTO = tagDTO;
-	}
-
-	public String getVpnName() {
-		return vpnName;
-	}
-
-	public void setVpnName(String vpnName) {
-		this.vpnName = vpnName;
-	}
-
-	public String getVpnPassword() {
-		return vpnPassword;
-	}
-
-	public void setVpnPassword(String vpnPassword) {
-		this.vpnPassword = vpnPassword;
+	public void setPolicyId(Integer policyId) {
+		this.policyId = policyId;
 	}
 
 	/**

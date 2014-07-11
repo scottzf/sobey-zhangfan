@@ -1,93 +1,23 @@
 package com.sobey.cmdbuild.webservice.response.dto;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
+import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 
 @XmlRootElement(name = "EcsSpecDTO")
 @XmlType(name = "EcsSpecDTO", namespace = WsConstants.NS)
-public class EcsSpecDTO {
+public class EcsSpecDTO extends BasicDTO {
 
-	private Integer id;
-	private String code;
-	private String description;
-	private Date beginDate;
-	private String remark;
-	private Integer brand;
-	private String brandText;
-	private Integer memory;
 	private Integer cpuNumber;
 	private Integer diskSize;
-	private Double price;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public Integer getBrand() {
-		return brand;
-	}
-
-	public void setBrand(Integer brand) {
-		this.brand = brand;
-	}
-
-	public String getBrandText() {
-		return brandText;
-	}
-
-	public void setBrandText(String brandText) {
-		this.brandText = brandText;
-	}
-
-	public Integer getMemory() {
-		return memory;
-	}
-
-	public void setMemory(Integer memory) {
-		this.memory = memory;
-	}
+	private String imageName;
+	private Integer memory;
+	private Integer osType;
+	private String osTypeText;
 
 	public Integer getCpuNumber() {
 		return cpuNumber;
@@ -105,12 +35,36 @@ public class EcsSpecDTO {
 		this.diskSize = diskSize;
 	}
 
-	public Double getPrice() {
-		return price;
+	public String getImageName() {
+		return imageName;
 	}
 
-	public void setPrice(Double price) {
-		this.price = price;
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+
+	public Integer getMemory() {
+		return memory;
+	}
+
+	public void setMemory(Integer memory) {
+		this.memory = memory;
+	}
+
+	public Integer getOsType() {
+		return osType;
+	}
+
+	public void setOsType(Integer osType) {
+		this.osType = osType;
+	}
+
+	public String getOsTypeText() {
+		return osTypeText;
+	}
+
+	public void setOsTypeText(String osTypeText) {
+		this.osTypeText = osTypeText;
 	}
 
 	/**

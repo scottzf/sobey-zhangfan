@@ -1,134 +1,34 @@
 package com.sobey.cmdbuild.webservice.response.dto;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
+import com.sobey.cmdbuild.webservice.response.dto.basic.PortBasicDTO;
 
 @XmlRootElement(name = "StoragePortDTO")
 @XmlType(name = "StoragePortDTO", namespace = WsConstants.NS)
-public class StoragePortDTO {
+public class StoragePortDTO extends PortBasicDTO {
 
-	private Integer id;
-	private String code;
-	private String description;
-	private Date beginDate;
-	private String remark;
-	private Integer netappBox;
-	private StorageBoxDTO netappBoxDTO;
-	private Integer connectedTo;
-	private SwitchPortDTO switchPortDTO;
-	private Integer ipaddress;
-	private IpaddressDTO ipaddressDTO;
-	private String site;
-	private String macAddress;
+	private Integer Storage;
+	private StorageDTO storageDTO;
 
-	public Integer getId() {
-		return id;
+	public Integer getStorage() {
+		return Storage;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setStorage(Integer storage) {
+		Storage = storage;
 	}
 
-	public String getCode() {
-		return code;
+	public StorageDTO getStorageDTO() {
+		return storageDTO;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public Integer getNetappBox() {
-		return netappBox;
-	}
-
-	public void setNetappBox(Integer netappBox) {
-		this.netappBox = netappBox;
-	}
-
-	public StorageBoxDTO getNetappBoxDTO() {
-		return netappBoxDTO;
-	}
-
-	public void setNetappBoxDTO(StorageBoxDTO netappBoxDTO) {
-		this.netappBoxDTO = netappBoxDTO;
-	}
-
-	public Integer getConnectedTo() {
-		return connectedTo;
-	}
-
-	public void setConnectedTo(Integer connectedTo) {
-		this.connectedTo = connectedTo;
-	}
-
-	public SwitchPortDTO getSwitchPortDTO() {
-		return switchPortDTO;
-	}
-
-	public void setSwitchPortDTO(SwitchPortDTO switchPortDTO) {
-		this.switchPortDTO = switchPortDTO;
-	}
-
-	public Integer getIpaddress() {
-		return ipaddress;
-	}
-
-	public void setIpaddress(Integer ipaddress) {
-		this.ipaddress = ipaddress;
-	}
-
-	public IpaddressDTO getIpaddressDTO() {
-		return ipaddressDTO;
-	}
-
-	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
-		this.ipaddressDTO = ipaddressDTO;
-	}
-
-	public String getSite() {
-		return site;
-	}
-
-	public void setSite(String site) {
-		this.site = site;
-	}
-
-	public String getMacAddress() {
-		return macAddress;
-	}
-
-	public void setMacAddress(String macAddress) {
-		this.macAddress = macAddress;
+	public void setStorageDTO(StorageDTO storageDTO) {
+		this.storageDTO = storageDTO;
 	}
 
 	/**

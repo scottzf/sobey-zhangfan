@@ -1,64 +1,54 @@
 package com.sobey.cmdbuild.webservice.response.dto;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
+import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 
 @XmlRootElement(name = "TagDTO")
 @XmlType(name = "TagDTO", namespace = WsConstants.NS)
-public class TagDTO {
+public class TagDTO extends BasicDTO {
 
-	private Integer id;
-	private String code;
-	private String description;
-	private Date beginDate;
-	private String remark;
+	private Integer parentTag;
+	private TagDTO parentTagDTO;
+	private Integer tagType;
+	private String tagTypeText;
 	private Integer tenants;
 	private TenantsDTO tenantsDTO;
 
-	public Integer getId() {
-		return id;
+	public Integer getParentTag() {
+		return parentTag;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setParentTag(Integer parentTag) {
+		this.parentTag = parentTag;
 	}
 
-	public String getCode() {
-		return code;
+	public TagDTO getParentTagDTO() {
+		return parentTagDTO;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setParentTagDTO(TagDTO parentTagDTO) {
+		this.parentTagDTO = parentTagDTO;
 	}
 
-	public String getDescription() {
-		return description;
+	public Integer getTagType() {
+		return tagType;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setTagType(Integer tagType) {
+		this.tagType = tagType;
 	}
 
-	public Date getBeginDate() {
-		return beginDate;
+	public String getTagTypeText() {
+		return tagTypeText;
 	}
 
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setTagTypeText(String tagTypeText) {
+		this.tagTypeText = tagTypeText;
 	}
 
 	public Integer getTenants() {

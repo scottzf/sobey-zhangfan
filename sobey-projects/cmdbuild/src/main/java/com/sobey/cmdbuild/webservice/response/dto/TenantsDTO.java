@@ -1,84 +1,46 @@
 package com.sobey.cmdbuild.webservice.response.dto;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
+import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 
 @XmlRootElement(name = "TenantsDTO")
 @XmlType(name = "TenantsDTO", namespace = WsConstants.NS)
-public class TenantsDTO {
+public class TenantsDTO extends BasicDTO {
 
-	private Integer id;
-	private String code;
-	private String description;
-	private Date beginDate;
-	private String remark;
-	private Integer company;
-	private CompanyDTO companyDTO;
+	private String accessKey;
+	private String company;
+	private String createInfo;
 	private String email;
 	private String password;
 	private String phone;
-	private Double accontBalance;
 
-	public Integer getId() {
-		return id;
+	public String getAccessKey() {
+		return accessKey;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setAccessKey(String accessKey) {
+		this.accessKey = accessKey;
 	}
 
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public Integer getCompany() {
+	public String getCompany() {
 		return company;
 	}
 
-	public void setCompany(Integer company) {
+	public void setCompany(String company) {
 		this.company = company;
 	}
 
-	public CompanyDTO getCompanyDTO() {
-		return companyDTO;
+	public String getCreateInfo() {
+		return createInfo;
 	}
 
-	public void setCompanyDTO(CompanyDTO companyDTO) {
-		this.companyDTO = companyDTO;
+	public void setCreateInfo(String createInfo) {
+		this.createInfo = createInfo;
 	}
 
 	public String getEmail() {
@@ -103,14 +65,6 @@ public class TenantsDTO {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
-	}
-
-	public Double getAccontBalance() {
-		return accontBalance;
-	}
-
-	public void setAccontBalance(Double accontBalance) {
-		this.accontBalance = accontBalance;
 	}
 
 	/**

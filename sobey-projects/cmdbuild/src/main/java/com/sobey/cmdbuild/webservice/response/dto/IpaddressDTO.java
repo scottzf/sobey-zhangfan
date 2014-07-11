@@ -1,104 +1,34 @@
 package com.sobey.cmdbuild.webservice.response.dto;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
+import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 
 @XmlRootElement(name = "IpaddressDTO")
 @XmlType(name = "IpaddressDTO", namespace = WsConstants.NS)
-public class IpaddressDTO {
+public class IpaddressDTO extends BasicDTO {
 
-	private Integer id;
-	private String code;
-	private String description;
-	private Date beginDate;
-	private String remark;
-	private Integer vlan;
-	private VlanDTO vlanDTO;
-	private Integer isp;
-	private String ispText;
+	private String gateway;
 	private Integer ipAddressPool;
 	private String ipAddressPoolText;
 	private Integer ipAddressStatus;
 	private String ipAddressStatusText;
+	private Integer isp;
+	private String ispText;
 	private String netmask;
-	private String gateway;
+	private Integer vlan;
+	private VlanDTO vlanDTO;
 
-	public Integer getId() {
-		return id;
+	public String getGateway() {
+		return gateway;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public Integer getVlan() {
-		return vlan;
-	}
-
-	public void setVlan(Integer vlan) {
-		this.vlan = vlan;
-	}
-
-	public VlanDTO getVlanDTO() {
-		return vlanDTO;
-	}
-
-	public void setVlanDTO(VlanDTO vlanDTO) {
-		this.vlanDTO = vlanDTO;
-	}
-
-	public Integer getIsp() {
-		return isp;
-	}
-
-	public void setIsp(Integer isp) {
-		this.isp = isp;
-	}
-
-	public String getIspText() {
-		return ispText;
-	}
-
-	public void setIspText(String ispText) {
-		this.ispText = ispText;
+	public void setGateway(String gateway) {
+		this.gateway = gateway;
 	}
 
 	public Integer getIpAddressPool() {
@@ -133,6 +63,22 @@ public class IpaddressDTO {
 		this.ipAddressStatusText = ipAddressStatusText;
 	}
 
+	public Integer getIsp() {
+		return isp;
+	}
+
+	public void setIsp(Integer isp) {
+		this.isp = isp;
+	}
+
+	public String getIspText() {
+		return ispText;
+	}
+
+	public void setIspText(String ispText) {
+		this.ispText = ispText;
+	}
+
 	public String getNetmask() {
 		return netmask;
 	}
@@ -141,12 +87,20 @@ public class IpaddressDTO {
 		this.netmask = netmask;
 	}
 
-	public String getGateway() {
-		return gateway;
+	public Integer getVlan() {
+		return vlan;
 	}
 
-	public void setGateway(String gateway) {
-		this.gateway = gateway;
+	public void setVlan(Integer vlan) {
+		this.vlan = vlan;
+	}
+
+	public VlanDTO getVlanDTO() {
+		return vlanDTO;
+	}
+
+	public void setVlanDTO(VlanDTO vlanDTO) {
+		this.vlanDTO = vlanDTO;
 	}
 
 	/**

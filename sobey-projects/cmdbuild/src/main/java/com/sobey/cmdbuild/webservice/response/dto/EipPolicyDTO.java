@@ -1,68 +1,22 @@
 package com.sobey.cmdbuild.webservice.response.dto;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
+import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 
 @XmlRootElement(name = "EipPolicyDTO")
 @XmlType(name = "EipPolicyDTO", namespace = WsConstants.NS)
-public class EipPolicyDTO {
+public class EipPolicyDTO extends BasicDTO {
 
-	private Integer id;
-	private String code;
-	private String description;
-	private Date beginDate;
-	private String remark;
 	private Integer eip;
+	private Integer eipProtocol;
+	private String eipProtocolText;
 	private Integer sourcePort;
 	private Integer targetPort;
-	private Integer protocol;
-	private String protocolText;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
 
 	public Integer getEip() {
 		return eip;
@@ -70,6 +24,22 @@ public class EipPolicyDTO {
 
 	public void setEip(Integer eip) {
 		this.eip = eip;
+	}
+
+	public Integer getEipProtocol() {
+		return eipProtocol;
+	}
+
+	public void setEipProtocol(Integer eipProtocol) {
+		this.eipProtocol = eipProtocol;
+	}
+
+	public String getEipProtocolText() {
+		return eipProtocolText;
+	}
+
+	public void setEipProtocolText(String eipProtocolText) {
+		this.eipProtocolText = eipProtocolText;
 	}
 
 	public Integer getSourcePort() {
@@ -86,22 +56,6 @@ public class EipPolicyDTO {
 
 	public void setTargetPort(Integer targetPort) {
 		this.targetPort = targetPort;
-	}
-
-	public Integer getProtocol() {
-		return protocol;
-	}
-
-	public void setProtocol(Integer protocol) {
-		this.protocol = protocol;
-	}
-
-	public String getProtocolText() {
-		return protocolText;
-	}
-
-	public void setProtocolText(String protocolText) {
-		this.protocolText = protocolText;
 	}
 
 	/**

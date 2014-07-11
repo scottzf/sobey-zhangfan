@@ -1,85 +1,31 @@
 package com.sobey.cmdbuild.webservice.response.dto;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
+import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 
 @XmlRootElement(name = "VlanDTO")
 @XmlType(name = "VlanDTO", namespace = WsConstants.NS)
-public class VlanDTO {
+public class VlanDTO extends BasicDTO {
 
-	private Integer id;
-	private String code;
-	private String description;
-	private Date beginDate;
-	private String remark;
-	private Integer tenants;
-	private TenantsDTO tenantsDTO;
+	private String gateway;
 	private Integer idc;
 	private IdcDTO idcDTO;
-	private String segment;
 	private String netMask;
-	private String gateway;
+	private String segment;
+	private Integer tenants;
+	private TenantsDTO tenantsDTO;
 
-	public Integer getId() {
-		return id;
+	public String getGateway() {
+		return gateway;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public Integer getTenants() {
-		return tenants;
-	}
-
-	public void setTenants(Integer tenants) {
-		this.tenants = tenants;
-	}
-
-	public TenantsDTO getTenantsDTO() {
-		return tenantsDTO;
-	}
-
-	public void setTenantsDTO(TenantsDTO tenantsDTO) {
-		this.tenantsDTO = tenantsDTO;
+	public void setGateway(String gateway) {
+		this.gateway = gateway;
 	}
 
 	public Integer getIdc() {
@@ -98,14 +44,6 @@ public class VlanDTO {
 		this.idcDTO = idcDTO;
 	}
 
-	public String getSegment() {
-		return segment;
-	}
-
-	public void setSegment(String segment) {
-		this.segment = segment;
-	}
-
 	public String getNetMask() {
 		return netMask;
 	}
@@ -114,12 +52,28 @@ public class VlanDTO {
 		this.netMask = netMask;
 	}
 
-	public String getGateway() {
-		return gateway;
+	public String getSegment() {
+		return segment;
 	}
 
-	public void setGateway(String gateway) {
-		this.gateway = gateway;
+	public void setSegment(String segment) {
+		this.segment = segment;
+	}
+
+	public Integer getTenants() {
+		return tenants;
+	}
+
+	public void setTenants(Integer tenants) {
+		this.tenants = tenants;
+	}
+
+	public TenantsDTO getTenantsDTO() {
+		return tenantsDTO;
+	}
+
+	public void setTenantsDTO(TenantsDTO tenantsDTO) {
+		this.tenantsDTO = tenantsDTO;
 	}
 
 	/**

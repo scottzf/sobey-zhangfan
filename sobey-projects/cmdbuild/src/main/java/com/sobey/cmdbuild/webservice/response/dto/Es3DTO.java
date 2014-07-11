@@ -1,173 +1,23 @@
 package com.sobey.cmdbuild.webservice.response.dto;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.cmdbuild.constants.WsConstants;
+import com.sobey.cmdbuild.webservice.response.dto.basic.ServiceBasicDTO;
 
 @XmlRootElement(name = "Es3DTO")
 @XmlType(name = "Es3DTO", namespace = WsConstants.NS)
-public class Es3DTO {
+public class Es3DTO extends ServiceBasicDTO {
 
-	private Integer id;
-	private String code;
-	private String description;
-	private Date beginDate;
-	private String remark;
-	private Integer tag;
-	private TagDTO tagDTO;
-	private Integer ipaddress;
-	private IpaddressDTO ipaddressDTO;
-	private Integer tenants;
-	private TenantsDTO tenantsDTO;
-	private Integer es3Spec;
-	private Es3SpecDTO es3SpecDTO;
-	private Integer netappController;
-	private StorageDTO netappControllerDTO;
-	private Integer volumeType;
-	private String volumeTypeText;
 	private Double diskSize;
-	private String volumePath;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public Integer getTag() {
-		return tag;
-	}
-
-	public void setTag(Integer tag) {
-		this.tag = tag;
-	}
-
-	public TagDTO getTagDTO() {
-		return tagDTO;
-	}
-
-	public void setTagDTO(TagDTO tagDTO) {
-		this.tagDTO = tagDTO;
-	}
-
-	public Integer getIpaddress() {
-		return ipaddress;
-	}
-
-	public void setIpaddress(Integer ipaddress) {
-		this.ipaddress = ipaddress;
-	}
-
-	public IpaddressDTO getIpaddressDTO() {
-		return ipaddressDTO;
-	}
-
-	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
-		this.ipaddressDTO = ipaddressDTO;
-	}
-
-	public Integer getTenants() {
-		return tenants;
-	}
-
-	public void setTenants(Integer tenants) {
-		this.tenants = tenants;
-	}
-
-	public TenantsDTO getTenantsDTO() {
-		return tenantsDTO;
-	}
-
-	public void setTenantsDTO(TenantsDTO tenantsDTO) {
-		this.tenantsDTO = tenantsDTO;
-	}
-
-	public Integer getEs3Spec() {
-		return es3Spec;
-	}
-
-	public void setEs3Spec(Integer es3Spec) {
-		this.es3Spec = es3Spec;
-	}
-
-	public Es3SpecDTO getEs3SpecDTO() {
-		return es3SpecDTO;
-	}
-
-	public void setEs3SpecDTO(Es3SpecDTO es3SpecDTO) {
-		this.es3SpecDTO = es3SpecDTO;
-	}
-
-	public Integer getNetappController() {
-		return netappController;
-	}
-
-	public void setNetappController(Integer netappController) {
-		this.netappController = netappController;
-	}
-
-	public StorageDTO getNetappControllerDTO() {
-		return netappControllerDTO;
-	}
-
-	public void setNetappControllerDTO(StorageDTO netappControllerDTO) {
-		this.netappControllerDTO = netappControllerDTO;
-	}
-
-	public Integer getVolumeType() {
-		return volumeType;
-	}
-
-	public void setVolumeType(Integer volumeType) {
-		this.volumeType = volumeType;
-	}
-
-	public String getVolumeTypeText() {
-		return volumeTypeText;
-	}
-
-	public void setVolumeTypeText(String volumeTypeText) {
-		this.volumeTypeText = volumeTypeText;
-	}
+	private Integer es3Type;
+	private String es3TypeText;
+	private Integer storage;
+	private StorageDTO storageDTO;
+	private String volumeName;
 
 	public Double getDiskSize() {
 		return diskSize;
@@ -177,12 +27,44 @@ public class Es3DTO {
 		this.diskSize = diskSize;
 	}
 
-	public String getVolumePath() {
-		return volumePath;
+	public Integer getEs3Type() {
+		return es3Type;
 	}
 
-	public void setVolumePath(String volumePath) {
-		this.volumePath = volumePath;
+	public void setEs3Type(Integer es3Type) {
+		this.es3Type = es3Type;
+	}
+
+	public String getEs3TypeText() {
+		return es3TypeText;
+	}
+
+	public void setEs3TypeText(String es3TypeText) {
+		this.es3TypeText = es3TypeText;
+	}
+
+	public Integer getStorage() {
+		return storage;
+	}
+
+	public void setStorage(Integer storage) {
+		this.storage = storage;
+	}
+
+	public StorageDTO getStorageDTO() {
+		return storageDTO;
+	}
+
+	public void setStorageDTO(StorageDTO storageDTO) {
+		this.storageDTO = storageDTO;
+	}
+
+	public String getVolumeName() {
+		return volumeName;
+	}
+
+	public void setVolumeName(String volumeName) {
+		this.volumeName = volumeName;
 	}
 
 	/**
