@@ -216,6 +216,8 @@ public interface CmdbuildSoapService {
 	PaginationResult<LogDTO> getLogPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
+	/********** Service **************/
+
 	// ==============================//
 	// ============= Ecs ============//
 	// ==============================//
@@ -300,9 +302,9 @@ public interface CmdbuildSoapService {
 
 	DTOResult<DnsDTO> findDnsByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
-	IdResult createDns(@WebParam(name = "dnsDTO") DnsDTO DnsDTO);
+	IdResult createDns(@WebParam(name = "dnsDTO") DnsDTO dnsDTO);
 
-	IdResult updateDns(@WebParam(name = "id") Integer id, @WebParam(name = "dnsDTO") DnsDTO DnsDTO);
+	IdResult updateDns(@WebParam(name = "id") Integer id, @WebParam(name = "dnsDTO") DnsDTO dnsDTO);
 
 	IdResult deleteDns(@WebParam(name = "id") Integer id);
 
@@ -348,6 +350,8 @@ public interface CmdbuildSoapService {
 
 	PaginationResult<VpnDTO> getVpnPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	/********** Policy **************/
 
 	// ==============================//
 	// ========= EipPolicy ==========//
@@ -429,6 +433,8 @@ public interface CmdbuildSoapService {
 	PaginationResult<EsgPolicyDTO> getEsgPolicyPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
+	/********** Map **************/
+
 	// ==============================//
 	// ========= MapEcsEsg ==========//
 	// ==============================//
@@ -480,6 +486,8 @@ public interface CmdbuildSoapService {
 	/*************************************************
 	 *************** Infrastructure ******************
 	 *************************************************/
+
+	/********** Component **************/
 
 	// ==============================//
 	// ========== HardDisk ==========//
@@ -557,6 +565,8 @@ public interface CmdbuildSoapService {
 
 	PaginationResult<StorageBoxDTO> getStorageBoxPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	/********** Device **************/
 
 	// ==============================//
 	// ========== Firewall ==========//
@@ -655,6 +665,7 @@ public interface CmdbuildSoapService {
 	PaginationResult<SwitchesDTO> getSwitchesPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
+	/********** Network **************/
 	// ==============================//
 	// ========== Ipaddress =========//
 	// ==============================//
@@ -677,9 +688,6 @@ public interface CmdbuildSoapService {
 
 	/**
 	 * 分配 IPAddress。将 IPAddress 的状态设置为 “使用”状态
-	 * 
-	 * @param id
-	 * @return IdResult
 	 */
 	IdResult allocateIpaddress(@WebParam(name = "id") Integer id);
 
@@ -721,6 +729,8 @@ public interface CmdbuildSoapService {
 	 * 批量插入 Vlan. 先判断是否有相同的 code，如果有相同的 code 则跳过.
 	 */
 	IdResult insertVlan(@WebParam(name = "vlanDTOList") List<VlanDTO> vlanDTOList);
+
+	/********** Port **************/
 
 	// ==============================//
 	// ======== FirewallPort ========//
