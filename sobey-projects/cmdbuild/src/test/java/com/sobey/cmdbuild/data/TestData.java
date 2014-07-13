@@ -44,29 +44,12 @@ public class TestData {
 
 	// private static Date endDate = new Date(System.currentTimeMillis() + (60 * 60 * 24 * 7 * 1000));
 
-	public static Company randomCompany() {
-		Company company = new Company();
-		company.setId(0);
-		company.setCode(RandomData.randomName("code"));
-		company.setDescription(RandomData.randomName("description"));
-
-		company.setPhone(RandomData.randomName("phone"));
-		company.setAddress(RandomData.randomName("address"));
-		company.setZip(RandomData.randomName("zip"));
-		company.setRemark(RandomData.randomName("remark"));
-		return company;
-	}
-
 	public static Tenants randomTenants() {
 		Tenants tenants = new Tenants();
 		tenants.setId(0);
-		tenants.setCode(RandomData.randomName("code"));
 		tenants.setDescription(RandomData.randomName("description"));
-
 		tenants.setPhone(RandomData.randomName("phone"));
 		tenants.setRemark(RandomData.randomName("remark"));
-		tenants.setAccontBalance(RandomData.randomDouble());
-		tenants.setCompany(117122);
 		tenants.setPassword(RandomData.randomName("password"));
 		tenants.setEmail(RandomData.randomName("email"));
 		return tenants;
@@ -75,11 +58,21 @@ public class TestData {
 	public static Tag randomTag() {
 		Tag tag = new Tag();
 		tag.setId(0);
-		tag.setCode(RandomData.randomName("code"));
 		tag.setDescription(RandomData.randomName("description"));
-
+		tag.setTagType(LookUpConstants.TagType.上级标签.getValue());
 		tag.setRemark(RandomData.randomName("remark"));
-		tag.setTenants(117129);
+		tag.setTenants(108);
+		return tag;
+	}
+
+	public static Tag randomParentTag() {
+		Tag tag = new Tag();
+		tag.setId(0);
+		tag.setDescription(RandomData.randomName("description"));
+		tag.setTagType(LookUpConstants.TagType.子标签.getValue());
+		tag.setParentTag(112);
+		tag.setRemark(RandomData.randomName("remark"));
+		tag.setTenants(108);
 		return tag;
 	}
 
@@ -88,10 +81,7 @@ public class TestData {
 		Idc idc = new Idc();
 
 		idc.setId(0);
-		idc.setCode(RandomData.randomName("code"));
 		idc.setDescription(RandomData.randomName("description"));
-		// idc.setBeginDate(startDate);
-
 		idc.setRemark(RandomData.randomName("remark"));
 		idc.setCity(RandomData.randomName("city"));
 		idc.setZip(RandomData.randomName("zip"));
@@ -102,35 +92,35 @@ public class TestData {
 	}
 
 	public static Rack randomRack() {
+
 		Rack rack = new Rack();
-
 		rack.setId(0);
-		rack.setCode(RandomData.randomName("code"));
 		rack.setDescription(RandomData.randomName("description"));
-
 		rack.setRemark(RandomData.randomName("remark"));
-		rack.setIdc(90);
+		rack.setIdc(110);
+		rack.setBrand(56);
+		rack.setHeight(68);
+		rack.setPower(77);
+		rack.setUnitNumber(2);
 
 		return rack;
 	}
 
 	public static DeviceSpec randomDeviceSpec() {
+
 		DeviceSpec dev = new DeviceSpec();
-
 		dev.setId(0);
-		dev.setDeviceType(26);
 		dev.setBeginDate(startDate);
-		dev.setCode(RandomData.randomName("code10"));
 		dev.setDescription(RandomData.randomName("description"));
-
-		dev.setBrand(0);
-		dev.setHeight(0);
-		dev.setMaintenance(0);
+		dev.setDeviceType(23);
+		dev.setBrand(56);
+		dev.setHeight(69);
+		dev.setPower(77);
+		dev.setMaintenance(30);
 		dev.setCpuModel(RandomData.randomName("i"));
+		dev.setCpuNumber(2);
 		dev.setHdNumber(RandomData.randomInt());
 		dev.setRamNumber(RandomData.randomInt());
-		dev.setPower(RandomData.randomInt());
-		dev.setPrice(RandomData.randomDouble());
 		dev.setNicNumber(RandomData.randomInt());
 		dev.setRemark(RandomData.randomName("remark"));
 
@@ -138,104 +128,34 @@ public class TestData {
 	}
 
 	public static EcsSpec randomEcsSpec() {
+
 		EcsSpec esc = new EcsSpec();
 
 		esc.setId(0);
 		esc.setNotes(RandomData.randomName("note"));
-		esc.setCode(RandomData.randomName("code10"));
 		esc.setDescription(RandomData.randomName("description"));
 		esc.setBeginDate(startDate);
 		esc.setCpuNumber(RandomData.randomInt());
 		esc.setDiskSize(RandomData.randomInt());
 		esc.setMemory(RandomData.randomInt());
-		esc.setPrice(RandomData.randomDouble());
-
 		esc.setRemark(RandomData.randomName("remark"));
-		esc.setBrand(0);
+		esc.setOsType(21);
 
 		return esc;
-	}
-
-	public static EipSpec randomEipSpec() {
-		EipSpec eip = new EipSpec();
-
-		eip.setId(0);
-		eip.setBeginDate(startDate);
-		eip.setCode(RandomData.randomName("code10"));
-		eip.setDescription(RandomData.randomName("description"));
-		eip.setPrice(RandomData.randomDouble());
-		eip.setRemark(RandomData.randomName("remark"));
-		eip.setBrand(0);
-
-		return eip;
-	}
-
-	public static Es3Spec randomEs3Spec() {
-		Es3Spec es3 = new Es3Spec();
-
-		es3.setId(0);
-		es3.setBrand(0);
-		es3.setCode(RandomData.randomName("code10"));
-		es3.setDescription(RandomData.randomName("description"));
-
-		es3.setMaxSpace(RandomData.randomInt());
-		es3.setPrice(RandomData.randomDouble());
-		es3.setRemark(RandomData.randomName("remark"));
-		es3.setBrand(0);
-		es3.setBeginDate(startDate);
-
-		return es3;
-	}
-
-	public static Fimas randomFimas() {
-
-		Fimas fimas = new Fimas();
-
-		fimas.setId(0);
-		fimas.setCode(RandomData.randomName("code"));
-		fimas.setDescription(RandomData.randomName("description"));
-
-		return fimas;
-	}
-
-	public static FimasBox randomFimasBox() {
-
-		FimasBox fimasBox = new FimasBox();
-
-		fimasBox.setId(0);
-		fimasBox.setCode(RandomData.randomName("code"));
-		fimasBox.setDescription(RandomData.randomName("description"));
-		fimasBox.setBeginDate(startDate);
-		fimasBox.setIdc(90);
-		fimasBox.setRack(218);
-		fimasBox.setDeviceSpec(226);
-		fimasBox.setDiskType(53);// SATA
-		fimasBox.setDiskNumber(RandomData.randomInt());
-		fimasBox.setSite(0);
-
-		// 非必须参数
-		fimasBox.setIpaddress(94);
-		// fimasBox.setNotes(RandomData.randomName("nodes"));
-		fimasBox.setSn(RandomData.randomName("sn"));
-		fimasBox.setGdzcSn(RandomData.randomName("gdzcSn"));
-		fimasBox.setRemark(RandomData.randomName("remark"));
-
-		return fimasBox;
-	}
-
-	public static FimasPort randomFimasPort() {
-		FimasPort fimasPort = new FimasPort();
-		fimasPort.setId(0);
-		fimasPort.setCode(RandomData.randomName("code"));
-		fimasPort.setDescription(RandomData.randomName("description"));
-		return fimasPort;
 	}
 
 	public static Firewall randomFirewall() {
 		Firewall firewall = new Firewall();
 		firewall.setId(0);
-		firewall.setCode(RandomData.randomName("code"));
+		firewall.setIdc(110);
+		firewall.setRack(140);
+		firewall.setDeviceSpec(145);
+		firewall.setIpaddress(180);
 		firewall.setDescription(RandomData.randomName("description"));
+		firewall.setSn(RandomData.randomName("sn"));
+		firewall.setGdzcSn(RandomData.randomName("gdzcSn"));
+		firewall.setSite("1");
+		firewall.setRemark(RandomData.randomName("remark"));
 		return firewall;
 	}
 
@@ -269,16 +189,14 @@ public class TestData {
 		Ipaddress ipaddress = new Ipaddress();
 
 		ipaddress.setId(0);
-		// ipaddress.setCode("code7575");
-		ipaddress.setCode(RandomData.randomName("code"));
 		ipaddress.setDescription(RandomData.randomName("description"));
-		ipaddress.setIpaddressPool(46);// ip协议
+		ipaddress.setIpaddressPool(66);//
 		ipaddress.setIpaddressStatus(LookUpConstants.IPAddressStatus.未使用.getValue());
-		ipaddress.setVlan(91);
+		ipaddress.setVlan(172);
 		ipaddress.setBeginDate(startDate);
 
 		ipaddress.setNetMask(RandomData.randomName("netMask"));
-		ipaddress.setIsp(44);
+		ipaddress.setIsp(29);
 		ipaddress.setGateway(RandomData.randomName("gateway"));
 
 		return ipaddress;
@@ -408,13 +326,16 @@ public class TestData {
 		Server server = new Server();
 
 		server.setId(0);
-		server.setCode(RandomData.randomName("code"));
 		server.setDescription(RandomData.randomName("description"));
-
-		server.setGdzcSn(RandomData.randomName("gdzcSn"));
-		server.setIdc(129);
-		server.setRack(224);
+		server.setGdzcSn(RandomData.randomName("gdzcsn"));
+		server.setIdc(110);
+		server.setRack(140);
+		server.setDeviceSpec(145);
+		server.setIpaddress(180);
 		server.setSn(RandomData.randomName("sn"));
+		server.setRemark(RandomData.randomName("remark"));
+		server.setSite("1");
+		server.setResgroup("Resgroup-1");
 
 		return server;
 	}
@@ -448,16 +369,15 @@ public class TestData {
 		Vlan vlan = new Vlan();
 
 		vlan.setId(0);
-		vlan.setCode(String.valueOf(RandomData.randomInt()));
-		// vlan.setCode(String.valueOf(80));
 		vlan.setDescription(RandomData.randomName("description"));
 		vlan.setBeginDate(startDate);
-		vlan.setTenants(86);
-		vlan.setIdc(88);
+		vlan.setTenants(108);
+		vlan.setIdc(110);
 
 		vlan.setRemark(RandomData.randomName("remark"));
 		vlan.setSegment(RandomData.randomName("segment"));
 		vlan.setNetMask(RandomData.randomName("netMask"));
+		vlan.setGateway(RandomData.randomName("gateway"));
 
 		return vlan;
 	}
@@ -563,21 +483,19 @@ public class TestData {
 		return vpn;
 	}
 
-	public static GroupPolicy randomGroupPolicy() {
-		GroupPolicy groupPolicy = new GroupPolicy();
-		groupPolicy.setRemark(RandomData.randomName("remark"));
-		groupPolicy.setTenants(117129);
-		return groupPolicy;
-	}
-
 	public static Ecs randomEcs() {
 		Ecs ecs = new Ecs();
 		ecs.setId(0);
-		ecs.setCode(RandomData.randomName("code"));
 		ecs.setDescription(RandomData.randomName("description"));
 		ecs.setRemark(RandomData.randomName("remark"));
-		ecs.setTag(117132);
-		ecs.setTenants(117129);
+		ecs.setTenants(108);
+		ecs.setAgentType(47);
+		ecs.setIdc(110);
+		ecs.setIpaddress(180);
+		ecs.setEcsSpec(164);
+		ecs.setEcsStatus(34);
+		ecs.setServer(328);
+		;
 		return ecs;
 	}
 
