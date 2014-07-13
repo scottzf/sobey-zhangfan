@@ -26,7 +26,7 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class SwitchesService extends BasicSevcie {
-	
+
 	@Autowired
 	private SwitchesDao switchesDao;
 

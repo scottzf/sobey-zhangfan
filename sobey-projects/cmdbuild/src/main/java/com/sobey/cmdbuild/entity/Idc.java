@@ -25,7 +25,7 @@ public class Idc extends BasicEntity {
 	private String remark;
 	private Set<IdcHistory> idcHistories = new HashSet<IdcHistory>(0);
 
-	private Idc() {
+	public Idc() {
 	}
 
 	@Column(name = "city", length = 100)

@@ -26,7 +26,7 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class VlanService extends BasicSevcie {
-	
+
 	@Autowired
 	private VlanDao vlanDao;
 

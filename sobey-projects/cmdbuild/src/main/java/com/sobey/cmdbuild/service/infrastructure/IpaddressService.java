@@ -26,7 +26,7 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class IpaddressService extends BasicSevcie {
-	
+
 	@Autowired
 	private IpaddressDao ipaddressDao;
 

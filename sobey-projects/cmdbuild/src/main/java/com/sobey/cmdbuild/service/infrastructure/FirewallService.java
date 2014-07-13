@@ -26,7 +26,7 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class FirewallService extends BasicSevcie {
-	
+
 	@Autowired
 	private FirewallDao firewallDao;
 

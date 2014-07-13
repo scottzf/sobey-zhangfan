@@ -2,11 +2,18 @@ package com.sobey.cmdbuild.webservice.response.dto.basic;
 
 import java.util.Date;
 
+/**
+ * 
+ * DTO的基本类,每个DTO必须继承该抽象类
+ * 
+ * @author Administrator
+ *
+ */
 public abstract class BasicDTO {
 
 	protected Date beginDate;
-	protected String code;
-	protected String description;
+	protected String code; // cmdbuild中唯一的值,对用户隐藏,由系统自动生成.
+	protected String description; // 对用户显示的字段.
 	protected Integer id;
 	protected String remark;
 

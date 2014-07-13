@@ -24,6 +24,7 @@ public class Tenants extends BasicEntity {
 	private String company;
 	private String createInfo;
 	private String accessKey;
+	private String remark;
 	private Set<TenantsHistory> tenantsHistories = new HashSet<TenantsHistory>(0);
 
 	public Tenants() {
@@ -81,6 +82,15 @@ public class Tenants extends BasicEntity {
 
 	public void setAccessKey(String accessKey) {
 		this.accessKey = accessKey;
+	}
+
+	@Column(name = "remark", length = 200)
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tenants")

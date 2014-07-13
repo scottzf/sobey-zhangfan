@@ -42,7 +42,7 @@ public class VpnHistory extends ServiceHistoryBasic {
 		this.policyId = policyId;
 	}
 
-	@Column(name = "remark", length = 100)
+	@Column(name = "password", length = 100)
 	public String getPassword() {
 		return password;
 	}

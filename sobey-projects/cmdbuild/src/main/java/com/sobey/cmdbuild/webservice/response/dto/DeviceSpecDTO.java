@@ -19,7 +19,7 @@ public class DeviceSpecDTO extends BasicDTO {
 	private Integer deviceType;
 	private String deviceTypeText;
 	private Integer hdnumber;
-	private Integer hight;
+	private Integer height;
 	private String hightText;
 	private Integer maintenance;
 	private String maintenanceText;
@@ -84,12 +84,12 @@ public class DeviceSpecDTO extends BasicDTO {
 		this.hdnumber = hdnumber;
 	}
 
-	public Integer getHight() {
-		return hight;
+	public Integer getHeight() {
+		return height;
 	}
 
-	public void setHight(Integer hight) {
-		this.hight = hight;
+	public void setHeight(Integer height) {
+		this.height = height;
 	}
 
 	public String getHightText() {

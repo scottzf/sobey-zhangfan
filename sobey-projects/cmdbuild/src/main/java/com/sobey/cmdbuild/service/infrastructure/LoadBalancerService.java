@@ -26,7 +26,7 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class LoadBalancerService extends BasicSevcie {
-	
+
 	@Autowired
 	private LoadBalancerDao loadBalancerDao;
 

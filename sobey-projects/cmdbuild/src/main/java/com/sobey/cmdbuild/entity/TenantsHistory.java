@@ -28,6 +28,7 @@ public class TenantsHistory extends BasicEntity {
 	private String company;
 	private String createInfo;
 	private String accessKey;
+	private String remark;
 
 	public TenantsHistory() {
 	}
@@ -104,6 +105,15 @@ public class TenantsHistory extends BasicEntity {
 
 	public void setAccessKey(String accessKey) {
 		this.accessKey = accessKey;
+	}
+
+	@Column(name = "remark", length = 200)
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 }

@@ -26,7 +26,7 @@ import com.sobey.core.persistence.SearchFilter;
 @Service
 @Transactional
 public class NicService extends BasicSevcie {
-	
+
 	@Autowired
 	private NicDao nicDao;
 
