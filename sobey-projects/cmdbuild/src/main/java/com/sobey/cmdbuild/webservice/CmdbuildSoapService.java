@@ -207,10 +207,6 @@ public interface CmdbuildSoapService {
 
 	IdResult createLog(@WebParam(name = "logDTO") LogDTO logDTO);
 
-	IdResult updateLog(@WebParam(name = "id") Integer id, @WebParam(name = "logDTO") LogDTO logDTO);
-
-	IdResult deleteLog(@WebParam(name = "id") Integer id);
-
 	DTOListResult<LogDTO> getLogList(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	PaginationResult<LogDTO> getLogPagination(@WebParam(name = "searchParams") SearchParams searchParams,
