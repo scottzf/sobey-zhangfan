@@ -3,7 +3,8 @@ package com.sobey.cmdbuild.webservice.organisation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Ignore;
+import java.util.HashMap;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -35,59 +36,84 @@ import com.sobey.core.mapper.BeanMapper;
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
 public class IdcSoapTest extends BaseFunctionalTestCase {
 
-	@Test
-	@Ignore
-	public void find() {
-		Integer id = 110;
-		DTOResult<IdcDTO> response = cmdbuildSoapService.findIdc(id);
-		assertEquals("sobey", response.getDto().getCode());
-	}
+	/**
+	 * 全局id
+	 */
+	private Integer id = 0;
+
+	/**
+	 * 全局Description
+	 */
+	private String description = "";
 
 	@Test
-	@Ignore
-	public void getList() {
-		SearchParams searchParams = new SearchParams();
-		DTOListResult<IdcDTO> result = cmdbuildSoapService.getIdcList(searchParams);
-		assertEquals("0", result.getCode());
+	public void testAll() {
+		save();
+		find();
+		getList();
+		getPagination();
+		update();
+		delete();
 	}
 
-	@Test
-	// @Ignore
-	public void save() {
-		Idc idc = TestData.randomIdc();
-		IdcDTO idcDTO = BeanMapper.map(idc, IdcDTO.class);
-		IdResult response = cmdbuildSoapService.createIdc(idcDTO);
-		assertNotNull(response.getId());
-	}
-
-	@Test
-	@Ignore
-	public void update() {
-		Integer id = 110;
-		DTOResult<IdcDTO> response = cmdbuildSoapService.findIdc(id);
-		IdcDTO idcDTO = response.getDto();
-		idcDTO.setDescription("冬天来了啊");
-		IdResult result = cmdbuildSoapService.updateIdc(id, idcDTO);
-		assertNotNull(result.getId());
-	}
-
-	@Test
-	@Ignore
 	public void delete() {
-		Integer id = 110;
-		IdResult response = cmdbuildSoapService.deleteTag(id);
+		IdResult response = cmdbuildSoapService.deleteIdc(id);
 		assertNotNull(response.getId());
 	}
 
-	@Test
-	// @Ignore
+	public void find() {
+
+		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("EQ_description", description);
+		searchParams.setParamsMap(paramsMap);
+
+		DTOResult<IdcDTO> dtoResult = cmdbuildSoapService.findIdcByParams(searchParams);
+
+		assertEquals(description, dtoResult.getDto().getDescription());
+
+		id = dtoResult.getDto().getId();// 设置id
+	}
+
+	public void getList() {
+
+		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
+
+		DTOListResult<IdcDTO> result = cmdbuildSoapService.getIdcList(searchParams);
+		System.out.println("返回的查询结果数量:" + result.getDtos().size());
+	}
+
 	public void getPagination() {
 
 		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
 
 		PaginationResult<IdcDTO> result = cmdbuildSoapService.getIdcPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
-		System.out.println("返回的查询结果数量:" + result.getGetTotalElements());
+		System.out.println("返回的分页查询结果数量:" + result.getGetTotalElements());
 	}
+
+	public void save() {
+
+		Idc idc = TestData.randomIdc();
+		IdcDTO dto = BeanMapper.map(idc, IdcDTO.class);
+		IdResult response = cmdbuildSoapService.createIdc(dto);
+		assertNotNull(response.getId());
+
+		description = dto.getDescription();// 设置Description
+	}
+
+	public void update() {
+
+		DTOResult<IdcDTO> response = cmdbuildSoapService.findIdc(id);
+		IdcDTO dto = response.getDto();
+		dto.setDescription(dto.getDescription() + "Update");
+		IdResult result = cmdbuildSoapService.updateIdc(id, dto);
+		assertEquals("0", result.getCode());
+	}
+
 }

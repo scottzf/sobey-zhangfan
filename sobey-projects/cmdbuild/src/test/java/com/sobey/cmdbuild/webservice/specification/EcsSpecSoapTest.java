@@ -1,4 +1,4 @@
-package com.sobey.cmdbuild.webservice.organisation;
+package com.sobey.cmdbuild.webservice.specification;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -14,8 +14,8 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
-import com.sobey.cmdbuild.entity.Tag;
-import com.sobey.cmdbuild.webservice.response.dto.TagDTO;
+import com.sobey.cmdbuild.entity.EcsSpec;
+import com.sobey.cmdbuild.webservice.response.dto.EcsSpecDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
@@ -23,18 +23,10 @@ import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.cmdbuild.webservice.response.result.SearchParams;
 import com.sobey.core.mapper.BeanMapper;
 
-/**
- * Tag SOAP服务的功能测试, 测试主要的接口调用.
- * 
- * 使用在Spring applicaitonContext.xml中用<jaxws:client/>，根据CmdbuildWebService接口创建的Client.
- * 
- * 
- * @author Administrator
- */
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class })
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
-public class TagSoapTest extends BaseFunctionalTestCase {
+public class EcsSpecSoapTest extends BaseFunctionalTestCase {
 
 	/**
 	 * 全局id
@@ -57,7 +49,7 @@ public class TagSoapTest extends BaseFunctionalTestCase {
 	}
 
 	public void delete() {
-		IdResult response = cmdbuildSoapService.deleteTag(id);
+		IdResult response = cmdbuildSoapService.deleteEcsSpec(id);
 		assertNotNull(response.getId());
 	}
 
@@ -68,7 +60,7 @@ public class TagSoapTest extends BaseFunctionalTestCase {
 		paramsMap.put("EQ_description", description);
 		searchParams.setParamsMap(paramsMap);
 
-		DTOResult<TagDTO> dtoResult = cmdbuildSoapService.findTagByParams(searchParams);
+		DTOResult<EcsSpecDTO> dtoResult = cmdbuildSoapService.findEcsSpecByParams(searchParams);
 
 		assertEquals(description, dtoResult.getDto().getDescription());
 
@@ -81,7 +73,8 @@ public class TagSoapTest extends BaseFunctionalTestCase {
 		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
 		searchParams.setParamsMap(paramsMap);
 
-		DTOListResult<TagDTO> result = cmdbuildSoapService.getTagList(searchParams);
+		DTOListResult<EcsSpecDTO> result = cmdbuildSoapService.getEcsSpecList(searchParams);
+
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 	}
 
@@ -91,7 +84,9 @@ public class TagSoapTest extends BaseFunctionalTestCase {
 		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
 		searchParams.setParamsMap(paramsMap);
 
-		PaginationResult<TagDTO> result = cmdbuildSoapService.getTagPagination(searchParams, 1, 10);
+		PaginationResult<EcsSpecDTO> result = cmdbuildSoapService.getEcsSpecPagination(searchParams, 1, 10);
+
+		assertNotNull(result.getGetTotalElements());
 
 		assertNotNull(result.getGetTotalElements());
 		System.out.println("返回的分页查询结果数量:" + result.getGetTotalElements());
@@ -99,21 +94,28 @@ public class TagSoapTest extends BaseFunctionalTestCase {
 
 	public void save() {
 
-		Tag tag = TestData.randomTag();
-		TagDTO dto = BeanMapper.map(tag, TagDTO.class);
-		IdResult response = cmdbuildSoapService.createTag(dto);
+		EcsSpec ecsSpec = TestData.randomEcsSpec();
+
+		EcsSpecDTO dto = BeanMapper.map(ecsSpec, EcsSpecDTO.class);
+
+		IdResult response = cmdbuildSoapService.createEcsSpec(dto);
 
 		assertNotNull(response.getId());
 
 		description = dto.getDescription();
+
 	}
 
 	public void update() {
 
-		DTOResult<TagDTO> response = cmdbuildSoapService.findTag(id);
-		TagDTO dto = response.getDto();
+		DTOResult<EcsSpecDTO> response = cmdbuildSoapService.findEcsSpec(id);
+
+		EcsSpecDTO dto = response.getDto();
+
 		dto.setDescription(dto.getDescription() + "Update");
-		IdResult result = cmdbuildSoapService.updateTag(id, dto);
+
+		IdResult result = cmdbuildSoapService.updateEcsSpec(id, dto);
+
 		assertEquals("0", result.getCode());
 	}
 }

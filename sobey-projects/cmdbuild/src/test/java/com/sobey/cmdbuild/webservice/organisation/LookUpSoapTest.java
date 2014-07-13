@@ -3,7 +3,8 @@ package com.sobey.cmdbuild.webservice.organisation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Ignore;
+import java.util.HashMap;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -33,36 +34,44 @@ import com.sobey.cmdbuild.webservice.response.result.SearchParams;
 public class LookUpSoapTest extends BaseFunctionalTestCase {
 
 	@Test
-	@Ignore
 	public void find() {
-		Integer id = 70;
+
+		Integer id = 80;
 		DTOResult<LookUpDTO> response = cmdbuildSoapService.findLookUp(id);
-		assertEquals("CentOS 6.4 64bit", response.getDto().getDescription());
+		assertEquals("NetApp", response.getDto().getDescription());
 
 		SearchParams searchParams = new SearchParams();
-		searchParams.getParamsMap().put("EQ_type", LookUpTypeEnum.Image.name());
-		searchParams.getParamsMap().put("EQ_description", "CentOS 6.4 64bit");
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("EQ_type", LookUpTypeEnum.ISP.name());
+		paramsMap.put("EQ_description", "中国联通");
+		searchParams.setParamsMap(paramsMap);
 
 		DTOResult<LookUpDTO> responseParams = cmdbuildSoapService.findLookUpByParams(searchParams);
-		assertEquals("CentOS 6.4 64bit", responseParams.getDto().getDescription());
+		assertEquals("中国联通", responseParams.getDto().getDescription());
 	}
 
 	@Test
-	@Ignore
 	public void getList() {
+
 		SearchParams searchParams = new SearchParams();
-		searchParams.getParamsMap().put("EQ_type", LookUpTypeEnum.Image.name());
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("EQ_type", LookUpTypeEnum.ISP.name());
+		paramsMap.put("EQ_description", "中国联通");
+		searchParams.setParamsMap(paramsMap);
 
 		DTOListResult<LookUpDTO> result = cmdbuildSoapService.getLookUpList(searchParams);
+
 		System.out.println("获得集合数量:" + result.getDtos().size());
+
 		assertEquals("0", result.getCode());
 	}
 
 	@Test
-	@Ignore
 	public void getPagination() {
 
 		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
 
 		PaginationResult<LookUpDTO> result = cmdbuildSoapService.getLookUpPagination(searchParams, 2, 10);
 

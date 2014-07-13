@@ -3,7 +3,8 @@ package com.sobey.cmdbuild.webservice.organisation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Ignore;
+import java.util.HashMap;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -35,62 +36,82 @@ import com.sobey.core.mapper.BeanMapper;
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
 public class TenantsSoapTest extends BaseFunctionalTestCase {
 
-	@Test
-	@Ignore
-	public void find() {
-		Integer id = 87;
-		DTOResult<TenantsDTO> response = cmdbuildSoapService.findTenants(id);
-		assertNotNull(response.getDto().getCompanyDTO());
-		assertEquals("sobey", response.getDto().getCode());
-	}
+	/**
+	 * 全局id
+	 */
+	private Integer id = 0;
+
+	/**
+	 * 全局Description
+	 */
+	private String description = "";
 
 	@Test
-	@Ignore
-	public void getList() {
-		SearchParams searchParams = new SearchParams();
-		DTOListResult<TenantsDTO> result = cmdbuildSoapService.getTenantsList(searchParams);
-		assertEquals("0", result.getCode());
+	public void testAll() {
+		save();
+		find();
+		getList();
+		getPagination();
+		update();
+		delete();
 	}
 
-	@Test
-	// @Ignore
-	public void save() {
-		Tenants tenants = TestData.randomTenants();
-		TenantsDTO TenantsDTO = BeanMapper.map(tenants, TenantsDTO.class);
-		IdResult response = cmdbuildSoapService.createTenants(TenantsDTO);
-		assertNotNull(response.getId());
-	}
-
-	@Test
-	@Ignore
-	public void update() {
-		Integer id = 86;
-		DTOResult<TenantsDTO> response = cmdbuildSoapService.findTenants(id);
-		TenantsDTO TenantsDTO = response.getDto();
-		TenantsDTO.setCode("codeliukai333");
-		TenantsDTO.setDescription("刘凯目前单身,求一妹子~!");
-		IdResult result = cmdbuildSoapService.updateTenants(id, TenantsDTO);
-		assertNotNull(result.getId());
-	}
-
-	@Test
-	@Ignore
 	public void delete() {
-		Integer id = 88;
 		IdResult response = cmdbuildSoapService.deleteTenants(id);
 		assertNotNull(response.getId());
 	}
 
-	@Test
-	@Ignore
+	public void find() {
+
+		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("EQ_description", description);
+		searchParams.setParamsMap(paramsMap);
+
+		DTOResult<TenantsDTO> dtoResult = cmdbuildSoapService.findTenantsByParams(searchParams);
+
+		assertEquals(description, dtoResult.getDto().getDescription());
+
+		id = dtoResult.getDto().getId();// 设置id
+	}
+
+	public void getList() {
+
+		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
+
+		DTOListResult<TenantsDTO> result = cmdbuildSoapService.getTenantsList(searchParams);
+		System.out.println("返回的查询结果数量:" + result.getDtos().size());
+	}
+
 	public void getPagination() {
 
 		SearchParams searchParams = new SearchParams();
-		searchParams.getParamsMap().put("EQ_company", 85);
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
 
 		PaginationResult<TenantsDTO> result = cmdbuildSoapService.getTenantsPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
-		System.out.println("返回的查询结果数量:" + result.getGetTotalElements());
+		System.out.println("返回的分页查询结果数量:" + result.getGetTotalElements());
+	}
+
+	public void save() {
+
+		Tenants tenants = TestData.randomTenants();
+		TenantsDTO dto = BeanMapper.map(tenants, TenantsDTO.class);
+		IdResult response = cmdbuildSoapService.createTenants(dto);
+		assertNotNull(response.getId());
+		description = dto.getDescription();
+	}
+
+	public void update() {
+
+		DTOResult<TenantsDTO> dtoResult = cmdbuildSoapService.findTenants(id);
+		TenantsDTO dto = dtoResult.getDto();
+		dto.setDescription(dto.getDescription() + "Update");
+		IdResult result = cmdbuildSoapService.updateTenants(id, dto);
+		assertEquals("0", result.getCode());
 	}
 }

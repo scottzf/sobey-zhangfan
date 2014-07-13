@@ -3,7 +3,8 @@ package com.sobey.cmdbuild.webservice.organisation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Ignore;
+import java.util.HashMap;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -35,63 +36,84 @@ import com.sobey.core.mapper.BeanMapper;
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
 public class RackSoapTest extends BaseFunctionalTestCase {
 
-	@Test
-	// @Ignore
-	public void find() {
-		Integer id = 218;
-		DTOResult<RackDTO> response = cmdbuildSoapService.findRack(id);
-		assertNotNull(response.getDto().getBrandText());
-		assertNotNull(response.getDto().getHeightText());
-		assertNotNull(response.getDto().getPowerText());
-		assertNotNull(response.getDto().getIdcDTO());
-		assertEquals("code2027", response.getDto().getCode());
-	}
+	/**
+	 * 全局Description
+	 */
+	private String description = "";
+
+	/**
+	 * 全局id
+	 */
+	private Integer id = 0;
 
 	@Test
-	@Ignore
-	public void getList() {
-		SearchParams searchParams = new SearchParams();
-		DTOListResult<RackDTO> result = cmdbuildSoapService.getRackList(searchParams);
-		assertEquals("0", result.getCode());
+	public void testAll() {
+		save();
+		find();
+		getList();
+		getPagination();
+		update();
+		delete();
 	}
 
-	@Test
-	@Ignore
-	public void save() {
-		Rack rack = TestData.randomRack();
-		RackDTO rackDTO = BeanMapper.map(rack, RackDTO.class);
-		IdResult response = cmdbuildSoapService.createRack(rackDTO);
-		assertNotNull(response.getId());
-	}
-
-	@Test
-	@Ignore
-	public void update() {
-		Integer id = 115;
-		DTOResult<RackDTO> response = cmdbuildSoapService.findRack(id);
-		RackDTO rackDTO = response.getDto();
-		rackDTO.setDescription("冬天来了啊");
-		IdResult result = cmdbuildSoapService.updateRack(id, rackDTO);
-		assertNotNull(result.getId());
-	}
-
-	@Test
-	@Ignore
 	public void delete() {
-		Integer id = 115;
-		IdResult response = cmdbuildSoapService.deleteTag(id);
+		IdResult response = cmdbuildSoapService.deleteRack(id);
 		assertNotNull(response.getId());
 	}
 
-	@Test
-	@Ignore
+	public void find() {
+
+		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("EQ_description", description);
+		searchParams.setParamsMap(paramsMap);
+
+		DTOResult<RackDTO> dtoResult = cmdbuildSoapService.findRackByParams(searchParams);
+
+		assertEquals(description, dtoResult.getDto().getDescription());
+
+		id = dtoResult.getDto().getId();// 设置id
+	}
+
+	public void getList() {
+
+		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
+
+		DTOListResult<RackDTO> result = cmdbuildSoapService.getRackList(searchParams);
+		System.out.println("返回的查询结果数量:" + result.getDtos().size());
+	}
+
 	public void getPagination() {
 
 		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
 
 		PaginationResult<RackDTO> result = cmdbuildSoapService.getRackPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
-		System.out.println("返回的查询结果数量:" + result.getGetTotalElements());
+		System.out.println("返回的分页查询结果数量:" + result.getGetTotalElements());
+	}
+
+	public void save() {
+
+		Rack rack = TestData.randomRack();
+		RackDTO dto = BeanMapper.map(rack, RackDTO.class);
+		IdResult response = cmdbuildSoapService.createRack(dto);
+
+		assertNotNull(response.getId());
+
+		description = dto.getDescription();
+	}
+
+	public void update() {
+
+		DTOResult<RackDTO> response = cmdbuildSoapService.findRack(id);
+		RackDTO dto = response.getDto();
+		dto.setDescription(dto.getDescription() + "Update");
+		IdResult result = cmdbuildSoapService.updateRack(id, dto);
+		assertEquals("0", result.getCode());
 	}
 }

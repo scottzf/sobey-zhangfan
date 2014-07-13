@@ -3,9 +3,7 @@ package com.sobey.cmdbuild.webservice.infrastructure;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,148 +22,90 @@ import com.sobey.cmdbuild.webservice.response.result.IdResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.cmdbuild.webservice.response.result.SearchParams;
 import com.sobey.core.mapper.BeanMapper;
-import com.sobey.test.data.RandomData;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class })
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
 public class VlanSoapTest extends BaseFunctionalTestCase {
+
+	/**
+	 * 全局id
+	 */
 	private Integer id = 0;
 
-	private String code = "";
+	/**
+	 * 全局Description
+	 */
+	private String description = "";
 
 	@Test
 	public void testAll() {
-		testCreateVlan();
-		testFindVlan();
-		testGetVlanList();
-		testGetVlanPagination();
-		testUpdateVlan();
-		testDeleteVlan();
-
+		save();
+		find();
+		getList();
+		getPagination();
+		update();
+		delete();
 	}
 
-	// @Test
-	// @Ignore
-	public void testFindVlan() {
-		System.out.println(code + ">>>>>>>>>>>>>");
+	public void delete() {
+		IdResult response = cmdbuildSoapService.deleteVlan(id);
+		assertNotNull(response.getId());
+	}
+
+	public void find() {
 
 		SearchParams searchParams = new SearchParams();
 		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("EQ_code", code);
+		paramsMap.put("EQ_description", description);
 		searchParams.setParamsMap(paramsMap);
 
-		DTOResult<VlanDTO> responseParams = cmdbuildSoapService.findVlanByParams(searchParams);
+		DTOResult<VlanDTO> dtoResult = cmdbuildSoapService.findVlanByParams(searchParams);
 
-		assertEquals(code, responseParams.getDto().getCode());
+		assertEquals(description, dtoResult.getDto().getDescription());
 
-		id = responseParams.getDto().getId();// 设置id
-
-		DTOResult<VlanDTO> response = cmdbuildSoapService.findVlan(id);
-
-		assertNotNull(response);
-
-		System.out.println(id + ">>>>>>>>>>>>>");
-
+		id = dtoResult.getDto().getId();// 设置id
 	}
 
-	// @Test
-	// @Ignore
-	public void testGetVlanList() {
+	public void getList() {
 
 		SearchParams searchParams = new SearchParams();
 		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("EQ_code", code);
 		searchParams.setParamsMap(paramsMap);
 
 		DTOListResult<VlanDTO> result = cmdbuildSoapService.getVlanList(searchParams);
-
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
-
-		assertEquals("0", result.getCode());
-
 	}
 
-	@Test
-	// @Ignore
-	public void testCreateVlan() {
-
-		Vlan vlan = TestData.randomVlan();
-
-		VlanDTO vlanDTO = BeanMapper.map(vlan, VlanDTO.class);
-
-		IdResult response = cmdbuildSoapService.createVlan(vlanDTO);
-
-		assertNotNull(response.getId());
-
-		code = vlan.getCode();// 设置code
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testUpdateVlan() {
-
-		DTOResult<VlanDTO> response = cmdbuildSoapService.findVlan(id);
-
-		VlanDTO vlanDTO = response.getDto();
-
-		vlanDTO.setCode(RandomData.randomName("code"));
-
-		vlanDTO.setDescription(RandomData.randomName("update"));
-
-		IdResult result = cmdbuildSoapService.updateVlan(id, vlanDTO);
-
-		assertEquals("0", result.getCode());
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testDeleteVlan() {
-
-		IdResult response = cmdbuildSoapService.deleteVlan(id);
-
-		assertNotNull(response.getId());
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testGetVlanPagination() {
+	public void getPagination() {
 
 		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
 
 		PaginationResult<VlanDTO> result = cmdbuildSoapService.getVlanPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
-
-		System.out.println("返回的查询结果数量:" + result.getGetTotalElements());
-
+		System.out.println("返回的分页查询结果数量:" + result.getGetTotalElements());
 	}
 
-	/**
-	 * 批量添加Vlan
-	 */
-	@Test
-	// @Ignore
-	public void testInsertVlan() {
+	public void save() {
 
-		List<VlanDTO> list = new ArrayList<VlanDTO>();
+		Vlan vlan = TestData.randomVlan();
+		VlanDTO dto = BeanMapper.map(vlan, VlanDTO.class);
+		IdResult response = cmdbuildSoapService.createVlan(dto);
+		assertNotNull(response.getId());
 
-		for (int i = 0; i < 10; i++) {
+		description = dto.getDescription();// 设置Description
+	}
 
-			Vlan vlan = TestData.randomVlan();
+	public void update() {
 
-			VlanDTO vlanDTO = BeanMapper.map(vlan, VlanDTO.class);
-
-			list.add(vlanDTO);
-
-		}
-
-		IdResult results = cmdbuildSoapService.insertVlan(list);
-		System.err.println(results.getMessage());
-
+		DTOResult<VlanDTO> response = cmdbuildSoapService.findVlan(id);
+		VlanDTO dto = response.getDto();
+		dto.setDescription(dto.getDescription() + "Update");
+		IdResult result = cmdbuildSoapService.updateVlan(id, dto);
+		assertEquals("0", result.getCode());
 	}
 
 }

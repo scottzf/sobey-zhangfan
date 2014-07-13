@@ -22,120 +22,90 @@ import com.sobey.cmdbuild.webservice.response.result.IdResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.cmdbuild.webservice.response.result.SearchParams;
 import com.sobey.core.mapper.BeanMapper;
-import com.sobey.test.data.RandomData;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class })
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
 public class FirewallSoapTest extends BaseFunctionalTestCase {
+
+	/**
+	 * 全局id
+	 */
 	private Integer id = 0;
 
-	private String code = "";
+	/**
+	 * 全局Description
+	 */
+	private String description = "";
 
 	@Test
 	public void testAll() {
-		testCreateFirewall();
-		testFindFirewall();
-		testGetFirewallList();
-		testGetFirewallPagination();
-		testUpdateFirewall();
-		testDeleteFirewall();
-
+		save();
+		find();
+		getList();
+		getPagination();
+		update();
+		delete();
 	}
 
-	// @Test
-	// @Ignore
-	public void testFindFirewall() {
-		System.out.println(code + ">>>>>>>>>>>>>");
+	public void delete() {
+		IdResult response = cmdbuildSoapService.deleteFirewall(id);
+		assertNotNull(response.getId());
+	}
+
+	public void find() {
 
 		SearchParams searchParams = new SearchParams();
 		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("EQ_code", code);
+		paramsMap.put("EQ_description", description);
 		searchParams.setParamsMap(paramsMap);
 
-		DTOResult<FirewallDTO> responseParams = cmdbuildSoapService.findFirewallByParams(searchParams);
+		DTOResult<FirewallDTO> dtoResult = cmdbuildSoapService.findFirewallByParams(searchParams);
 
-		assertEquals(code, responseParams.getDto().getCode());
+		assertEquals(description, dtoResult.getDto().getDescription());
 
-		id = responseParams.getDto().getId();// 设置id
-
-		DTOResult<FirewallDTO> response = cmdbuildSoapService.findFirewall(id);
-
-		assertNotNull(response);
-
-		System.out.println(id + ">>>>>>>>>>>>>");
-
+		id = dtoResult.getDto().getId();// 设置id
 	}
 
-	// @Test
-	// @Ignore
-	public void testGetFirewallList() {
+	public void getList() {
 
 		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
 
 		DTOListResult<FirewallDTO> result = cmdbuildSoapService.getFirewallList(searchParams);
-
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
-
-		assertEquals("0", result.getCode());
-
 	}
 
-	// @Test
-	// @Ignore
-	public void testCreateFirewall() {
-
-		Firewall firewall = TestData.randomFirewall();
-
-		FirewallDTO firewallDTO = BeanMapper.map(firewall, FirewallDTO.class);
-
-		IdResult response = cmdbuildSoapService.createFirewall(firewallDTO);
-
-		assertNotNull(response.getId());
-
-		code = firewall.getCode();// 设置code
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testUpdateFirewall() {
-
-		DTOResult<FirewallDTO> response = cmdbuildSoapService.findFirewall(id);
-
-		FirewallDTO firewallDTO = response.getDto();
-
-		firewallDTO.setCode(RandomData.randomName("code"));
-
-		firewallDTO.setDescription(RandomData.randomName("update"));
-
-		IdResult result = cmdbuildSoapService.updateFirewall(id, firewallDTO);
-
-		assertEquals("0", result.getCode());
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testDeleteFirewall() {
-
-		IdResult response = cmdbuildSoapService.deleteFirewall(id);
-
-		assertNotNull(response.getId());
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testGetFirewallPagination() {
+	public void getPagination() {
 
 		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
 
 		PaginationResult<FirewallDTO> result = cmdbuildSoapService.getFirewallPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
+		System.out.println("返回的分页查询结果数量:" + result.getGetTotalElements());
+	}
 
-		System.out.println("返回的查询结果数量:" + result.getGetTotalElements());
+	public void save() {
 
+		Firewall firewall = TestData.randomFirewall();
+		FirewallDTO dto = BeanMapper.map(firewall, FirewallDTO.class);
+		IdResult response = cmdbuildSoapService.createFirewall(dto);
+		assertNotNull(response.getId());
+
+		System.out.println(dto.getIdc());
+		description = dto.getDescription();// 设置Description
+	}
+
+	public void update() {
+
+		DTOResult<FirewallDTO> response = cmdbuildSoapService.findFirewall(id);
+		FirewallDTO dto = response.getDto();
+		dto.setDescription(dto.getDescription() + "Update");
+		IdResult result = cmdbuildSoapService.updateFirewall(id, dto);
+		assertEquals("0", result.getCode());
 	}
 }

@@ -22,120 +22,89 @@ import com.sobey.cmdbuild.webservice.response.result.IdResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.cmdbuild.webservice.response.result.SearchParams;
 import com.sobey.core.mapper.BeanMapper;
-import com.sobey.test.data.RandomData;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class })
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
 public class ServerSoapTest extends BaseFunctionalTestCase {
+	/**
+	 * 全局id
+	 */
 	private Integer id = 0;
 
-	private String code = "";
+	/**
+	 * 全局Description
+	 */
+	private String description = "";
 
 	@Test
 	public void testAll() {
-		testCreateServer();
-		testFindServer();
-		testGetServerList();
-		testGetServerPagination();
-		testUpdateServer();
-		testDeleteServer();
-
+		save();
+		find();
+		getList();
+		getPagination();
+		update();
+		delete();
 	}
 
-	// @Test
-	// @Ignore
-	public void testFindServer() {
-		System.out.println(code + ">>>>>>>>>>>>>");
+	public void delete() {
+		IdResult response = cmdbuildSoapService.deleteServer(id);
+		assertNotNull(response.getId());
+	}
+
+	public void find() {
 
 		SearchParams searchParams = new SearchParams();
 		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("EQ_code", code);
+		paramsMap.put("EQ_description", description);
 		searchParams.setParamsMap(paramsMap);
 
-		DTOResult<ServerDTO> responseParams = cmdbuildSoapService.findServerByParams(searchParams);
+		DTOResult<ServerDTO> dtoResult = cmdbuildSoapService.findServerByParams(searchParams);
 
-		assertEquals(code, responseParams.getDto().getCode());
+		assertEquals(description, dtoResult.getDto().getDescription());
 
-		id = responseParams.getDto().getId();// 设置id
-
-		DTOResult<ServerDTO> response = cmdbuildSoapService.findServer(id);
-
-		assertNotNull(response);
-
-		System.out.println(id + ">>>>>>>>>>>>>");
-
+		id = dtoResult.getDto().getId();// 设置id
 	}
 
-	// @Test
-	// @Ignore
-	public void testGetServerList() {
+	public void getList() {
 
 		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
 
 		DTOListResult<ServerDTO> result = cmdbuildSoapService.getServerList(searchParams);
-
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
-
-		assertEquals("0", result.getCode());
-
 	}
 
-	// @Test
-	// @Ignore
-	public void testCreateServer() {
-
-		Server server = TestData.randomServer();
-
-		ServerDTO serverDTO = BeanMapper.map(server, ServerDTO.class);
-
-		IdResult response = cmdbuildSoapService.createServer(serverDTO);
-
-		assertNotNull(response.getId());
-
-		code = server.getCode();// 设置code
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testUpdateServer() {
-
-		DTOResult<ServerDTO> response = cmdbuildSoapService.findServer(id);
-
-		ServerDTO serverDTO = response.getDto();
-
-		serverDTO.setCode(RandomData.randomName("code"));
-
-		serverDTO.setDescription(RandomData.randomName("update"));
-
-		IdResult result = cmdbuildSoapService.updateServer(id, serverDTO);
-
-		assertEquals("0", result.getCode());
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testDeleteServer() {
-
-		IdResult response = cmdbuildSoapService.deleteServer(id);
-
-		assertNotNull(response.getId());
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testGetServerPagination() {
+	public void getPagination() {
 
 		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
 
 		PaginationResult<ServerDTO> result = cmdbuildSoapService.getServerPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
+		System.out.println("返回的分页查询结果数量:" + result.getGetTotalElements());
+	}
 
-		System.out.println("返回的查询结果数量:" + result.getGetTotalElements());
+	public void save() {
 
+		Server server = TestData.randomServer();
+		ServerDTO dto = BeanMapper.map(server, ServerDTO.class);
+		IdResult response = cmdbuildSoapService.createServer(dto);
+		assertNotNull(response.getId());
+
+		System.out.println(dto.getIdc());
+		description = dto.getDescription();// 设置Description
+	}
+
+	public void update() {
+
+		DTOResult<ServerDTO> response = cmdbuildSoapService.findServer(id);
+		ServerDTO dto = response.getDto();
+		dto.setDescription(dto.getDescription() + "Update");
+		IdResult result = cmdbuildSoapService.updateServer(id, dto);
+		assertEquals("0", result.getCode());
 	}
 }
