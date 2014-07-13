@@ -118,14 +118,37 @@ public class LookUpConstants {
 	 */
 	public enum IPAddressStatus {
 
-		使用中("使用中", 49),
+		已使用("已使用", 41),
 
-		未使用("未使用", 50);
+		未使用("未使用", 74);
 
 		private String name;
 		private Integer value;
 
 		private IPAddressStatus(String name, Integer value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public Integer getValue() {
+			return value;
+		}
+	}
+
+	public enum TagType {
+
+		上级标签("上级标签", 45),
+
+		子标签("子标签", 46);
+
+		private String name;
+		private Integer value;
+
+		private TagType(String name, Integer value) {
 			this.name = name;
 			this.value = value;
 		}
