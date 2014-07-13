@@ -3,6 +3,7 @@ package com.sobey.cmdbuild.entity.basic;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -16,6 +17,7 @@ import javax.persistence.TemporalType;
  * @author Administrator
  *
  */
+@MappedSuperclass
 public class ComponentHistoryBasic extends BasicEntity {
 
 	protected Integer idc;
@@ -92,7 +94,7 @@ public class ComponentHistoryBasic extends BasicEntity {
 		this.sn = sn;
 	}
 
-	@Column(name = "gdzcSn", length = 100)
+	@Column(name = "gdzcsn", length = 100)
 	public String getGdzcSn() {
 		return gdzcSn;
 	}

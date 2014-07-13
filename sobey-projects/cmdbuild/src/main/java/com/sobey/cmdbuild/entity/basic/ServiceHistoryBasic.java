@@ -3,6 +3,7 @@ package com.sobey.cmdbuild.entity.basic;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -16,6 +17,7 @@ import javax.persistence.TemporalType;
  * @author Administrator
  *
  */
+@MappedSuperclass
 public class ServiceHistoryBasic extends BasicEntity {
 
 	protected Integer tenants;

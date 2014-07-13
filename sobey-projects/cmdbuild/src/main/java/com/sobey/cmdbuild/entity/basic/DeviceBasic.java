@@ -1,6 +1,7 @@
 package com.sobey.cmdbuild.entity.basic;
 
 import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
 /**
  * Device 模块的基本Entity
@@ -12,6 +13,7 @@ import javax.persistence.Column;
  * @author Administrator
  *
  */
+@MappedSuperclass
 public class DeviceBasic extends BasicEntity {
 
 	protected Integer idc;
@@ -77,7 +79,7 @@ public class DeviceBasic extends BasicEntity {
 		this.sn = sn;
 	}
 
-	@Column(name = "gdzcSn", length = 100)
+	@Column(name = "gdzcsn", length = 100)
 	public String getGdzcSn() {
 		return gdzcSn;
 	}

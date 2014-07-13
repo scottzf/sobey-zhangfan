@@ -1,6 +1,7 @@
 package com.sobey.cmdbuild.entity.basic;
 
 import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
 /**
  * Service 模块的基本Entity
@@ -12,6 +13,7 @@ import javax.persistence.Column;
  * @author Administrator
  *
  */
+@MappedSuperclass
 public class ServiceBasic extends BasicEntity {
 
 	protected Integer tenants;
