@@ -100,6 +100,7 @@ public class TagSoapTest extends BaseFunctionalTestCase {
 	public void save() {
 
 		Tag tag = TestData.randomTag();
+		// Tag tag = TestData.randomSubTag(); 子标签
 		TagDTO dto = BeanMapper.map(tag, TagDTO.class);
 		IdResult response = cmdbuildSoapService.createTag(dto);
 

@@ -27,6 +27,7 @@ import com.sobey.core.mapper.BeanMapper;
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class })
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
 public class ServerSoapTest extends BaseFunctionalTestCase {
+
 	/**
 	 * 全局id
 	 */
@@ -93,9 +94,9 @@ public class ServerSoapTest extends BaseFunctionalTestCase {
 		Server server = TestData.randomServer();
 		ServerDTO dto = BeanMapper.map(server, ServerDTO.class);
 		IdResult response = cmdbuildSoapService.createServer(dto);
+
 		assertNotNull(response.getId());
 
-		System.out.println(dto.getIdc());
 		description = dto.getDescription();// 设置Description
 	}
 
