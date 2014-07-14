@@ -58,6 +58,7 @@ public class TestData {
 	private static Integer ipaddressId = 143;
 	private static Integer serverId = 344;
 	private static Integer switchId = 386;
+	private static Integer diskTypeId = 24;
 
 	// private static Date endDate = new Date(System.currentTimeMillis() + (60 * 60 * 24 * 7 * 1000));
 
@@ -192,14 +193,18 @@ public class TestData {
 		HardDisk hardDisk = new HardDisk();
 
 		hardDisk.setId(0);
-		hardDisk.setCode(RandomData.randomName("code"));
+		hardDisk.setIdc(idcId);
+		hardDisk.setRack(rackId);
+		hardDisk.setBrand(brandId);
+		hardDisk.setSite("1");
+		hardDisk.setRemark(RandomData.randomName("remark"));
+		hardDisk.setSn(RandomData.randomName("sn"));
+		hardDisk.setGdzcSn(RandomData.randomName("gdzcSn"));
 		hardDisk.setDescription(RandomData.randomName("description"));
-		hardDisk.setBeginDate(startDate);
-		hardDisk.setHardDiskSize(1024);
-		hardDisk.setIdc(85);
-
-		// 非必须参数
-		// hardDisk.setServer(0);
+		hardDisk.setServer(serverId);
+		hardDisk.setRotationalSpeed(62);
+		hardDisk.setHdSize(100);
+		hardDisk.setDiskType(diskTypeId);
 
 		return hardDisk;
 	}
@@ -261,41 +266,37 @@ public class TestData {
 		Memory memory = new Memory();
 
 		memory.setId(0);
-		memory.setCode(RandomData.randomName("code"));
+		memory.setIdc(idcId);
+		memory.setRack(rackId);
+		memory.setBrand(brandId);
+		memory.setSite("1");
+		memory.setRemark(RandomData.randomName("remark"));
+		memory.setSn(RandomData.randomName("sn"));
+		memory.setGdzcSn(RandomData.randomName("gdzcSn"));
 		memory.setDescription(RandomData.randomName("description"));
-		memory.setBeginDate(startDate);
-		memory.setIdc(0);
-		memory.setRam(4);
-
-		// 非必须参数
-		memory.setBrand(0);
-		memory.setFimas(0);
-		memory.setFrequency(0);
-		memory.setNotes(RandomData.randomName("notes"));
-		memory.setServer(0);
+		memory.setServer(serverId);
+		memory.setFrequency(32);
+		memory.setSize(4);
 
 		return memory;
 	}
 
-	public static StorageBox randomNetappBox() {
+	public static StorageBox randomStorageBox() {
 
 		StorageBox netappBox = new StorageBox();
 
 		netappBox.setId(0);
-		netappBox.setCode(RandomData.randomName("code"));
-		netappBox.setDescription(RandomData.randomName("description"));
-		netappBox.setBeginDate(startDate);
-		netappBox.setIdc(90);
-		netappBox.setRack(218);
-		netappBox.setDeviceSpec(226);
-		netappBox.setDiskNumber(RandomData.randomInt());
-		netappBox.setDiskType(53);// SATA
-
-		// 非必须参数
-		netappBox.setGdzcSn(RandomData.randomName("gdzcSn"));
+		netappBox.setIdc(idcId);
+		netappBox.setRack(rackId);
+		netappBox.setBrand(brandId);
+		netappBox.setSite("1");
 		netappBox.setRemark(RandomData.randomName("remark"));
 		netappBox.setSn(RandomData.randomName("sn"));
-		netappBox.setIpaddress(94);
+		netappBox.setGdzcSn(RandomData.randomName("gdzcSn"));
+		netappBox.setDescription(RandomData.randomName("description"));
+		netappBox.setServer(serverId);
+		netappBox.setDiskType(diskTypeId);
+		netappBox.setDiskNumber(4);
 
 		return netappBox;
 	}
@@ -337,13 +338,18 @@ public class TestData {
 		Nic nic = new Nic();
 
 		nic.setId(0);
-		nic.setCode(RandomData.randomName("code"));
+		nic.setIdc(idcId);
+		nic.setRack(rackId);
+		nic.setBrand(brandId);
+		nic.setSite("1");
+		nic.setRemark(RandomData.randomName("remark"));
+		nic.setSn(RandomData.randomName("sn"));
+		nic.setGdzcSn(RandomData.randomName("gdzcSn"));
 		nic.setDescription(RandomData.randomName("description"));
-		nic.setBeginDate(startDate);
-		nic.setPortNumber(3);
-		nic.setIdc(0);
+		nic.setServer(serverId);
 
-		nic.setBrand(0);
+		nic.setNicRate(64);
+		nic.setPortNumber(4);
 
 		return nic;
 	}
