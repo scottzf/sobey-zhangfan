@@ -19,14 +19,18 @@ import com.sobey.cmdbuild.entity.DeviceSpec;
 import com.sobey.cmdbuild.entity.Ecs;
 import com.sobey.cmdbuild.entity.EcsSpec;
 import com.sobey.cmdbuild.entity.Firewall;
+import com.sobey.cmdbuild.entity.HardDisk;
 import com.sobey.cmdbuild.entity.Idc;
 import com.sobey.cmdbuild.entity.Ipaddress;
 import com.sobey.cmdbuild.entity.LoadBalancer;
 import com.sobey.cmdbuild.entity.Log;
 import com.sobey.cmdbuild.entity.LookUp;
+import com.sobey.cmdbuild.entity.Memory;
+import com.sobey.cmdbuild.entity.Nic;
 import com.sobey.cmdbuild.entity.Rack;
 import com.sobey.cmdbuild.entity.Server;
 import com.sobey.cmdbuild.entity.Storage;
+import com.sobey.cmdbuild.entity.StorageBox;
 import com.sobey.cmdbuild.entity.Switches;
 import com.sobey.cmdbuild.entity.Tag;
 import com.sobey.cmdbuild.entity.Tenants;
@@ -2279,173 +2283,862 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public DTOResult<HardDiskDTO> findHardDisk(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<HardDiskDTO> result = new DTOResult<HardDiskDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			HardDisk hardDisk = comm.hardDiskService.findHardDisk(id);
+
+			Validate.notNull(hardDisk, ERROR.OBJECT_NULL);
+
+			HardDiskDTO dto = BeanMapper.map(hardDisk, HardDiskDTO.class);
+
+			// Reference
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(findRack(dto.getRack()).getDto());
+			if (dto.getServer() != null) {
+				dto.setServerDTO(findServer(dto.getServer()).getDto());
+			} else if (dto.getStorage() != null) {
+				dto.setStorageDTO(findStorage(dto.getStorage()).getDto());
+			}
+
+			// LookUp
+			dto.setRotationalSpeedText(findLookUp(dto.getRotationalSpeed()).getDto().getDescription());
+			dto.setBrandText(findLookUp(dto.getBrand()).getDto().getDescription());
+			dto.setDiskTypeText(findLookUp(dto.getDiskType()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<HardDiskDTO> findHardDiskByParams(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<HardDiskDTO> result = new DTOResult<HardDiskDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			HardDisk hardDisk = comm.hardDiskService.findHardDisk(searchParams.getParamsMap());
+
+			Validate.notNull(hardDisk, ERROR.OBJECT_NULL);
+
+			HardDiskDTO dto = BeanMapper.map(hardDisk, HardDiskDTO.class);
+
+			// Reference
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(findRack(dto.getRack()).getDto());
+			if (dto.getServer() != null) {
+				dto.setServerDTO(findServer(dto.getServer()).getDto());
+			} else if (dto.getStorage() != null) {
+				dto.setStorageDTO(findStorage(dto.getStorage()).getDto());
+			}
+
+			// LookUp
+			dto.setRotationalSpeedText(findLookUp(dto.getRotationalSpeed()).getDto().getDescription());
+			dto.setBrandText(findLookUp(dto.getBrand()).getDto().getDescription());
+			dto.setDiskTypeText(findLookUp(dto.getDiskType()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
 	}
 
 	@Override
 	public IdResult createHardDisk(HardDiskDTO hardDiskDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(hardDiskDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+			paramsMap.put("EQ_description", hardDiskDTO.getDescription());
+
+			Validate.isTrue(comm.hardDiskService.findHardDisk(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			HardDisk hardDisk = BeanMapper.map(hardDiskDTO, HardDisk.class);
+			hardDisk.setCode("HardDisk-" + Identities.randomBase62(8));
+			hardDisk.setUser(DEFAULT_USER);
+			hardDisk.setId(0);
+
+			BeanValidators.validateWithException(validator, hardDisk);
+
+			comm.hardDiskService.saveOrUpdate(hardDisk);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult updateHardDisk(Integer id, HardDiskDTO hardDiskDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(hardDiskDTO, ERROR.INPUT_NULL);
+
+			HardDisk hardDisk = comm.hardDiskService.findHardDisk(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", hardDiskDTO.getDescription());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(
+					comm.hardDiskService.findHardDisk(paramsMap) == null
+							|| hardDisk.getDescription().equals(hardDiskDTO.getDescription()), ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(hardDiskDTO, HardDisk.class), hardDisk);
+			hardDisk.setUser(DEFAULT_USER);
+			hardDisk.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			hardDisk.setIdClass(TableNameUtil.getTableName(HardDisk.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, hardDisk);
+
+			comm.hardDiskService.saveOrUpdate(hardDisk);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteHardDisk(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			HardDisk hardDisk = comm.hardDiskService.findHardDisk(id);
+
+			Validate.notNull(hardDisk, ERROR.OBJECT_NULL);
+
+			hardDisk.setIdClass(TableNameUtil.getTableName(HardDisk.class));
+
+			hardDisk.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.hardDiskService.saveOrUpdate(hardDisk);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOListResult<HardDiskDTO> getHardDiskList(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOListResult<HardDiskDTO> result = new DTOListResult<HardDiskDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.hardDiskService.getHardDiskList(searchParams.getParamsMap()),
+					HardDiskDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public PaginationResult<HardDiskDTO> getHardDiskPagination(SearchParams searchParams, Integer pageNumber,
 			Integer pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+
+		PaginationResult<HardDiskDTO> result = new PaginationResult<HardDiskDTO>();
+
+		try {
+
+			return comm.hardDiskService.getHardDiskDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<MemoryDTO> findMemory(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<MemoryDTO> result = new DTOResult<MemoryDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Memory memory = comm.memoryService.findMemory(id);
+
+			Validate.notNull(memory, ERROR.OBJECT_NULL);
+
+			MemoryDTO dto = BeanMapper.map(memory, MemoryDTO.class);
+
+			// Reference
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(findRack(dto.getRack()).getDto());
+			if (dto.getServer() != null) {
+				dto.setServerDTO(findServer(dto.getServer()).getDto());
+			} else if (dto.getStorage() != null) {
+				dto.setStorageDTO(findStorage(dto.getStorage()).getDto());
+			}
+			// LookUp
+			dto.setBrandText(findLookUp(dto.getBrand()).getDto().getDescription());
+			dto.setFrequencyText(Integer.parseInt(findLookUp(dto.getFrequency()).getDto().getDescription()));
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<MemoryDTO> findMemoryByParams(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<MemoryDTO> result = new DTOResult<MemoryDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Memory memory = comm.memoryService.findMemory(searchParams.getParamsMap());
+
+			Validate.notNull(memory, ERROR.OBJECT_NULL);
+
+			MemoryDTO dto = BeanMapper.map(memory, MemoryDTO.class);
+
+			// Reference
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(findRack(dto.getRack()).getDto());
+			if (dto.getServer() != null) {
+				dto.setServerDTO(findServer(dto.getServer()).getDto());
+			} else if (dto.getStorage() != null) {
+				dto.setStorageDTO(findStorage(dto.getStorage()).getDto());
+			}
+
+			// LookUp
+			dto.setBrandText(findLookUp(dto.getBrand()).getDto().getDescription());
+			dto.setFrequencyText(Integer.parseInt(findLookUp(dto.getFrequency()).getDto().getDescription()));
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
 	}
 
 	@Override
 	public IdResult createMemory(MemoryDTO memoryDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(memoryDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", memoryDTO.getDescription());
+
+			Validate.isTrue(comm.memoryService.findMemory(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			Memory memory = BeanMapper.map(memoryDTO, Memory.class);
+			memory.setCode("Memory-" + Identities.randomBase62(8));
+			memory.setUser(DEFAULT_USER);
+			memory.setId(0);
+
+			BeanValidators.validateWithException(validator, memory);
+
+			comm.memoryService.saveOrUpdate(memory);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult updateMemory(Integer id, MemoryDTO memoryDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(memoryDTO, ERROR.INPUT_NULL);
+
+			Memory memory = comm.memoryService.findMemory(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", memoryDTO.getDescription());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(
+					comm.memoryService.findMemory(paramsMap) == null
+							|| memory.getDescription().equals(memoryDTO.getDescription()), ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(memoryDTO, Memory.class), memory);
+
+			memory.setUser(DEFAULT_USER);
+			memory.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			memory.setIdClass(TableNameUtil.getTableName(Memory.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, memory);
+
+			comm.memoryService.saveOrUpdate(memory);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteMemory(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Memory memory = comm.memoryService.findMemory(id);
+
+			Validate.notNull(memory, ERROR.OBJECT_NULL);
+
+			memory.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.memoryService.saveOrUpdate(memory);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOListResult<MemoryDTO> getMemoryList(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOListResult<MemoryDTO> result = new DTOListResult<MemoryDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.memoryService.getMemoryList(searchParams.getParamsMap()),
+					MemoryDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public PaginationResult<MemoryDTO> getMemoryPagination(SearchParams searchParams, Integer pageNumber,
 			Integer pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+
+		PaginationResult<MemoryDTO> result = new PaginationResult<MemoryDTO>();
+
+		try {
+
+			return comm.memoryService.getMemoryDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<NicDTO> findNic(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<NicDTO> result = new DTOResult<NicDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Nic nic = comm.nicService.findNic(id);
+
+			Validate.notNull(nic, ERROR.OBJECT_NULL);
+
+			NicDTO dto = BeanMapper.map(nic, NicDTO.class);
+
+			// Reference
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(findRack(dto.getRack()).getDto());
+			if (dto.getServer() != null) {
+				dto.setServerDTO(findServer(dto.getServer()).getDto());
+			} else if (dto.getStorage() != null) {
+				dto.setStorageDTO(findStorage(dto.getStorage()).getDto());
+			}
+
+			// LookUp
+			dto.setNicRateText(findLookUp(dto.getNicRate()).getDto().getDescription());
+			dto.setBrandText(findLookUp(dto.getBrand()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<NicDTO> findNicByParams(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<NicDTO> result = new DTOResult<NicDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Nic nic = comm.nicService.findNic(searchParams.getParamsMap());
+
+			Validate.notNull(nic, ERROR.OBJECT_NULL);
+
+			NicDTO dto = BeanMapper.map(nic, NicDTO.class);
+
+			// Reference
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(findRack(dto.getRack()).getDto());
+			if (dto.getServer() != null) {
+				dto.setServerDTO(findServer(dto.getServer()).getDto());
+			} else if (dto.getStorage() != null) {
+				dto.setStorageDTO(findStorage(dto.getStorage()).getDto());
+			}
+
+			// LookUp
+			dto.setNicRateText(findLookUp(dto.getNicRate()).getDto().getDescription());
+			dto.setBrandText(findLookUp(dto.getBrand()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
 	}
 
 	@Override
 	public IdResult createNic(NicDTO nicDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(nicDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", nicDTO.getDescription());
+
+			Validate.isTrue(comm.nicService.findNic(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			Nic nic = BeanMapper.map(nicDTO, Nic.class);
+			nic.setCode("Nic-" + Identities.randomBase62(8));
+			nic.setUser(DEFAULT_USER);
+			nic.setId(0);
+
+			BeanValidators.validateWithException(validator, nic);
+
+			comm.nicService.saveOrUpdate(nic);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult updateNic(Integer id, NicDTO nicDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(nicDTO, ERROR.INPUT_NULL);
+
+			Nic nic = comm.nicService.findNic(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", nicDTO.getDescription());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(
+					comm.nicService.findNic(paramsMap) == null || nic.getDescription().equals(nicDTO.getDescription()),
+					ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(nicDTO, Nic.class), nic);
+
+			nic.setUser(DEFAULT_USER);
+			nic.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			nic.setIdClass(TableNameUtil.getTableName(Nic.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, nic);
+
+			comm.nicService.saveOrUpdate(nic);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteNic(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Nic nic = comm.nicService.findNic(id);
+
+			Validate.notNull(nic, ERROR.OBJECT_NULL);
+
+			nic.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.nicService.saveOrUpdate(nic);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOListResult<NicDTO> getNicList(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOListResult<NicDTO> result = new DTOListResult<NicDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.nicService.getNicList(searchParams.getParamsMap()), NicDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public PaginationResult<NicDTO> getNicPagination(SearchParams searchParams, Integer pageNumber, Integer pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+
+		PaginationResult<NicDTO> result = new PaginationResult<NicDTO>();
+
+		try {
+
+			return comm.nicService.getNicDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<StorageBoxDTO> findStorageBox(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<StorageBoxDTO> result = new DTOResult<StorageBoxDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			StorageBox storageBox = comm.storageBoxService.findStorageBox(id);
+
+			Validate.notNull(storageBox, ERROR.OBJECT_NULL);
+
+			StorageBoxDTO dto = BeanMapper.map(storageBox, StorageBoxDTO.class);
+
+			// Reference
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(findRack(dto.getRack()).getDto());
+			if (dto.getServer() != null) {
+				dto.setServerDTO(findServer(dto.getServer()).getDto());
+			} else if (dto.getStorage() != null) {
+				dto.setStorageDTO(findStorage(dto.getStorage()).getDto());
+			}
+
+			// LookUp
+			dto.setDiskTypeText(findLookUp(dto.getDiskType()).getDto().getDescription());
+			dto.setBrandText(findLookUp(dto.getBrand()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<StorageBoxDTO> findStorageBoxByParams(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<StorageBoxDTO> result = new DTOResult<StorageBoxDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			StorageBox netappBox = comm.storageBoxService.findStorageBox(searchParams.getParamsMap());
+
+			Validate.notNull(netappBox, ERROR.OBJECT_NULL);
+
+			StorageBoxDTO dto = BeanMapper.map(netappBox, StorageBoxDTO.class);
+
+			// Reference
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(findRack(dto.getRack()).getDto());
+			if (dto.getServer() != null) {
+				dto.setServerDTO(findServer(dto.getServer()).getDto());
+			} else if (dto.getStorage() != null) {
+				dto.setStorageDTO(findStorage(dto.getStorage()).getDto());
+			}
+
+			// LookUp
+			dto.setDiskTypeText(findLookUp(dto.getDiskType()).getDto().getDescription());
+			dto.setBrandText(findLookUp(dto.getBrand()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
 	}
 
 	@Override
 	public IdResult createStorageBox(StorageBoxDTO storageBoxDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(storageBoxDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", storageBoxDTO.getDescription());
+
+			Validate.isTrue(comm.storageBoxService.findStorageBox(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			StorageBox storageBox = BeanMapper.map(storageBoxDTO, StorageBox.class);
+			storageBox.setCode("StorageBox-" + Identities.randomBase62(8));
+			storageBox.setUser(DEFAULT_USER);
+			storageBox.setId(0);
+
+			BeanValidators.validateWithException(validator, storageBox);
+
+			comm.storageBoxService.saveOrUpdate(storageBox);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult updateStorageBox(Integer id, StorageBoxDTO storageBoxDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(storageBoxDTO, ERROR.INPUT_NULL);
+
+			StorageBox netappBox = comm.storageBoxService.findStorageBox(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", storageBoxDTO.getDescription());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(comm.storageBoxService.findStorageBox(paramsMap) == null
+					|| netappBox.getDescription().equals(storageBoxDTO.getDescription()), ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(storageBoxDTO, StorageBox.class), netappBox);
+
+			netappBox.setUser(DEFAULT_USER);
+			netappBox.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			netappBox.setIdClass(TableNameUtil.getTableName(StorageBox.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, netappBox);
+
+			comm.storageBoxService.saveOrUpdate(netappBox);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteStorageBox(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			StorageBox netappBox = comm.storageBoxService.findStorageBox(id);
+
+			Validate.notNull(netappBox, ERROR.OBJECT_NULL);
+
+			netappBox.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.storageBoxService.saveOrUpdate(netappBox);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOListResult<StorageBoxDTO> getStorageBoxList(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOListResult<StorageBoxDTO> result = new DTOListResult<StorageBoxDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.storageBoxService.getStorageBoxList(searchParams.getParamsMap()),
+					StorageBoxDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public PaginationResult<StorageBoxDTO> getStorageBoxPagination(SearchParams searchParams, Integer pageNumber,
 			Integer pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+		PaginationResult<StorageBoxDTO> result = new PaginationResult<StorageBoxDTO>();
+
+		try {
+
+			return comm.storageBoxService.getStorageBoxDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
