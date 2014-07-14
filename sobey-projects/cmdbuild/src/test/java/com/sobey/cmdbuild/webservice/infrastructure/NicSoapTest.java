@@ -22,120 +22,90 @@ import com.sobey.cmdbuild.webservice.response.result.IdResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.cmdbuild.webservice.response.result.SearchParams;
 import com.sobey.core.mapper.BeanMapper;
-import com.sobey.test.data.RandomData;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class })
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
 public class NicSoapTest extends BaseFunctionalTestCase {
+
+	/**
+	 * 全局id
+	 */
 	private Integer id = 0;
 
-	private String code = "";
+	/**
+	 * 全局Description
+	 */
+	private String description = "";
 
 	@Test
 	public void testAll() {
-		testCreateNic();
-		testFindNic();
-		testGetNicList();
-		testGetNicPagination();
-		testUpdateNic();
-		testDeleteNic();
-
+		save();
+		find();
+		getList();
+		getPagination();
+		update();
+		delete();
 	}
 
-	// @Test
-	// @Ignore
-	public void testFindNic() {
-		System.out.println(code + ">>>>>>>>>>>>>");
+	public void delete() {
+		IdResult response = cmdbuildSoapService.deleteNic(id);
+		assertNotNull(response.getId());
+	}
+
+	public void find() {
 
 		SearchParams searchParams = new SearchParams();
 		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("EQ_code", code);
+		paramsMap.put("EQ_description", description);
 		searchParams.setParamsMap(paramsMap);
 
-		DTOResult<NicDTO> responseParams = cmdbuildSoapService.findNicByParams(searchParams);
+		DTOResult<NicDTO> dtoResult = cmdbuildSoapService.findNicByParams(searchParams);
 
-		assertEquals(code, responseParams.getDto().getCode());
+		assertEquals(description, dtoResult.getDto().getDescription());
 
-		id = responseParams.getDto().getId();// 设置id
-
-		DTOResult<NicDTO> response = cmdbuildSoapService.findNic(id);
-
-		assertNotNull(response);
-
-		System.out.println(id + ">>>>>>>>>>>>>");
-
+		id = dtoResult.getDto().getId();// 设置id
 	}
 
-	// @Test
-	// @Ignore
-	public void testGetNicList() {
+	public void getList() {
 
 		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
 
 		DTOListResult<NicDTO> result = cmdbuildSoapService.getNicList(searchParams);
-
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
-
-		assertEquals("0", result.getCode());
-
 	}
 
-	// @Test
-	// @Ignore
-	public void testCreateNic() {
-
-		Nic nic = TestData.randomNic();
-
-		NicDTO nicDTO = BeanMapper.map(nic, NicDTO.class);
-
-		IdResult response = cmdbuildSoapService.createNic(nicDTO);
-
-		assertNotNull(response.getId());
-
-		code = nic.getCode();// 设置code
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testUpdateNic() {
-
-		DTOResult<NicDTO> response = cmdbuildSoapService.findNic(id);
-
-		NicDTO nicDTO = response.getDto();
-
-		nicDTO.setCode(RandomData.randomName("code"));
-
-		nicDTO.setDescription(RandomData.randomName("update"));
-
-		IdResult result = cmdbuildSoapService.updateNic(id, nicDTO);
-
-		assertEquals("0", result.getCode());
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testDeleteNic() {
-
-		IdResult response = cmdbuildSoapService.deleteNic(id);
-
-		assertNotNull(response.getId());
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testGetNicPagination() {
+	public void getPagination() {
 
 		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
 
 		PaginationResult<NicDTO> result = cmdbuildSoapService.getNicPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
+		System.out.println("返回的分页查询结果数量:" + result.getGetTotalElements());
+	}
 
-		System.out.println("返回的查询结果数量:" + result.getGetTotalElements());
+	public void save() {
 
+		Nic nic = TestData.randomNic();
+		NicDTO dto = BeanMapper.map(nic, NicDTO.class);
+		IdResult response = cmdbuildSoapService.createNic(dto);
+
+		assertNotNull(response.getId());
+
+		description = dto.getDescription();// 设置Description
+	}
+
+	public void update() {
+
+		DTOResult<NicDTO> response = cmdbuildSoapService.findNic(id);
+		NicDTO dto = response.getDto();
+		dto.setDescription(dto.getDescription() + "Update");
+		IdResult result = cmdbuildSoapService.updateNic(id, dto);
+		assertEquals("0", result.getCode());
 	}
 }

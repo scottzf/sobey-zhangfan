@@ -14,8 +14,8 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
-import com.sobey.cmdbuild.entity.Memory;
-import com.sobey.cmdbuild.webservice.response.dto.MemoryDTO;
+import com.sobey.cmdbuild.entity.StorageBox;
+import com.sobey.cmdbuild.webservice.response.dto.StorageBoxDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
 import com.sobey.cmdbuild.webservice.response.result.IdResult;
@@ -26,7 +26,7 @@ import com.sobey.core.mapper.BeanMapper;
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class })
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
-public class MemorySoapTest extends BaseFunctionalTestCase {
+public class StorageBoxSoapTest extends BaseFunctionalTestCase {
 
 	/**
 	 * 全局id
@@ -49,7 +49,7 @@ public class MemorySoapTest extends BaseFunctionalTestCase {
 	}
 
 	public void delete() {
-		IdResult response = cmdbuildSoapService.deleteMemory(id);
+		IdResult response = cmdbuildSoapService.deleteStorageBox(id);
 		assertNotNull(response.getId());
 	}
 
@@ -60,7 +60,7 @@ public class MemorySoapTest extends BaseFunctionalTestCase {
 		paramsMap.put("EQ_description", description);
 		searchParams.setParamsMap(paramsMap);
 
-		DTOResult<MemoryDTO> dtoResult = cmdbuildSoapService.findMemoryByParams(searchParams);
+		DTOResult<StorageBoxDTO> dtoResult = cmdbuildSoapService.findStorageBoxByParams(searchParams);
 
 		assertEquals(description, dtoResult.getDto().getDescription());
 
@@ -73,7 +73,7 @@ public class MemorySoapTest extends BaseFunctionalTestCase {
 		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
 		searchParams.setParamsMap(paramsMap);
 
-		DTOListResult<MemoryDTO> result = cmdbuildSoapService.getMemoryList(searchParams);
+		DTOListResult<StorageBoxDTO> result = cmdbuildSoapService.getStorageBoxList(searchParams);
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
 	}
 
@@ -83,7 +83,7 @@ public class MemorySoapTest extends BaseFunctionalTestCase {
 		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
 		searchParams.setParamsMap(paramsMap);
 
-		PaginationResult<MemoryDTO> result = cmdbuildSoapService.getMemoryPagination(searchParams, 1, 10);
+		PaginationResult<StorageBoxDTO> result = cmdbuildSoapService.getStorageBoxPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
 		System.out.println("返回的分页查询结果数量:" + result.getGetTotalElements());
@@ -91,9 +91,9 @@ public class MemorySoapTest extends BaseFunctionalTestCase {
 
 	public void save() {
 
-		Memory memory = TestData.randomMemory();
-		MemoryDTO dto = BeanMapper.map(memory, MemoryDTO.class);
-		IdResult response = cmdbuildSoapService.createMemory(dto);
+		StorageBox storageBox = TestData.randomStorageBox();
+		StorageBoxDTO dto = BeanMapper.map(storageBox, StorageBoxDTO.class);
+		IdResult response = cmdbuildSoapService.createStorageBox(dto);
 
 		assertNotNull(response.getId());
 
@@ -102,10 +102,10 @@ public class MemorySoapTest extends BaseFunctionalTestCase {
 
 	public void update() {
 
-		DTOResult<MemoryDTO> response = cmdbuildSoapService.findMemory(id);
-		MemoryDTO dto = response.getDto();
+		DTOResult<StorageBoxDTO> response = cmdbuildSoapService.findStorageBox(id);
+		StorageBoxDTO dto = response.getDto();
 		dto.setDescription(dto.getDescription() + "Update");
-		IdResult result = cmdbuildSoapService.updateMemory(id, dto);
+		IdResult result = cmdbuildSoapService.updateStorageBox(id, dto);
 		assertEquals("0", result.getCode());
 	}
 }
