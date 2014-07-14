@@ -7,10 +7,13 @@ import java.util.List;
 import com.sobey.cmdbuild.constants.LookUpConstants;
 import com.sobey.cmdbuild.entity.DeviceSpec;
 import com.sobey.cmdbuild.entity.Dns;
+import com.sobey.cmdbuild.entity.DnsPolicy;
 import com.sobey.cmdbuild.entity.Ecs;
 import com.sobey.cmdbuild.entity.EcsSpec;
 import com.sobey.cmdbuild.entity.Eip;
+import com.sobey.cmdbuild.entity.EipPolicy;
 import com.sobey.cmdbuild.entity.Elb;
+import com.sobey.cmdbuild.entity.ElbPolicy;
 import com.sobey.cmdbuild.entity.Es3;
 import com.sobey.cmdbuild.entity.Esg;
 import com.sobey.cmdbuild.entity.EsgPolicy;
@@ -41,13 +44,16 @@ import com.sobey.test.data.RandomData;
 
 public class TestData {
 
-	private static Date startDate = new Date(System.currentTimeMillis());
 	private static Integer agentTypeId = 80;
 	private static Integer brandId = 56;
 	private static Integer deviceSpecId = 121;
 	private static Integer deviceTypeId = 23;
 	private static Integer diskTypeId = 24;
+	private static Integer dnsId = 712;
 	private static Integer ecsSpecId = 123;
+	private static Integer eipId = 697;
+	private static Integer elbId = 680;
+	private static Integer esgId = 725;
 	private static Integer heightId = 69;
 	private static Integer idcId = 99;
 	private static Integer ipaddressId = 143;
@@ -63,6 +69,8 @@ public class TestData {
 	private static Integer switchPortId = 472;
 	private static Integer tenantsId = 105;
 	private static Integer vlanId = 125;
+
+	private static Date startDate = new Date(System.currentTimeMillis());
 
 	// private static Date endDate = new Date(System.currentTimeMillis() + (60 * 60 * 24 * 7 * 1000));
 
@@ -102,6 +110,19 @@ public class TestData {
 		dns.setDomainType(25);
 
 		return dns;
+	}
+
+	public static DnsPolicy randomDnsPolicy() {
+
+		DnsPolicy policy = new DnsPolicy();
+
+		policy.setId(0);
+		policy.setDescription(RandomData.randomName("description"));
+		policy.setDns(dnsId);
+		policy.setDnsProtocol(39);
+		policy.setPort(RandomData.randomInt());
+
+		return policy;
 	}
 
 	public static Ecs randomEcs() {
@@ -157,6 +178,20 @@ public class TestData {
 		return eip;
 	}
 
+	public static EipPolicy randomEipPolicy() {
+
+		EipPolicy policy = new EipPolicy();
+
+		policy.setId(0);
+		policy.setDescription(RandomData.randomName("description"));
+		policy.setEip(eipId);
+		policy.setEipProtocol(38);
+		policy.setSourcePort(RandomData.randomInt());
+		policy.setTargetPort(RandomData.randomInt());
+
+		return policy;
+	}
+
 	public static Elb randomElb() {
 
 		Elb elb = new Elb();
@@ -170,6 +205,19 @@ public class TestData {
 		elb.setAgentType(agentTypeId);
 
 		return elb;
+	}
+
+	public static ElbPolicy randomElbPolicy() {
+
+		ElbPolicy policy = new ElbPolicy();
+
+		policy.setId(0);
+		policy.setDescription(RandomData.randomName("description"));
+		policy.setElb(elbId);
+		policy.setElbProtocol(97);
+		policy.setSourcePort(RandomData.randomInt());
+		policy.setTargetPort(RandomData.randomInt());
+		return policy;
 	}
 
 	public static Es3 randomEs3() {
@@ -206,14 +254,17 @@ public class TestData {
 	}
 
 	public static EsgPolicy randomEsgPolicy() {
+
 		EsgPolicy policy = new EsgPolicy();
+
 		policy.setId(0);
-		policy.setCode(RandomData.randomName("code"));
 		policy.setDescription(RandomData.randomName("description"));
-		policy.setEsg(95);
-		policy.setSourceIp("10.10.0.0");
-		policy.setTargetIp("10.10.8.8");
-		policy.setPort(80);
+		policy.setEsg(esgId);
+		policy.setSourceIp(RandomData.randomName("SourceIp"));
+		policy.setTargetIp(RandomData.randomName("TargetIp"));
+		policy.setPort(RandomData.randomInt());
+		policy.setPolicyType(98);
+
 		return policy;
 	}
 
