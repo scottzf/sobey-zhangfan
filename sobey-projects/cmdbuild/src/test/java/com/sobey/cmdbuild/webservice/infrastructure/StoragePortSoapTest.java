@@ -45,7 +45,7 @@ public class StoragePortSoapTest extends BaseFunctionalTestCase {
 		getList();
 		getPagination();
 		update();
-		// delete();
+		delete();
 	}
 
 	public void delete() {

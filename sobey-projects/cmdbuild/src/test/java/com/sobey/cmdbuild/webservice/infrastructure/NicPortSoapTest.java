@@ -45,7 +45,7 @@ public class NicPortSoapTest extends BaseFunctionalTestCase {
 		getList();
 		getPagination();
 		update();
-		// delete();
+		delete();
 	}
 
 	public void delete() {
