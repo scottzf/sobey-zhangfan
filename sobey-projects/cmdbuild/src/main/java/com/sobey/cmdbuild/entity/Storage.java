@@ -19,6 +19,7 @@ import com.sobey.cmdbuild.entity.basic.DeviceBasic;
 public class Storage extends DeviceBasic {
 
 	private String configText;
+	private String password;
 	private Set<StorageHistory> storageHistories = new HashSet<StorageHistory>(0);
 
 	public Storage() {
@@ -31,6 +32,15 @@ public class Storage extends DeviceBasic {
 
 	public void setConfigText(String configText) {
 		this.configText = configText;
+	}
+
+	@Column(name = "password", length = 100)
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "storage")
