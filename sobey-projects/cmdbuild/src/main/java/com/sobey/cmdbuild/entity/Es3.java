@@ -21,7 +21,7 @@ public class Es3 extends ServiceBasic {
 	private Integer storage;
 	private Set<Es3History> es3Histories = new HashSet<Es3History>(0);
 
-	private Es3() {
+	public Es3() {
 	}
 
 	@Column(name = "volume_name", length = 100)

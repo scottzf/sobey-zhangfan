@@ -18,9 +18,11 @@ public class Log extends BasicEntity {
 	private Integer tenants;
 	private Integer operateType;
 	private Integer result;
+	private Integer serviceType;
+
 	private Set<LogHistory> logHistories = new HashSet<LogHistory>(0);
 
-	private Log() {
+	public Log() {
 	}
 
 	@Column(name = "tenants")
@@ -48,6 +50,15 @@ public class Log extends BasicEntity {
 
 	public void setResult(Integer result) {
 		this.result = result;
+	}
+
+	@Column(name = "service_type")
+	public Integer getServiceType() {
+		return serviceType;
+	}
+
+	public void setServiceType(Integer serviceType) {
+		this.serviceType = serviceType;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "log")
