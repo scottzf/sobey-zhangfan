@@ -382,7 +382,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			// DTO中增加复杂对象的属性,获得复杂关联对象DTO,set进DTO中.
 			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
-			dto.setParentTagDTO(findTag(dto.getParentTag()).getDto());
+			if (dto.getParentTag() != null) {
+				dto.setParentTagDTO(findTag(dto.getParentTag()).getDto());
+			}
 
 			// 查询出Lookup中的description,并将其设置到DTO中增加的String字段中.
 			dto.setTagTypeText(findLookUp(dto.getTagType()).getDto().getDescription());
@@ -415,7 +417,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			// DTO中增加复杂对象的属性,获得复杂关联对象DTO,set进DTO中.
 			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
-			dto.setParentTagDTO(findTag(dto.getParentTag()).getDto());
+			if (dto.getParentTag() != null) {
+				dto.setParentTagDTO(findTag(dto.getParentTag()).getDto());
+			}
 
 			// 查询出Lookup中的description,并将其设置到DTO中增加的String字段中.
 			dto.setTagTypeText(findLookUp(dto.getTagType()).getDto().getDescription());
