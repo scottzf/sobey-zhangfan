@@ -59,6 +59,7 @@ public class TestData {
 	private static Integer serverId = 344;
 	private static Integer switchId = 386;
 	private static Integer diskTypeId = 24;
+	private static Integer switchPortId = 472;
 
 	// private static Date endDate = new Date(System.currentTimeMillis() + (60 * 60 * 24 * 7 * 1000));
 
@@ -181,10 +182,19 @@ public class TestData {
 	}
 
 	public static FirewallPort randomFirewallPort() {
+
 		FirewallPort firewallPort = new FirewallPort();
+
 		firewallPort.setId(0);
-		firewallPort.setCode(RandomData.randomName("code"));
 		firewallPort.setDescription(RandomData.randomName("description"));
+		firewallPort.setIdc(idcId);
+		firewallPort.setIpaddress(ipaddressId);
+		firewallPort.setRemark(RandomData.randomName("remark"));
+		firewallPort.setMacAddress(RandomData.randomName("macAddress"));
+		firewallPort.setSite(RandomData.randomName("site"));
+		firewallPort.setConnectedTo(switchPortId);
+		firewallPort.setFirewall(324);
+
 		return firewallPort;
 	}
 
@@ -255,9 +265,17 @@ public class TestData {
 
 	public static LoadBalancerPort randomLoadBalancerPort() {
 		LoadBalancerPort loadBalancerPort = new LoadBalancerPort();
+
 		loadBalancerPort.setId(0);
-		loadBalancerPort.setCode(RandomData.randomName("code"));
 		loadBalancerPort.setDescription(RandomData.randomName("description"));
+		loadBalancerPort.setIdc(idcId);
+		loadBalancerPort.setIpaddress(ipaddressId);
+		loadBalancerPort.setRemark(RandomData.randomName("remark"));
+		loadBalancerPort.setMacAddress(RandomData.randomName("macAddress"));
+		loadBalancerPort.setSite(RandomData.randomName("site"));
+		loadBalancerPort.setConnectedTo(switchPortId);
+		loadBalancerPort.setLoadBalancer(334);
+
 		return loadBalancerPort;
 	}
 
@@ -321,16 +339,21 @@ public class TestData {
 		return storage;
 	}
 
-	public static StoragePort randomNetappPort() {
+	public static StoragePort randomStoragePort() {
 
-		StoragePort netappPort = new StoragePort();
+		StoragePort storagePort = new StoragePort();
 
-		netappPort.setId(0);
-		netappPort.setCode(RandomData.randomName("code"));
-		netappPort.setDescription(RandomData.randomName("description"));
-		netappPort.setBeginDate(startDate);
+		storagePort.setId(0);
+		storagePort.setDescription(RandomData.randomName("description"));
+		storagePort.setIdc(idcId);
+		storagePort.setIpaddress(ipaddressId);
+		storagePort.setRemark(RandomData.randomName("remark"));
+		storagePort.setMacAddress(RandomData.randomName("macAddress"));
+		storagePort.setSite(RandomData.randomName("site"));
+		storagePort.setConnectedTo(switchPortId);
+		storagePort.setStorage(365);
 
-		return netappPort;
+		return storagePort;
 	}
 
 	public static Nic randomNic() {
@@ -359,11 +382,14 @@ public class TestData {
 		NicPort nicPort = new NicPort();
 
 		nicPort.setId(0);
-		nicPort.setCode(RandomData.randomName("code"));
 		nicPort.setDescription(RandomData.randomName("description"));
-		nicPort.setSite(RandomData.randomName("位置"));
-		nicPort.setBeginDate(startDate);
-		nicPort.setNic(0);
+		nicPort.setIdc(idcId);
+		nicPort.setIpaddress(ipaddressId);
+		nicPort.setRemark(RandomData.randomName("remark"));
+		nicPort.setMacAddress(RandomData.randomName("macAddress"));
+		nicPort.setSite(RandomData.randomName("site"));
+		nicPort.setConnectedTo(switchPortId);
+		nicPort.setNic(430);
 
 		nicPort.setMacAddress(RandomData.randomName("MAC地址"));
 
@@ -389,10 +415,19 @@ public class TestData {
 	}
 
 	public static ServerPort randomServerPort() {
+
 		ServerPort serverPort = new ServerPort();
+
 		serverPort.setId(0);
-		serverPort.setCode(RandomData.randomName("code"));
 		serverPort.setDescription(RandomData.randomName("description"));
+		serverPort.setIdc(idcId);
+		serverPort.setIpaddress(ipaddressId);
+		serverPort.setRemark(RandomData.randomName("remark"));
+		serverPort.setMacAddress(RandomData.randomName("macAddress"));
+		serverPort.setSite(RandomData.randomName("site"));
+		serverPort.setConnectedTo(switchPortId);
+		serverPort.setServer(serverId);
+
 		return serverPort;
 	}
 
@@ -414,10 +449,19 @@ public class TestData {
 	}
 
 	public static SwitchPort randomSwitchPort() {
+
 		SwitchPort switchPort = new SwitchPort();
+
 		switchPort.setId(0);
-		switchPort.setCode(RandomData.randomName("code"));
 		switchPort.setDescription(RandomData.randomName("description"));
+		switchPort.setIdc(idcId);
+		switchPort.setIpaddress(ipaddressId);
+		switchPort.setRemark(RandomData.randomName("remark"));
+		switchPort.setMacAddress(RandomData.randomName("macAddress"));
+		switchPort.setSite(RandomData.randomName("site"));
+		switchPort.setConnectedTo(switchPortId);
+		switchPort.setSwitches(386);
+
 		return switchPort;
 	}
 

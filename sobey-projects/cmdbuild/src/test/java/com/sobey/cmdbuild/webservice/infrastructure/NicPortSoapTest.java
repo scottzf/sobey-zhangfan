@@ -22,120 +22,90 @@ import com.sobey.cmdbuild.webservice.response.result.IdResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.cmdbuild.webservice.response.result.SearchParams;
 import com.sobey.core.mapper.BeanMapper;
-import com.sobey.test.data.RandomData;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class })
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
 public class NicPortSoapTest extends BaseFunctionalTestCase {
+
+	/**
+	 * 全局id
+	 */
 	private Integer id = 0;
 
-	private String code = "";
+	/**
+	 * 全局Description
+	 */
+	private String description = "";
 
 	@Test
 	public void testAll() {
-		testCreateNicPort();
-		testFindNicPort();
-		testGetNicPortList();
-		testGetNicPortPagination();
-		testUpdateNicPort();
-		testDeleteNicPort();
-
+		save();
+		find();
+		getList();
+		getPagination();
+		update();
+		// delete();
 	}
 
-	// @Test
-	// @Ignore
-	public void testFindNicPort() {
-		System.out.println(code + ">>>>>>>>>>>>>");
+	public void delete() {
+		IdResult response = cmdbuildSoapService.deleteNicPort(id);
+		assertNotNull(response.getId());
+	}
+
+	public void find() {
 
 		SearchParams searchParams = new SearchParams();
 		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("EQ_code", code);
+		paramsMap.put("EQ_description", description);
 		searchParams.setParamsMap(paramsMap);
 
-		DTOResult<NicPortDTO> responseParams = cmdbuildSoapService.findNicPortByParams(searchParams);
+		DTOResult<NicPortDTO> dtoResult = cmdbuildSoapService.findNicPortByParams(searchParams);
 
-		assertEquals(code, responseParams.getDto().getCode());
+		assertEquals(description, dtoResult.getDto().getDescription());
 
-		id = responseParams.getDto().getId();// 设置id
-
-		DTOResult<NicPortDTO> response = cmdbuildSoapService.findNicPort(id);
-
-		assertNotNull(response);
-
-		System.out.println(id + ">>>>>>>>>>>>>");
-
+		id = dtoResult.getDto().getId();// 设置id
 	}
 
-	// @Test
-	// @Ignore
-	public void testGetNicPortList() {
+	public void getList() {
 
 		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
 
 		DTOListResult<NicPortDTO> result = cmdbuildSoapService.getNicPortList(searchParams);
-
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
-
-		assertEquals("0", result.getCode());
-
 	}
 
-	// @Test
-	// @Ignore
-	public void testCreateNicPort() {
-
-		NicPort nicPort = TestData.randomNicPort();
-
-		NicPortDTO nicPortDTO = BeanMapper.map(nicPort, NicPortDTO.class);
-
-		IdResult response = cmdbuildSoapService.createNicPort(nicPortDTO);
-
-		assertNotNull(response.getId());
-
-		code = nicPort.getCode();// 设置code
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testUpdateNicPort() {
-
-		DTOResult<NicPortDTO> response = cmdbuildSoapService.findNicPort(id);
-
-		NicPortDTO nicPortDTO = response.getDto();
-
-		nicPortDTO.setCode(RandomData.randomName("code"));
-
-		nicPortDTO.setDescription(RandomData.randomName("update"));
-
-		IdResult result = cmdbuildSoapService.updateNicPort(id, nicPortDTO);
-
-		assertEquals("0", result.getCode());
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testDeleteNicPort() {
-
-		IdResult response = cmdbuildSoapService.deleteNicPort(id);
-
-		assertNotNull(response.getId());
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testGetNicPortPagination() {
+	public void getPagination() {
 
 		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
 
 		PaginationResult<NicPortDTO> result = cmdbuildSoapService.getNicPortPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
+		System.out.println("返回的分页查询结果数量:" + result.getGetTotalElements());
+	}
 
-		System.out.println("返回的查询结果数量:" + result.getGetTotalElements());
+	public void save() {
 
+		NicPort port = TestData.randomNicPort();
+		NicPortDTO dto = BeanMapper.map(port, NicPortDTO.class);
+		IdResult response = cmdbuildSoapService.createNicPort(dto);
+
+		assertNotNull(response.getId());
+
+		description = dto.getDescription();// 设置Description
+	}
+
+	public void update() {
+
+		DTOResult<NicPortDTO> response = cmdbuildSoapService.findNicPort(id);
+		NicPortDTO dto = response.getDto();
+		dto.setDescription(dto.getDescription() + "Update");
+		IdResult result = cmdbuildSoapService.updateNicPort(id, dto);
+		assertEquals("0", result.getCode());
 	}
 }

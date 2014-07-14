@@ -19,18 +19,24 @@ import com.sobey.cmdbuild.entity.DeviceSpec;
 import com.sobey.cmdbuild.entity.Ecs;
 import com.sobey.cmdbuild.entity.EcsSpec;
 import com.sobey.cmdbuild.entity.Firewall;
+import com.sobey.cmdbuild.entity.FirewallPort;
 import com.sobey.cmdbuild.entity.HardDisk;
 import com.sobey.cmdbuild.entity.Idc;
 import com.sobey.cmdbuild.entity.Ipaddress;
 import com.sobey.cmdbuild.entity.LoadBalancer;
+import com.sobey.cmdbuild.entity.LoadBalancerPort;
 import com.sobey.cmdbuild.entity.Log;
 import com.sobey.cmdbuild.entity.LookUp;
 import com.sobey.cmdbuild.entity.Memory;
 import com.sobey.cmdbuild.entity.Nic;
+import com.sobey.cmdbuild.entity.NicPort;
 import com.sobey.cmdbuild.entity.Rack;
 import com.sobey.cmdbuild.entity.Server;
+import com.sobey.cmdbuild.entity.ServerPort;
 import com.sobey.cmdbuild.entity.Storage;
 import com.sobey.cmdbuild.entity.StorageBox;
+import com.sobey.cmdbuild.entity.StoragePort;
+import com.sobey.cmdbuild.entity.SwitchPort;
 import com.sobey.cmdbuild.entity.Switches;
 import com.sobey.cmdbuild.entity.Tag;
 import com.sobey.cmdbuild.entity.Tenants;
@@ -4594,260 +4600,1241 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public DTOResult<FirewallPortDTO> findFirewallPort(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<FirewallPortDTO> result = new DTOResult<FirewallPortDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			FirewallPort firewallPort = comm.firewallPortService.findFirewallPort(id);
+
+			Validate.notNull(firewallPort, ERROR.OBJECT_NULL);
+
+			FirewallPortDTO dto = BeanMapper.map(firewallPort, FirewallPortDTO.class);
+
+			// Reference
+			if (dto.getConnectedTo() != null) {
+				dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			}
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setFirewallDTO(findFirewall(dto.getFirewall()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<FirewallPortDTO> findFirewallPortByParams(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<FirewallPortDTO> result = new DTOResult<FirewallPortDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			FirewallPort firewallPort = comm.firewallPortService.findFirewallPort(searchParams.getParamsMap());
+
+			Validate.notNull(firewallPort, ERROR.OBJECT_NULL);
+
+			FirewallPortDTO dto = BeanMapper.map(firewallPort, FirewallPortDTO.class);
+
+			// Reference
+			if (dto.getConnectedTo() != null) {
+				dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			}
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setFirewallDTO(findFirewall(dto.getFirewall()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
 	}
 
 	@Override
 	public IdResult createFirewallPort(FirewallPortDTO firewallPortDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(firewallPortDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", firewallPortDTO.getDescription());
+
+			Validate.isTrue(comm.firewallPortService.findFirewallPort(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			FirewallPort firewallPort = BeanMapper.map(firewallPortDTO, FirewallPort.class);
+			firewallPort.setCode("FirewallPort-" + Identities.randomBase62(8));
+			firewallPort.setUser(DEFAULT_USER);
+			firewallPort.setId(0);
+
+			BeanValidators.validateWithException(validator, firewallPort);
+
+			comm.firewallPortService.saveOrUpdate(firewallPort);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult updateFirewallPort(Integer id, FirewallPortDTO firewallPortDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(firewallPortDTO, ERROR.INPUT_NULL);
+
+			FirewallPort firewallPort = comm.firewallPortService.findFirewallPort(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", firewallPortDTO.getDescription());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(comm.firewallPortService.findFirewallPort(paramsMap) == null
+					|| firewallPort.getDescription().equals(firewallPortDTO.getDescription()), ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(firewallPortDTO, FirewallPort.class), firewallPort);
+
+			firewallPort.setUser(DEFAULT_USER);
+			firewallPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			firewallPort.setIdClass(TableNameUtil.getTableName(FirewallPort.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, firewallPort);
+
+			comm.firewallPortService.saveOrUpdate(firewallPort);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteFirewallPort(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			FirewallPort firewallPort = comm.firewallPortService.findFirewallPort(id);
+
+			Validate.notNull(firewallPort, ERROR.OBJECT_NULL);
+
+			firewallPort.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.firewallPortService.saveOrUpdate(firewallPort);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOListResult<FirewallPortDTO> getFirewallPortList(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOListResult<FirewallPortDTO> result = new DTOListResult<FirewallPortDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(
+					comm.firewallPortService.getFirewallPortList(searchParams.getParamsMap()), FirewallPortDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public PaginationResult<FirewallPortDTO> getFirewallPortPagination(SearchParams searchParams, Integer pageNumber,
 			Integer pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+
+		PaginationResult<FirewallPortDTO> result = new PaginationResult<FirewallPortDTO>();
+
+		try {
+
+			return comm.firewallPortService.getFirewallPortDTOPagination(searchParams.getParamsMap(), pageNumber,
+					pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<LoadBalancerPortDTO> findLoadBalancerPort(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<LoadBalancerPortDTO> result = new DTOResult<LoadBalancerPortDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			LoadBalancerPort loadBalancerPort = comm.loadBalancerPortService.findLoadBalancerPort(id);
+
+			Validate.notNull(loadBalancerPort, ERROR.OBJECT_NULL);
+
+			LoadBalancerPortDTO dto = BeanMapper.map(loadBalancerPort, LoadBalancerPortDTO.class);
+
+			// Reference
+			if (dto.getConnectedTo() != null) {
+				dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			}
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setLoadBalancerDTO(findLoadBalancer(dto.getLoadBalancer()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<LoadBalancerPortDTO> findLoadBalancerPortByParams(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<LoadBalancerPortDTO> result = new DTOResult<LoadBalancerPortDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			LoadBalancerPort loadBalancerPort = comm.loadBalancerPortService.findLoadBalancerPort(searchParams
+					.getParamsMap());
+
+			Validate.notNull(loadBalancerPort, ERROR.OBJECT_NULL);
+
+			LoadBalancerPortDTO dto = BeanMapper.map(loadBalancerPort, LoadBalancerPortDTO.class);
+
+			// Reference
+			if (dto.getConnectedTo() != null) {
+				dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			}
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setLoadBalancerDTO(findLoadBalancer(dto.getLoadBalancer()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
 	}
 
 	@Override
 	public IdResult createLoadBalancerPort(LoadBalancerPortDTO loadBalancerPortDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(loadBalancerPortDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", loadBalancerPortDTO.getDescription());
+
+			Validate.isTrue(comm.loadBalancerPortService.findLoadBalancerPort(paramsMap) == null,
+					ERROR.OBJECT_DUPLICATE);
+
+			LoadBalancerPort loadBalancerPort = BeanMapper.map(loadBalancerPortDTO, LoadBalancerPort.class);
+			loadBalancerPort.setCode("LoadBalancerPort-" + Identities.randomBase62(8));
+			loadBalancerPort.setUser(DEFAULT_USER);
+			loadBalancerPort.setId(0);
+
+			BeanValidators.validateWithException(validator, loadBalancerPort);
+
+			comm.loadBalancerPortService.saveOrUpdate(loadBalancerPort);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult updateLoadBalancerPort(Integer id, LoadBalancerPortDTO loadBalancerPortDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(loadBalancerPortDTO, ERROR.INPUT_NULL);
+
+			LoadBalancerPort loadBalancerPort = comm.loadBalancerPortService.findLoadBalancerPort(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", loadBalancerPortDTO.getDescription());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(comm.loadBalancerPortService.findLoadBalancerPort(paramsMap) == null
+					|| loadBalancerPort.getDescription().equals(loadBalancerPortDTO.getDescription()),
+					ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(loadBalancerPortDTO, LoadBalancerPort.class), loadBalancerPort);
+
+			loadBalancerPort.setUser(DEFAULT_USER);
+			loadBalancerPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			loadBalancerPort.setIdClass(TableNameUtil.getTableName(LoadBalancerPort.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, loadBalancerPort);
+
+			comm.loadBalancerPortService.saveOrUpdate(loadBalancerPort);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteLoadBalancerPort(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			LoadBalancerPort loadBalancerPort = comm.loadBalancerPortService.findLoadBalancerPort(id);
+
+			Validate.notNull(loadBalancerPort, ERROR.OBJECT_NULL);
+
+			loadBalancerPort.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.loadBalancerPortService.saveOrUpdate(loadBalancerPort);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOListResult<LoadBalancerPortDTO> getLoadBalancerPortList(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOListResult<LoadBalancerPortDTO> result = new DTOListResult<LoadBalancerPortDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(
+					comm.loadBalancerPortService.getLoadBalancerPortList(searchParams.getParamsMap()),
+					LoadBalancerPortDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public PaginationResult<LoadBalancerPortDTO> getLoadBalancerPortPagination(SearchParams searchParams,
 			Integer pageNumber, Integer pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+
+		PaginationResult<LoadBalancerPortDTO> result = new PaginationResult<LoadBalancerPortDTO>();
+
+		try {
+
+			return comm.loadBalancerPortService.getLoadBalancerPortDTOPagination(searchParams.getParamsMap(),
+					pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<StoragePortDTO> findStoragePort(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<StoragePortDTO> result = new DTOResult<StoragePortDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			StoragePort netappPort = comm.storagePortService.findStoragePort(id);
+
+			Validate.notNull(netappPort, ERROR.OBJECT_NULL);
+
+			StoragePortDTO dto = BeanMapper.map(netappPort, StoragePortDTO.class);
+
+			// Reference
+			if (dto.getConnectedTo() != null) {
+				dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			}
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setStorageDTO(findStorage(dto.getStorage()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<StoragePortDTO> findStoragePortByParams(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<StoragePortDTO> result = new DTOResult<StoragePortDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			StoragePort netappPort = comm.storagePortService.findStoragePort(searchParams.getParamsMap());
+
+			Validate.notNull(netappPort, ERROR.OBJECT_NULL);
+
+			StoragePortDTO dto = BeanMapper.map(netappPort, StoragePortDTO.class);
+
+			// Reference
+			if (dto.getConnectedTo() != null) {
+				dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			}
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setStorageDTO(findStorage(dto.getStorage()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
 	}
 
 	@Override
 	public IdResult createStoragePort(StoragePortDTO storagePortDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(storagePortDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", storagePortDTO.getDescription());
+
+			Validate.isTrue(comm.storagePortService.findStoragePort(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			StoragePort storagePort = BeanMapper.map(storagePortDTO, StoragePort.class);
+			storagePort.setCode("StoragePort-" + Identities.randomBase62(8));
+			storagePort.setUser(DEFAULT_USER);
+			storagePort.setId(0);
+
+			BeanValidators.validateWithException(validator, storagePort);
+
+			comm.storagePortService.saveOrUpdate(storagePort);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult updateStoragePort(Integer id, StoragePortDTO storagePortDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(storagePortDTO, ERROR.INPUT_NULL);
+
+			StoragePort storagePort = comm.storagePortService.findStoragePort(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", storagePortDTO.getDescription());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(comm.storagePortService.findStoragePort(paramsMap) == null
+					|| storagePort.getDescription().equals(storagePortDTO.getDescription()), ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(storagePortDTO, StoragePort.class), storagePort);
+
+			storagePort.setUser(DEFAULT_USER);
+			storagePort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			storagePort.setIdClass(TableNameUtil.getTableName(StoragePort.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, storagePort);
+
+			comm.storagePortService.saveOrUpdate(storagePort);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteStoragePort(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			StoragePort netappPort = comm.storagePortService.findStoragePort(id);
+
+			Validate.notNull(netappPort, ERROR.OBJECT_NULL);
+
+			netappPort.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.storagePortService.saveOrUpdate(netappPort);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOListResult<StoragePortDTO> getStoragePortList(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOListResult<StoragePortDTO> result = new DTOListResult<StoragePortDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.storagePortService.getStoragePortList(searchParams.getParamsMap()),
+					StoragePortDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
 	}
 
 	@Override
 	public PaginationResult<StoragePortDTO> getStoragePortPagination(SearchParams searchParams, Integer pageNumber,
 			Integer pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+
+		PaginationResult<StoragePortDTO> result = new PaginationResult<StoragePortDTO>();
+
+		try {
+
+			return comm.storagePortService.getStoragePortDTOPagination(searchParams.getParamsMap(), pageNumber,
+					pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<ServerPortDTO> findServerPort(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<ServerPortDTO> result = new DTOResult<ServerPortDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			ServerPort serverPort = comm.serverPortService.findServerPort(id);
+
+			Validate.notNull(serverPort, ERROR.OBJECT_NULL);
+
+			ServerPortDTO dto = BeanMapper.map(serverPort, ServerPortDTO.class);
+
+			// Reference
+			if (dto.getConnectedTo() != null) {
+				dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			}
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setServerDTO(findServer(dto.getServer()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<ServerPortDTO> findServerPortByParams(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<ServerPortDTO> result = new DTOResult<ServerPortDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			ServerPort serverPort = comm.serverPortService.findServerPort(searchParams.getParamsMap());
+
+			Validate.notNull(serverPort, ERROR.OBJECT_NULL);
+
+			ServerPortDTO dto = BeanMapper.map(serverPort, ServerPortDTO.class);
+
+			// Reference
+			if (dto.getConnectedTo() != null) {
+				dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			}
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setServerDTO(findServer(dto.getServer()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
 	}
 
 	@Override
 	public IdResult createServerPort(ServerPortDTO serverPortDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(serverPortDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", serverPortDTO.getDescription());
+
+			Validate.isTrue(comm.serverPortService.findServerPort(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			ServerPort serverPort = BeanMapper.map(serverPortDTO, ServerPort.class);
+			serverPort.setCode("ServerPort-" + Identities.randomBase62(8));
+			serverPort.setUser(DEFAULT_USER);
+			serverPort.setId(0);
+
+			BeanValidators.validateWithException(validator, serverPort);
+
+			comm.serverPortService.saveOrUpdate(serverPort);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult updateServerPort(Integer id, ServerPortDTO serverPortDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(serverPortDTO, ERROR.INPUT_NULL);
+
+			ServerPort serverPort = comm.serverPortService.findServerPort(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", serverPortDTO.getDescription());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(comm.serverPortService.findServerPort(paramsMap) == null
+					|| serverPort.getDescription().equals(serverPortDTO.getDescription()), ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(serverPortDTO, ServerPort.class), serverPort);
+
+			serverPort.setUser(DEFAULT_USER);
+			serverPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			serverPort.setIdClass(TableNameUtil.getTableName(ServerPort.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, serverPort);
+
+			comm.serverPortService.saveOrUpdate(serverPort);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteServerPort(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			ServerPort serverPort = comm.serverPortService.findServerPort(id);
+
+			Validate.notNull(serverPort, ERROR.OBJECT_NULL);
+
+			serverPort.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.serverPortService.saveOrUpdate(serverPort);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOListResult<ServerPortDTO> getServerPortList(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOListResult<ServerPortDTO> result = new DTOListResult<ServerPortDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.serverPortService.getServerPortList(searchParams.getParamsMap()),
+					ServerPortDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public PaginationResult<ServerPortDTO> getServerPortPagination(SearchParams searchParams, Integer pageNumber,
 			Integer pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+
+		PaginationResult<ServerPortDTO> result = new PaginationResult<ServerPortDTO>();
+
+		try {
+
+			return comm.serverPortService.getServerPortDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<SwitchPortDTO> findSwitchPort(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<SwitchPortDTO> result = new DTOResult<SwitchPortDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			SwitchPort switchPort = comm.switchPortService.findSwitchPort(id);
+
+			Validate.notNull(switchPort, ERROR.OBJECT_NULL);
+
+			SwitchPortDTO dto = BeanMapper.map(switchPort, SwitchPortDTO.class);
+
+			// Reference
+			if (dto.getConnectedTo() != null) {
+				dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			}
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setSwitchesDTO(findSwitches(dto.getSwitches()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<SwitchPortDTO> findSwitchPortByParams(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<SwitchPortDTO> result = new DTOResult<SwitchPortDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			SwitchPort switchPort = comm.switchPortService.findSwitchPort(searchParams.getParamsMap());
+
+			Validate.notNull(switchPort, ERROR.OBJECT_NULL);
+
+			SwitchPortDTO dto = BeanMapper.map(switchPort, SwitchPortDTO.class);
+
+			// Reference
+			if (dto.getConnectedTo() != null) {
+				dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			}
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setSwitchesDTO(findSwitches(dto.getSwitches()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
 	}
 
 	@Override
 	public IdResult createSwitchPort(SwitchPortDTO switchPortDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(switchPortDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", switchPortDTO.getDescription());
+
+			Validate.isTrue(comm.switchPortService.findSwitchPort(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			SwitchPort switchPort = BeanMapper.map(switchPortDTO, SwitchPort.class);
+			switchPort.setCode("SwitchPort-" + Identities.randomBase62(8));
+			switchPort.setUser(DEFAULT_USER);
+			switchPort.setId(0);
+
+			BeanValidators.validateWithException(validator, switchPort);
+
+			comm.switchPortService.saveOrUpdate(switchPort);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult updateSwitchPort(Integer id, SwitchPortDTO switchPortDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(switchPortDTO, ERROR.INPUT_NULL);
+
+			SwitchPort switchPort = comm.switchPortService.findSwitchPort(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", switchPortDTO.getDescription());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(comm.switchPortService.findSwitchPort(paramsMap) == null
+					|| switchPort.getDescription().equals(switchPortDTO.getDescription()), ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(switchPortDTO, SwitchPort.class), switchPort);
+
+			switchPort.setUser(DEFAULT_USER);
+			switchPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			switchPort.setIdClass(TableNameUtil.getTableName(SwitchPort.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, switchPort);
+
+			comm.switchPortService.saveOrUpdate(switchPort);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteSwitchPort(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			SwitchPort switchPort = comm.switchPortService.findSwitchPort(id);
+
+			Validate.notNull(switchPort, ERROR.OBJECT_NULL);
+
+			switchPort.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.switchPortService.saveOrUpdate(switchPort);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOListResult<SwitchPortDTO> getSwitchPortList(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOListResult<SwitchPortDTO> result = new DTOListResult<SwitchPortDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.switchPortService.getSwitchPortList(searchParams.getParamsMap()),
+					SwitchPortDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public PaginationResult<SwitchPortDTO> getSwitchPortPagination(SearchParams searchParams, Integer pageNumber,
 			Integer pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+
+		PaginationResult<SwitchPortDTO> result = new PaginationResult<SwitchPortDTO>();
+
+		try {
+
+			return comm.switchPortService.getSwitchPortDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<NicPortDTO> findNicPort(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<NicPortDTO> result = new DTOResult<NicPortDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			NicPort nicPort = comm.nicPortService.findNicPort(id);
+
+			Validate.notNull(nicPort, ERROR.OBJECT_NULL);
+
+			NicPortDTO dto = BeanMapper.map(nicPort, NicPortDTO.class);
+
+			// Reference
+			if (dto.getConnectedTo() != null) {
+				dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			}
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setNicDTO(findNic(dto.getNic()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<NicPortDTO> findNicPortByParams(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<NicPortDTO> result = new DTOResult<NicPortDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			NicPort nicPort = comm.nicPortService.findNicPort(searchParams.getParamsMap());
+
+			Validate.notNull(nicPort, ERROR.OBJECT_NULL);
+
+			NicPortDTO dto = BeanMapper.map(nicPort, NicPortDTO.class);
+
+			// Reference
+			if (dto.getConnectedTo() != null) {
+				dto.setSwitchPortDTO(findSwitchPort(dto.getConnectedTo()).getDto());
+			}
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setNicDTO(findNic(dto.getNic()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
 	}
 
 	@Override
 	public IdResult createNicPort(NicPortDTO nicPortDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(nicPortDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", nicPortDTO.getDescription());
+
+			Validate.isTrue(comm.nicPortService.findNicPort(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			NicPort nicPort = BeanMapper.map(nicPortDTO, NicPort.class);
+			nicPort.setCode("NicPort-" + Identities.randomBase62(8));
+			nicPort.setUser(DEFAULT_USER);
+			nicPort.setId(0);
+
+			BeanValidators.validateWithException(validator, nicPort);
+
+			comm.nicPortService.saveOrUpdate(nicPort);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult updateNicPort(Integer id, NicPortDTO nicPortDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(nicPortDTO, ERROR.INPUT_NULL);
+
+			NicPort nicPort = comm.nicPortService.findNicPort(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", nicPortDTO.getDescription());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(
+					comm.nicPortService.findNicPort(paramsMap) == null
+							|| nicPort.getDescription().equals(nicPortDTO.getDescription()), ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(nicPortDTO, NicPort.class), nicPort);
+
+			nicPort.setUser(DEFAULT_USER);
+			nicPort.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			nicPort.setIdClass(TableNameUtil.getTableName(NicPort.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, nicPort);
+
+			comm.nicPortService.saveOrUpdate(nicPort);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteNicPort(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			NicPort nicPort = comm.nicPortService.findNicPort(id);
+
+			Validate.notNull(nicPort, ERROR.OBJECT_NULL);
+
+			nicPort.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.nicPortService.saveOrUpdate(nicPort);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOListResult<NicPortDTO> getNicPortList(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOListResult<NicPortDTO> result = new DTOListResult<NicPortDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.nicPortService.getNicPortList(searchParams.getParamsMap()),
+					NicPortDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public PaginationResult<NicPortDTO> getNicPortPagination(SearchParams searchParams, Integer pageNumber,
 			Integer pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+
+		PaginationResult<NicPortDTO> result = new PaginationResult<NicPortDTO>();
+
+		try {
+
+			return comm.nicPortService.getNicPortDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 }
