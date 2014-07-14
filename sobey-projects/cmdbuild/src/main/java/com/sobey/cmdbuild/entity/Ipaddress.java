@@ -19,11 +19,14 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 public class Ipaddress extends BasicEntity {
 
 	private Integer vlan;
+	private Integer idc;
 	private Integer isp;
 	private Integer ipaddressPool;
 	private Integer ipaddressStatus;
 	private String netMask;
+	private String remark;
 	private String gateway;
+
 	private Set<IpaddressHistory> ipaddressHistories = new HashSet<IpaddressHistory>(0);
 
 	public Ipaddress() {
@@ -36,6 +39,15 @@ public class Ipaddress extends BasicEntity {
 
 	public void setVlan(Integer vlan) {
 		this.vlan = vlan;
+	}
+
+	@Column(name = "idc")
+	public Integer getIdc() {
+		return idc;
+	}
+
+	public void setIdc(Integer idc) {
+		this.idc = idc;
 	}
 
 	@Column(name = "isp")
@@ -72,6 +84,15 @@ public class Ipaddress extends BasicEntity {
 
 	public void setNetMask(String netMask) {
 		this.netMask = netMask;
+	}
+
+	@Column(name = "remark", length = 200)
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 	@Column(name = "gateway", length = 100)

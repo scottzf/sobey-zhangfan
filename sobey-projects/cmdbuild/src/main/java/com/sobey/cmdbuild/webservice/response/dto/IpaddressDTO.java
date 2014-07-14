@@ -13,6 +13,8 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 public class IpaddressDTO extends BasicDTO {
 
 	private String gateway;
+	private Integer idc;
+	private IdcDTO idcDTO;
 	private Integer ipAddressPool;
 	private String ipAddressPoolText;
 	private Integer ipAddressStatus;
@@ -29,6 +31,22 @@ public class IpaddressDTO extends BasicDTO {
 
 	public void setGateway(String gateway) {
 		this.gateway = gateway;
+	}
+
+	public Integer getIdc() {
+		return idc;
+	}
+
+	public void setIdc(Integer idc) {
+		this.idc = idc;
+	}
+
+	public IdcDTO getIdcDTO() {
+		return idcDTO;
+	}
+
+	public void setIdcDTO(IdcDTO idcDTO) {
+		this.idcDTO = idcDTO;
 	}
 
 	public Integer getIpAddressPool() {
