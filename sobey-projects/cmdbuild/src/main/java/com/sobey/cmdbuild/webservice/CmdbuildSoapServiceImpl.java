@@ -16,8 +16,13 @@ import com.sobey.cmdbuild.constants.ERROR;
 import com.sobey.cmdbuild.constants.LookUpConstants;
 import com.sobey.cmdbuild.constants.WsConstants;
 import com.sobey.cmdbuild.entity.DeviceSpec;
+import com.sobey.cmdbuild.entity.Dns;
 import com.sobey.cmdbuild.entity.Ecs;
 import com.sobey.cmdbuild.entity.EcsSpec;
+import com.sobey.cmdbuild.entity.Eip;
+import com.sobey.cmdbuild.entity.Elb;
+import com.sobey.cmdbuild.entity.Es3;
+import com.sobey.cmdbuild.entity.Esg;
 import com.sobey.cmdbuild.entity.Firewall;
 import com.sobey.cmdbuild.entity.FirewallPort;
 import com.sobey.cmdbuild.entity.HardDisk;
@@ -41,6 +46,7 @@ import com.sobey.cmdbuild.entity.Switches;
 import com.sobey.cmdbuild.entity.Tag;
 import com.sobey.cmdbuild.entity.Tenants;
 import com.sobey.cmdbuild.entity.Vlan;
+import com.sobey.cmdbuild.entity.Vpn;
 import com.sobey.cmdbuild.webservice.response.dto.DeviceSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DnsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DnsPolicyDTO;
@@ -1576,7 +1582,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			EcsDTO dto = BeanMapper.map(ecs, EcsDTO.class);
 
 			// Reference
-			// dto.setTagDTO(findTag(dto.getTag()).getDto());
 			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
 			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
@@ -1614,7 +1619,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			EcsDTO dto = BeanMapper.map(ecs, EcsDTO.class);
 
 			// Reference
-			// dto.setTagDTO(findTag(dto.getTag()).getDto());
 			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
 			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
@@ -1781,254 +1785,1218 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public DTOResult<Es3DTO> findEs3(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<Es3DTO> result = new DTOResult<Es3DTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Es3 es3 = comm.es3Service.findEs3(id);
+
+			Validate.notNull(es3, ERROR.OBJECT_NULL);
+
+			Es3DTO dto = BeanMapper.map(es3, Es3DTO.class);
+
+			// Reference
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setStorageDTO(findStorage(dto.getStorage()).getDto());
+
+			// LookUp
+			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
+			dto.setEs3TypeText(findLookUp(dto.getEs3Type()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<Es3DTO> findEs3ByParams(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<Es3DTO> result = new DTOResult<Es3DTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Es3 es3 = comm.es3Service.findEs3(searchParams.getParamsMap());
+
+			Validate.notNull(es3, ERROR.OBJECT_NULL);
+
+			Es3DTO dto = BeanMapper.map(es3, Es3DTO.class);
+
+			// Reference
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setStorageDTO(findStorage(dto.getStorage()).getDto());
+
+			// LookUp
+			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
+			dto.setEs3TypeText(findLookUp(dto.getEs3Type()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
 	}
 
 	@Override
-	public IdResult createEs3(Es3DTO es3dto) {
-		// TODO Auto-generated method stub
-		return null;
+	public IdResult createEs3(Es3DTO es3DTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(es3DTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", es3DTO.getDescription());
+
+			Validate.isTrue(comm.es3Service.findEs3(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			Es3 es3 = BeanMapper.map(es3DTO, Es3.class);
+			es3.setCode("ES3-" + Identities.randomBase62(8));
+			es3.setUser(DEFAULT_USER);
+			es3.setId(0);
+
+			BeanValidators.validateWithException(validator, es3);
+
+			comm.es3Service.saveOrUpdate(es3);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
 	}
 
 	@Override
-	public IdResult updateEs3(Integer id, Es3DTO es3dto) {
-		// TODO Auto-generated method stub
-		return null;
+	public IdResult updateEs3(Integer id, Es3DTO es3DTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(es3DTO, ERROR.INPUT_NULL);
+
+			Es3 es3 = comm.es3Service.findEs3(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", es3DTO.getDescription());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(
+					comm.es3Service.findEs3(paramsMap) == null || es3.getDescription().equals(es3DTO.getDescription()),
+					ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(es3DTO, Es3.class), es3);
+
+			es3.setUser(DEFAULT_USER);
+			es3.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			es3.setIdClass(TableNameUtil.getTableName(Es3.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, es3);
+
+			comm.es3Service.saveOrUpdate(es3);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteEs3(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Es3 es3 = comm.es3Service.findEs3(id);
+
+			Validate.notNull(es3, ERROR.OBJECT_NULL);
+
+			es3.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.es3Service.saveOrUpdate(es3);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOListResult<Es3DTO> getEs3List(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOListResult<Es3DTO> result = new DTOListResult<Es3DTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.es3Service.getEs3List(searchParams.getParamsMap()), Es3DTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public PaginationResult<Es3DTO> getEs3Pagination(SearchParams searchParams, Integer pageNumber, Integer pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+
+		PaginationResult<Es3DTO> result = new PaginationResult<Es3DTO>();
+
+		try {
+
+			return comm.es3Service.getEs3DTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<EipDTO> findEip(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<EipDTO> result = new DTOResult<EipDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Eip eip = comm.eipService.findEip(id);
+
+			Validate.notNull(eip, ERROR.OBJECT_NULL);
+
+			EipDTO dto = BeanMapper.map(eip, EipDTO.class);
+
+			// Reference
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+
+			// LookUp
+			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
+			dto.setEipStatusText(findLookUp(dto.getEipStatus()).getDto().getDescription());
+			dto.setIspText(findLookUp(dto.getIsp()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<EipDTO> findEipByParams(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<EipDTO> result = new DTOResult<EipDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Eip eip = comm.eipService.findEip(searchParams.getParamsMap());
+
+			Validate.notNull(eip, ERROR.OBJECT_NULL);
+
+			EipDTO dto = BeanMapper.map(eip, EipDTO.class);
+
+			// Reference
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+
+			// LookUp
+			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
+			dto.setEipStatusText(findLookUp(dto.getEipStatus()).getDto().getDescription());
+			dto.setIspText(findLookUp(dto.getIsp()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
 	}
 
 	@Override
 	public IdResult createEip(EipDTO eipDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(eipDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", eipDTO.getDescription());
+
+			Validate.isTrue(comm.eipService.findEip(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			Eip eip = BeanMapper.map(eipDTO, Eip.class);
+			eip.setCode("EIP-" + Identities.randomBase62(8));
+			eip.setUser(DEFAULT_USER);
+			eip.setId(0);
+
+			BeanValidators.validateWithException(validator, eip);
+
+			comm.eipService.saveOrUpdate(eip);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult updateEip(Integer id, EipDTO eipDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(eipDTO, ERROR.INPUT_NULL);
+
+			Eip eip = comm.eipService.findEip(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", eipDTO.getDescription());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(
+					comm.eipService.findEip(paramsMap) == null || eip.getDescription().equals(eipDTO.getDescription()),
+					ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(eipDTO, Eip.class), eip);
+
+			eip.setUser(DEFAULT_USER);
+			eip.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			eip.setIdClass(TableNameUtil.getTableName(Eip.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, eip);
+
+			comm.eipService.saveOrUpdate(eip);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteEip(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Eip eip = comm.eipService.findEip(id);
+
+			Validate.notNull(eip, ERROR.OBJECT_NULL);
+
+			eip.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.eipService.saveOrUpdate(eip);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOListResult<EipDTO> getEipList(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOListResult<EipDTO> result = new DTOListResult<EipDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.eipService.getEipList(searchParams.getParamsMap()), EipDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public PaginationResult<EipDTO> getEipPagination(SearchParams searchParams, Integer pageNumber, Integer pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+
+		PaginationResult<EipDTO> result = new PaginationResult<EipDTO>();
+
+		try {
+
+			return comm.eipService.getEipDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<ElbDTO> findElb(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<ElbDTO> result = new DTOResult<ElbDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Elb elb = comm.elbService.findElb(id);
+
+			Validate.notNull(elb, ERROR.OBJECT_NULL);
+
+			ElbDTO dto = BeanMapper.map(elb, ElbDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+
+			// LookUp
+			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<ElbDTO> findElbByParams(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<ElbDTO> result = new DTOResult<ElbDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Elb elb = comm.elbService.findElb(searchParams.getParamsMap());
+
+			Validate.notNull(elb, ERROR.OBJECT_NULL);
+
+			ElbDTO dto = BeanMapper.map(elb, ElbDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+
+			// LookUp
+			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
 	}
 
 	@Override
 	public IdResult createElb(ElbDTO elbDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(elbDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", elbDTO.getDescription());
+
+			Validate.isTrue(comm.elbService.findElb(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			Elb elb = BeanMapper.map(elbDTO, Elb.class);
+			elb.setCode("ELB-" + Identities.randomBase62(8));
+			elb.setUser(DEFAULT_USER);
+			elb.setId(0);
+
+			BeanValidators.validateWithException(validator, elb);
+
+			comm.elbService.saveOrUpdate(elb);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult updateElb(Integer id, ElbDTO elbDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(elbDTO, ERROR.INPUT_NULL);
+
+			Elb elb = comm.elbService.findElb(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", elbDTO.getDescription());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(
+					comm.elbService.findElb(paramsMap) == null || elb.getDescription().equals(elbDTO.getDescription()),
+					ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(elbDTO, Elb.class), elb);
+
+			elb.setUser(DEFAULT_USER);
+			elb.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			elb.setIdClass(TableNameUtil.getTableName(Elb.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, elb);
+
+			comm.elbService.saveOrUpdate(elb);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteElb(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Elb elb = comm.elbService.findElb(id);
+
+			Validate.notNull(elb, ERROR.OBJECT_NULL);
+
+			elb.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.elbService.saveOrUpdate(elb);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOListResult<ElbDTO> getElbList(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOListResult<ElbDTO> result = new DTOListResult<ElbDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.elbService.getElbList(searchParams.getParamsMap()), ElbDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public PaginationResult<ElbDTO> getElbPagination(SearchParams searchParams, Integer pageNumber, Integer pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+
+		PaginationResult<ElbDTO> result = new PaginationResult<ElbDTO>();
+
+		try {
+
+			return comm.elbService.getElbDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<DnsDTO> findDns(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<DnsDTO> result = new DTOResult<DnsDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Dns dns = comm.dnsService.findDns(id);
+
+			Validate.notNull(dns, ERROR.OBJECT_NULL);
+
+			DnsDTO dto = BeanMapper.map(dns, DnsDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+
+			// LookUp
+			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
+			dto.setDomainTypeText(findLookUp(dto.getDomainType()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<DnsDTO> findDnsByParams(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<DnsDTO> result = new DTOResult<DnsDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Dns dns = comm.dnsService.findDns(searchParams.getParamsMap());
+
+			Validate.notNull(dns, ERROR.OBJECT_NULL);
+
+			DnsDTO dto = BeanMapper.map(dns, DnsDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+
+			// LookUp
+			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
+			dto.setDomainTypeText(findLookUp(dto.getDomainType()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
 	}
 
 	@Override
 	public IdResult createDns(DnsDTO dnsDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(dnsDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", dnsDTO.getDescription());
+
+			Validate.isTrue(comm.dnsService.findDns(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			Dns dns = BeanMapper.map(dnsDTO, Dns.class);
+			dns.setCode("DNS-" + Identities.randomBase62(8));
+			dns.setUser(DEFAULT_USER);
+			dns.setId(0);
+
+			BeanValidators.validateWithException(validator, dns);
+
+			comm.dnsService.saveOrUpdate(dns);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult updateDns(Integer id, DnsDTO dnsDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(dnsDTO, ERROR.INPUT_NULL);
+
+			Dns dns = comm.dnsService.findDns(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", dnsDTO.getDescription());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(
+					comm.dnsService.findDns(paramsMap) == null || dns.getDescription().equals(dnsDTO.getDescription()),
+					ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(dnsDTO, Dns.class), dns);
+
+			dns.setUser(DEFAULT_USER);
+			dns.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			dns.setIdClass(TableNameUtil.getTableName(Dns.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, dns);
+
+			comm.dnsService.saveOrUpdate(dns);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteDns(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Dns dns = comm.dnsService.findDns(id);
+
+			Validate.notNull(dns, ERROR.OBJECT_NULL);
+
+			dns.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.dnsService.saveOrUpdate(dns);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOListResult<DnsDTO> getDnsList(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOListResult<DnsDTO> result = new DTOListResult<DnsDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.dnsService.getDnsList(searchParams.getParamsMap()), DnsDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public PaginationResult<DnsDTO> getDnsPagination(SearchParams searchParams, Integer pageNumber, Integer pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+
+		PaginationResult<DnsDTO> result = new PaginationResult<DnsDTO>();
+
+		try {
+
+			return comm.dnsService.getDnsDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<EsgDTO> findEsg(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<EsgDTO> result = new DTOResult<EsgDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Esg esg = comm.esgService.findEsg(id);
+
+			Validate.notNull(esg, ERROR.OBJECT_NULL);
+
+			EsgDTO dto = BeanMapper.map(esg, EsgDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+
+			// LookUp
+			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<EsgDTO> findEsgByParams(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<EsgDTO> result = new DTOResult<EsgDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Esg esg = comm.esgService.findEsg(searchParams.getParamsMap());
+
+			Validate.notNull(esg, ERROR.OBJECT_NULL);
+
+			EsgDTO dto = BeanMapper.map(esg, EsgDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+
+			// LookUp
+			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
 	}
 
 	@Override
 	public IdResult createEsg(EsgDTO esgDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(esgDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", esgDTO.getDescription());
+
+			Validate.isTrue(comm.esgService.findEsg(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			Esg esg = BeanMapper.map(esgDTO, Esg.class);
+			esg.setCode("ESG-" + Identities.randomBase62(8));
+			esg.setUser(DEFAULT_USER);
+			esg.setId(0);
+
+			BeanValidators.validateWithException(validator, esg);
+
+			comm.esgService.saveOrUpdate(esg);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult updateEsg(Integer id, EsgDTO esgDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(esgDTO, ERROR.INPUT_NULL);
+
+			Esg esg = comm.esgService.findEsg(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", esgDTO.getDescription());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(
+					comm.esgService.findEsg(paramsMap) == null || esg.getDescription().equals(esgDTO.getDescription()),
+					ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(esgDTO, Esg.class), esg);
+
+			esg.setUser(DEFAULT_USER);
+			esg.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			esg.setIdClass(TableNameUtil.getTableName(Esg.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, esg);
+
+			comm.esgService.saveOrUpdate(esg);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteEsg(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Esg esg = comm.esgService.findEsg(id);
+
+			Validate.notNull(esg, ERROR.OBJECT_NULL);
+
+			esg.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.esgService.saveOrUpdate(esg);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOListResult<EsgDTO> getEsgList(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+		DTOListResult<EsgDTO> result = new DTOListResult<EsgDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.esgService.getEsgList(searchParams.getParamsMap()), EsgDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public PaginationResult<EsgDTO> getEsgPagination(SearchParams searchParams, Integer pageNumber, Integer pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+
+		PaginationResult<EsgDTO> result = new PaginationResult<EsgDTO>();
+
+		try {
+
+			return comm.esgService.getEsgDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<VpnDTO> findVpn(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<VpnDTO> result = new DTOResult<VpnDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Vpn vpn = comm.vpnService.findVpn(id);
+
+			Validate.notNull(vpn, ERROR.OBJECT_NULL);
+
+			VpnDTO dto = BeanMapper.map(vpn, VpnDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<VpnDTO> findVpnByParams(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+		DTOResult<VpnDTO> result = new DTOResult<VpnDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Vpn vpn = comm.vpnService.findVpn(searchParams.getParamsMap());
+
+			Validate.notNull(vpn, ERROR.OBJECT_NULL);
+
+			VpnDTO dto = BeanMapper.map(vpn, VpnDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
 	}
 
 	@Override
 	public IdResult createVpn(VpnDTO vpnDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(vpnDTO, ERROR.INPUT_NULL);
+
+			// 验证同一租户下description是否唯一.如果不为null,则弹出错误.
+			Map<String, Object> paramsMap = Maps.newHashMap();
+			paramsMap.put("EQ_description", vpnDTO.getDescription());
+			paramsMap.put("EQ_tenants", vpnDTO.getTenants());
+
+			Validate.isTrue(comm.vpnService.findVpn(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			Vpn vpn = BeanMapper.map(vpnDTO, Vpn.class);
+			vpn.setCode("VPN-" + Identities.randomBase62(8));
+			vpn.setUser(DEFAULT_USER);
+			vpn.setId(0);
+
+			BeanValidators.validateWithException(validator, vpn);
+
+			comm.vpnService.saveOrUpdate(vpn);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult updateVpn(Integer id, VpnDTO vpnDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(vpnDTO, ERROR.INPUT_NULL);
+
+			Vpn vpn = comm.vpnService.findVpn(id);
+
+			// 验证同一租户下description是否唯一.如果不为null,则弹出错误.
+			Map<String, Object> paramsMap = Maps.newHashMap();
+			paramsMap.put("EQ_description", vpnDTO.getDescription());
+			paramsMap.put("EQ_tenants", vpnDTO.getTenants());
+
+			Validate.isTrue(
+					comm.vpnService.findVpn(paramsMap) == null || vpn.getDescription().equals(vpnDTO.getDescription()),
+					ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(vpnDTO, Vpn.class), vpn);
+
+			vpn.setUser(DEFAULT_USER);
+			vpn.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			vpn.setIdClass(TableNameUtil.getTableName(Vpn.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, vpn);
+
+			comm.vpnService.saveOrUpdate(vpn);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteVpn(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Vpn vpn = comm.vpnService.findVpn(id);
+
+			Validate.notNull(vpn, ERROR.OBJECT_NULL);
+
+			vpn.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.vpnService.saveOrUpdate(vpn);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOListResult<VpnDTO> getVpnList(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOListResult<VpnDTO> result = new DTOListResult<VpnDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.vpnService.getVpnList(searchParams.getParamsMap()), VpnDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public PaginationResult<VpnDTO> getVpnPagination(SearchParams searchParams, Integer pageNumber, Integer pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+
+		PaginationResult<VpnDTO> result = new PaginationResult<VpnDTO>();
+
+		try {
+
+			return comm.vpnService.getVpnDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override

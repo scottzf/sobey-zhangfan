@@ -22,126 +22,90 @@ import com.sobey.cmdbuild.webservice.response.result.IdResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.cmdbuild.webservice.response.result.SearchParams;
 import com.sobey.core.mapper.BeanMapper;
-import com.sobey.test.data.RandomData;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class })
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
 public class EipSoapTest extends BaseFunctionalTestCase {
+
+	/**
+	 * 全局id
+	 */
 	private Integer id = 0;
 
-	private String code = "";
+	/**
+	 * 全局Description
+	 */
+	private String description = "";
 
-	// @Test
+	@Test
 	public void testAll() {
-		testCreateEip();
-		testFindEip();
-		testGetEipList();
-		testGetEipPagination();
-		testUpdateEip();
-		testDeleteEip();
-
+		save();
+		find();
+		getList();
+		getPagination();
+		update();
+		delete();
 	}
 
-	// @Test
-	// @Ignore
-	public void testFindEip() {
-		System.out.println(code + ">>>>>>>>>>>>>");
+	public void delete() {
+		IdResult response = cmdbuildSoapService.deleteEip(id);
+		assertNotNull(response.getId());
+	}
+
+	public void find() {
 
 		SearchParams searchParams = new SearchParams();
 		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("EQ_code", code);
+		paramsMap.put("EQ_description", description);
 		searchParams.setParamsMap(paramsMap);
 
-		DTOResult<EipDTO> responseParams = cmdbuildSoapService.findEipByParams(searchParams);
+		DTOResult<EipDTO> dtoResult = cmdbuildSoapService.findEipByParams(searchParams);
 
-		assertEquals(code, responseParams.getDto().getCode());
+		assertEquals(description, dtoResult.getDto().getDescription());
 
-		id = responseParams.getDto().getId();// 设置id
-
-		DTOResult<EipDTO> response = cmdbuildSoapService.findEip(id);
-
-		assertNotNull(response);
-
-		System.out.println(id + ">>>>>>>>>>>>>");
-
+		id = dtoResult.getDto().getId();// 设置id
 	}
 
-	// @Test
-	// @Ignore
-	public void testGetEipList() {
+	public void getList() {
 
 		SearchParams searchParams = new SearchParams();
 		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("EQ_code", code);
 		searchParams.setParamsMap(paramsMap);
 
 		DTOListResult<EipDTO> result = cmdbuildSoapService.getEipList(searchParams);
-
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
-
-		assertEquals("0", result.getCode());
-
 	}
 
-	@Test
-	// @Ignore
-	public void testCreateEip() {
-
-		Eip eip = TestData.randomEip();
-
-		EipDTO eipDTO = BeanMapper.map(eip, EipDTO.class);
-
-		IdResult response = cmdbuildSoapService.createEip(eipDTO);
-
-		assertNotNull(response.getId());
-
-		code = eip.getCode();// 设置code
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testUpdateEip() {
-
-		DTOResult<EipDTO> response = cmdbuildSoapService.findEip(id);
-
-		EipDTO eipDTO = response.getDto();
-
-		eipDTO.setCode(RandomData.randomName("code"));
-
-		eipDTO.setDescription(RandomData.randomName("update"));
-
-		IdResult result = cmdbuildSoapService.updateEip(id, eipDTO);
-
-		assertEquals("0", result.getCode());
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testDeleteEip() {
-
-		IdResult response = cmdbuildSoapService.deleteEip(id);
-
-		assertNotNull(response.getId());
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testGetEipPagination() {
+	public void getPagination() {
 
 		SearchParams searchParams = new SearchParams();
 		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("EQ_code", code);
 		searchParams.setParamsMap(paramsMap);
 
 		PaginationResult<EipDTO> result = cmdbuildSoapService.getEipPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
+		System.out.println("返回的分页查询结果数量:" + result.getGetTotalElements());
+	}
 
-		System.out.println("返回的查询结果数量:" + result.getGetTotalElements());
+	public void save() {
 
+		Eip eip = TestData.randomEip();
+		EipDTO dto = BeanMapper.map(eip, EipDTO.class);
+		IdResult response = cmdbuildSoapService.createEip(dto);
+
+		assertNotNull(response.getId());
+
+		description = dto.getDescription();// 设置Description
+	}
+
+	public void update() {
+
+		DTOResult<EipDTO> response = cmdbuildSoapService.findEip(id);
+		EipDTO dto = response.getDto();
+		dto.setDescription(dto.getDescription() + "Update");
+		IdResult result = cmdbuildSoapService.updateEip(id, dto);
+		assertEquals("0", result.getCode());
 	}
 }

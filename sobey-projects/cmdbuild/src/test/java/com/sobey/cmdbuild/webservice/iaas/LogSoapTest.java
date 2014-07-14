@@ -14,6 +14,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
+import com.sobey.cmdbuild.entity.Log;
 import com.sobey.cmdbuild.webservice.response.dto.LogDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
 import com.sobey.cmdbuild.webservice.response.result.DTOResult;
@@ -21,120 +22,69 @@ import com.sobey.cmdbuild.webservice.response.result.IdResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.cmdbuild.webservice.response.result.SearchParams;
 import com.sobey.core.mapper.BeanMapper;
-import com.sobey.test.data.RandomData;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class })
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
 public class LogSoapTest extends BaseFunctionalTestCase {
-	private Integer id = 0;
 
-	private String code = "";
+	/**
+	 * 全局Description
+	 */
+	private String description = "";
 
 	@Test
 	public void testAll() {
-		testCreateCs2();
-		testFindCs2();
-		testGetCs2List();
-		testGetCs2Pagination();
-		testUpdateCs2();
-		testDeleteCs2();
-
+		save();
+		find();
+		getList();
+		getPagination();
 	}
 
-	// @Test
-	// @Ignore
-	public void testFindCs2() {
-		System.out.println(code + ">>>>>>>>>>>>>");
+	public void find() {
 
 		SearchParams searchParams = new SearchParams();
 		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("EQ_code", code);
+		paramsMap.put("EQ_description", description);
 		searchParams.setParamsMap(paramsMap);
 
-		DTOResult<LogDTO> responseParams = cmdbuildSoapService.findCs2ByParams(searchParams);
+		DTOResult<LogDTO> dtoResult = cmdbuildSoapService.findLogByParams(searchParams);
 
-		assertEquals(code, responseParams.getDto().getCode());
-
-		id = responseParams.getDto().getId();// 设置id
-
-		DTOResult<LogDTO> response = cmdbuildSoapService.findCs2(id);
-
-		assertNotNull(response);
-
-		System.out.println(id + ">>>>>>>>>>>>>");
+		assertEquals(description, dtoResult.getDto().getDescription());
 
 	}
 
-	// @Test
-	// @Ignore
-	public void testGetCs2List() {
+	public void getList() {
 
 		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
 
-		DTOListResult<LogDTO> result = cmdbuildSoapService.getCs2List(searchParams);
-
+		DTOListResult<LogDTO> result = cmdbuildSoapService.getLogList(searchParams);
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
-
-		assertEquals("0", result.getCode());
-
 	}
 
-	// @Test
-	// @Ignore
-	public void testCreateCs2() {
-
-		Cs2 cs2 = TestData.randomCs2();
-
-		LogDTO cs2DTO = BeanMapper.map(cs2, LogDTO.class);
-
-		IdResult response = cmdbuildSoapService.createCs2(cs2DTO);
-
-		assertNotNull(response.getId());
-
-		code = cs2.getCode();// 设置code
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testUpdateCs2() {
-
-		DTOResult<LogDTO> response = cmdbuildSoapService.findCs2(id);
-
-		LogDTO cs2DTO = response.getDto();
-
-		cs2DTO.setCode(RandomData.randomName("code"));
-
-		cs2DTO.setDescription(RandomData.randomName("update"));
-
-		IdResult result = cmdbuildSoapService.updateCs2(id, cs2DTO);
-
-		assertEquals("0", result.getCode());
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testDeleteCs2() {
-
-		IdResult response = cmdbuildSoapService.deleteCs2(id);
-
-		assertNotNull(response.getId());
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testGetCs2Pagination() {
+	public void getPagination() {
 
 		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
 
-		PaginationResult<LogDTO> result = cmdbuildSoapService.getCs2Pagination(searchParams, 1, 10);
+		PaginationResult<LogDTO> result = cmdbuildSoapService.getLogPagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
-
-		System.out.println("返回的查询结果数量:" + result.getGetTotalElements());
-
+		System.out.println("返回的分页查询结果数量:" + result.getGetTotalElements());
 	}
+
+	public void save() {
+
+		Log log = TestData.randomLog();
+		LogDTO dto = BeanMapper.map(log, LogDTO.class);
+		IdResult response = cmdbuildSoapService.createLog(dto);
+
+		assertNotNull(response.getId());
+
+		description = dto.getDescription();// 设置Description
+	}
+
 }

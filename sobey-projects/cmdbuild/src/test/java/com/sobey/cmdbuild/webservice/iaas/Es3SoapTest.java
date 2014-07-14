@@ -22,120 +22,90 @@ import com.sobey.cmdbuild.webservice.response.result.IdResult;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.cmdbuild.webservice.response.result.SearchParams;
 import com.sobey.core.mapper.BeanMapper;
-import com.sobey.test.data.RandomData;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class })
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
 public class Es3SoapTest extends BaseFunctionalTestCase {
+
+	/**
+	 * 全局id
+	 */
 	private Integer id = 0;
 
-	private String code = "";
+	/**
+	 * 全局Description
+	 */
+	private String description = "";
 
 	@Test
 	public void testAll() {
-		testCreateAs2();
-		testFindAs2();
-		testGetAs2List();
-		testGetAs2Pagination();
-		testUpdateAs2();
-		testDeleteAs2();
-
+		save();
+		find();
+		getList();
+		getPagination();
+		update();
+		delete();
 	}
 
-	// @Test
-	// @Ignore
-	public void testFindAs2() {
-		System.out.println(code + ">>>>>>>>>>>>>");
+	public void delete() {
+		IdResult response = cmdbuildSoapService.deleteEs3(id);
+		assertNotNull(response.getId());
+	}
+
+	public void find() {
 
 		SearchParams searchParams = new SearchParams();
 		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("EQ_code", code);
+		paramsMap.put("EQ_description", description);
 		searchParams.setParamsMap(paramsMap);
 
-		DTOResult<Es3DTO> responseParams = cmdbuildSoapService.findAs2ByParams(searchParams);
+		DTOResult<Es3DTO> dtoResult = cmdbuildSoapService.findEs3ByParams(searchParams);
 
-		assertEquals(code, responseParams.getDto().getCode());
+		assertEquals(description, dtoResult.getDto().getDescription());
 
-		id = responseParams.getDto().getId();// 设置id
-
-		DTOResult<Es3DTO> response = cmdbuildSoapService.findAs2(id);
-
-		assertNotNull(response);
-
-		System.out.println(id + ">>>>>>>>>>>>>");
-
+		id = dtoResult.getDto().getId();// 设置id
 	}
 
-	// @Test
-	// @Ignore
-	public void testGetAs2List() {
+	public void getList() {
 
 		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
 
-		DTOListResult<Es3DTO> result = cmdbuildSoapService.getAs2List(searchParams);
-
+		DTOListResult<Es3DTO> result = cmdbuildSoapService.getEs3List(searchParams);
 		System.out.println("返回的查询结果数量:" + result.getDtos().size());
-
-		assertEquals("0", result.getCode());
-
 	}
 
-	// @Test
-	// @Ignore
-	public void testCreateAs2() {
-
-		Es3 as2 = TestData.randomAs2();
-
-		Es3DTO as2DTO = BeanMapper.map(as2, Es3DTO.class);
-
-		IdResult response = cmdbuildSoapService.createAs2(as2DTO);
-
-		assertNotNull(response.getId());
-
-		code = as2.getCode();// 设置code
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testUpdateAs2() {
-
-		DTOResult<Es3DTO> response = cmdbuildSoapService.findAs2(id);
-
-		Es3DTO as2DTO = response.getDto();
-
-		as2DTO.setCode(RandomData.randomName("code"));
-
-		as2DTO.setDescription(RandomData.randomName("update"));
-
-		IdResult result = cmdbuildSoapService.updateAs2(id, as2DTO);
-
-		assertEquals("0", result.getCode());
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testDeleteAs2() {
-
-		IdResult response = cmdbuildSoapService.deleteAs2(id);
-
-		assertNotNull(response.getId());
-
-	}
-
-	// @Test
-	// @Ignore
-	public void testGetAs2Pagination() {
+	public void getPagination() {
 
 		SearchParams searchParams = new SearchParams();
+		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
+		searchParams.setParamsMap(paramsMap);
 
-		PaginationResult<Es3DTO> result = cmdbuildSoapService.getAs2Pagination(searchParams, 1, 10);
+		PaginationResult<Es3DTO> result = cmdbuildSoapService.getEs3Pagination(searchParams, 1, 10);
 
 		assertNotNull(result.getGetTotalElements());
+		System.out.println("返回的分页查询结果数量:" + result.getGetTotalElements());
+	}
 
-		System.out.println("返回的查询结果数量:" + result.getGetTotalElements());
+	public void save() {
 
+		Es3 es3 = TestData.randomEs3();
+		Es3DTO dto = BeanMapper.map(es3, Es3DTO.class);
+		IdResult response = cmdbuildSoapService.createEs3(dto);
+
+		assertNotNull(response.getId());
+
+		description = dto.getDescription();// 设置Description
+	}
+
+	public void update() {
+
+		DTOResult<Es3DTO> response = cmdbuildSoapService.findEs3(id);
+		Es3DTO dto = response.getDto();
+		dto.setDescription(dto.getDescription() + "Update");
+		IdResult result = cmdbuildSoapService.updateEs3(id, dto);
+		assertEquals("0", result.getCode());
 	}
 }
