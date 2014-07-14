@@ -139,4 +139,14 @@ public class Es3Service extends BasicSevcie {
 		return es3Dao.findAll(spec, pageRequest);
 	}
 
+	/**
+	 * 新增、保存对象
+	 * 
+	 * @param Es3
+	 * @return Es3
+	 */
+	public Es3 saveOrUpdate(Es3 es3) {
+		return es3Dao.save(es3);
+	}
+
 }
