@@ -27,7 +27,7 @@ import com.sobey.test.data.RandomData;
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class })
 @ContextConfiguration(locations = { "/applicationContext-soap-client.xml" })
-public class As2SoapTest extends BaseFunctionalTestCase {
+public class Es3SoapTest extends BaseFunctionalTestCase {
 	private Integer id = 0;
 
 	private String code = "";
