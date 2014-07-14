@@ -21,10 +21,13 @@ import com.sobey.cmdbuild.entity.EcsSpec;
 import com.sobey.cmdbuild.entity.Firewall;
 import com.sobey.cmdbuild.entity.Idc;
 import com.sobey.cmdbuild.entity.Ipaddress;
+import com.sobey.cmdbuild.entity.LoadBalancer;
 import com.sobey.cmdbuild.entity.Log;
 import com.sobey.cmdbuild.entity.LookUp;
 import com.sobey.cmdbuild.entity.Rack;
 import com.sobey.cmdbuild.entity.Server;
+import com.sobey.cmdbuild.entity.Storage;
+import com.sobey.cmdbuild.entity.Switches;
 import com.sobey.cmdbuild.entity.Tag;
 import com.sobey.cmdbuild.entity.Tenants;
 import com.sobey.cmdbuild.entity.Vlan;
@@ -2648,45 +2651,207 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public DTOResult<LoadBalancerDTO> findLoadBalancer(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<LoadBalancerDTO> result = new DTOResult<LoadBalancerDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			LoadBalancer loadBalancer = comm.loadBalancerService.findLoadBalancer(id);
+
+			Validate.notNull(loadBalancer, ERROR.OBJECT_NULL);
+
+			LoadBalancerDTO dto = BeanMapper.map(loadBalancer, LoadBalancerDTO.class);
+
+			// Reference
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(findRack(dto.getRack()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setDeviceSpecDTO(findDeviceSpec(dto.getDeviceSpec()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<LoadBalancerDTO> findLoadBalancerByParams(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<LoadBalancerDTO> result = new DTOResult<LoadBalancerDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			LoadBalancer loadBalancer = comm.loadBalancerService.findLoadBalancer(searchParams.getParamsMap());
+
+			Validate.notNull(loadBalancer, ERROR.OBJECT_NULL);
+
+			LoadBalancerDTO dto = BeanMapper.map(loadBalancer, LoadBalancerDTO.class);
+
+			// Reference
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(findRack(dto.getRack()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setDeviceSpecDTO(findDeviceSpec(dto.getDeviceSpec()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
 	}
 
 	@Override
 	public IdResult createLoadBalancer(LoadBalancerDTO loadBalancerDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(loadBalancerDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", loadBalancerDTO.getDescription());
+
+			Validate.isTrue(comm.loadBalancerService.findLoadBalancer(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象
+			LoadBalancer loadBalancer = BeanMapper.map(loadBalancerDTO, LoadBalancer.class);
+			loadBalancer.setCode("LoadBalancer-" + Identities.randomBase62(8));
+			loadBalancer.setUser(DEFAULT_USER);
+			loadBalancer.setId(0);
+
+			BeanValidators.validateWithException(validator, loadBalancer);
+
+			comm.loadBalancerService.saveOrUpdate(loadBalancer);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult updateLoadBalancer(Integer id, LoadBalancerDTO loadBalancerDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(loadBalancerDTO, ERROR.INPUT_NULL);
+
+			LoadBalancer loadBalancer = comm.loadBalancerService.findLoadBalancer(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", loadBalancerDTO.getDescription());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(comm.loadBalancerService.findLoadBalancer(paramsMap) == null
+					|| loadBalancer.getDescription().equals(loadBalancerDTO.getDescription()), ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(loadBalancerDTO, LoadBalancer.class), loadBalancer);
+
+			loadBalancer.setUser(DEFAULT_USER);
+			loadBalancer.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			loadBalancer.setIdClass(TableNameUtil.getTableName(LoadBalancer.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, loadBalancer);
+
+			comm.loadBalancerService.saveOrUpdate(loadBalancer);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteLoadBalancer(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			LoadBalancer loadBalancer = comm.loadBalancerService.findLoadBalancer(id);
+
+			Validate.notNull(id, ERROR.OBJECT_NULL);
+
+			loadBalancer.setIdClass(TableNameUtil.getTableName(LoadBalancer.class));
+
+			loadBalancer.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.loadBalancerService.saveOrUpdate(loadBalancer);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOListResult<LoadBalancerDTO> getLoadBalancerList(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOListResult<LoadBalancerDTO> result = new DTOListResult<LoadBalancerDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(
+					comm.loadBalancerService.getLoadBalancerList(searchParams.getParamsMap()), LoadBalancerDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public PaginationResult<LoadBalancerDTO> getLoadBalancerPagination(SearchParams searchParams, Integer pageNumber,
 			Integer pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+
+		PaginationResult<LoadBalancerDTO> result = new PaginationResult<LoadBalancerDTO>();
+
+		try {
+
+			return comm.loadBalancerService.getLoadBalancerDTOPagination(searchParams.getParamsMap(), pageNumber,
+					pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
@@ -2896,88 +3061,405 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public DTOResult<StorageDTO> findStorage(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<StorageDTO> result = new DTOResult<StorageDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Storage storage = comm.storageService.findStorage(id);
+
+			Validate.notNull(storage, ERROR.OBJECT_NULL);
+
+			StorageDTO dto = BeanMapper.map(storage, StorageDTO.class);
+
+			// Reference
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(findRack(dto.getRack()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setDeviceSpecDTO(findDeviceSpec(dto.getDeviceSpec()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
 	}
 
 	@Override
 	public DTOResult<StorageDTO> findStorageByParams(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<StorageDTO> result = new DTOResult<StorageDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Storage storage = comm.storageService.findStorage(searchParams.getParamsMap());
+
+			Validate.notNull(storage, ERROR.OBJECT_NULL);
+
+			StorageDTO dto = BeanMapper.map(storage, StorageDTO.class);
+
+			// Reference
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(findRack(dto.getRack()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setDeviceSpecDTO(findDeviceSpec(dto.getDeviceSpec()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
 	}
 
 	@Override
 	public IdResult createStorage(StorageDTO storageDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(storageDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", storageDTO.getDescription());
+
+			Validate.isTrue(comm.storageService.findStorage(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象
+			Storage storage = BeanMapper.map(storageDTO, Storage.class);
+			storage.setCode("Storage-" + Identities.randomBase62(8));
+			storage.setUser(DEFAULT_USER);
+			storage.setId(0);
+
+			BeanValidators.validateWithException(validator, storage);
+
+			comm.storageService.saveOrUpdate(storage);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult updateStorage(Integer id, StorageDTO storageDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(storageDTO, ERROR.INPUT_NULL);
+
+			Storage storage = comm.storageService.findStorage(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", storageDTO.getDescription());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(
+					comm.storageService.findStorage(paramsMap) == null
+							|| storage.getDescription().equals(storageDTO.getDescription()), ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(storageDTO, Storage.class), storage);
+
+			storage.setUser(DEFAULT_USER);
+			storage.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			storage.setIdClass(TableNameUtil.getTableName(Storage.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, storage);
+
+			comm.storageService.saveOrUpdate(storage);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteStorage(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Storage storage = comm.storageService.findStorage(id);
+
+			Validate.notNull(storage, ERROR.OBJECT_NULL);
+
+			storage.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.storageService.saveOrUpdate(storage);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOListResult<StorageDTO> getStorageList(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOListResult<StorageDTO> result = new DTOListResult<StorageDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.storageService.getStorageList(searchParams.getParamsMap()),
+					StorageDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public PaginationResult<StorageDTO> getStoragePagination(SearchParams searchParams, Integer pageNumber,
 			Integer pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+
+		PaginationResult<StorageDTO> result = new PaginationResult<StorageDTO>();
+
+		try {
+
+			return comm.storageService.getStorageDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<SwitchesDTO> findSwitches(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<SwitchesDTO> result = new DTOResult<SwitchesDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Switches switches = comm.switchesService.findSwitches(id);
+
+			Validate.notNull(switches, ERROR.OBJECT_NULL);
+
+			SwitchesDTO dto = BeanMapper.map(switches, SwitchesDTO.class);
+
+			// Reference
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(findRack(dto.getRack()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setDeviceSpecDTO(findDeviceSpec(dto.getDeviceSpec()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOResult<SwitchesDTO> findSwitchesByParams(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<SwitchesDTO> result = new DTOResult<SwitchesDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Switches switches = comm.switchesService.findSwitches(searchParams.getParamsMap());
+
+			Validate.notNull(switches, ERROR.OBJECT_NULL);
+
+			SwitchesDTO dto = BeanMapper.map(switches, SwitchesDTO.class);
+
+			// Reference
+			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			dto.setRackDTO(findRack(dto.getRack()).getDto());
+			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setDeviceSpecDTO(findDeviceSpec(dto.getDeviceSpec()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
 	}
 
 	@Override
 	public IdResult createSwitches(SwitchesDTO switchesDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(switchesDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Map<String, Object> paramsMap = Maps.newHashMap();
+			paramsMap.put("EQ_description", switchesDTO.getDescription());
+
+			Validate.isTrue(comm.switchesService.findSwitches(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			Switches switches = BeanMapper.map(switchesDTO, Switches.class);
+			switches.setCode("Switch-" + Identities.randomBase62(8));
+			switches.setUser(DEFAULT_USER);
+			switches.setId(0);
+
+			BeanValidators.validateWithException(validator, switches);
+
+			comm.switchesService.saveOrUpdate(switches);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult updateSwitches(Integer id, SwitchesDTO switchesDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(switchesDTO, ERROR.INPUT_NULL);
+
+			Switches switches = comm.switchesService.findSwitches(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", switchesDTO.getDescription());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(
+					comm.switchesService.findSwitches(paramsMap) == null
+							|| switches.getDescription().equals(switchesDTO.getDescription()), ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(switchesDTO, Switches.class), switches);
+			switches.setUser(DEFAULT_USER);
+			switches.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			switches.setIdClass(TableNameUtil.getTableName(Switches.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, switches);
+
+			comm.switchesService.saveOrUpdate(switches);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteSwitches(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Switches switches = comm.switchesService.findSwitches(id);
+
+			Validate.notNull(switches, ERROR.OBJECT_NULL);
+
+			switches.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.switchesService.saveOrUpdate(switches);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public DTOListResult<SwitchesDTO> getSwitchesList(SearchParams searchParams) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOListResult<SwitchesDTO> result = new DTOListResult<SwitchesDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.switchesService.getSwitchesList(searchParams.getParamsMap()),
+					SwitchesDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public PaginationResult<SwitchesDTO> getSwitchesPagination(SearchParams searchParams, Integer pageNumber,
 			Integer pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+
+		PaginationResult<SwitchesDTO> result = new PaginationResult<SwitchesDTO>();
+
+		try {
+
+			return comm.switchesService.getSwitchesDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
