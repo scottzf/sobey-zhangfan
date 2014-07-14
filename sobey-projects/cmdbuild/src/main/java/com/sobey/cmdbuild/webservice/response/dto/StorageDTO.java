@@ -13,6 +13,7 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.DeviceBasicDTO;
 public class StorageDTO extends DeviceBasicDTO {
 
 	private String configText;
+	private String password;
 
 	public String getConfigText() {
 		return configText;
@@ -20,6 +21,14 @@ public class StorageDTO extends DeviceBasicDTO {
 
 	public void setConfigText(String configText) {
 		this.configText = configText;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	/**

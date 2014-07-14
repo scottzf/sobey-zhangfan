@@ -19,7 +19,7 @@ public class LoadBalancer extends DeviceBasic {
 
 	private Set<LoadBalancerHistory> loadBalancerHistories = new HashSet<LoadBalancerHistory>(0);
 
-	private LoadBalancer() {
+	public LoadBalancer() {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "loadBalancer")

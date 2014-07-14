@@ -94,9 +94,9 @@ public class FirewallSoapTest extends BaseFunctionalTestCase {
 		Firewall firewall = TestData.randomFirewall();
 		FirewallDTO dto = BeanMapper.map(firewall, FirewallDTO.class);
 		IdResult response = cmdbuildSoapService.createFirewall(dto);
+
 		assertNotNull(response.getId());
 
-		System.out.println(dto.getIdc());
 		description = dto.getDescription();// 设置Description
 	}
 
