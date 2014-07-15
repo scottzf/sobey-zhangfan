@@ -20,6 +20,7 @@ import com.sobey.cmdbuild.service.iaas.MapEcsEs3Service;
 import com.sobey.cmdbuild.service.iaas.MapEcsEsgService;
 import com.sobey.cmdbuild.service.iaas.MapEipDnsService;
 import com.sobey.cmdbuild.service.iaas.MapEipElbService;
+import com.sobey.cmdbuild.service.iaas.MapTagServiceService;
 import com.sobey.cmdbuild.service.iaas.VpnService;
 import com.sobey.cmdbuild.service.infrastructure.FirewallPortService;
 import com.sobey.cmdbuild.service.infrastructure.FirewallService;
@@ -135,6 +136,9 @@ public class CommonService {
 
 	@Autowired
 	public MapEipElbService mapEipElbService;
+
+	@Autowired
+	public MapTagServiceService mapTagServiceService;
 
 	@Autowired
 	public MemoryService memoryService;

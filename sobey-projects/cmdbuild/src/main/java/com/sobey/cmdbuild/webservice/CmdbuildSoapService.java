@@ -484,7 +484,7 @@ public interface CmdbuildSoapService {
 	// ==============================//
 
 	IdResult createMapTagService(@WebParam(name = "tagId") Integer tagId,
-			@WebParam(name = "serviceId") Integer serviceId);
+			@WebParam(name = "serviceId") Integer serviceId, Class<?> serviceClassName);
 
 	IdResult deleteMapTagService(@WebParam(name = "tagId") Integer tagId,
 			@WebParam(name = "serviceId") Integer serviceId);

@@ -541,22 +541,22 @@ public class TestData {
 
 	public static StorageBox randomStorageBox() {
 
-		StorageBox netappBox = new StorageBox();
+		StorageBox storageBox = new StorageBox();
 
-		netappBox.setId(0);
-		netappBox.setIdc(idcId);
-		netappBox.setRack(rackId);
-		netappBox.setBrand(brandId);
-		netappBox.setSite("1");
-		netappBox.setRemark(RandomData.randomName("remark"));
-		netappBox.setSn(RandomData.randomName("sn"));
-		netappBox.setGdzcSn(RandomData.randomName("gdzcSn"));
-		netappBox.setDescription(RandomData.randomName("description"));
-		netappBox.setServer(serverId);
-		netappBox.setDiskType(diskTypeId);
-		netappBox.setDiskNumber(4);
+		storageBox.setId(0);
+		storageBox.setIdc(idcId);
+		storageBox.setRack(rackId);
+		storageBox.setBrand(brandId);
+		storageBox.setSite("1");
+		storageBox.setRemark(RandomData.randomName("remark"));
+		storageBox.setSn(RandomData.randomName("sn"));
+		storageBox.setGdzcSn(RandomData.randomName("gdzcSn"));
+		storageBox.setDescription(RandomData.randomName("description"));
+		storageBox.setStorage(storageId);
+		storageBox.setDiskType(diskTypeId);
+		storageBox.setDiskNumber(4);
 
-		return netappBox;
+		return storageBox;
 	}
 
 	public static StoragePort randomStoragePort() {

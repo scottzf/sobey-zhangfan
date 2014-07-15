@@ -36,6 +36,13 @@ import com.sobey.cmdbuild.entity.LoadBalancer;
 import com.sobey.cmdbuild.entity.LoadBalancerPort;
 import com.sobey.cmdbuild.entity.Log;
 import com.sobey.cmdbuild.entity.LookUp;
+import com.sobey.cmdbuild.entity.MapEcsEip;
+import com.sobey.cmdbuild.entity.MapEcsElb;
+import com.sobey.cmdbuild.entity.MapEcsEs3;
+import com.sobey.cmdbuild.entity.MapEcsEsg;
+import com.sobey.cmdbuild.entity.MapEipDns;
+import com.sobey.cmdbuild.entity.MapEipElb;
+import com.sobey.cmdbuild.entity.MapTagService;
 import com.sobey.cmdbuild.entity.Memory;
 import com.sobey.cmdbuild.entity.Nic;
 import com.sobey.cmdbuild.entity.NicPort;
@@ -3805,86 +3812,408 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public IdResult createMapEcsEsg(Integer ecsId, Integer esgId) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			MapEcsEsg map = new MapEcsEsg();
+
+			map.setId(0);
+			map.setIdObj1(ecsId);
+			map.setIdObj2(esgId);
+			map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
+			map.setIdClass2(TableNameUtil.getTableName(Esg.class));
+			map.setUser(DEFAULT_USER);
+
+			comm.mapEcsEsgService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteMapEcsEsg(Integer ecsId, Integer esgId) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(ecsId, ERROR.INPUT_NULL);
+			Validate.notNull(esgId, ERROR.INPUT_NULL);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+			paramsMap.put("EQ_idObj1", ecsId);
+			paramsMap.put("EQ_idObj2", esgId);
+
+			MapEcsEsg map = comm.mapEcsEsgService.findMapEcsEsg(paramsMap);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.mapEcsEsgService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult createMapEcsEs3(Integer ecsId, Integer es3Id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			MapEcsEs3 map = new MapEcsEs3();
+
+			map.setId(0);
+			map.setIdObj1(ecsId);
+			map.setIdObj2(es3Id);
+			map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
+			map.setIdClass2(TableNameUtil.getTableName(Es3.class));
+			map.setUser(DEFAULT_USER);
+
+			comm.mapEcsEs3Service.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteMapEcsEs3(Integer ecsId, Integer es3Id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(ecsId, ERROR.INPUT_NULL);
+			Validate.notNull(es3Id, ERROR.INPUT_NULL);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+			paramsMap.put("EQ_idObj1", ecsId);
+			paramsMap.put("EQ_idObj2", es3Id);
+
+			MapEcsEs3 map = comm.mapEcsEs3Service.findMapEcsEs3(paramsMap);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.mapEcsEs3Service.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult createMapEcsEip(Integer ecsId, Integer eipId) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			MapEcsEip map = new MapEcsEip();
+
+			map.setId(0);
+			map.setIdObj1(ecsId);
+			map.setIdObj2(eipId);
+			map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
+			map.setIdClass2(TableNameUtil.getTableName(Eip.class));
+			map.setUser(DEFAULT_USER);
+
+			comm.mapEcsEipService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteMapEcsEip(Integer ecsId, Integer eipId) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(ecsId, ERROR.INPUT_NULL);
+			Validate.notNull(eipId, ERROR.INPUT_NULL);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+			paramsMap.put("EQ_idObj1", ecsId);
+			paramsMap.put("EQ_idObj2", eipId);
+
+			MapEcsEip map = comm.mapEcsEipService.findMapEcsEip(paramsMap);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.mapEcsEipService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult createMapEcsElb(Integer ecsId, Integer elbId) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			MapEcsElb map = new MapEcsElb();
+
+			map.setId(0);
+			map.setIdObj1(ecsId);
+			map.setIdObj2(elbId);
+			map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
+			map.setIdClass2(TableNameUtil.getTableName(Elb.class));
+			map.setUser(DEFAULT_USER);
+
+			comm.mapEcsElbService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteMapEcsElb(Integer ecsId, Integer elbId) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(ecsId, ERROR.INPUT_NULL);
+			Validate.notNull(elbId, ERROR.INPUT_NULL);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+			paramsMap.put("EQ_idObj1", ecsId);
+			paramsMap.put("EQ_idObj2", elbId);
+
+			MapEcsElb map = comm.mapEcsElbService.findMapEcsElb(paramsMap);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.mapEcsElbService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult createMapEipElb(Integer eipId, Integer elbId) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			MapEipElb map = new MapEipElb();
+
+			map.setId(0);
+			map.setIdObj1(eipId);
+			map.setIdObj2(elbId);
+			map.setIdClass1(TableNameUtil.getTableName(Eip.class));
+			map.setIdClass2(TableNameUtil.getTableName(Elb.class));
+			map.setUser(DEFAULT_USER);
+
+			comm.mapEipElbService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteMapEipElb(Integer eipId, Integer elbId) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(eipId, ERROR.INPUT_NULL);
+			Validate.notNull(elbId, ERROR.INPUT_NULL);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+			paramsMap.put("EQ_idObj1", eipId);
+			paramsMap.put("EQ_idObj2", elbId);
+
+			MapEipElb map = comm.mapEipElbService.findMapEipElb(paramsMap);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.mapEipElbService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult createMapEipDns(Integer eipId, Integer dnsId) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			MapEipDns map = new MapEipDns();
+
+			map.setId(0);
+			map.setIdObj1(eipId);
+			map.setIdObj2(dnsId);
+			map.setIdClass1(TableNameUtil.getTableName(Eip.class));
+			map.setIdClass2(TableNameUtil.getTableName(Dns.class));
+			map.setUser(DEFAULT_USER);
+
+			comm.mapEipDnsService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteMapEipDns(Integer eipId, Integer dnsId) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(eipId, ERROR.INPUT_NULL);
+			Validate.notNull(dnsId, ERROR.INPUT_NULL);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+			paramsMap.put("EQ_idObj1", eipId);
+			paramsMap.put("EQ_idObj2", dnsId);
+
+			MapEipDns map = comm.mapEipDnsService.findMapEipDns(paramsMap);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.mapEipDnsService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
-	public IdResult createMapTagService(Integer tagId, Integer serviceId) {
-		// TODO Auto-generated method stub
-		return null;
+	public IdResult createMapTagService(Integer tagId, Integer serviceId, Class<?> serviceClassName) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			MapEipDns map = new MapEipDns();
+
+			map.setId(0);
+			map.setIdObj1(tagId);
+			map.setIdObj2(serviceId);
+			map.setIdClass1(TableNameUtil.getTableName(Tag.class));
+			map.setIdClass2(serviceClassName.getSimpleName());
+			map.setUser(DEFAULT_USER);
+
+			comm.mapEipDnsService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
 	public IdResult deleteMapTagService(Integer tagId, Integer serviceId) {
-		// TODO Auto-generated method stub
-		return null;
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(tagId, ERROR.INPUT_NULL);
+			Validate.notNull(serviceId, ERROR.INPUT_NULL);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+			paramsMap.put("EQ_idObj1", tagId);
+			paramsMap.put("EQ_idObj2", serviceId);
+
+			MapTagService map = comm.mapTagServiceService.findMapTagService(paramsMap);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.mapTagServiceService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
 	}
 
 	@Override
