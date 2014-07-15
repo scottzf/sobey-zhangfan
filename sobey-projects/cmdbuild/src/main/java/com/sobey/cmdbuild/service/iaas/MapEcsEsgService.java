@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +14,9 @@ import com.sobey.cmdbuild.constants.CMDBuildConstants;
 import com.sobey.cmdbuild.entity.MapEcsEsg;
 import com.sobey.cmdbuild.repository.MapEcsEsgDao;
 import com.sobey.cmdbuild.service.BasicSevcie;
+import com.sobey.cmdbuild.webservice.response.dto.MapEcsEsgDTO;
+import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
+import com.sobey.core.mapper.BeanMapper;
 import com.sobey.core.persistence.DynamicSpecifications;
 import com.sobey.core.persistence.SearchFilter;
 
@@ -79,6 +84,29 @@ public class MapEcsEsgService extends BasicSevcie {
 	}
 
 	/**
+	 * MapEcsEsgDTO webservice分页查询.
+	 * 
+	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
+	 * 
+	 * @param searchParams
+	 *            查询语句Map.
+	 * @param pageNumber
+	 *            当前页数,最小为1.
+	 * @param pageSize
+	 *            当前页大小,如每页为10行
+	 * @return PaginationResult<MapEcsEsgDTO>
+	 */
+	public PaginationResult<MapEcsEsgDTO> getMapEcsEsgDTOPagination(Map<String, Object> searchParams, int pageNumber,
+			int pageSize) {
+
+		Page<MapEcsEsg> page = getMapEcsEsgPage(searchParams, pageNumber, pageSize);
+
+		List<MapEcsEsgDTO> dtos = BeanMapper.mapList(page.getContent(), MapEcsEsgDTO.class);
+
+		return fillPaginationResult(page, dtos);
+	}
+
+	/**
 	 * 根据自定义动态查询条件获得对象集合.
 	 * 
 	 * 将条件查询放入searchParams中. 查询条件可查询{@link SearchFilter}类.
@@ -93,6 +121,23 @@ public class MapEcsEsgService extends BasicSevcie {
 	 */
 	public List<MapEcsEsg> getMapEcsEsgList(Map<String, Object> searchParams) {
 		return mapEcsEsgDao.findAll(buildSpecification(searchParams));
+	}
+
+	/**
+	 * Spring-data-jpa自带的分页查询
+	 * 
+	 * @param searchParams
+	 * @param pageNumber
+	 * @param pageSize
+	 * @return Page<MapEcsEsg>
+	 */
+	private Page<MapEcsEsg> getMapEcsEsgPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
+
+		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
+
+		Specification<MapEcsEsg> spec = buildSpecification(searchParams);
+
+		return mapEcsEsgDao.findAll(spec, pageRequest);
 	}
 
 	/**
