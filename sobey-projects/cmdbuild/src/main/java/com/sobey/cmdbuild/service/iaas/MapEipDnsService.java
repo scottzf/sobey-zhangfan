@@ -29,7 +29,7 @@ public class MapEipDnsService extends BasicSevcie {
 
 	@Autowired
 	private MapEipDnsDao mapEipDnsDao;
-	
+
 	/**
 	 * 创建动态查询条件组合.
 	 * 

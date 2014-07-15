@@ -41,7 +41,7 @@ public class MapEipElbSoapTest extends BaseFunctionalTestCase {
 		find();
 		getList();
 		getPagination();
-//		delete();
+		delete();
 	}
 
 	public void delete() {
