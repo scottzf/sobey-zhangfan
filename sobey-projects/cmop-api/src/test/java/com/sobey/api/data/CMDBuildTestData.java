@@ -1,21 +1,26 @@
 package com.sobey.api.data;
 
-import com.sobey.generate.cmdbuild.CompanyDTO;
+import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.test.data.RandomData;
 
 public class CMDBuildTestData {
 
-	public static CompanyDTO randomCompany() {
-		CompanyDTO dto = new CompanyDTO();
+	public static EcsDTO randomEcsDTO() {
 
-		dto.setAddress(RandomData.randomName("address"));
+		EcsDTO dto = new EcsDTO();
+
 		dto.setCode(RandomData.randomName("code"));
-		dto.setDescription("测试");
-		dto.setZip(RandomData.randomName("zip"));
-		dto.setPhone(RandomData.randomName("phone"));
+		dto.setDescription("Description");
 		dto.setRemark(RandomData.randomName("remark"));
+
+		dto.setIdc(99);
+		dto.setIpaddress(143);
+		dto.setServer(344);
+		dto.setTenants(105);
+		dto.setAgentType(80);
+		dto.setEcsSpec(123);
+		dto.setEcsStatus(34);
 
 		return dto;
 	}
-
 }

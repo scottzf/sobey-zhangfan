@@ -16,7 +16,6 @@ import com.sobey.api.data.CMDBuildTestData;
 import com.sobey.api.service.CmdbuildService;
 import com.sobey.api.service.InstanceService;
 import com.sobey.api.utils.CMDBuildUtil;
-import com.sobey.generate.cmdbuild.CompanyDTO;
 import com.sobey.generate.cmdbuild.DTOResult;
 import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.SearchParams;
@@ -83,51 +82,53 @@ public class CMDBuildTest extends TestCase {
 	}
 
 	@Test
-	public void createCompanyTest() {
+	public void createEcs() {
 
-		CompanyDTO companyDTO = CMDBuildTestData.randomCompany();
+		EcsDTO dto = CMDBuildTestData.randomEcsDTO();
 
-		WSResult wsResult = service.createcompany(companyDTO);
+		WSResult wsResult = service.createEcsDTO(dto);
 		System.out.println(wsResult.getCode());
 		System.out.println(wsResult.getMessage());
 
 	}
 
 	@Test
-	public void deleteCompanyTest() {
+	public void deleteEcs() {
 
-		WSResult wsResult = service.deleteCompany(117124);
+		Integer id = 832;
+
+		WSResult wsResult = service.deleteEcs(id);
 		System.out.println(wsResult.getCode());
 		System.out.println(wsResult.getMessage());
 
 	}
 
 	@Test
-	public void updateCompanyTest() {
+	public void updateEcs() {
 
-		Integer id = 117125;
+		Integer id = 832;
 
-		DTOResult dtoResult = service.findCompany(id);
-		CompanyDTO dto = (CompanyDTO) dtoResult.getDto();
+		DTOResult dtoResult = service.findEcs(id);
+		EcsDTO dto = (EcsDTO) dtoResult.getDto();
 		dto.setCode("coder");
 		dto.setDescription("我是超人啊~!");
 
-		WSResult wsResult = service.updateCompany(id, dto);
+		WSResult wsResult = service.updateEcs(id, dto);
 		System.out.println(wsResult.getCode());
 		System.out.println(wsResult.getMessage());
 
 	}
 
 	@Test
-	public void findCompanyTest() {
+	public void findEcs() {
 
 		List<Entry> entries = new ArrayList<Entry>();
 
 		SearchParams searchParams = new SearchParams();
 
 		Entry entry = new Entry();
-		entry.setKey("EQ_zip");
-		entry.setValue("zip4865");
+		entry.setKey("EQ_code");
+		entry.setValue("coder");
 
 		entries.add(entry);
 
@@ -137,9 +138,9 @@ public class CMDBuildTest extends TestCase {
 
 		searchParams.setParamsMap(paramsMap);
 
-		DTOResult dtoResult = service.findCompany(searchParams);
-		CompanyDTO dto = (CompanyDTO) dtoResult.getDto();
-		System.out.println(dto.getAddress());
+		DTOResult dtoResult = service.findEcs(searchParams);
+
+		EcsDTO dto = (EcsDTO) dtoResult.getDto();
 		System.out.println(dto.getCode());
 		System.out.println(dto.getRemark());
 		System.out.println(dto.getId());
