@@ -25,6 +25,13 @@ import com.sobey.cmdbuild.entity.Ipaddress;
 import com.sobey.cmdbuild.entity.LoadBalancer;
 import com.sobey.cmdbuild.entity.LoadBalancerPort;
 import com.sobey.cmdbuild.entity.Log;
+import com.sobey.cmdbuild.entity.MapEcsEip;
+import com.sobey.cmdbuild.entity.MapEcsElb;
+import com.sobey.cmdbuild.entity.MapEcsEs3;
+import com.sobey.cmdbuild.entity.MapEcsEsg;
+import com.sobey.cmdbuild.entity.MapEipDns;
+import com.sobey.cmdbuild.entity.MapEipElb;
+import com.sobey.cmdbuild.entity.MapTagService;
 import com.sobey.cmdbuild.entity.Memory;
 import com.sobey.cmdbuild.entity.Nic;
 import com.sobey.cmdbuild.entity.NicPort;
@@ -40,37 +47,41 @@ import com.sobey.cmdbuild.entity.Tag;
 import com.sobey.cmdbuild.entity.Tenants;
 import com.sobey.cmdbuild.entity.Vlan;
 import com.sobey.cmdbuild.entity.Vpn;
+import com.sobey.core.utils.TableNameUtil;
 import com.sobey.test.data.RandomData;
 
 public class TestData {
 
-	private static Integer agentTypeId = 80;
-	private static Integer brandId = 56;
-	private static Integer deviceSpecId = 121;
-	private static Integer deviceTypeId = 23;
-	private static Integer diskTypeId = 24;
-	private static Integer dnsId = 712;
-	private static Integer ecsSpecId = 123;
-	private static Integer eipId = 697;
-	private static Integer elbId = 680;
-	private static Integer esgId = 725;
-	private static Integer heightId = 69;
-	private static Integer idcId = 99;
-	private static Integer ipaddressId = 143;
-	private static Integer ispId = 29;
-	private static Integer maintenanceId = 77;
-	private static Integer osTypeId = 21;
-	private static Integer parentTagId = 107;
-	private static Integer powerId = 77;
-	private static Integer rackId = 101;
-	private static Integer serverId = 344;
-	private static Integer serviceTypeId = 26;
-	private static Integer storageId = 365;
-	private static Integer switchPortId = 472;
-	private static Integer tenantsId = 105;
-	private static Integer vlanId = 125;
+	public static Integer agentTypeId = 80;
+	public static Integer brandId = 56;
+	public static Integer deviceSpecId = 121;
+	public static Integer deviceTypeId = 23;
+	public static Integer diskTypeId = 24;
+	public static Integer dnsId = 712;
+	public static Integer ecsId = 639;
+	public static Integer ecsSpecId = 123;
+	public static Integer eipId = 697;
+	public static Integer elbId = 680;
+	public static Integer es3Id = 654;
+	public static Integer esgId = 725;
+	public static Integer heightId = 69;
+	public static Integer idcId = 99;
+	public static Integer ipaddressId = 143;
+	public static Integer ispId = 29;
+	public static Integer maintenanceId = 77;
+	public static Integer osTypeId = 21;
+	public static Integer parentTagId = 107;
+	public static Integer powerId = 77;
+	public static Integer rackId = 101;
+	public static Integer serverId = 344;
+	public static Integer serviceTypeId = 26;
+	public static Integer storageId = 365;
+	public static Integer switchPortId = 472;
+	public static Integer tagId = 107;
+	public static Integer tenantsId = 105;
+	public static Integer vlanId = 125;
 
-	private static Date startDate = new Date(System.currentTimeMillis());
+	public static Date startDate = new Date(System.currentTimeMillis());
 
 	// private static Date endDate = new Date(System.currentTimeMillis() + (60 * 60 * 24 * 7 * 1000));
 
@@ -407,6 +418,97 @@ public class TestData {
 		log.setServiceType(serviceTypeId);
 
 		return log;
+	}
+
+	public static MapEcsEip randomMapEcsEip() {
+
+		MapEcsEip map = new MapEcsEip();
+
+		map.setId(0);
+		map.setIdObj1(ecsId);
+		map.setIdObj2(eipId);
+		map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
+		map.setIdClass2(TableNameUtil.getTableName(Eip.class));
+
+		return map;
+	}
+
+	public static MapEcsElb randomMapEcsElb() {
+
+		MapEcsElb map = new MapEcsElb();
+
+		map.setId(0);
+		map.setIdObj1(ecsId);
+		map.setIdObj2(elbId);
+		map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
+		map.setIdClass2(TableNameUtil.getTableName(Elb.class));
+
+		return map;
+	}
+
+	public static MapEcsEs3 randomMapEcsEs3() {
+
+		MapEcsEs3 map = new MapEcsEs3();
+
+		map.setId(0);
+		map.setIdObj1(ecsId);
+		map.setIdObj2(es3Id);
+		map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
+		map.setIdClass2(TableNameUtil.getTableName(Es3.class));
+
+		return map;
+	}
+
+	public static MapEcsEsg randomMapEcsEsg() {
+
+		MapEcsEsg map = new MapEcsEsg();
+
+		map.setId(0);
+		map.setIdObj1(ecsId);
+		map.setIdObj2(esgId);
+		map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
+		map.setIdClass2(TableNameUtil.getTableName(Esg.class));
+
+		return map;
+	}
+
+	public static MapEipDns randomMapEipDns() {
+
+		MapEipDns map = new MapEipDns();
+
+		map.setId(0);
+		map.setIdObj1(eipId);
+		map.setIdObj2(dnsId);
+		map.setIdClass1(TableNameUtil.getTableName(Eip.class));
+		map.setIdClass2(TableNameUtil.getTableName(Dns.class));
+
+		return map;
+	}
+
+	public static MapEipElb randomMapEipElb() {
+
+		MapEipElb map = new MapEipElb();
+
+		map.setId(0);
+		map.setIdObj1(eipId);
+		map.setIdObj2(elbId);
+		map.setIdClass1(TableNameUtil.getTableName(Eip.class));
+		map.setIdClass2(TableNameUtil.getTableName(Elb.class));
+
+		return map;
+	}
+
+	public static MapTagService randomMapTagService() {
+
+		MapTagService map = new MapTagService();
+
+		map.setId(0);
+		map.setIdObj1(tagId);
+		map.setIdObj2(ecsId);
+		map.setIdClass1(TableNameUtil.getTableName(Tag.class));
+		map.setIdClass2(TableNameUtil.getTableName(Ecs.class));
+
+		return map;
 	}
 
 	public static Memory randomMemory() {
