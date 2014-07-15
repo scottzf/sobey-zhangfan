@@ -27,6 +27,13 @@ import com.sobey.cmdbuild.webservice.response.dto.LoadBalancerDTO;
 import com.sobey.cmdbuild.webservice.response.dto.LoadBalancerPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.LogDTO;
 import com.sobey.cmdbuild.webservice.response.dto.LookUpDTO;
+import com.sobey.cmdbuild.webservice.response.dto.MapEcsEipDTO;
+import com.sobey.cmdbuild.webservice.response.dto.MapEcsElbDTO;
+import com.sobey.cmdbuild.webservice.response.dto.MapEcsEs3DTO;
+import com.sobey.cmdbuild.webservice.response.dto.MapEcsEsgDTO;
+import com.sobey.cmdbuild.webservice.response.dto.MapEipDnsDTO;
+import com.sobey.cmdbuild.webservice.response.dto.MapEipElbDTO;
+import com.sobey.cmdbuild.webservice.response.dto.MapTagServiceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MemoryDTO;
 import com.sobey.cmdbuild.webservice.response.dto.NicDTO;
 import com.sobey.cmdbuild.webservice.response.dto.NicPortDTO;
@@ -435,59 +442,123 @@ public interface CmdbuildSoapService {
 	// ========= MapEcsEsg ==========//
 	// ==============================//
 
+	DTOResult<MapEcsEsgDTO> findMapEcsEsg(@WebParam(name = "id") Integer id);
+
+	DTOResult<MapEcsEsgDTO> findMapEcsEsgByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
 	IdResult createMapEcsEsg(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "esgId") Integer esgId);
 
 	IdResult deleteMapEcsEsg(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "esgId") Integer esgId);
+
+	DTOListResult<MapEcsEsgDTO> getMapEcsEsgList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<MapEcsEsgDTO> getMapEcsEsgPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
 	// ========= MapEcsEs3 ==========//
 	// ==============================//
 
+	DTOResult<MapEcsEs3DTO> findMapEcsEs3(@WebParam(name = "id") Integer id);
+
+	DTOResult<MapEcsEs3DTO> findMapEcsEs3ByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
 	IdResult createMapEcsEs3(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "es3Id") Integer es3Id);
 
 	IdResult deleteMapEcsEs3(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "es3Id") Integer es3Id);
+
+	DTOListResult<MapEcsEs3DTO> getMapEcsEs3List(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<MapEcsEs3DTO> getMapEcsEs3Pagination(@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
 	// ========= MapEcsEip ==========//
 	// ==============================//
 
+	DTOResult<MapEcsEipDTO> findMapEcsEip(@WebParam(name = "id") Integer id);
+
+	DTOResult<MapEcsEipDTO> findMapEcsEipByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
 	IdResult createMapEcsEip(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "eipId") Integer eipId);
 
 	IdResult deleteMapEcsEip(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "eipId") Integer eipId);
+
+	DTOListResult<MapEcsEipDTO> getMapEcsEipList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<MapEcsEipDTO> getMapEcsEipPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
 	// ========= MapEcsElb ==========//
 	// ==============================//
 
+	DTOResult<MapEcsElbDTO> findMapEcsElb(@WebParam(name = "id") Integer id);
+
+	DTOResult<MapEcsElbDTO> findMapEcsElbByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
 	IdResult createMapEcsElb(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "elbId") Integer elbId);
 
 	IdResult deleteMapEcsElb(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "elbId") Integer elbId);
+
+	DTOListResult<MapEcsElbDTO> getMapEcsElbList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<MapEcsElbDTO> getMapEcsElbPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
 	// ========= MapEipElb ==========//
 	// ==============================//
 
+	DTOResult<MapEipElbDTO> findMapEipElb(@WebParam(name = "id") Integer id);
+
+	DTOResult<MapEipElbDTO> findMapEipElbByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
 	IdResult createMapEipElb(@WebParam(name = "eipId") Integer eipId, @WebParam(name = "elbId") Integer elbId);
 
 	IdResult deleteMapEipElb(@WebParam(name = "eipId") Integer eipId, @WebParam(name = "elbId") Integer elbId);
+
+	DTOListResult<MapEipElbDTO> getMapEipElbList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<MapEipElbDTO> getMapEipElbPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
 	// ========= MapEipDns ==========//
 	// ==============================//
 
+	DTOResult<MapEipDnsDTO> findMapEipDns(@WebParam(name = "id") Integer id);
+
+	DTOResult<MapEipDnsDTO> findMapEipDnsByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
 	IdResult createMapEipDns(@WebParam(name = "eipId") Integer eipId, @WebParam(name = "dnsId") Integer dnsId);
 
 	IdResult deleteMapEipDns(@WebParam(name = "eipId") Integer eipId, @WebParam(name = "dnsId") Integer dnsId);
 
+	DTOListResult<MapEipDnsDTO> getMapEipDnsList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<MapEipDnsDTO> getMapEipDnsPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
 	// ==============================//
 	// ======= MapTagService ========//
 	// ==============================//
+
+	DTOResult<MapTagServiceDTO> findMapTagService(@WebParam(name = "id") Integer id);
+
+	DTOResult<MapTagServiceDTO> findMapTagServiceByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createMapTagService(@WebParam(name = "tagId") Integer tagId,
 			@WebParam(name = "serviceId") Integer serviceId, Class<?> serviceClassName);
 
 	IdResult deleteMapTagService(@WebParam(name = "tagId") Integer tagId,
 			@WebParam(name = "serviceId") Integer serviceId);
+
+	DTOListResult<MapTagServiceDTO> getMapTagServiceList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<MapTagServiceDTO> getMapTagServicePagination(
+			@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	/*************************************************
 	 *************** Infrastructure ******************

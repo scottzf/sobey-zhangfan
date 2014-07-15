@@ -79,6 +79,13 @@ import com.sobey.cmdbuild.webservice.response.dto.LoadBalancerDTO;
 import com.sobey.cmdbuild.webservice.response.dto.LoadBalancerPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.LogDTO;
 import com.sobey.cmdbuild.webservice.response.dto.LookUpDTO;
+import com.sobey.cmdbuild.webservice.response.dto.MapEcsEipDTO;
+import com.sobey.cmdbuild.webservice.response.dto.MapEcsElbDTO;
+import com.sobey.cmdbuild.webservice.response.dto.MapEcsEs3DTO;
+import com.sobey.cmdbuild.webservice.response.dto.MapEcsEsgDTO;
+import com.sobey.cmdbuild.webservice.response.dto.MapEipDnsDTO;
+import com.sobey.cmdbuild.webservice.response.dto.MapEipElbDTO;
+import com.sobey.cmdbuild.webservice.response.dto.MapTagServiceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MemoryDTO;
 import com.sobey.cmdbuild.webservice.response.dto.NicDTO;
 import com.sobey.cmdbuild.webservice.response.dto.NicPortDTO;
@@ -3811,6 +3818,59 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
+	public DTOResult<MapEcsEsgDTO> findMapEcsEsg(Integer id) {
+
+		DTOResult<MapEcsEsgDTO> result = new DTOResult<MapEcsEsgDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			MapEcsEsg map = comm.mapEcsEsgService.findMapEcsEsg(id);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			MapEcsEsgDTO dto = BeanMapper.map(map, MapEcsEsgDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public DTOResult<MapEcsEsgDTO> findMapEcsEsgByParams(SearchParams searchParams) {
+
+		DTOResult<MapEcsEsgDTO> result = new DTOResult<MapEcsEsgDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			MapEcsEsg map = comm.mapEcsEsgService.findMapEcsEsg(searchParams.getParamsMap());
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			MapEcsEsgDTO dto = BeanMapper.map(map, MapEcsEsgDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
 	public IdResult createMapEcsEsg(Integer ecsId, Integer esgId) {
 
 		IdResult result = new IdResult();
@@ -3858,6 +3918,95 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.mapEcsEsgService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOListResult<MapEcsEsgDTO> getMapEcsEsgList(SearchParams searchParams) {
+
+		DTOListResult<MapEcsEsgDTO> result = new DTOListResult<MapEcsEsgDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.mapEcsEsgService.getMapEcsEsgList(searchParams.getParamsMap()),
+					MapEcsEsgDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<MapEcsEsgDTO> getMapEcsEsgPagination(SearchParams searchParams, Integer pageNumber,
+			Integer pageSize) {
+
+		PaginationResult<MapEcsEsgDTO> result = new PaginationResult<MapEcsEsgDTO>();
+
+		try {
+
+			return comm.mapEcsEsgService.getMapEcsEsgDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<MapEcsEs3DTO> findMapEcsEs3(Integer id) {
+
+		DTOResult<MapEcsEs3DTO> result = new DTOResult<MapEcsEs3DTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			MapEcsEs3 map = comm.mapEcsEs3Service.findMapEcsEs3(id);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			MapEcsEs3DTO dto = BeanMapper.map(map, MapEcsEs3DTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public DTOResult<MapEcsEs3DTO> findMapEcsEs3ByParams(SearchParams searchParams) {
+
+		DTOResult<MapEcsEs3DTO> result = new DTOResult<MapEcsEs3DTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			MapEcsEs3 map = comm.mapEcsEs3Service.findMapEcsEs3(searchParams.getParamsMap());
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			MapEcsEs3DTO dto = BeanMapper.map(map, MapEcsEs3DTO.class);
+
+			result.setDto(dto);
 
 			return result;
 
@@ -3927,6 +4076,94 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
+	public DTOListResult<MapEcsEs3DTO> getMapEcsEs3List(SearchParams searchParams) {
+
+		DTOListResult<MapEcsEs3DTO> result = new DTOListResult<MapEcsEs3DTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.mapEcsEs3Service.getMapEcsEs3List(searchParams.getParamsMap()),
+					MapEcsEs3DTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<MapEcsEs3DTO> getMapEcsEs3Pagination(SearchParams searchParams, Integer pageNumber,
+			Integer pageSize) {
+
+		PaginationResult<MapEcsEs3DTO> result = new PaginationResult<MapEcsEs3DTO>();
+
+		try {
+
+			return comm.mapEcsEs3Service.getMapEcsEs3DTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<MapEcsEipDTO> findMapEcsEip(Integer id) {
+
+		DTOResult<MapEcsEipDTO> result = new DTOResult<MapEcsEipDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			MapEcsEip map = comm.mapEcsEipService.findMapEcsEip(id);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			MapEcsEipDTO dto = BeanMapper.map(map, MapEcsEipDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<MapEcsEipDTO> findMapEcsEipByParams(SearchParams searchParams) {
+
+		DTOResult<MapEcsEipDTO> result = new DTOResult<MapEcsEipDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			MapEcsEip map = comm.mapEcsEipService.findMapEcsEip(searchParams.getParamsMap());
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			MapEcsEipDTO dto = BeanMapper.map(map, MapEcsEipDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
 	public IdResult createMapEcsEip(Integer ecsId, Integer eipId) {
 
 		IdResult result = new IdResult();
@@ -3974,6 +4211,94 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.mapEcsEipService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOListResult<MapEcsEipDTO> getMapEcsEipList(SearchParams searchParams) {
+
+		DTOListResult<MapEcsEipDTO> result = new DTOListResult<MapEcsEipDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.mapEcsEipService.getMapEcsEipList(searchParams.getParamsMap()),
+					MapEcsEipDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<MapEcsEipDTO> getMapEcsEipPagination(SearchParams searchParams, Integer pageNumber,
+			Integer pageSize) {
+
+		PaginationResult<MapEcsEipDTO> result = new PaginationResult<MapEcsEipDTO>();
+
+		try {
+
+			return comm.mapEcsEipService.getMapEcsEipDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<MapEcsElbDTO> findMapEcsElb(Integer id) {
+
+		DTOResult<MapEcsElbDTO> result = new DTOResult<MapEcsElbDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			MapEcsElb map = comm.mapEcsElbService.findMapEcsElb(id);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			MapEcsElbDTO dto = BeanMapper.map(map, MapEcsElbDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<MapEcsElbDTO> findMapEcsElbByParams(SearchParams searchParams) {
+
+		DTOResult<MapEcsElbDTO> result = new DTOResult<MapEcsElbDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			MapEcsElb map = comm.mapEcsElbService.findMapEcsElb(searchParams.getParamsMap());
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			MapEcsElbDTO dto = BeanMapper.map(map, MapEcsElbDTO.class);
+
+			result.setDto(dto);
 
 			return result;
 
@@ -4043,6 +4368,94 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
+	public DTOListResult<MapEcsElbDTO> getMapEcsElbList(SearchParams searchParams) {
+
+		DTOListResult<MapEcsElbDTO> result = new DTOListResult<MapEcsElbDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.mapEcsElbService.getMapEcsElbList(searchParams.getParamsMap()),
+					MapEcsElbDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<MapEcsElbDTO> getMapEcsElbPagination(SearchParams searchParams, Integer pageNumber,
+			Integer pageSize) {
+
+		PaginationResult<MapEcsElbDTO> result = new PaginationResult<MapEcsElbDTO>();
+
+		try {
+
+			return comm.mapEcsElbService.getMapEcsElbDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<MapEipElbDTO> findMapEipElb(Integer id) {
+
+		DTOResult<MapEipElbDTO> result = new DTOResult<MapEipElbDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			MapEipElb map = comm.mapEipElbService.findMapEipElbDao(id);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			MapEipElbDTO dto = BeanMapper.map(map, MapEipElbDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<MapEipElbDTO> findMapEipElbByParams(SearchParams searchParams) {
+
+		DTOResult<MapEipElbDTO> result = new DTOResult<MapEipElbDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			MapEipElb map = comm.mapEipElbService.findMapEipElb(searchParams.getParamsMap());
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			MapEipElbDTO dto = BeanMapper.map(map, MapEipElbDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
 	public IdResult createMapEipElb(Integer eipId, Integer elbId) {
 
 		IdResult result = new IdResult();
@@ -4090,6 +4503,94 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
 
 			comm.mapEipElbService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOListResult<MapEipElbDTO> getMapEipElbList(SearchParams searchParams) {
+
+		DTOListResult<MapEipElbDTO> result = new DTOListResult<MapEipElbDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.mapEipElbService.getMapEipElbList(searchParams.getParamsMap()),
+					MapEipElbDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<MapEipElbDTO> getMapEipElbPagination(SearchParams searchParams, Integer pageNumber,
+			Integer pageSize) {
+
+		PaginationResult<MapEipElbDTO> result = new PaginationResult<MapEipElbDTO>();
+
+		try {
+
+			return comm.mapEipElbService.getMapEipElbDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<MapEipDnsDTO> findMapEipDns(Integer id) {
+
+		DTOResult<MapEipDnsDTO> result = new DTOResult<MapEipDnsDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			MapEipDns map = comm.mapEipDnsService.findMapEipDns(id);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			MapEipDnsDTO dto = BeanMapper.map(map, MapEipDnsDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<MapEipDnsDTO> findMapEipDnsByParams(SearchParams searchParams) {
+
+		DTOResult<MapEipDnsDTO> result = new DTOResult<MapEipDnsDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			MapEipDns map = comm.mapEipDnsService.findMapEipDns(searchParams.getParamsMap());
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			MapEipDnsDTO dto = BeanMapper.map(map, MapEipDnsDTO.class);
+
+			result.setDto(dto);
 
 			return result;
 
@@ -4159,13 +4660,101 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
+	public DTOListResult<MapEipDnsDTO> getMapEipDnsList(SearchParams searchParams) {
+
+		DTOListResult<MapEipDnsDTO> result = new DTOListResult<MapEipDnsDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.mapEipDnsService.getMapEipDnsList(searchParams.getParamsMap()),
+					MapEipDnsDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<MapEipDnsDTO> getMapEipDnsPagination(SearchParams searchParams, Integer pageNumber,
+			Integer pageSize) {
+
+		PaginationResult<MapEipDnsDTO> result = new PaginationResult<MapEipDnsDTO>();
+
+		try {
+
+			return comm.mapEipDnsService.getMapEipDnsDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<MapTagServiceDTO> findMapTagService(Integer id) {
+
+		DTOResult<MapTagServiceDTO> result = new DTOResult<MapTagServiceDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			MapTagService map = comm.mapTagServiceService.findMapTagService(id);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			MapTagServiceDTO dto = BeanMapper.map(map, MapTagServiceDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<MapTagServiceDTO> findMapTagServiceByParams(SearchParams searchParams) {
+
+		DTOResult<MapTagServiceDTO> result = new DTOResult<MapTagServiceDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			MapTagService map = comm.mapTagServiceService.findMapTagService(searchParams.getParamsMap());
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			MapTagServiceDTO dto = BeanMapper.map(map, MapTagServiceDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
 	public IdResult createMapTagService(Integer tagId, Integer serviceId, Class<?> serviceClassName) {
 
 		IdResult result = new IdResult();
 
 		try {
 
-			MapEipDns map = new MapEipDns();
+			MapTagService map = new MapTagService();
 
 			map.setId(0);
 			map.setIdObj1(tagId);
@@ -4174,7 +4763,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			map.setIdClass2(serviceClassName.getSimpleName());
 			map.setUser(DEFAULT_USER);
 
-			comm.mapEipDnsService.saveOrUpdate(map);
+			comm.mapTagServiceService.saveOrUpdate(map);
 
 			return result;
 
@@ -4208,6 +4797,43 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			comm.mapTagServiceService.saveOrUpdate(map);
 
 			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOListResult<MapTagServiceDTO> getMapTagServiceList(SearchParams searchParams) {
+
+		DTOListResult<MapTagServiceDTO> result = new DTOListResult<MapTagServiceDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(
+					comm.mapTagServiceService.getMapTagServiceList(searchParams.getParamsMap()), MapTagServiceDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<MapTagServiceDTO> getMapTagServicePagination(SearchParams searchParams, Integer pageNumber,
+			Integer pageSize) {
+
+		PaginationResult<MapTagServiceDTO> result = new PaginationResult<MapTagServiceDTO>();
+
+		try {
+
+			return comm.mapTagServiceService.getMapTagServiceDTOPagination(searchParams.getParamsMap(), pageNumber,
+					pageSize);
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
