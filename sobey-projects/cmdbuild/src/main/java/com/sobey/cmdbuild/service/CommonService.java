@@ -22,6 +22,7 @@ import com.sobey.cmdbuild.service.iaas.MapEipDnsService;
 import com.sobey.cmdbuild.service.iaas.MapEipElbService;
 import com.sobey.cmdbuild.service.iaas.MapTagServiceService;
 import com.sobey.cmdbuild.service.iaas.VpnService;
+import com.sobey.cmdbuild.service.infrastructure.CustomService;
 import com.sobey.cmdbuild.service.infrastructure.FirewallPortService;
 import com.sobey.cmdbuild.service.infrastructure.FirewallService;
 import com.sobey.cmdbuild.service.infrastructure.HardDiskService;
@@ -55,6 +56,9 @@ import com.sobey.cmdbuild.service.specification.EcsSpecService;
  */
 @Service
 public class CommonService {
+
+	@Autowired
+	public CustomService customService;
 
 	@Autowired
 	public DeviceSpecService deviceSpecService;

@@ -122,6 +122,16 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	private static final String DEFAULT_USER = "admin";
 
 	@Override
+	public Integer getMaxAclNumber() {
+		return comm.customService.selectMaxAclNumber();
+	}
+
+	@Override
+	public Integer getMaxPolicyId() {
+		return comm.customService.selectMaxPolicyId();
+	}
+
+	@Override
 	public DTOResult<LookUpDTO> findLookUp(@WebParam(name = "id") Integer id) {
 
 		DTOResult<LookUpDTO> result = new DTOResult<LookUpDTO>();

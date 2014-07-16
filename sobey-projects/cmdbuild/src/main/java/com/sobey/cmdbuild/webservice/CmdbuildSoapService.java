@@ -64,6 +64,13 @@ import com.sobey.cmdbuild.webservice.response.result.SearchParams;
 @WebService(name = "CmdbuildSoapService", targetNamespace = WsConstants.NS)
 public interface CmdbuildSoapService {
 
+	/*************************************************
+	 ****************** Custom ***********************
+	 *************************************************/
+	Integer getMaxAclNumber();
+
+	Integer getMaxPolicyId();
+
 	// ==============================//
 	// =========== LookUp ===========//
 	// == 系统默认表,只读取,不写入 ==//
