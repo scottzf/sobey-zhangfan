@@ -1,7 +1,6 @@
 package com.sobey.cmdbuild.webservice.response.dto.basic;
 
 import com.sobey.cmdbuild.webservice.response.dto.IdcDTO;
-import com.sobey.cmdbuild.webservice.response.dto.TagDTO;
 import com.sobey.cmdbuild.webservice.response.dto.TenantsDTO;
 
 public abstract class ServiceBasicDTO extends BasicDTO {
@@ -10,8 +9,6 @@ public abstract class ServiceBasicDTO extends BasicDTO {
 	protected String agentTypeText;
 	protected Integer idc;
 	protected IdcDTO idcDTO;
-	protected Integer tag;
-	protected TagDTO tagDTO;
 	protected Integer tenants;
 	protected TenantsDTO tenantsDTO;
 
@@ -45,22 +42,6 @@ public abstract class ServiceBasicDTO extends BasicDTO {
 
 	public void setIdcDTO(IdcDTO idcDTO) {
 		this.idcDTO = idcDTO;
-	}
-
-	public Integer getTag() {
-		return tag;
-	}
-
-	public void setTag(Integer tag) {
-		this.tag = tag;
-	}
-
-	public TagDTO getTagDTO() {
-		return tagDTO;
-	}
-
-	public void setTagDTO(TagDTO tagDTO) {
-		this.tagDTO = tagDTO;
 	}
 
 	public Integer getTenants() {
