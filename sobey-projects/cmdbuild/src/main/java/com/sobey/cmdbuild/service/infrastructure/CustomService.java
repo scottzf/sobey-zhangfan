@@ -23,7 +23,9 @@ public class CustomService {
 	 * @return
 	 */
 	public int selectMaxAclNumber() {
-		return (int) MathsUtil.add(customDao.selectMaxAclNumber(), 1);
+
+		Integer aclNumber = customDao.selectMaxAclNumber();
+		return (int) MathsUtil.add(aclNumber == null ? 2000 : aclNumber, 1);
 	}
 
 	/**
@@ -32,7 +34,8 @@ public class CustomService {
 	 * @return
 	 */
 	public int selectMaxPolicyId() {
-		return (int) MathsUtil.add(customDao.selectMaxPolicyId(), 1);
+		Integer policyId = customDao.selectMaxPolicyId();
+		return (int) MathsUtil.add(policyId == null ? 2000 : policyId, 1);
 	}
 
 }
