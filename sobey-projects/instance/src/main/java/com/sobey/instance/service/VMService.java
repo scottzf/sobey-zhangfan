@@ -770,9 +770,9 @@ public class VMService {
 			return new ServiceInstance(new URL(INSTANCE_IP_CD), INSTANCE_USERNAME_CD, INSTANCE_PASSWORD_CD, true);
 		} else if (DataCenterEnum.XA.toString().equalsIgnoreCase(datacenter)) {
 			return new ServiceInstance(new URL(INSTANCE_IP_XA), INSTANCE_USERNAME_XA, INSTANCE_PASSWORD_XA, true);
+		} else {
+			return new ServiceInstance(new URL(INSTANCE_IP_XA), INSTANCE_USERNAME_XA, INSTANCE_PASSWORD_XA, true);
 		}
-
-		return null;
 	}
 
 	/**
