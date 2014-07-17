@@ -19,6 +19,8 @@ public class VlanDTO extends BasicDTO {
 	private String segment;
 	private Integer tenants;
 	private TenantsDTO tenantsDTO;
+	private Integer vlanStatus;
+	private String vlanStatusText;
 
 	public String getGateway() {
 		return gateway;
@@ -74,6 +76,22 @@ public class VlanDTO extends BasicDTO {
 
 	public void setTenantsDTO(TenantsDTO tenantsDTO) {
 		this.tenantsDTO = tenantsDTO;
+	}
+
+	public Integer getVlanStatus() {
+		return vlanStatus;
+	}
+
+	public void setVlanStatus(Integer vlanStatus) {
+		this.vlanStatus = vlanStatus;
+	}
+
+	public String getVlanStatusText() {
+		return vlanStatusText;
+	}
+
+	public void setVlanStatusText(String vlanStatusText) {
+		this.vlanStatusText = vlanStatusText;
 	}
 
 	/**

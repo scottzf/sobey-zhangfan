@@ -139,6 +139,40 @@ public class LookUpConstants {
 		}
 	}
 
+	/**
+	 * 描述LookUp中VlanStatus的Description和Id.
+	 * 
+	 * <pre>
+	 * 已使用	 1443 
+	 * 未使用 	 1442
+	 * </pre>
+	 * 
+	 * @author Administrator
+	 * 
+	 */
+	public enum VlanStatus {
+
+		已使用("已使用", 1443),
+
+		未使用("未使用", 1442);
+
+		private String name;
+		private Integer value;
+
+		private VlanStatus(String name, Integer value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public Integer getValue() {
+			return value;
+		}
+	}
+
 	public enum TagType {
 
 		上级标签("上级标签", 45),

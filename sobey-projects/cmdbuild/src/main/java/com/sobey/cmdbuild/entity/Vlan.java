@@ -19,6 +19,7 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 public class Vlan extends BasicEntity {
 
 	private Integer idc;
+	private Integer vlanStatus;
 	private Integer tenants;
 	private String segment;
 	private String gateway;
@@ -36,6 +37,15 @@ public class Vlan extends BasicEntity {
 
 	public void setIdc(Integer idc) {
 		this.idc = idc;
+	}
+
+	@Column(name = "vlan_status")
+	public Integer getVlanStatus() {
+		return vlanStatus;
+	}
+
+	public void setVlanStatus(Integer vlanStatus) {
+		this.vlanStatus = vlanStatus;
 	}
 
 	@Column(name = "tenants")
