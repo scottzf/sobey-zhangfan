@@ -1542,12 +1542,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(logDTO, ERROR.INPUT_NULL);
 
-			// 验证description是否唯一.如果不为null,则弹出错误.
-			Map<String, Object> paramsMap = Maps.newHashMap();
-			paramsMap.put("EQ_description", logDTO.getDescription());
-
-			Validate.isTrue(comm.logService.findLog(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
-
 			// 将DTO对象转换至Entity对象
 			Log log = BeanMapper.map(logDTO, Log.class);
 			log.setCode("Log-" + Identities.randomBase62(8));
