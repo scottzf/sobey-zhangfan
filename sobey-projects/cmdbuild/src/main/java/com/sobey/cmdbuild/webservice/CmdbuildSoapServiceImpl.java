@@ -2842,6 +2842,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Map<String, Object> paramsMap = Maps.newHashMap();
 
 			paramsMap.put("EQ_description", esgDTO.getDescription());
+			paramsMap.put("EQ_tenants", esgDTO.getTenants());
 
 			Validate.isTrue(comm.esgService.findEsg(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
@@ -2877,6 +2878,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Map<String, Object> paramsMap = Maps.newHashMap();
 
 			paramsMap.put("EQ_description", esgDTO.getDescription());
+			paramsMap.put("EQ_tenants", esgDTO.getTenants());
 
 			// 验证description是否唯一.如果不为null,则弹出错误.
 			Validate.isTrue(
@@ -3251,12 +3253,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(eipPolicyDTO, ERROR.INPUT_NULL);
 
-			// 验证description是否唯一.如果不为null,则弹出错误.
-			Map<String, Object> paramsMap = Maps.newHashMap();
-			paramsMap.put("EQ_description", eipPolicyDTO.getDescription());
-
-			Validate.isTrue(comm.eipPolicyService.findEipPolicy(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
-
 			// 将DTO对象转换至Entity对象
 			EipPolicy eipPolicy = BeanMapper.map(eipPolicyDTO, EipPolicy.class);
 			eipPolicy.setCode("EIPPolicy-" + Identities.randomBase62(8));
@@ -3291,13 +3287,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			EipPolicy eipPolicy = comm.eipPolicyService.findEipPolicy(id);
 
 			Validate.notNull(eipPolicy, ERROR.OBJECT_NULL);
-
-			// 验证description是否唯一.如果不为null,则弹出错误.
-			Map<String, Object> paramsMap = Maps.newHashMap();
-			paramsMap.put("EQ_description", eipPolicyDTO.getDescription());
-
-			Validate.isTrue(comm.eipPolicyService.findEipPolicy(paramsMap) == null
-					|| eipPolicy.getDescription().equals(eipPolicyDTO.getDescription()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(eipPolicyDTO, EipPolicy.class), eipPolicy);
@@ -3451,12 +3440,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(elbPolicyDTO, ERROR.INPUT_NULL);
 
-			// 验证description是否唯一.如果不为null,则弹出错误.
-			Map<String, Object> paramsMap = Maps.newHashMap();
-			paramsMap.put("EQ_description", elbPolicyDTO.getDescription());
-
-			Validate.isTrue(comm.elbPolicyService.findElbPolicy(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
-
 			// 将DTO对象转换至Entity对象
 			ElbPolicy elbPolicy = BeanMapper.map(elbPolicyDTO, ElbPolicy.class);
 			elbPolicy.setCode("ELBPolicy-" + Identities.randomBase62(8));
@@ -3491,13 +3474,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			ElbPolicy elbPolicy = comm.elbPolicyService.findElbPolicy(id);
 
 			Validate.notNull(elbPolicy, ERROR.OBJECT_NULL);
-
-			// 验证description是否唯一.如果不为null,则弹出错误.
-			Map<String, Object> paramsMap = Maps.newHashMap();
-			paramsMap.put("EQ_description", elbPolicyDTO.getDescription());
-
-			Validate.isTrue(comm.elbPolicyService.findElbPolicy(paramsMap) == null
-					|| elbPolicy.getDescription().equals(elbPolicyDTO.getDescription()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(elbPolicyDTO, ElbPolicy.class), elbPolicy);
@@ -3651,12 +3627,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(dnsPolicyDTO, ERROR.INPUT_NULL);
 
-			// 验证description是否唯一.如果不为null,则弹出错误.
-			Map<String, Object> paramsMap = Maps.newHashMap();
-			paramsMap.put("EQ_description", dnsPolicyDTO.getDescription());
-
-			Validate.isTrue(comm.dnsPolicyService.findDnsPolicy(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
-
 			// 将DTO对象转换至Entity对象
 			DnsPolicy dnsPolicy = BeanMapper.map(dnsPolicyDTO, DnsPolicy.class);
 			dnsPolicy.setCode("DNSPolicy-" + Identities.randomBase62(8));
@@ -3691,13 +3661,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			DnsPolicy dnsPolicy = comm.dnsPolicyService.findDnsPolicy(id);
 
 			Validate.notNull(dnsPolicy, ERROR.OBJECT_NULL);
-
-			// 验证description是否唯一.如果不为null,则弹出错误.
-			Map<String, Object> paramsMap = Maps.newHashMap();
-			paramsMap.put("EQ_description", dnsPolicyDTO.getDescription());
-
-			Validate.isTrue(comm.dnsPolicyService.findDnsPolicy(paramsMap) == null
-					|| dnsPolicy.getDescription().equals(dnsPolicyDTO.getDescription()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(dnsPolicyDTO, DnsPolicy.class), dnsPolicy);
@@ -3851,12 +3814,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(esgPolicyDTO, ERROR.INPUT_NULL);
 
-			// 验证description是否唯一.如果不为null,则弹出错误.
-			Map<String, Object> paramsMap = Maps.newHashMap();
-			paramsMap.put("EQ_description", esgPolicyDTO.getDescription());
-
-			Validate.isTrue(comm.esgPolicyService.findEsgPolicy(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
-
 			// 将DTO对象转换至Entity对象
 			EsgPolicy esgPolicy = BeanMapper.map(esgPolicyDTO, EsgPolicy.class);
 			esgPolicy.setCode("ESGPolicy-" + Identities.randomBase62(8));
@@ -3891,13 +3848,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			EsgPolicy esgPolicy = comm.esgPolicyService.findEsgPolicy(id);
 
 			Validate.notNull(esgPolicy, ERROR.OBJECT_NULL);
-
-			// 验证description是否唯一.如果不为null,则弹出错误.
-			Map<String, Object> paramsMap = Maps.newHashMap();
-			paramsMap.put("EQ_description", esgPolicyDTO.getDescription());
-
-			Validate.isTrue(comm.esgPolicyService.findEsgPolicy(paramsMap) == null
-					|| esgPolicy.getDescription().equals(esgPolicyDTO.getDescription()), ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
 			BeanMapper.copy(BeanMapper.map(esgPolicyDTO, EsgPolicy.class), esgPolicy);
@@ -7194,6 +7144,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			// 将DTO对象转换至Entity对象
 			Vlan vlan = BeanMapper.map(vlanDTO, Vlan.class);
+			vlan.setVlanStatus(LookUpConstants.VlanStatus.未使用.getValue());
 			vlan.setCode("Vlan-" + Identities.randomBase62(8));
 			vlan.setUser(DEFAULT_USER);
 			vlan.setId(0);
