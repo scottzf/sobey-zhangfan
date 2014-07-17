@@ -1,6 +1,7 @@
 package com.sobey.api.service;
 
 import com.sobey.generate.cmdbuild.TenantsDTO;
+import com.sobey.generate.instance.CloneVMParameter;
 
 public interface ApiService {
 
@@ -10,5 +11,9 @@ public interface ApiService {
 	 * @param tenantsDTO
 	 */
 	public void createTenants(TenantsDTO tenantsDTO);
+	
+	
+	public void createECS(Integer tenantsId,CloneVMParameter cloneVMParameter);
+	
 
 }
