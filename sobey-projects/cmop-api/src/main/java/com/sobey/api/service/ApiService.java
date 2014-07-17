@@ -11,9 +11,15 @@ public interface ApiService {
 	 * @param tenantsDTO
 	 */
 	public void createTenants(TenantsDTO tenantsDTO);
-	
-	
-	public void createECS(Integer tenantsId,CloneVMParameter cloneVMParameter);
-	
+
+	public void createECS(Integer tenantsId, CloneVMParameter cloneVMParameter);
+
+	public void destroyECS(Integer ecsId);
+
+	public void powerOpsECS(Integer ecsId, String powerOperation);
+
+	public void reconfigECS(Integer ecsId, Integer ecsSpecId);
+
+	public String syncVM(String datacenter);
 
 }

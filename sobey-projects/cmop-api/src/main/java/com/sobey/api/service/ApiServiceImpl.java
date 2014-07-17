@@ -9,22 +9,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sobey.api.utils.CMDBuildUtil;
+import com.sobey.core.utils.MathsUtil;
 import com.sobey.generate.cmdbuild.CmdbuildSoapService;
 import com.sobey.generate.cmdbuild.DTOListResult;
+import com.sobey.generate.cmdbuild.DTOResult;
 import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EcsSpecDTO;
 import com.sobey.generate.cmdbuild.EsgDTO;
 import com.sobey.generate.cmdbuild.EsgPolicyDTO;
 import com.sobey.generate.cmdbuild.IpaddressDTO;
 import com.sobey.generate.cmdbuild.LogDTO;
+import com.sobey.generate.cmdbuild.LookUpDTO;
 import com.sobey.generate.cmdbuild.SearchParams;
+import com.sobey.generate.cmdbuild.ServerDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.cmdbuild.VlanDTO;
 import com.sobey.generate.cmdbuild.VpnDTO;
 import com.sobey.generate.firewall.FirewallSoapService;
 import com.sobey.generate.firewall.VPNUserParameter;
 import com.sobey.generate.instance.CloneVMParameter;
+import com.sobey.generate.instance.DestroyVMParameter;
 import com.sobey.generate.instance.InstanceSoapService;
+import com.sobey.generate.instance.PowerVMParameter;
+import com.sobey.generate.instance.ReconfigVMParameter;
+import com.sobey.generate.instance.RelationVMParameter.RelationMaps.Entry;
 import com.sobey.generate.switches.ESGParameter;
 import com.sobey.generate.switches.RuleParameter;
 import com.sobey.generate.switches.SwitchesSoapService;
@@ -52,6 +60,7 @@ public class ApiServiceImpl implements ApiService {
 	public static Integer VLANSTATUSID_USED = 1443;
 	public static Integer serverId = 344;
 	public static Integer EcsStatusId = 34;
+	public static Integer resultId = 63;
 	/**
 	 * 未使用
 	 */
@@ -288,7 +297,6 @@ public class ApiServiceImpl implements ApiService {
 	@Override
 	public void createECS(Integer tenantsId, CloneVMParameter cloneVMParameter) {
 
-		// TODO Auto-generated method stub
 		/**
 		 * step.1 获得租户、vlan、未使用的IP信息
 		 * 
@@ -304,7 +312,6 @@ public class ApiServiceImpl implements ApiService {
 
 		// 获得租户所属vlan
 		VlanDTO vlanDTO = getVlanDTO(tenantsDTO);
-		System.out.println(vlanDTO.getDescription());
 
 		// 获得未使用的IP
 		IpaddressDTO ipaddressDTO = getUnusedIpaddress(vlanDTO);
@@ -318,12 +325,26 @@ public class ApiServiceImpl implements ApiService {
 		// CMDBuild中插入一条ECS信息
 		createECS(cloneVMParameter, vlanDTO, ipaddressDTO, tenantsDTO);
 
+		// TODO 应该提供一个枚举常量
+		createLog(tenantsDTO.getId(), 26, 48, resultId);
+	}
+
+	/**
+	 * 创建操作日志
+	 */
+	private void createLog(Integer tenantsId, Integer serviceTypeId, Integer operateTypeId, Integer resultId) {
+
+		LookUpDTO serviceType = (LookUpDTO) cmdbuildSoapService.findLookUp(serviceTypeId).getDto();
+		LookUpDTO operateType = (LookUpDTO) cmdbuildSoapService.findLookUp(operateTypeId).getDto();
+
+		String description = operateType.getDescription() + serviceType.getDescription();
+
 		LogDTO logDTO = new LogDTO();
-		logDTO.setResult(63);
-		logDTO.setTenants(tenantsDTO.getId());
-		logDTO.setServiceType(26);
-		logDTO.setOperateType(48);
-		logDTO.setDescription("创建ECS:" + cloneVMParameter.getVMName());
+		logDTO.setResult(resultId);
+		logDTO.setTenants(tenantsId);
+		logDTO.setServiceType(serviceTypeId);
+		logDTO.setOperateType(operateTypeId);
+		logDTO.setDescription(description);
 
 		cmdbuildSoapService.createLog(logDTO);
 	}
@@ -391,6 +412,163 @@ public class ApiServiceImpl implements ApiService {
 		map.put("EQ_tenants", tenantsDTO.getId().toString());
 		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
 		return (VlanDTO) cmdbuildSoapService.findVlanByParams(searchParams).getDto();
+	}
+
+	@Override
+	public void destroyECS(Integer ecsId) {
+
+		/**
+		 * step.1 获得ECS信息
+		 * 
+		 * step.2 关闭VM电源
+		 * 
+		 * step.3 销毁虚拟机，同时初始化IP状态
+		 * 
+		 * step.4 CMDBuild中删除ECS信息
+		 * 
+		 * step.5 写入日志
+		 */
+
+		// 获得ECS信息
+		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
+
+		// 关闭VM电源
+		powerOpsECS(ecsId, "poweroff");
+
+		// 销毁虚拟机
+		DestroyVMParameter destroyVMParameter = new DestroyVMParameter();
+		destroyVMParameter.setDatacenter("xa");
+		destroyVMParameter.setVMName(ecsDTO.getDescription());
+		instanceSoapService.destroyVMByInstance(destroyVMParameter);
+
+		// 初始化IP
+		cmdbuildSoapService.initIpaddress(ecsDTO.getIpaddress());
+
+		// CMDBuild中删除ECS信息
+		cmdbuildSoapService.deleteEcs(ecsId);
+
+		// 写入日志
+		createLog(ecsDTO.getTenants(), 26, 76, resultId);
+	}
+
+	@Override
+	public void powerOpsECS(Integer ecsId, String powerOperation) {
+
+		/**
+		 * step.1 获得ECS信息
+		 * 
+		 * step.2 关闭VM电源
+		 */
+
+		// 获得ECS信息
+		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
+
+		ecsDTO.setEcsStatus(71);
+		cmdbuildSoapService.updateEcs(ecsId, ecsDTO);
+
+		PowerVMParameter powerVMParameter = new PowerVMParameter();
+		powerVMParameter.setVMName(ecsDTO.getDescription());
+		powerVMParameter.setPowerOperation(powerOperation);
+		powerVMParameter.setDatacenter("xa");
+		instanceSoapService.powerVMByInstance(powerVMParameter);
+
+		// 写入日志
+		createLog(ecsDTO.getTenants(), 26, 75, resultId);
+
+	}
+
+	@Override
+	public void reconfigECS(Integer ecsId, Integer ecsSpecId) {
+
+		/**
+		 * step.1 获得ECS信息
+		 * 
+		 * step.2 获得ECS Spec信息
+		 * 
+		 * step.3 更新VM内存大小和CPU数量
+		 * 
+		 * step.4 更新CMDBuild ECS规格
+		 */
+
+		// 获得ECS信息
+		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
+
+		// 获得ECS Spec信息
+		EcsSpecDTO ecsSpecDTO = (EcsSpecDTO) cmdbuildSoapService.findEcsSpec(ecsSpecId).getDto();
+
+		// 更新VM内存大小和CPU数量
+		Long memoryMb = (long) MathsUtil.mul(ecsSpecDTO.getMemory(), 1024);// 因为vmware的内存单位是MB,cmdbuild是GB,所以此处做一个单位换算.
+
+		ReconfigVMParameter reconfigVMParameter = new ReconfigVMParameter();
+		reconfigVMParameter.setCPUNumber(ecsSpecDTO.getCpuNumber());
+		reconfigVMParameter.setDatacenter("xa");
+		reconfigVMParameter.setMemoryMB(memoryMb);
+		reconfigVMParameter.setVMName(ecsDTO.getDescription());
+
+		instanceSoapService.reconfigVMByInstance(reconfigVMParameter);
+
+		// 更新CMDBuild ECS规格
+		ecsDTO.setEcsSpec(ecsSpecId);
+		cmdbuildSoapService.updateEcs(ecsId, ecsDTO);
+
+	}
+
+	@Override
+	public String syncVM(String datacenter) {
+
+		StringBuffer sb = new StringBuffer();
+
+		// 从vcenter中获得VM和Host的关联关系
+		HashMap<String, String> vcenterMap = relationVM(datacenter);
+
+		for (java.util.Map.Entry<String, String> entry : vcenterMap.entrySet()) {
+
+			HashMap<String, String> ecsMap = new HashMap<String, String>();
+
+			System.out.println(entry.getKey());
+			ecsMap.put("EQ_description", entry.getKey());
+
+			// 根据VM的名称获得CMDBuild中的对象Ecs
+			DTOResult dtoResult = cmdbuildSoapService.findEcsByParams(CMDBuildUtil.wrapperSearchParams(ecsMap));
+
+			EcsDTO ecsDTO = (EcsDTO) dtoResult.getDto();
+
+			// 根据SHost的名称获得CMDB中的对象Server
+			ServerDTO serverDTO = (ServerDTO) cmdbuildSoapService.findServer(ecsDTO.getServer()).getDto();
+
+			// 比较VM从vcenter获取的关联关系中的Host名称和根据CMDBuild中查询得到的关联的Host名称是否相同
+			// 如果不相同,则更改CMDBuild中关联的Server对象.
+			if (!entry.getValue().equals(serverDTO.getCode())) {
+
+				sb.append("vcenter中对应的宿主机:" + entry.getValue() + "<br>");
+				sb.append("CMDBuild中对应的宿主机:" + serverDTO.getDescription() + "<br>");
+				sb.append("--------------------------------------------------");
+
+				HashMap<String, String> serverMap = new HashMap<String, String>();
+				serverMap.put("EQ_description", entry.getValue());
+
+				ServerDTO serverDTO2 = (ServerDTO) cmdbuildSoapService.findServerByParams(
+						CMDBuildUtil.wrapperSearchParams(serverMap)).getDto();
+
+				ecsDTO.setServer(serverDTO2.getId());
+				cmdbuildSoapService.updateEcs(ecsDTO.getId(), ecsDTO);
+
+			}
+
+		}
+		return sb.toString();
+	}
+
+	private HashMap<String, String> relationVM(String datacenter) {
+
+		HashMap<String, String> map = new HashMap<String, String>();
+
+		// 将RelationVMParameter转换成HashMap
+		for (Entry entry : instanceSoapService.getVMAndHostRelationByInstance(datacenter).getRelationMaps().getEntry()) {
+			map.put(entry.getKey(), entry.getValue());
+		}
+
+		return map;
 	}
 
 }

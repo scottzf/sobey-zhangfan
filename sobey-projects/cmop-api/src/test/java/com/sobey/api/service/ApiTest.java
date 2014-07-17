@@ -54,4 +54,25 @@ public class ApiTest extends TestCase {
 
 		service.createECS(tenantsId, cloneVMParameter);
 	}
+
+	@Test
+	public void destroyECS() {
+		service.destroyECS(1585);
+	}
+
+	@Test
+	public void powerECS() {
+		service.powerOpsECS(1612, "poweron");
+	}
+
+	@Test
+	public void reconfigECS() {
+		service.reconfigECS(1612, 1503);
+	}
+
+	@Test
+	public void syncVM() {
+		System.out.println(service.syncVM("xa"));
+	}
+
 }
