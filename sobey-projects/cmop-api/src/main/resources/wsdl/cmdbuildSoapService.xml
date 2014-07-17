@@ -995,6 +995,14 @@
 
   <xs:element name="getMapTagServicePaginationResponse" type="tns:getMapTagServicePaginationResponse"/>
 
+  <xs:element name="getMaxAclNumber" type="tns:getMaxAclNumber"/>
+
+  <xs:element name="getMaxAclNumberResponse" type="tns:getMaxAclNumberResponse"/>
+
+  <xs:element name="getMaxPolicyId" type="tns:getMaxPolicyId"/>
+
+  <xs:element name="getMaxPolicyIdResponse" type="tns:getMaxPolicyIdResponse"/>
+
   <xs:element name="getMemoryList" type="tns:getMemoryList"/>
 
   <xs:element name="getMemoryListResponse" type="tns:getMemoryListResponse"/>
@@ -1424,6 +1432,8 @@
           <xs:element minOccurs="0" name="segment" type="xs:string"/>
           <xs:element minOccurs="0" name="tenants" type="xs:int"/>
           <xs:element minOccurs="0" name="tenantsDTO" type="tns:TenantsDTO"/>
+          <xs:element minOccurs="0" name="vlanStatus" type="xs:int"/>
+          <xs:element minOccurs="0" name="vlanStatusText" type="xs:string"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -3216,6 +3226,16 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="getMaxPolicyId">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="getMaxPolicyIdResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="getTagList">
     <xs:sequence>
       <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
@@ -4732,6 +4752,16 @@
   <xs:complexType name="findNicPortResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getMaxAclNumber">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="getMaxAclNumberResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:int"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -6272,6 +6302,10 @@
     <wsdl:part element="tns:getMapTagServiceList" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getMaxPolicyIdResponse">
+    <wsdl:part element="tns:getMaxPolicyIdResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="updateEs3Response">
     <wsdl:part element="tns:updateEs3Response" name="parameters">
     </wsdl:part>
@@ -6482,6 +6516,10 @@
   </wsdl:message>
   <wsdl:message name="getNicPortPagination">
     <wsdl:part element="tns:getNicPortPagination" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getMaxPolicyId">
+    <wsdl:part element="tns:getMaxPolicyId" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findEcsSpec">
@@ -6894,6 +6932,10 @@
   </wsdl:message>
   <wsdl:message name="createMapEcsEs3">
     <wsdl:part element="tns:createMapEcsEs3" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getMaxAclNumber">
+    <wsdl:part element="tns:getMaxAclNumber" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findEcsResponse">
@@ -7586,6 +7628,10 @@
   </wsdl:message>
   <wsdl:message name="deleteDns">
     <wsdl:part element="tns:deleteDns" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getMaxAclNumberResponse">
+    <wsdl:part element="tns:getMaxAclNumberResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findEipResponse">
@@ -8601,6 +8647,12 @@
       <wsdl:output message="tns:updateStorageResponse" name="updateStorageResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getMaxPolicyId">
+      <wsdl:input message="tns:getMaxPolicyId" name="getMaxPolicyId">
+    </wsdl:input>
+      <wsdl:output message="tns:getMaxPolicyIdResponse" name="getMaxPolicyIdResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getTagList">
       <wsdl:input message="tns:getTagList" name="getTagList">
     </wsdl:input>
@@ -9301,6 +9353,12 @@
       <wsdl:input message="tns:findNicPort" name="findNicPort">
     </wsdl:input>
       <wsdl:output message="tns:findNicPortResponse" name="findNicPortResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMaxAclNumber">
+      <wsdl:input message="tns:getMaxAclNumber" name="getMaxAclNumber">
+    </wsdl:input>
+      <wsdl:output message="tns:getMaxAclNumberResponse" name="getMaxAclNumberResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="findLoadBalancerByParams">
@@ -10665,6 +10723,15 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getMaxPolicyId">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getMaxPolicyId">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getMaxPolicyIdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="updateStorage">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="updateStorage">
@@ -11733,6 +11800,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="findLoadBalancerByParamsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMaxAclNumber">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getMaxAclNumber">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getMaxAclNumberResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
