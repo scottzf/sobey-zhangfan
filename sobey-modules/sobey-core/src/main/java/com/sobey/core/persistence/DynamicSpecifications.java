@@ -53,6 +53,15 @@ public class DynamicSpecifications {
 						case LTE:
 							predicates.add(builder.lessThanOrEqualTo(expression, (Comparable) filter.value));
 							break;
+						case NOT:
+							predicates.add(builder.notEqual(expression, (Comparable) filter.value));
+							break;
+						case IsNull:
+							predicates.add(builder.isNull(expression));
+							break;
+						case NotNull:
+							predicates.add(builder.isNotNull(expression));
+							break;
 						}
 					}
 
