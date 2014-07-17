@@ -1693,6 +1693,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Map<String, Object> paramsMap = Maps.newHashMap();
 
 			paramsMap.put("EQ_description", ecsDTO.getDescription());
+			paramsMap.put("EQ_tenants", ecsDTO.getTenants());
 
 			Validate.isTrue(comm.ecsService.findEcs(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
@@ -1732,6 +1733,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			// 验证description是否唯一.如果不为null,则弹出错误.
 			Map<String, Object> paramsMap = Maps.newHashMap();
 			paramsMap.put("EQ_description", ecsDTO.getDescription());
+			paramsMap.put("EQ_tenants", ecsDTO.getTenants());
 
 			Validate.isTrue(
 					comm.ecsService.findEcs(paramsMap) == null || ecs.getDescription().equals(ecsDTO.getDescription()),
@@ -1938,6 +1940,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Map<String, Object> paramsMap = Maps.newHashMap();
 
 			paramsMap.put("EQ_description", es3DTO.getDescription());
+			paramsMap.put("EQ_tenants", es3DTO.getTenants());
 
 			Validate.isTrue(comm.es3Service.findEs3(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
@@ -1974,6 +1977,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Map<String, Object> paramsMap = Maps.newHashMap();
 
 			paramsMap.put("EQ_description", es3DTO.getDescription());
+			paramsMap.put("EQ_tenants", es3DTO.getTenants());
 
 			// 验证description是否唯一.如果不为null,则弹出错误.
 			Validate.isTrue(
@@ -2164,6 +2168,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Map<String, Object> paramsMap = Maps.newHashMap();
 
 			paramsMap.put("EQ_description", eipDTO.getDescription());
+			paramsMap.put("EQ_tenants", eipDTO.getTenants());
 
 			Validate.isTrue(comm.eipService.findEip(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
@@ -2199,6 +2204,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Map<String, Object> paramsMap = Maps.newHashMap();
 
 			paramsMap.put("EQ_description", eipDTO.getDescription());
+			paramsMap.put("EQ_tenants", eipDTO.getTenants());
 
 			// 验证description是否唯一.如果不为null,则弹出错误.
 			Validate.isTrue(
@@ -2396,6 +2402,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Map<String, Object> paramsMap = Maps.newHashMap();
 
 			paramsMap.put("EQ_description", elbDTO.getDescription());
+			paramsMap.put("EQ_tenants", elbDTO.getTenants());
 
 			Validate.isTrue(comm.elbService.findElb(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
@@ -2431,6 +2438,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Map<String, Object> paramsMap = Maps.newHashMap();
 
 			paramsMap.put("EQ_description", elbDTO.getDescription());
+			paramsMap.put("EQ_tenants", elbDTO.getTenants());
 
 			// 验证description是否唯一.如果不为null,则弹出错误.
 			Validate.isTrue(
@@ -2623,6 +2631,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Map<String, Object> paramsMap = Maps.newHashMap();
 
 			paramsMap.put("EQ_description", dnsDTO.getDescription());
+			paramsMap.put("EQ_tenants", dnsDTO.getTenants());
 
 			Validate.isTrue(comm.dnsService.findDns(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
@@ -2658,6 +2667,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Map<String, Object> paramsMap = Maps.newHashMap();
 
 			paramsMap.put("EQ_description", dnsDTO.getDescription());
+			paramsMap.put("EQ_tenants", dnsDTO.getTenants());
 
 			// 验证description是否唯一.如果不为null,则弹出错误.
 			Validate.isTrue(
