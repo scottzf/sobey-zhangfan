@@ -7049,8 +7049,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public IdResult allocateIpaddress(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		return changeIpaddressStatus(id, LookUpConstants.IPAddressStatus.已使用.getValue());
 	}
 
 	@Override
@@ -7061,8 +7060,42 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 	@Override
 	public IdResult initIpaddress(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		return changeIpaddressStatus(id, LookUpConstants.IPAddressStatus.未使用.getValue());
+	}
+
+	/**
+	 * 修改Ipaddress对象的ipaddressStatus.
+	 * 
+	 * @param id
+	 *            ipaddress Id
+	 * @param ipaddressStatus
+	 *            ipaddress状态 {@link LookUpConstants.IPAddressStatus}
+	 * @return
+	 */
+	private IdResult changeIpaddressStatus(Integer id, Integer ipaddressStatus) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Ipaddress ipaddress = comm.ipaddressService.findIpaddress(id);
+
+			Validate.notNull(ipaddress, ERROR.OBJECT_NULL);
+
+			ipaddress.setIpaddressStatus(ipaddressStatus);
+
+			comm.ipaddressService.saveOrUpdate(ipaddress);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
 	}
 
 	@Override
