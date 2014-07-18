@@ -15,11 +15,13 @@ import com.sobey.generate.cmdbuild.DTOListResult;
 import com.sobey.generate.cmdbuild.DTOResult;
 import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EcsSpecDTO;
+import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.EsgDTO;
 import com.sobey.generate.cmdbuild.EsgPolicyDTO;
 import com.sobey.generate.cmdbuild.IpaddressDTO;
 import com.sobey.generate.cmdbuild.LogDTO;
 import com.sobey.generate.cmdbuild.LookUpDTO;
+import com.sobey.generate.cmdbuild.MapEcsEs3DTO;
 import com.sobey.generate.cmdbuild.SearchParams;
 import com.sobey.generate.cmdbuild.ServerDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
@@ -33,6 +35,12 @@ import com.sobey.generate.instance.InstanceSoapService;
 import com.sobey.generate.instance.PowerVMParameter;
 import com.sobey.generate.instance.ReconfigVMParameter;
 import com.sobey.generate.instance.RelationVMParameter.RelationMaps.Entry;
+import com.sobey.generate.storage.CreateEs3Parameter;
+import com.sobey.generate.storage.DeleteEs3Parameter;
+import com.sobey.generate.storage.MountEs3Parameter;
+import com.sobey.generate.storage.RemountEs3Parameter;
+import com.sobey.generate.storage.StorageSoapService;
+import com.sobey.generate.storage.UmountEs3Parameter;
 import com.sobey.generate.switches.ESGParameter;
 import com.sobey.generate.switches.RuleParameter;
 import com.sobey.generate.switches.SwitchesSoapService;
@@ -52,6 +60,9 @@ public class ApiServiceImpl implements ApiService {
 
 	@Autowired
 	private InstanceSoapService instanceSoapService;
+
+	@Autowired
+	private StorageSoapService storageSoapService;
 
 	// 临时数据
 	public static Integer idcId = 99;
@@ -511,6 +522,8 @@ public class ApiServiceImpl implements ApiService {
 		ecsDTO.setEcsSpec(ecsSpecId);
 		cmdbuildSoapService.updateEcs(ecsId, ecsDTO);
 
+		// TODO 日志
+
 	}
 
 	@Override
@@ -569,6 +582,241 @@ public class ApiServiceImpl implements ApiService {
 		}
 
 		return map;
+	}
+
+	@Override
+	public void createES3(Integer tenantsId, CreateEs3Parameter createEs3Parameter) {
+
+		/**
+		 * step.1 获得租户、vlan、未使用的IP信息
+		 * 
+		 * step.2 创建volume
+		 * 
+		 * step.3 CMDBuild中创建ES3信息
+		 * 
+		 * step.4 写入日志
+		 */
+
+		String VolumeName = createEs3Parameter.getVolumeName();
+
+		// 获得租户
+		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(tenantsId).getDto();
+
+		// 获得租户所属vlan
+		VlanDTO vlanDTO = getVlanDTO(tenantsDTO);
+
+		// 创建volume
+		createEs3Parameter.setVolumeName(VolumeName + tenantsDTO.getId());
+		storageSoapService.createEs3ByStorage(createEs3Parameter);
+
+		// CMDBuild中创建ES3信息
+		Es3DTO es3DTO = new Es3DTO();
+		es3DTO.setAgentType(agentTypeId);
+		es3DTO.setDescription(createEs3Parameter.getVolumeName());
+		es3DTO.setIdc(vlanDTO.getIdc());
+		es3DTO.setTenants(tenantsDTO.getId());
+		// TODO 注意单位,脚本用的MB,而页面是GB,测试环境无法创建GB大小的volume.
+		es3DTO.setDiskSize(Double.valueOf(createEs3Parameter.getVolumeSize()));
+		es3DTO.setVolumeName(VolumeName);
+		es3DTO.setStorage(365);// TODO 通过算法得出负载最轻的netappcontroller.
+		es3DTO.setEs3Type(73);
+
+		cmdbuildSoapService.createEs3(es3DTO);
+
+		// TODO 应该提供一个枚举常量
+		createLog(tenantsDTO.getId(), 91, 48, resultId);
+	}
+
+	@Override
+	public void attachES3(Integer es3Id, Integer ecsId) {
+
+		/**
+		 * step.1 获得ECS、ES3、Storage、IP信息
+		 * 
+		 * step.2 将访问IP列表写入netapp controller中
+		 * 
+		 * step.3 挂载volume
+		 * 
+		 * step.4 将ES3 和ECS的关联关系写入cmdbuild
+		 * 
+		 * step.5 写入日志
+		 * 
+		 */
+
+		// 获得ES3
+		Es3DTO es3dto = (Es3DTO) cmdbuildSoapService.findEs3(es3Id).getDto();
+
+		// 获得ECS
+		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
+
+		// 将访问IP列表写入netapp controller中
+		wirteMountRule(es3dto, ecsDTO);
+
+		// 挂载
+		mountEs3(es3dto, ecsDTO);
+
+		// 将ES3 和ECS的关联关系写入cmdbuild
+		cmdbuildSoapService.createMapEcsEs3(ecsId, es3Id);
+
+		// 写入日志
+		createLog(ecsDTO.getTenants(), 91, 75, resultId);
+
+	}
+
+	private void mountEs3(Es3DTO es3dto, EcsDTO ecsDTO) {
+
+		// netapp的控制IP
+		IpaddressDTO storageIP = (IpaddressDTO) cmdbuildSoapService
+				.findIpaddress(es3dto.getStorageDTO().getIpaddress()).getDto();
+
+		// ECS的IP
+		IpaddressDTO ecsIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
+
+		MountEs3Parameter mountEs3Parameter = new MountEs3Parameter();
+		mountEs3Parameter.setClientIPaddress(ecsIP.getDescription());
+		mountEs3Parameter.setNetAppIPaddress(storageIP.getDescription());
+		mountEs3Parameter.setVolumeName(es3dto.getDescription());
+		storageSoapService.mountEs3ByStorage(mountEs3Parameter);
+	}
+
+	/**
+	 * 向netapp控制器写入可挂载的权限.
+	 */
+	private void wirteMountRule(Es3DTO es3dto, EcsDTO ecsDTO) {
+
+		/**
+		 * netapp的权限是要将所有的ip都写入控制器中,但是后面会将前面的规则覆盖掉.
+		 * 
+		 * 为了保证规则完成,需要将es3关联的所有ECS查询出来放入after、before list中.
+		 */
+
+		RemountEs3Parameter remountEs3Parameter = new RemountEs3Parameter();
+		remountEs3Parameter.setVolumeName(es3dto.getDescription());
+
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("EQ_idObj2", es3dto.getId().toString());
+		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
+
+		// 查询出ECS和ES3的关联关系
+		List<Object> ecsEs3DTOs = cmdbuildSoapService.getMapEcsEs3List(searchParams).getDtoList().getDto();
+
+		List<String> list = new ArrayList<String>();
+
+		for (Object obj : ecsEs3DTOs) {
+			MapEcsEs3DTO mapEcsEs3DTO = (MapEcsEs3DTO) obj;
+			EcsDTO dto = (EcsDTO) cmdbuildSoapService.findEcs(Integer.valueOf(mapEcsEs3DTO.getIdObj1())).getDto();
+			list.add(dto.getIpaddressDTO().getDescription());
+		}
+
+		remountEs3Parameter.getBeforeClientIPaddress().addAll(list);
+
+		// 将需要挂载的ECS IP放入list中.
+		list.remove(ecsDTO.getIpaddressDTO().getDescription());// 先去重
+		list.add(ecsDTO.getIpaddressDTO().getDescription());
+		remountEs3Parameter.getAfterClientIPaddress().addAll(list);
+
+		storageSoapService.remountEs3ByStorage(remountEs3Parameter);
+	}
+
+	@Override
+	public void detachES3(Integer es3Id, Integer ecsId) {
+
+		/**
+		 * step.1 获得ECS、ES3、Storage、IP信息
+		 * 
+		 * step.2 将访问IP列表写入netapp controller中
+		 * 
+		 * step.3 挂载volume
+		 * 
+		 * step.4 将ES3 和ECS的关联关系写入cmdbuild
+		 * 
+		 * step.5 写入日志
+		 * 
+		 */
+
+		// 获得ES3
+		Es3DTO es3dto = (Es3DTO) cmdbuildSoapService.findEs3(es3Id).getDto();
+
+		// 获得ECS
+		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
+
+		wirteUmountRule(es3dto, ecsDTO);
+
+		// 卸载Es3
+		umountEs3(ecsDTO);
+
+		cmdbuildSoapService.deleteMapEcsEs3(ecsId, es3Id);
+
+		// 写入日志
+		createLog(ecsDTO.getTenants(), 26, 76, resultId);
+
+	}
+
+	private void umountEs3(EcsDTO ecsDTO) {
+
+		// ECS的IP
+		IpaddressDTO ecsIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
+
+		UmountEs3Parameter umountEs3Parameter = new UmountEs3Parameter();
+		umountEs3Parameter.setClientIPaddress(ecsIP.getDescription());
+
+		storageSoapService.umountEs3ByStorage(umountEs3Parameter);
+	}
+
+	/**
+	 * 向netapp控制器写入可挂载的权限.
+	 */
+	private void wirteUmountRule(Es3DTO es3dto, EcsDTO ecsDTO) {
+
+		/**
+		 * netapp的权限是要将所有的ip都写入控制器中,但是后面会将前面的规则覆盖掉.
+		 * 
+		 * 为了保证规则完成,需要将es3关联的所有ECS查询出来放入after、before list中.
+		 */
+
+		RemountEs3Parameter remountEs3Parameter = new RemountEs3Parameter();
+		remountEs3Parameter.setVolumeName(es3dto.getDescription());
+
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("EQ_idObj2", es3dto.getId().toString());
+		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
+
+		// 查询出ECS和ES3的关联关系
+		List<Object> ecsEs3DTOs = cmdbuildSoapService.getMapEcsEs3List(searchParams).getDtoList().getDto();
+
+		List<String> list = new ArrayList<String>();
+
+		for (Object obj : ecsEs3DTOs) {
+			MapEcsEs3DTO mapEcsEs3DTO = (MapEcsEs3DTO) obj;
+			EcsDTO dto = (EcsDTO) cmdbuildSoapService.findEcs(Integer.valueOf(mapEcsEs3DTO.getIdObj1())).getDto();
+			list.add(dto.getIpaddressDTO().getDescription());
+		}
+
+		remountEs3Parameter.getBeforeClientIPaddress().addAll(list);
+
+		// 将需要挂载的ECS IP放入list中.
+		list.remove(ecsDTO.getIpaddressDTO().getDescription());
+		remountEs3Parameter.getAfterClientIPaddress().addAll(list);
+
+		storageSoapService.remountEs3ByStorage(remountEs3Parameter);
+	}
+
+	@Override
+	public void deleteES3(Integer es3Id) {
+
+		// 获得ES3
+		Es3DTO es3dto = (Es3DTO) cmdbuildSoapService.findEs3(es3Id).getDto();
+
+		// 删除volume
+		DeleteEs3Parameter deleteEs3Parameter = new DeleteEs3Parameter();
+		deleteEs3Parameter.setVolumeName(es3dto.getDescription());
+		storageSoapService.deleteEs3ByStorage(deleteEs3Parameter);
+
+		// cmdbuild 中删除Es3
+		cmdbuildSoapService.deleteEs3(es3Id);
+
+		// 写入日志
+		createLog(es3dto.getTenants(), 26, 76, resultId);
 	}
 
 }

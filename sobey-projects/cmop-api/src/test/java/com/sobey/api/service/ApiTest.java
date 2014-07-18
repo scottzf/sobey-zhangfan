@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.instance.CloneVMParameter;
+import com.sobey.generate.storage.CreateEs3Parameter;
 import com.sobey.test.data.RandomData;
 
 /**
@@ -49,7 +50,7 @@ public class ApiTest extends TestCase {
 		CloneVMParameter cloneVMParameter = new CloneVMParameter();
 		cloneVMParameter.setDatacenter("xa");
 		cloneVMParameter.setDescription("这个是公共功能模块测试");
-		cloneVMParameter.setVMName("MDC");
+		cloneVMParameter.setVMName("liukai");
 		cloneVMParameter.setVMTemplateName("CnetOS6.5");
 
 		service.createECS(tenantsId, cloneVMParameter);
@@ -75,4 +76,27 @@ public class ApiTest extends TestCase {
 		System.out.println(service.syncVM("xa"));
 	}
 
+	@Test
+	public void createEs3() {
+		Integer tenantsId = 1418;
+		CreateEs3Parameter createEs3Parameter = new CreateEs3Parameter();
+		createEs3Parameter.setVolumeName("Sobey");
+		createEs3Parameter.setVolumeSize("20");
+		service.createES3(tenantsId, createEs3Parameter);
+	}
+
+	@Test
+	public void attachES3() {
+		service.attachES3(1780, 1766);
+	}
+
+	@Test
+	public void detachES3() {
+		service.detachES3(1780, 1766);
+	}
+
+	@Test
+	public void deleteES3() {
+		service.deleteES3(1780);
+	}
 }
