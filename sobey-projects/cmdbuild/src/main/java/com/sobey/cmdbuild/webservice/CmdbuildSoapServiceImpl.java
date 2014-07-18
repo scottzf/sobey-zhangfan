@@ -1332,6 +1332,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			// 验证description是否唯一.如果不为null,则弹出错误.
 			Map<String, Object> paramsMap = Maps.newHashMap();
 			paramsMap.put("EQ_description", ecsSpecDTO.getDescription());
+			paramsMap.put("EQ_imageName", ecsSpecDTO.getDescription());
 
 			Validate.isTrue(comm.ecsSpecService.findEcsSpec(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
@@ -1373,6 +1374,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			// 验证description是否唯一.如果不为null,则弹出错误.
 			Map<String, Object> paramsMap = Maps.newHashMap();
 			paramsMap.put("EQ_description", ecsSpecDTO.getDescription());
+			paramsMap.put("EQ_imageName", ecsSpecDTO.getDescription());
 
 			Validate.isTrue(
 					comm.ecsSpecService.findEcsSpec(paramsMap) == null
