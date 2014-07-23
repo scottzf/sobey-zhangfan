@@ -15,6 +15,9 @@ import com.sobey.generate.cmdbuild.DTOListResult;
 import com.sobey.generate.cmdbuild.DTOResult;
 import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EcsSpecDTO;
+import com.sobey.generate.cmdbuild.EipDTO;
+import com.sobey.generate.cmdbuild.EipPolicyDTO;
+import com.sobey.generate.cmdbuild.ElbDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.EsgDTO;
 import com.sobey.generate.cmdbuild.EsgPolicyDTO;
@@ -27,6 +30,8 @@ import com.sobey.generate.cmdbuild.ServerDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.cmdbuild.VlanDTO;
 import com.sobey.generate.cmdbuild.VpnDTO;
+import com.sobey.generate.firewall.EIPParameter;
+import com.sobey.generate.firewall.EIPPolicyParameter;
 import com.sobey.generate.firewall.FirewallSoapService;
 import com.sobey.generate.firewall.VPNUserParameter;
 import com.sobey.generate.instance.CloneVMParameter;
@@ -819,4 +824,273 @@ public class ApiServiceImpl implements ApiService {
 		createLog(es3dto.getTenants(), 26, 76, resultId);
 	}
 
+	@Override
+	public void allocateEIP(EipDTO eipDTO, List<EipPolicyDTO> eipPolicyDTOs) {
+
+		/**
+		 * step.1 获得未使用的公网IP.
+		 * 
+		 * step.2 将EIP和EIP端口信息写入CMDBuild
+		 * 
+		 * step.3 写入日志
+		 * 
+		 */
+
+		// 获得未使用的公网IP.
+		IpaddressDTO ipaddressDTO = getUnusedPublicIpaddress(eipDTO.getIsp());
+
+		// 将EIP信息写入CMDBuild
+		eipDTO.setAgentType(agentTypeId);
+		eipDTO.setEipStatus(35);
+		eipDTO.setIdc(idcId);
+		eipDTO.setIpaddress(ipaddressDTO.getId());
+		eipDTO.setDescription(ipaddressDTO.getDescription());
+		cmdbuildSoapService.createEip(eipDTO);
+
+		EipDTO dto = getEipDTO(ipaddressDTO.getId(), eipDTO.getTenants());
+
+		// 将EIP端口信息写入CMDBuild
+		for (EipPolicyDTO policyDTO : eipPolicyDTOs) {
+
+			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(policyDTO.getEipProtocol()).getDto();
+
+			policyDTO.setDescription(lookUpDTO.getDescription() + "-" + policyDTO.getSourcePort() + "-"
+					+ policyDTO.getTargetPort());
+			policyDTO.setEip(dto.getId());
+			policyDTO.setEipProtocol(policyDTO.getEipProtocol());
+			policyDTO.setSourcePort(policyDTO.getSourcePort());
+			policyDTO.setTargetPort(policyDTO.getTargetPort());
+
+			cmdbuildSoapService.createEipPolicy(policyDTO);
+		}
+
+		cmdbuildSoapService.allocateIpaddress(ipaddressDTO.getId());
+
+		// 写入日志
+		createLog(eipDTO.getTenants(), 26, 76, resultId);
+	}
+
+	private EipDTO getEipDTO(Integer ipaddressId, Integer tenantsId) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("EQ_ipaddress", ipaddressId.toString());
+		map.put("EQ_tenants", tenantsId.toString());
+		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
+		return (EipDTO) cmdbuildSoapService.findEipByParams(searchParams).getDto();
+
+	}
+
+	/**
+	 * 获得未使用的公网IP
+	 * 
+	 * @return
+	 */
+	private IpaddressDTO getUnusedPublicIpaddress(Integer ispId) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("EQ_ipaddressStatus", IPADDRESSSTATUS_UNUSE);
+		map.put("EQ_ipaddressPool", "28");
+		map.put("EQ_isp", ispId.toString());// 65 29
+		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
+		DTOListResult listResult = cmdbuildSoapService.getIpaddressList(searchParams);
+		return (IpaddressDTO) listResult.getDtoList().getDto().get(0);
+	}
+
+	@Override
+	public void recoverEIP(Integer eipId) {
+
+		/**
+		 * step.1 获得EIP.
+		 * 
+		 * step.2 初始化公网IP
+		 * 
+		 * step.3 查询EIP下所有policy并删除
+		 * 
+		 * step.4 删除EIP
+		 * 
+		 * step.5 写入日志
+		 */
+
+		// 获得EIP.
+		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(eipId).getDto();
+
+		// 初始化公网IP
+		cmdbuildSoapService.initIpaddress(eipDTO.getIpaddress());
+
+		// 查询EIP下所有policy并删除
+		DTOListResult policyResult = getEipPolicyDTOList(eipId);
+
+		for (Object obj : policyResult.getDtoList().getDto()) {
+			EipPolicyDTO policyDTO = (EipPolicyDTO) obj;
+			cmdbuildSoapService.deleteEipPolicy(policyDTO.getId());
+		}
+		// 删除EIP
+		cmdbuildSoapService.deleteEip(eipId);
+
+		// 写入日志
+		createLog(eipDTO.getTenants(), 26, 76, resultId);
+	}
+
+	/**
+	 * 获得EIP下所有的policy
+	 */
+	private DTOListResult getEipPolicyDTOList(Integer eipId) {
+
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("EQ_eip", eipId.toString());
+		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
+		DTOListResult listResult = cmdbuildSoapService.getEipPolicyList(searchParams);
+		return listResult;
+	}
+
+	/**
+	 * 获得租户下所有EIP的所有policy
+	 */
+	private DTOListResult getEipPolicyDTOListByTenants(EipDTO eipDTO) {
+
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("EQ_tenants", eipDTO.getTenants().toString());
+		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
+		DTOListResult listResult = cmdbuildSoapService.getEipPolicyList(searchParams);
+		return listResult;
+	}
+
+	@Override
+	public void associateEIP(Integer eipId, Integer serviceId) {
+
+		/**
+		 * step.1 获得EIP.
+		 * 
+		 * step.2 与其他资源(ECS & ELB)建立关联关系
+		 * 
+		 * step.2 firwall创建虚拟IP
+		 * 
+		 * 
+		 * step.3 更新eip状态
+		 * 
+		 * 
+		 * step.4 写入日志
+		 */
+
+		String privateIP = "";
+
+		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(eipId).getDto();
+
+		// 因为可能绑定ELB或ECS,无法区分.但是ECS和ELB同属一个service,id是不可能重复的.
+		// 所以先通过ID查询,判断对象是否为null,如果不为null说明绑定的是该服务对象.
+		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(serviceId).getDto();
+		ElbDTO elbDTO = (ElbDTO) cmdbuildSoapService.findElb(serviceId).getDto();
+
+		if (elbDTO != null) {
+			cmdbuildSoapService.createMapEipElb(eipId, serviceId);
+			privateIP = elbDTO.getIpaddressDTO().getDescription();
+		} else if (ecsDTO != null) {
+			cmdbuildSoapService.createMapEcsEip(serviceId, eipId);
+			privateIP = ecsDTO.getIpaddressDTO().getDescription();
+		}
+
+		// 防火墙上创建eip
+		createEIPInFirewall(eipDTO, privateIP);
+
+		// 更新EIP状态
+		eipDTO.setEipStatus(72); // 72:已使用 35:未使用
+		cmdbuildSoapService.updateEip(eipId, eipDTO);
+
+		// 写入日志
+		createLog(eipDTO.getTenants(), 26, 76, resultId);
+	}
+
+	/**
+	 * 在防火墙上创建EIP
+	 */
+	private void createEIPInFirewall(EipDTO eipDTO, String privateIP) {
+
+		EIPParameter eipParameter = wrapperEIPParameter(eipDTO);
+		eipParameter.setPrivateIP(privateIP);
+
+		// 调用防火墙agent的接口
+		firewallSoapService.createEIPByFirewall(eipParameter);
+
+	}
+
+	private EIPParameter wrapperEIPParameter(EipDTO eipDTO) {
+
+		LookUpDTO isp = (LookUpDTO) cmdbuildSoapService.findLookUp(eipDTO.getIsp()).getDto();
+
+		// 获得租户下所有的EIP策略.
+		DTOListResult allPoliciesResult = getEipPolicyDTOListByTenants(eipDTO);
+		List<String> allPolicies = new ArrayList<String>();
+		if (allPoliciesResult.getDtoList() != null) {
+
+			for (Object obj : allPoliciesResult.getDtoList().getDto()) {
+				EipDTO dto = (EipDTO) obj;
+				allPolicies.add(dto.getIpaddressDTO().getDescription());
+			}
+		}
+
+		// 获得EIP的策略
+		List<EIPPolicyParameter> policyParameters = new ArrayList<EIPPolicyParameter>();
+		DTOListResult policiesResult = getEipPolicyDTOList(eipDTO.getId());
+
+		for (Object obj : policiesResult.getDtoList().getDto()) {
+
+			EipPolicyDTO dto = (EipPolicyDTO) obj;
+			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(dto.getEipProtocol()).getDto();
+
+			EIPPolicyParameter policyParameter = new EIPPolicyParameter();
+			policyParameter.setProtocolText(lookUpDTO.getDescription());
+			policyParameter.setSourcePort(dto.getSourcePort());
+			policyParameter.setTargetPort(dto.getTargetPort());
+
+			policyParameters.add(policyParameter);
+		}
+
+		EIPParameter eipParameter = new EIPParameter();
+		eipParameter.setInternetIP(eipDTO.getIpaddressDTO().getDescription());
+		eipParameter.setIsp(Integer.valueOf(isp.getCode()));
+		eipParameter.getPolicies().addAll(policyParameters);
+		eipParameter.getAllPolicies().addAll(allPolicies);
+		return eipParameter;
+
+	}
+
+	@Override
+	public void dissociateEIP(Integer eipId, Integer serviceId) {
+
+		/**
+		 * step.1 获得EIP.
+		 * 
+		 * step.2 删除和其他资源(ECS & ELB)的关联关系
+		 * 
+		 * step.3 firwall删除虚拟IP
+		 * 
+		 * step.4 更新CMDBuild中EIP的状态为"未使用"
+		 * 
+		 * step.5 写入日志
+		 */
+
+		// 获得EIP.
+		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(eipId).getDto();
+
+		// 删除和其他资源(ECS & ELB)的关联关系
+
+		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(serviceId).getDto();
+		ElbDTO elbDTO = (ElbDTO) cmdbuildSoapService.findElb(serviceId).getDto();
+
+		if (ecsDTO != null) {
+			cmdbuildSoapService.deleteMapEcsEip(serviceId, eipId);
+		} else if (elbDTO != null) {
+			cmdbuildSoapService.deleteMapEipElb(eipId, serviceId);
+		}
+
+		// firwall删除虚拟IP
+		EIPParameter eipParameter = wrapperEIPParameter(eipDTO);
+		firewallSoapService.deleteEIPByFirewall(eipParameter);
+
+		// 更新CMDBuild中EIP的状态为"未使用"
+		eipDTO.setEipStatus(35);
+		cmdbuildSoapService.updateEip(eipId, eipDTO);
+
+		// 写入日志
+		createLog(eipDTO.getTenants(), 26, 76, resultId);
+
+	}
 }

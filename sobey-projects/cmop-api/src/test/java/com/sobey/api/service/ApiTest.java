@@ -1,5 +1,8 @@
 package com.sobey.api.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -8,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.sobey.generate.cmdbuild.EipDTO;
+import com.sobey.generate.cmdbuild.EipPolicyDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.instance.CloneVMParameter;
 import com.sobey.generate.storage.CreateEs3Parameter;
@@ -98,5 +103,49 @@ public class ApiTest extends TestCase {
 	@Test
 	public void deleteES3() {
 		service.deleteES3(1780);
+	}
+
+	@Test
+	public void allocateEIP() {
+
+		Integer tenantsId = 1418;
+		Integer ispId = 65;
+		// Integer ispId = 29;
+
+		EipDTO eipDTO = new EipDTO();
+		eipDTO.setBandwidth(1);
+		eipDTO.setTenants(tenantsId);
+		eipDTO.setIsp(ispId);
+
+		List<EipPolicyDTO> eipPolicyDTOs = new ArrayList<EipPolicyDTO>();
+
+		EipPolicyDTO policyDTO = new EipPolicyDTO();
+		policyDTO.setEipProtocol(38);
+		policyDTO.setSourcePort(80);
+		policyDTO.setTargetPort(80);
+		eipPolicyDTOs.add(policyDTO);
+
+		EipPolicyDTO policyDTO2 = new EipPolicyDTO();
+		policyDTO2.setEipProtocol(38);
+		policyDTO2.setSourcePort(443);
+		policyDTO2.setTargetPort(443);
+		eipPolicyDTOs.add(policyDTO2);
+
+		service.allocateEIP(eipDTO, eipPolicyDTOs);
+	}
+
+	@Test
+	public void recoverEIP() {
+		service.recoverEIP(1916);
+	}
+
+	@Test
+	public void associateEIP() {
+		service.associateEIP(1940, 1612);
+	}
+
+	@Test
+	public void dissociateEIP() {
+		service.dissociateEIP(1940, 1612);
 	}
 }
