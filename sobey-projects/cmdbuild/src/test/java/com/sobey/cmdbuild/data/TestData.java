@@ -52,35 +52,38 @@ import com.sobey.test.data.RandomData;
 
 public class TestData {
 
-	public static Integer agentTypeId = 80;
+	public static Integer agentTypeId = 47;
 	public static Integer brandId = 56;
-	public static Integer deviceSpecId = 121;
+	public static Integer deviceSpecId = 128;
 	public static Integer deviceTypeId = 23;
 	public static Integer diskTypeId = 24;
-	public static Integer dnsId = 712;
-	public static Integer ecsId = 639;
-	public static Integer ecsSpecId = 123;
-	public static Integer eipId = 697;
-	public static Integer elbId = 680;
-	public static Integer es3Id = 654;
-	public static Integer esgId = 725;
+	public static Integer dnsId = 260;
+	public static Integer ecsId = 197;
+	public static Integer ecsSpecId = 130;
+	public static Integer eipId = 253;
+	public static Integer elbId = 237;
+	public static Integer es3Id = 208;
+	public static Integer esgId = 215;
 	public static Integer heightId = 69;
-	public static Integer idcId = 99;
-	public static Integer ipaddressId = 143;
+	public static Integer idcId = 110;
+	public static Integer ipaddressId = 138;
 	public static Integer ispId = 29;
 	public static Integer maintenanceId = 77;
 	public static Integer osTypeId = 21;
-	public static Integer parentTagId = 107;
+	public static Integer parentTagId = 118;
 	public static Integer powerId = 77;
-	public static Integer rackId = 101;
-	public static Integer serverId = 344;
-	public static Integer serviceTypeId = 26;
-	public static Integer storageId = 365;
-	public static Integer switchPortId = 472;
-	public static Integer tagId = 107;
-	public static Integer tenantsId = 105;
-	public static Integer vlanId = 125;
+	public static Integer rackId = 112;
+	public static Integer serverId = 143;
+	public static Integer storageId = 161;
+	public static Integer switchPortId = 181;
+	public static Integer switchId = 170;
+	public static Integer tagId = 122;
+	public static Integer tenantsId = 116;
+	public static Integer vlanId = 132;
 	public static Integer vlanStatusId = 99; // 未使用
+	public static Integer ipaddressPoolId = 66; // private
+	public static Integer ecsStatusId = 34; // 运行
+	public static Integer es3TypeId = 93;
 
 	public static Date startDate = new Date(System.currentTimeMillis());
 
@@ -150,7 +153,7 @@ public class TestData {
 		ecs.setTenants(tenantsId);
 		ecs.setAgentType(agentTypeId);
 		ecs.setEcsSpec(ecsSpecId);
-		ecs.setEcsStatus(34);
+		ecs.setEcsStatus(ecsStatusId);
 
 		return ecs;
 	}
@@ -245,7 +248,7 @@ public class TestData {
 		es3.setAgentType(agentTypeId);
 		es3.setVolumeName(RandomData.randomName("volumeName"));
 		es3.setStorage(storageId);
-		es3.setEs3Type(93);
+		es3.setEs3Type(es3TypeId);
 		es3.setDiskSize(1000);
 
 		return es3;
@@ -354,13 +357,13 @@ public class TestData {
 
 		ipaddress.setId(0);
 		ipaddress.setDescription(RandomData.randomName("description"));
-		ipaddress.setIpaddressPool(66);
 		ipaddress.setIpaddressStatus(LookUpConstants.IPAddressStatus.未使用.getValue());
+		ipaddress.setIpaddressPool(ipaddressPoolId);
 		ipaddress.setVlan(vlanId);
-		ipaddress.setBeginDate(startDate);
 		ipaddress.setIdc(idcId);
-		ipaddress.setNetMask(RandomData.randomName("netMask"));
 		ipaddress.setIsp(ispId);
+		ipaddress.setBeginDate(startDate);
+		ipaddress.setNetMask("255.255.255.0");
 		ipaddress.setGateway(RandomData.randomName("gateway"));
 		ipaddress.setRemark(RandomData.randomName("remark"));
 
@@ -416,7 +419,7 @@ public class TestData {
 		log.setTenants(tenantsId);
 		log.setOperateType(21);
 		log.setResult(63);
-		log.setServiceType(serviceTypeId);
+		log.setServiceType(LookUpConstants.ServiceType.ECS.getValue());
 
 		return log;
 	}
@@ -631,10 +634,10 @@ public class TestData {
 		storage.setRack(rackId);
 		storage.setDeviceSpec(deviceSpecId);
 		storage.setIpaddress(ipaddressId);
+		storage.setSite("1");
 		storage.setDescription(RandomData.randomName("description"));
 		storage.setSn(RandomData.randomName("sn"));
 		storage.setGdzcSn(RandomData.randomName("gdzcSn"));
-		storage.setSite("1");
 		storage.setRemark(RandomData.randomName("remark"));
 		storage.setConfigText(RandomData.randomName("configText"));
 		storage.setPassword(RandomData.randomName("password"));
@@ -719,7 +722,7 @@ public class TestData {
 		switchPort.setMacAddress(RandomData.randomName("macAddress"));
 		switchPort.setSite(RandomData.randomName("site"));
 		switchPort.setConnectedTo(switchPortId);
-		switchPort.setSwitches(386);
+		switchPort.setSwitches(switchId);
 
 		return switchPort;
 	}
