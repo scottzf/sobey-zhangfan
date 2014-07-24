@@ -13,6 +13,7 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 public class TenantsDTO extends BasicDTO {
 
 	private String accessKey;
+	private Integer aclNumber;
 	private String company;
 	private String createInfo;
 	private String email;
@@ -25,6 +26,14 @@ public class TenantsDTO extends BasicDTO {
 
 	public void setAccessKey(String accessKey) {
 		this.accessKey = accessKey;
+	}
+
+	public Integer getAclNumber() {
+		return aclNumber;
+	}
+
+	public void setAclNumber(Integer aclNumber) {
+		this.aclNumber = aclNumber;
 	}
 
 	public String getCompany() {

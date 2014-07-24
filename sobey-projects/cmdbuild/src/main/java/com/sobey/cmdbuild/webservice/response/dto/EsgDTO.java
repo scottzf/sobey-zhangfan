@@ -12,16 +12,7 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.ServiceBasicDTO;
 @XmlType(name = "EsgDTO", namespace = WsConstants.NS)
 public class EsgDTO extends ServiceBasicDTO {
 
-	private Integer aclNumber;
 	private Boolean isDefault;
-
-	public Integer getAclNumber() {
-		return aclNumber;
-	}
-
-	public void setAclNumber(Integer aclNumber) {
-		this.aclNumber = aclNumber;
-	}
 
 	public Boolean getIsDefault() {
 		return isDefault;

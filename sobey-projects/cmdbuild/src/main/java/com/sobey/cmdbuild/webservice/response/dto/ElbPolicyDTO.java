@@ -15,6 +15,7 @@ public class ElbPolicyDTO extends BasicDTO {
 	private Integer elb;
 	private Integer elbProtocol;
 	private String elbProtocolText;
+	private String ipaddress;
 	private Integer sourcePort;
 	private Integer targetPort;
 
@@ -40,6 +41,14 @@ public class ElbPolicyDTO extends BasicDTO {
 
 	public void setElbProtocolText(String elbProtocolText) {
 		this.elbProtocolText = elbProtocolText;
+	}
+
+	public String getIpaddress() {
+		return ipaddress;
+	}
+
+	public void setIpaddress(String ipaddress) {
+		this.ipaddress = ipaddress;
 	}
 
 	public Integer getSourcePort() {

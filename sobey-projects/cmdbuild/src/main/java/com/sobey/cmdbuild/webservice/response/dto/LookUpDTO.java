@@ -18,6 +18,7 @@ public class LookUpDTO {
 	private String description;
 	private Integer id;
 	private Boolean isDefault;
+	private String notes;
 	private Integer number;
 	private Integer parentId;
 	private String parentType;
@@ -61,6 +62,14 @@ public class LookUpDTO {
 
 	public void setIsDefault(Boolean isDefault) {
 		this.isDefault = isDefault;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 
 	public Integer getNumber() {
