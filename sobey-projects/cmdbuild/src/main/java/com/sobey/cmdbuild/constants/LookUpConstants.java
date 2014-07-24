@@ -11,62 +11,15 @@ package com.sobey.cmdbuild.constants;
 public class LookUpConstants {
 
 	/**
-	 * 描述LookUp中ConsumptionsStatus的Description和Id.
-	 * 
-	 * <pre>
-	 * 执行:	Execution	 41 
-	 * 完成:	Complete 	 42 
-	 * 到期:	Maturity 	 43
-	 * </pre>
-	 * 
-	 * @author Administrator
-	 * 
-	 */
-	public enum ConsumptionsStatus {
-
-		/**
-		 * 执行
-		 */
-		Execution("Execution", 41),
-
-		/**
-		 * 完成
-		 */
-		Complete("Complete", 42),
-
-		/**
-		 * 到期
-		 */
-		Maturity("Maturity", 43);
-
-		private String name;
-		private Integer value;
-
-		private ConsumptionsStatus(String name, Integer value) {
-			this.name = name;
-			this.value = value;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public Integer getValue() {
-			return value;
-		}
-	}
-
-	/**
 	 * 描述LookUp中ServiceType的Description和Id.
 	 * 
 	 * <pre>
-	 * ECS	 35 
-	 * ES3 	 36 
-	 * EIP 	 37
-	 * ELB 	 38
-	 * DNS 	 39
-	 * ESG 	 40
-	 * VPN 	 未定
+	 * ECS	 26 
+	 * ES3 	 91 
+	 * EIP 	 93
+	 * ELB 	 92
+	 * DNS 	 94
+	 * ESG 	 95
 	 * </pre>
 	 * 
 	 * @author Administrator
@@ -74,19 +27,17 @@ public class LookUpConstants {
 	 */
 	public enum ServiceType {
 
-		ECS("ECS", 35),
+		ECS("ECS", 26),
 
-		ES3("ES3", 36),
+		ES3("ES3", 91),
 
-		EIP("EIP", 37),
+		EIP("EIP", 93),
 
-		ELB("ELB", 38),
+		ELB("ELB", 92),
 
-		DNS("DNS", 39),
+		DNS("DNS", 94),
 
-		ESG("ESG", 40),
-
-		VPN("VPN", 0);
+		ESG("ESG", 95);
 
 		private String name;
 		private Integer value;
@@ -109,8 +60,8 @@ public class LookUpConstants {
 	 * 描述LookUp中IPAddressStatus的Description和Id.
 	 * 
 	 * <pre>
-	 * 使用中	 49 
-	 * 未使用 	 50
+	 * 已使用	 41 
+	 * 未使用 	 74
 	 * </pre>
 	 * 
 	 * @author Administrator
@@ -143,8 +94,8 @@ public class LookUpConstants {
 	 * 描述LookUp中VlanStatus的Description和Id.
 	 * 
 	 * <pre>
-	 * 已使用	 1443 
-	 * 未使用 	 1442
+	 * 已使用	 100 
+	 * 未使用 	 99
 	 * </pre>
 	 * 
 	 * @author Administrator
@@ -152,9 +103,9 @@ public class LookUpConstants {
 	 */
 	public enum VlanStatus {
 
-		已使用("已使用", 1443),
+		已使用("已使用", 100),
 
-		未使用("未使用", 1442);
+		未使用("未使用", 99);
 
 		private String name;
 		private Integer value;
