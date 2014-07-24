@@ -17,7 +17,7 @@ import com.sobey.cmdbuild.entity.basic.ServiceHistoryBasic;
 public class EsgHistory extends ServiceHistoryBasic {
 
 	private Esg esg;
-	private Integer aclNumber;
+
 	private Boolean isDefault;
 
 	public EsgHistory() {
@@ -31,15 +31,6 @@ public class EsgHistory extends ServiceHistoryBasic {
 
 	public void setEsg(Esg esg) {
 		this.esg = esg;
-	}
-
-	@Column(name = "acl_number")
-	public Integer getAclNumber() {
-		return aclNumber;
-	}
-
-	public void setAclNumber(Integer aclNumber) {
-		this.aclNumber = aclNumber;
 	}
 
 	@Column(name = "is_default")

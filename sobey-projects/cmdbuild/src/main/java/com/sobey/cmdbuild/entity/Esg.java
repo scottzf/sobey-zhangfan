@@ -18,20 +18,10 @@ import com.sobey.cmdbuild.entity.basic.ServiceBasic;
 @Table(name = "esg", schema = "public")
 public class Esg extends ServiceBasic {
 
-	private Integer aclNumber;
 	private Boolean isDefault;
 	private Set<EsgHistory> esgHistories = new HashSet<EsgHistory>(0);
 
 	public Esg() {
-	}
-
-	@Column(name = "acl_number")
-	public Integer getAclNumber() {
-		return aclNumber;
-	}
-
-	public void setAclNumber(Integer aclNumber) {
-		this.aclNumber = aclNumber;
 	}
 
 	@Column(name = "is_default")

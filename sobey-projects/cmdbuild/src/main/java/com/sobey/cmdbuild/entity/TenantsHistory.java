@@ -22,6 +22,7 @@ public class TenantsHistory extends BasicEntity {
 
 	private Tenants tenants;
 	private Date endDate;
+	private Integer aclNumber;
 	private String password;
 	private String email;
 	private String phone;
@@ -51,6 +52,15 @@ public class TenantsHistory extends BasicEntity {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+
+	@Column(name = "acl_number")
+	public Integer getAclNumber() {
+		return aclNumber;
+	}
+
+	public void setAclNumber(Integer aclNumber) {
+		this.aclNumber = aclNumber;
 	}
 
 	@Column(name = "password", length = 100)

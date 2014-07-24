@@ -18,6 +18,7 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "tenants", schema = "public")
 public class Tenants extends BasicEntity {
 
+	private Integer aclNumber;
 	private String password;
 	private String email;
 	private String phone;
@@ -28,6 +29,15 @@ public class Tenants extends BasicEntity {
 	private Set<TenantsHistory> tenantsHistories = new HashSet<TenantsHistory>(0);
 
 	public Tenants() {
+	}
+
+	@Column(name = "acl_number")
+	public Integer getAclNumber() {
+		return aclNumber;
+	}
+
+	public void setAclNumber(Integer aclNumber) {
+		this.aclNumber = aclNumber;
 	}
 
 	@Column(name = "password", length = 100)

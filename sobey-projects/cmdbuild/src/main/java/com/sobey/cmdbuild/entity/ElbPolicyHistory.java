@@ -24,6 +24,7 @@ public class ElbPolicyHistory extends BasicEntity {
 	private Date endDate;
 	private Integer elb;
 	private Integer elbProtocol;
+	private String ipaddress;
 	private Integer sourcePort;
 	private Integer targetPort;
 
@@ -66,6 +67,15 @@ public class ElbPolicyHistory extends BasicEntity {
 
 	public void setElbProtocol(Integer elbProtocol) {
 		this.elbProtocol = elbProtocol;
+	}
+
+	@Column(name = "ipaddress", length = 100)
+	public String getIpaddress() {
+		return ipaddress;
+	}
+
+	public void setIpaddress(String ipaddress) {
+		this.ipaddress = ipaddress;
 	}
 
 	@Column(name = "source_port")

@@ -20,8 +20,10 @@ public class ElbPolicy extends BasicEntity {
 
 	private Integer elb;
 	private Integer elbProtocol;
+	private String ipaddress;
 	private Integer sourcePort;
 	private Integer targetPort;
+
 	private Set<ElbPolicyHistory> elbPolicyHistories = new HashSet<ElbPolicyHistory>(0);
 
 	public ElbPolicy() {
@@ -43,6 +45,15 @@ public class ElbPolicy extends BasicEntity {
 
 	public void setElbProtocol(Integer elbProtocol) {
 		this.elbProtocol = elbProtocol;
+	}
+
+	@Column(name = "ipaddress", length = 100)
+	public String getIpaddress() {
+		return ipaddress;
+	}
+
+	public void setIpaddress(String ipaddress) {
+		this.ipaddress = ipaddress;
 	}
 
 	@Column(name = "source_port")
