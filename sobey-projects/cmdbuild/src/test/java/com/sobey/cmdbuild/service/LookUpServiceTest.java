@@ -45,6 +45,7 @@ public class LookUpServiceTest extends SpringTransactionalTestCase {
 
 		for (LookUp lookUp : list) {
 			System.out.println(lookUp.getDescription());
+			System.out.println(lookUp.getNotes());
 		}
 
 		assertNotNull(list);

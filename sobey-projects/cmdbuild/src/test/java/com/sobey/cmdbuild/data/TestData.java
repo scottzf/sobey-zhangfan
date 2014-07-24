@@ -80,6 +80,7 @@ public class TestData {
 	public static Integer tagId = 107;
 	public static Integer tenantsId = 105;
 	public static Integer vlanId = 125;
+	public static Integer vlanStatusId = 99; // 未使用
 
 	public static Date startDate = new Date(System.currentTimeMillis());
 
@@ -228,6 +229,7 @@ public class TestData {
 		policy.setElbProtocol(97);
 		policy.setSourcePort(RandomData.randomInt());
 		policy.setTargetPort(RandomData.randomInt());
+		policy.setIpaddress("127.0.0.1");
 		return policy;
 	}
 
@@ -259,7 +261,6 @@ public class TestData {
 		esg.setRemark(RandomData.randomName("remark"));
 		esg.setTenants(tenantsId);
 		esg.setAgentType(agentTypeId);
-		esg.setAclNumber(RandomData.randomInt());
 		esg.setIsDefault(true);
 		return esg;
 	}
@@ -744,6 +745,7 @@ public class TestData {
 		tenants.setAccessKey(RandomData.randomName("accessKey"));
 		tenants.setCompany(RandomData.randomName("company"));
 		tenants.setCreateInfo(RandomData.randomName("createInfo"));
+		tenants.setAclNumber(RandomData.randomInt());
 		return tenants;
 	}
 
@@ -756,7 +758,7 @@ public class TestData {
 		vlan.setBeginDate(startDate);
 		vlan.setTenants(tenantsId);
 		vlan.setIdc(idcId);
-
+		vlan.setVlanStatus(vlanStatusId);
 		vlan.setRemark(RandomData.randomName("remark"));
 		vlan.setSegment(RandomData.randomName("segment"));
 		vlan.setNetMask(RandomData.randomName("netMask"));
