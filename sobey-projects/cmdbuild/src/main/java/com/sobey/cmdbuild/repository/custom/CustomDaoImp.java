@@ -13,7 +13,7 @@ public class CustomDaoImp implements CustomDao {
 
 	@Override
 	public Integer selectMaxAclNumber() {
-		String sqlString = "SELECT MAX(acl_number) from esg where \"Status\"= 'A' ";
+		String sqlString = "SELECT MAX(acl_number) from tenants where \"Status\"= 'A' ";
 		return (Integer) em.createNativeQuery(sqlString).getSingleResult();
 	}
 
