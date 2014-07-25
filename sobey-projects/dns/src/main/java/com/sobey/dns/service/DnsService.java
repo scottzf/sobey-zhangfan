@@ -291,7 +291,7 @@ public class DnsService {
 					gsvc.set_servicename(generateServiceName(ipParameter, policyParameter));
 					gsvc.set_ip(ipParameter.getIpaddress());
 					gsvc.set_maxclient(Integer.valueOf(DNS_MAXCLIENT));
-					gsvc.set_port(policyParameter.getTargetPort());
+					gsvc.set_port(policyParameter.getPort());
 					gsvc.set_sitename(generateSiteName(ipParameter));
 					gsvc.set_servicetype(policyParameter.getProtocolText());
 
@@ -476,7 +476,7 @@ public class DnsService {
 	 * @return
 	 */
 	private static String generateServiceName(DNSPublicIPParameter ipParameter, DNSPolicyParameter dnsPolicyParameter) {
-		return ipParameter.getIpaddress() + "-" + dnsPolicyParameter.getTargetPort();
+		return ipParameter.getIpaddress() + "-" + dnsPolicyParameter.getPort();
 	}
 
 }

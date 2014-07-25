@@ -24,19 +24,22 @@ import com.sobey.dns.constans.WsConstants;
 public class DNSPolicyParameter {
 
 	/**
+	 * 端口
+	 */
+	private Integer port;
+
+	/**
 	 * 协议
 	 */
 	private String protocolText;
 
-	/**
-	 * 源端口
-	 */
-	private Integer sourcePort;
+	public Integer getPort() {
+		return port;
+	}
 
-	/**
-	 * 目标端口
-	 */
-	private Integer targetPort;
+	public void setPort(Integer port) {
+		this.port = port;
+	}
 
 	public String getProtocolText() {
 		return protocolText;
@@ -44,22 +47,6 @@ public class DNSPolicyParameter {
 
 	public void setProtocolText(String protocolText) {
 		this.protocolText = protocolText;
-	}
-
-	public Integer getSourcePort() {
-		return sourcePort;
-	}
-
-	public void setSourcePort(Integer sourcePort) {
-		this.sourcePort = sourcePort;
-	}
-
-	public Integer getTargetPort() {
-		return targetPort;
-	}
-
-	public void setTargetPort(Integer targetPort) {
-		this.targetPort = targetPort;
 	}
 
 	/**

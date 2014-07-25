@@ -40,9 +40,8 @@
 
   <xs:complexType name="DNSPolicyParameter">
     <xs:sequence>
+      <xs:element minOccurs="0" name="port" type="xs:int"/>
       <xs:element minOccurs="0" name="protocolText" type="xs:string"/>
-      <xs:element minOccurs="0" name="sourcePort" type="xs:int"/>
-      <xs:element minOccurs="0" name="targetPort" type="xs:int"/>
     </xs:sequence>
   </xs:complexType>
 
