@@ -148,4 +148,10 @@ public class ApiTest extends TestCase {
 	public void dissociateEIP() {
 		service.dissociateEIP(1940, 1612);
 	}
+	
+	@Test
+	public void aa() {
+		//policyParameter.setSourcePort(NetworkUtil.getPortFromProtocol(protocols[i]));
+		service.dissociateEIP(1940, 1612);
+	}
 }

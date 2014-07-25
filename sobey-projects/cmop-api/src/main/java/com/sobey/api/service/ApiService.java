@@ -5,7 +5,9 @@ import java.util.List;
 import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
+import com.sobey.generate.dns.DNSParameter;
 import com.sobey.generate.instance.CloneVMParameter;
+import com.sobey.generate.loadbalancer.ELBParameter;
 import com.sobey.generate.storage.CreateEs3Parameter;
 
 public interface ApiService {
@@ -117,5 +119,17 @@ public interface ApiService {
 	 * @param serviceId
 	 */
 	public void dissociateEIP(Integer eipId, Integer serviceId);
+
+	public void createELB(ELBParameter elbParameter, Integer tenantsId);
+
+	public void deleteELB(Integer elbId);
+
+	public void associateELB(ELBParameter elbParameter, Integer elbId);
+
+	public void dissociateELB(ELBParameter elbParameter, Integer elbId);
+
+	public void createDNS(DNSParameter dnsParameter, Integer tenantsId);
+
+	public void deleteDNS(DNSParameter dnsParameter);
 
 }
