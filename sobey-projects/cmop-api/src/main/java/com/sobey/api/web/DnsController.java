@@ -51,8 +51,7 @@ public class DnsController {
 
 			DNSPolicyParameter policyParameter = new DNSPolicyParameter();
 			policyParameter.setProtocolText(protocols[i]);
-			policyParameter.setSourcePort(NetworkUtil.getPortFromProtocol(protocols[i]));
-			policyParameter.setTargetPort(NetworkUtil.getPortFromProtocol(protocols[i]));
+			policyParameter.setPort(NetworkUtil.getPortFromProtocol(protocols[i]));
 
 			DNSPublicIPParameter publicIPParameter = new DNSPublicIPParameter();
 			publicIPParameter.setIpaddress(publicIPs[i]);
@@ -103,9 +102,7 @@ public class DnsController {
 
 			DNSPolicyParameter policyParameter = new DNSPolicyParameter();
 			policyParameter.setProtocolText(protocols[i]);
-			policyParameter.setSourcePort(NetworkUtil.getPortFromProtocol(protocols[i]));
-			policyParameter.setTargetPort(NetworkUtil.getPortFromProtocol(protocols[i]));
-
+			policyParameter.setPort(NetworkUtil.getPortFromProtocol(protocols[i]));
 			DNSPublicIPParameter publicIPParameter = new DNSPublicIPParameter();
 			publicIPParameter.setIpaddress(publicIPs[i]);
 			publicIPParameter.getPolicyParameters().add(policyParameter);

@@ -18,14 +18,12 @@ public class DNSTestData {
 
 		DNSPolicyParameter policyParameter = new DNSPolicyParameter();
 		policyParameter.setProtocolText("tcp");
-		policyParameter.setSourcePort(8080);
-		policyParameter.setTargetPort(8080);
+		policyParameter.setPort(8080);
 		policyParameters.add(policyParameter);
 
 		DNSPolicyParameter policyParameter2 = new DNSPolicyParameter();
 		policyParameter2.setProtocolText("tcp");
-		policyParameter2.setSourcePort(80);
-		policyParameter2.setTargetPort(80);
+		policyParameter2.setPort(80);
 
 		policyParameters.add(policyParameter2);
 
@@ -38,14 +36,12 @@ public class DNSTestData {
 
 		DNSPolicyParameter policyParameter3 = new DNSPolicyParameter();
 		policyParameter3.setProtocolText("tcp");
-		policyParameter3.setSourcePort(8080);
-		policyParameter3.setTargetPort(8080);
+		policyParameter3.setPort(8080);
 		policyParameters2.add(policyParameter3);
 
 		DNSPolicyParameter policyParameter4 = new DNSPolicyParameter();
 		policyParameter4.setProtocolText("tcp");
-		policyParameter4.setSourcePort(80);
-		policyParameter4.setTargetPort(80);
+		policyParameter4.setPort(80);
 
 		policyParameters2.add(policyParameter4);
 
