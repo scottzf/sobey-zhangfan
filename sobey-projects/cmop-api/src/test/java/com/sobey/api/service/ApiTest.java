@@ -11,10 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.sobey.api.constans.LookUpConstants;
+import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
-import com.sobey.generate.instance.CloneVMParameter;
 import com.sobey.generate.storage.CreateEs3Parameter;
 import com.sobey.test.data.RandomData;
 
@@ -35,7 +36,7 @@ public class ApiTest extends TestCase {
 	public void createtenants() {
 
 		TenantsDTO tenantsDTO = new TenantsDTO();
-		tenantsDTO.setDescription("liu@163.com");
+		tenantsDTO.setDescription("kai8406@gmail.com");
 		tenantsDTO.setPhone(RandomData.randomName("phone"));
 		tenantsDTO.setRemark(RandomData.randomName("remark"));
 		tenantsDTO.setPassword(RandomData.randomName("password"));
@@ -44,36 +45,43 @@ public class ApiTest extends TestCase {
 		tenantsDTO.setCompany(RandomData.randomName("company"));
 		tenantsDTO.setCreateInfo(RandomData.randomName("createInfo"));
 
-		service.createTenants(tenantsDTO);
+		service.createTenants(tenantsDTO, LookUpConstants.AgentType.VMware.getValue());
 	}
 
 	@Test
 	public void createECS() {
 
-		Integer tenantsId = 1418;
+		Integer tenantsId = 344;
+		Integer ecsSpecId = 130;
+		Integer idcId = 110;
 
-		CloneVMParameter cloneVMParameter = new CloneVMParameter();
-		cloneVMParameter.setDatacenter("xa");
-		cloneVMParameter.setDescription("这个是公共功能模块测试");
-		cloneVMParameter.setVMName("liukai");
-		cloneVMParameter.setVMTemplateName("CnetOS6.5");
+		EcsDTO ecsDTO = new EcsDTO();
+		ecsDTO.setTenants(tenantsId);
+		ecsDTO.setEcsSpec(ecsSpecId);
+		ecsDTO.setRemark("测试环境");
+		ecsDTO.setIdc(idcId);
+		ecsDTO.setDescription("云非编-2");
 
-		service.createECS(tenantsId, cloneVMParameter);
+		service.createECS(ecsDTO, idcId);
 	}
 
 	@Test
 	public void destroyECS() {
-		service.destroyECS(1585);
+		Integer ecsId = 445;
+		service.destroyECS(ecsId);
 	}
 
 	@Test
 	public void powerECS() {
-		service.powerOpsECS(1612, "poweron");
+		Integer ecsId = 430;
+		service.powerOpsECS(ecsId, "poweroff");
 	}
 
 	@Test
 	public void reconfigECS() {
-		service.reconfigECS(1612, 1503);
+		Integer ecsSpecId = 130;
+		Integer ecsId = 430;
+		service.reconfigECS(ecsId, ecsSpecId);
 	}
 
 	@Test
@@ -87,7 +95,8 @@ public class ApiTest extends TestCase {
 		CreateEs3Parameter createEs3Parameter = new CreateEs3Parameter();
 		createEs3Parameter.setVolumeName("Sobey");
 		createEs3Parameter.setVolumeSize("20");
-		service.createES3(tenantsId, createEs3Parameter);
+		service.createES3(tenantsId, createEs3Parameter, LookUpConstants.ES3Type.高IOPS.getValue(),
+				LookUpConstants.AgentType.NetApp.getValue());
 	}
 
 	@Test
@@ -131,7 +140,7 @@ public class ApiTest extends TestCase {
 		policyDTO2.setTargetPort(443);
 		eipPolicyDTOs.add(policyDTO2);
 
-		service.allocateEIP(eipDTO, eipPolicyDTOs);
+		service.allocateEIP(eipDTO, eipPolicyDTOs, LookUpConstants.ISP.中国联通.getValue());
 	}
 
 	@Test
@@ -148,10 +157,10 @@ public class ApiTest extends TestCase {
 	public void dissociateEIP() {
 		service.dissociateEIP(1940, 1612);
 	}
-	
+
 	@Test
 	public void aa() {
-		//policyParameter.setSourcePort(NetworkUtil.getPortFromProtocol(protocols[i]));
+		// policyParameter.setSourcePort(NetworkUtil.getPortFromProtocol(protocols[i]));
 		service.dissociateEIP(1940, 1612);
 	}
 }

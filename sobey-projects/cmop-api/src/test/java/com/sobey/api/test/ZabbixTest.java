@@ -29,6 +29,4 @@ public class ZabbixTest extends TestCase {
 		System.out.println(service.getItem("10.10.2.111", ItemEnum.Free_disk_space_on.getName()).getLastValue());
 	}
 
-	 
-
 }
