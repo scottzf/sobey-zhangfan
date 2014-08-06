@@ -17,6 +17,23 @@
 		<div class="collapse navbar-collapse">
 			<ul class="nav navbar-nav">
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">Tenants<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="${ctx}/tenants/create/">创建租户</a></li>
+					</ul></li>
+					
+					<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">Instance<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="${ctx}/instance/create/">创建ECS</a></li>
+						<li><a href="${ctx}/instance/destroy/">销毁ECS</a></li>
+						<li><a href="${ctx}/instance/power/">ECS电源管理</a></li>
+						<li><a href="${ctx}/instance/reconfig/">更改ECS规格</a></li>
+						<li><a href="${ctx}/instance/relation/">主机、虚拟机关联关系</a></li>
+						<li><a href="${ctx}/instance/sync/">同步关联关系</a></li>
+					</ul></li>
+					
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown">Switch<b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="${ctx}/switch/create/vlan/core/">创建核心Vlan</a></li>
@@ -26,17 +43,7 @@
 						<li><a href="${ctx}/switch/create/esg/">创建Esg</a></li>
 						<li><a href="${ctx}/switch/delete/esg/">删除Esg</a></li>
 					</ul></li>
-				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown">Instance<b class="caret"></b></a>
-					<ul class="dropdown-menu">
-						<li><a href="${ctx}/instance/clone/">虚拟机克隆</a></li>
-						<li><a href="${ctx}/instance/power/">虚拟机电源管理</a></li>
-						<li><a href="${ctx}/instance/reconfig/">虚拟机配置管理</a></li>
-						<li><a href="${ctx}/instance/destroy/">虚拟机销毁</a></li>
-						<li><a href="${ctx}/instance/relation/">主机、虚拟机关联关系</a></li>
-						<li><a href="${ctx}/instance/sync/">同步关联关系</a></li>
-						<li><a href="${ctx}/instance/portGroup/">创建分布式端口</a></li>
-					</ul></li>
+				
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown">Loadbalancer<b class="caret"></b></a>
