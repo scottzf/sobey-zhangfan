@@ -21,6 +21,10 @@ public interface ApiService {
 	public List<IdcDTO> getIdcDTO();
 	
 	public List<EcsSpecDTO> getEcsSpecDTO();
+	
+	public List<EcsDTO> getEcsDTO();
+	
+	
 
 	public void createECS(EcsDTO ecsDTO);
 

@@ -1992,4 +1992,15 @@ public class ApiServiceImpl implements ApiService {
 		return list;
 	}
 
+	@Override
+	public List<EcsDTO> getEcsDTO() {
+		HashMap<String, String> map = new HashMap<String, String>();
+		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
+		List<EcsDTO> list = new ArrayList<EcsDTO>();
+		for (Object obj : cmdbuildSoapService.getEcsList(searchParams).getDtoList().getDto()) {
+			list.add((EcsDTO) obj);
+		}
+		return list;
+	}
+
 }

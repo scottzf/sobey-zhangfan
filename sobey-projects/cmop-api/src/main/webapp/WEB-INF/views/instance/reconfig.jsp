@@ -11,47 +11,27 @@
 	<form class="form-horizontal" role="form" method="post" action=".">
 
 		<div class="page-header">
-			<h3>虚拟机配置更新页面</h3>
+			<h3>ECS配置更新页面</h3>
 		</div>
 
 		<div class="form-group">
-			<label for="datacenter" class="col-sm-2 control-label">数据中心</label>
+			<label for="ecsId" class="col-sm-2 control-label">ECS</label>
 			<div class="col-sm-4">
-				<select id="datacenter" name="datacenter" class="form-control">
-					<option value="xa">西安</option>
-					<option value="cd">成都</option>
+				<select id="ecsId" name="ecsId" class="form-control">
+					<c:forEach var="item" items="${ecsList}">
+						<option value="${item.id }">${item.description}</option>
+					</c:forEach>
 				</select>
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label for="vmName" class="col-sm-2 control-label">虚拟机名称</label>
+			<label for="ecsSpecId" class="col-sm-2 control-label">规格</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="vmName" name="vmName"
-					placeholder="虚拟机名称" value="Sobey">
-			</div>
-		</div>
-
-		<div class="form-group">
-			<label for="cpuNumber" class="col-sm-2 control-label">CPU
-				Number</label>
-			<div class="col-sm-4">
-				<select id="cpuNumber" name="cpuNumber" class="form-control">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="4">4</option>
-				</select>
-			</div>
-		</div>
-
-		<div class="form-group">
-			<label for="memoryMB" class="col-sm-2 control-label">Memory
-				Size</label>
-			<div class="col-sm-4">
-				<select id="memoryMB" name="memoryMB" class="form-control">
-					<option value="1024">1G</option>
-					<option value="2048">2G</option>
-					<option value="4096">4G</option>
+				<select id="ecsSpecId" name="ecsSpecId" class="form-control">
+					<c:forEach var="item" items="${ecsSpecList}">
+						<option value="${item.id }">${item.description}</option>
+					</c:forEach>
 				</select>
 			</div>
 		</div>

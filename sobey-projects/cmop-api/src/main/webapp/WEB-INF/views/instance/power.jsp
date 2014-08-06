@@ -11,24 +11,17 @@
 	<form class="form-horizontal" role="form" method="post" action=".">
 
 		<div class="page-header">
-			<h3>虚拟机电源管理页面</h3>
+			<h3>ECS电源管理页面</h3>
 		</div>
 
 		<div class="form-group">
-			<label for="datacenter" class="col-sm-2 control-label">数据中心</label>
+			<label for="ecsId" class="col-sm-2 control-label">ECS</label>
 			<div class="col-sm-4">
-				<select id="datacenter" name="datacenter" class="form-control">
-					<option value="xa">西安</option>
-					<option value="cd">成都</option>
+				<select id="ecsId" name="ecsId" class="form-control">
+					<c:forEach var="item" items="${ecsList}">
+						<option value="${item.id }">${item.description}</option>
+					</c:forEach>
 				</select>
-			</div>
-		</div>
-
-		<div class="form-group">
-			<label for="vmName" class="col-sm-2 control-label">虚拟机名称</label>
-			<div class="col-sm-4">
-				<input type="text" class="form-control" id="vmName" name="vmName"
-					placeholder="虚拟机名称" value="Sobey">
 			</div>
 		</div>
 

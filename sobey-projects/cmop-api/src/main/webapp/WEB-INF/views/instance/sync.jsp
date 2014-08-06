@@ -15,11 +15,12 @@
 		</div>
 
 		<div class="form-group">
-			<label for="datacenter" class="col-sm-2 control-label">数据中心</label>
+			<label for="idcId" class="col-sm-2 control-label">数据中心</label>
 			<div class="col-sm-4">
-				<select id="datacenter" name="datacenter" class="form-control">
-					<option value="xa">西安</option>
-					<option value="cd">成都</option>
+				<select id="remark" name="remark" class="form-control">
+					<c:forEach var="item" items="${idcList}">
+						<option value="${item.remark }">${item.description}</option>
+					</c:forEach>
 				</select>
 			</div>
 		</div>

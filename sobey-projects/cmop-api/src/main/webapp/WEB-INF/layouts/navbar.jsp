@@ -21,18 +21,27 @@
 					<ul class="dropdown-menu">
 						<li><a href="${ctx}/tenants/create/">创建租户</a></li>
 					</ul></li>
-					
-					<li class="dropdown"><a href="#" class="dropdown-toggle"
+
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown">Instance<b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="${ctx}/instance/create/">创建ECS</a></li>
 						<li><a href="${ctx}/instance/destroy/">销毁ECS</a></li>
 						<li><a href="${ctx}/instance/power/">ECS电源管理</a></li>
 						<li><a href="${ctx}/instance/reconfig/">更改ECS规格</a></li>
-						<li><a href="${ctx}/instance/relation/">主机、虚拟机关联关系</a></li>
 						<li><a href="${ctx}/instance/sync/">同步关联关系</a></li>
 					</ul></li>
-					
+
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">Storage<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="${ctx}/storage/create/">创建Es3</a></li>
+						<li><a href="${ctx}/storage/delete/">删除Es3</a></li>
+						<li><a href="${ctx}/storage/mount/">挂载Es3</a></li>
+						<li><a href="${ctx}/storage/umount/">卸载Es3</a></li>
+						<li><a href="${ctx}/storage/remount/">更改Es3</a></li>
+					</ul></li>
+
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown">Switch<b class="caret"></b></a>
 					<ul class="dropdown-menu">
@@ -43,7 +52,7 @@
 						<li><a href="${ctx}/switch/create/esg/">创建Esg</a></li>
 						<li><a href="${ctx}/switch/delete/esg/">删除Esg</a></li>
 					</ul></li>
-				
+
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown">Loadbalancer<b class="caret"></b></a>
@@ -66,15 +75,7 @@
 						<li><a href="${ctx}/dns/create/">创建Dns</a></li>
 						<li><a href="${ctx}/dns/delete/">删除Dns</a></li>
 					</ul></li>
-				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown">Storage<b class="caret"></b></a>
-					<ul class="dropdown-menu">
-						<li><a href="${ctx}/storage/create/">创建Es3</a></li>
-						<li><a href="${ctx}/storage/delete/">删除Es3</a></li>
-						<li><a href="${ctx}/storage/mount/">挂载Es3</a></li>
-						<li><a href="${ctx}/storage/umount/">卸载Es3</a></li>
-						<li><a href="${ctx}/storage/remount/">更改Es3</a></li>
-					</ul></li>
+
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown">Monitor<b class="caret"></b></a>
 					<ul class="dropdown-menu">
