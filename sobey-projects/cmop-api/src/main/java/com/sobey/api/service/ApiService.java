@@ -3,8 +3,10 @@ package com.sobey.api.service;
 import java.util.List;
 
 import com.sobey.generate.cmdbuild.EcsDTO;
+import com.sobey.generate.cmdbuild.EcsSpecDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
+import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.dns.DNSParameter;
 import com.sobey.generate.loadbalancer.ELBParameter;
@@ -14,7 +16,13 @@ public interface ApiService {
 
 	public void createTenants(TenantsDTO tenantsDTO, Integer agentTypeId);
 
-	public void createECS(EcsDTO ecsDTO, Integer agentTypeId);
+	public List<TenantsDTO> getTenantsDTO();
+	
+	public List<IdcDTO> getIdcDTO();
+	
+	public List<EcsSpecDTO> getEcsSpecDTO();
+
+	public void createECS(EcsDTO ecsDTO);
 
 	public void destroyECS(Integer ecsId);
 

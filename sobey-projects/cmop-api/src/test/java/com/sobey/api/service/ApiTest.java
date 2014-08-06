@@ -62,7 +62,7 @@ public class ApiTest extends TestCase {
 		ecsDTO.setIdc(idcId);
 		ecsDTO.setDescription("云非编-2");
 
-		service.createECS(ecsDTO, idcId);
+		service.createECS(ecsDTO);
 	}
 
 	@Test

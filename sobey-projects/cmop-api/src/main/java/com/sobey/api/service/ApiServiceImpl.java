@@ -134,7 +134,9 @@ public class ApiServiceImpl implements ApiService {
 	 */
 	private TenantsDTO getTenantsDTO(String description) {
 		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("EQ_description", description);
+		if (StringUtils.isNotBlank(description)) {
+			map.put("EQ_description", description);
+		}
 		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
 		return (TenantsDTO) cmdbuildSoapService.findTenantsByParams(searchParams).getDto();
 	}
@@ -327,7 +329,7 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public void createECS(EcsDTO ecsDTO, Integer agentTypeId) {
+	public void createECS(EcsDTO ecsDTO) {
 
 		/**
 		 * Step.1 获得租户、vlan、未使用的IP信息
@@ -369,7 +371,6 @@ public class ApiServiceImpl implements ApiService {
 
 		// Step.4 CMDBuild中创建ECS信息
 		ecsDTO.setServer(serverId); // TODO 此处应该通过算法得出负载最轻的Server
-		ecsDTO.setAgentType(agentTypeId);
 		ecsDTO.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
 		ecsDTO.setIpaddress(ipaddressDTO.getId());
 		cmdbuildSoapService.createEcs(ecsDTO);
@@ -1956,6 +1957,39 @@ public class ApiServiceImpl implements ApiService {
 		createLog(esgDTO.getTenants(), LookUpConstants.ServiceType.ESG.getValue(),
 				LookUpConstants.OperateType.应用规则至.getValue(), LookUpConstants.Result.成功.getValue());
 
+	}
+
+	@Override
+	public List<TenantsDTO> getTenantsDTO() {
+		HashMap<String, String> map = new HashMap<String, String>();
+		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
+		List<TenantsDTO> list = new ArrayList<TenantsDTO>();
+		for (Object obj : cmdbuildSoapService.getTenantsList(searchParams).getDtoList().getDto()) {
+			list.add((TenantsDTO) obj);
+		}
+		return list;
+	}
+
+	@Override
+	public List<IdcDTO> getIdcDTO() {
+		HashMap<String, String> map = new HashMap<String, String>();
+		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
+		List<IdcDTO> list = new ArrayList<IdcDTO>();
+		for (Object obj : cmdbuildSoapService.getIdcList(searchParams).getDtoList().getDto()) {
+			list.add((IdcDTO) obj);
+		}
+		return list;
+	}
+
+	@Override
+	public List<EcsSpecDTO> getEcsSpecDTO() {
+		HashMap<String, String> map = new HashMap<String, String>();
+		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
+		List<EcsSpecDTO> list = new ArrayList<EcsSpecDTO>();
+		for (Object obj : cmdbuildSoapService.getEcsSpecList(searchParams).getDtoList().getDto()) {
+			list.add((EcsSpecDTO) obj);
+		}
+		return list;
 	}
 
 }
