@@ -94,6 +94,8 @@ public class ApiServiceImpl implements ApiService {
 	// 临时数据
 	public static Integer serverId = 143;
 
+	public static Integer storageId = 161;
+
 	@Override
 	public void createTenants(TenantsDTO tenantsDTO, Integer agentTypeId) {
 
@@ -612,7 +614,7 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public void createES3(Integer tenantsId, CreateEs3Parameter createEs3Parameter, Integer Es3Type, Integer agentTypeId) {
+	public void createES3(Es3DTO es3DTO) {
 
 		/**
 		 * Step.1 获得租户、vlan信息
@@ -625,25 +627,19 @@ public class ApiServiceImpl implements ApiService {
 		 */
 
 		// Step.1 获得租户、vlan信息
-		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(tenantsId).getDto();
-		VlanDTO vlanDTO = getVlanDTO(tenantsDTO);
+		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(es3DTO.getTenants()).getDto();
 
 		// Step.2 创建volume
-		String VolumeName = createEs3Parameter.getVolumeName();
-		createEs3Parameter.setVolumeName(VolumeName + tenantsDTO.getId());
+		String VolumeName = es3DTO.getDescription() + tenantsDTO.getId();
+
+		CreateEs3Parameter createEs3Parameter = new CreateEs3Parameter();
+		createEs3Parameter.setVolumeName(VolumeName);
+		createEs3Parameter.setVolumeSize(Integer.valueOf(es3DTO.getDiskSize().intValue()).toString());
 		storageSoapService.createEs3ByStorage(createEs3Parameter);
 
 		// Step.3 CMDBuild中创建ES3信息
-		Es3DTO es3DTO = new Es3DTO();
-		es3DTO.setAgentType(agentTypeId);
-		es3DTO.setDescription(createEs3Parameter.getVolumeName());
-		es3DTO.setIdc(vlanDTO.getIdc());
-		es3DTO.setTenants(tenantsDTO.getId());
-		// TODO 注意单位,脚本用的MB,而页面是GB,测试环境无法创建GB大小的volume.
-		es3DTO.setDiskSize(Double.valueOf(createEs3Parameter.getVolumeSize()));
 		es3DTO.setVolumeName(VolumeName);
-		es3DTO.setStorage(365);// TODO 通过算法得出负载最轻的netappcontroller.
-		es3DTO.setEs3Type(Es3Type);
+		es3DTO.setStorage(storageId);// TODO 通过算法得出负载最轻的Storage(NetappController).
 
 		cmdbuildSoapService.createEs3(es3DTO);
 
@@ -699,7 +695,7 @@ public class ApiServiceImpl implements ApiService {
 		MountEs3Parameter mountEs3Parameter = new MountEs3Parameter();
 		mountEs3Parameter.setClientIPaddress(ecsIP.getDescription());
 		mountEs3Parameter.setNetAppIPaddress(storageIP.getDescription());
-		mountEs3Parameter.setVolumeName(es3dto.getDescription());
+		mountEs3Parameter.setVolumeName(es3dto.getVolumeName());
 		storageSoapService.mountEs3ByStorage(mountEs3Parameter);
 	}
 
@@ -715,7 +711,7 @@ public class ApiServiceImpl implements ApiService {
 		List<String> list = getEcsIpaddressByEs3(es3dto);
 
 		RemountEs3Parameter remountEs3Parameter = new RemountEs3Parameter();
-		remountEs3Parameter.setVolumeName(es3dto.getDescription());
+		remountEs3Parameter.setVolumeName(es3dto.getVolumeName());
 		remountEs3Parameter.getBeforeClientIPaddress().addAll(list);
 
 		list.remove(ecsDTO.getIpaddressDTO().getDescription());// 先去重
@@ -738,7 +734,7 @@ public class ApiServiceImpl implements ApiService {
 		List<String> list = getEcsIpaddressByEs3(es3dto);
 
 		RemountEs3Parameter remountEs3Parameter = new RemountEs3Parameter();
-		remountEs3Parameter.setVolumeName(es3dto.getDescription());
+		remountEs3Parameter.setVolumeName(es3dto.getVolumeName());
 		remountEs3Parameter.getBeforeClientIPaddress().addAll(list);
 
 		list.remove(ecsDTO.getIpaddressDTO().getDescription());// 将需要卸载的ECS IP从List中删除.
@@ -838,7 +834,7 @@ public class ApiServiceImpl implements ApiService {
 
 		// Step.2 删除volume
 		DeleteEs3Parameter deleteEs3Parameter = new DeleteEs3Parameter();
-		deleteEs3Parameter.setVolumeName(es3dto.getDescription());
+		deleteEs3Parameter.setVolumeName(es3dto.getVolumeName());
 		storageSoapService.deleteEs3ByStorage(deleteEs3Parameter);
 
 		// Step.3 将CMDBuild中的ES3信息删除
@@ -1999,6 +1995,17 @@ public class ApiServiceImpl implements ApiService {
 		List<EcsDTO> list = new ArrayList<EcsDTO>();
 		for (Object obj : cmdbuildSoapService.getEcsList(searchParams).getDtoList().getDto()) {
 			list.add((EcsDTO) obj);
+		}
+		return list;
+	}
+
+	@Override
+	public List<Es3DTO> getEs3DTO() {
+		HashMap<String, String> map = new HashMap<String, String>();
+		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
+		List<Es3DTO> list = new ArrayList<Es3DTO>();
+		for (Object obj : cmdbuildSoapService.getEs3List(searchParams).getDtoList().getDto()) {
+			list.add((Es3DTO) obj);
 		}
 		return list;
 	}

@@ -6,11 +6,11 @@ import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EcsSpecDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
+import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.dns.DNSParameter;
 import com.sobey.generate.loadbalancer.ELBParameter;
-import com.sobey.generate.storage.CreateEs3Parameter;
 
 public interface ApiService {
 
@@ -24,6 +24,8 @@ public interface ApiService {
 	
 	public List<EcsDTO> getEcsDTO();
 	
+	public List<Es3DTO> getEs3DTO();
+	
 	
 
 	public void createECS(EcsDTO ecsDTO);
@@ -36,7 +38,7 @@ public interface ApiService {
 
 	public String syncVM(String datacenter);
 
-	public void createES3(Integer tenantsId, CreateEs3Parameter createEs3Parameter, Integer Es3Type, Integer agentTypeId);
+	public void createES3(Es3DTO es3DTO);
 
 	public void attachES3(Integer es3Id, Integer ecsId);
 
