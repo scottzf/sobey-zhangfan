@@ -1,21 +1,21 @@
 package com.sobey.api.web;
 
-import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.sobey.api.service.StorageService;
-import com.sobey.generate.storage.CreateEs3Parameter;
-import com.sobey.generate.storage.DeleteEs3Parameter;
-import com.sobey.generate.storage.MountEs3Parameter;
-import com.sobey.generate.storage.RemountEs3Parameter;
-import com.sobey.generate.storage.UmountEs3Parameter;
-import com.sobey.generate.storage.WSResult;
+import com.sobey.api.constans.LookUpConstants;
+import com.sobey.api.service.ApiService;
+import com.sobey.generate.cmdbuild.EcsDTO;
+import com.sobey.generate.cmdbuild.Es3DTO;
+import com.sobey.generate.cmdbuild.IdcDTO;
+import com.sobey.generate.cmdbuild.TenantsDTO;
 
 /**
  * Storage 模块
@@ -28,7 +28,27 @@ import com.sobey.generate.storage.WSResult;
 public class StorageController {
 
 	@Autowired
-	private StorageService service;
+	private ApiService service;
+
+	@ModelAttribute("tenantsList")
+	public List<TenantsDTO> tenantsDTOList() {
+		return service.getTenantsDTO();
+	}
+
+	@ModelAttribute("idcList")
+	public List<IdcDTO> idcList() {
+		return service.getIdcDTO();
+	}
+
+	@ModelAttribute("ecsList")
+	public List<EcsDTO> ecsList() {
+		return service.getEcsDTO();
+	}
+
+	@ModelAttribute("es3List")
+	public List<Es3DTO> es3List() {
+		return service.getEs3DTO();
+	}
 
 	/**
 	 * 跳转到Storage页面
@@ -43,26 +63,25 @@ public class StorageController {
 	 */
 	@RequestMapping(value = "/create/", method = RequestMethod.POST)
 	public String create(@RequestParam(value = "volumeName") String volumeName,
-			@RequestParam(value = "volumeSize") String volumeSize,
-			@RequestParam(value = "clientIPaddress") String clientIPaddress, RedirectAttributes redirectAttributes) {
+			@RequestParam(value = "volumeSize") Double volumeSize,
+			@RequestParam(value = "es3TypeId") Integer es3TypeId, @RequestParam(value = "idcId") Integer idcId,
+			@RequestParam(value = "remark") String remark, @RequestParam(value = "tenantsId") Integer tenantsId,
 
-		CreateEs3Parameter createEs3Parameter = new CreateEs3Parameter();
+			RedirectAttributes redirectAttributes) {
 
-		createEs3Parameter.setVolumeName(volumeName);
-		createEs3Parameter.setVolumeSize(volumeSize);
-		createEs3Parameter.setClientIPaddress(clientIPaddress);
+		Es3DTO es3dto = new Es3DTO();
+		es3dto.setAgentType(LookUpConstants.AgentType.NetApp.getValue());
+		es3dto.setDescription(volumeName);
+		es3dto.setDiskSize(volumeSize);// TODO 注意单位,脚本用的MB,而页面是GB,测试环境无法创建GB大小的volume.
+		es3dto.setEs3Type(es3TypeId);
+		es3dto.setIdc(idcId);
+		es3dto.setVolumeName(volumeName);
+		es3dto.setTenants(tenantsId);
+		es3dto.setRemark(remark);
 
-		String message = "";
+		service.createES3(es3dto);
 
-		WSResult wsResult = service.createEs3(createEs3Parameter);
-
-		if (wsResult.getCode().equals("0")) {
-			message = "Es3创建成功";
-		} else {
-			message = wsResult.getMessage();
-		}
-
-		redirectAttributes.addFlashAttribute("message", message);
+		redirectAttributes.addFlashAttribute("message", "Es3创建成功");
 
 		return "redirect:/storage/create/";
 	}
@@ -79,22 +98,12 @@ public class StorageController {
 	 * Delete Storage
 	 */
 	@RequestMapping(value = "/delete/", method = RequestMethod.POST)
-	public String delete(@RequestParam(value = "volumeName") String volumeName, RedirectAttributes redirectAttributes) {
+	public String delete(@RequestParam(value = "es3Id") Integer es3Id, RedirectAttributes redirectAttributes) {
 
-		DeleteEs3Parameter deleteEs3Parameter = new DeleteEs3Parameter();
-		deleteEs3Parameter.setVolumeName(volumeName);
+		service.deleteES3(es3Id);
+		;
 
-		String message = "";
-
-		WSResult wsResult = service.deleteEs3(deleteEs3Parameter);
-
-		if (wsResult.getCode().equals("0")) {
-			message = "Es3删除成功";
-		} else {
-			message = wsResult.getMessage();
-		}
-
-		redirectAttributes.addFlashAttribute("message", message);
+		redirectAttributes.addFlashAttribute("message", "ES3删除成功");
 
 		return "redirect:/storage/delete/";
 	}
@@ -111,25 +120,12 @@ public class StorageController {
 	 * Mount Storage
 	 */
 	@RequestMapping(value = "/mount/", method = RequestMethod.POST)
-	public String mount(@RequestParam(value = "volumeName") String volumeName,
-			@RequestParam(value = "clientIPaddress") String clientIPaddress,
-			@RequestParam(value = "netAppIPaddress") String netAppIPaddress, RedirectAttributes redirectAttributes) {
+	public String mount(@RequestParam(value = "es3Id") Integer es3Id, @RequestParam(value = "ecsId") Integer ecsId,
+			RedirectAttributes redirectAttributes) {
 
-		MountEs3Parameter mountEs3Parameter = new MountEs3Parameter();
-		mountEs3Parameter.setVolumeName(volumeName);
-		mountEs3Parameter.setClientIPaddress(clientIPaddress);
-		mountEs3Parameter.setNetAppIPaddress(netAppIPaddress);
+		service.attachES3(es3Id, ecsId);
 
-		String message = "";
-		WSResult wsResult = service.mountEs3(mountEs3Parameter);
-
-		if (wsResult.getCode().equals("0")) {
-			message = "Es3挂载成功";
-		} else {
-			message = wsResult.getMessage();
-		}
-
-		redirectAttributes.addFlashAttribute("message", message);
+		redirectAttributes.addFlashAttribute("message", "ES3挂载成功");
 
 		return "redirect:/storage/mount/";
 	}
@@ -146,60 +142,14 @@ public class StorageController {
 	 * Umount Storage
 	 */
 	@RequestMapping(value = "/umount/", method = RequestMethod.POST)
-	public String umount(@RequestParam(value = "clientIPaddress") String clientIPaddress,
+	public String umount(@RequestParam(value = "es3Id") Integer es3Id, @RequestParam(value = "ecsId") Integer ecsId,
 			RedirectAttributes redirectAttributes) {
 
-		UmountEs3Parameter umountEs3Parameter = new UmountEs3Parameter();
-		umountEs3Parameter.setClientIPaddress(clientIPaddress);
+		service.detachES3(es3Id, ecsId);
 
-		String message = "";
-		WSResult wsResult = service.umountEs3(umountEs3Parameter);
-
-		if (wsResult.getCode().equals("0")) {
-			message = "Es3卸载成功";
-		} else {
-			message = wsResult.getMessage();
-		}
-
-		redirectAttributes.addFlashAttribute("message", message);
+		redirectAttributes.addFlashAttribute("message", "ES3卸载成功");
 
 		return "redirect:/storage/umount/";
-	}
-
-	/**
-	 * 跳转到Remount Storage页面
-	 */
-	@RequestMapping(value = "/remount/")
-	public String remountPage() {
-		return "storage/remount";
-	}
-
-	/**
-	 * Remount Storage
-	 */
-	@RequestMapping(value = "/remount/", method = RequestMethod.POST)
-	public String remount(@RequestParam(value = "volumeName") String volumeName,
-			@RequestParam(value = "beforeClientIPaddress") String[] beforeClientIPaddress,
-			@RequestParam(value = "afterClientIPaddress") String[] afterClientIPaddress,
-			RedirectAttributes redirectAttributes) {
-
-		RemountEs3Parameter remountEs3Parameter = new RemountEs3Parameter();
-		remountEs3Parameter.setVolumeName(volumeName);
-		remountEs3Parameter.getBeforeClientIPaddress().addAll(Arrays.asList(beforeClientIPaddress));
-		remountEs3Parameter.getAfterClientIPaddress().addAll(Arrays.asList(afterClientIPaddress));
-
-		String message = "";
-		WSResult wsResult = service.remountEs3(remountEs3Parameter);
-
-		if (wsResult.getCode().equals("0")) {
-			message = "Es3修改成功";
-		} else {
-			message = wsResult.getMessage();
-		}
-
-		redirectAttributes.addFlashAttribute("message", message);
-
-		return "redirect:/storage/remount/";
 	}
 
 }

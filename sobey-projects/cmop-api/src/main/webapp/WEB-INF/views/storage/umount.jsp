@@ -15,13 +15,26 @@
 		</div>
 
 		<div class="form-group">
-			<label for="clientIPaddress" class="col-sm-2 control-label">挂载目标IP</label>
+			<label for="ecsId" class="col-sm-2 control-label">ECS列表</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="clientIPaddress"
-					name="clientIPaddress" placeholder="客户端IP" value="10.10.100.1">
+				<select id="ecsId" name="ecsId" class="form-control">
+					<c:forEach var="item" items="${ecsList}">
+						<option value="${item.id }">${item.description}</option>
+					</c:forEach>
+				</select>
 			</div>
 		</div>
 
+		<div class="form-group">
+			<label for="" es3Id"" class="col-sm-2 control-label">ES3列表</label>
+			<div class="col-sm-4">
+				<select id="" es3Id"" name="es3Id" class="form-control">
+					<c:forEach var="item" items="${es3List}">
+						<option value="${item.id }">${item.description}</option>
+					</c:forEach>
+				</select>
+			</div>
+		</div>
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
 				<button type="submit" class="btn btn-primary">Umount</button>

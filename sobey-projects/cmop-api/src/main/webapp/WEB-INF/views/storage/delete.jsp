@@ -15,10 +15,13 @@
 		</div>
 
 		<div class="form-group">
-			<label for="volumeName" class="col-sm-2 control-label">卷名</label>
+			<label for="" es3Id"" class="col-sm-2 control-label">ES3列表</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="volumeName"
-					name="volumeName" placeholder="卷名" value="sobey">
+				<select id="" es3Id"" name="es3Id" class="form-control">
+					<c:forEach var="item" items="${es3List}">
+						<option value="${item.id }">${item.description}</option>
+					</c:forEach>
+				</select>
 			</div>
 		</div>
 

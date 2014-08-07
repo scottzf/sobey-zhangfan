@@ -39,7 +39,6 @@
 						<li><a href="${ctx}/storage/delete/">删除Es3</a></li>
 						<li><a href="${ctx}/storage/mount/">挂载Es3</a></li>
 						<li><a href="${ctx}/storage/umount/">卸载Es3</a></li>
-						<li><a href="${ctx}/storage/remount/">更改Es3</a></li>
 					</ul></li>
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"

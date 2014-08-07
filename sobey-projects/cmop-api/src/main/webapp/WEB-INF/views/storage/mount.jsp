@@ -15,27 +15,24 @@
 		</div>
 
 		<div class="form-group">
-			<label for="volumeName" class="col-sm-2 control-label">卷名</label>
+			<label for="ecsId" class="col-sm-2 control-label">ECS列表</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="volumeName"
-					name="volumeName" placeholder="卷名" value="sobey">
+				<select id="ecsId" name="ecsId" class="form-control">
+					<c:forEach var="item" items="${ecsList}">
+						<option value="${item.id }">${item.description}</option>
+					</c:forEach>
+				</select>
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label for="clientIPaddress" class="col-sm-2 control-label">挂载目标IP</label>
+			<label for="" es3Id"" class="col-sm-2 control-label">ES3列表</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="clientIPaddress"
-					name="clientIPaddress" placeholder="客户端IP" value="10.10.100.1">
-			</div>
-		</div>
-
-		<div class="form-group">
-			<label for="netAppIPaddress" class="col-sm-2 control-label">NetApp服务器IPaddress</label>
-			<div class="col-sm-4">
-				<input type="text" class="form-control" id="netAppIPaddress"
-					name="netAppIPaddress" placeholder="Netapp IP" value="10.10.2.34"
-					readonly="readonly">
+				<select id="" es3Id"" name="es3Id" class="form-control">
+					<c:forEach var="item" items="${es3List}">
+						<option value="${item.id }">${item.description}</option>
+					</c:forEach>
+				</select>
 			</div>
 		</div>
 

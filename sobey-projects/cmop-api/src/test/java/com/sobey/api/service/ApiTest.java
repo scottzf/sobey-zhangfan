@@ -16,7 +16,6 @@ import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
-import com.sobey.generate.storage.CreateEs3Parameter;
 import com.sobey.test.data.RandomData;
 
 /**
@@ -91,12 +90,12 @@ public class ApiTest extends TestCase {
 
 	@Test
 	public void createEs3() {
-		Integer tenantsId = 1418;
-		CreateEs3Parameter createEs3Parameter = new CreateEs3Parameter();
-		createEs3Parameter.setVolumeName("Sobey");
-		createEs3Parameter.setVolumeSize("20");
-		service.createES3(tenantsId, createEs3Parameter, LookUpConstants.ES3Type.高IOPS.getValue(),
-				LookUpConstants.AgentType.NetApp.getValue());
+//		Integer tenantsId = 1418;
+//		CreateEs3Parameter createEs3Parameter = new CreateEs3Parameter();
+//		createEs3Parameter.setVolumeName("Sobey");
+//		createEs3Parameter.setVolumeSize("20");
+//		service.createES3(tenantsId, createEs3Parameter, LookUpConstants.ES3Type.高IOPS.getValue(),
+//				LookUpConstants.AgentType.NetApp.getValue());
 	}
 
 	@Test
