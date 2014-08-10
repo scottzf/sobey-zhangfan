@@ -40,6 +40,15 @@
 						<li><a href="${ctx}/storage/mount/">挂载Es3</a></li>
 						<li><a href="${ctx}/storage/umount/">卸载Es3</a></li>
 					</ul></li>
+					
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">EIP<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="${ctx}/eip/allocate/">创建EIP</a></li>
+						<li><a href="${ctx}/eip/recover/">回收EIP</a></li>
+						<li><a href="${ctx}/eip/associate/">绑定EIP</a></li>
+						<li><a href="${ctx}/eip/dissociate/">解绑EIP</a></li>
+					</ul></li>
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown">Switch<b class="caret"></b></a>

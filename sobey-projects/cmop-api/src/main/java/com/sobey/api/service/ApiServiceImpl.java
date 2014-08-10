@@ -847,7 +847,7 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public void allocateEIP(EipDTO eipDTO, List<EipPolicyDTO> eipPolicyDTOs, Integer agentTypeId) {
+	public void allocateEIP(EipDTO eipDTO, List<EipPolicyDTO> eipPolicyDTOs) {
 
 		/**
 		 * Step.1 获得未使用的公网IP.
@@ -866,7 +866,6 @@ public class ApiServiceImpl implements ApiService {
 		IpaddressDTO ipaddressDTO = getPublicIpaddress(eipDTO.getIsp());
 
 		// Step.2 将EIP信息写入CMDBuild
-		eipDTO.setAgentType(agentTypeId);
 		eipDTO.setIdc(ipaddressDTO.getIdc());
 		eipDTO.setIpaddress(ipaddressDTO.getId());
 		eipDTO.setDescription(ipaddressDTO.getDescription());
@@ -963,6 +962,8 @@ public class ApiServiceImpl implements ApiService {
 
 	@Override
 	public void recoverEIP(Integer eipId) {
+
+		System.out.println("eipId:" + eipId);
 
 		/**
 		 * Step.1 获得EIP.
@@ -2006,6 +2007,28 @@ public class ApiServiceImpl implements ApiService {
 		List<Es3DTO> list = new ArrayList<Es3DTO>();
 		for (Object obj : cmdbuildSoapService.getEs3List(searchParams).getDtoList().getDto()) {
 			list.add((Es3DTO) obj);
+		}
+		return list;
+	}
+
+	@Override
+	public List<EipDTO> getEipDTO() {
+		HashMap<String, String> map = new HashMap<String, String>();
+		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
+		List<EipDTO> list = new ArrayList<EipDTO>();
+		for (Object obj : cmdbuildSoapService.getEipList(searchParams).getDtoList().getDto()) {
+			list.add((EipDTO) obj);
+		}
+		return list;
+	}
+
+	@Override
+	public List<ElbDTO> getElbDTO() {
+		HashMap<String, String> map = new HashMap<String, String>();
+		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
+		List<ElbDTO> list = new ArrayList<ElbDTO>();
+		for (Object obj : cmdbuildSoapService.getElbList(searchParams).getDtoList().getDto()) {
+			list.add((ElbDTO) obj);
 		}
 		return list;
 	}

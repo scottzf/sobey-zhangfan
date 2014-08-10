@@ -90,12 +90,12 @@ public class ApiTest extends TestCase {
 
 	@Test
 	public void createEs3() {
-//		Integer tenantsId = 1418;
-//		CreateEs3Parameter createEs3Parameter = new CreateEs3Parameter();
-//		createEs3Parameter.setVolumeName("Sobey");
-//		createEs3Parameter.setVolumeSize("20");
-//		service.createES3(tenantsId, createEs3Parameter, LookUpConstants.ES3Type.高IOPS.getValue(),
-//				LookUpConstants.AgentType.NetApp.getValue());
+		// Integer tenantsId = 1418;
+		// CreateEs3Parameter createEs3Parameter = new CreateEs3Parameter();
+		// createEs3Parameter.setVolumeName("Sobey");
+		// createEs3Parameter.setVolumeSize("20");
+		// service.createES3(tenantsId, createEs3Parameter, LookUpConstants.ES3Type.高IOPS.getValue(),
+		// LookUpConstants.AgentType.NetApp.getValue());
 	}
 
 	@Test
@@ -124,6 +124,7 @@ public class ApiTest extends TestCase {
 		eipDTO.setBandwidth(1);
 		eipDTO.setTenants(tenantsId);
 		eipDTO.setIsp(ispId);
+		eipDTO.setAgentType(LookUpConstants.ISP.中国联通.getValue());
 
 		List<EipPolicyDTO> eipPolicyDTOs = new ArrayList<EipPolicyDTO>();
 
@@ -139,7 +140,7 @@ public class ApiTest extends TestCase {
 		policyDTO2.setTargetPort(443);
 		eipPolicyDTOs.add(policyDTO2);
 
-		service.allocateEIP(eipDTO, eipPolicyDTOs, LookUpConstants.ISP.中国联通.getValue());
+		service.allocateEIP(eipDTO, eipPolicyDTOs);
 	}
 
 	@Test

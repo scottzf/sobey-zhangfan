@@ -6,6 +6,7 @@ import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EcsSpecDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
+import com.sobey.generate.cmdbuild.ElbDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
@@ -25,6 +26,10 @@ public interface ApiService {
 	public List<EcsDTO> getEcsDTO();
 	
 	public List<Es3DTO> getEs3DTO();
+	
+	public List<EipDTO> getEipDTO();
+	
+	public List<ElbDTO> getElbDTO();
 	
 	
 
@@ -46,7 +51,7 @@ public interface ApiService {
 
 	public void deleteES3(Integer es3Id);
 
-	public void allocateEIP(EipDTO eipDTO, List<EipPolicyDTO> eipPolicyDTOs, Integer agentTypeId);
+	public void allocateEIP(EipDTO eipDTO, List<EipPolicyDTO> eipPolicyDTOs);
 
 	public void recoverEIP(Integer eipId);
 
