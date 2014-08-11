@@ -49,6 +49,13 @@
 						<li><a href="${ctx}/eip/associate/">绑定EIP</a></li>
 						<li><a href="${ctx}/eip/dissociate/">解绑EIP</a></li>
 					</ul></li>
+					
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">ELB<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="${ctx}/elb/create/">创建ELB</a></li>
+						<li><a href="${ctx}/elb/delete/">删除ELB</a></li>
+					</ul></li>
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown">Switch<b class="caret"></b></a>

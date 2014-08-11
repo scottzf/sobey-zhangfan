@@ -41,7 +41,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Recover</button>
+				<button type="submit" class="btn btn-primary">解绑</button>
 			</div>
 		</div>
 

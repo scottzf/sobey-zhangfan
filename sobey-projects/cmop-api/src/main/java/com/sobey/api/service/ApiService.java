@@ -7,6 +7,7 @@ import com.sobey.generate.cmdbuild.EcsSpecDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
 import com.sobey.generate.cmdbuild.ElbDTO;
+import com.sobey.generate.cmdbuild.ElbPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
@@ -59,7 +60,7 @@ public interface ApiService {
 
 	public void dissociateEIP(Integer eipId, Integer serviceId);
 
-	public void createELB(ELBParameter elbParameter, Integer tenantsId, Integer agentTypeId);
+	public void createELB(ElbDTO elbDTO, List<ElbPolicyDTO> elbPolicyDTOs,Integer[] ecsIds);
 
 	public void deleteELB(Integer elbId);
 
