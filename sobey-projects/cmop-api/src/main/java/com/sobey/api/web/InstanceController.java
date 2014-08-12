@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.sobey.api.service.AwsService;
 import com.sobey.api.service.InstanceService;
 import com.sobey.generate.instance.CloneVMParameter;
 import com.sobey.generate.instance.DestroyVMParameter;
@@ -28,6 +29,9 @@ public class InstanceController {
 	@Autowired
 	private InstanceService service;
 
+	@Autowired
+	private AwsService awsService;
+
 	/**
 	 * 跳转到克隆页面
 	 */
@@ -44,31 +48,50 @@ public class InstanceController {
 			@RequestParam(value = "gateway") String gateway, @RequestParam(value = "ipaddress") String ipaddress,
 			@RequestParam(value = "subNetMask") String subNetMask, @RequestParam(value = "vmName") String vmName,
 			@RequestParam(value = "vmTemplateOS") String vmTemplateOS, @RequestParam(value = "vlanId") Integer vlanId,
+			@RequestParam(value = "agentTypeId") String agentTypeId,
 			@RequestParam(value = "datacenter") String datacenter, RedirectAttributes redirectAttributes) {
 
-		CloneVMParameter cloneVMParameter = new CloneVMParameter();
-		cloneVMParameter.setDescription(description);
-		cloneVMParameter.setGateway(gateway);
-		cloneVMParameter.setIpaddress(ipaddress);
-		cloneVMParameter.setVMName(vmName);
-		cloneVMParameter.setSubNetMask(subNetMask);
-		cloneVMParameter.setVMTemplateName(vmTemplateOS);
-		cloneVMParameter.setDatacenter(datacenter);
-		cloneVMParameter.setVlanId(vlanId);
+		System.out.println("****************");
+		System.out.println("agentTypeId:" + agentTypeId);
+		System.out.println("****************");
 
-		cloneVMParameter.setVMSUserName("Sobey");
-		cloneVMParameter.setVMTemplateOS("Linux");
+		if ("aws".equals(agentTypeId)) {// aws
 
-		String message = "";
-		WSResult wsResult = service.cloneVM(cloneVMParameter);
+			System.out.println("*****1***********");
 
-		if ("0".equals(wsResult.getCode())) {
-			message = "克隆成功";
-		} else {
-			message = wsResult.getMessage();
+			awsService.createEC2();
+
+			redirectAttributes.addFlashAttribute("message", "创建成功");
+
+		} else if ("vmware".equals(agentTypeId)) {
+
+			System.out.println("******0**********");
+
+			CloneVMParameter cloneVMParameter = new CloneVMParameter();
+			cloneVMParameter.setDescription(description);
+			cloneVMParameter.setGateway(gateway);
+			cloneVMParameter.setIpaddress(ipaddress);
+			cloneVMParameter.setVMName(vmName);
+			cloneVMParameter.setSubNetMask(subNetMask);
+			cloneVMParameter.setVMTemplateName(vmTemplateOS);
+			cloneVMParameter.setDatacenter(datacenter);
+			cloneVMParameter.setVlanId(vlanId);
+
+			cloneVMParameter.setVMSUserName("Sobey");
+			cloneVMParameter.setVMTemplateOS("Linux");
+
+			String message = "";
+
+			WSResult wsResult = service.cloneVM(cloneVMParameter);
+
+			if ("0".equals(wsResult.getCode())) {
+				message = "创建成功";
+			} else {
+				message = wsResult.getMessage();
+			}
+
+			redirectAttributes.addFlashAttribute("message", message);
 		}
-
-		redirectAttributes.addFlashAttribute("message", message);
 
 		return "redirect:/instance/clone/";
 	}

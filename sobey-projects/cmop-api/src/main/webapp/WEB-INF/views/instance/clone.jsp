@@ -25,6 +25,16 @@
 		</div>
 
 		<div class="form-group">
+			<label for="agentTypeId" class="col-sm-2 control-label">agent</label>
+			<div class="col-sm-4">
+				<select id="agentTypeId" name="agentTypeId" class="form-control">
+					<option value="vmware">vmware</option>
+					<option value="aws">aws</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
 			<label for="vmName" class="col-sm-2 control-label">虚拟机名称</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="vmName" name="vmName"
