@@ -29,7 +29,7 @@
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown">Instance<b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="${ctx}/instance/clone/">虚拟机克隆</a></li>
+						<li><a href="${ctx}/instance/clone/">虚拟机创建</a></li>
 						<li><a href="${ctx}/instance/power/">虚拟机电源管理</a></li>
 						<li><a href="${ctx}/instance/reconfig/">虚拟机配置管理</a></li>
 						<li><a href="${ctx}/instance/destroy/">虚拟机销毁</a></li>

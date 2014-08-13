@@ -13,6 +13,16 @@
 		<div class="page-header">
 			<h3>卷创建页面</h3>
 		</div>
+		
+		<div class="form-group">
+			<label for="operation" class="col-sm-2 control-label">存储类型</label>
+			<div class="col-sm-4">
+				<select id="es3Type" name="es3Type" class="form-control">
+					<option value="CnetOS6.5">媒体共享存储(高吞吐)</option>
+					<option value="CnetOS6.5">媒体分布存储(高IOPS])</option>
+				</select>
+			</div>
+		</div>
 
 		<div class="form-group">
 			<label for="volumeName" class="col-sm-2 control-label">卷名</label>

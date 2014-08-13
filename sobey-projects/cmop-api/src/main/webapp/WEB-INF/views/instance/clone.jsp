@@ -46,7 +46,8 @@
 			<label for="operation" class="col-sm-2 control-label">规格</label>
 			<div class="col-sm-4">
 				<select id="vmTemplateOS" name="vmTemplateOS" class="form-control">
-					<option value="CnetOS6.5">CnetOS6.5 4GB CPUx2</option>
+					<option value="CnetOS6.5">CentOS6.5 64bit 4GB CPUx2 GPU渲染</option>
+					<option value="CnetOS6.5">CentOS6.5 64bit 4GB CPUx2 </option>
 				</select>
 			</div>
 		</div>
