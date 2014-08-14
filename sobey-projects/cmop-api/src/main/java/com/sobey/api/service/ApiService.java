@@ -19,20 +19,18 @@ public interface ApiService {
 	public void createTenants(TenantsDTO tenantsDTO, Integer agentTypeId);
 
 	public List<TenantsDTO> getTenantsDTO();
-	
+
 	public List<IdcDTO> getIdcDTO();
-	
+
 	public List<EcsSpecDTO> getEcsSpecDTO();
-	
+
 	public List<EcsDTO> getEcsDTO();
-	
+
 	public List<Es3DTO> getEs3DTO();
-	
+
 	public List<EipDTO> getEipDTO();
-	
+
 	public List<ElbDTO> getElbDTO();
-	
-	
 
 	public void createECS(EcsDTO ecsDTO);
 
@@ -60,7 +58,7 @@ public interface ApiService {
 
 	public void dissociateEIP(Integer eipId, Integer serviceId);
 
-	public void createELB(ElbDTO elbDTO, List<ElbPolicyDTO> elbPolicyDTOs,Integer[] ecsIds);
+	public void createELB(ElbDTO elbDTO, List<ElbPolicyDTO> elbPolicyDTOs, Integer[] ecsIds);
 
 	public void deleteELB(Integer elbId);
 

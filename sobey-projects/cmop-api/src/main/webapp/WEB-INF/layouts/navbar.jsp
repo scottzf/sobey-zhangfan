@@ -23,7 +23,7 @@
 					</ul></li>
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown">Instance<b class="caret"></b></a>
+					data-toggle="dropdown">ECS<b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="${ctx}/instance/create/">创建ECS</a></li>
 						<li><a href="${ctx}/instance/destroy/">销毁ECS</a></li>
@@ -33,14 +33,21 @@
 					</ul></li>
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown">Storage<b class="caret"></b></a>
+					data-toggle="dropdown">ES3<b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="${ctx}/storage/create/">创建Es3</a></li>
 						<li><a href="${ctx}/storage/delete/">删除Es3</a></li>
 						<li><a href="${ctx}/storage/mount/">挂载Es3</a></li>
 						<li><a href="${ctx}/storage/umount/">卸载Es3</a></li>
 					</ul></li>
-					
+
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">ELB<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="${ctx}/elb/create/">创建ELB</a></li>
+						<li><a href="${ctx}/elb/delete/">删除ELB</a></li>
+					</ul></li>
+
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown">EIP<b class="caret"></b></a>
 					<ul class="dropdown-menu">
@@ -48,13 +55,6 @@
 						<li><a href="${ctx}/eip/recover/">回收EIP</a></li>
 						<li><a href="${ctx}/eip/associate/">绑定EIP</a></li>
 						<li><a href="${ctx}/eip/dissociate/">解绑EIP</a></li>
-					</ul></li>
-					
-				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown">ELB<b class="caret"></b></a>
-					<ul class="dropdown-menu">
-						<li><a href="${ctx}/elb/create/">创建ELB</a></li>
-						<li><a href="${ctx}/elb/delete/">删除ELB</a></li>
 					</ul></li>
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
