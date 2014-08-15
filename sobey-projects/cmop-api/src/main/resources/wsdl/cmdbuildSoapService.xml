@@ -1613,6 +1613,7 @@
           <xs:element minOccurs="0" name="dns" type="xs:int"/>
           <xs:element minOccurs="0" name="dnsProtocol" type="xs:int"/>
           <xs:element minOccurs="0" name="dnsProtocolText" type="xs:string"/>
+          <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
           <xs:element minOccurs="0" name="port" type="xs:string"/>
         </xs:sequence>
       </xs:extension>

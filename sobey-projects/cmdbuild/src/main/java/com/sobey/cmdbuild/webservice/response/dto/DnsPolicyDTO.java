@@ -15,6 +15,7 @@ public class DnsPolicyDTO extends BasicDTO {
 	private Integer dns;
 	private Integer dnsProtocol;
 	private String dnsProtocolText;
+	private String ipaddress;
 	private String port;
 
 	public Integer getDns() {
@@ -39,6 +40,14 @@ public class DnsPolicyDTO extends BasicDTO {
 
 	public void setDnsProtocolText(String dnsProtocolText) {
 		this.dnsProtocolText = dnsProtocolText;
+	}
+
+	public String getIpaddress() {
+		return ipaddress;
+	}
+
+	public void setIpaddress(String ipaddress) {
+		this.ipaddress = ipaddress;
 	}
 
 	public String getPort() {

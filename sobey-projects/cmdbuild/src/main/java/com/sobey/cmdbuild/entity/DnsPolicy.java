@@ -20,7 +20,9 @@ public class DnsPolicy extends BasicEntity {
 
 	private Integer dns;
 	private Integer dnsProtocol;
+	private String ipaddress;
 	private Integer port;
+
 	private Set<DnsPolicyHistory> dnsPolicyHistories = new HashSet<DnsPolicyHistory>(0);
 
 	public DnsPolicy() {
@@ -42,6 +44,15 @@ public class DnsPolicy extends BasicEntity {
 
 	public void setDnsProtocol(Integer dnsProtocol) {
 		this.dnsProtocol = dnsProtocol;
+	}
+
+	@Column(name = "ipaddress", length = 100)
+	public String getIpaddress() {
+		return ipaddress;
+	}
+
+	public void setIpaddress(String ipaddress) {
+		this.ipaddress = ipaddress;
 	}
 
 	@Column(name = "port")

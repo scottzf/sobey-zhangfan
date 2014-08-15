@@ -24,6 +24,7 @@ public class DnsPolicyHistory extends BasicEntity {
 	private Date endDate;
 	private Integer dns;
 	private Integer dnsProtocol;
+	private String ipaddress;
 	private Integer port;
 
 	public DnsPolicyHistory() {
@@ -65,6 +66,15 @@ public class DnsPolicyHistory extends BasicEntity {
 
 	public void setDnsProtocol(Integer dnsProtocol) {
 		this.dnsProtocol = dnsProtocol;
+	}
+
+	@Column(name = "ipaddress", length = 100)
+	public String getIpaddress() {
+		return ipaddress;
+	}
+
+	public void setIpaddress(String ipaddress) {
+		this.ipaddress = ipaddress;
 	}
 
 	@Column(name = "port")
