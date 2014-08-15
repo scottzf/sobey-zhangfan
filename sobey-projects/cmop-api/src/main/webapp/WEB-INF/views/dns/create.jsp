@@ -15,6 +15,17 @@
 		</div>
 
 		<div class="form-group">
+			<label for="tenantsId" class="col-sm-2 control-label">租户</label>
+			<div class="col-sm-4">
+				<select id="tenantsId" name="tenantsId" class="form-control">
+					<c:forEach var="item" items="${tenantsList}">
+						<option value="${item.id }">${item.description}</option>
+					</c:forEach>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
 			<label for="domianName" class="col-sm-2 control-label">域名</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="domianName"
@@ -23,16 +34,19 @@
 		</div>
 
 		<div class="form-group clone">
-			<label for="domianName" class="col-sm-2 control-label">公网IP</label>
+			<label for="eipIds" class="col-sm-2 control-label">Eip</label>
 			<div class="col-sm-2">
-				<input type="text" class="form-control" name="publicIPs"
-					placeholder="公网IP地址" value="119.6.200.203">
+				<select id="eipIds" name="eipIds" class="form-control">
+					<c:forEach var="item" items="${eipList}">
+						<option value="${item.id}">${item.description}</option>
+					</c:forEach>
+				</select>
 			</div>
 
 			<div class="col-sm-2">
 				<select name="protocols" class="form-control">
-					<option value="HTTP">HTTP</option>
-					<option value="SSL">HTTPS</option>
+					<option value="39">HTTP</option>
+					<option value="59">HTTPS</option>
 				</select>
 			</div>
 

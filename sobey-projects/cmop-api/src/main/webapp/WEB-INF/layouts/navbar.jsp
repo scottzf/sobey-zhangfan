@@ -58,37 +58,17 @@
 					</ul></li>
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown">Switch<b class="caret"></b></a>
-					<ul class="dropdown-menu">
-						<li><a href="${ctx}/switch/create/vlan/core/">创建核心Vlan</a></li>
-						<li><a href="${ctx}/switch/delete/vlan/core/">删除核心Vlan</a></li>
-						<li><a href="${ctx}/switch/create/vlan/access/">创建接入Vlan</a></li>
-						<li><a href="${ctx}/switch/delete/vlan/access/">删除接入Vlan</a></li>
-						<li><a href="${ctx}/switch/create/esg/">创建Esg</a></li>
-						<li><a href="${ctx}/switch/delete/esg/">删除Esg</a></li>
-					</ul></li>
-
-
-				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown">Loadbalancer<b class="caret"></b></a>
-					<ul class="dropdown-menu">
-						<li><a href="${ctx}/loadbalancer/create/">创建Elb</a></li>
-						<li><a href="${ctx}/loadbalancer/delete/">删除Elb</a></li>
-					</ul></li>
-				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown">Firewall<b class="caret"></b></a>
-					<ul class="dropdown-menu">
-						<li><a href="${ctx}/firewall/create/eip/">创建Eip</a></li>
-						<li><a href="${ctx}/firewall/delete/eip/">删除Eip</a></li>
-						<li><a href="${ctx}/firewall/create/vpn/">创建VPN</a></li>
-						<li><a href="${ctx}/firewall/delete/vpn/">删除VPN</a></li>
-						<li><a href="${ctx}/firewall/change/vpn/">更改VPN</a></li>
-					</ul></li>
-				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown">Dns<b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="${ctx}/dns/create/">创建Dns</a></li>
 						<li><a href="${ctx}/dns/delete/">删除Dns</a></li>
+					</ul></li>
+
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">Esg<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="${ctx}/esg/create/">创建Esg</a></li>
+						<li><a href="${ctx}/esg/delete//">删除Esg</a></li>
 					</ul></li>
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"

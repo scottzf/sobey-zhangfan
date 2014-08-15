@@ -2,6 +2,8 @@ package com.sobey.api.service;
 
 import java.util.List;
 
+import com.sobey.generate.cmdbuild.DnsDTO;
+import com.sobey.generate.cmdbuild.DnsPolicyDTO;
 import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EcsSpecDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
@@ -11,7 +13,6 @@ import com.sobey.generate.cmdbuild.ElbPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
-import com.sobey.generate.dns.DNSParameter;
 import com.sobey.generate.loadbalancer.ELBParameter;
 
 public interface ApiService {
@@ -31,6 +32,8 @@ public interface ApiService {
 	public List<EipDTO> getEipDTO();
 
 	public List<ElbDTO> getElbDTO();
+	
+	public List<DnsDTO> getDnsDTO();
 
 	public void createECS(EcsDTO ecsDTO);
 
@@ -66,7 +69,7 @@ public interface ApiService {
 
 	public void dissociateELB(ELBParameter elbParameter, Integer elbId);
 
-	public void createDNS(DNSParameter dnsParameter, Integer tenantsId, Integer idcId, Integer agentTypeId);
+	public void createDNS(DnsDTO dnsDTO, List<DnsPolicyDTO> dnsPolicyDTOs, Integer[] eipIds);
 
 	public void deleteDNS(Integer dnsId);
 

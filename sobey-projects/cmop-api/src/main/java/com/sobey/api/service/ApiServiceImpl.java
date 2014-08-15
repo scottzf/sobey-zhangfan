@@ -32,7 +32,6 @@ import com.sobey.generate.cmdbuild.LookUpDTO;
 import com.sobey.generate.cmdbuild.MapEcsElbDTO;
 import com.sobey.generate.cmdbuild.MapEcsEs3DTO;
 import com.sobey.generate.cmdbuild.MapEcsEsgDTO;
-import com.sobey.generate.cmdbuild.MapEipDnsDTO;
 import com.sobey.generate.cmdbuild.SearchParams;
 import com.sobey.generate.cmdbuild.ServerDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
@@ -95,6 +94,8 @@ public class ApiServiceImpl implements ApiService {
 	public static Integer serverId = 143;
 
 	public static Integer storageId = 161;
+
+	public static Integer idcId = 110;
 
 	@Override
 	public void createTenants(TenantsDTO tenantsDTO, Integer agentTypeId) {
@@ -1558,47 +1559,84 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public void createDNS(DNSParameter dnsParameter, Integer tenantsId, Integer idcId, Integer agentTypeId) {
+	public void createDNS(DnsDTO dnsDTO, List<DnsPolicyDTO> dnsPolicyDTOs, Integer[] eipIds) {
 
-		DnsDTO dnsDTO = new DnsDTO();
-		dnsDTO.setTenants(tenantsId);
 		dnsDTO.setIdc(idcId);
-		dnsDTO.setDomainName(dnsParameter.getDomianName());
-		dnsDTO.setAgentType(agentTypeId);
-		dnsDTO.setDescription(dnsParameter.getDomianName());
+		dnsDTO.setDomainType(LookUpConstants.DomainType.GSLB.getValue());
+
 		cmdbuildSoapService.createDns(dnsDTO);
 
-		DnsDTO dto = getDnsDTO(dnsDTO.getDescription(), tenantsId);
+		DnsDTO dto = getDnsDTO(dnsDTO.getDescription(), dnsDTO.getTenants());
 
-		for (DNSPublicIPParameter publicIPParameter : dnsParameter.getPublicIPs()) {
-
-			IpaddressDTO ipaddressDTO = getIpaddressDTOByDescription(publicIPParameter.getIpaddress(), idcId);
-
-			EcsDTO ecsDTO = getEcsDTO(ipaddressDTO.getId());
-
-			cmdbuildSoapService.createMapEipDns(ecsDTO.getId(), dto.getId());
-
-			for (DNSPolicyParameter policyParameter : publicIPParameter.getPolicyParameters()) {
-
-				LookUpDTO lookUpDTO = getLookUpDTO(policyParameter.getProtocolText(), "DNSProtocol");
-
-				DnsPolicyDTO dnsPolicyDTO = new DnsPolicyDTO();
-				dnsPolicyDTO.setDnsProtocol(lookUpDTO.getId());
-				dnsPolicyDTO.setPort(policyParameter.getPort().toString());
-				dnsPolicyDTO.setDescription(dto.getDomainName());
-
-				cmdbuildSoapService.createDnsPolicy(dnsPolicyDTO);
-
-			}
-
+		for (Integer eipId : eipIds) {
+			cmdbuildSoapService.createMapEipDns(eipId, dto.getId());
 		}
 
-		dnsSoapService.createDNSByDNS(dnsParameter);
+		for (DnsPolicyDTO policyDTO : dnsPolicyDTOs) {
+
+			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(policyDTO.getDnsProtocol()).getDto();
+
+			EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(Integer.valueOf(policyDTO.getIpaddress())).getDto();
+
+			IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(eipDTO.getIpaddress())
+					.getDto();
+
+			DnsPolicyDTO dnsPolicyDTO = new DnsPolicyDTO();
+
+			dnsPolicyDTO.setDescription(lookUpDTO.getDescription() + "-" + policyDTO.getPort());
+			dnsPolicyDTO.setPort(policyDTO.getPort());
+			dnsPolicyDTO.setDns(dto.getId());
+			dnsPolicyDTO.setIpaddress(ipaddressDTO.getDescription());
+			dnsPolicyDTO.setDnsProtocol(policyDTO.getDnsProtocol());
+
+			cmdbuildSoapService.createDnsPolicy(dnsPolicyDTO);
+		}
+
+		dnsSoapService.createDNSByDNS(wrapperDNSParameter(dto));
 
 		// 写入日志
 		createLog(dto.getTenants(), LookUpConstants.ServiceType.DNS.getValue(),
 				LookUpConstants.OperateType.创建.getValue(), LookUpConstants.Result.成功.getValue());
+	}
 
+	/**
+	 * DnsDTO -> DNSParameter
+	 * 
+	 * @param eipDTO
+	 * @return
+	 */
+	private DNSParameter wrapperDNSParameter(DnsDTO dnsDTO) {
+
+		List<DNSPublicIPParameter> publicIPParameters = new ArrayList<DNSPublicIPParameter>();
+
+		DTOListResult policyResult = geDnsPolicyDTOList(dnsDTO.getId());
+
+		for (Object obj : policyResult.getDtoList().getDto()) {
+
+			List<DNSPolicyParameter> policyParameters = new ArrayList<DNSPolicyParameter>();
+
+			DnsPolicyDTO policyDTO = (DnsPolicyDTO) obj;
+
+			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(policyDTO.getDnsProtocol()).getDto();
+
+			DNSPolicyParameter policyParameter = new DNSPolicyParameter();
+			policyParameter.setProtocolText(lookUpDTO.getDescription());
+			policyParameter.setPort(Integer.valueOf(policyDTO.getPort()));
+
+			policyParameters.add(policyParameter);
+
+			DNSPublicIPParameter publicIPParameter = new DNSPublicIPParameter();
+			publicIPParameter.setIpaddress(policyDTO.getIpaddress());
+			publicIPParameter.getPolicyParameters().addAll(policyParameters);
+			publicIPParameters.add(publicIPParameter);
+		}
+
+		DNSParameter parameter = new DNSParameter();
+		parameter.setDomianName(dnsDTO.getDomainName());
+		parameter.setDomianType(dnsDTO.getDomainTypeText());
+		parameter.getPublicIPs().addAll(publicIPParameters);
+
+		return parameter;
 	}
 
 	private DnsDTO getDnsDTO(String description, Integer tenantsId) {
@@ -1609,81 +1647,23 @@ public class ApiServiceImpl implements ApiService {
 		return (DnsDTO) cmdbuildSoapService.findDnsByParams(searchParams).getDto();
 	}
 
-	private EcsDTO getEcsDTO(Integer ipaddressId) {
-		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("EQ_ipaddress", ipaddressId.toString());
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		return (EcsDTO) cmdbuildSoapService.findEcsByParams(searchParams).getDto();
-	}
-
-	private IpaddressDTO getIpaddressDTOByDescription(String description, Integer idcId) {
-		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("EQ_description", description);
-		if (idcId != null) {
-			map.put("EQ_idc", idcId.toString());
-		}
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		return (IpaddressDTO) cmdbuildSoapService.findIpaddressByParams(searchParams).getDto();
-	}
-
 	@Override
 	public void deleteDNS(Integer dnsId) {
 
 		DnsDTO dnsDTO = (DnsDTO) cmdbuildSoapService.findDns(dnsId).getDto();
 
-		cmdbuildSoapService.deleteDns(dnsId);
+		dnsSoapService.deleteDNSByDNS(wrapperDNSParameter(dnsDTO));
 
-		LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(dnsDTO.getDomainType()).getDto();
-		List<DNSPublicIPParameter> publicIPParameters = new ArrayList<DNSPublicIPParameter>();
-		List<DNSPolicyParameter> policyParameters = new ArrayList<DNSPolicyParameter>();
+		DTOListResult policyResult = geDnsPolicyDTOList(dnsId);
 
-		// 查询出ECS和ELB的关联关系
-		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("EQ_idObj2", dnsId.toString());
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		List<Object> eipDnsDTOs = cmdbuildSoapService.getMapEipDnsList(searchParams).getDtoList().getDto();
+		for (Object obj : policyResult.getDtoList().getDto()) {
 
-		for (Object object : eipDnsDTOs) {
+			DnsPolicyDTO policyDTO = (DnsPolicyDTO) obj;
 
-			DNSPublicIPParameter publicIPParameter = new DNSPublicIPParameter();
-
-			MapEipDnsDTO mapEipDnsDTO = (MapEipDnsDTO) object;
-
-			EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(Integer.valueOf(mapEipDnsDTO.getIdObj1())).getDto();
-
-			IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(eipDTO.getIpaddress())
-					.getDto();
-
-			DTOListResult policyResult = geDnsPolicyDTOList(Integer.valueOf(mapEipDnsDTO.getIdObj2()));
-
-			for (Object obj : policyResult.getDtoList().getDto()) {
-
-				DnsPolicyDTO policyDTO = (DnsPolicyDTO) obj;
-
-				LookUpDTO protocolLookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(policyDTO.getDnsProtocol())
-						.getDto();
-
-				DNSPolicyParameter policyParameter = new DNSPolicyParameter();
-				policyParameter.setPort(Integer.valueOf(policyDTO.getPort()));
-				policyParameter.setProtocolText(protocolLookUpDTO.getDescription());
-
-				policyParameters.add(policyParameter);
-
-				cmdbuildSoapService.deleteElbPolicy(policyDTO.getId());
-			}
-
-			publicIPParameter.setIpaddress(ipaddressDTO.getDescription());
-			publicIPParameter.getPolicyParameters().addAll(policyParameters);
-			publicIPParameters.add(publicIPParameter);
-
+			cmdbuildSoapService.deleteDnsPolicy(policyDTO.getId());
 		}
 
-		DNSParameter dnsParameter = new DNSParameter();
-		dnsParameter.setDomianName(dnsDTO.getDomainName());
-		dnsParameter.setDomianType(lookUpDTO.getDescription());
-		dnsParameter.getPublicIPs().addAll(publicIPParameters);
-
-		dnsSoapService.deleteDNSByDNS(dnsParameter);
+		cmdbuildSoapService.deleteDns(dnsId);
 
 		// 写入日志
 
@@ -2037,6 +2017,17 @@ public class ApiServiceImpl implements ApiService {
 		List<ElbDTO> list = new ArrayList<ElbDTO>();
 		for (Object obj : cmdbuildSoapService.getElbList(searchParams).getDtoList().getDto()) {
 			list.add((ElbDTO) obj);
+		}
+		return list;
+	}
+
+	@Override
+	public List<DnsDTO> getDnsDTO() {
+		HashMap<String, String> map = new HashMap<String, String>();
+		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
+		List<DnsDTO> list = new ArrayList<DnsDTO>();
+		for (Object obj : cmdbuildSoapService.getDnsList(searchParams).getDtoList().getDto()) {
+			list.add((DnsDTO) obj);
 		}
 		return list;
 	}

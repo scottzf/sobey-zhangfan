@@ -15,33 +15,13 @@
 		</div>
 
 		<div class="form-group">
-			<label for="domianName" class="col-sm-2 control-label">域名</label>
+			<label for="" dnsId"" class="col-sm-2 control-label">Dns</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="domianName"
-					name="domianName" placeholder="域名" value="cmoptest.sobeycache.com">
-			</div>
-		</div>
-
-		<div class="form-group clone">
-			<label for="domianName" class="col-sm-2 control-label">公网IP</label>
-			<div class="col-sm-2">
-				<input type="text" class="form-control" name="publicIPs"
-					placeholder="公网IP地址" value="119.6.200.203">
-			</div>
-
-			<div class="col-sm-2">
-				<select name="protocols" class="form-control">
-					<option value="HTTP">HTTP</option>
-					<option value="SSL">HTTPS</option>
+				<select id="" dnsId"" name="dnsId" class="form-control">
+					<c:forEach var="item" items="${dnsList}">
+						<option value="${item.id }">${item.description}</option>
+					</c:forEach>
 				</select>
-			</div>
-
-			<div class="col-sm-1">
-				<button type="button" class="btn btn-default clone">Add</button>
-			</div>
-			<div class="col-sm-1">
-				<button type="button" class="btn btn-warning clone">Delete
-				</button>
 			</div>
 		</div>
 
@@ -51,24 +31,6 @@
 			</div>
 		</div>
 	</form>
-
-	<script>
-		$(document).ready(function() {
-
-			$(document).on("click", "button.clone", function() {
-				var $this = $(this);
-				var $div = $this.closest('div.clone');
-				if ($this.hasClass("btn-warning")) {
-					$div.remove();
-				} else {
-					var $clone = $div.clone();
-					$clone.find('input[type=text]').val('');
-					$div.after($clone);
-				}
-			});
-
-		});
-	</script>
 
 </body>
 </html>

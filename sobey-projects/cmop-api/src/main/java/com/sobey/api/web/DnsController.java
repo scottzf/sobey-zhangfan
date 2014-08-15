@@ -1,20 +1,22 @@
 package com.sobey.api.web;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.sobey.api.service.DnsService;
-import com.sobey.api.utils.NetworkUtil;
-import com.sobey.generate.dns.DNSParameter;
-import com.sobey.generate.dns.DNSPolicyParameter;
-import com.sobey.generate.dns.DNSPublicIPParameter;
-import com.sobey.generate.dns.WSResult;
+import com.sobey.api.constans.LookUpConstants;
+import com.sobey.api.service.ApiService;
+import com.sobey.generate.cmdbuild.DnsDTO;
+import com.sobey.generate.cmdbuild.DnsPolicyDTO;
+import com.sobey.generate.cmdbuild.EipDTO;
+import com.sobey.generate.cmdbuild.TenantsDTO;
 
 /**
  * Dns 模块
@@ -27,7 +29,26 @@ import com.sobey.generate.dns.WSResult;
 public class DnsController {
 
 	@Autowired
-	private DnsService service;
+	private ApiService service;
+
+	@ModelAttribute("tenantsList")
+	public List<TenantsDTO> tenantsDTOList() {
+		return service.getTenantsDTO();
+	}
+
+	@ModelAttribute("eipList")
+	public List<EipDTO> eipList() {
+		return service.getEipDTO();
+	}
+
+	@ModelAttribute("dnsList")
+	public List<DnsDTO> dnsList() {
+		return service.getDnsDTO();
+	}
+
+	private static String getPortFromProtocol(Integer protocol) {
+		return "59".equals(protocol) ? "443" : "80";
+	}
 
 	/**
 	 * 跳转到Dns页面
@@ -42,40 +63,28 @@ public class DnsController {
 	 */
 	@RequestMapping(value = "/create/", method = RequestMethod.POST)
 	public String create(@RequestParam(value = "domianName") String domianName,
-			@RequestParam(value = "publicIPs") String[] publicIPs,
-			@RequestParam(value = "protocols") String[] protocols, RedirectAttributes redirectAttributes) {
+			@RequestParam(value = "tenantsId") Integer tenantsId, @RequestParam(value = "eipIds") Integer[] eipIds,
+			@RequestParam(value = "protocols") Integer[] protocols, RedirectAttributes redirectAttributes) {
 
-		ArrayList<DNSPublicIPParameter> publicIPParameters = new ArrayList<DNSPublicIPParameter>();
+		List<DnsPolicyDTO> dnsPolicyDTOs = new ArrayList<DnsPolicyDTO>();
 
 		for (int i = 0; i < protocols.length; i++) {
-
-			DNSPolicyParameter policyParameter = new DNSPolicyParameter();
-			policyParameter.setProtocolText(protocols[i]);
-			policyParameter.setPort(NetworkUtil.getPortFromProtocol(protocols[i]));
-
-			DNSPublicIPParameter publicIPParameter = new DNSPublicIPParameter();
-			publicIPParameter.setIpaddress(publicIPs[i]);
-			publicIPParameter.getPolicyParameters().add(policyParameter);
-
-			publicIPParameters.add(publicIPParameter);
-
+			DnsPolicyDTO policyDTO = new DnsPolicyDTO();
+			policyDTO.setDnsProtocol(protocols[i]);
+			policyDTO.setPort(getPortFromProtocol(protocols[i]));
+			policyDTO.setIpaddress(eipIds[i].toString());
+			dnsPolicyDTOs.add(policyDTO);
 		}
 
-		DNSParameter dnsParameter = new DNSParameter();
-		dnsParameter.setDomianType("gslb");
-		dnsParameter.setDomianName(domianName);
-		dnsParameter.getPublicIPs().addAll(publicIPParameters);
+		DnsDTO dnsDTO = new DnsDTO();
+		dnsDTO.setAgentType(LookUpConstants.AgentType.Netscaler.getValue());
+		dnsDTO.setTenants(tenantsId);
+		dnsDTO.setDomainName(domianName);
+		dnsDTO.setDescription(domianName);
 
-		String message = "";
-		WSResult wsResult = service.createDNS(dnsParameter);
+		service.createDNS(dnsDTO, dnsPolicyDTOs, eipIds);
 
-		if (wsResult.getCode().equals("0")) {
-			message = "Dns创建成功";
-		} else {
-			message = wsResult.getMessage();
-		}
-
-		redirectAttributes.addFlashAttribute("message", message);
+		redirectAttributes.addFlashAttribute("message", "Dns创建成功");
 
 		return "redirect:/dns/create/";
 	}
@@ -92,40 +101,11 @@ public class DnsController {
 	 * 删除Dns
 	 */
 	@RequestMapping(value = "/delete/", method = RequestMethod.POST)
-	public String delete(@RequestParam(value = "domianName") String domianName,
-			@RequestParam(value = "publicIPs") String[] publicIPs,
-			@RequestParam(value = "protocols") String[] protocols, RedirectAttributes redirectAttributes) {
+	public String delete(@RequestParam(value = "dnsId") Integer dnsId, RedirectAttributes redirectAttributes) {
 
-		ArrayList<DNSPublicIPParameter> publicIPParameters = new ArrayList<DNSPublicIPParameter>();
+		service.deleteDNS(dnsId);
 
-		for (int i = 0; i < protocols.length; i++) {
-
-			DNSPolicyParameter policyParameter = new DNSPolicyParameter();
-			policyParameter.setProtocolText(protocols[i]);
-			policyParameter.setPort(NetworkUtil.getPortFromProtocol(protocols[i]));
-			DNSPublicIPParameter publicIPParameter = new DNSPublicIPParameter();
-			publicIPParameter.setIpaddress(publicIPs[i]);
-			publicIPParameter.getPolicyParameters().add(policyParameter);
-
-			publicIPParameters.add(publicIPParameter);
-
-		}
-
-		DNSParameter dnsParameter = new DNSParameter();
-		dnsParameter.setDomianType("gslb");
-		dnsParameter.setDomianName(domianName);
-		dnsParameter.getPublicIPs().addAll(publicIPParameters);
-
-		String message = "";
-		WSResult wsResult = service.deleteDNS(dnsParameter);
-
-		if (wsResult.getCode().equals("0")) {
-			message = "Dns删除成功";
-		} else {
-			message = wsResult.getMessage();
-		}
-
-		redirectAttributes.addFlashAttribute("message", message);
+		redirectAttributes.addFlashAttribute("message", "Dns删除成功");
 
 		return "redirect:/dns/delete/";
 	}
