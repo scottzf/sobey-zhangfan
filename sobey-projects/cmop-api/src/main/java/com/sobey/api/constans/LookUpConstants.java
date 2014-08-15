@@ -453,4 +453,25 @@ public class LookUpConstants {
 		}
 	}
 
+	public enum DomainType {
+
+		GSLB("GSLB", 25), A("A", 60), CNAME("CNAME", 61);
+
+		private String name;
+		private Integer value;
+
+		private DomainType(String name, Integer value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public Integer getValue() {
+			return value;
+		}
+	}
+
 }
