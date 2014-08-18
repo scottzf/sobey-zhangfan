@@ -11,6 +11,8 @@ import com.sobey.generate.cmdbuild.EipPolicyDTO;
 import com.sobey.generate.cmdbuild.ElbDTO;
 import com.sobey.generate.cmdbuild.ElbPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
+import com.sobey.generate.cmdbuild.EsgDTO;
+import com.sobey.generate.cmdbuild.EsgPolicyDTO;
 import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.loadbalancer.ELBParameter;
@@ -32,8 +34,10 @@ public interface ApiService {
 	public List<EipDTO> getEipDTO();
 
 	public List<ElbDTO> getElbDTO();
-	
+
 	public List<DnsDTO> getDnsDTO();
+
+	public List<EsgDTO> getEsgDTO();
 
 	public void createECS(EcsDTO ecsDTO);
 
@@ -73,7 +77,7 @@ public interface ApiService {
 
 	public void deleteDNS(Integer dnsId);
 
-	public void createESG(Integer tenantsId);
+	public void createESG(EsgDTO esgDTO, List<EsgPolicyDTO> esgPolicyDTOs);
 
 	public void deleteESG(Integer esgId);
 

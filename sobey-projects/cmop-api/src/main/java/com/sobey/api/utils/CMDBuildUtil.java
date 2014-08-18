@@ -27,12 +27,12 @@ public class CMDBuildUtil {
 	 * @param map
 	 * @return
 	 */
-	public static SearchParams wrapperSearchParams(HashMap<String, String> map) {
+	public static SearchParams wrapperSearchParams(HashMap<String, Object> map) {
 
 		SearchParams searchParams = new SearchParams();
 		List<Entry> entries = new ArrayList<Entry>();
 
-		for (java.util.Map.Entry<String, String> entry : map.entrySet()) {
+		for (java.util.Map.Entry<String, Object> entry : map.entrySet()) {
 
 			Entry searchEntry = new Entry();
 			searchEntry.setKey(entry.getKey());

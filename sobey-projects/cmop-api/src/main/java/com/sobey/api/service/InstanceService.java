@@ -77,7 +77,7 @@ public class InstanceService {
 
 		for (java.util.Map.Entry<String, String> entry : vcenterMap.entrySet()) {
 
-			HashMap<String, String> ecsMap = new HashMap<String, String>();
+			HashMap<String, Object> ecsMap = new HashMap<String, Object>();
 			ecsMap.put("EQ_code", entry.getKey());
 
 			// 根据VM的名称获得CMDBuild中的对象Ecs
@@ -96,7 +96,7 @@ public class InstanceService {
 				sb.append("CMDBuild中对应的宿主机:" + serverDTO.getCode() + "<br>");
 				sb.append("--------------------------------------------------");
 
-				HashMap<String, String> serverMap = new HashMap<String, String>();
+				HashMap<String, Object> serverMap = new HashMap<String, Object>();
 				serverMap.put("EQ_code", entry.getValue());
 
 				ServerDTO serverDTO2 = (ServerDTO) cmdbuildService.findServer(

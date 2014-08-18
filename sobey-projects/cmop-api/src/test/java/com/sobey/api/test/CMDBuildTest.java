@@ -51,7 +51,7 @@ public class CMDBuildTest extends TestCase {
 
 		for (java.util.Map.Entry<String, String> entry : vcenterMap.entrySet()) {
 
-			HashMap<String, String> ecsMap = new HashMap<String, String>();
+			HashMap<String, Object> ecsMap = new HashMap<String, Object>();
 			ecsMap.put("EQ_code", entry.getKey());
 
 			DTOResult dtoResult = service.findEcs(CMDBuildUtil.wrapperSearchParams(ecsMap));
@@ -66,7 +66,7 @@ public class CMDBuildTest extends TestCase {
 				System.err.println("vcenter中对应的宿主机:" + entry.getValue());
 				System.err.println("CMDBuild中对应的宿主机:" + serverDTO.getCode());
 
-				HashMap<String, String> serverMap = new HashMap<String, String>();
+				HashMap<String, Object> serverMap = new HashMap<String, Object>();
 				serverMap.put("EQ_code", entry.getValue());
 
 				ServerDTO serverDTO2 = (ServerDTO) service.findServer(CMDBuildUtil.wrapperSearchParams(serverMap))
