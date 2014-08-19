@@ -2012,14 +2012,14 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			// 删除Es3,同时也需要将Es3和其他服务资源的关联关系也一并删除掉.
 			Map<String, Object> paramsMap = Maps.newHashMap();
-			paramsMap.put("EQ_idObj1", id);
-			List<MapEcsEs3> ecsList = comm.mapEcsEs3Service.getMapEcsEs3List(paramsMap);
+			paramsMap.put("EQ_idObj2", id);
+			List<MapEcsEs3> es3List = comm.mapEcsEs3Service.getMapEcsEs3List(paramsMap);
 
 			Map<String, Object> tagParamsMap = Maps.newHashMap();
 			tagParamsMap.put("EQ_idObj2", id);
 			List<MapTagService> tags = comm.mapTagServiceService.getMapTagServiceList(tagParamsMap);
 
-			for (MapEcsEs3 map : ecsList) {
+			for (MapEcsEs3 map : es3List) {
 				deleteMapEcsEs3(map.getIdObj1(), id);
 			}
 
@@ -2238,16 +2238,16 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Validate.notNull(id, ERROR.INPUT_NULL);
 
 			// 删除Eip,同时也需要将Eip和其他服务资源的关联关系也一并删除掉.
+
 			Map<String, Object> paramsMap = Maps.newHashMap();
 			paramsMap.put("EQ_idObj1", id);
-
-			List<MapEcsEip> eips = comm.mapEcsEipService.getMapEcsEipList(paramsMap);
 			List<MapEipDns> dnsList = comm.mapEipDnsService.getMapEipDnsList(paramsMap);
 			List<MapEipElb> elbs = comm.mapEipElbService.getMapEipElbList(paramsMap);
 
-			Map<String, Object> tagParamsMap = Maps.newHashMap();
-			tagParamsMap.put("EQ_idObj2", id);
-			List<MapTagService> tags = comm.mapTagServiceService.getMapTagServiceList(tagParamsMap);
+			Map<String, Object> paramsMap2 = Maps.newHashMap();
+			paramsMap2.put("EQ_idObj2", id);
+			List<MapEcsEip> eips = comm.mapEcsEipService.getMapEcsEipList(paramsMap2);
+			List<MapTagService> tags = comm.mapTagServiceService.getMapTagServiceList(paramsMap2);
 
 			for (MapEcsEip map : eips) {
 				deleteMapEcsEip(map.getIdObj1(), id);
@@ -2258,7 +2258,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			}
 
 			for (MapEipDns map : dnsList) {
-				deleteMapEcsEs3(id, map.getIdObj2());
+				deleteMapEipDns(id, map.getIdObj2());
 			}
 
 			for (MapTagService map : tags) {
@@ -2473,14 +2473,11 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			// 删除Elb,同时也需要将Elb和其他服务资源的关联关系也一并删除掉.
 			Map<String, Object> paramsMap = Maps.newHashMap();
-			paramsMap.put("EQ_idObj1", id);
+			paramsMap.put("EQ_idObj2", id);
 
 			List<MapEipElb> eips = comm.mapEipElbService.getMapEipElbList(paramsMap);
 			List<MapEcsElb> ecsList = comm.mapEcsElbService.getMapEcsElbList(paramsMap);
-
-			Map<String, Object> tagParamsMap = Maps.newHashMap();
-			tagParamsMap.put("EQ_idObj2", id);
-			List<MapTagService> tags = comm.mapTagServiceService.getMapTagServiceList(tagParamsMap);
+			List<MapTagService> tags = comm.mapTagServiceService.getMapTagServiceList(paramsMap);
 
 			for (MapEipElb map : eips) {
 				deleteMapEipElb(map.getIdObj1(), id);
@@ -2702,13 +2699,10 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			// 删除Dns,同时也需要将Dns和其他服务资源的关联关系也一并删除掉.
 			Map<String, Object> paramsMap = Maps.newHashMap();
-			paramsMap.put("EQ_idObj1", id);
+			paramsMap.put("EQ_idObj2", id);
 
 			List<MapEipDns> dnsList = comm.mapEipDnsService.getMapEipDnsList(paramsMap);
-
-			Map<String, Object> tagParamsMap = Maps.newHashMap();
-			tagParamsMap.put("EQ_idObj2", id);
-			List<MapTagService> tags = comm.mapTagServiceService.getMapTagServiceList(tagParamsMap);
+			List<MapTagService> tags = comm.mapTagServiceService.getMapTagServiceList(paramsMap);
 
 			for (MapEipDns map : dnsList) {
 				deleteMapEipDns(map.getIdObj1(), id);
@@ -2923,15 +2917,12 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			// 删除Esg,同时也需要将Esg和其他服务资源的关联关系也一并删除掉.
 			Map<String, Object> paramsMap = Maps.newHashMap();
-			paramsMap.put("EQ_idObj1", id);
+			paramsMap.put("EQ_idObj2", id);
 
-			List<MapEcsEsg> ecslist = comm.mapEcsEsgService.getMapEcsEsgList(paramsMap);
+			List<MapEcsEsg> esgs = comm.mapEcsEsgService.getMapEcsEsgList(paramsMap);
+			List<MapTagService> tags = comm.mapTagServiceService.getMapTagServiceList(paramsMap);
 
-			Map<String, Object> tagParamsMap = Maps.newHashMap();
-			tagParamsMap.put("EQ_idObj2", id);
-			List<MapTagService> tags = comm.mapTagServiceService.getMapTagServiceList(tagParamsMap);
-
-			for (MapEcsEsg map : ecslist) {
+			for (MapEcsEsg map : esgs) {
 				deleteMapEcsEsg(map.getIdObj1(), id);
 			}
 
