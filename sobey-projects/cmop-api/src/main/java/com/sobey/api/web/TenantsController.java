@@ -51,7 +51,7 @@ public class TenantsController {
 		tenantsDTO.setPassword(password);
 		tenantsDTO.setPhone(phone);
 
-		service.createTenants(tenantsDTO, LookUpConstants.AgentType.H3C.getValue());
+		service.createTenants(tenantsDTO);
 
 		redirectAttributes.addFlashAttribute("message", "创建成功");
 

@@ -68,7 +68,9 @@
 					data-toggle="dropdown">Esg<b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="${ctx}/esg/create/">创建Esg</a></li>
-						<li><a href="${ctx}/esg/delete//">删除Esg</a></li>
+						<li><a href="${ctx}/esg/delete/">删除Esg</a></li>
+						<li><a href="${ctx}/esg/associate/">绑定Esg</a></li>
+						<li><a href="${ctx}/esg/dissociate/">解绑Esg</a></li>
 					</ul></li>
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
