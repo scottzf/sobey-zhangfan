@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.sobey.api.constans.LookUpConstants;
 import com.sobey.api.utils.CMDBuildUtil;
+import com.sobey.api.webservice.response.result.WSResult;
 import com.sobey.core.utils.MathsUtil;
 import com.sobey.generate.cmdbuild.CmdbuildSoapService;
 import com.sobey.generate.cmdbuild.DTOListResult;
@@ -97,8 +98,25 @@ public class ApiServiceImpl implements ApiService {
 
 	public static Integer idcId = 110;
 
+	/**
+	 * 默认管理网段:10.10.1.0
+	 */
+	private static String default_Segment_1 = "10.10.1.0";
+
+	/**
+	 * 默认管理网段:10.10.2.0
+	 */
+	private static String default_Segment_2 = "10.10.2.0";
+
+	/**
+	 * ESG的默认名.
+	 */
+	private static String default_esg_name = "默认策略";
+
 	@Override
-	public void createTenants(TenantsDTO tenantsDTO, Integer agentTypeId) {
+	public WSResult createTenants(TenantsDTO tenantsDTO) {
+
+		WSResult result = new WSResult();
 
 		/**
 		 * Step.1 创建租户.
@@ -114,46 +132,64 @@ public class ApiServiceImpl implements ApiService {
 		tenantsDTO.setAclNumber(cmdbuildSoapService.getMaxAclNumber());
 		TenantsDTO tenants = createTenantsDTO(tenantsDTO);
 
-		// Step.2 分配Vlan
+		// Step.2 分配Vlan,每个租户都会分配一个Vlan.
 		VlanDTO vlanDTO = allocationVlan(tenants);
 
+		if (vlanDTO == null) {
+			result.setError(WSResult.SYSTEM_ERROR, "Vlan资源不足,请联系管理员.");
+			return result;
+		}
+
 		// Step.3 创建VPN账号
-		createVPN(tenants, vlanDTO, agentTypeId);
+		createVPN(tenants, vlanDTO);
 
 		// Step.4 创建默认Esg
 		createDefaultEsg(tenants, vlanDTO);
+
+		result.setMessage("租户创建成功");
+		return result;
 	}
 
 	/**
 	 * 创建TenantsDTO,并返回TenantsDTO对象.
+	 * 
+	 * @param tenantsDTO
+	 * @return
 	 */
 	private TenantsDTO createTenantsDTO(TenantsDTO tenantsDTO) {
+
 		cmdbuildSoapService.createTenants(tenantsDTO);
-		return getTenantsDTO(tenantsDTO.getDescription());
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_description", tenantsDTO.getDescription());
+
+		return (TenantsDTO) cmdbuildSoapService.findTenantsByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
 	}
 
 	/**
-	 * 根据 description 返回TenantsDTO对象
+	 * 分配Vlan<br>
+	 * 
+	 * 查出一个未使用的vlan,并将该vlan分配给租户,更新vlan的状态<br>
+	 * 
+	 * 如果没有未使用的vlan,则返回null
+	 * 
+	 * @param tenantsDTO
+	 * @return
 	 */
-	private TenantsDTO getTenantsDTO(String description) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		if (StringUtils.isNotBlank(description)) {
-			map.put("EQ_description", description);
-		}
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		return (TenantsDTO) cmdbuildSoapService.findTenantsByParams(searchParams).getDto();
-	}
-
 	private VlanDTO allocationVlan(TenantsDTO tenantsDTO) {
 
 		// 查询出未被使用的vlan
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_vlanStatus", LookUpConstants.VlanStatus.未使用.getValue());
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		DTOListResult dtoListResult = cmdbuildSoapService.getVlanList(searchParams);
+		DTOListResult dtoListResult = cmdbuildSoapService.getVlanList(CMDBuildUtil.wrapperSearchParams(map));
 
 		// 将vlan分配给租户,更新vlan状态
 		VlanDTO vlanDTO = (VlanDTO) dtoListResult.getDtoList().getDto().get(0);
+
+		if (vlanDTO == null) {
+			return null;
+		}
+
 		vlanDTO.setTenants(tenantsDTO.getId());
 		vlanDTO.setVlanStatus(LookUpConstants.VlanStatus.已使用.getValue());
 		cmdbuildSoapService.updateVlan(vlanDTO.getId(), vlanDTO);
@@ -181,7 +217,7 @@ public class ApiServiceImpl implements ApiService {
 	 * @param tenantsDTO
 	 * @param vlanDTO
 	 */
-	private void createVPN(TenantsDTO tenantsDTO, VlanDTO vlanDTO, Integer agentTypeId) {
+	private void createVPN(TenantsDTO tenantsDTO, VlanDTO vlanDTO) {
 
 		Integer policyId = cmdbuildSoapService.getMaxPolicyId();
 
@@ -193,10 +229,12 @@ public class ApiServiceImpl implements ApiService {
 		parameter.setNetMask(vlanDTO.getNetMask());
 		parameter.setFirewallPolicyId(policyId);
 
+		// 填充网段
 		List<String> segments = new ArrayList<String>();
 		segments.add(vlanDTO.getSegment());
 		parameter.getSegments().addAll(segments);
 
+		// 填充网关
 		List<String> ipaddressList = new ArrayList<String>();
 		ipaddressList.add(vlanDTO.getGateway());
 		parameter.getIpaddress().addAll(ipaddressList);
@@ -205,53 +243,69 @@ public class ApiServiceImpl implements ApiService {
 
 		// 在CMDBuild中创建VPNUser信息
 		VpnDTO vpnDTO = new VpnDTO();
+
 		vpnDTO.setTenants(tenantsDTO.getId());
 		vpnDTO.setRemark(tenantsDTO.getDescription() + "的VPN账号");
 		vpnDTO.setPolicyId(policyId);
 		vpnDTO.setPassword(tenantsDTO.getPassword());
 		vpnDTO.setDescription(tenantsDTO.getDescription());
 		vpnDTO.setIdc(vlanDTO.getIdc());
-		vpnDTO.setAgentType(agentTypeId);
+		vpnDTO.setAgentType(LookUpConstants.AgentType.Fortigate.getValue());
 
 		cmdbuildSoapService.createVpn(vpnDTO);
 	}
 
 	/**
 	 * 创建默认Esg
+	 * 
+	 * @param tenantsDTO
+	 * @param vlanDTO
 	 */
 	private void createDefaultEsg(TenantsDTO tenantsDTO, VlanDTO vlanDTO) {
 
-		// 默认的permit列表包含10.10.1.0和10.10.2.0两个管理网段
+		/**
+		 * Step.1 为租户创建默认的Acl Number
+		 * 
+		 * Step.2 将ESG保存在CMDBuild中
+		 * 
+		 * Step.3 将ESG策略保存在CMDBuild
+		 */
 
+		// Step.1 为租户创建默认的Acl Number
+
+		// 允许列表
 		List<RuleParameter> permits = new ArrayList<RuleParameter>();
 
+		// 默认的permit列表包含10.10.1.0和10.10.2.0两个管理网段
 		RuleParameter permitsRule1 = new RuleParameter();
 		permitsRule1.setSource(vlanDTO.getSegment());
-		permitsRule1.setSourceNetMask("0.0.0.255");
-		permitsRule1.setDestination("10.10.1.0");
-		permitsRule1.setDestinationNetMask("0.0.0.255");
+		permitsRule1.setSourceNetMask(getNetMask(vlanDTO.getSegment()));
+		permitsRule1.setDestination(default_Segment_1);
+		permitsRule1.setDestinationNetMask(getNetMask(default_Segment_1));
 
 		permits.add(permitsRule1);
 
 		RuleParameter permitsRule2 = new RuleParameter();
 		permitsRule2.setSource(vlanDTO.getSegment());
-		permitsRule2.setSourceNetMask("0.0.0.255");
-		permitsRule2.setDestination("10.10.2.0");
-		permitsRule2.setDestinationNetMask("0.0.0.255");
+		permitsRule2.setSourceNetMask(getNetMask(vlanDTO.getSegment()));
+		permitsRule2.setDestination(default_Segment_2);
+		permitsRule2.setDestinationNetMask(getNetMask(default_Segment_2));
 
 		permits.add(permitsRule2);
 
-		// 拒绝所有其他网段访问
+		// 拒绝列表
 		List<RuleParameter> denys = new ArrayList<RuleParameter>();
 
+		// 拒绝所有其他网段访问
 		RuleParameter denysRule = new RuleParameter();
 		denysRule.setSource(vlanDTO.getSegment());
-		denysRule.setSourceNetMask("0.0.0.255");
-		denysRule.setDestination("0.0.0.0");
+		denysRule.setSourceNetMask(getNetMask(vlanDTO.getSegment()));
+		denysRule.setDestination("0.0.0.0"); // 表示所有的网段
 		denysRule.setDestinationNetMask("0");
 
 		denys.add(denysRule);
 
+		// 交换机上创建Acl
 		ESGParameter parameter = new ESGParameter();
 		parameter.setAclNumber(tenantsDTO.getAclNumber());
 		parameter.setDesc(tenantsDTO.getDescription());
@@ -261,19 +315,20 @@ public class ApiServiceImpl implements ApiService {
 
 		switchesSoapService.createESGBySwtich(parameter);
 
-		// 将ESG保存在CMDBuild
+		// Step.2 将ESG保存在CMDBuild中
 
 		EsgDTO dto = new EsgDTO();
-		dto.setDescription("默认策略");
+		dto.setDescription(default_esg_name);
 		dto.setIsDefault(true);
-		dto.setRemark(tenantsDTO.getDescription() + "的默认策略");
+		dto.setIdc(vlanDTO.getIdc());
+		dto.setRemark(tenantsDTO.getDescription() + default_esg_name);
 		dto.setTenants(tenantsDTO.getId());
 		dto.setAgentType(LookUpConstants.AgentType.H3C.getValue());
 
 		cmdbuildSoapService.createEsg(dto);
 
-		// 将ESG策略保存在CMDBuild
-		createEsgPolicy(parameter, dto, tenantsDTO);
+		// Step.3 将ESG策略保存在CMDBuild
+		createEsgPolicyInCMDBuild(parameter, dto, tenantsDTO);
 	}
 
 	/**
@@ -283,10 +338,11 @@ public class ApiServiceImpl implements ApiService {
 	 * @param esgDTO
 	 * @param tenantsDTO
 	 */
-	private void createEsgPolicy(ESGParameter parameter, EsgDTO esgDTO, TenantsDTO tenantsDTO) {
+	private void createEsgPolicyInCMDBuild(ESGParameter parameter, EsgDTO esgDTO, TenantsDTO tenantsDTO) {
 
-		EsgDTO dto = getEsgDTO(esgDTO, tenantsDTO);
+		EsgDTO dto = getEsgDTOByDescription(esgDTO);// 获得租户的默认esg.
 
+		// Denys
 		for (RuleParameter ruleParameter : parameter.getDenys()) {
 			EsgPolicyDTO esgPolicyDTO = new EsgPolicyDTO();
 			esgPolicyDTO.setEsg(dto.getId());
@@ -297,6 +353,7 @@ public class ApiServiceImpl implements ApiService {
 			cmdbuildSoapService.createEsgPolicy(esgPolicyDTO);
 		}
 
+		// Permits
 		for (RuleParameter ruleParameter : parameter.getPermits()) {
 
 			EsgPolicyDTO esgPolicyDTO = new EsgPolicyDTO();
@@ -311,28 +368,33 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	/**
-	 * 根据 description 返回EsgDTO对象
+	 * 根据 description 返回租户下指定的EsgDTO对象
 	 */
-	private EsgDTO getEsgDTO(EsgDTO esgDTO, TenantsDTO tenantsDTO) {
-
+	private EsgDTO getEsgDTOByDescription(EsgDTO esgDTO) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_description", esgDTO.getDescription());
-		map.put("EQ_tenants", tenantsDTO.getId());
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		return (EsgDTO) cmdbuildSoapService.findEsgByParams(searchParams).getDto();
+		map.put("EQ_tenants", esgDTO.getTenants());
+		return (EsgDTO) cmdbuildSoapService.findEsgByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
 	}
 
 	/**
 	 * 将VlanDTO的description进行分解,去掉前缀vlan后,得到数字.<br>
 	 * 
-	 * 注意: description的格式必须为"Vlan + 数字" eg: vlan100
+	 * 注意: description的格式必须为"Vlan + 数字"<br>
+	 * 
+	 * eg: vlan100 -> 100
+	 * 
+	 * @param description
+	 * @return
 	 */
 	private Integer getVlanId(String description) {
-		return Integer.valueOf(StringUtils.remove(description, "vlan"));
+		return Integer.valueOf(StringUtils.remove(description.toLowerCase(), "vlan"));
 	}
 
 	@Override
-	public void createECS(EcsDTO ecsDTO) {
+	public WSResult createECS(EcsDTO ecsDTO) {
+
+		WSResult result = new WSResult();
 
 		/**
 		 * Step.1 获得租户、vlan、未使用的IP信息
@@ -356,7 +418,7 @@ public class ApiServiceImpl implements ApiService {
 		// Step.2 创建虚拟机，
 
 		CloneVMParameter cloneVMParameter = new CloneVMParameter();
-		cloneVMParameter.setVMName(getVMName(tenantsDTO, ipaddressDTO));
+		cloneVMParameter.setVMName(generateVMName(tenantsDTO, ipaddressDTO));
 		cloneVMParameter.setVMTemplateOS(ecsSpecDTO.getOsTypeText());
 		cloneVMParameter.setVMTemplateName(ecsSpecDTO.getImageName());
 		cloneVMParameter.setVMSUserName("sobey");
@@ -367,7 +429,10 @@ public class ApiServiceImpl implements ApiService {
 		cloneVMParameter.setDescription(ecsDTO.getRemark());
 		cloneVMParameter.setDatacenter(idcDTO.getRemark());
 
-		instanceSoapService.cloneVMByInstance(cloneVMParameter);
+		if (!WSResult.SUCESS.equals(instanceSoapService.cloneVMByInstance(cloneVMParameter).getCode())) {
+			result.setError(WSResult.SYSTEM_ERROR, "ECS创建失败,请联系管理员.");
+			return result;
+		}
 
 		// Step.3 分配给虚拟机的IP更改为使用状态
 		cmdbuildSoapService.allocateIpaddress(ipaddressDTO.getId());
@@ -381,10 +446,21 @@ public class ApiServiceImpl implements ApiService {
 		// Step.5 写入日志
 		createLog(tenantsDTO.getId(), LookUpConstants.ServiceType.ECS.getValue(),
 				LookUpConstants.OperateType.创建.getValue(), LookUpConstants.Result.成功.getValue());
+
+		result.setMessage("ECS创建成功");
+		return result;
 	}
 
 	/**
 	 * 创建操作日志
+	 * 
+	 * @param tenantsId
+	 * @param serviceTypeId
+	 *            {@link LookUpConstants}
+	 * @param operateTypeId
+	 *            {@link LookUpConstants}
+	 * @param resultId
+	 *            {@link LookUpConstants}
 	 */
 	private void createLog(Integer tenantsId, Integer serviceTypeId, Integer operateTypeId, Integer resultId) {
 
@@ -403,12 +479,14 @@ public class ApiServiceImpl implements ApiService {
 
 	/**
 	 * 获得tenants的vlan
+	 * 
+	 * @param tenantsDTO
+	 * @return
 	 */
 	private VlanDTO getVlanDTO(TenantsDTO tenantsDTO) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_tenants", tenantsDTO.getId());
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		return (VlanDTO) cmdbuildSoapService.findVlanByParams(searchParams).getDto();
+		return (VlanDTO) cmdbuildSoapService.findVlanByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
 	}
 
 	@Override
@@ -436,13 +514,12 @@ public class ApiServiceImpl implements ApiService {
 		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
 
 		// Step.2 关闭VM电源
-		powerOpsECS(ecsId, "poweroff");
+		powerOpsECS(ecsId, LookUpConstants.powerOperation.poweroff.toString());
 
 		// Step.3 销毁虚拟机
-
 		DestroyVMParameter destroyVMParameter = new DestroyVMParameter();
 		destroyVMParameter.setDatacenter(idcDTO.getRemark());
-		destroyVMParameter.setVMName(getVMName(tenantsDTO, ipaddressDTO));
+		destroyVMParameter.setVMName(generateVMName(tenantsDTO, ipaddressDTO));
 		instanceSoapService.destroyVMByInstance(destroyVMParameter);
 
 		// Step.4 初始化虚拟机的IP状态
@@ -488,7 +565,7 @@ public class ApiServiceImpl implements ApiService {
 
 		// Step.3 操作VM电源
 		PowerVMParameter powerVMParameter = new PowerVMParameter();
-		powerVMParameter.setVMName(getVMName(tenantsDTO, ipaddressDTO));
+		powerVMParameter.setVMName(generateVMName(tenantsDTO, ipaddressDTO));
 		powerVMParameter.setPowerOperation(powerOperation);
 		powerVMParameter.setDatacenter(idcDTO.getRemark());
 		instanceSoapService.powerVMByInstance(powerVMParameter);
@@ -499,15 +576,18 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	/**
-	 * 获得vcenter中VM的名称.<br>
+	 * 生成vcenter中VM的名称.<br>
 	 *
 	 * VMWare中虚拟机名称不能重复,所以将VM名称设置为 "用户定义名称-ip地址"
-	 *
+	 * 
+	 * eg: xman@sobey.com-10.10.100.1
+	 * 
+	 * @param tenantsDTO
+	 * @param ipaddressDTO
 	 * @return
 	 */
-	private String getVMName(TenantsDTO tenantsDTO, IpaddressDTO ipaddressDTO) {
+	private String generateVMName(TenantsDTO tenantsDTO, IpaddressDTO ipaddressDTO) {
 		return tenantsDTO.getDescription() + "-" + ipaddressDTO.getDescription();
-
 	}
 
 	@Override
@@ -536,12 +616,15 @@ public class ApiServiceImpl implements ApiService {
 		EcsSpecDTO ecsSpecDTO = (EcsSpecDTO) cmdbuildSoapService.findEcsSpec(ecsSpecId).getDto();
 
 		// Step.3 更新VM内存大小和CPU数量
-		Long memoryMb = (long) MathsUtil.mul(ecsSpecDTO.getMemory(), 1024);// 因为vmware的内存单位是MB,cmdbuild是GB,所以此处做一个单位换算.
+
+		// MB -> GB ,因为vmware的内存单位是MB,cmdbuild是GB,所以此处做一个单位换算.
+		Long memoryMb = (long) MathsUtil.mul(ecsSpecDTO.getMemory(), 1024);
+
 		ReconfigVMParameter reconfigVMParameter = new ReconfigVMParameter();
 		reconfigVMParameter.setCPUNumber(ecsSpecDTO.getCpuNumber());
 		reconfigVMParameter.setDatacenter(idcDTO.getRemark());
 		reconfigVMParameter.setMemoryMB(memoryMb);
-		reconfigVMParameter.setVMName(getVMName(tenantsDTO, ipaddressDTO));
+		reconfigVMParameter.setVMName(generateVMName(tenantsDTO, ipaddressDTO));
 
 		instanceSoapService.reconfigVMByInstance(reconfigVMParameter);
 
@@ -563,8 +646,6 @@ public class ApiServiceImpl implements ApiService {
 		 * Step.2 获得CMDBuild中的ECS和Server的关联关系
 		 * 
 		 * Step.3 比较两个关联关系,已从vcenter中获得的关联关系为准,对CMDBuild数据进行更新
-		 * 
-		 * 
 		 */
 
 		// Step.1 获得虚拟机和宿主机的实际关联关系
@@ -605,6 +686,12 @@ public class ApiServiceImpl implements ApiService {
 		return sb.toString();
 	}
 
+	/**
+	 * 查询VMWare中VM和Host的实际关联关系,并封装成Map.
+	 * 
+	 * @param datacenter
+	 * @return
+	 */
 	private HashMap<String, String> wrapperRelationVM(String datacenter) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		// 将RelationVMParameter转换成HashMap
@@ -615,7 +702,7 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public void createES3(Es3DTO es3DTO) {
+	public WSResult createES3(Es3DTO es3DTO) {
 
 		/**
 		 * Step.1 获得租户、vlan信息
@@ -627,16 +714,23 @@ public class ApiServiceImpl implements ApiService {
 		 * Step.4 写入日志
 		 */
 
+		WSResult result = new WSResult();
+
 		// Step.1 获得租户、vlan信息
 		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(es3DTO.getTenants()).getDto();
 
 		// Step.2 创建volume
+		// 卷名在netapp中应该是唯一的,故实际的卷名: 租户定义的名称+租户ID
 		String VolumeName = es3DTO.getDescription() + tenantsDTO.getId();
 
 		CreateEs3Parameter createEs3Parameter = new CreateEs3Parameter();
 		createEs3Parameter.setVolumeName(VolumeName);
 		createEs3Parameter.setVolumeSize(Integer.valueOf(es3DTO.getDiskSize().intValue()).toString());
-		storageSoapService.createEs3ByStorage(createEs3Parameter);
+
+		if (!WSResult.SUCESS.equals(storageSoapService.createEs3ByStorage(createEs3Parameter).getCode())) {
+			result.setError(WSResult.SYSTEM_ERROR, "ES3创建失败,请联系管理员.");
+			return result;
+		}
 
 		// Step.3 CMDBuild中创建ES3信息
 		es3DTO.setVolumeName(VolumeName);
@@ -647,10 +741,13 @@ public class ApiServiceImpl implements ApiService {
 		// Step.4 写入日志
 		createLog(tenantsDTO.getId(), LookUpConstants.ServiceType.ES3.getValue(),
 				LookUpConstants.OperateType.创建.getValue(), LookUpConstants.Result.成功.getValue());
+
+		result.setMessage("ES3创建成功");
+		return result;
 	}
 
 	@Override
-	public void attachES3(Integer es3Id, Integer ecsId) {
+	public WSResult attachES3(Integer es3Id, Integer ecsId) {
 
 		/**
 		 * Step.1 获得ECS、ES3、Storage、IP信息
@@ -665,6 +762,8 @@ public class ApiServiceImpl implements ApiService {
 		 * 
 		 */
 
+		WSResult result = new WSResult();
+
 		// Step.1 获得ECS、ES3、Storage、IP信息
 		Es3DTO es3dto = (Es3DTO) cmdbuildSoapService.findEs3(es3Id).getDto();
 		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
@@ -673,18 +772,6 @@ public class ApiServiceImpl implements ApiService {
 		wirteMountRule(es3dto, ecsDTO);
 
 		// Step.3 挂载volume
-		mountEs3(es3dto, ecsDTO);
-
-		// Step.4 将ES3 和ECS的关联关系写入cmdbuild
-		cmdbuildSoapService.createMapEcsEs3(ecsId, es3Id);
-
-		// Step.5 写入日志
-		createLog(es3dto.getTenants(), LookUpConstants.ServiceType.ES3.getValue(),
-				LookUpConstants.OperateType.挂载.getValue(), LookUpConstants.Result.成功.getValue());
-
-	}
-
-	private void mountEs3(Es3DTO es3dto, EcsDTO ecsDTO) {
 
 		// netapp的控制IP
 		IpaddressDTO storageIP = (IpaddressDTO) cmdbuildSoapService
@@ -697,15 +784,33 @@ public class ApiServiceImpl implements ApiService {
 		mountEs3Parameter.setClientIPaddress(ecsIP.getDescription());
 		mountEs3Parameter.setNetAppIPaddress(storageIP.getDescription());
 		mountEs3Parameter.setVolumeName(es3dto.getVolumeName());
-		storageSoapService.mountEs3ByStorage(mountEs3Parameter);
+
+		if (!WSResult.SUCESS.equals(storageSoapService.mountEs3ByStorage(mountEs3Parameter).getCode())) {
+			result.setError(WSResult.SYSTEM_ERROR, "ES3挂载失败,请联系管理员.");
+			return result;
+		}
+
+		// Step.4 将ES3 和ECS的关联关系写入cmdbuild
+		cmdbuildSoapService.createMapEcsEs3(ecsId, es3Id);
+
+		// Step.5 写入日志
+		createLog(es3dto.getTenants(), LookUpConstants.ServiceType.ES3.getValue(),
+				LookUpConstants.OperateType.挂载.getValue(), LookUpConstants.Result.成功.getValue());
+
+		result.setMessage("ES3挂载成功");
+		return result;
+
 	}
 
 	/**
 	 * 向netapp控制器写入可挂载的权限.<br>
 	 * 
-	 * netapp的权限是要将所有的ip都写入控制器中,但是后面会将前面的规则覆盖掉.
+	 * netapp的权限是要将所有的ip都写入控制器中,但是后面会将前面的规则覆盖掉.<br>
 	 * 
 	 * 为了保证规则完成,需要将es3关联的所有ECS查询出来放入after、before list中.
+	 * 
+	 * @param es3dto
+	 * @param ecsDTO
 	 */
 	private void wirteMountRule(Es3DTO es3dto, EcsDTO ecsDTO) {
 
@@ -729,6 +834,9 @@ public class ApiServiceImpl implements ApiService {
 	 * netapp的权限是要将所有的ip都写入控制器中,但是后面会将前面的规则覆盖掉.
 	 * 
 	 * 为了保证规则完成,需要将es3关联的所有ECS查询出来放入after、before list中.
+	 * 
+	 * @param es3dto
+	 * @param ecsDTO
 	 */
 	private void wirteUmountRule(Es3DTO es3dto, EcsDTO ecsDTO) {
 
@@ -746,19 +854,18 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	/**
-	 * 获得ES3关联的所有ECS IP集合.
+	 * 获得ES3关联的所有ECS的IP集合.
 	 * 
 	 * @param es3dto
 	 * @return
 	 */
 	private List<String> getEcsIpaddressByEs3(Es3DTO es3dto) {
 
+		// 查询出ECS和ES3的关联关系
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_idObj2", es3dto.getId());
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-
-		// 查询出ECS和ES3的关联关系
-		List<Object> ecsEs3DTOs = cmdbuildSoapService.getMapEcsEs3List(searchParams).getDtoList().getDto();
+		List<Object> ecsEs3DTOs = cmdbuildSoapService.getMapEcsEs3List(CMDBuildUtil.wrapperSearchParams(map))
+				.getDtoList().getDto();
 
 		List<String> list = new ArrayList<String>();
 
@@ -771,20 +878,21 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public void detachES3(Integer es3Id, Integer ecsId) {
+	public WSResult detachES3(Integer es3Id, Integer ecsId) {
 
 		/**
 		 * Step.1 获得ECS、ES3信息
 		 * 
 		 * Step.2 ES3的IP从netapp控制器中排除权限<br>
 		 * 
-		 * Step.3 挂载volume
+		 * Step.3 卸载volume
 		 * 
 		 * Step.4 将ES3 和ECS的关联关系写入cmdbuild
 		 * 
 		 * Step.5 写入日志
-		 * 
 		 */
+
+		WSResult result = new WSResult();
 
 		// Step.1 获得ECS、ES3、Storage、IP信息
 		Es3DTO es3dto = (Es3DTO) cmdbuildSoapService.findEs3(es3Id).getDto();
@@ -793,8 +901,17 @@ public class ApiServiceImpl implements ApiService {
 		// Step.2 ES3的IP从netapp控制器中排除权限<br>
 		wirteUmountRule(es3dto, ecsDTO);
 
-		// Step.3 挂载volume
-		umountEs3(ecsDTO);
+		// Step.3 卸载volume
+		// ECS的IP
+		IpaddressDTO ecsIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
+
+		UmountEs3Parameter umountEs3Parameter = new UmountEs3Parameter();
+		umountEs3Parameter.setClientIPaddress(ecsIP.getDescription());
+
+		if (!WSResult.SUCESS.equals(storageSoapService.umountEs3ByStorage(umountEs3Parameter).getCode())) {
+			result.setError(WSResult.SYSTEM_ERROR, "ES3卸载失败,请联系管理员.");
+			return result;
+		}
 
 		// Step.4 将ES3 和ECS的关联关系写入cmdbuild
 		cmdbuildSoapService.deleteMapEcsEs3(ecsId, es3Id);
@@ -803,21 +920,13 @@ public class ApiServiceImpl implements ApiService {
 		createLog(es3dto.getTenants(), LookUpConstants.ServiceType.ES3.getValue(),
 				LookUpConstants.OperateType.卸载.getValue(), LookUpConstants.Result.成功.getValue());
 
-	}
+		result.setMessage("ES3卸载成功");
+		return result;
 
-	private void umountEs3(EcsDTO ecsDTO) {
-
-		// ECS的IP
-		IpaddressDTO ecsIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
-
-		UmountEs3Parameter umountEs3Parameter = new UmountEs3Parameter();
-		umountEs3Parameter.setClientIPaddress(ecsIP.getDescription());
-
-		storageSoapService.umountEs3ByStorage(umountEs3Parameter);
 	}
 
 	@Override
-	public void deleteES3(Integer es3Id) {
+	public WSResult deleteES3(Integer es3Id) {
 
 		/**
 		 * Step.1 获得 ES3信息
@@ -830,21 +939,29 @@ public class ApiServiceImpl implements ApiService {
 		 * 
 		 */
 
+		WSResult result = new WSResult();
+
 		// Step.1 获得 ES3信息
 		Es3DTO es3dto = (Es3DTO) cmdbuildSoapService.findEs3(es3Id).getDto();
 
 		// Step.2 删除volume
 		DeleteEs3Parameter deleteEs3Parameter = new DeleteEs3Parameter();
 		deleteEs3Parameter.setVolumeName(es3dto.getVolumeName());
-		storageSoapService.deleteEs3ByStorage(deleteEs3Parameter);
+
+		if (!WSResult.SUCESS.equals(storageSoapService.deleteEs3ByStorage(deleteEs3Parameter).getCode())) {
+			result.setError(WSResult.SYSTEM_ERROR, "ES3删除失败,请联系管理员.");
+			return result;
+		}
 
 		// Step.3 将CMDBuild中的ES3信息删除
 		cmdbuildSoapService.deleteEs3(es3Id);
 
 		// Step.4 写入日志
-
 		createLog(es3dto.getTenants(), LookUpConstants.ServiceType.ES3.getValue(),
 				LookUpConstants.OperateType.删除.getValue(), LookUpConstants.Result.成功.getValue());
+
+		result.setMessage("ES3删除成功");
+		return result;
 	}
 
 	@Override
@@ -1685,23 +1802,6 @@ public class ApiServiceImpl implements ApiService {
 		return (EsgDTO) cmdbuildSoapService.findEsgByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
 	}
 
-	/**
-	 * 获得租户下的所有ESG
-	 * 
-	 * @param tenantsDTO
-	 * @return
-	 */
-	private List<EsgDTO> getEsgDTO(TenantsDTO tenantsDTO) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_tenants", tenantsDTO.getId());
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		List<EsgDTO> list = new ArrayList<EsgDTO>();
-		for (Object obj : cmdbuildSoapService.getEsgList(searchParams).getDtoList().getDto()) {
-			list.add((EsgDTO) obj);
-		}
-		return list;
-	}
-
 	@Override
 	public void createESG(EsgDTO esgDTO, List<EsgPolicyDTO> esgPolicyDTOs) {
 
@@ -1715,16 +1815,11 @@ public class ApiServiceImpl implements ApiService {
 
 		EsgDTO defaultEsgDTO = getDefaultEsgDTO(tenantsDTO);
 
-		System.out.println("********************");
-		System.out.println("defaultEsgDTO:" + defaultEsgDTO);
-		System.out.println("IDC:" + defaultEsgDTO.getIdc());
-		System.out.println("********************");
-
 		esgDTO.setIdc(defaultEsgDTO.getIdc());
 		esgDTO.setIsDefault(false);
 		cmdbuildSoapService.createEsg(esgDTO);
 
-		EsgDTO dto = getEsgDTO(esgDTO, tenantsDTO);
+		EsgDTO dto = getEsgDTOByDescription(esgDTO);
 
 		for (EsgPolicyDTO policyDTO : esgPolicyDTOs) {
 
@@ -1735,14 +1830,11 @@ public class ApiServiceImpl implements ApiService {
 					+ policyDTO.getTargetIP());
 
 			esgPolicyDTO.setEsg(dto.getId());
-			esgPolicyDTO.setSourceIP(policyDTO.getSourceIP());
 			esgPolicyDTO.setTargetIP(policyDTO.getTargetIP());
 			esgPolicyDTO.setPolicyType(policyDTO.getPolicyType());
 
 			cmdbuildSoapService.createEsgPolicy(esgPolicyDTO);
 		}
-
-		switchesSoapService.createESGBySwtich(wrapperESGParameter(dto));
 
 		createLog(esgDTO.getTenants(), LookUpConstants.ServiceType.ESG.getValue(),
 				LookUpConstants.OperateType.创建.getValue(), LookUpConstants.Result.成功.getValue());
@@ -1760,10 +1852,13 @@ public class ApiServiceImpl implements ApiService {
 		esgParameter.setDesc(esgDTO.getDescription());
 		esgParameter.setVlanId(getVlanDTO(tenantsDTO).getId());
 
-		List<EsgDTO> esgDTOs = getEsgDTO(tenantsDTO);
+		// 获得租户所有的ESG
 
 		List<RuleParameter> permits = new ArrayList<RuleParameter>();
 		List<RuleParameter> denys = new ArrayList<RuleParameter>();
+
+		// 非默认ESG
+		List<EsgDTO> esgDTOs = getEsgDTO();
 
 		for (EsgDTO dto : esgDTOs) {
 
@@ -1771,20 +1866,58 @@ public class ApiServiceImpl implements ApiService {
 
 				EsgPolicyDTO policyDTO = (EsgPolicyDTO) object;
 
-				RuleParameter ruleParameter = new RuleParameter();
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("EQ_idObj2", dto.getId());
+				SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
+				List<Object> ecsEsgDTOs = cmdbuildSoapService.getMapEcsEsgList(searchParams).getDtoList().getDto();
 
-				ruleParameter.setSource(policyDTO.getSourceIP());
-				ruleParameter.setSourceNetMask(getNetMask(policyDTO.getSourceIP()));
-				ruleParameter.setDestination(policyDTO.getTargetIP());
-				ruleParameter.setDestinationNetMask(getNetMask(policyDTO.getTargetIP()));
+				for (Object mapObj : ecsEsgDTOs) {
 
-				if (LookUpConstants.PolicyType.Permit.getValue().equals(policyDTO.getPolicyType())) { // prmits
-					permits.add(ruleParameter);
-				} else {// denys
-					denys.add(ruleParameter);
+					MapEcsEsgDTO mapEcsEsgDTO = (MapEcsEsgDTO) mapObj;
+
+					EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(Integer.valueOf(mapEcsEsgDTO.getIdObj1()))
+							.getDto();
+
+					IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress())
+							.getDto();
+
+					RuleParameter ruleParameter = new RuleParameter();
+					ruleParameter.setSource(ipaddressDTO.getDescription());
+					ruleParameter.setSourceNetMask(getNetMask(ipaddressDTO.getDescription()));
+					ruleParameter.setDestination(policyDTO.getTargetIP());
+					ruleParameter.setDestinationNetMask(getNetMask(policyDTO.getTargetIP()));
+
+					if (LookUpConstants.PolicyType.Permit.getValue().equals(policyDTO.getPolicyType())) { // prmits
+						permits.add(ruleParameter);
+					} else {// denys
+						denys.add(ruleParameter);
+					}
+
 				}
+
 			}
 		}
+
+		// 默认ESG
+		EsgDTO defaultEsgDTO = getDefaultEsgDTO(tenantsDTO);
+		for (Object object : geEsgPolicyDTOList(defaultEsgDTO.getId()).getDtoList().getDto()) {
+
+			EsgPolicyDTO policyDTO = (EsgPolicyDTO) object;
+
+			RuleParameter ruleParameter = new RuleParameter();
+			ruleParameter.setSource(policyDTO.getSourceIP());
+			ruleParameter.setSourceNetMask(getNetMask(policyDTO.getSourceIP()));
+			ruleParameter.setDestination(policyDTO.getTargetIP());
+			ruleParameter.setDestinationNetMask(getNetMask(policyDTO.getTargetIP()));
+
+			if (LookUpConstants.PolicyType.Permit.getValue().equals(policyDTO.getPolicyType())) { // prmits
+				permits.add(ruleParameter);
+			} else {// denys
+				denys.add(ruleParameter);
+			}
+
+		}
+
 		esgParameter.getPermits().addAll(permits);
 		esgParameter.getDenys().addAll(denys);
 
@@ -1792,7 +1925,11 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	/**
-	 * 字符串结尾为0返回"0.0.0.255",表示网关. 字符串结尾不为0返回"0.0.0.0",表示单个IP.
+	 * 字符串结尾为0返回"0.0.0.255",表示网关. 字符串结尾不为0返回"0.0.0.0",表示单个IP.<br>
+	 * 
+	 * eg: 10.10.100.0 -> 0.0.0.255 , 10.10.100.1 -> 0.0.0.0
+	 * 
+	 * 
 	 */
 	private String getNetMask(String paramter) {
 		return "0".equals(StringUtils.split(paramter, ".")[3]) ? "0.0.0.255" : "0.0.0.0";
@@ -1818,7 +1955,7 @@ public class ApiServiceImpl implements ApiService {
 		EsgDTO esgDTO = (EsgDTO) cmdbuildSoapService.findEsg(esgId).getDto();
 
 		// 删除策略
-		for (Object obj : getElbPolicyDTOList(esgId).getDtoList().getDto()) {
+		for (Object obj : geEsgPolicyDTOList(esgId).getDtoList().getDto()) {
 
 			EsgPolicyDTO policyDTO = (EsgPolicyDTO) obj;
 
@@ -1848,17 +1985,6 @@ public class ApiServiceImpl implements ApiService {
 		return listResult;
 	}
 
-	/**
-	 * 获得ESG下所有的policy
-	 */
-	private DTOListResult geEsgDTOList(Integer tenantsId) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_tenants", tenantsId);
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		DTOListResult listResult = cmdbuildSoapService.getEsgList(searchParams);
-		return listResult;
-	}
-
 	@Override
 	public void associateESG(Integer ecsId, Integer esgId) {
 
@@ -1866,54 +1992,7 @@ public class ApiServiceImpl implements ApiService {
 
 		EsgDTO esgDTO = (EsgDTO) cmdbuildSoapService.findEsg(esgId).getDto();
 
-		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
-
-		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(esgDTO.getTenants()).getDto();
-
-		VlanDTO vlanDTO = getVlanDTO(tenantsDTO);
-
-		List<RuleParameter> denys = new ArrayList<RuleParameter>();
-		List<RuleParameter> permits = new ArrayList<RuleParameter>();
-
-		// 获得这个租户下所有的esg下的策略
-		for (Object object : geEsgDTOList(esgDTO.getTenants()).getDtoList().getDto()) {
-
-			EsgDTO dto = (EsgDTO) object;
-
-			for (Object object2 : geEsgPolicyDTOList(dto.getId()).getDtoList().getDto()) {
-
-				EsgPolicyDTO policyDTO = (EsgPolicyDTO) object2;
-
-				RuleParameter ruleParameter = new RuleParameter();
-
-				ruleParameter.setSource(policyDTO.getSourceIP());
-				ruleParameter.setSourceNetMask("0.0.0.0");
-				ruleParameter.setDestination(policyDTO.getTargetIP());
-				ruleParameter.setDestinationNetMask("0.0.0.0");
-
-				if (LookUpConstants.PolicyType.Permit.getValue().equals(policyDTO.getPolicyType())) { // prmits
-					permits.add(ruleParameter);
-				} else {// denys
-					denys.add(ruleParameter);
-				}
-			}
-		}
-
-		RuleParameter newRuleParameter = new RuleParameter();
-		newRuleParameter.setSource(ecsDTO.getIpaddressDTO().getDescription());
-		newRuleParameter.setSourceNetMask("0.0.0.0");
-		newRuleParameter.setDestination("");// TODO 明日完成
-		newRuleParameter.setDestinationNetMask("0.0.0.0");
-		permits.add(newRuleParameter);
-
-		ESGParameter esgParameter = new ESGParameter();
-		esgParameter.setAclNumber(tenantsDTO.getAclNumber());
-		esgParameter.setDesc("");
-		esgParameter.setVlanId(getVlanId(vlanDTO.getDescription()));
-		esgParameter.getDenys().addAll(denys);
-		esgParameter.getPermits().addAll(permits);
-
-		switchesSoapService.createESGBySwtich(esgParameter);
+		switchesSoapService.createESGBySwtich(wrapperESGParameter(esgDTO));
 
 		// 写入日志
 		createLog(esgDTO.getTenants(), LookUpConstants.ServiceType.ESG.getValue(),
@@ -1922,7 +2001,7 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public void dissociateESG(Integer esgId) {
+	public void dissociateESG(Integer ecsId, Integer esgId) {
 
 		/**
 		 * Step1. 查询Esg信息
@@ -1938,63 +2017,11 @@ public class ApiServiceImpl implements ApiService {
 		 * Step6. 写入日志
 		 */
 
+		cmdbuildSoapService.deleteMapEcsEsg(ecsId, esgId);
+
 		EsgDTO esgDTO = (EsgDTO) cmdbuildSoapService.findEsg(esgId).getDto();
 
-		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(esgDTO.getTenants()).getDto();
-
-		VlanDTO vlanDTO = getVlanDTO(tenantsDTO);
-
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_idObj2", esgDTO.getId());
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		List<Object> ecsEsgDTOs = cmdbuildSoapService.getMapEcsEsgList(searchParams).getDtoList().getDto();
-
-		for (Object object : ecsEsgDTOs) {
-			MapEcsEsgDTO mapEcsEsgDTO = (MapEcsEsgDTO) object;
-			cmdbuildSoapService.deleteMapEcsEsg(Integer.valueOf(mapEcsEsgDTO.getIdObj1()), esgId);
-		}
-
-		List<RuleParameter> denys = new ArrayList<RuleParameter>();
-		List<RuleParameter> permits = new ArrayList<RuleParameter>();
-
-		// 获得这个租户下所有的esg下的策略
-		for (Object object : geEsgDTOList(esgDTO.getTenants()).getDtoList().getDto()) {
-
-			EsgDTO dto = (EsgDTO) object;
-
-			// 将删除的Esg跳过
-			if (!dto.getId().equals(esgId)) {
-
-				for (Object object2 : geEsgPolicyDTOList(dto.getId()).getDtoList().getDto()) {
-
-					EsgPolicyDTO policyDTO = (EsgPolicyDTO) object2;
-
-					RuleParameter ruleParameter = new RuleParameter();
-
-					ruleParameter.setSource(policyDTO.getSourceIP()); // TODO 此处的源应该是关联的ECS IP target是定义好的ESG中的策略.
-					ruleParameter.setSourceNetMask("0.0.0.0"); // TODO 自定义的话只能选择虚拟机,即单IP,所以暂时写死成0.0.0.0
-					ruleParameter.setDestination(policyDTO.getTargetIP());
-
-					ruleParameter.setDestinationNetMask("0.0.0.0");
-
-					if (LookUpConstants.PolicyType.Permit.getValue().equals(policyDTO.getPolicyType())) { // prmits
-						permits.add(ruleParameter);
-					} else {// denys
-						denys.add(ruleParameter);
-					}
-				}
-
-			}
-		}
-
-		ESGParameter esgParameter = new ESGParameter();
-		esgParameter.setAclNumber(tenantsDTO.getAclNumber());
-		esgParameter.setDesc("");
-		esgParameter.setVlanId(getVlanId(vlanDTO.getDescription()));
-		esgParameter.getDenys().addAll(denys);
-		esgParameter.getPermits().addAll(permits);
-
-		switchesSoapService.createESGBySwtich(esgParameter);
+		switchesSoapService.createESGBySwtich(wrapperESGParameter(esgDTO));
 
 		// 写入日志
 		createLog(esgDTO.getTenants(), LookUpConstants.ServiceType.ESG.getValue(),
@@ -2093,6 +2120,7 @@ public class ApiServiceImpl implements ApiService {
 	@Override
 	public List<EsgDTO> getEsgDTO() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_isDefault", Boolean.FALSE);
 		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
 		List<EsgDTO> list = new ArrayList<EsgDTO>();
 		for (Object obj : cmdbuildSoapService.getEsgList(searchParams).getDtoList().getDto()) {

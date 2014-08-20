@@ -2,6 +2,8 @@ package com.sobey.api.service;
 
 import java.util.List;
 
+import com.sobey.api.constans.LookUpConstants;
+import com.sobey.api.webservice.response.result.WSResult;
 import com.sobey.generate.cmdbuild.DnsDTO;
 import com.sobey.generate.cmdbuild.DnsPolicyDTO;
 import com.sobey.generate.cmdbuild.EcsDTO;
@@ -19,43 +21,82 @@ import com.sobey.generate.loadbalancer.ELBParameter;
 
 public interface ApiService {
 
-	public void createTenants(TenantsDTO tenantsDTO, Integer agentTypeId);
+	/**
+	 * 创建一个租户,同时创建一个默认ESG和默认VPN账户
+	 * 
+	 * @param tenantsDTO
+	 */
+	public WSResult createTenants(TenantsDTO tenantsDTO);
 
-	public List<TenantsDTO> getTenantsDTO();
+	/**
+	 * 创建一个ECS
+	 * 
+	 * @param ecsDTO
+	 */
+	public WSResult createECS(EcsDTO ecsDTO);
 
-	public List<IdcDTO> getIdcDTO();
-
-	public List<EcsSpecDTO> getEcsSpecDTO();
-
-	public List<EcsDTO> getEcsDTO();
-
-	public List<Es3DTO> getEs3DTO();
-
-	public List<EipDTO> getEipDTO();
-
-	public List<ElbDTO> getElbDTO();
-
-	public List<DnsDTO> getDnsDTO();
-
-	public List<EsgDTO> getEsgDTO();
-
-	public void createECS(EcsDTO ecsDTO);
-
+	/**
+	 * 销毁ECS
+	 * 
+	 * @param ecsId
+	 */
 	public void destroyECS(Integer ecsId);
 
+	/**
+	 * 对ECS的电源操作,目前只支持开机和关机操作
+	 * 
+	 * @param ecsId
+	 * @param powerOperation
+	 *            {@link LookUpConstants}
+	 */
 	public void powerOpsECS(Integer ecsId, String powerOperation);
 
+	/**
+	 * 修改ECS的配置
+	 * 
+	 * @param ecsId
+	 * @param ecsSpecId
+	 */
 	public void reconfigECS(Integer ecsId, Integer ecsSpecId);
 
+	/**
+	 * 同步ECS和VMware的关联关系至CMDBuild中.
+	 * 
+	 * @param datacenter
+	 * @return
+	 */
 	public String syncVM(String datacenter);
 
-	public void createES3(Es3DTO es3DTO);
+	/**
+	 * 创建ES3
+	 * 
+	 * @param es3DTO
+	 */
+	public WSResult createES3(Es3DTO es3DTO);
 
-	public void attachES3(Integer es3Id, Integer ecsId);
+	/**
+	 * 挂载ES3
+	 * 
+	 * @param es3Id
+	 * @param ecsId
+	 * @return 
+	 */
+	public WSResult attachES3(Integer es3Id, Integer ecsId);
 
-	public void detachES3(Integer es3Id, Integer ecsId);
+	/**
+	 * 卸载ES3
+	 * 
+	 * @param es3Id
+	 * @param ecsId
+	 */
+	public WSResult detachES3(Integer es3Id, Integer ecsId);
 
-	public void deleteES3(Integer es3Id);
+	/**
+	 * 删除ES3
+	 * 
+	 * @param es3Id
+	 */
+	public WSResult deleteES3(Integer es3Id);
 
 	public void allocateEIP(EipDTO eipDTO, List<EipPolicyDTO> eipPolicyDTOs);
 
@@ -83,6 +124,24 @@ public interface ApiService {
 
 	public void associateESG(Integer ecsId, Integer esgId);
 
-	public void dissociateESG(Integer esgId);
+	public void dissociateESG(Integer ecsId, Integer esgId);
+
+	public List<TenantsDTO> getTenantsDTO();
+
+	public List<IdcDTO> getIdcDTO();
+
+	public List<EcsSpecDTO> getEcsSpecDTO();
+
+	public List<EcsDTO> getEcsDTO();
+
+	public List<Es3DTO> getEs3DTO();
+
+	public List<EipDTO> getEipDTO();
+
+	public List<ElbDTO> getElbDTO();
+
+	public List<DnsDTO> getDnsDTO();
+
+	public List<EsgDTO> getEsgDTO();
 
 }
