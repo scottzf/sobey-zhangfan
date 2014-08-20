@@ -79,7 +79,7 @@ public interface ApiService {
 	 * 
 	 * @param es3Id
 	 * @param ecsId
-	 * @return 
+	 * @return
 	 */
 	public WSResult attachES3(Integer es3Id, Integer ecsId);
 
@@ -98,12 +98,36 @@ public interface ApiService {
 	 */
 	public WSResult deleteES3(Integer es3Id);
 
-	public void allocateEIP(EipDTO eipDTO, List<EipPolicyDTO> eipPolicyDTOs);
+	/**
+	 * 分配公网IP
+	 * 
+	 * @param eipDTO
+	 * @param eipPolicyDTOs
+	 */
+	public WSResult allocateEIP(EipDTO eipDTO, List<EipPolicyDTO> eipPolicyDTOs);
 
+	/**
+	 * 回收EIP
+	 * 
+	 * @param eipId
+	 */
 	public void recoverEIP(Integer eipId);
 
-	public void associateEIP(Integer eipId, Integer serviceId);
+	/**
+	 * 关联EIP
+	 * 
+	 * @param eipId
+	 * @param serviceId
+	 * @return
+	 */
+	public WSResult associateEIP(Integer eipId, Integer serviceId);
 
+	/**
+	 * 解绑EIP
+	 * 
+	 * @param eipId
+	 * @param serviceId
+	 */
 	public void dissociateEIP(Integer eipId, Integer serviceId);
 
 	public void createELB(ElbDTO elbDTO, List<ElbPolicyDTO> elbPolicyDTOs, Integer[] ecsIds);

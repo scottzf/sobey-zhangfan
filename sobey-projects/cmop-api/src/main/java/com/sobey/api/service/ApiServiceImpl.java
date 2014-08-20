@@ -965,7 +965,7 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public void allocateEIP(EipDTO eipDTO, List<EipPolicyDTO> eipPolicyDTOs) {
+	public WSResult allocateEIP(EipDTO eipDTO, List<EipPolicyDTO> eipPolicyDTOs) {
 
 		/**
 		 * Step.1 获得未使用的公网IP.
@@ -980,8 +980,15 @@ public class ApiServiceImpl implements ApiService {
 		 * 
 		 */
 
+		WSResult result = new WSResult();
+
 		// Step.1 获得未使用的公网IP.
 		IpaddressDTO ipaddressDTO = getPublicIpaddress(eipDTO.getIsp());
+
+		if (ipaddressDTO == null) {
+			result.setError(WSResult.SYSTEM_ERROR, "公网IP资源不足,请联系管理员.");
+			return result;
+		}
 
 		// Step.2 将EIP信息写入CMDBuild
 		eipDTO.setIdc(ipaddressDTO.getIdc());
@@ -1013,27 +1020,43 @@ public class ApiServiceImpl implements ApiService {
 		// Step.5 写入日志
 		createLog(dto.getTenants(), LookUpConstants.ServiceType.ECS.getValue(),
 				LookUpConstants.OperateType.更新.getValue(), LookUpConstants.Result.成功.getValue());
+
+		result.setMessage("公网IP分配成功");
+		return result;
 	}
 
+	/**
+	 * 获得分配给租户的EIP
+	 * 
+	 * @param ipaddressId
+	 * @param tenantsId
+	 * @return
+	 */
 	private EipDTO getEipDTO(Integer ipaddressId, Integer tenantsId) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_ipaddress", ipaddressId);
 		map.put("EQ_tenants", tenantsId);
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		return (EipDTO) cmdbuildSoapService.findEipByParams(searchParams).getDto();
+		return (EipDTO) cmdbuildSoapService.findEipByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
 	}
 
+	/**
+	 * 获得租户创建的ELB
+	 * 
+	 * @param ipaddressId
+	 * @param tenantsId
+	 * @return
+	 */
 	private ElbDTO getElbDTO(Integer ipaddressId, Integer tenantsId) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_ipaddress", ipaddressId);
 		map.put("EQ_tenants", tenantsId);
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		return (ElbDTO) cmdbuildSoapService.findElbByParams(searchParams).getDto();
+		return (ElbDTO) cmdbuildSoapService.findElbByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
 	}
 
 	/**
 	 * 获得未使用的公网IP
 	 * 
+	 * @param ispId
 	 * @return
 	 */
 	private IpaddressDTO getPublicIpaddress(Integer ispId) {
@@ -1058,6 +1081,9 @@ public class ApiServiceImpl implements ApiService {
 
 	/**
 	 * 获得未使用的ip地址.
+	 * 
+	 * @param vlanDTO
+	 * @return
 	 */
 	private IpaddressDTO getUnusedIpaddress(VlanDTO vlanDTO) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -1073,15 +1099,12 @@ public class ApiServiceImpl implements ApiService {
 	 * @return
 	 */
 	private IpaddressDTO getIpaddress(HashMap<String, Object> map) {
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		DTOListResult listResult = cmdbuildSoapService.getIpaddressList(searchParams);
+		DTOListResult listResult = cmdbuildSoapService.getIpaddressList(CMDBuildUtil.wrapperSearchParams(map));
 		return (IpaddressDTO) listResult.getDtoList().getDto().get(0);
 	}
 
 	@Override
 	public void recoverEIP(Integer eipId) {
-
-		System.out.println("eipId:" + eipId);
 
 		/**
 		 * Step.1 获得EIP.
@@ -1119,51 +1142,54 @@ public class ApiServiceImpl implements ApiService {
 
 	/**
 	 * 获得EIP下所有的policy
+	 * 
+	 * @param eipId
+	 * @return
 	 */
 	private DTOListResult getEipPolicyDTOList(Integer eipId) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_eip", eipId);
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		DTOListResult listResult = cmdbuildSoapService.getEipPolicyList(searchParams);
-		return listResult;
+		return cmdbuildSoapService.getEipPolicyList(CMDBuildUtil.wrapperSearchParams(map));
 	}
 
 	/**
 	 * 获得ELB下所有的policy
+	 * 
+	 * @param elbId
+	 * @return
 	 */
 	private DTOListResult getElbPolicyDTOList(Integer elbId) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_elb", elbId);
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		DTOListResult listResult = cmdbuildSoapService.getElbPolicyList(searchParams);
-		return listResult;
+		return cmdbuildSoapService.getElbPolicyList(CMDBuildUtil.wrapperSearchParams(map));
 	}
 
 	/**
 	 * 获得DNS下所有的policy
+	 * 
+	 * @param dnsId
+	 * @return
 	 */
 	private DTOListResult geDnsPolicyDTOList(Integer dnsId) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_dns", dnsId);
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		DTOListResult listResult = cmdbuildSoapService.getDnsPolicyList(searchParams);
-		return listResult;
+		return cmdbuildSoapService.getDnsPolicyList(CMDBuildUtil.wrapperSearchParams(map));
 	}
 
 	/**
 	 * 获得租户下所有EIP的所有policy
+	 * 
+	 * @param eipDTO
+	 * @return
 	 */
-	private DTOListResult getEipPolicyDTOListByTenants(EipDTO eipDTO) {
-
+	private DTOListResult getEipDTOListByTenants(EipDTO eipDTO) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_tenants", eipDTO.getTenants());
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		DTOListResult listResult = cmdbuildSoapService.getEipPolicyList(searchParams);
-		return listResult;
+		return cmdbuildSoapService.getEipList(CMDBuildUtil.wrapperSearchParams(map));
 	}
 
 	@Override
-	public void associateEIP(Integer eipId, Integer serviceId) {
+	public WSResult associateEIP(Integer eipId, Integer serviceId) {
 
 		/**
 		 * Step.1 获得EIP、ECS、ELB的信息
@@ -1174,6 +1200,8 @@ public class ApiServiceImpl implements ApiService {
 		 * 
 		 * Step.4 写入日志
 		 */
+
+		WSResult result = new WSResult();
 
 		// Step.1 获得EIP、ECS、ELB的信息
 		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(eipId).getDto();
@@ -1194,11 +1222,26 @@ public class ApiServiceImpl implements ApiService {
 		// Step.3 firwall创建虚拟IP
 		EIPParameter eipParameter = wrapperEIPParameter(eipDTO);
 		eipParameter.setPrivateIP(privateIP);
-		firewallSoapService.createEIPByFirewall(eipParameter);
+
+		if (!WSResult.SUCESS.equals(firewallSoapService.createEIPByFirewall(eipParameter).getCode())) {
+
+			// 删除关联关系
+			if (elbDTO != null) {
+				cmdbuildSoapService.deleteMapEipElb(eipId, serviceId);
+			} else if (ecsDTO != null) {
+				cmdbuildSoapService.deleteMapEcsEip(serviceId, eipId);
+			}
+
+			result.setError(WSResult.SYSTEM_ERROR, "EIP关联失败,请联系管理员.");
+			return result;
+		}
 
 		// Step.4 写入日志
 		createLog(eipDTO.getTenants(), LookUpConstants.ServiceType.EIP.getValue(),
 				LookUpConstants.OperateType.应用规则至.getValue(), LookUpConstants.Result.成功.getValue());
+
+		result.setMessage("EIP关联成功");
+		return result;
 
 	}
 
@@ -1212,8 +1255,8 @@ public class ApiServiceImpl implements ApiService {
 
 		LookUpDTO isp = (LookUpDTO) cmdbuildSoapService.findLookUp(eipDTO.getIsp()).getDto();
 
-		// 获得租户下所有的EIP策略.
-		DTOListResult allPoliciesResult = getEipPolicyDTOListByTenants(eipDTO);
+		// 获得租户下所有的EIP.
+		DTOListResult allPoliciesResult = getEipDTOListByTenants(eipDTO);
 		List<String> allPolicies = new ArrayList<String>();
 		if (allPoliciesResult.getDtoList() != null) {
 
