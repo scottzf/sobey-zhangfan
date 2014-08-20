@@ -534,17 +534,19 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public void powerOpsECS(Integer ecsId, String powerOperation) {
+	public WSResult powerOpsECS(Integer ecsId, String powerOperation) {
 
 		/**
 		 * Step.1 获得ECS信息
 		 * 
-		 * Step.2 修改ECS的运行状态
+		 * Step.2 操作VM电源
 		 * 
-		 * Step.3 操作VM电源
+		 * Step.3 修改ECS的运行状态
 		 * 
 		 * Step.4 写入日志
 		 */
+
+		WSResult result = new WSResult();
 
 		// Step.1 获得ECS信息
 		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
@@ -553,7 +555,18 @@ public class ApiServiceImpl implements ApiService {
 		IdcDTO idcDTO = (IdcDTO) cmdbuildSoapService.findIdc(vlanDTO.getIdc()).getDto();
 		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
 
-		// Step.2 修改ECS的运行状态
+		// Step.2 操作VM电源
+		PowerVMParameter powerVMParameter = new PowerVMParameter();
+		powerVMParameter.setVMName(generateVMName(tenantsDTO, ipaddressDTO));
+		powerVMParameter.setPowerOperation(powerOperation);
+		powerVMParameter.setDatacenter(idcDTO.getRemark());
+
+		if (!WSResult.SUCESS.equals(instanceSoapService.powerVMByInstance(powerVMParameter).getCode())) {
+			result.setError(WSResult.SYSTEM_ERROR, "ECS电源操作失败,请检查ECS电源状态.");
+			return result;
+		}
+
+		// Step.3 修改ECS的运行状态
 
 		if (LookUpConstants.powerOperation.poweroff.equals(powerOperation)) {
 			ecsDTO.setEcsStatus(LookUpConstants.ECSStatus.停止.getValue());
@@ -563,16 +576,13 @@ public class ApiServiceImpl implements ApiService {
 
 		cmdbuildSoapService.updateEcs(ecsId, ecsDTO);
 
-		// Step.3 操作VM电源
-		PowerVMParameter powerVMParameter = new PowerVMParameter();
-		powerVMParameter.setVMName(generateVMName(tenantsDTO, ipaddressDTO));
-		powerVMParameter.setPowerOperation(powerOperation);
-		powerVMParameter.setDatacenter(idcDTO.getRemark());
-		instanceSoapService.powerVMByInstance(powerVMParameter);
-
 		// Step.4 写入日志
 		createLog(tenantsDTO.getId(), LookUpConstants.ServiceType.ECS.getValue(),
 				LookUpConstants.OperateType.应用规则至.getValue(), LookUpConstants.Result.成功.getValue());
+
+		result.setMessage("ECS电源操作成功");
+		return result;
+
 	}
 
 	/**
@@ -591,7 +601,7 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public void reconfigECS(Integer ecsId, Integer ecsSpecId) {
+	public WSResult reconfigECS(Integer ecsId, Integer ecsSpecId) {
 
 		/**
 		 * Step.1 获得ECS信息
@@ -604,6 +614,8 @@ public class ApiServiceImpl implements ApiService {
 		 * 
 		 * Step.5 写入日志
 		 */
+
+		WSResult result = new WSResult();
 
 		// Step.1 获得ECS信息
 		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
@@ -626,7 +638,10 @@ public class ApiServiceImpl implements ApiService {
 		reconfigVMParameter.setMemoryMB(memoryMb);
 		reconfigVMParameter.setVMName(generateVMName(tenantsDTO, ipaddressDTO));
 
-		instanceSoapService.reconfigVMByInstance(reconfigVMParameter);
+		if (!WSResult.SUCESS.equals(instanceSoapService.reconfigVMByInstance(reconfigVMParameter).getCode())) {
+			result.setError(WSResult.SYSTEM_ERROR, "ECS运行状态无法修改配置,请检查ECS电源状态.");
+			return result;
+		}
 
 		// Step.4 更新CMDBuild ECS规格
 		ecsDTO.setEcsSpec(ecsSpecId);
@@ -635,6 +650,9 @@ public class ApiServiceImpl implements ApiService {
 		// Step.5 写入日志
 		createLog(tenantsDTO.getId(), LookUpConstants.ServiceType.ECS.getValue(),
 				LookUpConstants.OperateType.更新.getValue(), LookUpConstants.Result.成功.getValue());
+
+		result.setMessage("ECS配置修改成功");
+		return result;
 	}
 
 	@Override

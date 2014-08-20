@@ -49,7 +49,7 @@ public interface ApiService {
 	 * @param powerOperation
 	 *            {@link LookUpConstants}
 	 */
-	public void powerOpsECS(Integer ecsId, String powerOperation);
+	public WSResult powerOpsECS(Integer ecsId, String powerOperation);
 
 	/**
 	 * 修改ECS的配置
@@ -57,7 +57,7 @@ public interface ApiService {
 	 * @param ecsId
 	 * @param ecsSpecId
 	 */
-	public void reconfigECS(Integer ecsId, Integer ecsSpecId);
+	public WSResult reconfigECS(Integer ecsId, Integer ecsSpecId);
 
 	/**
 	 * 同步ECS和VMware的关联关系至CMDBuild中.
