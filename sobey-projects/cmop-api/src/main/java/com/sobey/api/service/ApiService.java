@@ -146,16 +146,51 @@ public interface ApiService {
 	 */
 	public void deleteELB(Integer elbId);
 
+	/**
+	 * 创建DNS
+	 * 
+	 * @param dnsDTO
+	 * @param dnsPolicyDTOs
+	 * @param eipIds
+	 */
 	public void createDNS(DnsDTO dnsDTO, List<DnsPolicyDTO> dnsPolicyDTOs, Integer[] eipIds);
 
+	/**
+	 * 删除DNS
+	 * 
+	 * @param dnsId
+	 */
 	public void deleteDNS(Integer dnsId);
 
+	/**
+	 * 创建ESG
+	 * 
+	 * @param esgDTO
+	 * @param esgPolicyDTOs
+	 */
 	public void createESG(EsgDTO esgDTO, List<EsgPolicyDTO> esgPolicyDTOs);
 
+	/**
+	 * 删除ESG
+	 * 
+	 * @param esgId
+	 */
 	public void deleteESG(Integer esgId);
 
+	/**
+	 * 绑定ESG
+	 * 
+	 * @param ecsId
+	 * @param esgId
+	 */
 	public void associateESG(Integer ecsId, Integer esgId);
 
+	/**
+	 * 解绑ESG
+	 * 
+	 * @param ecsId
+	 * @param esgId
+	 */
 	public void dissociateESG(Integer ecsId, Integer esgId);
 
 	public List<TenantsDTO> getTenantsDTO();
@@ -174,6 +209,11 @@ public interface ApiService {
 
 	public List<DnsDTO> getDnsDTO();
 
+	/**
+	 * 获得非默认的Esg List
+	 * 
+	 * @return
+	 */
 	public List<EsgDTO> getEsgDTO();
 
 }

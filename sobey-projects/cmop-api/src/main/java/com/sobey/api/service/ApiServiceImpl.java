@@ -1508,15 +1508,26 @@ public class ApiServiceImpl implements ApiService {
 	@Override
 	public void createDNS(DnsDTO dnsDTO, List<DnsPolicyDTO> dnsPolicyDTOs, Integer[] eipIds) {
 
-		dnsDTO.setDomainType(LookUpConstants.DomainType.GSLB.getValue());
+		/**
+		 * 
+		 * Step.1 将DNS信息写入CMDBuild
+		 * 
+		 * Step.2 将DNS策略信息写入CMDBuild
+		 * 
+		 * Step.3 创建关联关系
+		 * 
+		 * Step.4 调用DNS 接口创建DNS对象
+		 * 
+		 * Step.5 写入日志
+		 * 
+		 */
 
+		// Step.1 将DNS信息写入CMDBuild
+		dnsDTO.setDomainType(LookUpConstants.DomainType.GSLB.getValue());
 		cmdbuildSoapService.createDns(dnsDTO);
 
+		// Step.2 将DNS策略信息写入CMDBuild
 		DnsDTO dto = getDnsDTO(dnsDTO.getDescription(), dnsDTO.getTenants());
-
-		for (Integer eipId : eipIds) {
-			cmdbuildSoapService.createMapEipDns(eipId, dto.getId());
-		}
 
 		for (DnsPolicyDTO policyDTO : dnsPolicyDTOs) {
 
@@ -1538,9 +1549,15 @@ public class ApiServiceImpl implements ApiService {
 			cmdbuildSoapService.createDnsPolicy(dnsPolicyDTO);
 		}
 
+		// Step.3 创建关联关系
+		for (Integer eipId : eipIds) {
+			cmdbuildSoapService.createMapEipDns(eipId, dto.getId());
+		}
+
+		// Step.4 调用DNS 接口创建DNS对象
 		dnsSoapService.createDNSByDNS(wrapperDNSParameter(dto));
 
-		// 写入日志
+		// Step.5 写入日志
 		createLog(dto.getTenants(), LookUpConstants.ServiceType.DNS.getValue(),
 				LookUpConstants.OperateType.创建.getValue(), LookUpConstants.Result.成功.getValue());
 	}
@@ -1589,17 +1606,31 @@ public class ApiServiceImpl implements ApiService {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_description", description);
 		map.put("EQ_tenants", tenantsId);
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		return (DnsDTO) cmdbuildSoapService.findDnsByParams(searchParams).getDto();
+		return (DnsDTO) cmdbuildSoapService.findDnsByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
 	}
 
 	@Override
 	public void deleteDNS(Integer dnsId) {
 
+		/**
+		 * Step.1 获得dns.
+		 * 
+		 * Step.2 调用dns接口删除dns
+		 * 
+		 * Step.3 查询dns下所有policy并删除
+		 * 
+		 * Step.4 删除dns
+		 * 
+		 * Step.5 写入日志
+		 */
+
+		// Step.1 获得dns.
 		DnsDTO dnsDTO = (DnsDTO) cmdbuildSoapService.findDns(dnsId).getDto();
 
+		// Step.2 调用dns接口删除dns
 		dnsSoapService.deleteDNSByDNS(wrapperDNSParameter(dnsDTO));
 
+		// Step.3 查询dns下所有policy并删除
 		DTOListResult policyResult = geDnsPolicyDTOList(dnsId);
 
 		for (Object obj : policyResult.getDtoList().getDto()) {
@@ -1609,10 +1640,10 @@ public class ApiServiceImpl implements ApiService {
 			cmdbuildSoapService.deleteDnsPolicy(policyDTO.getId());
 		}
 
+		// Step.4 删除dns
 		cmdbuildSoapService.deleteDns(dnsId);
 
-		// 写入日志
-
+		// Step.5 写入日志
 		createLog(dnsDTO.getTenants(), LookUpConstants.ServiceType.DNS.getValue(),
 				LookUpConstants.OperateType.删除.getValue(), LookUpConstants.Result.成功.getValue());
 	}
@@ -1635,19 +1666,27 @@ public class ApiServiceImpl implements ApiService {
 	public void createESG(EsgDTO esgDTO, List<EsgPolicyDTO> esgPolicyDTOs) {
 
 		/**
-		 * Step1. 查询出租户的默认策略.
+		 * Step.1 查询出租户和租户默认策略.
 		 * 
-		 * Step2. 写入日志
+		 * Step.2 将ESG信息写入CMDBuild
+		 * 
+		 * Step.3 将ESG策略信息写入CMDBuild
+		 * 
+		 * Step.4 写入日志
+		 * 
 		 */
 
+		// Step.1 查询出租户的默认策略.
 		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(esgDTO.getTenants()).getDto();
 
 		EsgDTO defaultEsgDTO = getDefaultEsgDTO(tenantsDTO);
 
+		// Step.2 将ESG信息写入CMDBuild
 		esgDTO.setIdc(defaultEsgDTO.getIdc());
 		esgDTO.setIsDefault(false);
 		cmdbuildSoapService.createEsg(esgDTO);
 
+		// Step.3 将ESG策略信息写入CMDBuild
 		EsgDTO dto = getEsgDTOByDescription(esgDTO);
 
 		for (EsgPolicyDTO policyDTO : esgPolicyDTOs) {
@@ -1665,6 +1704,7 @@ public class ApiServiceImpl implements ApiService {
 			cmdbuildSoapService.createEsgPolicy(esgPolicyDTO);
 		}
 
+		// Step.4 写入日志
 		createLog(esgDTO.getTenants(), LookUpConstants.ServiceType.ESG.getValue(),
 				LookUpConstants.OperateType.创建.getValue(), LookUpConstants.Result.成功.getValue());
 	}
@@ -1758,7 +1798,8 @@ public class ApiServiceImpl implements ApiService {
 	 * 
 	 * eg: 10.10.100.0 -> 0.0.0.255 , 10.10.100.1 -> 0.0.0.0
 	 * 
-	 * 
+	 * @param paramter
+	 * @return
 	 */
 	private String getNetMask(String paramter) {
 		return "0".equals(StringUtils.split(paramter, ".")[3]) ? "0.0.0.255" : "0.0.0.0";
@@ -1768,22 +1809,21 @@ public class ApiServiceImpl implements ApiService {
 	public void deleteESG(Integer esgId) {
 
 		/**
-		 * Step1. 查询Esg信息
+		 * Step.1 查询Esg信息
 		 * 
-		 * Step2. 解绑关联信息
+		 * Step.2 删除CMDBuild中ESG的策略
 		 * 
-		 * Step3. 查出租户所有的ESG策略
+		 * Step.3 删除CMDBuild的ESG信息.
 		 * 
-		 * Step4. 去除删除ESG关联的策略后重新执行
+		 * Step.4 去除删除ESG关联的策略后重新执行
 		 * 
-		 * Step5. 删除CMDBuild的关联信息和ESG信息.
-		 * 
-		 * Step6. 写入日志
+		 * Step.5 写入日志
 		 */
 
+		// Step1. 查询Esg信息
 		EsgDTO esgDTO = (EsgDTO) cmdbuildSoapService.findEsg(esgId).getDto();
 
-		// 删除策略
+		// Step2.删除CMDBuild中ESG的策略
 		for (Object obj : geEsgPolicyDTOList(esgId).getDtoList().getDto()) {
 
 			EsgPolicyDTO policyDTO = (EsgPolicyDTO) obj;
@@ -1791,13 +1831,13 @@ public class ApiServiceImpl implements ApiService {
 			cmdbuildSoapService.deleteEsgPolicy(policyDTO.getId());
 		}
 
-		// 删除esg信息
+		// Step3. 删除CMDBuild的ESG信息.
 		cmdbuildSoapService.deleteEsg(esgId);
 
+		// Step4. 去除删除ESG关联的策略后重新执行
 		switchesSoapService.createESGBySwtich(wrapperESGParameter(esgDTO));
 
-		// 写入日志
-
+		// Step5. 写入日志
 		createLog(esgDTO.getTenants(), LookUpConstants.ServiceType.ESG.getValue(),
 				LookUpConstants.OperateType.删除.getValue(), LookUpConstants.Result.成功.getValue());
 
@@ -1809,21 +1849,32 @@ public class ApiServiceImpl implements ApiService {
 	private DTOListResult geEsgPolicyDTOList(Integer esgId) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_esg", esgId);
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		DTOListResult listResult = cmdbuildSoapService.getEsgPolicyList(searchParams);
-		return listResult;
+		return cmdbuildSoapService.getEsgPolicyList(CMDBuildUtil.wrapperSearchParams(map));
 	}
 
 	@Override
 	public void associateESG(Integer ecsId, Integer esgId) {
 
-		cmdbuildSoapService.createMapEcsEsg(ecsId, esgId);
+		/**
+		 * Step.1 查询Esg信息
+		 * 
+		 * Step.2 创建关联关系
+		 * 
+		 * Step.3 调用switch接口创建acl number.
+		 * 
+		 * Step.4 写入日志
+		 */
 
+		// Step.1 查询Esg信息
 		EsgDTO esgDTO = (EsgDTO) cmdbuildSoapService.findEsg(esgId).getDto();
 
+		// Step.2 创建关联关系
+		cmdbuildSoapService.createMapEcsEsg(ecsId, esgId);
+
+		// Step.3 调用switch接口创建acl number.
 		switchesSoapService.createESGBySwtich(wrapperESGParameter(esgDTO));
 
-		// 写入日志
+		// Step.4 写入日志
 		createLog(esgDTO.getTenants(), LookUpConstants.ServiceType.ESG.getValue(),
 				LookUpConstants.OperateType.应用规则至.getValue(), LookUpConstants.Result.成功.getValue());
 
@@ -1833,26 +1884,25 @@ public class ApiServiceImpl implements ApiService {
 	public void dissociateESG(Integer ecsId, Integer esgId) {
 
 		/**
-		 * Step1. 查询Esg信息
+		 * Step.1 查询Esg信息
 		 * 
-		 * Step2. 解绑关联信息
+		 * Step.2 删除关联关系
 		 * 
-		 * Step3. 查出租户所有的ESG策略
+		 * Step.3 调用switch接口创建acl number.
 		 * 
-		 * Step4. 去除删除ESG关联的策略后重新执行
-		 * 
-		 * Step5. 删除CMDBuild的关联信息和ESG信息.
-		 * 
-		 * Step6. 写入日志
+		 * Step.4 写入日志
 		 */
 
-		cmdbuildSoapService.deleteMapEcsEsg(ecsId, esgId);
-
+		// Step.1 查询Esg信息
 		EsgDTO esgDTO = (EsgDTO) cmdbuildSoapService.findEsg(esgId).getDto();
 
+		// Step.2 删除关联关系
+		cmdbuildSoapService.deleteMapEcsEsg(ecsId, esgId);
+
+		// Step.3 调用switch接口创建acl number.
 		switchesSoapService.createESGBySwtich(wrapperESGParameter(esgDTO));
 
-		// 写入日志
+		// Step.4 写入日志
 		createLog(esgDTO.getTenants(), LookUpConstants.ServiceType.ESG.getValue(),
 				LookUpConstants.OperateType.应用规则至.getValue(), LookUpConstants.Result.成功.getValue());
 
@@ -1872,9 +1922,8 @@ public class ApiServiceImpl implements ApiService {
 	@Override
 	public List<IdcDTO> getIdcDTO() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
 		List<IdcDTO> list = new ArrayList<IdcDTO>();
-		for (Object obj : cmdbuildSoapService.getIdcList(searchParams).getDtoList().getDto()) {
+		for (Object obj : cmdbuildSoapService.getIdcList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList().getDto()) {
 			list.add((IdcDTO) obj);
 		}
 		return list;
@@ -1883,9 +1932,9 @@ public class ApiServiceImpl implements ApiService {
 	@Override
 	public List<EcsSpecDTO> getEcsSpecDTO() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
 		List<EcsSpecDTO> list = new ArrayList<EcsSpecDTO>();
-		for (Object obj : cmdbuildSoapService.getEcsSpecList(searchParams).getDtoList().getDto()) {
+		for (Object obj : cmdbuildSoapService.getEcsSpecList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+				.getDto()) {
 			list.add((EcsSpecDTO) obj);
 		}
 		return list;
@@ -1894,9 +1943,8 @@ public class ApiServiceImpl implements ApiService {
 	@Override
 	public List<EcsDTO> getEcsDTO() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
 		List<EcsDTO> list = new ArrayList<EcsDTO>();
-		for (Object obj : cmdbuildSoapService.getEcsList(searchParams).getDtoList().getDto()) {
+		for (Object obj : cmdbuildSoapService.getEcsList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList().getDto()) {
 			list.add((EcsDTO) obj);
 		}
 		return list;
@@ -1905,9 +1953,8 @@ public class ApiServiceImpl implements ApiService {
 	@Override
 	public List<Es3DTO> getEs3DTO() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
 		List<Es3DTO> list = new ArrayList<Es3DTO>();
-		for (Object obj : cmdbuildSoapService.getEs3List(searchParams).getDtoList().getDto()) {
+		for (Object obj : cmdbuildSoapService.getEs3List(CMDBuildUtil.wrapperSearchParams(map)).getDtoList().getDto()) {
 			list.add((Es3DTO) obj);
 		}
 		return list;
@@ -1916,9 +1963,8 @@ public class ApiServiceImpl implements ApiService {
 	@Override
 	public List<EipDTO> getEipDTO() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
 		List<EipDTO> list = new ArrayList<EipDTO>();
-		for (Object obj : cmdbuildSoapService.getEipList(searchParams).getDtoList().getDto()) {
+		for (Object obj : cmdbuildSoapService.getEipList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList().getDto()) {
 			list.add((EipDTO) obj);
 		}
 		return list;
@@ -1927,9 +1973,8 @@ public class ApiServiceImpl implements ApiService {
 	@Override
 	public List<ElbDTO> getElbDTO() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
 		List<ElbDTO> list = new ArrayList<ElbDTO>();
-		for (Object obj : cmdbuildSoapService.getElbList(searchParams).getDtoList().getDto()) {
+		for (Object obj : cmdbuildSoapService.getElbList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList().getDto()) {
 			list.add((ElbDTO) obj);
 		}
 		return list;
@@ -1938,9 +1983,8 @@ public class ApiServiceImpl implements ApiService {
 	@Override
 	public List<DnsDTO> getDnsDTO() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
 		List<DnsDTO> list = new ArrayList<DnsDTO>();
-		for (Object obj : cmdbuildSoapService.getDnsList(searchParams).getDtoList().getDto()) {
+		for (Object obj : cmdbuildSoapService.getDnsList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList().getDto()) {
 			list.add((DnsDTO) obj);
 		}
 		return list;
@@ -1950,9 +1994,8 @@ public class ApiServiceImpl implements ApiService {
 	public List<EsgDTO> getEsgDTO() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_isDefault", Boolean.FALSE);
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
 		List<EsgDTO> list = new ArrayList<EsgDTO>();
-		for (Object obj : cmdbuildSoapService.getEsgList(searchParams).getDtoList().getDto()) {
+		for (Object obj : cmdbuildSoapService.getEsgList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList().getDto()) {
 			list.add((EsgDTO) obj);
 		}
 		return list;

@@ -44,7 +44,7 @@ public class ApiTest extends TestCase {
 		tenantsDTO.setCompany(RandomData.randomName("company"));
 		tenantsDTO.setCreateInfo(RandomData.randomName("createInfo"));
 
-		service.createTenants(tenantsDTO, LookUpConstants.AgentType.VMware.getValue());
+		service.createTenants(tenantsDTO);
 	}
 
 	@Test
