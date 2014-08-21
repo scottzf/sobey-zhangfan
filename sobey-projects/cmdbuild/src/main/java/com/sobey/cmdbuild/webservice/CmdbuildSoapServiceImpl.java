@@ -2559,7 +2559,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			// Reference
 			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
-			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
 
 			// LookUp
 			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
@@ -2593,7 +2592,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			// Reference
 			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
-			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
 
 			// LookUp
 			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());

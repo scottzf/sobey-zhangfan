@@ -95,8 +95,6 @@ public class ApiServiceImpl implements ApiService {
 
 	public static Integer storageId = 161;
 
-	public static Integer idcId = 110;
-
 	/**
 	 * 默认管理网段:10.10.1.0
 	 */
@@ -1510,7 +1508,6 @@ public class ApiServiceImpl implements ApiService {
 	@Override
 	public void createDNS(DnsDTO dnsDTO, List<DnsPolicyDTO> dnsPolicyDTOs, Integer[] eipIds) {
 
-		dnsDTO.setIdc(idcId);
 		dnsDTO.setDomainType(LookUpConstants.DomainType.GSLB.getValue());
 
 		cmdbuildSoapService.createDns(dnsDTO);
