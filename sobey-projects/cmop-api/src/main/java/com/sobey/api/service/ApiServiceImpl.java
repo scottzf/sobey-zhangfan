@@ -30,7 +30,6 @@ import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.IpaddressDTO;
 import com.sobey.generate.cmdbuild.LogDTO;
 import com.sobey.generate.cmdbuild.LookUpDTO;
-import com.sobey.generate.cmdbuild.MapEcsElbDTO;
 import com.sobey.generate.cmdbuild.MapEcsEs3DTO;
 import com.sobey.generate.cmdbuild.MapEcsEsgDTO;
 import com.sobey.generate.cmdbuild.SearchParams;
@@ -1345,7 +1344,7 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public void createELB(ElbDTO elbDTO, List<ElbPolicyDTO> elbPolicyDTOs, Integer[] ecsIds) {
+	public WSResult createELB(ElbDTO elbDTO, List<ElbPolicyDTO> elbPolicyDTOs, Integer[] ecsIds) {
 
 		/**
 		 * Step.1 获得未使用的VIP.
@@ -1364,8 +1363,15 @@ public class ApiServiceImpl implements ApiService {
 		 * 
 		 */
 
+		WSResult result = new WSResult();
+
 		// Step.1 获得未使用的VIP.
 		IpaddressDTO ipaddressDTO = getVIP();
+
+		if (ipaddressDTO == null) {
+			result.setError(WSResult.SYSTEM_ERROR, "VIP资源不足,请联系管理员.");
+			return result;
+		}
 
 		// Step.2 将ELB信息写入CMDBuild
 		elbDTO.setIdc(ipaddressDTO.getIdc());
@@ -1377,22 +1383,17 @@ public class ApiServiceImpl implements ApiService {
 
 		ElbDTO dto = getElbDTO(ipaddressDTO.getId(), elbDTO.getTenants());
 
-		for (Integer ecsId : ecsIds) {
-			cmdbuildSoapService.createMapEcsElb(ecsId, dto.getId());
-		}
-
 		for (ElbPolicyDTO policyDTO : elbPolicyDTOs) {
 
 			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(policyDTO.getElbProtocol()).getDto();
-
 			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(Integer.valueOf(policyDTO.getIpaddress())).getDto();
-
 			IpaddressDTO ipDto = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
 
 			ElbPolicyDTO elbPolicyDTO = new ElbPolicyDTO();
+
+			elbPolicyDTO.setElb(dto.getId());
 			elbPolicyDTO.setDescription(lookUpDTO.getDescription() + "-" + policyDTO.getSourcePort() + "-"
 					+ policyDTO.getTargetPort());
-			elbPolicyDTO.setElb(dto.getId());
 			elbPolicyDTO.setElbProtocol(policyDTO.getElbProtocol());
 			elbPolicyDTO.setSourcePort(policyDTO.getSourcePort());
 			elbPolicyDTO.setTargetPort(policyDTO.getTargetPort());
@@ -1401,16 +1402,23 @@ public class ApiServiceImpl implements ApiService {
 			cmdbuildSoapService.createElbPolicy(elbPolicyDTO);
 		}
 
-		// 调用loadbalancer 接口创建ELB对象
+		// Step.4 创建关联关系
+		for (Integer ecsId : ecsIds) {
+			cmdbuildSoapService.createMapEcsElb(ecsId, dto.getId());
+		}
+
+		// Step.5 调用loadbalancer 接口创建ELB对象
 		loadbalancerSoapService.createELBByLoadbalancer(wrapperELBParameter(dto));
 
-		// 更改VIP状态
+		// Step.6 更改VIP状态
 		cmdbuildSoapService.allocateIpaddress(ipaddressDTO.getId());
 
-		// 写入日志
+		// Step.7 写入日志
 		createLog(elbDTO.getTenants(), LookUpConstants.ServiceType.ELB.getValue(),
 				LookUpConstants.OperateType.创建.getValue(), LookUpConstants.Result.成功.getValue());
 
+		result.setMessage("ELB创建成功");
+		return result;
 	}
 
 	/**
@@ -1455,23 +1463,6 @@ public class ApiServiceImpl implements ApiService {
 		return elbParameter;
 	}
 
-	/**
-	 * 根据description查询LookUp对象
-	 */
-	private LookUpDTO getLookUpDTOByDescription(String description) {
-		return getLookUpDTO(description, null);
-	}
-
-	private LookUpDTO getLookUpDTO(String description, String typeStr) {
-
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_description", description);
-		if (StringUtils.isNotBlank(typeStr)) {
-			map.put("EQ_type", typeStr);
-		}
-		return (LookUpDTO) cmdbuildSoapService.findLookUpByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
-	}
-
 	@Override
 	public void deleteELB(Integer elbId) {
 
@@ -1513,226 +1504,6 @@ public class ApiServiceImpl implements ApiService {
 
 		createLog(elbDTO.getTenants(), LookUpConstants.ServiceType.ELB.getValue(),
 				LookUpConstants.OperateType.删除.getValue(), LookUpConstants.Result.成功.getValue());
-
-	}
-
-	@Override
-	public void associateELB(ELBParameter elbParameter, Integer elbId) {
-
-		/**
-		 * Step.1 获得ELB.
-		 * 
-		 * Step.2 删除cmdbuild中ELB端口的数据和关联关系
-		 * 
-		 * Step.3 删除loadbalancer上的对象
-		 * 
-		 * Step.4 CMDBuild中创建ELB端口数据
-		 * 
-		 * Step.5 在loadbalancer上创建elb对象
-		 * 
-		 * Step.6 写入日志
-		 */
-
-		// 获得ELB.
-		ElbDTO elbDTO = (ElbDTO) cmdbuildSoapService.findElb(elbId).getDto();
-
-		List<ELBPublicIPParameter> publicIPParameters = new ArrayList<ELBPublicIPParameter>();
-		List<ELBPolicyParameter> policyParameters = new ArrayList<ELBPolicyParameter>();
-
-		// 查询出ECS和ELB的关联关系
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_idObj2", elbDTO.getId());
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		List<Object> ecsElbDTOs = cmdbuildSoapService.getMapEcsElbList(searchParams).getDtoList().getDto();
-
-		// 删除elb下所有policy,同时填充用于loadbalancer agent的对象.
-		for (Object object : ecsElbDTOs) {
-
-			ELBPublicIPParameter publicIPParameter = new ELBPublicIPParameter();
-
-			MapEcsElbDTO mapEcsElbDTO = (MapEcsElbDTO) object;
-
-			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(Integer.valueOf(mapEcsElbDTO.getIdObj1())).getDto();
-			IpaddressDTO ecsIpaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress())
-					.getDto();
-
-			DTOListResult policyResult = getElbPolicyDTOList(Integer.valueOf(mapEcsElbDTO.getIdObj2()));
-
-			for (Object obj : policyResult.getDtoList().getDto()) {
-
-				ElbPolicyDTO policyDTO = (ElbPolicyDTO) obj;
-
-				LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(policyDTO.getElbProtocol()).getDto();
-
-				ELBPolicyParameter elbPolicyParameter = new ELBPolicyParameter();
-				elbPolicyParameter.setProtocolText(lookUpDTO.getDescription());
-				elbPolicyParameter.setSourcePort(policyDTO.getSourcePort());
-				elbPolicyParameter.setTargetPort(policyDTO.getTargetPort());
-
-				policyParameters.add(elbPolicyParameter);
-
-				cmdbuildSoapService.deleteElbPolicy(policyDTO.getId());
-			}
-
-			publicIPParameter.setIpaddress(ecsIpaddressDTO.getDescription());
-			publicIPParameter.getPolicyParameters().addAll(policyParameters);
-
-			publicIPParameters.add(publicIPParameter);
-		}
-
-		// 删除CMDBuild中的elb
-		cmdbuildSoapService.deleteElb(elbId);
-
-		// 删除关联关系
-		for (Object object : ecsElbDTOs) {
-			MapEcsElbDTO mapEcsElbDTO = (MapEcsElbDTO) object;
-			cmdbuildSoapService.deleteMapEcsElb(Integer.valueOf(mapEcsElbDTO.getIdObj1()),
-					Integer.valueOf(mapEcsElbDTO.getIdObj2()));
-		}
-
-		// CMDBuild中创建ELB端口数据
-
-		for (ELBPublicIPParameter ipParameter : elbParameter.getPublicIPs()) {
-
-			for (ELBPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
-
-				ElbPolicyDTO policyDTO = new ElbPolicyDTO();
-
-				LookUpDTO lookUpDTO = getLookUpDTOByDescription(policyParameter.getProtocolText());
-
-				policyDTO.setDescription(policyParameter.getProtocolText() + "-" + policyParameter.getSourcePort()
-						+ "-" + policyParameter.getTargetPort());
-				policyDTO.setElb(elbDTO.getId());
-				policyDTO.setElbProtocol(lookUpDTO.getId());
-				policyDTO.setSourcePort(policyParameter.getSourcePort());
-				policyDTO.setTargetPort(policyParameter.getTargetPort());
-				policyDTO.setIpaddress(ipParameter.getIpaddress());
-
-				cmdbuildSoapService.createElbPolicy(policyDTO);
-			}
-
-		}
-
-		// 调用loadbalancer 接口创建ELB对象
-		loadbalancerSoapService.createELBByLoadbalancer(elbParameter);
-
-		// 在loadbalancer上创建elb对象
-		elbParameter.setVip(elbDTO.getIpaddressDTO().getDescription());
-		loadbalancerSoapService.createELBByLoadbalancer(elbParameter);
-
-		// 写入日志
-
-		createLog(elbDTO.getTenants(), LookUpConstants.ServiceType.ELB.getValue(),
-				LookUpConstants.OperateType.应用规则至.getValue(), LookUpConstants.Result.成功.getValue());
-
-	}
-
-	@Override
-	public void dissociateELB(ELBParameter elbParameter, Integer elbId) {
-		/**
-		 * Step.1 获得ELB.
-		 * 
-		 * Step.2 删除cmdbuild中ELB端口的数据和关联关系
-		 * 
-		 * Step.3 删除loadbalancer上的对象
-		 * 
-		 * Step.4 CMDBuild中创建ELB端口数据
-		 * 
-		 * Step.5 在loadbalancer上创建elb对象
-		 * 
-		 * Step.6 写入日志
-		 */
-
-		// 获得ELB.
-		ElbDTO elbDTO = (ElbDTO) cmdbuildSoapService.findElb(elbId).getDto();
-
-		List<ELBPublicIPParameter> publicIPParameters = new ArrayList<ELBPublicIPParameter>();
-		List<ELBPolicyParameter> policyParameters = new ArrayList<ELBPolicyParameter>();
-
-		// 查询出ECS和ELB的关联关系
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_idObj2", elbDTO.getId());
-		SearchParams searchParams = CMDBuildUtil.wrapperSearchParams(map);
-		List<Object> ecsElbDTOs = cmdbuildSoapService.getMapEcsElbList(searchParams).getDtoList().getDto();
-
-		// 删除elb下所有policy,同时填充用于loadbalancer agent的对象.
-		for (Object object : ecsElbDTOs) {
-
-			ELBPublicIPParameter publicIPParameter = new ELBPublicIPParameter();
-
-			MapEcsElbDTO mapEcsElbDTO = (MapEcsElbDTO) object;
-
-			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(Integer.valueOf(mapEcsElbDTO.getIdObj1())).getDto();
-			IpaddressDTO ecsIpaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress())
-					.getDto();
-
-			DTOListResult policyResult = getElbPolicyDTOList(Integer.valueOf(mapEcsElbDTO.getIdObj2()));
-
-			for (Object obj : policyResult.getDtoList().getDto()) {
-
-				ElbPolicyDTO policyDTO = (ElbPolicyDTO) obj;
-
-				LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(policyDTO.getElbProtocol()).getDto();
-
-				ELBPolicyParameter elbPolicyParameter = new ELBPolicyParameter();
-				elbPolicyParameter.setProtocolText(lookUpDTO.getDescription());
-				elbPolicyParameter.setSourcePort(policyDTO.getSourcePort());
-				elbPolicyParameter.setTargetPort(policyDTO.getTargetPort());
-
-				policyParameters.add(elbPolicyParameter);
-
-				cmdbuildSoapService.deleteElbPolicy(policyDTO.getId());
-			}
-
-			publicIPParameter.setIpaddress(ecsIpaddressDTO.getDescription());
-			publicIPParameter.getPolicyParameters().addAll(policyParameters);
-
-			publicIPParameters.add(publicIPParameter);
-		}
-
-		// 删除CMDBuild中的elb
-		cmdbuildSoapService.deleteElb(elbId);
-
-		// 删除关联关系
-		for (Object object : ecsElbDTOs) {
-			MapEcsElbDTO mapEcsElbDTO = (MapEcsElbDTO) object;
-			cmdbuildSoapService.deleteMapEcsElb(Integer.valueOf(mapEcsElbDTO.getIdObj1()),
-					Integer.valueOf(mapEcsElbDTO.getIdObj2()));
-		}
-
-		// CMDBuild中创建ELB端口数据
-
-		for (ELBPublicIPParameter ipParameter : elbParameter.getPublicIPs()) {
-
-			for (ELBPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
-
-				ElbPolicyDTO policyDTO = new ElbPolicyDTO();
-
-				LookUpDTO lookUpDTO = getLookUpDTOByDescription(policyParameter.getProtocolText());
-
-				policyDTO.setDescription(policyParameter.getProtocolText() + "-" + policyParameter.getSourcePort()
-						+ "-" + policyParameter.getTargetPort());
-				policyDTO.setElb(elbDTO.getId());
-				policyDTO.setElbProtocol(lookUpDTO.getId());
-				policyDTO.setSourcePort(policyParameter.getSourcePort());
-				policyDTO.setTargetPort(policyParameter.getTargetPort());
-				policyDTO.setIpaddress(ipParameter.getIpaddress());
-
-				cmdbuildSoapService.createElbPolicy(policyDTO);
-			}
-
-		}
-
-		// 调用loadbalancer 接口创建ELB对象
-		loadbalancerSoapService.createELBByLoadbalancer(elbParameter);
-
-		// 在loadbalancer上创建elb对象
-		elbParameter.setVip(elbDTO.getIpaddressDTO().getDescription());
-		loadbalancerSoapService.createELBByLoadbalancer(elbParameter);
-
-		// 写入日志
-		createLog(elbDTO.getTenants(), LookUpConstants.ServiceType.ELB.getValue(),
-				LookUpConstants.OperateType.应用规则至.getValue(), LookUpConstants.Result.成功.getValue());
 
 	}
 
