@@ -86,9 +86,7 @@ public class EipController {
 		eipDTO.setTenants(tenantsId);
 		eipDTO.setIsp(isp);
 
-		service.allocateEIP(eipDTO, eipPolicyDTOs);
-
-		redirectAttributes.addFlashAttribute("message", "Eip创建成功");
+		redirectAttributes.addFlashAttribute("message", service.allocateEIP(eipDTO, eipPolicyDTOs).getMessage());
 
 		return "redirect:/eip/allocate/";
 	}
@@ -129,9 +127,7 @@ public class EipController {
 	public String associate(@RequestParam(value = "eipId") Integer eipId,
 			@RequestParam(value = "serviceId") Integer serviceId, RedirectAttributes redirectAttributes) {
 
-		service.associateEIP(eipId, serviceId);
-
-		redirectAttributes.addFlashAttribute("message", "Eip绑定成功");
+		redirectAttributes.addFlashAttribute("message", service.associateEIP(eipId, serviceId).getMessage());
 
 		return "redirect:/eip/associate/";
 	}

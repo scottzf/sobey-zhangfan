@@ -55,9 +55,7 @@ public class InstanceController {
 		ecsDTO.setRemark(remark);
 		ecsDTO.setTenants(tenantsId);
 
-		service.createECS(ecsDTO);
-
-		redirectAttributes.addFlashAttribute("message", "创建ECS成功");
+		redirectAttributes.addFlashAttribute("message", service.createECS(ecsDTO).getMessage());
 
 		return "redirect:/instance/create/";
 	}
@@ -119,9 +117,7 @@ public class InstanceController {
 	public String power(@RequestParam(value = "ecsId") Integer ecsId,
 			@RequestParam(value = "operation") String operation, RedirectAttributes redirectAttributes) {
 
-		service.powerOpsECS(ecsId, operation);
-
-		redirectAttributes.addFlashAttribute("message", "电源操作成功");
+		redirectAttributes.addFlashAttribute("message", service.powerOpsECS(ecsId, operation).getMessage());
 
 		return "redirect:/instance/power/";
 	}
@@ -141,9 +137,7 @@ public class InstanceController {
 	public String reconfig(@RequestParam(value = "ecsId") Integer ecsId,
 			@RequestParam(value = "ecsSpecId") Integer ecsSpecId, RedirectAttributes redirectAttributes) {
 
-		service.reconfigECS(ecsId, ecsSpecId);
-
-		redirectAttributes.addFlashAttribute("message", "配置修改成功");
+		redirectAttributes.addFlashAttribute("message", service.reconfigECS(ecsId, ecsSpecId).getMessage());
 
 		return "redirect:/instance/reconfig/";
 	}

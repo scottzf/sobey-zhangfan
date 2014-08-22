@@ -79,9 +79,7 @@ public class StorageController {
 		es3dto.setTenants(tenantsId);
 		es3dto.setRemark(remark);
 
-		service.createES3(es3dto);
-
-		redirectAttributes.addFlashAttribute("message", "Es3创建成功");
+		redirectAttributes.addFlashAttribute("message", service.createES3(es3dto).getMessage());
 
 		return "redirect:/storage/create/";
 	}
@@ -100,10 +98,7 @@ public class StorageController {
 	@RequestMapping(value = "/delete/", method = RequestMethod.POST)
 	public String delete(@RequestParam(value = "es3Id") Integer es3Id, RedirectAttributes redirectAttributes) {
 
-		service.deleteES3(es3Id);
-		;
-
-		redirectAttributes.addFlashAttribute("message", "ES3删除成功");
+		redirectAttributes.addFlashAttribute("message", service.deleteES3(es3Id).getMessage());
 
 		return "redirect:/storage/delete/";
 	}
@@ -123,9 +118,7 @@ public class StorageController {
 	public String mount(@RequestParam(value = "es3Id") Integer es3Id, @RequestParam(value = "ecsId") Integer ecsId,
 			RedirectAttributes redirectAttributes) {
 
-		service.attachES3(es3Id, ecsId);
-
-		redirectAttributes.addFlashAttribute("message", "ES3挂载成功");
+		redirectAttributes.addFlashAttribute("message", service.attachES3(es3Id, ecsId).getMessage());
 
 		return "redirect:/storage/mount/";
 	}
@@ -145,9 +138,7 @@ public class StorageController {
 	public String umount(@RequestParam(value = "es3Id") Integer es3Id, @RequestParam(value = "ecsId") Integer ecsId,
 			RedirectAttributes redirectAttributes) {
 
-		service.detachES3(es3Id, ecsId);
-
-		redirectAttributes.addFlashAttribute("message", "ES3卸载成功");
+		redirectAttributes.addFlashAttribute("message", service.detachES3(es3Id, ecsId).getMessage());
 
 		return "redirect:/storage/umount/";
 	}

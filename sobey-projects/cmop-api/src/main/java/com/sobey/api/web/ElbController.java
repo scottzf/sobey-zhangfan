@@ -81,9 +81,7 @@ public class ElbController {
 		elbDTO.setAgentType(LookUpConstants.AgentType.Netscaler.getValue());
 		elbDTO.setTenants(tenantsId);
 
-		service.createELB(elbDTO, elbPolicyDTOs, ecsIds);
-
-		redirectAttributes.addFlashAttribute("message", "elb创建成功");
+		redirectAttributes.addFlashAttribute("message", service.createELB(elbDTO, elbPolicyDTOs, ecsIds).getMessage());
 
 		return "redirect:/elb/create/";
 	}

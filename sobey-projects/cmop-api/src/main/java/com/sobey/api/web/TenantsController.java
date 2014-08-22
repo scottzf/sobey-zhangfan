@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.sobey.api.constans.LookUpConstants;
 import com.sobey.api.service.ApiService;
 import com.sobey.core.utils.Encodes;
 import com.sobey.generate.cmdbuild.TenantsDTO;
@@ -51,9 +50,7 @@ public class TenantsController {
 		tenantsDTO.setPassword(password);
 		tenantsDTO.setPhone(phone);
 
-		service.createTenants(tenantsDTO);
-
-		redirectAttributes.addFlashAttribute("message", "创建成功");
+		redirectAttributes.addFlashAttribute("message", service.createTenants(tenantsDTO).getMessage());
 
 		return "redirect:/tenants/create/";
 	}
