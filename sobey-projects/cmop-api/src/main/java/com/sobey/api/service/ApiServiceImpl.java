@@ -110,6 +110,8 @@ public class ApiServiceImpl implements ApiService {
 	 */
 	private static String default_esg_name = "默认策略";
 
+	private static String default_netapp_ip = "10.10.2.34";
+
 	@Override
 	public WSResult createTenants(TenantsDTO tenantsDTO) {
 
@@ -741,6 +743,7 @@ public class ApiServiceImpl implements ApiService {
 		CreateEs3Parameter createEs3Parameter = new CreateEs3Parameter();
 		createEs3Parameter.setVolumeName(VolumeName);
 		createEs3Parameter.setVolumeSize(Integer.valueOf(es3DTO.getDiskSize().intValue()).toString());
+		createEs3Parameter.setClientIPaddress(default_netapp_ip);// TODO 默认加上控制器IP
 
 		if (!WSResult.SUCESS.equals(storageSoapService.createEs3ByStorage(createEs3Parameter).getCode())) {
 			result.setError(WSResult.SYSTEM_ERROR, "ES3创建失败,请联系管理员.");
@@ -831,10 +834,16 @@ public class ApiServiceImpl implements ApiService {
 
 		List<String> list = getEcsIpaddressByEs3(es3dto);
 
+		// 如果为null加入默认的netapp控制器IP
+		if (list.isEmpty()) {
+			list.add(default_netapp_ip);
+		}
+
 		RemountEs3Parameter remountEs3Parameter = new RemountEs3Parameter();
 		remountEs3Parameter.setVolumeName(es3dto.getVolumeName());
 		remountEs3Parameter.getBeforeClientIPaddress().addAll(list);
 
+		list.remove(default_netapp_ip);
 		list.remove(ecsDTO.getIpaddressDTO().getDescription());// 先去重
 		list.add(ecsDTO.getIpaddressDTO().getDescription());// 将需要挂载的ECS IP放入list中.
 
