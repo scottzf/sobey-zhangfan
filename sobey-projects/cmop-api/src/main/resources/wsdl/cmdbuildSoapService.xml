@@ -2888,7 +2888,6 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="tagId" type="xs:int"/>
       <xs:element minOccurs="0" name="serviceId" type="xs:int"/>
-      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
