@@ -182,12 +182,12 @@ public class ApiServiceImpl implements ApiService {
 		map.put("EQ_vlanStatus", LookUpConstants.VlanStatus.未使用.getValue());
 		DTOListResult dtoListResult = cmdbuildSoapService.getVlanList(CMDBuildUtil.wrapperSearchParams(map));
 
-		// 将vlan分配给租户,更新vlan状态
-		VlanDTO vlanDTO = (VlanDTO) dtoListResult.getDtoList().getDto().get(0);
-
-		if (vlanDTO == null) {
+		if (dtoListResult.getDtoList().getDto().isEmpty()) {
 			return null;
 		}
+
+		// 将vlan分配给租户,更新vlan状态
+		VlanDTO vlanDTO = (VlanDTO) dtoListResult.getDtoList().getDto().get(0);
 
 		vlanDTO.setTenants(tenantsDTO.getId());
 		vlanDTO.setVlanStatus(LookUpConstants.VlanStatus.已使用.getValue());
@@ -1282,12 +1282,17 @@ public class ApiServiceImpl implements ApiService {
 		// 获得租户下所有的EIP.
 		DTOListResult allPoliciesResult = getEipDTOListByTenants(eipDTO);
 		List<String> allPolicies = new ArrayList<String>();
-		if (allPoliciesResult.getDtoList() != null) {
 
-			for (Object obj : allPoliciesResult.getDtoList().getDto()) {
-				EipDTO dto = (EipDTO) obj;
-				allPolicies.add(dto.getIpaddressDTO().getDescription());
-			}
+		System.out.println(allPoliciesResult.getDtoList().getDto().isEmpty());
+
+		for (Object obj : allPoliciesResult.getDtoList().getDto()) {
+			EipDTO dto = (EipDTO) obj;
+
+			System.out.println("dto:" + dto.getIpaddress());
+
+			IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(dto.getIpaddress()).getDto();
+
+			allPolicies.add(ipaddressDTO.getDescription());
 		}
 
 		// 获得EIP的策略
@@ -1702,15 +1707,16 @@ public class ApiServiceImpl implements ApiService {
 
 			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(policyDTO.getPolicyType()).getDto();
 
-			EsgPolicyDTO esgPolicyDTO = new EsgPolicyDTO();
-			esgPolicyDTO.setDescription(lookUpDTO.getDescription() + "-" + policyDTO.getSourceIP() + "-"
-					+ policyDTO.getTargetIP());
+			if (StringUtils.isNotBlank(policyDTO.getTargetIP())) {
 
-			esgPolicyDTO.setEsg(dto.getId());
-			esgPolicyDTO.setTargetIP(policyDTO.getTargetIP());
-			esgPolicyDTO.setPolicyType(policyDTO.getPolicyType());
+				EsgPolicyDTO esgPolicyDTO = new EsgPolicyDTO();
+				esgPolicyDTO.setDescription(lookUpDTO.getDescription() + "-" + policyDTO.getTargetIP());
 
-			cmdbuildSoapService.createEsgPolicy(esgPolicyDTO);
+				esgPolicyDTO.setEsg(dto.getId());
+				esgPolicyDTO.setTargetIP(policyDTO.getTargetIP());
+				esgPolicyDTO.setPolicyType(policyDTO.getPolicyType());
+				cmdbuildSoapService.createEsgPolicy(esgPolicyDTO);
+			}
 		}
 
 		// Step.4 写入日志
