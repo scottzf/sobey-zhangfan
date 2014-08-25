@@ -45,8 +45,5 @@
 
 	<jaxws:client id="zabbixSoapService" serviceClass="com.sobey.generate.zabbix.ZabbixSoapService"
 		address="http://localhost:8087/zabbix/cxf/soap/zabbixSoapService?wsdl" />
-		
-	<jaxws:client id="nagiosSoapService" serviceClass="com.sobey.generate.nagios.NagiosSoapService"
-		address="http://localhost:8089/nagios/cxf/soap/nagiosSoapService?wsdl" />
 
 </beans>

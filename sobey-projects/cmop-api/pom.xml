@@ -401,9 +401,6 @@
 								<wsdlOption>
 									<wsdl>${basedir}/src/main/resources/wsdl/cmdbuildSoapService.xml</wsdl>
 								</wsdlOption>
-								<wsdlOption>
-									<wsdl>${basedir}/src/main/resources/wsdl/nagiosSoapService.xml</wsdl>
-								</wsdlOption>
 							</wsdlOptions>
 						</configuration>
 						<goals>
