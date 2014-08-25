@@ -78,6 +78,24 @@
 			</div>
 		</div>
 	</form>
+	
+	<script>
+		$(document).ready(function() {
+
+			$(document).on("click", "button.clone", function() {
+				var $this = $(this);
+				var $div = $this.closest('div.clone');
+				if ($this.hasClass("btn-warning")) {
+					$div.remove();
+				} else {
+					var $clone = $div.clone();
+					$clone.find('input[type=text]').val('');
+					$div.after($clone);
+				}
+			});
+
+		});
+	</script>
 
 </body>
 </html>
