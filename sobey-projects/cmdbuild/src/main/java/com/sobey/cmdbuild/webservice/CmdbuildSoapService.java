@@ -556,7 +556,7 @@ public interface CmdbuildSoapService {
 	DTOResult<MapTagServiceDTO> findMapTagServiceByParams(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	IdResult createMapTagService(@WebParam(name = "tagId") Integer tagId,
-			@WebParam(name = "serviceId") Integer serviceId, Class<?> serviceClassName);
+			@WebParam(name = "serviceId") Integer serviceId);
 
 	IdResult deleteMapTagService(@WebParam(name = "tagId") Integer tagId,
 			@WebParam(name = "serviceId") Integer serviceId);

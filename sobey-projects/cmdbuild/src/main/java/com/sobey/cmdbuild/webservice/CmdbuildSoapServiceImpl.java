@@ -4860,7 +4860,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public IdResult createMapTagService(Integer tagId, Integer serviceId, Class<?> serviceClassName) {
+	public IdResult createMapTagService(Integer tagId, Integer serviceId) {
 
 		IdResult result = new IdResult();
 
@@ -4868,11 +4868,33 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			MapTagService map = new MapTagService();
 
+			EcsDTO ecsDTO = findEcs(serviceId).getDto();
+			Es3DTO es3dto = findEs3(serviceId).getDto();
+			ElbDTO elbDTO = findElb(serviceId).getDto();
+			EipDTO eipDTO = findEip(serviceId).getDto();
+			DnsDTO dnsDTO = findDns(serviceId).getDto();
+			EsgDTO esgDTO = findEsg(serviceId).getDto();
+
+			if (ecsDTO != null) {
+				map.setIdClass2(Ecs.class.getSimpleName());
+			} else if (es3dto != null) {
+				map.setIdClass2(Es3.class.getSimpleName());
+			} else if (elbDTO != null) {
+				map.setIdClass2(Elb.class.getSimpleName());
+			} else if (eipDTO != null) {
+				map.setIdClass2(Eip.class.getSimpleName());
+			} else if (dnsDTO != null) {
+				map.setIdClass2(Dns.class.getSimpleName());
+			} else if (esgDTO != null) {
+				map.setIdClass2(Esg.class.getSimpleName());
+			} else {
+				System.out.println("没有找到资源!");
+			}
+
 			map.setId(0);
 			map.setIdObj1(tagId);
 			map.setIdObj2(serviceId);
 			map.setIdClass1(TableNameUtil.getTableName(Tag.class));
-			map.setIdClass2(serviceClassName.getSimpleName());
 			map.setUser(DEFAULT_USER);
 
 			comm.mapTagServiceService.saveOrUpdate(map);
