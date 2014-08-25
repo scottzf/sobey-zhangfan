@@ -13,7 +13,6 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 
 import com.sobey.cmdbuild.BaseFunctionalTestCase;
 import com.sobey.cmdbuild.data.TestData;
-import com.sobey.cmdbuild.entity.Ecs;
 import com.sobey.cmdbuild.entity.MapTagService;
 import com.sobey.cmdbuild.webservice.response.dto.MapTagServiceDTO;
 import com.sobey.cmdbuild.webservice.response.result.DTOListResult;
@@ -92,7 +91,7 @@ public class MapTagServiceSoapTest extends BaseFunctionalTestCase {
 		MapTagService map = TestData.randomMapTagService();
 		MapTagServiceDTO dto = BeanMapper.map(map, MapTagServiceDTO.class);
 		IdResult response = cmdbuildSoapService.createMapTagService(Integer.valueOf(dto.getIdObj1()),
-				Integer.valueOf(dto.getIdObj2()), Ecs.class);
+				Integer.valueOf(dto.getIdObj2()));
 		assertNotNull(response.getId());
 	}
 

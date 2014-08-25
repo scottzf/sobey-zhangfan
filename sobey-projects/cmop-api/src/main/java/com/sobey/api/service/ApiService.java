@@ -16,6 +16,7 @@ import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.EsgDTO;
 import com.sobey.generate.cmdbuild.EsgPolicyDTO;
 import com.sobey.generate.cmdbuild.IdcDTO;
+import com.sobey.generate.cmdbuild.TagDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 
 public interface ApiService {
@@ -209,11 +210,43 @@ public interface ApiService {
 
 	public List<DnsDTO> getDnsDTO();
 
+	public List<TagDTO> getTagDTO();
+
 	/**
 	 * 获得非默认的Esg List
 	 * 
 	 * @return
 	 */
 	public List<EsgDTO> getEsgDTO();
+
+	/**
+	 * 创建标签
+	 * 
+	 * @param tagDTO
+	 */
+	public void createTag(TagDTO tagDTO);
+
+	/**
+	 * 删除标签
+	 * 
+	 * @param tagId
+	 */
+	public void deleteTag(Integer tagId);
+
+	/**
+	 * 绑定标签
+	 * 
+	 * @param tagId
+	 * @param serviceId
+	 */
+	public void associateTag(Integer tagId, Integer serviceId);
+
+	/**
+	 * 解绑标签
+	 * 
+	 * @param tagId
+	 * @param serviceId
+	 */
+	public void dssociateTag(Integer tagId, Integer serviceId);
 
 }

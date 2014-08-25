@@ -34,6 +34,7 @@ import com.sobey.generate.cmdbuild.MapEcsEs3DTO;
 import com.sobey.generate.cmdbuild.MapEcsEsgDTO;
 import com.sobey.generate.cmdbuild.SearchParams;
 import com.sobey.generate.cmdbuild.ServerDTO;
+import com.sobey.generate.cmdbuild.TagDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.cmdbuild.VlanDTO;
 import com.sobey.generate.cmdbuild.VpnDTO;
@@ -2012,6 +2013,37 @@ public class ApiServiceImpl implements ApiService {
 		List<EsgDTO> list = new ArrayList<EsgDTO>();
 		for (Object obj : cmdbuildSoapService.getEsgList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList().getDto()) {
 			list.add((EsgDTO) obj);
+		}
+		return list;
+	}
+
+	@Override
+	public void createTag(TagDTO tagDTO) {
+		cmdbuildSoapService.createTag(tagDTO);
+	}
+
+	@Override
+	public void deleteTag(Integer tagId) {
+		cmdbuildSoapService.deleteTag(tagId);
+	}
+
+	@Override
+	public void associateTag(Integer tagId, Integer serviceId) {
+		cmdbuildSoapService.createMapTagService(tagId, serviceId);
+
+	}
+
+	@Override
+	public void dssociateTag(Integer tagId, Integer serviceId) {
+		cmdbuildSoapService.deleteMapTagService(tagId, serviceId);
+	}
+
+	@Override
+	public List<TagDTO> getTagDTO() {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		List<TagDTO> list = new ArrayList<TagDTO>();
+		for (Object obj : cmdbuildSoapService.getTagList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList().getDto()) {
+			list.add((TagDTO) obj);
 		}
 		return list;
 	}

@@ -74,6 +74,15 @@
 					</ul></li>
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">Tag<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="${ctx}/tag/create/">创建Tag</a></li>
+						<li><a href="${ctx}/tag/delete/">删除Tag</a></li>
+						<li><a href="${ctx}/tag/associate/">绑定Tag</a></li>
+						<li><a href="${ctx}/tag/dissociate/">解绑Tag</a></li>
+					</ul></li>
+
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown">Monitor<b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="${ctx}/zabbix/">Zabbix</a></li>
