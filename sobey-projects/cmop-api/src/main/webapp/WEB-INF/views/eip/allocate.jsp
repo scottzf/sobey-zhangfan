@@ -35,17 +35,6 @@
 			</div>
 		</div>
 
-		<div class="form-group">
-			<label for="ecsId" class="col-sm-2 control-label">ECS列表</label>
-			<div class="col-sm-4">
-				<select id="ecsId" name="ecsId" class="form-control">
-					<c:forEach var="item" items="${ecsList}">
-						<option value="${item.id }">${item.description}</option>
-					</c:forEach>
-				</select>
-			</div>
-		</div>
-
 		<div class="form-group clone">
 			<label for="domianName" class="col-sm-2 control-label">端口策略</label>
 
