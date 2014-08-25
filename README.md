@@ -14,7 +14,6 @@
 * firewall 	   : Firewall的webservice接口
 * loadbalancer : LoadBalancer的webservice接口
 * dns 		   : DNS的webservice接口
-* nagios 	   : Nagios的webservice接口
 * zabbix 	   :Zabbix的webservice接口
 * redmine 	   : Redmine的webservice接口
 * cmop-api	   : 公共功能模块的webservice接口

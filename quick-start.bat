@@ -71,7 +71,7 @@ echo [INFO] http://localhost:8083/firewall
 echo [INFO] http://localhost:8084/storage
 echo [INFO] http://localhost:8085/dns
 echo [INFO] http://localhost:8086/loadbalancer
-echo [INFO] http://localhost:8087/nagios
+
 echo [INFO] http://localhost:8088/cmop-api
 
 goto end

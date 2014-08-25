@@ -21,7 +21,6 @@
 		<module>loadbalancer</module>
 		<module>storage</module>
 		<module>dns</module>
-		<module>nagios</module>
 		<module>cmop-api</module>
 		<module>zabbix</module>
 	</modules>
