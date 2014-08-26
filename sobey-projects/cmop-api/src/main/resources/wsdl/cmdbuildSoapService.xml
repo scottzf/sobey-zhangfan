@@ -85,6 +85,8 @@
 
   <xs:element name="TagDTO" type="tns:TagDTO"/>
 
+  <xs:element name="TagRelation" type="tns:TagRelation"/>
+
   <xs:element name="TenantsDTO" type="tns:TenantsDTO"/>
 
   <xs:element name="VlanDTO" type="tns:VlanDTO"/>
@@ -1099,6 +1101,10 @@
 
   <xs:element name="getTagPaginationResponse" type="tns:getTagPaginationResponse"/>
 
+  <xs:element name="getTagRelation" type="tns:getTagRelation"/>
+
+  <xs:element name="getTagRelationResponse" type="tns:getTagRelationResponse"/>
+
   <xs:element name="getTenantsList" type="tns:getTenantsList"/>
 
   <xs:element name="getTenantsListResponse" type="tns:getTenantsListResponse"/>
@@ -2026,6 +2032,28 @@
   <xs:complexType name="createLogResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getTagRelation">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="serviceId" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getTagRelationResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:TagRelation"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="TagRelation">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="parentTagName" type="xs:string"/>
+      <xs:element minOccurs="0" name="serviceCode" type="xs:string"/>
+      <xs:element minOccurs="0" name="serviceName" type="xs:string"/>
+      <xs:element minOccurs="0" name="tagName" type="xs:string"/>
+      <xs:element minOccurs="0" name="tagTypeName" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -5968,6 +5996,10 @@
     <wsdl:part element="tns:getIdcPagination" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getTagRelation">
+    <wsdl:part element="tns:getTagRelation" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="createStorage">
     <wsdl:part element="tns:createStorage" name="parameters">
     </wsdl:part>
@@ -6922,6 +6954,10 @@
   </wsdl:message>
   <wsdl:message name="deleteRackResponse">
     <wsdl:part element="tns:deleteRackResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTagRelationResponse">
+    <wsdl:part element="tns:getTagRelationResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findNicPortByParamsResponse">
@@ -8155,6 +8191,12 @@
       <wsdl:input message="tns:createLog" name="createLog">
     </wsdl:input>
       <wsdl:output message="tns:createLogResponse" name="createLogResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTagRelation">
+      <wsdl:input message="tns:getTagRelation" name="getTagRelation">
+    </wsdl:input>
+      <wsdl:output message="tns:getTagRelationResponse" name="getTagRelationResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="findRack">
@@ -10002,6 +10044,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="findRackResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTagRelation">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getTagRelation">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getTagRelationResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>

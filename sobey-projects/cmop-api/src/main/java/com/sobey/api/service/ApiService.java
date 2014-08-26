@@ -17,6 +17,7 @@ import com.sobey.generate.cmdbuild.EsgDTO;
 import com.sobey.generate.cmdbuild.EsgPolicyDTO;
 import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.TagDTO;
+import com.sobey.generate.cmdbuild.TagRelation;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 
 public interface ApiService {
@@ -248,5 +249,7 @@ public interface ApiService {
 	 * @param serviceId
 	 */
 	public void dssociateTag(Integer tagId, Integer serviceId);
+
+	public List<TagRelation> getTagRelation(Integer serviceId);
 
 }

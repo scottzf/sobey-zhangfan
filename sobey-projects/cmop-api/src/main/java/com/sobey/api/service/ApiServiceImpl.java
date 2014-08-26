@@ -35,6 +35,7 @@ import com.sobey.generate.cmdbuild.MapEcsEsgDTO;
 import com.sobey.generate.cmdbuild.SearchParams;
 import com.sobey.generate.cmdbuild.ServerDTO;
 import com.sobey.generate.cmdbuild.TagDTO;
+import com.sobey.generate.cmdbuild.TagRelation;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.cmdbuild.VlanDTO;
 import com.sobey.generate.cmdbuild.VpnDTO;
@@ -2046,6 +2047,11 @@ public class ApiServiceImpl implements ApiService {
 			list.add((TagDTO) obj);
 		}
 		return list;
+	}
+
+	@Override
+	public List<TagRelation> getTagRelation(Integer serviceId) {
+		return cmdbuildSoapService.getTagRelation(serviceId);
 	}
 
 }

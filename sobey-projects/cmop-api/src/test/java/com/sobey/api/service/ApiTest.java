@@ -15,6 +15,7 @@ import com.sobey.api.constans.LookUpConstants;
 import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
+import com.sobey.generate.cmdbuild.TagRelation;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.test.data.RandomData;
 
@@ -30,6 +31,15 @@ public class ApiTest extends TestCase {
 
 	@Autowired
 	public ApiService service;
+
+	@Test
+	public void getTag() {
+		List<TagRelation> list = service.getTagRelation(2542);
+		for (TagRelation tagRelation : list) {
+			System.out.println(tagRelation.getServiceName());
+			System.out.println(tagRelation.getTagName());
+		}
+	}
 
 	// @Test
 	public void createtenants() {
