@@ -46,6 +46,7 @@ import com.sobey.cmdbuild.webservice.response.dto.StoragePortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.SwitchPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.SwitchesDTO;
 import com.sobey.cmdbuild.webservice.response.dto.TagDTO;
+import com.sobey.cmdbuild.webservice.response.dto.TagRelation;
 import com.sobey.cmdbuild.webservice.response.dto.TenantsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.VlanDTO;
 import com.sobey.cmdbuild.webservice.response.dto.VpnDTO;
@@ -125,6 +126,8 @@ public interface CmdbuildSoapService {
 
 	PaginationResult<TagDTO> getTagPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	List<TagRelation> getTagRelation(@WebParam(name = "serviceId") Integer serviceId);
 
 	// ==============================//
 	// ============ IDC =============//

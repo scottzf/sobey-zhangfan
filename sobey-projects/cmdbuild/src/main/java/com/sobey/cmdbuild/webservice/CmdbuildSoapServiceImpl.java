@@ -98,6 +98,7 @@ import com.sobey.cmdbuild.webservice.response.dto.StoragePortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.SwitchPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.SwitchesDTO;
 import com.sobey.cmdbuild.webservice.response.dto.TagDTO;
+import com.sobey.cmdbuild.webservice.response.dto.TagRelation;
 import com.sobey.cmdbuild.webservice.response.dto.TenantsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.VlanDTO;
 import com.sobey.cmdbuild.webservice.response.dto.VpnDTO;
@@ -646,6 +647,11 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 		} catch (RuntimeException e) {
 			return handleGeneralError(result, e);
 		}
+	}
+
+	@Override
+	public List<TagRelation> getTagRelation(Integer serviceId) {
+		return comm.customService.getTagRelation(serviceId);
 	}
 
 	@Override

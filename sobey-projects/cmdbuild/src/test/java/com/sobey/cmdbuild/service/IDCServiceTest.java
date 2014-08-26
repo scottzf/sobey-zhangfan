@@ -18,6 +18,7 @@ import com.sobey.cmdbuild.entity.Idc;
 import com.sobey.cmdbuild.service.infrastructure.CustomService;
 import com.sobey.cmdbuild.service.organisation.IdcService;
 import com.sobey.cmdbuild.webservice.response.dto.IdcDTO;
+import com.sobey.cmdbuild.webservice.response.dto.TagRelation;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 
 /**
@@ -36,6 +37,17 @@ public class IDCServiceTest {
 
 	@Autowired
 	public CustomService customService;
+
+	@Test
+	public void getTagRelationBySeviceId() {
+
+		List<TagRelation> list = customService.getTagRelation(2542);
+
+		for (TagRelation tagRelation : list) {
+			System.out.println(tagRelation);
+		}
+
+	}
 
 	@Test
 	public void selectMaxAclNumber() {
