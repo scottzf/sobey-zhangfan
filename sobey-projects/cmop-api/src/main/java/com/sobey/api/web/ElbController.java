@@ -47,7 +47,7 @@ public class ElbController {
 	}
 
 	private static Integer getPortFromProtocol(Integer protocol) {
-		return "97".equals(protocol) ? 443 : 80;
+		return "97".equals(protocol.toString()) ? 443 : 80;
 	}
 
 	/**

@@ -569,7 +569,7 @@ public class ApiServiceImpl implements ApiService {
 
 		// Step.3 修改ECS的运行状态
 
-		if (LookUpConstants.powerOperation.poweroff.equals(powerOperation)) {
+		if (LookUpConstants.powerOperation.poweroff.toString().equals(powerOperation)) {
 			ecsDTO.setEcsStatus(LookUpConstants.ECSStatus.停止.getValue());
 		} else {
 			ecsDTO.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());

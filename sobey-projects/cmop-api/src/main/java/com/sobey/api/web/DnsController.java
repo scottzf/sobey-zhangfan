@@ -47,7 +47,7 @@ public class DnsController {
 	}
 
 	private static String getPortFromProtocol(Integer protocol) {
-		return "59".equals(protocol) ? "443" : "80";
+		return "59".equals(protocol.toString()) ? "443" : "80";
 	}
 
 	/**
