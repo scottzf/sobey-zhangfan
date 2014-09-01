@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Instance Power Demo</title>
+<title>ECS Power Demo</title>
 </head>
 
 <body>

@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Esg Dissociate Demo</title>
+<title>ESG Dissociate Demo</title>
 </head>
 
 <body>
@@ -15,7 +15,7 @@
 		</div>
 
 		<div class="form-group">
-			<label for="ecsId" class="col-sm-2 control-label">Ecs列表</label>
+			<label for="ecsId" class="col-sm-2 control-label">ECS列表</label>
 			<div class="col-sm-4">
 				<select id="ecsId" name="ecsId" class="form-control">
 					<c:forEach var="item" items="${ecsList}">
@@ -26,7 +26,7 @@
 		</div>
 
 		<div class="form-group">
-			<label for="ecsId" class="col-sm-2 control-label">Esg列表</label>
+			<label for="ecsId" class="col-sm-2 control-label">ESG列表</label>
 			<div class="col-sm-4">
 				<select id="esgId" name="esgId" class="form-control">
 					<c:forEach var="item" items="${esgList}">

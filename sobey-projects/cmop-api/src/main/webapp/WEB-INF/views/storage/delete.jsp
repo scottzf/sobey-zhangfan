@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Storage Delete Demo</title>
+<title>ES3 Delete Demo</title>
 </head>
 
 <body>
@@ -11,7 +11,7 @@
 	<form class="form-horizontal" role="form" method="post" action=".">
 
 		<div class="page-header">
-			<h3>卷删除页面</h3>
+			<h3>删除ES3页面</h3>
 		</div>
 
 		<div class="form-group">

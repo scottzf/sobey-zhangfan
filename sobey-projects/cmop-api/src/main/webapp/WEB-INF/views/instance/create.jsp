@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Instance Create Demo</title>
+<title>ECS Create Demo</title>
 </head>
 
 <body>
@@ -11,7 +11,7 @@
 	<form class="form-horizontal" role="form" method="post" action=".">
 
 		<div class="page-header">
-			<h3>创建虚拟机页面</h3>
+			<h3>创建ECS页面</h3>
 		</div>
 
 		<div class="form-group">

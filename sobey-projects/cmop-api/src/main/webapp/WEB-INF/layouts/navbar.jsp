@@ -58,34 +58,34 @@
 					</ul></li>
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown">Dns<b class="caret"></b></a>
+					data-toggle="dropdown">DNS<b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="${ctx}/dns/create/">创建Dns</a></li>
-						<li><a href="${ctx}/dns/delete/">删除Dns</a></li>
+						<li><a href="${ctx}/dns/create/">创建DNS</a></li>
+						<li><a href="${ctx}/dns/delete/">删除DNS</a></li>
 					</ul></li>
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown">Esg<b class="caret"></b></a>
+					data-toggle="dropdown">ESG<b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="${ctx}/esg/create/">创建Esg</a></li>
-						<li><a href="${ctx}/esg/delete/">删除Esg</a></li>
-						<li><a href="${ctx}/esg/associate/">绑定Esg</a></li>
-						<li><a href="${ctx}/esg/dissociate/">解绑Esg</a></li>
+						<li><a href="${ctx}/esg/create/">创建ESG</a></li>
+						<li><a href="${ctx}/esg/delete/">删除ESG</a></li>
+						<li><a href="${ctx}/esg/associate/">绑定ESG</a></li>
+						<li><a href="${ctx}/esg/dissociate/">解绑ESG</a></li>
 					</ul></li>
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown">Tag<b class="caret"></b></a>
+					data-toggle="dropdown">标签<b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="${ctx}/tag/create/">创建Tag</a></li>
-						<li><a href="${ctx}/tag/delete/">删除Tag</a></li>
-						<li><a href="${ctx}/tag/associate/">绑定Tag</a></li>
-						<li><a href="${ctx}/tag/dissociate/">解绑Tag</a></li>
+						<li><a href="${ctx}/tag/create/">创建标签</a></li>
+						<li><a href="${ctx}/tag/delete/">删除标签</a></li>
+						<li><a href="${ctx}/tag/associate/">绑定标签</a></li>
+						<li><a href="${ctx}/tag/dissociate/">解绑标签</a></li>
 					</ul></li>
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown">Monitor<b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="${ctx}/zabbix/">Zabbix</a></li>
+						<li><a href="${ctx}/zabbix/">ECS监控</a></li>
 					</ul></li>
 			</ul>
 		</div>

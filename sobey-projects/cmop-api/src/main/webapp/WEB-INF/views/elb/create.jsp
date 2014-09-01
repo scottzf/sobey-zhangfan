@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Elb Create Demo</title>
+<title>ELB Create Demo</title>
 </head>
 
 <body>
@@ -26,7 +26,7 @@
 		</div>
 
 		<div class="form-group clone">
-			<label for="ecsIds" class="col-sm-2 control-label">Ecs</label>
+			<label for="ecsIds" class="col-sm-2 control-label">ECS</label>
 			<div class="col-sm-2">
 				<select id="ecsIds" name="ecsIds" class="form-control">
 					<c:forEach var="item" items="${ecsList}">

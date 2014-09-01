@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Storage Umount Demo</title>
+<title>ES3 Umount Demo</title>
 </head>
 
 <body>
@@ -11,7 +11,7 @@
 	<form class="form-horizontal" role="form" method="post" action=".">
 
 		<div class="page-header">
-			<h3>卷卸载页面</h3>
+			<h3>卸载ES3页面</h3>
 		</div>
 
 		<div class="form-group">

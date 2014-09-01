@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Storage Create Demo</title>
+<title>ES3 Create Demo</title>
 </head>
 
 <body>
@@ -11,7 +11,7 @@
 	<form class="form-horizontal" role="form" method="post" action=".">
 
 		<div class="page-header">
-			<h3>卷创建页面</h3>
+			<h3>创建ES3页面</h3>
 		</div>
 
 		<div class="form-group">
@@ -47,18 +47,18 @@
 		</div>
 
 		<div class="form-group">
-			<label for="volumeName" class="col-sm-2 control-label">卷名</label>
+			<label for="volumeName" class="col-sm-2 control-label">ES3名</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="volumeName"
-					name="volumeName" placeholder="卷名" value="sobey">
+					name="volumeName" placeholder="ES3名" value="sobey">
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label for="volumeSize" class="col-sm-2 control-label">卷大小</label>
+			<label for="volumeSize" class="col-sm-2 control-label">ES3大小</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="volumeSize"
-					name="volumeSize" placeholder="卷大小(MB)" value="20">
+					name="volumeSize" placeholder="ES3大小(MB)" value="20">
 			</div>
 		</div>
 		

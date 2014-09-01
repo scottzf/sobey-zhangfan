@@ -11,14 +11,14 @@
 	<form class="form-horizontal" role="form" method="post" action=".">
 
 		<div class="page-header">
-			<h3>Zabbix 监控</h3>
+			<h3>ECS监控</h3>
 		</div>
 
 		<div class="form-group">
 			<label for="" ipaddress"" class="col-sm-2 control-label">Ipaddress</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="ipaddress"
-					name="ipaddress" placeholder="监控设备名称" value="10.10.100.1">
+					name="ipaddress" placeholder="ECS IPAddress">
 			</div>
 		</div>
 

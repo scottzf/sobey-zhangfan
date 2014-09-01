@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Tag Dissociate Demo</title>
+<title>TAG Dissociate Demo</title>
 </head>
 
 <body>
@@ -11,7 +11,7 @@
 	<form class="form-horizontal" role="form" method="post" action=".">
 
 		<div class="page-header">
-			<h3>解绑Tag页面</h3>
+			<h3>解绑标签页面</h3>
 		</div>
 
 		<div class="form-group">
@@ -26,7 +26,7 @@
 		</div>
 
 		<div class="form-group">
-			<label for="ecsId" class="col-sm-2 control-label">Tag列表</label>
+			<label for="ecsId" class="col-sm-2 control-label">标签列表</label>
 			<div class="col-sm-4">
 				<select id="tagId" name="tagId" class="form-control">
 					<c:forEach var="item" items="${tagList}">

@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Esg Delete Demo</title>
+<title>ESG Delete Demo</title>
 </head>
 
 <body>
@@ -11,11 +11,11 @@
 	<form class="form-horizontal" role="form" method="post" action=".">
 
 		<div class="page-header">
-			<h3>删除Esg页面</h3>
+			<h3>删除ESG页面</h3>
 		</div>
 
 		<div class="form-group">
-			<label for="elbId" class="col-sm-2 control-label">Esg</label>
+			<label for="elbId" class="col-sm-2 control-label">ESG</label>
 			<div class="col-sm-4">
 				<select id="esgId" name="esgId" class="form-control">
 					<c:forEach var="item" items="${esgList}">

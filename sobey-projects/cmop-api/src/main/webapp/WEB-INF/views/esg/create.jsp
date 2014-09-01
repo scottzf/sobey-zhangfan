@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Esg Create Demo</title>
+<title>ESG Create Demo</title>
 </head>
 
 <body>
@@ -11,7 +11,7 @@
 	<form class="form-horizontal" role="form" method="post" action=".">
 
 		<div class="page-header">
-			<h3>创建Esg页面</h3>
+			<h3>创建ESG页面</h3>
 		</div>
 
 		<div class="form-group">

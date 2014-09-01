@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Tag Delete Demo</title>
+<title>TAG Delete Demo</title>
 </head>
 
 <body>
@@ -11,11 +11,11 @@
 	<form class="form-horizontal" role="form" method="post" action=".">
 
 		<div class="page-header">
-			<h3>Tag删除页面</h3>
+			<h3>删除标签页面</h3>
 		</div>
 
 		<div class="form-group">
-			<label for="" TagId"" class="col-sm-2 control-label">Tag</label>
+			<label for="" TagId"" class="col-sm-2 control-label">标签列表</label>
 			<div class="col-sm-4">
 				<select id="tagId" name="tagId" class="form-control">
 					<c:forEach var="item" items="${tagList}">

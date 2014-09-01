@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Instance Destroy Demo</title>
+<title>ECS Destroy Demo</title>
 </head>
 
 <body>

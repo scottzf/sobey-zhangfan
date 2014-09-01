@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Dns Create Demo</title>
+<title>DNS Create Demo</title>
 </head>
 
 <body>
@@ -11,7 +11,7 @@
 	<form class="form-horizontal" role="form" method="post" action=".">
 
 		<div class="page-header">
-			<h3>域名绑定页面</h3>
+			<h3>DNS绑定页面</h3>
 		</div>
 
 		<div class="form-group">
@@ -34,7 +34,7 @@
 		</div>
 
 		<div class="form-group clone">
-			<label for="eipIds" class="col-sm-2 control-label">Eip</label>
+			<label for="eipIds" class="col-sm-2 control-label">EIP</label>
 			<div class="col-sm-2">
 				<select id="eipIds" name="eipIds" class="form-control">
 					<c:forEach var="item" items="${eipList}">
