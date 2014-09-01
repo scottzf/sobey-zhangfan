@@ -122,12 +122,12 @@ public class ZabbixTest extends TestCase {
 
 	}
 
-	// @Test
+	@Test
 	public void gethistory() throws JSONException, IOException {
 
 		String hostId = getHostId("10.10.100.1");
 
-		ZItem item = getItem(hostId, ItemEnum.SDA的读性能.getName());
+		ZItem item = getItem(hostId, ItemEnum.Free_disk_space_on.getName());
 
 		List<ZHistoryItem> zHistoryItems = gethistory(hostId, item.getItemId());
 
@@ -413,6 +413,7 @@ public class ZabbixTest extends TestCase {
 	}
 
 	private static String subResult(JsonNode node) {
+		System.err.println(node.toString());
 		return StringUtils.substringBetween(node.toString(), "\"", "\"");
 	}
 
@@ -468,12 +469,13 @@ public class ZabbixTest extends TestCase {
 
 			ZHistoryItem zHistoryItem = new ZHistoryItem();
 			JsonNode node = data.get(i);
-
-			zHistoryItem.setClock(subResult(node.get("clock")));
-			zHistoryItem.setItemid(subResult(node.get("itemid")));
-			zHistoryItem.setNs(subResult(node.get("ns")));
-			zHistoryItem.setValue(subResult(node.get("value")));
-			zHistoryItems.add(zHistoryItem);
+			if (node != null) {
+				zHistoryItem.setClock(subResult(node.get("clock")));
+				zHistoryItem.setItemid(subResult(node.get("itemid")));
+				zHistoryItem.setNs(subResult(node.get("ns")));
+				zHistoryItem.setValue(subResult(node.get("value")));
+				zHistoryItems.add(zHistoryItem);
+			}
 		}
 
 		return zHistoryItems;

@@ -20,6 +20,7 @@ import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.TagDTO;
 import com.sobey.generate.cmdbuild.TagRelation;
 import com.sobey.generate.cmdbuild.TenantsDTO;
+import com.sobey.generate.zabbix.ZHistoryItemDTO;
 import com.sobey.generate.zabbix.ZItemDTO;
 
 public interface ApiService {
@@ -262,7 +263,7 @@ public interface ApiService {
 	public void deleteHost(Integer ecsId);
 
 	/**
-	 * 空的监控项
+	 * 获得当前ECS指定监控项
 	 * 
 	 * @param ecsId
 	 * @param itemKey
@@ -270,5 +271,14 @@ public interface ApiService {
 	 * @return
 	 */
 	public ZItemDTO getItem(Integer ecsId, String itemKey);
+
+	/**
+	 * 获得当前ECS指定监控项的历史数据
+	 * 
+	 * @param ecsId
+	 * @param itemKey
+	 * @return
+	 */
+	public ZHistoryItemDTO getHistoryItem(Integer ecsId, String itemKey);
 
 }

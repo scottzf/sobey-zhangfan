@@ -18,6 +18,8 @@ import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
 import com.sobey.generate.cmdbuild.TagRelation;
 import com.sobey.generate.cmdbuild.TenantsDTO;
+import com.sobey.generate.zabbix.ZHistoryItem;
+import com.sobey.generate.zabbix.ZHistoryItemDTO;
 import com.sobey.test.data.RandomData;
 
 /**
@@ -177,6 +179,16 @@ public class ApiTest extends TestCase {
 
 	@Test
 	public void getItemTest() {
-		System.out.println(service.getItem(3002, ItemEnum.Free_disk_space_on.getName()).getLastValue());
+//		System.out.println(service.getItem(3002, ItemEnum.Free_disk_space_on.getName()).getLastValue());
+		
+		ZHistoryItemDTO dtos = service.getHistoryItem(3002, ItemEnum.SDA的读性能.getName());
+		
+		for (ZHistoryItem item : dtos.getZHistoryItems()) {
+			System.out.println(item.getItemid());
+			System.out.println(item.getClock());
+			System.out.println(item.getValue());
+			System.out.println();
+			
+		}
 	}
 }

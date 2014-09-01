@@ -67,6 +67,7 @@ import com.sobey.generate.switches.ESGParameter;
 import com.sobey.generate.switches.RuleParameter;
 import com.sobey.generate.switches.SwitchesSoapService;
 import com.sobey.generate.switches.VlanParameter;
+import com.sobey.generate.zabbix.ZHistoryItemDTO;
 import com.sobey.generate.zabbix.ZItemDTO;
 import com.sobey.generate.zabbix.ZabbixSoapService;
 
@@ -2076,6 +2077,13 @@ public class ApiServiceImpl implements ApiService {
 		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
 		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
 		return zabbixSoapService.getZItem(ipaddressDTO.getDescription(), itemKey);
+	}
+
+	@Override
+	public ZHistoryItemDTO getHistoryItem(Integer ecsId, String itemKey) {
+		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
+		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
+		return zabbixSoapService.getZHistoryItem(ipaddressDTO.getDescription(), itemKey);
 	}
 
 }

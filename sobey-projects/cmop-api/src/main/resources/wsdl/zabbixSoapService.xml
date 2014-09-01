@@ -3,11 +3,17 @@
   <wsdl:types>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://zabbix.generate.sobey.com" elementFormDefault="unqualified" targetNamespace="http://zabbix.generate.sobey.com" version="1.0">
 
+  <xs:element name="ZHistoryItemDTO" type="tns:ZHistoryItemDTO"/>
+
   <xs:element name="ZItemDTO" type="tns:ZItemDTO"/>
 
   <xs:element name="deleleHost" type="tns:deleleHost"/>
 
   <xs:element name="deleleHostResponse" type="tns:deleleHostResponse"/>
+
+  <xs:element name="getZHistoryItem" type="tns:getZHistoryItem"/>
+
+  <xs:element name="getZHistoryItemResponse" type="tns:getZHistoryItemResponse"/>
 
   <xs:element name="getZItem" type="tns:getZItem"/>
 
@@ -71,6 +77,34 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="getZHistoryItem">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getZHistoryItemResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:ZHistoryItemDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ZHistoryItemDTO">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="zHistoryItems" nillable="true" type="tns:zHistoryItem"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="zHistoryItem">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="clock" type="xs:string"/>
+      <xs:element minOccurs="0" name="itemid" type="xs:string"/>
+      <xs:element minOccurs="0" name="ns" type="xs:string"/>
+      <xs:element minOccurs="0" name="value" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="deleleHost">
     <xs:sequence>
       <xs:element minOccurs="0" name="arg0" type="xs:string"/>
@@ -91,6 +125,10 @@
     <wsdl:part element="tns:deleleHost" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getZHistoryItemResponse">
+    <wsdl:part element="tns:getZHistoryItemResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getZItem">
     <wsdl:part element="tns:getZItem" name="parameters">
     </wsdl:part>
@@ -99,11 +137,21 @@
     <wsdl:part element="tns:deleleHostResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getZHistoryItem">
+    <wsdl:part element="tns:getZHistoryItem" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:portType name="ZabbixSoapService">
     <wsdl:operation name="getZItem">
       <wsdl:input message="tns:getZItem" name="getZItem">
     </wsdl:input>
       <wsdl:output message="tns:getZItemResponse" name="getZItemResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getZHistoryItem">
+      <wsdl:input message="tns:getZHistoryItem" name="getZHistoryItem">
+    </wsdl:input>
+      <wsdl:output message="tns:getZHistoryItemResponse" name="getZHistoryItemResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="deleleHost">
@@ -121,6 +169,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getZItemResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getZHistoryItem">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getZHistoryItem">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getZHistoryItemResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
