@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -35,9 +36,18 @@ import com.sobey.core.mapper.JsonMapper;
 import com.sobey.zabbix.constans.ItemEnum;
 import com.sobey.zabbix.data.TestData;
 import com.sobey.zabbix.entity.Authenticate;
+import com.sobey.zabbix.entity.ZHistoryItem;
 import com.sobey.zabbix.entity.ZItem;
 import com.sobey.zabbix.service.ZabbixApiService;
 
+/**
+ * 中文信息可查看:http://wenku.baidu.com/view/3ef8b3e2050876323112127e.html?pn=62
+ * 
+ * 
+ * 
+ * @author Administrator
+ *
+ */
 @ContextConfiguration({ "classpath:applicationContext.xml", "classpath:applicationContext-zabbix.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ZabbixTest extends TestCase {
@@ -55,9 +65,10 @@ public class ZabbixTest extends TestCase {
 		System.out.println(getApplicationId("mdn1", templateId));
 	}
 
-	// @Test
+	@Test
 	public void test() throws JSONException, IOException {
-		// System.out.println(service.getItem("10.10.2.111", ItemEnum.Free_disk_space_on.getName()));
+
+		// 探索规则更新有BUG,详见:https://support.zabbix.com/browse/ZBX-6257
 
 		HashMap<String, String> map = getDrule("cdtest");
 
@@ -67,9 +78,12 @@ public class ZabbixTest extends TestCase {
 		for (Entry<String, String> entity : map.entrySet()) {
 			druleid = entity.getKey();
 			iprange = entity.getValue();
+
+			System.err.println(druleid);
+			System.out.println(iprange);
 		}
 
-		System.out.println(iprange + ",10.10.100.1");
+		System.out.println(iprange + ",10.10.103.1-254");
 
 		updateDrule(druleid, iprange, "cdtest");
 
@@ -108,6 +122,23 @@ public class ZabbixTest extends TestCase {
 
 	}
 
+	// @Test
+	public void gethistory() throws JSONException, IOException {
+
+		String hostId = getHostId("10.10.100.1");
+
+		ZItem item = getItem(hostId, ItemEnum.SDA的读性能.getName());
+
+		List<ZHistoryItem> zHistoryItems = gethistory(hostId, item.getItemId());
+
+		for (ZHistoryItem zHistoryItem : zHistoryItems) {
+			System.out.println(zHistoryItem.getItemid());
+			System.out.println(zHistoryItem.getValue());
+			System.out.println();
+		}
+
+	}
+
 	@Test
 	public void zabbixAPITest() throws JsonGenerationException, JsonMappingException, IOException, JSONException {
 
@@ -115,7 +146,7 @@ public class ZabbixTest extends TestCase {
 
 		System.out.println("hostId:" + hostId);
 
-		ZItem item = getItem(hostId, ItemEnum.traffic_in.getName());
+		ZItem item = getItem(hostId, ItemEnum.SDA的读性能.getName());
 		System.out.println(item.getLastValue());
 		System.out.println(item.getUnits());
 
@@ -161,23 +192,6 @@ public class ZabbixTest extends TestCase {
 		JsonNode node = new ObjectMapper().readTree(resStr);
 
 		return subResult(node, "druleids");
-	}
-
-	public static String getDcheck(String druleid) throws JSONException, IOException {
-
-		JSONObject jsonObj = new JSONObject();
-		jsonObj.put("jsonrpc", "2.0");
-		jsonObj.put("method", "dcheck.get");
-		jsonObj.put("id", 0);
-		jsonObj.put("auth", getToken());
-
-		jsonObj.put("params", (new JSONObject().put("druleids", druleid)).put("output", "extend"));
-
-		String resStr = executeZabbixMethod(jsonObj);
-
-		JsonNode node = new ObjectMapper().readTree(resStr);
-
-		return subResult(node, "dcheckid");
 	}
 
 	public static String deleteHost(String hostId) throws JSONException, IOException {
@@ -396,7 +410,10 @@ public class ZabbixTest extends TestCase {
 
 	private static String subResult(JsonNode node, String value) {
 		return StringUtils.substringBetween(node.findValues(value).toString(), "[\"", "\"]");
+	}
 
+	private static String subResult(JsonNode node) {
+		return StringUtils.substringBetween(node.toString(), "\"", "\"");
 	}
 
 	/**
@@ -424,6 +441,42 @@ public class ZabbixTest extends TestCase {
 		JsonNode node = new ObjectMapper().readTree(resStr);
 
 		return subResult(node, "hostid");
+	}
+
+	public static List<ZHistoryItem> gethistory(String hostId, String itemId) throws IOException, JSONException {
+
+		JSONObject jsonObj = new JSONObject();
+
+		jsonObj.put("id", 0);
+		jsonObj.put("jsonrpc", "2.0");
+		jsonObj.put("method", "history.get");
+		jsonObj.put("auth", getToken());
+		jsonObj.put(
+				"params",
+				(new JSONObject().put("output", "extend").put("limit", 10).put("sortfield", "clock")
+						.put("sortorder", "DESC").put("history", 0).put("itemids", itemId).put("hostids", hostId)));
+
+		String resStr = executeZabbixMethod(jsonObj);
+
+		JsonNode root = new ObjectMapper().readTree(resStr);
+
+		JsonNode data = root.path("result");
+
+		List<ZHistoryItem> zHistoryItems = new ArrayList<ZHistoryItem>();
+
+		for (int i = 0; i < 10; i++) {
+
+			ZHistoryItem zHistoryItem = new ZHistoryItem();
+			JsonNode node = data.get(i);
+
+			zHistoryItem.setClock(subResult(node.get("clock")));
+			zHistoryItem.setItemid(subResult(node.get("itemid")));
+			zHistoryItem.setNs(subResult(node.get("ns")));
+			zHistoryItem.setValue(subResult(node.get("value")));
+			zHistoryItems.add(zHistoryItem);
+		}
+
+		return zHistoryItems;
 	}
 
 	/**

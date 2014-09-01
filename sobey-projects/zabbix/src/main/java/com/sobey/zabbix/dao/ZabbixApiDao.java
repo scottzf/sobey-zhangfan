@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -23,6 +24,8 @@ import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.zabbix.constans.ItemEnum;
 import com.sobey.zabbix.entity.Authenticate;
 import com.sobey.zabbix.entity.Params;
+import com.sobey.zabbix.entity.ZHistoryItem;
+import com.sobey.zabbix.webservice.response.dto.ZHistoryItemDTO;
 import com.sobey.zabbix.webservice.response.dto.ZItemDTO;
 
 /**
@@ -134,6 +137,60 @@ public class ZabbixApiDao {
 	}
 
 	/**
+	 * 根据hostId 和itemkey 获得历史监控内容
+	 * 
+	 * @param hostId
+	 * @param itemKey
+	 * @return
+	 * @throws IOException
+	 * @throws JSONException
+	 */
+	public ZHistoryItemDTO gethistory(String hostId, String itemKey) throws IOException, JSONException {
+
+		int limits = 10; // 历史数据显示数量
+
+		ZItemDTO zItemDTO = getItem(hostId, itemKey);
+
+		JSONObject jsonObj = new JSONObject();
+
+		jsonObj.put("id", 0);
+		jsonObj.put("jsonrpc", "2.0");
+		jsonObj.put("method", "history.get");
+		jsonObj.put("auth", getToken());
+		jsonObj.put(
+				"params",
+				(new JSONObject().put("output", "extend").put("limit", limits).put("sortfield", "clock")
+						.put("sortorder", "DESC").put("history", 0).put("itemids", zItemDTO.getItemId()).put("hostids",
+						hostId)));
+
+		String resStr = executeZabbixMethod(jsonObj);
+
+		JsonNode root = new ObjectMapper().readTree(resStr);
+
+		JsonNode data = root.path("result");
+
+		ArrayList<ZHistoryItem> zHistoryItems = new ArrayList<ZHistoryItem>();
+
+		for (int i = 0; i < limits; i++) {
+
+			ZHistoryItem zHistoryItem = new ZHistoryItem();
+
+			JsonNode node = data.get(i);
+
+			zHistoryItem.setClock(subResult(node.get("clock")));
+			zHistoryItem.setItemid(subResult(node.get("itemid")));
+			zHistoryItem.setNs(subResult(node.get("ns")));
+			zHistoryItem.setValue(subResult(node.get("value")));
+			zHistoryItems.add(zHistoryItem);
+		}
+
+		ZHistoryItemDTO zHistoryItemDTO = new ZHistoryItemDTO();
+		zHistoryItemDTO.setzHistoryItems(zHistoryItems);
+
+		return zHistoryItemDTO;
+	}
+
+	/**
 	 * 根据Host name 获得其Id.
 	 * 
 	 * @param name
@@ -229,6 +286,20 @@ public class ZabbixApiDao {
 	 */
 	private static String subResult(JsonNode node, String value) {
 		return StringUtils.substringBetween(node.findValues(value).toString(), "[\"", "\"]");
+	}
+
+	/**
+	 * 对返回的json字符串进行解析处理
+	 * 
+	 * eg:
+	 * 
+	 * "net.if.in[eth1]" -> net.if.in[eth1]
+	 * 
+	 * @param node
+	 * @return
+	 */
+	private static String subResult(JsonNode node) {
+		return StringUtils.substringBetween(node.toString(), "\"", "\"");
 	}
 
 }

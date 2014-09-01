@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sobey.zabbix.dao.ZabbixApiDao;
+import com.sobey.zabbix.webservice.response.dto.ZHistoryItemDTO;
 import com.sobey.zabbix.webservice.response.dto.ZItemDTO;
 
 @Service
@@ -32,16 +33,26 @@ public class ZabbixApiService {
 		ZItemDTO dto = new ZItemDTO();
 
 		try {
-
 			dto = dao.getItem(dao.getHostId(hostName), itemKey);
-
 		} catch (JSONException | IOException e) {
-
 			logger.info("Exception::getItem::message=" + e);
-
 		}
 
 		return dto;
+	}
+
+	public ZHistoryItemDTO getHistoryItemDTO(String hostName, String itemKey) {
+
+		ZHistoryItemDTO dto = new ZHistoryItemDTO();
+
+		try {
+			dto = dao.gethistory(dao.getHostId(hostName), itemKey);
+		} catch (JSONException | IOException e) {
+			logger.info("Exception::getHistoryItemDTO::message=" + e);
+		}
+
+		return dto;
+
 	}
 
 }

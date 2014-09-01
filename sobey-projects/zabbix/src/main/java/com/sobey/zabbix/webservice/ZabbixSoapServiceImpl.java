@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sobey.zabbix.constans.WsConstants;
 import com.sobey.zabbix.service.ZabbixApiService;
+import com.sobey.zabbix.webservice.response.dto.ZHistoryItemDTO;
 import com.sobey.zabbix.webservice.response.dto.ZItemDTO;
 
 @WebService(serviceName = "ZabbixSoapService", endpointInterface = "com.sobey.zabbix.webservice.ZabbixSoapService", targetNamespace = WsConstants.NS)
@@ -23,6 +24,11 @@ public class ZabbixSoapServiceImpl implements ZabbixSoapService {
 	@Override
 	public void deleleHost(String name) {
 		service.deleteHost(name);
+	}
+
+	@Override
+	public ZHistoryItemDTO getZHistoryItem(String name, String itemkey) {
+		return service.getHistoryItemDTO(name, itemkey);
 	}
 
 }

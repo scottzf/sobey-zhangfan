@@ -3,6 +3,7 @@ package com.sobey.zabbix.webservice;
 import javax.jws.WebService;
 
 import com.sobey.zabbix.constans.WsConstants;
+import com.sobey.zabbix.webservice.response.dto.ZHistoryItemDTO;
 import com.sobey.zabbix.webservice.response.dto.ZItemDTO;
 
 /**
@@ -17,4 +18,6 @@ public interface ZabbixSoapService {
 	ZItemDTO getZItem(String name, String itemkey);
 
 	void deleleHost(String name);
+
+	ZHistoryItemDTO getZHistoryItem(String name, String itemkey);
 }
