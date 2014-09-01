@@ -176,12 +176,13 @@ public class ZabbixApiDao {
 			ZHistoryItem zHistoryItem = new ZHistoryItem();
 
 			JsonNode node = data.get(i);
-
-			zHistoryItem.setClock(subResult(node.get("clock")));
-			zHistoryItem.setItemid(subResult(node.get("itemid")));
-			zHistoryItem.setNs(subResult(node.get("ns")));
-			zHistoryItem.setValue(subResult(node.get("value")));
-			zHistoryItems.add(zHistoryItem);
+			if (node != null) {
+				zHistoryItem.setClock(subResult(node.get("clock")));
+				zHistoryItem.setItemid(subResult(node.get("itemid")));
+				zHistoryItem.setNs(subResult(node.get("ns")));
+				zHistoryItem.setValue(subResult(node.get("value")));
+				zHistoryItems.add(zHistoryItem);
+			}
 		}
 
 		ZHistoryItemDTO zHistoryItemDTO = new ZHistoryItemDTO();
