@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>Zabbix Demo</title>
+<title>ECS Monitor Demo</title>
 </head>
 
 <body>
@@ -15,10 +15,13 @@
 		</div>
 
 		<div class="form-group">
-			<label for="" ipaddress"" class="col-sm-2 control-label">Ipaddress</label>
+			<label for="tenantsId" class="col-sm-2 control-label">ECS列表</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="ipaddress"
-					name="ipaddress" placeholder="ECS IPAddress">
+				<select id="ecsId" name="ecsId" class="form-control">
+					<c:forEach var="item" items="${ecsList}">
+						<option value="${item.id }">${item.description}</option>
+					</c:forEach>
+				</select>
 			</div>
 		</div>
 
@@ -75,24 +78,5 @@
 			</div>
 		</div>
 	</form>
-
-	<script>
-		$(document).ready(function() {
-
-			$(document).on("click", "button.clone", function() {
-				var $this = $(this);
-				var $div = $this.closest('div.clone');
-				if ($this.hasClass("btn-warning")) {
-					$div.remove();
-				} else {
-					var $clone = $div.clone();
-					$clone.find('input[type=text]').val('');
-					$div.after($clone);
-				}
-			});
-
-		});
-	</script>
-
 </body>
 </html>

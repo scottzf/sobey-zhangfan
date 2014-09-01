@@ -67,6 +67,8 @@ import com.sobey.generate.switches.ESGParameter;
 import com.sobey.generate.switches.RuleParameter;
 import com.sobey.generate.switches.SwitchesSoapService;
 import com.sobey.generate.switches.VlanParameter;
+import com.sobey.generate.zabbix.ZItemDTO;
+import com.sobey.generate.zabbix.ZabbixSoapService;
 
 @Service
 public class ApiServiceImpl implements ApiService {
@@ -91,6 +93,9 @@ public class ApiServiceImpl implements ApiService {
 
 	@Autowired
 	private DnsSoapService dnsSoapService;
+
+	@Autowired
+	private ZabbixSoapService zabbixSoapService;
 
 	// 临时数据
 	public static Integer serverId = 143;
@@ -502,9 +507,11 @@ public class ApiServiceImpl implements ApiService {
 		 * 
 		 * Step.4 初始化虚拟机的IP状态
 		 * 
-		 * Step.5 CMDBuild中删除ECS信息
+		 * Step.5 删除zabbix中的监控
 		 * 
-		 * Step.6 写入日志
+		 * Step.6 CMDBuild中删除ECS信息
+		 * 
+		 * Step.7 写入日志
 		 */
 
 		// Step.1 获得ECS信息
@@ -526,10 +533,13 @@ public class ApiServiceImpl implements ApiService {
 		// Step.4 初始化虚拟机的IP状态
 		cmdbuildSoapService.initIpaddress(ecsDTO.getIpaddress());
 
-		// Step.5 CMDBuild中删除ECS信息
+		// Step.5 删除zabbix中的监控
+		deleteHost(ecsId);
+
+		// Step.6 CMDBuild中删除ECS信息
 		cmdbuildSoapService.deleteEcs(ecsId);
 
-		// Step.6 写入日志
+		// Step.7 写入日志
 		createLog(tenantsDTO.getId(), LookUpConstants.ServiceType.ECS.getValue(),
 				LookUpConstants.OperateType.删除.getValue(), LookUpConstants.Result.成功.getValue());
 	}
@@ -2052,6 +2062,20 @@ public class ApiServiceImpl implements ApiService {
 	@Override
 	public List<TagRelation> getTagRelation(Integer serviceId) {
 		return cmdbuildSoapService.getTagRelation(serviceId);
+	}
+
+	@Override
+	public void deleteHost(Integer ecsId) {
+		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
+		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
+		zabbixSoapService.deleleHost(ipaddressDTO.getDescription());
+	}
+
+	@Override
+	public ZItemDTO getItem(Integer ecsId, String itemKey) {
+		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
+		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
+		return zabbixSoapService.getZItem(ipaddressDTO.getDescription(), itemKey);
 	}
 
 }

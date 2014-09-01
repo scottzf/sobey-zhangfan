@@ -2,6 +2,7 @@ package com.sobey.api.service;
 
 import java.util.List;
 
+import com.sobey.api.constans.ItemEnum;
 import com.sobey.api.constans.LookUpConstants;
 import com.sobey.api.webservice.response.result.WSResult;
 import com.sobey.generate.cmdbuild.DnsDTO;
@@ -19,6 +20,7 @@ import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.TagDTO;
 import com.sobey.generate.cmdbuild.TagRelation;
 import com.sobey.generate.cmdbuild.TenantsDTO;
+import com.sobey.generate.zabbix.ZItemDTO;
 
 public interface ApiService {
 
@@ -251,5 +253,22 @@ public interface ApiService {
 	public void dssociateTag(Integer tagId, Integer serviceId);
 
 	public List<TagRelation> getTagRelation(Integer serviceId);
+
+	/**
+	 * 删除ECS的监控
+	 * 
+	 * @param ecsId
+	 */
+	public void deleteHost(Integer ecsId);
+
+	/**
+	 * 空的监控项
+	 * 
+	 * @param ecsId
+	 * @param itemKey
+	 *            {@link ItemEnum}
+	 * @return
+	 */
+	public ZItemDTO getItem(Integer ecsId, String itemKey);
 
 }

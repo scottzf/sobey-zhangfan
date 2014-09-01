@@ -111,7 +111,7 @@ public class ZabbixTest extends TestCase {
 	@Test
 	public void zabbixAPITest() throws JsonGenerationException, JsonMappingException, IOException, JSONException {
 
-		String hostId = getHostId("10.10.2.111");
+		String hostId = getHostId("10.10.100.1");
 
 		System.out.println("hostId:" + hostId);
 

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.sobey.api.constans.ItemEnum;
 import com.sobey.api.constans.LookUpConstants;
 import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
@@ -172,5 +173,10 @@ public class ApiTest extends TestCase {
 	public void aa() {
 		// policyParameter.setSourcePort(NetworkUtil.getPortFromProtocol(protocols[i]));
 		service.dissociateEIP(1940, 1612);
+	}
+
+	@Test
+	public void getItemTest() {
+		System.out.println(service.getItem(3002, ItemEnum.Free_disk_space_on.getName()).getLastValue());
 	}
 }
