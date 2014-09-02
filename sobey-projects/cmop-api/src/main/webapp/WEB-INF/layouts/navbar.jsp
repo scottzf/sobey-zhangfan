@@ -85,7 +85,8 @@
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown">Monitor<b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="${ctx}/zabbix/">ECS监控</a></li>
+						<li><a href="${ctx}/zabbix/current/">ECS监控</a></li>
+						<li><a href="${ctx}/zabbix/history/">ECS历史监控</a></li>
 					</ul></li>
 			</ul>
 		</div>
