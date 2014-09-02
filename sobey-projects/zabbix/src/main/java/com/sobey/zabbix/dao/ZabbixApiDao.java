@@ -96,42 +96,45 @@ public class ZabbixApiDao {
 
 		ZItemDTO item = new ZItemDTO();
 
-		item.setLogTimefmt(subResult(node, "logtimefmt"));
-		item.setType(subResult(node, "type"));
-		item.setInventoryLink(subResult(node, "inventory_link"));
-		item.setPassword(subResult(node, "password"));
-		item.setUserName(subResult(node, "username"));
-		item.setLastlogSize(subResult(node, "lastlogsize"));
-		item.setDataType(subResult(node, "data_type"));
-		item.setDescription(subResult(node, "description"));
-		item.setTrapperHosts(subResult(node, "trapper_hosts"));
-		item.setPrivateKey(subResult(node, "privatekey"));
-		item.setValueMapId(subResult(node, "valuemapid"));
-		item.setStatus(subResult(node, "status"));
-		item.setDelta(subResult(node, "delta"));
-		item.setmTime(subResult(node, "mtime"));
-		item.setLastclock(subResult(node, "lastclock"));
-		item.setLastValue(subResult(node, "lastvalue"));
-		item.setDelay(subResult(node, "delay"));
-		item.setTrends(subResult(node, "trends"));
-		item.setValueType(subResult(node, "value_type"));
-		item.setPort(subResult(node, "port"));
-		item.setAuthType(subResult(node, "authtype"));
-		item.setLastns(subResult(node, "lastns"));
-		item.setItemId(subResult(node, "itemid"));
-		item.setPublicKey(subResult(node, "publickey"));
-		item.setPrevValue(subResult(node, "prevvalue"));
-		item.setName(subResult(node, "name"));
-		item.setFlags(subResult(node, "flags"));
-		item.setTemplateId(subResult(node, "templateid"));
-		item.setDelayflex(subResult(node, "delay_flex"));
-		item.setParams(subResult(node, "params"));
-		item.setMultiplier(subResult(node, "multiplier"));
-		item.setUnits(subResult(node, "units"));
-		item.setKey(subResult(node, "key_"));
-		item.setHistory(subResult(node, "history"));
-		item.setHostId(subResult(node, "hostid"));
-		item.setFormula(subResult(node, "formula"));
+		if (node != null) {
+
+			item.setLogTimefmt(subResult(node, "logtimefmt"));
+			item.setType(subResult(node, "type"));
+			item.setInventoryLink(subResult(node, "inventory_link"));
+			item.setPassword(subResult(node, "password"));
+			item.setUserName(subResult(node, "username"));
+			item.setLastlogSize(subResult(node, "lastlogsize"));
+			item.setDataType(subResult(node, "data_type"));
+			item.setDescription(subResult(node, "description"));
+			item.setTrapperHosts(subResult(node, "trapper_hosts"));
+			item.setPrivateKey(subResult(node, "privatekey"));
+			item.setValueMapId(subResult(node, "valuemapid"));
+			item.setStatus(subResult(node, "status"));
+			item.setDelta(subResult(node, "delta"));
+			item.setmTime(subResult(node, "mtime"));
+			item.setLastclock(subResult(node, "lastclock"));
+			item.setLastValue(subResult(node, "lastvalue"));
+			item.setDelay(subResult(node, "delay"));
+			item.setTrends(subResult(node, "trends"));
+			item.setValueType(subResult(node, "value_type"));
+			item.setPort(subResult(node, "port"));
+			item.setAuthType(subResult(node, "authtype"));
+			item.setLastns(subResult(node, "lastns"));
+			item.setItemId(subResult(node, "itemid"));
+			item.setPublicKey(subResult(node, "publickey"));
+			item.setPrevValue(subResult(node, "prevvalue"));
+			item.setName(subResult(node, "name"));
+			item.setFlags(subResult(node, "flags"));
+			item.setTemplateId(subResult(node, "templateid"));
+			item.setDelayflex(subResult(node, "delay_flex"));
+			item.setParams(subResult(node, "params"));
+			item.setMultiplier(subResult(node, "multiplier"));
+			item.setUnits(subResult(node, "units"));
+			item.setKey(subResult(node, "key_"));
+			item.setHistory(subResult(node, "history"));
+			item.setHostId(subResult(node, "hostid"));
+			item.setFormula(subResult(node, "formula"));
+		}
 
 		return item;
 	}
