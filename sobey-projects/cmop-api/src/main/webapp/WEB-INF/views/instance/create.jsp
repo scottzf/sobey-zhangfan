@@ -38,13 +38,12 @@
 		</div>
 
 		<div class="form-group">
-			<label for="vmName" class="col-sm-2 control-label">虚拟机名称</label>
+			<label for="vmName" class="col-sm-2 control-label">ECS名称</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="vmname" name="vmname"
 					placeholder="虚拟机名" value="">
 			</div>
 		</div>
-
 
 		<div class="form-group">
 			<label for="ecsSpecId" class="col-sm-2 control-label">规格</label>
