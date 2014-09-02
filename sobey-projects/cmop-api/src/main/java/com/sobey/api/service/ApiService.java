@@ -253,6 +253,12 @@ public interface ApiService {
 	 */
 	public void dssociateTag(Integer tagId, Integer serviceId);
 
+	/**
+	 * 获得服务资源下所有的标签
+	 * 
+	 * @param serviceId
+	 * @return
+	 */
 	public List<TagRelation> getTagRelation(Integer serviceId);
 
 	/**
@@ -270,7 +276,7 @@ public interface ApiService {
 	 *            {@link ItemEnum}
 	 * @return
 	 */
-	public ZItemDTO getItem(Integer ecsId, String itemKey);
+	public ZItemDTO getCurrentData(Integer ecsId, String itemKey);
 
 	/**
 	 * 获得当前ECS指定监控项的历史数据
@@ -279,6 +285,12 @@ public interface ApiService {
 	 * @param itemKey
 	 * @return
 	 */
-	public ZHistoryItemDTO getHistoryItem(Integer ecsId, String itemKey);
+	public ZHistoryItemDTO getHistoryData(Integer ecsId, String itemKey);
+
+	public Double getFreeEs3();
+
+	public Integer getFreeEcs();
+
+	public Integer getFreeEip();
 
 }

@@ -1214,7 +1214,7 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	/**
-	 * 获得租户下所有EIP的所有policy
+	 * 获得租户下所有EIP
 	 * 
 	 * @param eipDTO
 	 * @return
@@ -2073,17 +2073,46 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public ZItemDTO getItem(Integer ecsId, String itemKey) {
+	public ZItemDTO getCurrentData(Integer ecsId, String itemKey) {
 		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
 		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
 		return zabbixSoapService.getZItem(ipaddressDTO.getDescription(), itemKey);
 	}
 
 	@Override
-	public ZHistoryItemDTO getHistoryItem(Integer ecsId, String itemKey) {
+	public ZHistoryItemDTO getHistoryData(Integer ecsId, String itemKey) {
 		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
 		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
 		return zabbixSoapService.getZHistoryItem(ipaddressDTO.getDescription(), itemKey);
+	}
+
+	@Override
+	public Double getFreeEs3() {
+		// TODO 缺少解决方案
+		return null;
+	}
+
+	@Override
+	public Integer getFreeEcs() {
+		// TODO 缺少解决方案
+		return null;
+	}
+
+	@Override
+	public Integer getFreeEip() {
+		return getAllEipDTOList().getDtoList().getDto().size();
+	}
+
+	/**
+	 * 获得所有未使用的EIP
+	 * 
+	 * @param eipDTO
+	 * @return
+	 */
+	private DTOListResult getAllEipDTOList() {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_eipStatus", LookUpConstants.EIPStatus.未使用.getValue());
+		return cmdbuildSoapService.getEipList(CMDBuildUtil.wrapperSearchParams(map));
 	}
 
 }

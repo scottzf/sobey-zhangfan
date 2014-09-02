@@ -181,7 +181,7 @@ public class ApiTest extends TestCase {
 	public void getItemTest() {
 //		System.out.println(service.getItem(3002, ItemEnum.Free_disk_space_on.getName()).getLastValue());
 		
-		ZHistoryItemDTO dtos = service.getHistoryItem(3002, ItemEnum.SDA的读性能.getName());
+		ZHistoryItemDTO dtos = service.getHistoryData(3002, ItemEnum.SDA的读性能.getName());
 		
 		for (ZHistoryItem item : dtos.getZHistoryItems()) {
 			System.out.println(item.getItemid());
