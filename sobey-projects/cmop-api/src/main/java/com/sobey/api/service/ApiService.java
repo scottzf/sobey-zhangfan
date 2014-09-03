@@ -287,10 +287,4 @@ public interface ApiService {
 	 */
 	public ZHistoryItemDTO getHistoryData(Integer ecsId, String itemKey);
 
-	public Double getFreeEs3();
-
-	public Integer getFreeEcs();
-
-	public Integer getFreeEip();
-
 }

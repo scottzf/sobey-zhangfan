@@ -54,7 +54,7 @@ public class TestData {
 
 	public static Integer agentTypeId = 47;
 	public static Integer brandId = 56;
-	public static Integer deviceSpecId = 128;
+	public static Integer deviceSpecId = 113;
 	public static Integer deviceTypeId = 23;
 	public static Integer diskTypeId = 24;
 	public static Integer dnsId = 260;
@@ -65,15 +65,15 @@ public class TestData {
 	public static Integer es3Id = 208;
 	public static Integer esgId = 215;
 	public static Integer heightId = 69;
-	public static Integer idcId = 110;
-	public static Integer ipaddressId = 138;
+	public static Integer idcId = 108;
+	public static Integer ipaddressId = 255;
 	public static Integer ispId = 29;
 	public static Integer maintenanceId = 77;
 	public static Integer osTypeId = 21;
 	public static Integer parentTagId = 118;
 	public static Integer powerId = 77;
-	public static Integer rackId = 112;
-	public static Integer serverId = 143;
+	public static Integer rackId = 110;
+	public static Integer serverId = 258;
 	public static Integer storageId = 161;
 	public static Integer switchPortId = 181;
 	public static Integer switchId = 170;
@@ -164,13 +164,14 @@ public class TestData {
 
 		esc.setId(0);
 		esc.setNotes(RandomData.randomName("note"));
-		esc.setDescription(RandomData.randomName("description"));
+		esc.setDescription("CentOS6.5");
 		esc.setBeginDate(startDate);
 		esc.setCpuNumber(RandomData.randomInt());
 		esc.setDiskSize(RandomData.randomInt());
 		esc.setMemory(RandomData.randomInt());
 		esc.setRemark(RandomData.randomName("remark"));
 		esc.setOsType(osTypeId);
+		esc.setImageName("CentOS6.5");
 
 		return esc;
 	}

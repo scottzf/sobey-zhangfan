@@ -99,9 +99,9 @@ public class ApiServiceImpl implements ApiService {
 	private ZabbixSoapService zabbixSoapService;
 
 	// 临时数据
-	public static Integer serverId = 143;
+	public static Integer serverId = 258;
 
-	public static Integer storageId = 161;
+	public static Integer storageId = 267;
 
 	/**
 	 * 默认管理网段:10.10.1.0
@@ -1296,12 +1296,8 @@ public class ApiServiceImpl implements ApiService {
 		DTOListResult allPoliciesResult = getEipDTOListByTenants(eipDTO);
 		List<String> allPolicies = new ArrayList<String>();
 
-		System.out.println(allPoliciesResult.getDtoList().getDto().isEmpty());
-
 		for (Object obj : allPoliciesResult.getDtoList().getDto()) {
 			EipDTO dto = (EipDTO) obj;
-
-			System.out.println("dto:" + dto.getIpaddress());
 
 			IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(dto.getIpaddress()).getDto();
 
@@ -2084,35 +2080,6 @@ public class ApiServiceImpl implements ApiService {
 		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
 		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
 		return zabbixSoapService.getZHistoryItem(ipaddressDTO.getDescription(), itemKey);
-	}
-
-	@Override
-	public Double getFreeEs3() {
-		// TODO 缺少解决方案
-		return null;
-	}
-
-	@Override
-	public Integer getFreeEcs() {
-		// TODO 缺少解决方案
-		return null;
-	}
-
-	@Override
-	public Integer getFreeEip() {
-		return getAllEipDTOList().getDtoList().getDto().size();
-	}
-
-	/**
-	 * 获得所有未使用的EIP
-	 * 
-	 * @param eipDTO
-	 * @return
-	 */
-	private DTOListResult getAllEipDTOList() {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_eipStatus", LookUpConstants.EIPStatus.未使用.getValue());
-		return cmdbuildSoapService.getEipList(CMDBuildUtil.wrapperSearchParams(map));
 	}
 
 }
