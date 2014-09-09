@@ -85,7 +85,7 @@ public class Tenants extends BasicEntity {
 		this.createInfo = createInfo;
 	}
 
-	@Column(name = "access_key", length = 100)
+	@Column(name = "access_key", length = 200)
 	public String getAccessKey() {
 		return accessKey;
 	}
