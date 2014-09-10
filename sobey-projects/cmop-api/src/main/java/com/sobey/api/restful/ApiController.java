@@ -21,29 +21,29 @@ public class ApiController {
 	private RestfulService servie;
 
 	@RequestMapping(value = "/createECS/", method = RequestMethod.POST)
-	public WSResult createECS(@RequestParam(value = "vmname") String vmname,
+	public WSResult createECS(@RequestParam(value = "ecsName") String ecsName,
 			@RequestParam(value = "remark") String remark, @RequestParam(value = "ecsSpec") String ecsSpec,
 			@RequestParam(value = "idc") String idc, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.createECS(vmname, remark, ecsSpec, idc, accessKey);
+		return servie.createECS(ecsName, remark, ecsSpec, idc, accessKey);
 	}
 
 	@RequestMapping(value = "/destroyECS/", method = RequestMethod.POST)
-	public WSResult destroyECS(@RequestParam(value = "vmname") String vmname,
+	public WSResult destroyECS(@RequestParam(value = "ecsName") String ecsName,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.destroyECS(vmname, accessKey);
+		return servie.destroyECS(ecsName, accessKey);
 	}
 
 	@RequestMapping(value = "/powerOpsECS/", method = RequestMethod.POST)
-	public WSResult powerOpsECS(@RequestParam(value = "vmname") String vmname,
+	public WSResult powerOpsECS(@RequestParam(value = "ecsName") String ecsName,
 			@RequestParam(value = "powerOperation") String powerOperation,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.powerOpsECS(vmname, powerOperation, accessKey);
+		return servie.powerOpsECS(ecsName, powerOperation, accessKey);
 	}
 
 	@RequestMapping(value = "/reconfigECS/", method = RequestMethod.POST)
-	public WSResult reconfigECS(@RequestParam(value = "vmname") String vmname,
+	public WSResult reconfigECS(@RequestParam(value = "ecsName") String ecsName,
 			@RequestParam(value = "ecsSpec") String ecsSpec, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.reconfigECS(vmname, ecsSpec, accessKey);
+		return servie.reconfigECS(ecsName, ecsSpec, accessKey);
 	}
 
 	@RequestMapping(value = "/createES3/", method = RequestMethod.POST)
