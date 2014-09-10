@@ -65,7 +65,7 @@ public class ZabbixTest extends TestCase {
 		System.out.println(getApplicationId("mdn1", templateId));
 	}
 
-	@Test
+	// @Test
 	public void test() throws JSONException, IOException {
 
 		// 探索规则更新有BUG,详见:https://support.zabbix.com/browse/ZBX-6257
@@ -122,7 +122,7 @@ public class ZabbixTest extends TestCase {
 
 	}
 
-	@Test
+	// @Test
 	public void gethistory() throws JSONException, IOException {
 
 		String hostId = getHostId("10.10.100.1");
@@ -142,11 +142,12 @@ public class ZabbixTest extends TestCase {
 	@Test
 	public void zabbixAPITest() throws JsonGenerationException, JsonMappingException, IOException, JSONException {
 
-		String hostId = getHostId("10.10.100.1");
+		String hostId = getHostId("netapp-1");
 
 		System.out.println("hostId:" + hostId);
 
-		ZItem item = getItem(hostId, ItemEnum.SDA的读性能.getName());
+		// 监控netapp卷大小,需要注意获得卷所在的controller,获得controller的hostID后,在根据key查询卷大小.key 的组合格式.
+		ZItem item = getItem(hostId, "VolSpace[/vol/data_gdsyxh/]");
 		System.out.println(item.getLastValue());
 		System.out.println(item.getUnits());
 
