@@ -361,8 +361,11 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult allocateEIP(String isp, String[] protocols, Integer[] sourcePorts, Integer[] targetPorts,
-			String accessKey) {
+	public WSResult allocateEIP(String isp, String protocols, String sourcePorts, String targetPorts, String accessKey) {
+
+		String[] protocolsArray = StringUtils.split(protocols, ",");
+		String[] sourcePortsArray = StringUtils.split(sourcePorts, ",");
+		String[] targetPortsArray = StringUtils.split(targetPorts, ",");
 
 		WSResult result = new WSResult();
 
@@ -380,9 +383,9 @@ public class RestfulServiceImpl implements RestfulService {
 
 		List<EipPolicyDTO> eipPolicyDTOs = new ArrayList<EipPolicyDTO>();
 
-		for (int i = 0; i < targetPorts.length; i++) {
+		for (int i = 0; i < targetPortsArray.length; i++) {
 
-			LookUpDTO upDTO = findLookUpDTO(protocols[i], "EIPProtocol");
+			LookUpDTO upDTO = findLookUpDTO(protocolsArray[i], "EIPProtocol");
 
 			if (upDTO == null) {
 				result.setError(WSResult.PARAMETER_ERROR, "协议不存在.");
@@ -391,8 +394,8 @@ public class RestfulServiceImpl implements RestfulService {
 
 			EipPolicyDTO policyDTO = new EipPolicyDTO();
 			policyDTO.setEipProtocol(upDTO.getId());
-			policyDTO.setSourcePort(sourcePorts[i]);
-			policyDTO.setTargetPort(targetPorts[i]);
+			policyDTO.setSourcePort(Integer.valueOf(sourcePortsArray[i]));
+			policyDTO.setTargetPort(Integer.valueOf(targetPortsArray[i]));
 			eipPolicyDTOs.add(policyDTO);
 		}
 
@@ -506,7 +509,10 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult createELB(String[] ecsNames, String[] protocols, String accessKey) {
+	public WSResult createELB(String ecsNames, String protocols, String accessKey) {
+
+		String[] ecsNamesArray = StringUtils.split(ecsNames, ",");
+		String[] protocolsArray = StringUtils.split(protocols, ",");
 
 		WSResult result = new WSResult();
 
@@ -518,17 +524,17 @@ public class RestfulServiceImpl implements RestfulService {
 
 		List<ElbPolicyDTO> elbPolicyDTOs = new ArrayList<ElbPolicyDTO>();
 
-		Integer[] ecsIds = new Integer[protocols.length];// 存放ecsId的数组
+		Integer[] ecsIds = new Integer[protocolsArray.length];// 存放ecsId的数组
 
-		for (int i = 0; i < protocols.length; i++) {
+		for (int i = 0; i < protocolsArray.length; i++) {
 
-			EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), ecsNames[i]);
+			EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), ecsNamesArray[i]);
 			if (ecsDTO == null) {
 				result.setError(WSResult.PARAMETER_ERROR, "ECS不存在.");
 				return result;
 			}
 
-			LookUpDTO lookUpDTO = findLookUpDTO(protocols[i], "ELBProtocol");
+			LookUpDTO lookUpDTO = findLookUpDTO(protocolsArray[i], "ELBProtocol");
 			if (lookUpDTO == null) {
 				result.setError(WSResult.PARAMETER_ERROR, "协议不存在.");
 				return result;
@@ -572,7 +578,10 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult createDNS(String domainName, String[] eipNames, String[] protocols, String accessKey) {
+	public WSResult createDNS(String domainName, String eipNames, String protocols, String accessKey) {
+
+		String[] eipNamesArray = StringUtils.split(eipNames, ",");
+		String[] protocolsArray = StringUtils.split(protocols, ",");
 
 		WSResult result = new WSResult();
 
@@ -582,19 +591,19 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		Integer[] eipIds = new Integer[protocols.length];// 存放eipId的数组
+		Integer[] eipIds = new Integer[protocolsArray.length];// 存放eipId的数组
 
 		List<DnsPolicyDTO> dnsPolicyDTOs = new ArrayList<DnsPolicyDTO>();
 
-		for (int i = 0; i < protocols.length; i++) {
+		for (int i = 0; i < protocolsArray.length; i++) {
 
-			EipDTO eipDTO = findEipDTO(tenantsDTO.getId(), eipNames[i]);
+			EipDTO eipDTO = findEipDTO(tenantsDTO.getId(), eipNamesArray[i]);
 			if (eipDTO == null) {
 				result.setError(WSResult.PARAMETER_ERROR, "EIP不存在.");
 				return result;
 			}
 
-			LookUpDTO lookUpDTO = findLookUpDTO(protocols[i], "DNSProtocol");
+			LookUpDTO lookUpDTO = findLookUpDTO(protocolsArray[i], "DNSProtocol");
 			if (lookUpDTO == null) {
 				result.setError(WSResult.PARAMETER_ERROR, "协议不存在.");
 				return result;
@@ -604,7 +613,7 @@ public class RestfulServiceImpl implements RestfulService {
 
 			DnsPolicyDTO policyDTO = new DnsPolicyDTO();
 			policyDTO.setDnsProtocol(lookUpDTO.getId());
-			policyDTO.setPort(getPortFromProtocol(protocols[i]).toString());
+			policyDTO.setPort(getPortFromProtocol(protocolsArray[i]).toString());
 			policyDTO.setIpaddress(eipIds[i].toString());
 			dnsPolicyDTOs.add(policyDTO);
 
@@ -640,7 +649,10 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult createESG(String esgName, String[] policyTypes, String[] targetIPs, String accessKey) {
+	public WSResult createESG(String esgName, String policyTypes, String targetIPs, String accessKey) {
+
+		String[] policyTypesArray = StringUtils.split(policyTypes, ",");
+		String[] targetIPsArray = StringUtils.split(targetIPs, ",");
 
 		WSResult result = new WSResult();
 
@@ -652,9 +664,9 @@ public class RestfulServiceImpl implements RestfulService {
 
 		List<EsgPolicyDTO> esgPolicyDTOs = new ArrayList<EsgPolicyDTO>();
 
-		for (int i = 0; i < policyTypes.length; i++) {
+		for (int i = 0; i < policyTypesArray.length; i++) {
 
-			LookUpDTO lookUpDTO = findLookUpDTO(policyTypes[i], "PolicyType");
+			LookUpDTO lookUpDTO = findLookUpDTO(policyTypesArray[i], "PolicyType");
 
 			if (lookUpDTO == null) {
 				result.setError(WSResult.PARAMETER_ERROR, "策略类型不存在.");
@@ -663,7 +675,7 @@ public class RestfulServiceImpl implements RestfulService {
 
 			EsgPolicyDTO policyDTO = new EsgPolicyDTO();
 			policyDTO.setPolicyType(lookUpDTO.getId());
-			policyDTO.setTargetIP(targetIPs[i]);
+			policyDTO.setTargetIP(targetIPsArray[i]);
 			esgPolicyDTOs.add(policyDTO);
 		}
 

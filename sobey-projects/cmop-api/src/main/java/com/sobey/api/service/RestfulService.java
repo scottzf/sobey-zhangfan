@@ -23,7 +23,7 @@ public interface RestfulService {
 
 	public WSResult deleteES3(String es3Name, String accessKey);
 
-	public WSResult allocateEIP(String isp, String[] protocols, Integer[] sourcePorts, Integer[] targetPorts,
+	public WSResult allocateEIP(String isp, String protocols, String sourcePorts, String targetPorts,
 			String accessKey);
 
 	public WSResult recoverEIP(String eipName, String accessKey);
@@ -32,15 +32,15 @@ public interface RestfulService {
 
 	public WSResult dissociateEIP(String eipName, String serviceName, String accessKey);
 
-	public WSResult createELB(String[] ecsNames, String[] protocols, String accessKey);
+	public WSResult createELB(String ecsNames, String protocols, String accessKey);
 
 	public WSResult deleteELB(String elbName, String accessKey);
 
-	public WSResult createDNS(String domianName, String[] eipNames, String[] protocols, String accessKey);
+	public WSResult createDNS(String domianName, String eipNames, String protocols, String accessKey);
 
 	public WSResult deleteDNS(String domianName, String accessKey);
 
-	public WSResult createESG(String esgName, String[] policyTypes, String[] targetIPs, String accessKey);
+	public WSResult createESG(String esgName, String policyTypes, String targetIPs, String accessKey);
 
 	public WSResult deleteESG(String esgName, String accessKey);
 

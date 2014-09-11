@@ -74,9 +74,9 @@ public class ApiController {
 
 	@RequestMapping(value = "/allocateEIP/", method = RequestMethod.POST)
 	public WSResult allocateEIP(@RequestParam(value = "isp") String isp,
-			@RequestParam(value = "protocols") String[] protocols,
-			@RequestParam(value = "sourcePorts") Integer[] sourcePorts,
-			@RequestParam(value = "targetPorts") Integer[] targetPorts,
+			@RequestParam(value = "protocols") String protocols,
+			@RequestParam(value = "sourcePorts") String sourcePorts,
+			@RequestParam(value = "targetPorts") String targetPorts,
 			@RequestParam(value = "accessKey") String accessKey) {
 		return servie.allocateEIP(isp, protocols, sourcePorts, targetPorts, accessKey);
 	}
@@ -100,8 +100,8 @@ public class ApiController {
 	}
 
 	@RequestMapping(value = "/createELB/", method = RequestMethod.POST)
-	public WSResult createELB(@RequestParam(value = "ecsNames") String[] ecsNames,
-			@RequestParam(value = "protocols") String[] protocols, @RequestParam(value = "accessKey") String accessKey) {
+	public WSResult createELB(@RequestParam(value = "ecsNames") String ecsNames,
+			@RequestParam(value = "protocols") String protocols, @RequestParam(value = "accessKey") String accessKey) {
 		return servie.createELB(ecsNames, protocols, accessKey);
 	}
 
@@ -113,7 +113,7 @@ public class ApiController {
 
 	@RequestMapping(value = "/createDNS/", method = RequestMethod.POST) 
 	public WSResult createDNS(@RequestParam(value = "domainName") String domainName,
-			@RequestParam(value = "eipNames") String[] eipNames, @RequestParam(value = "protocols") String[] protocols,
+			@RequestParam(value = "eipNames") String eipNames, @RequestParam(value = "protocols") String protocols,
 			@RequestParam(value = "accessKey") String accessKey) {
 		return servie.createDNS(domainName, eipNames, protocols, accessKey);
 	}
@@ -126,8 +126,8 @@ public class ApiController {
 
 	@RequestMapping(value = "/createESG/", method = RequestMethod.POST)
 	public WSResult createESG(@RequestParam(value = "esgName") String esgName,
-			@RequestParam(value = "policyTypes") String[] policyTypes,
-			@RequestParam(value = "targetIPs") String[] targetIPs, @RequestParam(value = "accessKey") String accessKey) {
+			@RequestParam(value = "policyTypes") String policyTypes,
+			@RequestParam(value = "targetIPs") String targetIPs, @RequestParam(value = "accessKey") String accessKey) {
 		return servie.createESG(esgName, policyTypes, targetIPs, accessKey);
 	}
 
