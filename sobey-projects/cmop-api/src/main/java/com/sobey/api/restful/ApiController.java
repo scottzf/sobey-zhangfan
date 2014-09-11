@@ -111,17 +111,17 @@ public class ApiController {
 		return servie.deleteELB(elbName, accessKey);
 	}
 
-	@RequestMapping(value = "/createDNS/", method = RequestMethod.POST)
-	public WSResult createDNS(@RequestParam(value = "domianName") String domianName,
+	@RequestMapping(value = "/createDNS/", method = RequestMethod.POST) 
+	public WSResult createDNS(@RequestParam(value = "domainName") String domainName,
 			@RequestParam(value = "eipNames") String[] eipNames, @RequestParam(value = "protocols") String[] protocols,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.createDNS(domianName, eipNames, protocols, accessKey);
+		return servie.createDNS(domainName, eipNames, protocols, accessKey);
 	}
 
 	@RequestMapping(value = "/deleteDNS/", method = RequestMethod.POST)
-	public WSResult deleteDNS(@RequestParam(value = "domianName") String domianName,
+	public WSResult deleteDNS(@RequestParam(value = "domainName") String domainName,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.deleteDNS(domianName, accessKey);
+		return servie.deleteDNS(domainName, accessKey);
 	}
 
 	@RequestMapping(value = "/createESG/", method = RequestMethod.POST)

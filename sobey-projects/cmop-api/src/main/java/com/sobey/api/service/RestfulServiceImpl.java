@@ -572,7 +572,7 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult createDNS(String domianName, String[] eipNames, String[] protocols, String accessKey) {
+	public WSResult createDNS(String domainName, String[] eipNames, String[] protocols, String accessKey) {
 
 		WSResult result = new WSResult();
 
@@ -613,8 +613,8 @@ public class RestfulServiceImpl implements RestfulService {
 		DnsDTO dnsDTO = new DnsDTO();
 		dnsDTO.setAgentType(LookUpConstants.AgentType.Netscaler.getValue());
 		dnsDTO.setTenants(tenantsDTO.getId());
-		dnsDTO.setDomainName(domianName);
-		dnsDTO.setDescription(domianName);
+		dnsDTO.setDomainName(domainName);
+		dnsDTO.setDescription(domainName);
 
 		apiService.createDNS(dnsDTO, dnsPolicyDTOs, eipIds);
 
@@ -622,7 +622,7 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult deleteDNS(String domianName, String accessKey) {
+	public WSResult deleteDNS(String domainName, String accessKey) {
 
 		WSResult result = new WSResult();
 
@@ -632,7 +632,7 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		DnsDTO dnsDTO = findDnsDTO(tenantsDTO.getId(), domianName);
+		DnsDTO dnsDTO = findDnsDTO(tenantsDTO.getId(), domainName);
 
 		apiService.deleteDNS(dnsDTO.getId());
 
