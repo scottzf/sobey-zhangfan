@@ -20,15 +20,6 @@ public class ApiController {
 	@Autowired
 	private RestfulService servie;
 
-	private String URLEscape(String value) {
-		try {
-			return new String(value.getBytes("iso-8859-1"), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return value;
-	}
-
 	@RequestMapping(value = "/createECS/", method = RequestMethod.POST)
 	public WSResult createECS(@RequestParam(value = "ecsName") String ecsName,
 			@RequestParam(value = "remark") String remark, @RequestParam(value = "ecsSpec") String ecsSpec,
