@@ -145,7 +145,6 @@ public class ZabbixApiDao {
 
 			JsonNode node = data.get(i);
 
-			System.out.println(node);
 			if (node != null) {
 
 				ZItemDTO itemDTO = new ZItemDTO();

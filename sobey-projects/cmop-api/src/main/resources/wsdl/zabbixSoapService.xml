@@ -34,46 +34,10 @@
 
   <xs:complexType name="ZItemDTO">
     <xs:sequence>
-      <xs:element minOccurs="0" name="authType" type="xs:string"/>
-      <xs:element minOccurs="0" name="dataType" type="xs:string"/>
-      <xs:element minOccurs="0" name="delay" type="xs:string"/>
-      <xs:element minOccurs="0" name="delayflex" type="xs:string"/>
-      <xs:element minOccurs="0" name="delta" type="xs:string"/>
-      <xs:element minOccurs="0" name="description" type="xs:string"/>
-      <xs:element minOccurs="0" name="error" type="xs:string"/>
-      <xs:element minOccurs="0" name="filter" type="xs:string"/>
-      <xs:element minOccurs="0" name="flags" type="xs:string"/>
-      <xs:element minOccurs="0" name="formula" type="xs:string"/>
-      <xs:element minOccurs="0" name="history" type="xs:string"/>
-      <xs:element minOccurs="0" name="hostId" type="xs:string"/>
-      <xs:element minOccurs="0" name="inventoryLink" type="xs:string"/>
-      <xs:element minOccurs="0" name="itemId" type="xs:string"/>
-      <xs:element minOccurs="0" name="key" type="xs:string"/>
-      <xs:element minOccurs="0" name="lastValue" type="xs:string"/>
-      <xs:element minOccurs="0" name="lastclock" type="xs:string"/>
-      <xs:element minOccurs="0" name="lastlogSize" type="xs:string"/>
-      <xs:element minOccurs="0" name="lastns" type="xs:string"/>
-      <xs:element minOccurs="0" name="logTimefmt" type="xs:string"/>
-      <xs:element minOccurs="0" name="multiplier" type="xs:string"/>
-      <xs:element minOccurs="0" name="name" type="xs:string"/>
-      <xs:element minOccurs="0" name="params" type="xs:string"/>
-      <xs:element minOccurs="0" name="password" type="xs:string"/>
-      <xs:element minOccurs="0" name="port" type="xs:string"/>
-      <xs:element minOccurs="0" name="prevValue" type="xs:string"/>
-      <xs:element minOccurs="0" name="prevorgValue" type="xs:string"/>
-      <xs:element minOccurs="0" name="privateKey" type="xs:string"/>
-      <xs:element minOccurs="0" name="publicKey" type="xs:string"/>
-      <xs:element minOccurs="0" name="status" type="xs:string"/>
-      <xs:element minOccurs="0" name="stringerfaceId" type="xs:string"/>
-      <xs:element minOccurs="0" name="templateId" type="xs:string"/>
-      <xs:element minOccurs="0" name="trapperHosts" type="xs:string"/>
-      <xs:element minOccurs="0" name="trends" type="xs:string"/>
-      <xs:element minOccurs="0" name="type" type="xs:string"/>
+      <xs:element minOccurs="0" name="clock" type="xs:string"/>
+      <xs:element minOccurs="0" name="itemid" type="xs:string"/>
       <xs:element minOccurs="0" name="units" type="xs:string"/>
-      <xs:element minOccurs="0" name="userName" type="xs:string"/>
-      <xs:element minOccurs="0" name="valueMapId" type="xs:string"/>
-      <xs:element minOccurs="0" name="valueType" type="xs:string"/>
-      <xs:element minOccurs="0" name="mTime" type="xs:string"/>
+      <xs:element minOccurs="0" name="value" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -92,16 +56,7 @@
 
   <xs:complexType name="ZHistoryItemDTO">
     <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="zHistoryItems" nillable="true" type="tns:zHistoryItem"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="zHistoryItem">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="clock" type="xs:string"/>
-      <xs:element minOccurs="0" name="itemid" type="xs:string"/>
-      <xs:element minOccurs="0" name="ns" type="xs:string"/>
-      <xs:element minOccurs="0" name="value" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="zItemDTOs" nillable="true" type="tns:ZItemDTO"/>
     </xs:sequence>
   </xs:complexType>
 

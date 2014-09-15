@@ -46,51 +46,51 @@ public class ZabbixController {
 	public String current(@RequestParam(value = "ecsId") Integer ecsId, RedirectAttributes redirectAttributes) {
 
 		redirectAttributes.addFlashAttribute("CPU_load_avg1",
-				"CPU Load 一分钟内平均负载:" + service.getCurrentData(ecsId, ItemEnum.CPU_load_avg1.getName()).getLastValue()
-						+ " " + service.getCurrentData(ecsId, ItemEnum.CPU_load_avg1.getName()).getUnits());
+				"CPU Load 一分钟内平均负载:" + service.getCurrentData(ecsId, ItemEnum.CPU_load_avg1.getName()).getValue() + " "
+						+ service.getCurrentData(ecsId, ItemEnum.CPU_load_avg1.getName()).getUnits());
 
 		redirectAttributes.addFlashAttribute("CPU_load_avg5",
-				"CPU Load 五分钟内平均负载:" + service.getCurrentData(ecsId, ItemEnum.CPU_load_avg5.getName()).getLastValue()
-						+ " " + service.getCurrentData(ecsId, ItemEnum.CPU_load_avg5.getName()).getUnits());
+				"CPU Load 五分钟内平均负载:" + service.getCurrentData(ecsId, ItemEnum.CPU_load_avg5.getName()).getValue() + " "
+						+ service.getCurrentData(ecsId, ItemEnum.CPU_load_avg5.getName()).getUnits());
 
 		redirectAttributes.addFlashAttribute("CPU_load_avg15",
-				"CPU Load 十五分钟内平均负载:" + service.getCurrentData(ecsId, ItemEnum.CPU_load_avg15.getName()).getLastValue()
+				"CPU Load 十五分钟内平均负载:" + service.getCurrentData(ecsId, ItemEnum.CPU_load_avg15.getName()).getValue()
 						+ " " + service.getCurrentData(ecsId, ItemEnum.CPU_load_avg15.getName()).getUnits());
 
 		redirectAttributes.addFlashAttribute("CPU_load_avg15",
-				"CPU Load 十五分钟内平均负载:" + service.getCurrentData(ecsId, ItemEnum.CPU_load_avg15.getName()).getLastValue()
+				"CPU Load 十五分钟内平均负载:" + service.getCurrentData(ecsId, ItemEnum.CPU_load_avg15.getName()).getValue()
 						+ " " + service.getCurrentData(ecsId, ItemEnum.CPU_load_avg15.getName()).getUnits());
 
 		redirectAttributes.addFlashAttribute("traffic_in",
-				"Traffic in:" + service.getCurrentData(ecsId, ItemEnum.traffic_in.getName()).getLastValue() + " "
+				"Traffic in:" + service.getCurrentData(ecsId, ItemEnum.traffic_in.getName()).getValue() + " "
 						+ service.getCurrentData(ecsId, ItemEnum.traffic_in.getName()).getUnits());
 
 		redirectAttributes.addFlashAttribute("traffic_out",
-				"Traffic out:" + service.getCurrentData(ecsId, ItemEnum.traffic_out.getName()).getLastValue() + " "
+				"Traffic out:" + service.getCurrentData(ecsId, ItemEnum.traffic_out.getName()).getValue() + " "
 						+ service.getCurrentData(ecsId, ItemEnum.traffic_out.getName()).getUnits());
 
 		redirectAttributes.addFlashAttribute("Free_disk_space_on",
-				"磁盘可用空间:" + service.getCurrentData(ecsId, ItemEnum.Free_disk_space_on_boot.getName()).getLastValue()
-						+ " " + service.getCurrentData(ecsId, ItemEnum.Free_disk_space_on_boot.getName()).getUnits());
+				"磁盘可用空间:" + service.getCurrentData(ecsId, ItemEnum.Free_disk_space_on_boot.getName()).getValue() + " "
+						+ service.getCurrentData(ecsId, ItemEnum.Free_disk_space_on_boot.getName()).getUnits());
 
 		redirectAttributes.addFlashAttribute("Total_disk_space_on",
-				"磁盘总大小:" + service.getCurrentData(ecsId, ItemEnum.Total_disk_space_on_boot.getName()).getLastValue()
-						+ " " + service.getCurrentData(ecsId, ItemEnum.Total_disk_space_on_boot.getName()).getUnits());
+				"磁盘总大小:" + service.getCurrentData(ecsId, ItemEnum.Total_disk_space_on_boot.getName()).getValue() + " "
+						+ service.getCurrentData(ecsId, ItemEnum.Total_disk_space_on_boot.getName()).getUnits());
 
 		redirectAttributes.addFlashAttribute("Available_memory",
-				"内存大小:" + service.getCurrentData(ecsId, ItemEnum.Available_memory.getName()).getLastValue() + " "
+				"内存大小:" + service.getCurrentData(ecsId, ItemEnum.Available_memory.getName()).getValue() + " "
 						+ service.getCurrentData(ecsId, ItemEnum.Available_memory.getName()).getUnits());
 
 		redirectAttributes.addFlashAttribute("check_readk",
-				"SDA的读性能:" + service.getCurrentData(ecsId, ItemEnum.SDA的读性能.getName()).getLastValue() + " "
+				"SDA的读性能:" + service.getCurrentData(ecsId, ItemEnum.SDA的读性能.getName()).getValue() + " "
 						+ service.getCurrentData(ecsId, ItemEnum.SDA的读性能.getName()).getUnits());
 
 		redirectAttributes.addFlashAttribute("check_writek",
-				"SDA的写性能:" + service.getCurrentData(ecsId, ItemEnum.SDA的写性能.getName()).getLastValue() + " "
+				"SDA的写性能:" + service.getCurrentData(ecsId, ItemEnum.SDA的写性能.getName()).getValue() + " "
 						+ service.getCurrentData(ecsId, ItemEnum.SDA的写性能.getName()).getUnits());
 
 		redirectAttributes.addFlashAttribute("check_tps",
-				"SDA的tps:" + service.getCurrentData(ecsId, ItemEnum.SDA的tps.getName()).getLastValue() + " "
+				"SDA的tps:" + service.getCurrentData(ecsId, ItemEnum.SDA的tps.getName()).getValue() + " "
 						+ service.getCurrentData(ecsId, ItemEnum.SDA的tps.getName()).getUnits());
 
 		return "redirect:/zabbix/current/";
@@ -108,7 +108,7 @@ public class ZabbixController {
 	public String history(@RequestParam(value = "ecsId") Integer ecsId,
 			@RequestParam(value = "itemKey") String itemKey, RedirectAttributes redirectAttributes) {
 
-		redirectAttributes.addFlashAttribute("historyData", service.getHistoryData(ecsId, itemKey).getZHistoryItems());
+		redirectAttributes.addFlashAttribute("historyData", service.getHistoryData(ecsId, itemKey).getZItemDTOs());
 		redirectAttributes.addFlashAttribute("itemKey", itemKey);
 
 		return "redirect:/zabbix/history/";
