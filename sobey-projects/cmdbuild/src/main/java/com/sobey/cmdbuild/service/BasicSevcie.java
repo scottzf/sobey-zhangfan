@@ -64,8 +64,8 @@ public class BasicSevcie {
 	protected <T, V> PaginationResult<T> fillPaginationResult(Page<V> page, List<T> dtos) {
 
 		PaginationResult<T> paginationResult = new PaginationResult<T>(page.getNumber(), page.getSize(),
-				page.getTotalPages(), page.getNumberOfElements(), page.getNumberOfElements(), page.hasPrevious(),
-				page.isFirst(), page.hasNext(), page.isLast(), dtos);
+				page.getTotalPages(), page.getNumberOfElements(), page.getNumberOfElements(), page.hasPreviousPage(),
+				page.isFirstPage(), page.hasNextPage(), page.isLastPage(), dtos);
 
 		return paginationResult;
 	}

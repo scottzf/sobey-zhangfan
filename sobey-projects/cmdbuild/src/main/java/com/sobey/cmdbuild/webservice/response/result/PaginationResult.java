@@ -53,40 +53,40 @@ public class PaginationResult<T> extends WSResult {
 	/**
 	 * 是否有下一页
 	 */
-	private boolean hasNext;
+	private boolean hasNextPage;
 
 	/**
 	 * 是否有上一页
 	 */
-	private boolean hasPrevious;
+	private boolean hasPreviousPage;
 
 	/**
 	 * 是否首页
 	 */
-	private boolean isFirst;
+	private boolean isFirstPage;
 
 	/**
 	 * 是否末页
 	 */
-	private boolean isLast;
+	private boolean isLastPage;
 
 	public PaginationResult() {
 		super();
 	}
 
 	public PaginationResult(int getNumber, int getSize, int getTotalPages, int getNumberOfElements,
-			int getTotalElements, boolean hasPrevious, boolean isFirst, boolean hasNext, boolean isLast,
-			List<T> getContent) {
+			int getTotalElements, boolean hasPreviousPage, boolean isFirstPage, boolean hasNextPage,
+			boolean isLastPage, List<T> getContent) {
 		super();
 		this.getNumber = getNumber;
 		this.getSize = getSize;
 		this.getTotalPages = getTotalPages;
 		this.getNumberOfElements = getNumberOfElements;
 		this.getTotalElements = getTotalElements;
-		this.hasPrevious = hasPrevious;
-		this.isFirst = isFirst;
-		this.hasNext = hasNext;
-		this.isLast = isLast;
+		this.hasPreviousPage = hasPreviousPage;
+		this.isFirstPage = isFirstPage;
+		this.hasNextPage = hasNextPage;
+		this.isLastPage = isLastPage;
 		this.getContent = getContent;
 	}
 
@@ -114,24 +114,24 @@ public class PaginationResult<T> extends WSResult {
 		return getTotalPages;
 	}
 
-	public boolean isFirst() {
-		return isFirst;
+	public boolean isFirstPage() {
+		return isFirstPage;
 	}
 
-	public boolean ishasNext() {
-		return hasNext;
+	public boolean isHasNextPage() {
+		return hasNextPage;
 	}
 
-	public boolean ishasPrevious() {
-		return hasPrevious;
+	public boolean isHasPreviousPage() {
+		return hasPreviousPage;
 	}
 
-	public boolean isLast() {
-		return isLast;
+	public boolean isLastPage() {
+		return isLastPage;
 	}
 
-	public void setFirstPage(boolean isFirst) {
-		this.isFirst = isFirst;
+	public void setFirstPage(boolean isFirstPage) {
+		this.isFirstPage = isFirstPage;
 	}
 
 	public void setGetContent(List<T> getContent) {
@@ -158,16 +158,16 @@ public class PaginationResult<T> extends WSResult {
 		this.getTotalPages = getTotalPages;
 	}
 
-	public void sethasNext(boolean hasNext) {
-		this.hasNext = hasNext;
+	public void setHasNextPage(boolean hasNextPage) {
+		this.hasNextPage = hasNextPage;
 	}
 
-	public void sethasPrevious(boolean hasPrevious) {
-		this.hasPrevious = hasPrevious;
+	public void setHasPreviousPage(boolean hasPreviousPage) {
+		this.hasPreviousPage = hasPreviousPage;
 	}
 
-	public void setLastPage(boolean isLast) {
-		this.isLast = isLast;
+	public void setLastPage(boolean isLastPage) {
+		this.isLastPage = isLastPage;
 	}
 
 	/**
