@@ -24,7 +24,6 @@ import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.zabbix.constans.ItemEnum;
 import com.sobey.zabbix.entity.Authenticate;
 import com.sobey.zabbix.entity.Params;
-import com.sobey.zabbix.entity.ZHistoryItem;
 import com.sobey.zabbix.webservice.response.dto.ZHistoryItemDTO;
 import com.sobey.zabbix.webservice.response.dto.ZItemDTO;
 
@@ -98,42 +97,10 @@ public class ZabbixApiDao {
 
 		if (node != null) {
 
-			item.setLogTimefmt(subResult(node, "logtimefmt"));
-			item.setType(subResult(node, "type"));
-			item.setInventoryLink(subResult(node, "inventory_link"));
-			item.setPassword(subResult(node, "password"));
-			item.setUserName(subResult(node, "username"));
-			item.setLastlogSize(subResult(node, "lastlogsize"));
-			item.setDataType(subResult(node, "data_type"));
-			item.setDescription(subResult(node, "description"));
-			item.setTrapperHosts(subResult(node, "trapper_hosts"));
-			item.setPrivateKey(subResult(node, "privatekey"));
-			item.setValueMapId(subResult(node, "valuemapid"));
-			item.setStatus(subResult(node, "status"));
-			item.setDelta(subResult(node, "delta"));
-			item.setmTime(subResult(node, "mtime"));
-			item.setLastclock(subResult(node, "lastclock"));
-			item.setLastValue(subResult(node, "lastvalue"));
-			item.setDelay(subResult(node, "delay"));
-			item.setTrends(subResult(node, "trends"));
-			item.setValueType(subResult(node, "value_type"));
-			item.setPort(subResult(node, "port"));
-			item.setAuthType(subResult(node, "authtype"));
-			item.setLastns(subResult(node, "lastns"));
-			item.setItemId(subResult(node, "itemid"));
-			item.setPublicKey(subResult(node, "publickey"));
-			item.setPrevValue(subResult(node, "prevvalue"));
-			item.setName(subResult(node, "name"));
-			item.setFlags(subResult(node, "flags"));
-			item.setTemplateId(subResult(node, "templateid"));
-			item.setDelayflex(subResult(node, "delay_flex"));
-			item.setParams(subResult(node, "params"));
-			item.setMultiplier(subResult(node, "multiplier"));
+			item.setItemid(subResult(node, "itemid"));
+			item.setClock(subResult(node, "lastclock"));
+			item.setValue(subResult(node, "lastvalue"));
 			item.setUnits(subResult(node, "units"));
-			item.setKey(subResult(node, "key_"));
-			item.setHistory(subResult(node, "history"));
-			item.setHostId(subResult(node, "hostid"));
-			item.setFormula(subResult(node, "formula"));
 		}
 
 		return item;
@@ -163,7 +130,7 @@ public class ZabbixApiDao {
 		jsonObj.put(
 				"params",
 				(new JSONObject().put("output", "extend").put("limit", limits).put("sortfield", "clock")
-						.put("sortorder", "DESC").put("history", 0).put("itemids", zItemDTO.getItemId()).put("hostids",
+						.put("sortorder", "DESC").put("history", 0).put("itemids", zItemDTO.getItemid()).put("hostids",
 						hostId)));
 
 		String resStr = executeZabbixMethod(jsonObj);
@@ -172,24 +139,26 @@ public class ZabbixApiDao {
 
 		JsonNode data = root.path("result");
 
-		ArrayList<ZHistoryItem> zHistoryItems = new ArrayList<ZHistoryItem>();
+		ArrayList<ZItemDTO> zItemDTOs = new ArrayList<ZItemDTO>();
 
 		for (int i = 0; i < limits; i++) {
 
-			ZHistoryItem zHistoryItem = new ZHistoryItem();
-
 			JsonNode node = data.get(i);
+
+			System.out.println(node);
 			if (node != null) {
-				zHistoryItem.setClock(subResult(node.get("clock")));
-				zHistoryItem.setItemid(subResult(node.get("itemid")));
-				zHistoryItem.setNs(subResult(node.get("ns")));
-				zHistoryItem.setValue(subResult(node.get("value")));
-				zHistoryItems.add(zHistoryItem);
+
+				ZItemDTO itemDTO = new ZItemDTO();
+				itemDTO.setClock(subResult(node.get("clock")));
+				itemDTO.setItemid(subResult(node.get("itemid")));
+				itemDTO.setUnits(""); // api中没有单位
+				itemDTO.setValue(subResult(node.get("value")));
+				zItemDTOs.add(itemDTO);
 			}
 		}
 
 		ZHistoryItemDTO zHistoryItemDTO = new ZHistoryItemDTO();
-		zHistoryItemDTO.setzHistoryItems(zHistoryItems);
+		zHistoryItemDTO.setzItemDTOs(zItemDTOs);
 
 		return zHistoryItemDTO;
 	}

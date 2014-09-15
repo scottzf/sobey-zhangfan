@@ -8,7 +8,6 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.zabbix.constans.WsConstants;
-import com.sobey.zabbix.entity.ZHistoryItem;
 
 /**
  * 定义 zabbix api History
@@ -20,14 +19,14 @@ import com.sobey.zabbix.entity.ZHistoryItem;
 @XmlType(name = "ZHistoryItemDTO", namespace = WsConstants.NS)
 public class ZHistoryItemDTO {
 
-	private ArrayList<ZHistoryItem> zHistoryItems;
+	private ArrayList<ZItemDTO> zItemDTOs;
 
-	public ArrayList<ZHistoryItem> getzHistoryItems() {
-		return zHistoryItems;
+	public ArrayList<ZItemDTO> getzItemDTOs() {
+		return zItemDTOs;
 	}
 
-	public void setzHistoryItems(ArrayList<ZHistoryItem> zHistoryItems) {
-		this.zHistoryItems = zHistoryItems;
+	public void setzItemDTOs(ArrayList<ZItemDTO> zItemDTOs) {
+		this.zItemDTOs = zItemDTOs;
 	}
 
 	/**

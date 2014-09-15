@@ -36,9 +36,10 @@ import com.sobey.core.mapper.JsonMapper;
 import com.sobey.zabbix.constans.ItemEnum;
 import com.sobey.zabbix.data.TestData;
 import com.sobey.zabbix.entity.Authenticate;
-import com.sobey.zabbix.entity.ZHistoryItem;
 import com.sobey.zabbix.entity.ZItem;
 import com.sobey.zabbix.service.ZabbixApiService;
+import com.sobey.zabbix.webservice.response.dto.ZHistoryItemDTO;
+import com.sobey.zabbix.webservice.response.dto.ZItemDTO;
 
 /**
  * 中文信息可查看:http://wenku.baidu.com/view/3ef8b3e2050876323112127e.html?pn=62
@@ -122,18 +123,20 @@ public class ZabbixTest extends TestCase {
 
 	}
 
-	// @Test
+	@Test
 	public void gethistory() throws JSONException, IOException {
 
-		String hostId = getHostId("10.10.100.1");
+		String hostId = getHostId("10.10.101.1");
 
-		ZItem item = getItem(hostId, ItemEnum.Free_disk_space_on.getName());
+		ZItemDTO item = getItem(hostId, ItemEnum.Free_disk_space_on.getName());
 
-		List<ZHistoryItem> zHistoryItems = gethistory(hostId, item.getItemId());
+		ZHistoryItemDTO zHistoryItemDTO = gethistory(hostId, item.getItemid());
 
-		for (ZHistoryItem zHistoryItem : zHistoryItems) {
-			System.out.println(zHistoryItem.getItemid());
-			System.out.println(zHistoryItem.getValue());
+		for (ZItemDTO zItemDTO : zHistoryItemDTO.getzItemDTOs()) {
+			System.out.println(zItemDTO.getUnits());
+			System.out.println(zItemDTO.getValue());
+			System.out.println(zItemDTO.getClock());
+			System.out.println(zItemDTO.getItemid());
 			System.out.println();
 		}
 
@@ -147,8 +150,10 @@ public class ZabbixTest extends TestCase {
 		System.out.println("hostId:" + hostId);
 
 		// 监控netapp卷大小,需要注意获得卷所在的controller,获得controller的hostID后,在根据key查询卷大小.key 的组合格式.
-		ZItem item = getItem(hostId, "VolSpace[/vol/data_gdsyxh/]");
-		System.out.println(item.getLastValue());
+		ZItemDTO item = getItem(hostId, "VolSpace[/vol/data_gdsyxh/]");
+		System.out.println(item.getItemid());
+		System.out.println(item.getClock());
+		System.out.println(item.getValue());
 		System.out.println(item.getUnits());
 
 	}
@@ -239,76 +244,6 @@ public class ZabbixTest extends TestCase {
 		JsonNode node = new ObjectMapper().readTree(resStr);
 
 		return subResult(node, "templateid");
-	}
-
-	/**
-	 * 根据hostId和监控键值,获得监控对象.
-	 * 
-	 * key在zabbix中组态 -> 主机 -> 项目 中可查看
-	 * 
-	 * @param hostId
-	 *            主机Id
-	 * @param key
-	 *            监控键值
-	 * @return
-	 * @throws IOException
-	 * @throws JSONException
-	 */
-	public static ZItem getItem(String hostId, String key) throws IOException, JSONException {
-		JSONObject jsonObj = new JSONObject();
-		jsonObj.put("id", 0);
-		jsonObj.put("auth", getToken());
-		jsonObj.put("jsonrpc", "2.0");
-		jsonObj.put("method", "item.get");
-		jsonObj.put("params",
-				(new JSONObject().put("search", (new JSONObject()).put("key_", key)).put("hostids", hostId).put(
-						"output", "extend")));
-
-		String resStr = executeZabbixMethod(jsonObj);
-
-		System.err.println(resStr);
-
-		JsonNode node = new ObjectMapper().readTree(resStr);
-
-		ZItem item = new ZItem();
-		item.setLogTimefmt(subResult(node, "logtimefmt"));
-		item.setType(subResult(node, "type"));
-		item.setInventoryLink(subResult(node, "inventory_link"));
-		item.setPassword(subResult(node, "password"));
-		item.setUserName(subResult(node, "username"));
-		item.setLastlogSize(subResult(node, "lastlogsize"));
-		item.setDataType(subResult(node, "data_type"));
-		item.setDescription(subResult(node, "description"));
-		item.setTrapperHosts(subResult(node, "trapper_hosts"));
-		item.setPrivateKey(subResult(node, "privatekey"));
-		item.setValueMapId(subResult(node, "valuemapid"));
-		item.setStatus(subResult(node, "status"));
-		item.setDelta(subResult(node, "delta"));
-		item.setmTime(subResult(node, "mtime"));
-		item.setLastclock(subResult(node, "lastclock"));
-		item.setLastValue(subResult(node, "lastvalue"));
-		item.setDelay(subResult(node, "delay"));
-		item.setTrends(subResult(node, "trends"));
-		item.setValueType(subResult(node, "value_type"));
-		item.setPort(subResult(node, "port"));
-		item.setAuthType(subResult(node, "authtype"));
-		item.setLastns(subResult(node, "lastns"));
-		item.setItemId(subResult(node, "itemid"));
-		item.setPublicKey(subResult(node, "publickey"));
-		item.setPrevValue(subResult(node, "prevvalue"));
-		item.setName(subResult(node, "name"));
-		item.setFlags(subResult(node, "flags"));
-		item.setTemplateId(subResult(node, "templateid"));
-		item.setDelayflex(subResult(node, "delay_flex"));
-		item.setParams(subResult(node, "params"));
-		item.setMultiplier(subResult(node, "multiplier"));
-		item.setUnits(subResult(node, "units"));
-		item.setKey(subResult(node, "key_"));
-		item.setHistory(subResult(node, "history"));
-		item.setHostId(subResult(node, "hostid"));
-		item.setFormula(subResult(node, "formula"));
-
-		return item;
 	}
 
 	public static ZItem getItem(String templateid) throws IOException, JSONException {
@@ -414,7 +349,6 @@ public class ZabbixTest extends TestCase {
 	}
 
 	private static String subResult(JsonNode node) {
-		System.err.println(node.toString());
 		return StringUtils.substringBetween(node.toString(), "\"", "\"");
 	}
 
@@ -445,7 +379,40 @@ public class ZabbixTest extends TestCase {
 		return subResult(node, "hostid");
 	}
 
-	public static List<ZHistoryItem> gethistory(String hostId, String itemId) throws IOException, JSONException {
+	public ZItemDTO getItem(String hostId, String itemKey) throws IOException, JSONException {
+
+		JSONObject jsonObj = new JSONObject();
+
+		jsonObj.put("id", 0);
+		jsonObj.put("auth", getToken());
+		jsonObj.put("jsonrpc", "2.0");
+		jsonObj.put("method", "item.get");
+		jsonObj.put("params",
+				(new JSONObject().put("search", (new JSONObject()).put("key_", itemKey)).put("hostids", hostId).put(
+						"output", "extend")));
+
+		String resStr = executeZabbixMethod(jsonObj);
+
+		JsonNode node = new ObjectMapper().readTree(resStr);
+
+		ZItemDTO item = new ZItemDTO();
+
+		if (node != null) {
+
+			item.setItemid(subResult(node, "itemid"));
+			item.setClock(subResult(node, "lastclock"));
+			item.setValue(subResult(node, "lastvalue"));
+			item.setUnits(subResult(node, "units"));
+		}
+
+		return item;
+	}
+
+	public ZHistoryItemDTO gethistory(String hostId, String itemKey) throws IOException, JSONException {
+
+		int limits = 10; // 历史数据显示数量
+
+		ZItemDTO zItemDTO = getItem(hostId, itemKey);
 
 		JSONObject jsonObj = new JSONObject();
 
@@ -455,8 +422,9 @@ public class ZabbixTest extends TestCase {
 		jsonObj.put("auth", getToken());
 		jsonObj.put(
 				"params",
-				(new JSONObject().put("output", "extend").put("limit", 10).put("sortfield", "clock")
-						.put("sortorder", "DESC").put("history", 0).put("itemids", itemId).put("hostids", hostId)));
+				(new JSONObject().put("output", "extend").put("limit", limits).put("sortfield", "clock")
+						.put("sortorder", "DESC").put("history", 0).put("itemids", zItemDTO.getItemid()).put("hostids",
+						hostId)));
 
 		String resStr = executeZabbixMethod(jsonObj);
 
@@ -464,22 +432,26 @@ public class ZabbixTest extends TestCase {
 
 		JsonNode data = root.path("result");
 
-		List<ZHistoryItem> zHistoryItems = new ArrayList<ZHistoryItem>();
+		ArrayList<ZItemDTO> zItemDTOs = new ArrayList<ZItemDTO>();
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < limits; i++) {
 
-			ZHistoryItem zHistoryItem = new ZHistoryItem();
 			JsonNode node = data.get(i);
 			if (node != null) {
-				zHistoryItem.setClock(subResult(node.get("clock")));
-				zHistoryItem.setItemid(subResult(node.get("itemid")));
-				zHistoryItem.setNs(subResult(node.get("ns")));
-				zHistoryItem.setValue(subResult(node.get("value")));
-				zHistoryItems.add(zHistoryItem);
+
+				ZItemDTO itemDTO = new ZItemDTO();
+				itemDTO.setClock(subResult(node.get("clock")));
+				itemDTO.setItemid(subResult(node.get("itemid")));
+				itemDTO.setUnits(""); // api中没有单位
+				itemDTO.setValue(subResult(node.get("value")));
+				zItemDTOs.add(itemDTO);
 			}
 		}
 
-		return zHistoryItems;
+		ZHistoryItemDTO zHistoryItemDTO = new ZHistoryItemDTO();
+		zHistoryItemDTO.setzItemDTOs(zItemDTOs);
+
+		return zHistoryItemDTO;
 	}
 
 	/**
