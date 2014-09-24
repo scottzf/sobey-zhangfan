@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.sobey.api.constans.LookUpConstants;
 import com.sobey.api.utils.CMDBuildUtil;
+import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
 import com.sobey.generate.cmdbuild.CmdbuildSoapService;
 import com.sobey.generate.cmdbuild.DnsDTO;
@@ -247,6 +248,28 @@ public class RestfulServiceImpl implements RestfulService {
 		}
 
 		return apiService.reconfigECS(ecsDTO.getId(), ecsSpecDTO.getId());
+	}
+
+	@Override
+	public DTOResult<EcsDTO> findECS(String ecsName, String accessKey) {
+
+		DTOResult<EcsDTO> result = new DTOResult<EcsDTO>();
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), ecsName);
+		if (ecsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "ECS不存在.");
+			return result;
+		}
+
+		result.setDto(ecsDTO);
+
+		return result;
 	}
 
 	@Override
@@ -982,4 +1005,5 @@ public class RestfulServiceImpl implements RestfulService {
 
 		return apiService.getHistoryData(ecsDTO.getId(), itemKey);
 	}
+
 }

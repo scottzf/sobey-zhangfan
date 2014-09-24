@@ -1,6 +1,8 @@
 package com.sobey.api.service;
 
+import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
+import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.zabbix.ZHistoryItemDTO;
 import com.sobey.generate.zabbix.ZItemDTO;
 
@@ -14,6 +16,8 @@ public interface RestfulService {
 
 	public WSResult reconfigECS(String ecsName, String ecsSpec, String accessKey);
 
+	public DTOResult<EcsDTO> findECS(String ecsName, String accessKey);
+
 	public WSResult createES3(String es3Name, Double es3Size, String es3Type, String idc, String remark,
 			String accessKey);
 
@@ -23,8 +27,7 @@ public interface RestfulService {
 
 	public WSResult deleteES3(String es3Name, String accessKey);
 
-	public WSResult allocateEIP(String isp, String protocols, String sourcePorts, String targetPorts,
-			String accessKey);
+	public WSResult allocateEIP(String isp, String protocols, String sourcePorts, String targetPorts, String accessKey);
 
 	public WSResult recoverEIP(String eipName, String accessKey);
 

@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sobey.api.service.RestfulService;
+import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
+import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.zabbix.ZHistoryItemDTO;
 import com.sobey.generate.zabbix.ZItemDTO;
 
@@ -19,6 +21,21 @@ public class ApiController {
 
 	@Autowired
 	private RestfulService servie;
+
+	private String URLEscape(String value) {
+		try {
+			return new String(value.getBytes("iso-8859-1"), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return value;
+	}
+
+	@RequestMapping(value = "/ECSResult/{ecsName}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<EcsDTO> ECSResult(@PathVariable("ecsName") String ecsName,
+			@PathVariable("accessKey") String accessKey) {
+		return servie.findECS(URLEscape(ecsName), accessKey);
+	}
 
 	@RequestMapping(value = "/createECS/", method = RequestMethod.POST)
 	public WSResult createECS(@RequestParam(value = "ecsName") String ecsName,
@@ -76,8 +93,7 @@ public class ApiController {
 	public WSResult allocateEIP(@RequestParam(value = "isp") String isp,
 			@RequestParam(value = "protocols") String protocols,
 			@RequestParam(value = "sourcePorts") String sourcePorts,
-			@RequestParam(value = "targetPorts") String targetPorts,
-			@RequestParam(value = "accessKey") String accessKey) {
+			@RequestParam(value = "targetPorts") String targetPorts, @RequestParam(value = "accessKey") String accessKey) {
 		return servie.allocateEIP(isp, protocols, sourcePorts, targetPorts, accessKey);
 	}
 
@@ -111,7 +127,7 @@ public class ApiController {
 		return servie.deleteELB(elbName, accessKey);
 	}
 
-	@RequestMapping(value = "/createDNS/", method = RequestMethod.POST) 
+	@RequestMapping(value = "/createDNS/", method = RequestMethod.POST)
 	public WSResult createDNS(@RequestParam(value = "domainName") String domainName,
 			@RequestParam(value = "eipNames") String eipNames, @RequestParam(value = "protocols") String protocols,
 			@RequestParam(value = "accessKey") String accessKey) {
