@@ -9,10 +9,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sobey.api.entity.DnsEntity;
+import com.sobey.api.entity.EcsEntity;
+import com.sobey.api.entity.EipEntity;
+import com.sobey.api.entity.ElbEntity;
+import com.sobey.api.entity.Es3Entity;
 import com.sobey.api.service.RestfulService;
 import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
-import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.zabbix.ZHistoryItemDTO;
 import com.sobey.generate.zabbix.ZItemDTO;
 
@@ -32,7 +36,7 @@ public class ApiController {
 	}
 
 	@RequestMapping(value = "/ECSResult/{ecsName}/{accessKey}", method = RequestMethod.GET)
-	public DTOResult<EcsDTO> ECSResult(@PathVariable("ecsName") String ecsName,
+	public DTOResult<EcsEntity> ECSResult(@PathVariable("ecsName") String ecsName,
 			@PathVariable("accessKey") String accessKey) {
 		return servie.findECS(URLEscape(ecsName), accessKey);
 	}
@@ -63,6 +67,12 @@ public class ApiController {
 		return servie.reconfigECS(ecsName, ecsSpec, accessKey);
 	}
 
+	@RequestMapping(value = "/ES3Result/{es3Name}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<Es3Entity> ES3Result(@PathVariable("es3Name") String es3Name,
+			@PathVariable("accessKey") String accessKey) {
+		return servie.findES3(es3Name, accessKey);
+	}
+
 	@RequestMapping(value = "/createES3/", method = RequestMethod.POST)
 	public WSResult createES3(@RequestParam(value = "es3Name") String es3Name,
 			@RequestParam(value = "es3Size") Double es3Size, @RequestParam(value = "es3Type") String es3Type,
@@ -87,6 +97,12 @@ public class ApiController {
 	public WSResult deleteES3(@RequestParam(value = "es3Name") String es3Name,
 			@RequestParam(value = "accessKey") String accessKey) {
 		return servie.deleteES3(es3Name, accessKey);
+	}
+
+	@RequestMapping(value = "/EIPResult/{eipName}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<EipEntity> EIPResult(@PathVariable("eipName") String eipName,
+			@PathVariable("accessKey") String accessKey) {
+		return servie.findEIP(eipName, accessKey);
 	}
 
 	@RequestMapping(value = "/allocateEIP/", method = RequestMethod.POST)
@@ -115,6 +131,12 @@ public class ApiController {
 		return servie.dissociateEIP(eipName, serviceName, accessKey);
 	}
 
+	@RequestMapping(value = "/ELBResult/{elbName}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<ElbEntity> ELBResult(@PathVariable("elbName") String elbName,
+			@PathVariable("accessKey") String accessKey) {
+		return servie.findELB(elbName, accessKey);
+	}
+
 	@RequestMapping(value = "/createELB/", method = RequestMethod.POST)
 	public WSResult createELB(@RequestParam(value = "ecsNames") String ecsNames,
 			@RequestParam(value = "protocols") String protocols, @RequestParam(value = "accessKey") String accessKey) {
@@ -125,6 +147,12 @@ public class ApiController {
 	public WSResult deleteELB(@RequestParam(value = "elbName") String elbName,
 			@RequestParam(value = "accessKey") String accessKey) {
 		return servie.deleteELB(elbName, accessKey);
+	}
+
+	@RequestMapping(value = "/DNSResult/{dnsName}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<DnsEntity> DNSResult(@PathVariable("dnsName") String dnsName,
+			@PathVariable("accessKey") String accessKey) {
+		return servie.findDNS(dnsName, accessKey);
 	}
 
 	@RequestMapping(value = "/createDNS/", method = RequestMethod.POST)

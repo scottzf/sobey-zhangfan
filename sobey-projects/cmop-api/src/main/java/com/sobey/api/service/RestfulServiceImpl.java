@@ -9,6 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sobey.api.constans.LookUpConstants;
+import com.sobey.api.entity.DnsEntity;
+import com.sobey.api.entity.EcsEntity;
+import com.sobey.api.entity.EipEntity;
+import com.sobey.api.entity.ElbEntity;
+import com.sobey.api.entity.Es3Entity;
 import com.sobey.api.utils.CMDBuildUtil;
 import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
@@ -26,6 +31,8 @@ import com.sobey.generate.cmdbuild.EsgDTO;
 import com.sobey.generate.cmdbuild.EsgPolicyDTO;
 import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.LookUpDTO;
+import com.sobey.generate.cmdbuild.MapEcsElbDTO;
+import com.sobey.generate.cmdbuild.MapEipDnsDTO;
 import com.sobey.generate.cmdbuild.TagDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.dns.DnsSoapService;
@@ -251,9 +258,9 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public DTOResult<EcsDTO> findECS(String ecsName, String accessKey) {
+	public DTOResult<EcsEntity> findECS(String ecsName, String accessKey) {
 
-		DTOResult<EcsDTO> result = new DTOResult<EcsDTO>();
+		DTOResult<EcsEntity> result = new DTOResult<EcsEntity>();
 
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
 		if (tenantsDTO == null) {
@@ -267,7 +274,36 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		result.setDto(ecsDTO);
+		EcsEntity entity = new EcsEntity(ecsDTO.getCode(), ecsDTO.getDescription(), ecsDTO.getRemark(), ecsDTO
+				.getIdcDTO().getDescription(), ecsDTO.getIpaddressDTO().getDescription(), ecsDTO.getEcsSpecDTO()
+				.getDescription());
+
+		result.setDto(entity);
+
+		return result;
+	}
+
+	@Override
+	public DTOResult<Es3Entity> findES3(String es3Name, String accessKey) {
+
+		DTOResult<Es3Entity> result = new DTOResult<Es3Entity>();
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		Es3DTO es3DTO = findEs3DTO(tenantsDTO.getId(), es3Name);
+		if (es3DTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "ES3不存在.");
+			return result;
+		}
+
+		Es3Entity entity = new Es3Entity(es3DTO.getCode(), es3DTO.getRemark(), es3DTO.getDescription(),
+				es3DTO.getDiskSize() + "GB", es3DTO.getEs3TypeText());
+
+		result.setDto(entity);
 
 		return result;
 	}
@@ -381,6 +417,31 @@ public class RestfulServiceImpl implements RestfulService {
 		}
 
 		return apiService.deleteES3(es3DTO.getId());
+	}
+
+	@Override
+	public DTOResult<EipEntity> findEIP(String eipName, String accessKey) {
+
+		DTOResult<EipEntity> result = new DTOResult<EipEntity>();
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		EipDTO eipDTO = findEipDTO(tenantsDTO.getId(), eipName);
+		if (eipDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "EIP不存在.");
+			return result;
+		}
+
+		EipEntity entity = new EipEntity(eipDTO.getCode(), eipName, eipDTO.getRemark(), eipDTO.getBandwidthText());
+
+		result.setDto(entity);
+
+		return result;
+
 	}
 
 	@Override
@@ -532,6 +593,49 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
+	public DTOResult<ElbEntity> findELB(String elbName, String accessKey) {
+
+		DTOResult<ElbEntity> result = new DTOResult<ElbEntity>();
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		ElbDTO elbDTO = findElbDTO(tenantsDTO.getId(), elbName);
+		if (elbDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "ELB不存在.");
+			return result;
+		}
+
+		List<EcsEntity> ecsEntities = new ArrayList<EcsEntity>();
+
+		// 查询出ELB负载的ECS信息
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_idObj2", elbDTO.getId());
+		List<Object> list = cmdbuildSoapService.getMapEcsElbList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+				.getDto();
+		for (Object object : list) {
+
+			MapEcsElbDTO mapEcsElbDTO = (MapEcsElbDTO) object;
+			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(Integer.valueOf(mapEcsElbDTO.getIdObj1())).getDto();
+			EcsEntity entity = new EcsEntity(ecsDTO.getCode(), ecsDTO.getDescription(), ecsDTO.getRemark(), ecsDTO
+					.getIdcDTO().getDescription(), ecsDTO.getIpaddressDTO().getDescription(), ecsDTO.getEcsSpecDTO()
+					.getDescription());
+
+			ecsEntities.add(entity);
+
+		}
+
+		ElbEntity entity = new ElbEntity(elbDTO.getCode(), elbName, ecsEntities);
+
+		result.setDto(entity);
+
+		return result;
+	}
+
+	@Override
 	public WSResult createELB(String ecsNames, String protocols, String accessKey) {
 
 		String[] ecsNamesArray = StringUtils.split(ecsNames, ",");
@@ -598,6 +702,49 @@ public class RestfulServiceImpl implements RestfulService {
 		}
 		apiService.deleteELB(elbDTO.getId());
 		return result;
+	}
+
+	@Override
+	public DTOResult<DnsEntity> findDNS(String dnsName, String accessKey) {
+
+		DTOResult<DnsEntity> result = new DTOResult<DnsEntity>();
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		DnsDTO dnsDTO = findDnsDTO(tenantsDTO.getId(), dnsName);
+		if (dnsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "DNS不存在.");
+			return result;
+		}
+
+		List<EipEntity> eipEntities = new ArrayList<EipEntity>();
+
+		// 查询出DNS关联的EIP信息
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_idObj2", dnsDTO.getId());
+		List<Object> list = cmdbuildSoapService.getMapEipDnsList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+				.getDto();
+		for (Object object : list) {
+
+			MapEipDnsDTO mapEipDnsDTO = (MapEipDnsDTO) object;
+			EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(Integer.valueOf(mapEipDnsDTO.getIdObj1())).getDto();
+			EipEntity entity = new EipEntity(eipDTO.getCode(), eipDTO.getDescription(), eipDTO.getRemark(),
+					eipDTO.getBandwidthText());
+
+			eipEntities.add(entity);
+
+		}
+
+		DnsEntity entity = new DnsEntity(dnsDTO.getCode(), dnsName, dnsDTO.getRemark(), eipEntities);
+
+		result.setDto(entity);
+
+		return result;
+
 	}
 
 	@Override
