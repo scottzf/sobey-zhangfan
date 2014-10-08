@@ -34,6 +34,7 @@ import com.sobey.generate.cmdbuild.MapEcsEs3DTO;
 import com.sobey.generate.cmdbuild.MapEcsEsgDTO;
 import com.sobey.generate.cmdbuild.SearchParams;
 import com.sobey.generate.cmdbuild.ServerDTO;
+import com.sobey.generate.cmdbuild.StorageDTO;
 import com.sobey.generate.cmdbuild.TagDTO;
 import com.sobey.generate.cmdbuild.TagRelation;
 import com.sobey.generate.cmdbuild.TenantsDTO;
@@ -2080,6 +2081,27 @@ public class ApiServiceImpl implements ApiService {
 		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
 		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
 		return zabbixSoapService.getZHistoryItem(ipaddressDTO.getDescription(), itemKey);
+	}
+
+	@Override
+	public ZItemDTO getVolumeDataPre(Integer es3Id) {
+
+		Es3DTO es3DTO = (Es3DTO) cmdbuildSoapService.findEs3(es3Id).getDto();
+		StorageDTO storageDTO = (StorageDTO) cmdbuildSoapService.findStorage(es3DTO.getStorage()).getDto();
+
+		String key = "VolSpacePercent[/vol/" + es3DTO.getVolumeName() + "/]";
+
+		return zabbixSoapService.getZItem(storageDTO.getDescription(), key);
+	}
+
+	@Override
+	public ZItemDTO getVolumeData(Integer es3Id) {
+
+		Es3DTO es3DTO = (Es3DTO) cmdbuildSoapService.findEs3(es3Id).getDto();
+		StorageDTO storageDTO = (StorageDTO) cmdbuildSoapService.findStorage(es3DTO.getStorage()).getDto();
+
+		String key = "VolSpace[/vol/" + es3DTO.getVolumeName() + "/]";
+		return zabbixSoapService.getZItem(storageDTO.getDescription(), key);
 	}
 
 }

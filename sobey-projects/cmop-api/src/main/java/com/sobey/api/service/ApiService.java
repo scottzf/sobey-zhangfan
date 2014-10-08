@@ -287,4 +287,20 @@ public interface ApiService {
 	 */
 	public ZHistoryItemDTO getHistoryData(Integer ecsId, String itemKey);
 
+	/**
+	 * 获得ES3用量的百分比
+	 * 
+	 * @param es3Id
+	 * @return
+	 */
+	public ZItemDTO getVolumeDataPre(Integer es3Id);
+
+	/**
+	 * 获得ES3用量
+	 * 
+	 * @param es3Id
+	 * @return
+	 */
+	public ZItemDTO getVolumeData(Integer es3Id);
+
 }

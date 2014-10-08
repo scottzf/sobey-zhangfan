@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.sobey.api.constans.ItemEnum;
 import com.sobey.api.service.ApiService;
 import com.sobey.generate.cmdbuild.EcsDTO;
+import com.sobey.generate.cmdbuild.Es3DTO;
 
 @Controller
 @RequestMapping(value = "/zabbix")
@@ -24,6 +25,11 @@ public class ZabbixController {
 	@ModelAttribute("ecsList")
 	public List<EcsDTO> ecsList() {
 		return service.getEcsDTO();
+	}
+
+	@ModelAttribute("es3List")
+	public List<Es3DTO> es3List() {
+		return service.getEs3DTO();
 	}
 
 	@ModelAttribute("itemList")
@@ -114,4 +120,19 @@ public class ZabbixController {
 		return "redirect:/zabbix/history/";
 	}
 
+	/**
+	 * 跳转到storage用量页面
+	 */
+	@RequestMapping(value = "/volume/")
+	public String volumePage() {
+		return "zabbix/volume";
+	}
+
+	@RequestMapping(value = "/volume/", method = RequestMethod.POST)
+	public String volume(@RequestParam(value = "es3Id") Integer es3Id, RedirectAttributes redirectAttributes) {
+
+		redirectAttributes.addFlashAttribute("volumeData", service.getVolumeData(es3Id));
+		redirectAttributes.addFlashAttribute("volumeDataPre", service.getVolumeDataPre(es3Id));
+		return "redirect:/zabbix/volume/";
+	}
 }
