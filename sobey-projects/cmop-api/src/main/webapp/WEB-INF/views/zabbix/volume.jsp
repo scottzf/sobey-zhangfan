@@ -11,7 +11,10 @@
 	<form class="form-horizontal" role="form" method="post" action=".">
 
 		<div class="page-header">
-			<h3>存储用量查询</h3>
+			<h3>云存储用量查询</h3>
+			<blockquote>
+				<p>云监控针对云存储进行监控的服务使他能获得云存储最新的用量信息。</p>
+			</blockquote>
 		</div>
 
 		<div class="form-group">
@@ -37,7 +40,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Refresh</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
 	</form>

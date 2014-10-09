@@ -12,6 +12,9 @@
 
 		<div class="page-header">
 			<h3>ECS监控</h3>
+			<blockquote>
+				<p>云监控针对云主机进行监控的服务使他能获得云主机最新的状态信息。</p>
+			</blockquote>
 		</div>
 
 		<div class="form-group">
@@ -74,7 +77,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Refresh</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
 	</form>

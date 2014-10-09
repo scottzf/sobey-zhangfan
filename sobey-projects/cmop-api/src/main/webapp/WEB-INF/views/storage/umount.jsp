@@ -12,6 +12,9 @@
 
 		<div class="page-header">
 			<h3>卸载ES3页面</h3>
+			<blockquote>
+				<p>云存储（ES3）独立于云主机的生命周期而存在，从云主机卸载后，云存储内的资料不会丢失。</p>
+			</blockquote>
 		</div>
 
 		<div class="form-group">
@@ -37,7 +40,7 @@
 		</div>
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Umount</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
 	</form>

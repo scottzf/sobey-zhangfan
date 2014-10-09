@@ -12,6 +12,9 @@
 
 		<div class="page-header">
 			<h3>删除ELB页面</h3>
+			<blockquote>
+				<p>注意：确保ELB关联的服务有其他替代方案。</p>
+			</blockquote>
 		</div>
 
 		<div class="form-group">
@@ -27,7 +30,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Delete</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
 	</form>

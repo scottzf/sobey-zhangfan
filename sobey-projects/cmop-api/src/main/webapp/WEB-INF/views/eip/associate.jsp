@@ -12,6 +12,10 @@
 
 		<div class="page-header">
 			<h3>绑定EIP页面</h3>
+			<blockquote>
+				<p>在SobeyCloud系统中，您可以将申请到的公网 IP （Elastic IP） 地址分配到任意云主机
+					，并随时可以解绑、再分配到其他云主机，如此可以快速替换您的对外云主机。</p>
+			</blockquote>
 		</div>
 
 		<div class="form-group">
@@ -41,7 +45,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">绑定</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
 

@@ -87,6 +87,7 @@
 					<ul class="dropdown-menu">
 						<li><a href="${ctx}/zabbix/current/">ECS监控</a></li>
 						<li><a href="${ctx}/zabbix/history/">ECS历史监控</a></li>
+						<li><a href="${ctx}/zabbix/volume/">云存储用量查询</a></li>
 					</ul></li>
 			</ul>
 		</div>

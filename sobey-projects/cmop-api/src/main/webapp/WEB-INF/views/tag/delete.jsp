@@ -27,7 +27,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Delete</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
 	</form>

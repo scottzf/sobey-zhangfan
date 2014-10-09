@@ -12,6 +12,9 @@
 
 		<div class="page-header">
 			<h3>挂载ES3页面</h3>
+			<blockquote>
+				<p>云存储（ES3）独立于云主机的生命周期而存在，可以被挂载到任意运行中的云主机上。</p>
+			</blockquote>
 		</div>
 
 		<div class="form-group">
@@ -38,7 +41,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Mount</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
 	</form>

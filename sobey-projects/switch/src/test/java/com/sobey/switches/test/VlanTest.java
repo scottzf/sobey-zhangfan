@@ -59,7 +59,7 @@ public class VlanTest extends TestCase implements PbulicProperties {
 	@Test
 	public void deleteVlanInCore() throws IOException {
 
-		Integer vlanId = 80; // 临时数据
+		Integer vlanId = 101; // 临时数据
 
 		String command = service.deleteVlanOnAccessLayer(vlanId);
 

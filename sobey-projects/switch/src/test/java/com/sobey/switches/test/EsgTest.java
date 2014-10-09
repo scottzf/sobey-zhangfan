@@ -54,7 +54,7 @@ public class EsgTest implements PbulicProperties {
 	@Test
 	public void deleteEsg() throws IOException {
 
-		Integer aclNumber = 3000; // 临时数据
+		Integer aclNumber = 3001; // 临时数据
 
 		String command = service.deleteEsg(aclNumber);
 

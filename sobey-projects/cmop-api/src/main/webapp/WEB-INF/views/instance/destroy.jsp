@@ -12,6 +12,9 @@
 
 		<div class="page-header">
 			<h3>销毁ECS页面</h3>
+			<blockquote>
+				<p>当您不需要更多计算资源能力时，可根据SobeyCloud提供的弹性计算能力对云主机（ECS）回收。</p>
+			</blockquote>
 		</div>
 
 		<div class="form-group">
@@ -27,7 +30,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Destroy</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
 	</form>

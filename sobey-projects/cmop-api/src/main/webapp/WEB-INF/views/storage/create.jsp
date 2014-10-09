@@ -12,6 +12,9 @@
 
 		<div class="page-header">
 			<h3>创建ES3页面</h3>
+			<blockquote>
+				<p>云存储（ES3）为云主机提供块存储设备，它独立于主机的生命周期而存在， 可以被连接到任意运行中的云主机上。</p>
+			</blockquote>
 		</div>
 
 		<div class="form-group">
@@ -61,18 +64,18 @@
 					name="volumeSize" placeholder="ES3大小(MB)" value="20">
 			</div>
 		</div>
-		
+
 		<div class="form-group">
 			<label for=remark class="col-sm-2 control-label">备注</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="remark"
-					name="remark" placeholder="备注" value="">
+				<input type="text" class="form-control" id="remark" name="remark"
+					placeholder="备注" value="">
 			</div>
 		</div>
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Create</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
 	</form>

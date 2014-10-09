@@ -12,6 +12,9 @@
 
 		<div class="page-header">
 			<h3>ECS配置更新页面</h3>
+			<blockquote>
+				<p>当云主机（ECS）负载过高时，可根据SobeyCloud提供的弹性计算能力对云主机（ECS）更改配置。</p>
+			</blockquote>
 		</div>
 
 		<div class="form-group">
@@ -38,7 +41,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Reconfig</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
 	</form>

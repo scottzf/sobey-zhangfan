@@ -12,6 +12,11 @@
 
 		<div class="page-header">
 			<h3>创建ELB页面</h3>
+			<blockquote>
+				<p>负载均衡器（Elastic Load Balancer）
+					可以将来自多个公网地址的访问流量分发到多台云主机上，并支持自动检测并隔离不可用的云主机， 从而提高业务的服务能力和可用性。
+					同时，你还可以随时通过添加或删减云主机来调整你的服务能力，而且这些操作不会影响业务的正常访问。</p>
+			</blockquote>
 		</div>
 
 		<div class="form-group">
@@ -53,7 +58,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Create</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
 	</form>

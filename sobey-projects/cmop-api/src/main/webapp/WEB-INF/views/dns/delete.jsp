@@ -12,6 +12,9 @@
 
 		<div class="page-header">
 			<h3>DNS解绑页面</h3>
+			<blockquote>
+				<p>在SobeyCloud系统中，您可以将申请到的域名分配到任意EIP ，并随时可以解绑、再分配到其他EIP。</p>
+			</blockquote>
 		</div>
 
 		<div class="form-group">
@@ -27,7 +30,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Delete</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
 	</form>

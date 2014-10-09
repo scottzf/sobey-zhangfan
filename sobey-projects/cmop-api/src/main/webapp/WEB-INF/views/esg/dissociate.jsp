@@ -12,6 +12,9 @@
 
 		<div class="page-header">
 			<h3>解绑ESG页面</h3>
+			<blockquote>
+				<p>安全组策略（ESG）用于主机之间互联，当它应用于主机上，主机会根据ESG的规则组成私有网络，私有网络之间是100%隔离的。</p>
+			</blockquote>
 		</div>
 
 		<div class="form-group">
@@ -38,7 +41,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">解绑</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
 

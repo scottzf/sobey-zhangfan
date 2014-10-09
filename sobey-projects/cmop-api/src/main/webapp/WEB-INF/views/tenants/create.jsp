@@ -12,6 +12,9 @@
 
 		<div class="page-header">
 			<h3>创建租户页面</h3>
+			<blockquote>
+				<p>SobeyCloud为每个租户提供了相同账号和密码的VPN默认账户。</p>
+			</blockquote>
 		</div>
 
 		<div class="form-group">
@@ -50,7 +53,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Create</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
 	</form>

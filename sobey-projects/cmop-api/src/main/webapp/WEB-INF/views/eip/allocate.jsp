@@ -12,6 +12,10 @@
 
 		<div class="page-header">
 			<h3>创建EIP页面</h3>
+			<blockquote>
+				<p>公网 IP （Elastic IP） 是在互联网上合法的静态 IP 地址。在SobeyCloud系统中，公网 IP
+					地址与您的账户而非特定的资源（云主机或ELB）关联。</p>
+			</blockquote>
 		</div>
 
 		<div class="form-group">
@@ -66,7 +70,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Create</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
 	</form>

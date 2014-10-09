@@ -12,6 +12,9 @@
 
 		<div class="page-header">
 			<h3>回收EIP页面</h3>
+			<blockquote>
+				<p>当您不再使用公网 IP （Elastic IP） ，SobeyCloud将对其进行回收。</p>
+			</blockquote>
 		</div>
 
 		<div class="form-group">
@@ -24,10 +27,10 @@
 				</select>
 			</div>
 		</div>
-		
-			<div class="form-group">
+
+		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Recover</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
 

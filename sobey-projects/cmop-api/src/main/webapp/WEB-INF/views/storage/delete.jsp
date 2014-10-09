@@ -12,6 +12,9 @@
 
 		<div class="page-header">
 			<h3>删除ES3页面</h3>
+			<blockquote>
+				<p>注意：请先卸载云存储（ES3），然后再在SobeyCloud中删除云存储，云存储中的资料也将一并删除。</p>
+			</blockquote>
 		</div>
 
 		<div class="form-group">
@@ -27,7 +30,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Delete</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
 	</form>

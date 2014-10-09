@@ -12,6 +12,9 @@
 
 		<div class="page-header">
 			<h3>ECS电源管理页面</h3>
+			<blockquote>
+				<p>可根据具体需要对云主机（ECS）进行电源的管理：开机、关机。</p>
+			</blockquote>
 		</div>
 
 		<div class="form-group">
@@ -37,7 +40,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Power</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
 	</form>

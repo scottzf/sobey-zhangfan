@@ -12,6 +12,10 @@
 
 		<div class="page-header">
 			<h3>创建ECS页面</h3>
+			<blockquote>
+				<p>SobeyCloud为您提供一种随时获取的、弹性的计算能力，这种计算能力的体现就是云主机（ECS）。
+					云主机就是一台配置好了的服务器，它有您期望的硬件配置、操作系统和网络配置，所以您完全可以动态地、按需使用计算能力。</p>
+			</blockquote>
 		</div>
 
 		<div class="form-group">
@@ -40,8 +44,7 @@
 		<div class="form-group">
 			<label for="vmName" class="col-sm-2 control-label">ECS名称</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="vmname" name="vmname"
-					placeholder="虚拟机名" value="">
+				<input type="text" class="form-control" id="vmname" name="vmname">
 			</div>
 		</div>
 
@@ -66,7 +69,7 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button type="submit" class="btn btn-primary">Create</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
 	</form>
