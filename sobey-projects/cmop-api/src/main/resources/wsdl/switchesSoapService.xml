@@ -286,7 +286,7 @@
   </wsdl:binding>
   <wsdl:service name="SwitchesSoapService">
     <wsdl:port binding="tns:SwitchesSoapServiceSoapBinding" name="SwitchesSoapServiceImplPort">
-      <soap:address location="http://localhost:8082/switch/cxf/soap/switchesSoapService"/>
+      <soap:address location="http://10.10.2.92:8082/switch/cxf/soap/switchesSoapService"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

@@ -260,7 +260,7 @@
   </wsdl:binding>
   <wsdl:service name="StorageSoapService">
     <wsdl:port binding="tns:StorageSoapServiceSoapBinding" name="StorageSoapServiceImplPort">
-      <soap:address location="http://localhost:8084/storage/cxf/soap/storageSoapService"/>
+      <soap:address location="http://10.10.2.91:8084/storage/cxf/soap/storageSoapService"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
