@@ -886,6 +886,10 @@ public class ApiServiceImpl implements ApiService {
 
 		list.remove(ecsDTO.getIpaddressDTO().getDescription());// 将需要卸载的ECS IP从List中删除.
 
+		if (list.isEmpty()) {
+			list.add(default_netapp_ip);
+		}
+
 		remountEs3Parameter.getAfterClientIPaddress().addAll(list);
 
 		storageSoapService.remountEs3ByStorage(remountEs3Parameter);
