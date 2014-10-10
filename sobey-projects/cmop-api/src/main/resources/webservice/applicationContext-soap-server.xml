@@ -11,16 +11,7 @@
 	<http-conf:conduit name="*.http-conduit">
 		<http-conf:client ConnectionTimeout="60000" ReceiveTimeout="600000" />
 	</http-conf:conduit>
-
-	<!-- jax-ws endpoint定义 -->
-	<jaxws:endpoint address="/api/dnsSoapService">
-		<jaxws:implementor ref="apiSoapService" />
-	</jaxws:endpoint>
-
-	<!-- WebService的实现Bean定义 -->
-
-	<bean id="apiSoapService" class="com.sobey.api.webservice.ApiSoapServiceImpl" />
-
+ 
 	<!-- WebService Client inject -->
 
 	<jaxws:client id="cmdbuildSoapService" serviceClass="com.sobey.generate.cmdbuild.CmdbuildSoapService"
