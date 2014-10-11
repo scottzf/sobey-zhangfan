@@ -799,9 +799,9 @@ public class ApiServiceImpl implements ApiService {
 		 * 
 		 * Step.2 将访问IP列表写入netapp controller中
 		 * 
-		 * Step.3 挂载volume
+		 * Step.3 将ES3 和ECS的关联关系写入cmdbuild
 		 * 
-		 * Step.4 将ES3 和ECS的关联关系写入cmdbuild
+		 * Step.4 挂载volume
 		 * 
 		 * Step.5 写入日志
 		 * 
@@ -816,7 +816,10 @@ public class ApiServiceImpl implements ApiService {
 		// Step.2 将访问IP列表写入netapp controller中
 		wirteMountRule(es3dto, ecsDTO);
 
-		// Step.3 挂载volume
+		// Step.3 将ES3 和ECS的关联关系写入cmdbuild
+		cmdbuildSoapService.createMapEcsEs3(ecsId, es3Id);
+
+		// Step.4 挂载volume
 
 		// netapp的控制IP
 		IpaddressDTO storageIP = (IpaddressDTO) cmdbuildSoapService
@@ -834,9 +837,6 @@ public class ApiServiceImpl implements ApiService {
 			result.setError(WSResult.SYSTEM_ERROR, "ES3挂载失败,请联系管理员.");
 			return result;
 		}
-
-		// Step.4 将ES3 和ECS的关联关系写入cmdbuild
-		cmdbuildSoapService.createMapEcsEs3(ecsId, es3Id);
 
 		// Step.5 写入日志
 		createLog(es3dto.getTenants(), LookUpConstants.ServiceType.ES3.getValue(),
