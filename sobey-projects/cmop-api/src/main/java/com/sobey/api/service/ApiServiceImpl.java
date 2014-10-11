@@ -115,6 +115,11 @@ public class ApiServiceImpl implements ApiService {
 	private static String default_Segment_2 = "10.10.2.0";
 
 	/**
+	 * 默认VPN网段:10.10.20.0
+	 */
+	private static String default_Segment_VPN = "10.10.20.0";
+
+	/**
 	 * ESG的默认名.
 	 */
 	private static String default_esg_name = "默认策略";
@@ -284,7 +289,7 @@ public class ApiServiceImpl implements ApiService {
 		// 允许列表
 		List<RuleParameter> permits = new ArrayList<RuleParameter>();
 
-		// 默认的permit列表包含10.10.1.0和10.10.2.0两个管理网段
+		// 默认的permit列表包含10.10.1.0和10.10.2.0,10.10.20.0三个管理网段
 		RuleParameter permitsRule1 = new RuleParameter();
 		permitsRule1.setSource(vlanDTO.getSegment());
 		permitsRule1.setSourceNetMask(getNetMask(vlanDTO.getSegment()));
@@ -301,6 +306,14 @@ public class ApiServiceImpl implements ApiService {
 
 		permits.add(permitsRule2);
 
+		RuleParameter permitsRule3 = new RuleParameter();
+		permitsRule3.setSource(vlanDTO.getSegment());
+		permitsRule3.setSourceNetMask(getNetMask(vlanDTO.getSegment()));
+		permitsRule3.setDestination(default_Segment_VPN);
+		permitsRule3.setDestinationNetMask(getNetMask(default_Segment_VPN));
+
+		permits.add(permitsRule3);
+
 		// 拒绝列表
 		List<RuleParameter> denys = new ArrayList<RuleParameter>();
 
@@ -308,8 +321,8 @@ public class ApiServiceImpl implements ApiService {
 		RuleParameter denysRule = new RuleParameter();
 		denysRule.setSource(vlanDTO.getSegment());
 		denysRule.setSourceNetMask(getNetMask(vlanDTO.getSegment()));
-		denysRule.setDestination("0.0.0.0"); // 表示所有的网段
-		denysRule.setDestinationNetMask("0");
+		denysRule.setDestination("10.10.0.0"); // 表示10.10.x.x所有的网段
+		denysRule.setDestinationNetMask("0.0.255.255");
 
 		denys.add(denysRule);
 
@@ -786,9 +799,9 @@ public class ApiServiceImpl implements ApiService {
 		 * 
 		 * Step.2 将访问IP列表写入netapp controller中
 		 * 
-		 * Step.3 挂载volume
+		 * Step.3 将ES3 和ECS的关联关系写入cmdbuild
 		 * 
-		 * Step.4 将ES3 和ECS的关联关系写入cmdbuild
+		 * Step.4 挂载volume
 		 * 
 		 * Step.5 写入日志
 		 * 
@@ -803,7 +816,10 @@ public class ApiServiceImpl implements ApiService {
 		// Step.2 将访问IP列表写入netapp controller中
 		wirteMountRule(es3dto, ecsDTO);
 
-		// Step.3 挂载volume
+		// Step.3 将ES3 和ECS的关联关系写入cmdbuild
+		cmdbuildSoapService.createMapEcsEs3(ecsId, es3Id);
+
+		// Step.4 挂载volume
 
 		// netapp的控制IP
 		IpaddressDTO storageIP = (IpaddressDTO) cmdbuildSoapService
@@ -821,9 +837,6 @@ public class ApiServiceImpl implements ApiService {
 			result.setError(WSResult.SYSTEM_ERROR, "ES3挂载失败,请联系管理员.");
 			return result;
 		}
-
-		// Step.4 将ES3 和ECS的关联关系写入cmdbuild
-		cmdbuildSoapService.createMapEcsEs3(ecsId, es3Id);
 
 		// Step.5 写入日志
 		createLog(es3dto.getTenants(), LookUpConstants.ServiceType.ES3.getValue(),
