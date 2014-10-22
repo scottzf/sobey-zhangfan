@@ -49,6 +49,7 @@ import com.sobey.cmdbuild.entity.NicPort;
 import com.sobey.cmdbuild.entity.Rack;
 import com.sobey.cmdbuild.entity.Server;
 import com.sobey.cmdbuild.entity.ServerPort;
+import com.sobey.cmdbuild.entity.Service;
 import com.sobey.cmdbuild.entity.Storage;
 import com.sobey.cmdbuild.entity.StorageBox;
 import com.sobey.cmdbuild.entity.StoragePort;
@@ -92,6 +93,7 @@ import com.sobey.cmdbuild.webservice.response.dto.NicPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.RackDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ServerDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ServerPortDTO;
+import com.sobey.cmdbuild.webservice.response.dto.ServiceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.StorageBoxDTO;
 import com.sobey.cmdbuild.webservice.response.dto.StorageDTO;
 import com.sobey.cmdbuild.webservice.response.dto.StoragePortDTO;
@@ -8558,6 +8560,94 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 		try {
 
 			return comm.nicPortService.getNicPortDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<ServiceDTO> findService(Integer id) {
+
+		DTOResult<ServiceDTO> result = new DTOResult<ServiceDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Service service = comm.serviceService.findService(id);
+
+			Validate.notNull(service, ERROR.OBJECT_NULL);
+
+			ServiceDTO dto = BeanMapper.map(service, ServiceDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<ServiceDTO> findServiceByParams(SearchParams searchParams) {
+
+		DTOResult<ServiceDTO> result = new DTOResult<ServiceDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Service service = comm.serviceService.findService(searchParams.getParamsMap());
+
+			Validate.notNull(service, ERROR.OBJECT_NULL);
+
+			ServiceDTO dto = BeanMapper.map(service, ServiceDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
+	}
+
+	@Override
+	public DTOListResult<ServiceDTO> getServiceList(SearchParams searchParams) {
+
+		DTOListResult<ServiceDTO> result = new DTOListResult<ServiceDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.serviceService.getServiceList(searchParams.getParamsMap()),
+					ServiceDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<ServiceDTO> getServicePagination(SearchParams searchParams, Integer pageNumber,
+			Integer pageSize) {
+
+		PaginationResult<ServiceDTO> result = new PaginationResult<ServiceDTO>();
+
+		try {
+
+			return comm.serviceService.getServiceDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);

@@ -21,6 +21,7 @@ import com.sobey.cmdbuild.service.iaas.MapEcsEsgService;
 import com.sobey.cmdbuild.service.iaas.MapEipDnsService;
 import com.sobey.cmdbuild.service.iaas.MapEipElbService;
 import com.sobey.cmdbuild.service.iaas.MapTagServiceService;
+import com.sobey.cmdbuild.service.iaas.ServiceService;
 import com.sobey.cmdbuild.service.iaas.VpnService;
 import com.sobey.cmdbuild.service.infrastructure.CustomService;
 import com.sobey.cmdbuild.service.infrastructure.FirewallPortService;
@@ -161,6 +162,9 @@ public class CommonService {
 
 	@Autowired
 	public ServerService serverService;
+
+	@Autowired
+	public ServiceService serviceService;
 
 	@Autowired
 	public StorageBoxService storageBoxService;
