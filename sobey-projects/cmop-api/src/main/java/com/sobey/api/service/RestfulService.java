@@ -48,9 +48,9 @@ public interface RestfulService {
 
 	public WSResult recoverEIP(String eipName, String accessKey);
 
-	public WSResult associateEIP(String eipName, String serviceName, String accessKey);
+	public WSResult associateEIP(String eipName, String serviceId, String accessKey);
 
-	public WSResult dissociateEIP(String eipName, String serviceName, String accessKey);
+	public WSResult dissociateEIP(String eipName, String serviceId, String accessKey);
 
 	/******** ELB ********/
 

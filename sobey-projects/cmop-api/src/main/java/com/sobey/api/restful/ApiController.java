@@ -149,14 +149,14 @@ public class ApiController {
 
 	@RequestMapping(value = "/associateEIP/", method = RequestMethod.POST)
 	public WSResult associateEIP(@RequestParam(value = "eipName") String eipName,
-			@RequestParam(value = "serviceName") String serviceName, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.associateEIP(URLEscape(eipName), URLEscape(serviceName), accessKey);
+			@RequestParam(value = "serviceId") String serviceId, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.associateEIP(URLEscape(eipName), serviceId, accessKey);
 	}
 
 	@RequestMapping(value = "/dissociateEIP/", method = RequestMethod.POST)
 	public WSResult dissociateEIP(@RequestParam(value = "eipName") String eipName,
-			@RequestParam(value = "serviceName") String serviceName, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.dissociateEIP(URLEscape(eipName), URLEscape(serviceName), accessKey);
+			@RequestParam(value = "serviceId") String serviceId, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.dissociateEIP(URLEscape(eipName), serviceId, accessKey);
 	}
 
 	/********** DNS ***********/
@@ -177,7 +177,7 @@ public class ApiController {
 	@RequestMapping(value = "/deleteDNS/", method = RequestMethod.POST)
 	public WSResult deleteDNS(@RequestParam(value = "domainName") String domainName,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.deleteDNS(domainName, accessKey);
+		return servie.deleteDNS(URLEscape(domainName), accessKey);
 	}
 
 	/********** ESG ***********/
@@ -218,7 +218,7 @@ public class ApiController {
 	@RequestMapping(value = "/TagResult/{tagName}/{accessKey}", method = RequestMethod.GET)
 	public DTOResult<TagEntity> TagResult(@PathVariable("tagName") String tagName,
 			@PathVariable("accessKey") String accessKey) {
-		return servie.findTag(tagName, accessKey);
+		return servie.findTag(URLEscape(tagName), accessKey);
 	}
 
 	@RequestMapping(value = "/createTag/", method = RequestMethod.POST)

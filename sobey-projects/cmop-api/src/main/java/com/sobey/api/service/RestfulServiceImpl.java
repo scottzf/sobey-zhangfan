@@ -580,7 +580,7 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult associateEIP(String eipName, String serviceName, String accessKey) {
+	public WSResult associateEIP(String eipName, String serviceId, String accessKey) {
 
 		WSResult result = new WSResult();
 
@@ -596,29 +596,18 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		Integer serviceId = null;
+		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(Integer.valueOf(serviceId)).getDto();
 
-		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), serviceName);
-		ElbDTO elbDTO = findElbDTO(tenantsDTO.getId(), serviceName);
-
-		if (ecsDTO != null) {
-			serviceId = ecsDTO.getId();
-		}
-
-		if (elbDTO != null) {
-			serviceId = elbDTO.getId();
-		}
-
-		if (serviceId == null) {
+		if (serviceDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "服务资源不存在.");
 			return result;
 		}
 
-		return apiService.associateEIP(eipDTO.getId(), serviceId);
+		return apiService.associateEIP(eipDTO.getId(), serviceDTO.getId());
 	}
 
 	@Override
-	public WSResult dissociateEIP(String eipName, String serviceName, String accessKey) {
+	public WSResult dissociateEIP(String eipName, String serviceId, String accessKey) {
 
 		WSResult result = new WSResult();
 
@@ -633,26 +622,15 @@ public class RestfulServiceImpl implements RestfulService {
 			result.setError(WSResult.PARAMETER_ERROR, "EIP不存在.");
 			return result;
 		}
+		
+		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(Integer.valueOf(serviceId)).getDto();
 
-		Integer serviceId = null;
-
-		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), serviceName);
-		ElbDTO elbDTO = findElbDTO(tenantsDTO.getId(), serviceName);
-
-		if (ecsDTO != null) {
-			serviceId = ecsDTO.getId();
-		}
-
-		if (elbDTO != null) {
-			serviceId = elbDTO.getId();
-		}
-
-		if (serviceId == null) {
+		if (serviceDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "服务资源不存在.");
 			return result;
 		}
 
-		apiService.dissociateEIP(eipDTO.getId(), serviceId);
+		apiService.dissociateEIP(eipDTO.getId(), serviceDTO.getId());
 
 		return result;
 	}
