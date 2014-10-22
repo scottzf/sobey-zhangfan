@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.opensymphony.module.sitemesh.html.Tag;
 import com.sobey.api.constans.LookUpConstants;
 import com.sobey.api.entity.DnsEntity;
 import com.sobey.api.entity.EcsEntity;
@@ -41,6 +40,8 @@ import com.sobey.generate.cmdbuild.MapEcsElbDTO;
 import com.sobey.generate.cmdbuild.MapEcsEsgDTO;
 import com.sobey.generate.cmdbuild.MapEipDnsDTO;
 import com.sobey.generate.cmdbuild.MapEipElbDTO;
+import com.sobey.generate.cmdbuild.MapTagServiceDTO;
+import com.sobey.generate.cmdbuild.ServiceDTO;
 import com.sobey.generate.cmdbuild.TagDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.dns.DnsSoapService;
@@ -110,6 +111,13 @@ public class RestfulServiceImpl implements RestfulService {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_accessKey", accessKey);
 		return (TenantsDTO) cmdbuildSoapService.findTenantsByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
+	}
+
+	private ServiceDTO findServcieDTO(Integer tenantsId, String description) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_tenants", tenantsId);
+		map.put("EQ_description", description);
+		return (ServiceDTO) cmdbuildSoapService.findServiceByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
 	}
 
 	private EcsDTO findEcsDTO(Integer tenantsId, String description) {
@@ -1093,7 +1101,6 @@ public class RestfulServiceImpl implements RestfulService {
 
 	@Override
 	public DTOResult<TagEntity> findTag(String tagName, String accessKey) {
-		// TODO Auto-generated method stub
 
 		DTOResult<TagEntity> result = new DTOResult<TagEntity>();
 
@@ -1109,37 +1116,36 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		// 查询出Tag关联的子Tag信息
+		// 查询出Tag关联的service信息
 		List<ServiceEntity> serviceEntities = new ArrayList<ServiceEntity>();
-		
+
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_idObj2", tagDTO.getId());
-		
-		List<Object> list = cmdbuildSoapService.getTagList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
-				.getDto();
-		
+		map.put("EQ_idObj1", tagDTO.getId());
+
+		List<Object> list = cmdbuildSoapService.getMapTagServiceList(CMDBuildUtil.wrapperSearchParams(map))
+				.getDtoList().getDto();
+
 		for (Object object : list) {
 
-			MapEcsEsgDTO mapEcsEsgDTO = (MapEcsEsgDTO) object;
-			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(Integer.valueOf(mapEcsEsgDTO.getIdObj1())).getDto();
-			EcsEntity entity = new EcsEntity(ecsDTO.getCode(), ecsDTO.getDescription(), ecsDTO.getRemark(), ecsDTO
-					.getIdcDTO().getDescription(), ecsDTO.getIpaddressDTO().getDescription(), ecsDTO.getEcsSpecDTO()
-					.getDescription(), ecsDTO.getEcsStatusText());
+			MapTagServiceDTO mapTagServiceDTO = (MapTagServiceDTO) object;
 
-			ecsEntities.add(entity);
+			ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(
+					Integer.valueOf(mapTagServiceDTO.getIdObj2())).getDto();
 
+			ServiceEntity entity = new ServiceEntity(serviceDTO.getCode(), serviceDTO.getDescription(),
+					serviceDTO.getRemark());
+
+			serviceEntities.add(entity);
 		}
-
-	 
 
 		TagEntity entity = new TagEntity(tagDTO.getCode(), tagName, serviceEntities);
 
 		result.setDto(entity);
 
 		return result;
-		
+
 	}
-	
+
 	@Override
 	public WSResult createTag(String tagName, String parentTag, String accessKey) {
 
@@ -1220,45 +1226,14 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		Integer serviceId = null;
+		ServiceDTO serviceDTO = findServcieDTO(tenantsDTO.getId(), serviceName);
 
-		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), serviceName);
-		Es3DTO es3DTO = findEs3DTO(tenantsDTO.getId(), serviceName);
-		ElbDTO elbDTO = findElbDTO(tenantsDTO.getId(), serviceName);
-		EipDTO eipDTO = findEipDTO(tenantsDTO.getId(), serviceName);
-		DnsDTO dnsDTO = findDnsDTO(tenantsDTO.getId(), serviceName);
-		EsgDTO esgDTO = findEsgDTO(tenantsDTO.getId(), serviceName);
-
-		if (ecsDTO != null) {
-			serviceId = ecsDTO.getId();
-		}
-
-		if (es3DTO != null) {
-			serviceId = es3DTO.getId();
-		}
-
-		if (elbDTO != null) {
-			serviceId = elbDTO.getId();
-		}
-
-		if (eipDTO != null) {
-			serviceId = eipDTO.getId();
-		}
-
-		if (dnsDTO != null) {
-			serviceId = dnsDTO.getId();
-		}
-
-		if (esgDTO != null) {
-			serviceId = esgDTO.getId();
-		}
-
-		if (serviceId == null) {
+		if (serviceDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "服务资源不存在.");
 			return result;
 		}
 
-		apiService.associateTag(tagDTO.getId(), serviceId);
+		apiService.associateTag(tagDTO.getId(), serviceDTO.getId());
 
 		return result;
 	}
@@ -1280,45 +1255,14 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		Integer serviceId = null;
+		ServiceDTO serviceDTO = findServcieDTO(tenantsDTO.getId(), serviceName);
 
-		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), serviceName);
-		Es3DTO es3DTO = findEs3DTO(tenantsDTO.getId(), serviceName);
-		ElbDTO elbDTO = findElbDTO(tenantsDTO.getId(), serviceName);
-		EipDTO eipDTO = findEipDTO(tenantsDTO.getId(), serviceName);
-		DnsDTO dnsDTO = findDnsDTO(tenantsDTO.getId(), serviceName);
-		EsgDTO esgDTO = findEsgDTO(tenantsDTO.getId(), serviceName);
-
-		if (ecsDTO != null) {
-			serviceId = ecsDTO.getId();
-		}
-
-		if (es3DTO != null) {
-			serviceId = es3DTO.getId();
-		}
-
-		if (elbDTO != null) {
-			serviceId = elbDTO.getId();
-		}
-
-		if (eipDTO != null) {
-			serviceId = eipDTO.getId();
-		}
-
-		if (dnsDTO != null) {
-			serviceId = dnsDTO.getId();
-		}
-
-		if (esgDTO != null) {
-			serviceId = esgDTO.getId();
-		}
-
-		if (serviceId == null) {
+		if (serviceDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "服务资源不存在.");
 			return result;
 		}
 
-		apiService.dssociateTag(tagDTO.getId(), serviceId);
+		apiService.dssociateTag(tagDTO.getId(), serviceDTO.getId());
 
 		return result;
 	}
@@ -1354,7 +1298,5 @@ public class RestfulServiceImpl implements RestfulService {
 
 		return apiService.getHistoryData(ecsDTO.getId(), itemKey);
 	}
-
-
 
 }
