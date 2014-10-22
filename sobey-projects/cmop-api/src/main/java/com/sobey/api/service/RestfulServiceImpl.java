@@ -14,6 +14,10 @@ import com.sobey.api.entity.EcsEntity;
 import com.sobey.api.entity.EipEntity;
 import com.sobey.api.entity.ElbEntity;
 import com.sobey.api.entity.Es3Entity;
+import com.sobey.api.entity.EsgEntity;
+import com.sobey.api.entity.EsgPolicyEntity;
+import com.sobey.api.entity.ServiceEntity;
+import com.sobey.api.entity.TagEntity;
 import com.sobey.api.utils.CMDBuildUtil;
 import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
@@ -31,8 +35,13 @@ import com.sobey.generate.cmdbuild.EsgDTO;
 import com.sobey.generate.cmdbuild.EsgPolicyDTO;
 import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.LookUpDTO;
+import com.sobey.generate.cmdbuild.MapEcsEipDTO;
 import com.sobey.generate.cmdbuild.MapEcsElbDTO;
+import com.sobey.generate.cmdbuild.MapEcsEsgDTO;
 import com.sobey.generate.cmdbuild.MapEipDnsDTO;
+import com.sobey.generate.cmdbuild.MapEipElbDTO;
+import com.sobey.generate.cmdbuild.MapTagServiceDTO;
+import com.sobey.generate.cmdbuild.ServiceDTO;
 import com.sobey.generate.cmdbuild.TagDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.dns.DnsSoapService;
@@ -176,6 +185,11 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
+		if (findEcsDTO(tenantsDTO.getId(), ecsName) != null) {
+			result.setError(WSResult.PARAMETER_ERROR, "ECS名称已存在.");
+			return result;
+		}
+
 		EcsDTO ecsDTO = new EcsDTO();
 		ecsDTO.setAgentType(LookUpConstants.AgentType.VMware.getValue());
 		ecsDTO.setDescription(ecsName);
@@ -207,6 +221,7 @@ public class RestfulServiceImpl implements RestfulService {
 
 		apiService.destroyECS(ecsDTO.getId());
 
+		result.setMessage("销毁成功.");
 		return result;
 	}
 
@@ -276,7 +291,7 @@ public class RestfulServiceImpl implements RestfulService {
 
 		EcsEntity entity = new EcsEntity(ecsDTO.getCode(), ecsDTO.getDescription(), ecsDTO.getRemark(), ecsDTO
 				.getIdcDTO().getDescription(), ecsDTO.getIpaddressDTO().getDescription(), ecsDTO.getEcsSpecDTO()
-				.getDescription());
+				.getDescription(), ecsDTO.getEcsStatusText());
 
 		result.setDto(entity);
 
@@ -330,6 +345,11 @@ public class RestfulServiceImpl implements RestfulService {
 		LookUpDTO lookUpDTO = findLookUpDTO(es3Type, "ES3Type");
 		if (lookUpDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "ES3Type不存在.");
+			return result;
+		}
+
+		if (findEs3DTO(tenantsDTO.getId(), es3Name) != null) {
+			result.setError(WSResult.PARAMETER_ERROR, "ES3名称已存在.");
 			return result;
 		}
 
@@ -416,6 +436,7 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
+		result.setMessage("删除成功.");
 		return apiService.deleteES3(es3DTO.getId());
 	}
 
@@ -436,7 +457,43 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		EipEntity entity = new EipEntity(eipDTO.getCode(), eipName, eipDTO.getRemark(), eipDTO.getBandwidthText());
+		// 查询出EIP关联的ECS信息
+		List<EcsEntity> ecsEntities = new ArrayList<EcsEntity>();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_idObj2", eipDTO.getId());
+		List<Object> list = cmdbuildSoapService.getMapEcsEipList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+				.getDto();
+
+		for (Object object : list) {
+
+			MapEcsEipDTO mapEcsEipDTO = (MapEcsEipDTO) object;
+			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(Integer.valueOf(mapEcsEipDTO.getIdObj1())).getDto();
+			EcsEntity entity = new EcsEntity(ecsDTO.getCode(), ecsDTO.getDescription(), ecsDTO.getRemark(), ecsDTO
+					.getIdcDTO().getDescription(), ecsDTO.getIpaddressDTO().getDescription(), ecsDTO.getEcsSpecDTO()
+					.getDescription(), ecsDTO.getEcsStatusText());
+
+			ecsEntities.add(entity);
+		}
+
+		// 查询出EIP关联的ELB信息
+		List<ElbEntity> elbEntities = new ArrayList<ElbEntity>();
+		HashMap<String, Object> elbMap = new HashMap<String, Object>();
+		elbMap.put("EQ_idObj1", eipDTO.getId());
+		List<Object> mapEipElblist = cmdbuildSoapService.getMapEipElbList(CMDBuildUtil.wrapperSearchParams(elbMap))
+				.getDtoList().getDto();
+
+		for (Object object : mapEipElblist) {
+
+			MapEipElbDTO mapEcsElbDTO = (MapEipElbDTO) object;
+			ElbDTO elbDTO = (ElbDTO) cmdbuildSoapService.findElb(Integer.valueOf(mapEcsElbDTO.getIdObj2())).getDto();
+
+			ElbEntity entity = new ElbEntity(elbDTO.getCode(), elbDTO.getDescription(), null);
+
+			elbEntities.add(entity);
+		}
+
+		EipEntity entity = new EipEntity(eipDTO.getCode(), eipName, eipDTO.getRemark(), eipDTO.getBandwidthText(),
+				eipDTO.getIspText(), ecsEntities, elbEntities);
 
 		result.setDto(entity);
 
@@ -445,13 +502,20 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult allocateEIP(String isp, String protocols, String sourcePorts, String targetPorts, String accessKey) {
+	public WSResult allocateEIP(String isp, String protocols, String sourcePorts, String targetPorts, String bandwidth,
+			String remark, String accessKey) {
 
 		String[] protocolsArray = StringUtils.split(protocols, ",");
 		String[] sourcePortsArray = StringUtils.split(sourcePorts, ",");
 		String[] targetPortsArray = StringUtils.split(targetPorts, ",");
 
 		WSResult result = new WSResult();
+
+		if (protocolsArray.length != sourcePortsArray.length || targetPortsArray.length != protocolsArray.length
+				|| sourcePortsArray.length != targetPortsArray.length) {
+			result.setError(WSResult.PARAMETER_ERROR, "参数错误.");
+			return result;
+		}
 
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
 		if (tenantsDTO == null) {
@@ -486,6 +550,7 @@ public class RestfulServiceImpl implements RestfulService {
 		EipDTO eipDTO = new EipDTO();
 		eipDTO.setAgentType(LookUpConstants.AgentType.Fortigate.getValue());
 		eipDTO.setBandwidth(1);
+		eipDTO.setRemark(remark);
 		eipDTO.setTenants(tenantsDTO.getId());
 		eipDTO.setIsp(lookUpDTO.getId());
 
@@ -515,7 +580,7 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult associateEIP(String eipName, String serviceName, String accessKey) {
+	public WSResult associateEIP(String eipName, String serviceId, String accessKey) {
 
 		WSResult result = new WSResult();
 
@@ -531,29 +596,18 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		Integer serviceId = null;
+		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(Integer.valueOf(serviceId)).getDto();
 
-		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), serviceName);
-		ElbDTO elbDTO = findElbDTO(tenantsDTO.getId(), serviceName);
-
-		if (ecsDTO != null) {
-			serviceId = ecsDTO.getId();
-		}
-
-		if (elbDTO != null) {
-			serviceId = elbDTO.getId();
-		}
-
-		if (serviceId == null) {
+		if (serviceDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "服务资源不存在.");
 			return result;
 		}
 
-		return apiService.associateEIP(eipDTO.getId(), serviceId);
+		return apiService.associateEIP(eipDTO.getId(), serviceDTO.getId());
 	}
 
 	@Override
-	public WSResult dissociateEIP(String eipName, String serviceName, String accessKey) {
+	public WSResult dissociateEIP(String eipName, String serviceId, String accessKey) {
 
 		WSResult result = new WSResult();
 
@@ -569,25 +623,14 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		Integer serviceId = null;
+		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(Integer.valueOf(serviceId)).getDto();
 
-		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), serviceName);
-		ElbDTO elbDTO = findElbDTO(tenantsDTO.getId(), serviceName);
-
-		if (ecsDTO != null) {
-			serviceId = ecsDTO.getId();
-		}
-
-		if (elbDTO != null) {
-			serviceId = elbDTO.getId();
-		}
-
-		if (serviceId == null) {
+		if (serviceDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "服务资源不存在.");
 			return result;
 		}
 
-		apiService.dissociateEIP(eipDTO.getId(), serviceId);
+		apiService.dissociateEIP(eipDTO.getId(), serviceDTO.getId());
 
 		return result;
 	}
@@ -622,7 +665,7 @@ public class RestfulServiceImpl implements RestfulService {
 			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(Integer.valueOf(mapEcsElbDTO.getIdObj1())).getDto();
 			EcsEntity entity = new EcsEntity(ecsDTO.getCode(), ecsDTO.getDescription(), ecsDTO.getRemark(), ecsDTO
 					.getIdcDTO().getDescription(), ecsDTO.getIpaddressDTO().getDescription(), ecsDTO.getEcsSpecDTO()
-					.getDescription());
+					.getDescription(), ecsDTO.getEcsStatusText());
 
 			ecsEntities.add(entity);
 
@@ -642,6 +685,11 @@ public class RestfulServiceImpl implements RestfulService {
 		String[] protocolsArray = StringUtils.split(protocols, ",");
 
 		WSResult result = new WSResult();
+
+		if (protocolsArray.length != ecsNamesArray.length) {
+			result.setError(WSResult.PARAMETER_ERROR, "参数错误.");
+			return result;
+		}
 
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
 		if (tenantsDTO == null) {
@@ -701,6 +749,8 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 		apiService.deleteELB(elbDTO.getId());
+
+		result.setMessage("删除成功.");
 		return result;
 	}
 
@@ -733,7 +783,7 @@ public class RestfulServiceImpl implements RestfulService {
 			MapEipDnsDTO mapEipDnsDTO = (MapEipDnsDTO) object;
 			EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(Integer.valueOf(mapEipDnsDTO.getIdObj1())).getDto();
 			EipEntity entity = new EipEntity(eipDTO.getCode(), eipDTO.getDescription(), eipDTO.getRemark(),
-					eipDTO.getBandwidthText());
+					eipDTO.getBandwidthText(), eipDTO.getIspText());
 
 			eipEntities.add(entity);
 
@@ -748,16 +798,26 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult createDNS(String domainName, String eipNames, String protocols, String accessKey) {
+	public WSResult createDNS(String domainName, String eipNames, String protocols, String remark, String accessKey) {
 
 		String[] eipNamesArray = StringUtils.split(eipNames, ",");
 		String[] protocolsArray = StringUtils.split(protocols, ",");
 
 		WSResult result = new WSResult();
 
+		if (protocolsArray.length != eipNamesArray.length) {
+			result.setError(WSResult.PARAMETER_ERROR, "参数错误.");
+			return result;
+		}
+
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
 		if (tenantsDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		if (findDnsDTO(tenantsDTO.getId(), domainName) != null) {
+			result.setError(WSResult.PARAMETER_ERROR, "域名已存在.");
 			return result;
 		}
 
@@ -794,6 +854,7 @@ public class RestfulServiceImpl implements RestfulService {
 		dnsDTO.setTenants(tenantsDTO.getId());
 		dnsDTO.setDomainName(domainName);
 		dnsDTO.setDescription(domainName);
+		dnsDTO.setRemark(remark);
 
 		apiService.createDNS(dnsDTO, dnsPolicyDTOs, eipIds);
 
@@ -819,16 +880,86 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult createESG(String esgName, String policyTypes, String targetIPs, String accessKey) {
+	public DTOResult<EsgEntity> findESG(String esgName, String accessKey) {
 
+		DTOResult<EsgEntity> result = new DTOResult<EsgEntity>();
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		EsgDTO esgDTO = findEsgDTO(tenantsDTO.getId(), esgName);
+		if (esgDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "ESG不存在.");
+			return result;
+		}
+
+		// 查询出ESG关联的ECS信息
+		List<EcsEntity> ecsEntities = new ArrayList<EcsEntity>();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_idObj2", esgDTO.getId());
+		List<Object> list = cmdbuildSoapService.getMapEcsEsgList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+				.getDto();
+		for (Object object : list) {
+
+			MapEcsEsgDTO mapEcsEsgDTO = (MapEcsEsgDTO) object;
+			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(Integer.valueOf(mapEcsEsgDTO.getIdObj1())).getDto();
+			EcsEntity entity = new EcsEntity(ecsDTO.getCode(), ecsDTO.getDescription(), ecsDTO.getRemark(), ecsDTO
+					.getIdcDTO().getDescription(), ecsDTO.getIpaddressDTO().getDescription(), ecsDTO.getEcsSpecDTO()
+					.getDescription(), ecsDTO.getEcsStatusText());
+
+			ecsEntities.add(entity);
+
+		}
+
+		// 查询出ESG关联的policy信息
+		List<EsgPolicyEntity> policyEntities = new ArrayList<EsgPolicyEntity>();
+		HashMap<String, Object> policyMap = new HashMap<String, Object>();
+		policyMap.put("EQ_idObj2", esgDTO.getId());
+
+		for (Object object : cmdbuildSoapService.getEsgPolicyList(CMDBuildUtil.wrapperSearchParams(policyMap))
+				.getDtoList().getDto()) {
+
+			EsgPolicyDTO policyDTO = (EsgPolicyDTO) object;
+
+			EsgPolicyEntity entity = new EsgPolicyEntity(policyDTO.getCode(), policyDTO.getDescription(),
+					policyDTO.getSourceIP(), policyDTO.getTargetIP(), policyDTO.getPolicyTypeText());
+
+			policyEntities.add(entity);
+
+		}
+
+		EsgEntity entity = new EsgEntity(esgDTO.getCode(), esgName, esgDTO.isIsDefault(), policyEntities, ecsEntities);
+
+		result.setDto(entity);
+
+		return result;
+	}
+
+	@Override
+	public WSResult createESG(String esgName, String policyTypes, String targetIPs, String remark, String accessKey) {
+
+		// 多个策略用","区分
 		String[] policyTypesArray = StringUtils.split(policyTypes, ",");
 		String[] targetIPsArray = StringUtils.split(targetIPs, ",");
 
 		WSResult result = new WSResult();
 
+		if (policyTypesArray.length != targetIPsArray.length) {
+			result.setError(WSResult.PARAMETER_ERROR, "参数错误.");
+			return result;
+		}
+
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
 		if (tenantsDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		if (findEsgDTO(tenantsDTO.getId(), esgName) != null) {
+			result.setError(WSResult.PARAMETER_ERROR, "ESG名称已存在.");
 			return result;
 		}
 
@@ -853,6 +984,7 @@ public class RestfulServiceImpl implements RestfulService {
 		esgDTO.setAgentType(LookUpConstants.AgentType.H3C.getValue());
 		esgDTO.setTenants(tenantsDTO.getId());
 		esgDTO.setDescription(esgName);
+		esgDTO.setRemark(remark);
 
 		apiService.createESG(esgDTO, esgPolicyDTOs);
 
@@ -939,6 +1071,53 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
+	public DTOResult<TagEntity> findTag(String tagName, String accessKey) {
+
+		DTOResult<TagEntity> result = new DTOResult<TagEntity>();
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		TagDTO tagDTO = findTagDTO(tenantsDTO.getId(), tagName);
+		if (tagDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "Tag不存在.");
+			return result;
+		}
+
+		// 查询出Tag关联的service信息
+		List<ServiceEntity> serviceEntities = new ArrayList<ServiceEntity>();
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_idObj1", tagDTO.getId());
+
+		List<Object> list = cmdbuildSoapService.getMapTagServiceList(CMDBuildUtil.wrapperSearchParams(map))
+				.getDtoList().getDto();
+
+		for (Object object : list) {
+
+			MapTagServiceDTO mapTagServiceDTO = (MapTagServiceDTO) object;
+
+			ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(
+					Integer.valueOf(mapTagServiceDTO.getIdObj2())).getDto();
+
+			ServiceEntity entity = new ServiceEntity(serviceDTO.getCode(), serviceDTO.getDescription(),
+					serviceDTO.getRemark());
+
+			serviceEntities.add(entity);
+		}
+
+		TagEntity entity = new TagEntity(tagDTO.getCode(), tagName, serviceEntities);
+
+		result.setDto(entity);
+
+		return result;
+
+	}
+
+	@Override
 	public WSResult createTag(String tagName, String parentTag, String accessKey) {
 
 		WSResult result = new WSResult();
@@ -946,6 +1125,11 @@ public class RestfulServiceImpl implements RestfulService {
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
 		if (tenantsDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		if (findTagDTO(tenantsDTO.getId(), tagName) != null) {
+			result.setError(WSResult.PARAMETER_ERROR, "标签已存在.");
 			return result;
 		}
 
@@ -1002,7 +1186,7 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult associateTag(String tagName, String serviceName, String accessKey) {
+	public WSResult associateTag(String tagName, String serviceId, String accessKey) {
 
 		WSResult result = new WSResult();
 
@@ -1018,51 +1202,20 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		Integer serviceId = null;
+		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(Integer.valueOf(serviceId)).getDto();
 
-		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), serviceName);
-		Es3DTO es3DTO = findEs3DTO(tenantsDTO.getId(), serviceName);
-		ElbDTO elbDTO = findElbDTO(tenantsDTO.getId(), serviceName);
-		EipDTO eipDTO = findEipDTO(tenantsDTO.getId(), serviceName);
-		DnsDTO dnsDTO = findDnsDTO(tenantsDTO.getId(), serviceName);
-		EsgDTO esgDTO = findEsgDTO(tenantsDTO.getId(), serviceName);
-
-		if (ecsDTO != null) {
-			serviceId = ecsDTO.getId();
-		}
-
-		if (es3DTO != null) {
-			serviceId = es3DTO.getId();
-		}
-
-		if (elbDTO != null) {
-			serviceId = elbDTO.getId();
-		}
-
-		if (eipDTO != null) {
-			serviceId = eipDTO.getId();
-		}
-
-		if (dnsDTO != null) {
-			serviceId = dnsDTO.getId();
-		}
-
-		if (esgDTO != null) {
-			serviceId = esgDTO.getId();
-		}
-
-		if (serviceId == null) {
+		if (serviceDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "服务资源不存在.");
 			return result;
 		}
 
-		apiService.associateTag(tagDTO.getId(), serviceId);
+		apiService.associateTag(tagDTO.getId(), serviceDTO.getId());
 
 		return result;
 	}
 
 	@Override
-	public WSResult dssociateTag(String tagName, String serviceName, String accessKey) {
+	public WSResult dssociateTag(String tagName, String serviceId, String accessKey) {
 
 		WSResult result = new WSResult();
 
@@ -1078,45 +1231,14 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		Integer serviceId = null;
+		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(Integer.valueOf(serviceId)).getDto();
 
-		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), serviceName);
-		Es3DTO es3DTO = findEs3DTO(tenantsDTO.getId(), serviceName);
-		ElbDTO elbDTO = findElbDTO(tenantsDTO.getId(), serviceName);
-		EipDTO eipDTO = findEipDTO(tenantsDTO.getId(), serviceName);
-		DnsDTO dnsDTO = findDnsDTO(tenantsDTO.getId(), serviceName);
-		EsgDTO esgDTO = findEsgDTO(tenantsDTO.getId(), serviceName);
-
-		if (ecsDTO != null) {
-			serviceId = ecsDTO.getId();
-		}
-
-		if (es3DTO != null) {
-			serviceId = es3DTO.getId();
-		}
-
-		if (elbDTO != null) {
-			serviceId = elbDTO.getId();
-		}
-
-		if (eipDTO != null) {
-			serviceId = eipDTO.getId();
-		}
-
-		if (dnsDTO != null) {
-			serviceId = dnsDTO.getId();
-		}
-
-		if (esgDTO != null) {
-			serviceId = esgDTO.getId();
-		}
-
-		if (serviceId == null) {
+		if (serviceDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "服务资源不存在.");
 			return result;
 		}
 
-		apiService.dssociateTag(tagDTO.getId(), serviceId);
+		apiService.dssociateTag(tagDTO.getId(), serviceDTO.getId());
 
 		return result;
 	}

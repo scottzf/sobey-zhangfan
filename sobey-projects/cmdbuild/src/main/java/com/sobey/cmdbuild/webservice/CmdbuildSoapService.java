@@ -40,6 +40,7 @@ import com.sobey.cmdbuild.webservice.response.dto.NicPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.RackDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ServerDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ServerPortDTO;
+import com.sobey.cmdbuild.webservice.response.dto.ServiceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.StorageBoxDTO;
 import com.sobey.cmdbuild.webservice.response.dto.StorageDTO;
 import com.sobey.cmdbuild.webservice.response.dto.StoragePortDTO;
@@ -941,6 +942,19 @@ public interface CmdbuildSoapService {
 	DTOListResult<NicPortDTO> getNicPortList(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	PaginationResult<NicPortDTO> getNicPortPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// ============ Service =========//
+	// ==============================//
+
+	DTOResult<ServiceDTO> findService(@WebParam(name = "id") Integer id);
+
+	DTOResult<ServiceDTO> findServiceByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	DTOListResult<ServiceDTO> getServiceList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<ServiceDTO> getServicePagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 }
