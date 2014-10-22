@@ -8,9 +8,10 @@ public class EcsEntity {
 	private String idc;
 	private String ipaddress;
 	private String specification;
+	private String status;
 
 	public EcsEntity(String identifier, String ecsName, String remark, String idc, String ipaddress,
-			String specification) {
+			String specification, String status) {
 		super();
 		this.identifier = identifier;
 		this.ecsName = ecsName;
@@ -18,6 +19,7 @@ public class EcsEntity {
 		this.idc = idc;
 		this.ipaddress = ipaddress;
 		this.specification = specification;
+		this.status = status;
 	}
 
 	public String getIdentifier() {
@@ -66,6 +68,14 @@ public class EcsEntity {
 
 	public void setSpecification(String specification) {
 		this.specification = specification;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

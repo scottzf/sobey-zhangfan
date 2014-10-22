@@ -5,12 +5,18 @@ import com.sobey.api.entity.EcsEntity;
 import com.sobey.api.entity.EipEntity;
 import com.sobey.api.entity.ElbEntity;
 import com.sobey.api.entity.Es3Entity;
+import com.sobey.api.entity.EsgEntity;
+import com.sobey.api.entity.TagEntity;
 import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
 import com.sobey.generate.zabbix.ZHistoryItemDTO;
 import com.sobey.generate.zabbix.ZItemDTO;
 
 public interface RestfulService {
+
+	/******** ECS ********/
+
+	public DTOResult<EcsEntity> findECS(String ecsName, String accessKey);
 
 	public WSResult createECS(String ecsName, String remark, String ecsSpec, String idc, String accessKey);
 
@@ -20,11 +26,9 @@ public interface RestfulService {
 
 	public WSResult reconfigECS(String ecsName, String ecsSpec, String accessKey);
 
-	public DTOResult<EcsEntity> findECS(String ecsName, String accessKey);
+	/******** ES3 ********/
 
 	public DTOResult<Es3Entity> findES3(String es3Name, String accessKey);
-
-	public DTOResult<ElbEntity> findELB(String elbName, String accessKey);
 
 	public WSResult createES3(String es3Name, Double es3Size, String es3Type, String idc, String remark,
 			String accessKey);
@@ -35,9 +39,12 @@ public interface RestfulService {
 
 	public WSResult deleteES3(String es3Name, String accessKey);
 
+	/******** EIP ********/
+
 	public DTOResult<EipEntity> findEIP(String eipName, String accessKey);
 
-	public WSResult allocateEIP(String isp, String protocols, String sourcePorts, String targetPorts, String accessKey);
+	public WSResult allocateEIP(String isp, String protocols, String sourcePorts, String targetPorts, String bandwidth,
+			String remark, String accessKey);
 
 	public WSResult recoverEIP(String eipName, String accessKey);
 
@@ -45,23 +52,37 @@ public interface RestfulService {
 
 	public WSResult dissociateEIP(String eipName, String serviceName, String accessKey);
 
+	/******** ELB ********/
+
+	public DTOResult<ElbEntity> findELB(String elbName, String accessKey);
+
 	public WSResult createELB(String ecsNames, String protocols, String accessKey);
 
 	public WSResult deleteELB(String elbName, String accessKey);
 
+	/******** DNS ********/
+
 	public DTOResult<DnsEntity> findDNS(String dnsName, String accessKey);
 
-	public WSResult createDNS(String domianName, String eipNames, String protocols, String accessKey);
+	public WSResult createDNS(String domianName, String eipNames, String protocols, String remark, String accessKey);
 
 	public WSResult deleteDNS(String domianName, String accessKey);
 
-	public WSResult createESG(String esgName, String policyTypes, String targetIPs, String accessKey);
+	/******** ESG ********/
+
+	public DTOResult<EsgEntity> findESG(String esgName, String accessKey);
+
+	public WSResult createESG(String esgName, String policyTypes, String targetIPs, String remark, String accessKey);
 
 	public WSResult deleteESG(String esgName, String accessKey);
 
 	public WSResult associateESG(String ecsName, String esgName, String accessKey);
 
 	public WSResult dissociateESG(String ecsName, String esgName, String accessKey);
+
+	/******** TAG ********/
+
+	public DTOResult<TagEntity> findTag(String tagName, String accessKey);
 
 	public WSResult createTag(String tagName, String parentTag, String accessKey);
 
@@ -70,6 +91,8 @@ public interface RestfulService {
 	public WSResult associateTag(String tagName, String serviceName, String accessKey);
 
 	public WSResult dssociateTag(String tagName, String serviceName, String accessKey);
+
+	/******** Zabbix ********/
 
 	public ZItemDTO getCurrentData(String ecsName, String itemKey, String accessKey);
 
