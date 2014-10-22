@@ -622,7 +622,7 @@ public class RestfulServiceImpl implements RestfulService {
 			result.setError(WSResult.PARAMETER_ERROR, "EIP不存在.");
 			return result;
 		}
-		
+
 		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(Integer.valueOf(serviceId)).getDto();
 
 		if (serviceDTO == null) {
@@ -1125,6 +1125,11 @@ public class RestfulServiceImpl implements RestfulService {
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
 		if (tenantsDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		if (findTagDTO(tenantsDTO.getId(), tagName) != null) {
+			result.setError(WSResult.PARAMETER_ERROR, "标签已存在.");
 			return result;
 		}
 
