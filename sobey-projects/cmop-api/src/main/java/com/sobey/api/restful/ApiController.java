@@ -235,14 +235,14 @@ public class ApiController {
 
 	@RequestMapping(value = "/associateTag/", method = RequestMethod.POST)
 	public WSResult associateTag(@RequestParam(value = "tagName") String tagName,
-			@RequestParam(value = "serviceName") String serviceName, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.associateTag(URLEscape(tagName), URLEscape(serviceName), accessKey);
+			@RequestParam(value = "serviceId") String serviceId, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.associateTag(URLEscape(tagName), serviceId, accessKey);
 	}
 
 	@RequestMapping(value = "/dssociateTag/", method = RequestMethod.POST)
 	public WSResult dssociateTag(@RequestParam(value = "tagName") String tagName,
-			@RequestParam(value = "serviceName") String serviceName, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.dssociateTag(URLEscape(tagName), URLEscape(serviceName), accessKey);
+			@RequestParam(value = "serviceId") String serviceId, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.dssociateTag(URLEscape(tagName), serviceId, accessKey);
 	}
 
 	/********** Zabbix ***********/

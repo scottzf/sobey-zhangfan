@@ -88,9 +88,9 @@ public interface RestfulService {
 
 	public WSResult deleteTag(String tagName, String accessKey);
 
-	public WSResult associateTag(String tagName, String serviceName, String accessKey);
+	public WSResult associateTag(String tagName, String serviceId, String accessKey);
 
-	public WSResult dssociateTag(String tagName, String serviceName, String accessKey);
+	public WSResult dssociateTag(String tagName, String serviceId, String accessKey);
 
 	/******** Zabbix ********/
 

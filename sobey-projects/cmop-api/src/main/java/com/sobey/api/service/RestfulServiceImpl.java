@@ -113,13 +113,6 @@ public class RestfulServiceImpl implements RestfulService {
 		return (TenantsDTO) cmdbuildSoapService.findTenantsByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
 	}
 
-	private ServiceDTO findServcieDTO(Integer tenantsId, String description) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_tenants", tenantsId);
-		map.put("EQ_description", description);
-		return (ServiceDTO) cmdbuildSoapService.findServiceByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
-	}
-
 	private EcsDTO findEcsDTO(Integer tenantsId, String description) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_tenants", tenantsId);
@@ -1210,7 +1203,7 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult associateTag(String tagName, String serviceName, String accessKey) {
+	public WSResult associateTag(String tagName, String serviceId, String accessKey) {
 
 		WSResult result = new WSResult();
 
@@ -1226,7 +1219,7 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		ServiceDTO serviceDTO = findServcieDTO(tenantsDTO.getId(), serviceName);
+		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(Integer.valueOf(serviceId)).getDto();
 
 		if (serviceDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "服务资源不存在.");
@@ -1239,7 +1232,7 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult dssociateTag(String tagName, String serviceName, String accessKey) {
+	public WSResult dssociateTag(String tagName, String serviceId, String accessKey) {
 
 		WSResult result = new WSResult();
 
@@ -1255,7 +1248,7 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		ServiceDTO serviceDTO = findServcieDTO(tenantsDTO.getId(), serviceName);
+		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(Integer.valueOf(serviceId)).getDto();
 
 		if (serviceDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "服务资源不存在.");
