@@ -73,6 +73,8 @@
 
   <xs:element name="ServerPortDTO" type="tns:ServerPortDTO"/>
 
+  <xs:element name="ServiceDTO" type="tns:ServiceDTO"/>
+
   <xs:element name="StorageBoxDTO" type="tns:StorageBoxDTO"/>
 
   <xs:element name="StorageDTO" type="tns:StorageDTO"/>
@@ -701,6 +703,14 @@
 
   <xs:element name="findServerResponse" type="tns:findServerResponse"/>
 
+  <xs:element name="findService" type="tns:findService"/>
+
+  <xs:element name="findServiceByParams" type="tns:findServiceByParams"/>
+
+  <xs:element name="findServiceByParamsResponse" type="tns:findServiceByParamsResponse"/>
+
+  <xs:element name="findServiceResponse" type="tns:findServiceResponse"/>
+
   <xs:element name="findStorage" type="tns:findStorage"/>
 
   <xs:element name="findStorageBox" type="tns:findStorageBox"/>
@@ -1052,6 +1062,14 @@
   <xs:element name="getServerPortPagination" type="tns:getServerPortPagination"/>
 
   <xs:element name="getServerPortPaginationResponse" type="tns:getServerPortPaginationResponse"/>
+
+  <xs:element name="getServiceList" type="tns:getServiceList"/>
+
+  <xs:element name="getServiceListResponse" type="tns:getServiceListResponse"/>
+
+  <xs:element name="getServicePagination" type="tns:getServicePagination"/>
+
+  <xs:element name="getServicePaginationResponse" type="tns:getServicePaginationResponse"/>
 
   <xs:element name="getStorageBoxList" type="tns:getStorageBoxList"/>
 
@@ -1948,6 +1966,26 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
     </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findServiceByParams">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findServiceByParamsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ServiceDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:basicDTO">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="findMapEipDnsByParams">
@@ -3819,6 +3857,18 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="getServiceList">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getServiceListResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOListResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="getMapEipElbPagination">
     <xs:sequence>
       <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
@@ -5582,6 +5632,20 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="getServicePagination">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
+      <xs:element minOccurs="0" name="pageNumber" type="xs:int"/>
+      <xs:element minOccurs="0" name="pageSize" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getServicePaginationResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:PaginationResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="createTag">
     <xs:sequence>
       <xs:element minOccurs="0" name="tagDTO" type="tns:TagDTO"/>
@@ -5615,6 +5679,18 @@
   <xs:complexType name="getElbListResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:DTOListResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findService">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findServiceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -5960,6 +6036,10 @@
     <wsdl:part element="tns:updateEipPolicyResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="findServiceByParamsResponse">
+    <wsdl:part element="tns:findServiceByParamsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="createFirewall">
     <wsdl:part element="tns:createFirewall" name="parameters">
     </wsdl:part>
@@ -6172,6 +6252,10 @@
     <wsdl:part element="tns:findRackByParams" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getServicePaginationResponse">
+    <wsdl:part element="tns:getServicePaginationResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="findIpaddress">
     <wsdl:part element="tns:findIpaddress" name="parameters">
     </wsdl:part>
@@ -6186,6 +6270,10 @@
   </wsdl:message>
   <wsdl:message name="deleteMapEipElbResponse">
     <wsdl:part element="tns:deleteMapEipElbResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getServiceList">
+    <wsdl:part element="tns:getServiceList" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteEsgResponse">
@@ -6436,6 +6524,10 @@
     <wsdl:part element="tns:getMapEcsEs3PaginationResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="findService">
+    <wsdl:part element="tns:findService" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="deleteLoadBalancerPortResponse">
     <wsdl:part element="tns:deleteLoadBalancerPortResponse" name="parameters">
     </wsdl:part>
@@ -6542,6 +6634,10 @@
   </wsdl:message>
   <wsdl:message name="getStorageBoxPaginationResponse">
     <wsdl:part element="tns:getStorageBoxPaginationResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getServiceListResponse">
+    <wsdl:part element="tns:getServiceListResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteMapTagServiceResponse">
@@ -6788,12 +6884,12 @@
     <wsdl:part element="tns:updateNicPort" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getEipPaginationResponse">
-    <wsdl:part element="tns:getEipPaginationResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="findDeviceSpecByParamsResponse">
     <wsdl:part element="tns:findDeviceSpecByParamsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getEipPaginationResponse">
+    <wsdl:part element="tns:getEipPaginationResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteStorage">
@@ -6846,6 +6942,10 @@
   </wsdl:message>
   <wsdl:message name="getMapEcsElbPagination">
     <wsdl:part element="tns:getMapEcsElbPagination" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getServicePagination">
+    <wsdl:part element="tns:getServicePagination" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createHardDisk">
@@ -7460,6 +7560,10 @@
     <wsdl:part element="tns:getTagPaginationResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="findServiceResponse">
+    <wsdl:part element="tns:findServiceResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getVlanPaginationResponse">
     <wsdl:part element="tns:getVlanPaginationResponse" name="parameters">
     </wsdl:part>
@@ -7646,6 +7750,10 @@
   </wsdl:message>
   <wsdl:message name="findMapTagService">
     <wsdl:part element="tns:findMapTagService" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findServiceByParams">
+    <wsdl:part element="tns:findServiceByParams" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findServerPort">
@@ -8161,6 +8269,12 @@
       <wsdl:input message="tns:updateElbPolicy" name="updateElbPolicy">
     </wsdl:input>
       <wsdl:output message="tns:updateElbPolicyResponse" name="updateElbPolicyResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findServiceByParams">
+      <wsdl:input message="tns:findServiceByParams" name="findServiceByParams">
+    </wsdl:input>
+      <wsdl:output message="tns:findServiceByParamsResponse" name="findServiceByParamsResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="findMapEipDnsByParams">
@@ -8947,6 +9061,12 @@
       <wsdl:input message="tns:deleteMapEipDns" name="deleteMapEipDns">
     </wsdl:input>
       <wsdl:output message="tns:deleteMapEipDnsResponse" name="deleteMapEipDnsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getServiceList">
+      <wsdl:input message="tns:getServiceList" name="getServiceList">
+    </wsdl:input>
+      <wsdl:output message="tns:getServiceListResponse" name="getServiceListResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getMapEipElbPagination">
@@ -9783,6 +9903,12 @@
       <wsdl:output message="tns:updateLoadBalancerPortResponse" name="updateLoadBalancerPortResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getServicePagination">
+      <wsdl:input message="tns:getServicePagination" name="getServicePagination">
+    </wsdl:input>
+      <wsdl:output message="tns:getServicePaginationResponse" name="getServicePaginationResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="createTag">
       <wsdl:input message="tns:createTag" name="createTag">
     </wsdl:input>
@@ -9799,6 +9925,12 @@
       <wsdl:input message="tns:getElbList" name="getElbList">
     </wsdl:input>
       <wsdl:output message="tns:getElbListResponse" name="getElbListResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findService">
+      <wsdl:input message="tns:findService" name="findService">
+    </wsdl:input>
+      <wsdl:output message="tns:findServiceResponse" name="findServiceResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="findMapEcsEipByParams">
@@ -9981,6 +10113,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="findDnsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findServiceByParams">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findServiceByParams">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findServiceByParamsResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -11169,6 +11310,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="deleteMapEipDnsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getServiceList">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getServiceList">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getServiceListResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -12423,6 +12573,15 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getServicePagination">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getServicePagination">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getServicePaginationResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="createTag">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="createTag">
@@ -12438,6 +12597,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="findHardDiskByParamsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findService">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findService">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findServiceResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
