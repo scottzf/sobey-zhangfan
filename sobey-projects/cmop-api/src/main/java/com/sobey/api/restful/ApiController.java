@@ -49,26 +49,26 @@ public class ApiController {
 	public WSResult createECS(@RequestParam(value = "ecsName") String ecsName,
 			@RequestParam(value = "remark") String remark, @RequestParam(value = "ecsSpec") String ecsSpec,
 			@RequestParam(value = "idc") String idc, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.createECS(URLEscape(ecsName), remark, ecsSpec, idc, accessKey);
+		return servie.createECS(ecsName, remark, ecsSpec, idc, accessKey);
 	}
 
 	@RequestMapping(value = "/destroyECS/", method = RequestMethod.POST)
 	public WSResult destroyECS(@RequestParam(value = "ecsName") String ecsName,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.destroyECS(URLEscape(ecsName), accessKey);
+		return servie.destroyECS(ecsName, accessKey);
 	}
 
 	@RequestMapping(value = "/powerOpsECS/", method = RequestMethod.POST)
 	public WSResult powerOpsECS(@RequestParam(value = "ecsName") String ecsName,
 			@RequestParam(value = "powerOperation") String powerOperation,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.powerOpsECS(URLEscape(ecsName), powerOperation, accessKey);
+		return servie.powerOpsECS(ecsName, powerOperation, accessKey);
 	}
 
 	@RequestMapping(value = "/reconfigECS/", method = RequestMethod.POST)
 	public WSResult reconfigECS(@RequestParam(value = "ecsName") String ecsName,
 			@RequestParam(value = "ecsSpec") String ecsSpec, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.reconfigECS(URLEscape(ecsName), ecsSpec, accessKey);
+		return servie.reconfigECS(ecsName, ecsSpec, accessKey);
 	}
 
 	/********** ES3 ***********/
@@ -84,25 +84,25 @@ public class ApiController {
 			@RequestParam(value = "es3Size") Double es3Size, @RequestParam(value = "es3Type") String es3Type,
 			@RequestParam(value = "idc") String idc, @RequestParam(value = "remark") String remark,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.createES3(URLEscape(es3Name), es3Size, es3Type, idc, remark, accessKey);
+		return servie.createES3(es3Name, es3Size, es3Type, idc, remark, accessKey);
 	}
 
 	@RequestMapping(value = "/attachES3/", method = RequestMethod.POST)
 	public WSResult attachES3(@RequestParam(value = "es3Name") String es3Name,
 			@RequestParam(value = "ecsName") String ecsName, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.attachES3(URLEscape(es3Name), ecsName, accessKey);
+		return servie.attachES3(es3Name, ecsName, accessKey);
 	}
 
 	@RequestMapping(value = "/detachES3/", method = RequestMethod.POST)
 	public WSResult detachES3(@RequestParam(value = "es3Name") String es3Name,
 			@RequestParam(value = "ecsName") String ecsName, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.detachES3(URLEscape(es3Name), ecsName, accessKey);
+		return servie.detachES3(es3Name, ecsName, accessKey);
 	}
 
 	@RequestMapping(value = "/deleteES3/", method = RequestMethod.POST)
 	public WSResult deleteES3(@RequestParam(value = "es3Name") String es3Name,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.deleteES3(URLEscape(es3Name), accessKey);
+		return servie.deleteES3(es3Name, accessKey);
 	}
 
 	/********** ELB ***********/
@@ -116,13 +116,13 @@ public class ApiController {
 	@RequestMapping(value = "/createELB/", method = RequestMethod.POST)
 	public WSResult createELB(@RequestParam(value = "ecsNames") String ecsNames,
 			@RequestParam(value = "protocols") String protocols, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.createELB(URLEscape(ecsNames), protocols, accessKey);
+		return servie.createELB(ecsNames, protocols, accessKey);
 	}
 
 	@RequestMapping(value = "/deleteELB/", method = RequestMethod.POST)
 	public WSResult deleteELB(@RequestParam(value = "elbName") String elbName,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.deleteELB(URLEscape(elbName), accessKey);
+		return servie.deleteELB(elbName, accessKey);
 	}
 
 	/********** EIP ***********/
@@ -138,25 +138,25 @@ public class ApiController {
 			@RequestParam(value = "bandwidth") String bandwidth, @RequestParam(value = "protocols") String protocols,
 			@RequestParam(value = "sourcePorts") String sourcePorts,
 			@RequestParam(value = "targetPorts") String targetPorts, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.allocateEIP(URLEscape(isp), protocols, sourcePorts, targetPorts, bandwidth, remark, accessKey);
+		return servie.allocateEIP(isp, protocols, sourcePorts, targetPorts, bandwidth, remark, accessKey);
 	}
 
 	@RequestMapping(value = "/recoverEIP/", method = RequestMethod.POST)
 	public WSResult recoverEIP(@RequestParam(value = "eipName") String eipName,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.recoverEIP(URLEscape(eipName), accessKey);
+		return servie.recoverEIP(eipName, accessKey);
 	}
 
 	@RequestMapping(value = "/associateEIP/", method = RequestMethod.POST)
 	public WSResult associateEIP(@RequestParam(value = "eipName") String eipName,
 			@RequestParam(value = "serviceId") String serviceId, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.associateEIP(URLEscape(eipName), serviceId, accessKey);
+		return servie.associateEIP(eipName, serviceId, accessKey);
 	}
 
 	@RequestMapping(value = "/dissociateEIP/", method = RequestMethod.POST)
 	public WSResult dissociateEIP(@RequestParam(value = "eipName") String eipName,
 			@RequestParam(value = "serviceId") String serviceId, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.dissociateEIP(URLEscape(eipName), serviceId, accessKey);
+		return servie.dissociateEIP(eipName, serviceId, accessKey);
 	}
 
 	/********** DNS ***********/
@@ -171,13 +171,13 @@ public class ApiController {
 	public WSResult createDNS(@RequestParam(value = "domainName") String domainName,
 			@RequestParam(value = "eipNames") String eipNames, @RequestParam(value = "protocols") String protocols,
 			@RequestParam(value = "remark") String remark, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.createDNS(URLEscape(domainName), URLEscape(eipNames), protocols, remark, accessKey);
+		return servie.createDNS(domainName, eipNames, protocols, remark, accessKey);
 	}
 
 	@RequestMapping(value = "/deleteDNS/", method = RequestMethod.POST)
 	public WSResult deleteDNS(@RequestParam(value = "domainName") String domainName,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.deleteDNS(URLEscape(domainName), accessKey);
+		return servie.deleteDNS(domainName, accessKey);
 	}
 
 	/********** ESG ***********/
@@ -192,25 +192,25 @@ public class ApiController {
 	public WSResult createESG(@RequestParam(value = "esgName") String esgName,
 			@RequestParam(value = "policyTypes") String policyTypes, @RequestParam(value = "remark") String remark,
 			@RequestParam(value = "targetIPs") String targetIPs, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.createESG(URLEscape(esgName), URLEscape(policyTypes), targetIPs, remark, accessKey);
+		return servie.createESG(esgName, policyTypes, targetIPs, remark, accessKey);
 	}
 
 	@RequestMapping(value = "/deleteESG/", method = RequestMethod.POST)
 	public WSResult deleteESG(@RequestParam(value = "esgName") String esgName,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.deleteESG(URLEscape(esgName), accessKey);
+		return servie.deleteESG(esgName, accessKey);
 	}
 
 	@RequestMapping(value = "/associateESG/", method = RequestMethod.POST)
 	public WSResult associateESG(@RequestParam(value = "esgName") String esgName,
 			@RequestParam(value = "ecsName") String ecsName, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.associateESG(URLEscape(ecsName), URLEscape(esgName), accessKey);
+		return servie.associateESG(ecsName, esgName, accessKey);
 	}
 
 	@RequestMapping(value = "/dissociateESG/", method = RequestMethod.POST)
 	public WSResult dissociateESG(@RequestParam(value = "esgName") String esgName,
 			@RequestParam(value = "ecsName") String ecsName, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.dissociateESG(URLEscape(ecsName), URLEscape(esgName), accessKey);
+		return servie.dissociateESG(ecsName, esgName, accessKey);
 	}
 
 	/********** TAG ***********/
@@ -224,25 +224,25 @@ public class ApiController {
 	@RequestMapping(value = "/createTag/", method = RequestMethod.POST)
 	public WSResult createTag(@RequestParam(value = "tagName") String tagName,
 			@RequestParam(value = "parentTag") String parentTag, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.createTag(URLEscape(tagName), URLEscape(parentTag), accessKey);
+		return servie.createTag(tagName, parentTag, accessKey);
 	}
 
 	@RequestMapping(value = "/deleteTag/", method = RequestMethod.POST)
 	public WSResult deleteTag(@RequestParam(value = "tagName") String tagName,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.deleteTag(URLEscape(tagName), accessKey);
+		return servie.deleteTag(tagName, accessKey);
 	}
 
 	@RequestMapping(value = "/associateTag/", method = RequestMethod.POST)
 	public WSResult associateTag(@RequestParam(value = "tagName") String tagName,
 			@RequestParam(value = "serviceId") String serviceId, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.associateTag(URLEscape(tagName), serviceId, accessKey);
+		return servie.associateTag(tagName, serviceId, accessKey);
 	}
 
 	@RequestMapping(value = "/dssociateTag/", method = RequestMethod.POST)
 	public WSResult dssociateTag(@RequestParam(value = "tagName") String tagName,
 			@RequestParam(value = "serviceId") String serviceId, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.dssociateTag(URLEscape(tagName), serviceId, accessKey);
+		return servie.dssociateTag(tagName, serviceId, accessKey);
 	}
 
 	/********** Zabbix ***********/
