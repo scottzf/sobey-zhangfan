@@ -18,9 +18,11 @@ import com.sobey.api.entity.EsgEntity;
 import com.sobey.api.entity.EsgPolicyEntity;
 import com.sobey.api.entity.ServiceEntity;
 import com.sobey.api.entity.TagEntity;
+import com.sobey.api.entity.TenantsEntity;
 import com.sobey.api.utils.CMDBuildUtil;
 import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
+import com.sobey.core.utils.Encodes;
 import com.sobey.generate.cmdbuild.CmdbuildSoapService;
 import com.sobey.generate.cmdbuild.DnsDTO;
 import com.sobey.generate.cmdbuild.DnsPolicyDTO;
@@ -53,6 +55,7 @@ import com.sobey.generate.switches.SwitchesSoapService;
 import com.sobey.generate.zabbix.ZHistoryItemDTO;
 import com.sobey.generate.zabbix.ZItemDTO;
 import com.sobey.generate.zabbix.ZabbixSoapService;
+import com.sobey.test.data.RandomData;
 
 @Service
 public class RestfulServiceImpl implements RestfulService {
@@ -1114,7 +1117,6 @@ public class RestfulServiceImpl implements RestfulService {
 		result.setDto(entity);
 
 		return result;
-
 	}
 
 	@Override
@@ -1273,6 +1275,39 @@ public class RestfulServiceImpl implements RestfulService {
 		}
 
 		return apiService.getHistoryData(ecsDTO.getId(), itemKey);
+	}
+
+	@Override
+	public WSResult createTenants(String company, String name, String email, String password, String phone) {
+
+		TenantsDTO tenantsDTO = new TenantsDTO();
+		tenantsDTO.setAccessKey(Encodes.encodeBase64(RandomData.randomName("accesskey").getBytes()));
+		tenantsDTO.setCompany(company);
+		tenantsDTO.setDescription(email);
+		tenantsDTO.setEmail(email);
+		tenantsDTO.setPassword(password);
+		tenantsDTO.setPhone(phone);
+		return apiService.createTenants(tenantsDTO);
+	}
+
+	@Override
+	public DTOResult<TenantsEntity> findTenants(String accessKey) {
+
+		DTOResult<TenantsEntity> result = new DTOResult<TenantsEntity>();
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		TenantsEntity entity = new TenantsEntity(tenantsDTO.getCode(), tenantsDTO.getDescription(),
+				tenantsDTO.getEmail(), tenantsDTO.getPhone(), tenantsDTO.getCompany());
+
+		result.setDto(entity);
+
+		return result;
+
 	}
 
 }

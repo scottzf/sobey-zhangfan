@@ -7,12 +7,19 @@ import com.sobey.api.entity.ElbEntity;
 import com.sobey.api.entity.Es3Entity;
 import com.sobey.api.entity.EsgEntity;
 import com.sobey.api.entity.TagEntity;
+import com.sobey.api.entity.TenantsEntity;
 import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
 import com.sobey.generate.zabbix.ZHistoryItemDTO;
 import com.sobey.generate.zabbix.ZItemDTO;
 
 public interface RestfulService {
+
+	/******** Tenants ********/
+
+	public DTOResult<TenantsEntity> findTenants(String accessKey);
+
+	public WSResult createTenants(String company, String name, String email, String password, String phone);
 
 	/******** ECS ********/
 

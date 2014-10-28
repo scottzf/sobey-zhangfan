@@ -16,6 +16,7 @@ import com.sobey.api.entity.ElbEntity;
 import com.sobey.api.entity.Es3Entity;
 import com.sobey.api.entity.EsgEntity;
 import com.sobey.api.entity.TagEntity;
+import com.sobey.api.entity.TenantsEntity;
 import com.sobey.api.service.RestfulService;
 import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
@@ -258,6 +259,20 @@ public class ApiController {
 			@PathVariable("itemKey") String itemKey, @PathVariable("accessKey") String accessKey)
 			throws UnsupportedEncodingException {
 		return servie.getHistoryData(URLEscape(ecsName), itemKey, accessKey);
+	}
+
+	/********** Tenants ***********/
+
+	@RequestMapping(value = "/TenantsResult/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<TenantsEntity> TenantsResult(@PathVariable("accessKey") String accessKey) {
+		return servie.findTenants(accessKey);
+	}
+
+	@RequestMapping(value = "/createTenants/", method = RequestMethod.POST)
+	public WSResult createTenants(@RequestParam(value = "company") String company,
+			@RequestParam(value = "name") String name, @RequestParam(value = "email") String email,
+			@RequestParam(value = "password") String password, @RequestParam(value = "phone") String phone) {
+		return servie.createTenants(company, name, email, password, phone);
 	}
 
 }
