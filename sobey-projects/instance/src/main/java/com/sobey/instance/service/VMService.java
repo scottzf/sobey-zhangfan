@@ -454,7 +454,7 @@ public class VMService {
 
 				CustomizationLinuxOptions linuxOptions = new CustomizationLinuxOptions();
 				CustomizationLinuxPrep cLinuxPrep = new CustomizationLinuxPrep();
-				cLinuxPrep.setDomain("sobeyc.com");
+				cLinuxPrep.setDomain("sobey.com");
 				cLinuxPrep.setHostName(computerName);
 				cLinuxPrep.setHwClockUTC(true);
 				cLinuxPrep.setTimeZone("Asia/Shanghai");

@@ -104,6 +104,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+		</dependency>
+
+		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 		</dependency>
@@ -116,6 +122,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
+			<version>14.0.1</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 
 		<!-- GENERAL UTILS end -->
@@ -144,6 +151,19 @@
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
 		</dependency>
+
+
+		<!-- netapp -->
+		<dependency>
+			<groupId>com.netapp</groupId>
+			<artifactId>nmsdk-runtime</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.netapp</groupId>
+			<artifactId>ontap-api</artifactId>
+		</dependency>
+
 
 	</dependencies>
 

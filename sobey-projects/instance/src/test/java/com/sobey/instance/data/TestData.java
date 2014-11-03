@@ -13,21 +13,21 @@ public class TestData {
 		CloneVMParameter parameter = new CloneVMParameter();
 
 		parameter.setDescription("这个一个API测试程序");
-		parameter.setGateway("10.10.100.1");
-		parameter.setIpaddress("10.10.100.2");
+		parameter.setGateway("10.10.2.1");
+		parameter.setIpaddress("10.10.2.93");
 		parameter.setSubNetMask("255.255.255.0");
-		parameter.setvMName("10.10.100.2");
+		parameter.setvMName("oncommand");
 		parameter.setvMSUserName("Sobey");
-		parameter.setVlanId(100);
+		parameter.setVlanId(2);
 		parameter.setDatacenter(DataCenterEnum.XA.toString());
 
 		// Linux
-		parameter.setvMTemplateName("CnetOS6.5");
-		parameter.setvMTemplateOS("Linux");
+//		parameter.setvMTemplateName("CnetOS6.5");
+//		parameter.setvMTemplateOS("Linux");
 
 		// Windows
-		// parameter.setvMTemplateName("WinServer2008R2");
-		// parameter.setvMTemplateOS("Windows");
+		 parameter.setvMTemplateName("WinServer2008R2");
+		 parameter.setvMTemplateOS("Windows");
 		return parameter;
 	}
 

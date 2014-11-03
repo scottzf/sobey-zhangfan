@@ -30,6 +30,11 @@
 ###需要导入vijava的jar包
 * mvn install:install-file -Dfile=D:\vijava55b20130927.jar -DgroupId=com.vmware -DartifactId=vijava -Dversion=55b20130927 -Dpackaging=jar
 
+###需要导入netapp的jar包
+* mvn install:install-file -Dfile=D:\nmsdk-runtime-5.2.jar -DgroupId=com.netapp -DartifactId=nmsdk-runtime -Dversion=5.2 -Dpackaging=jar
+
+* mvn install:install-file -Dfile=D:\ontap-api-8.2.jar -DgroupId=com.netapp -DartifactId=ontap-api -Dversion=8.2 -Dpackaging=jar
+
 ###部署
  需要分布式部署，注意生成wsdl文件的URL路径需要和cmop-api中webservice配置文件中的URL路径相同。正确的部署流程应该是：
 

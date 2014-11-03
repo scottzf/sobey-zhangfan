@@ -49,6 +49,8 @@
 		<nitro.version>10.1</nitro.version>
 		<jsch.version>0.1.50</jsch.version>
 		<vijava.version>55b20130927</vijava.version>
+		<ontap.version>8.2</ontap.version>
+		<nmsdk.version>5.2</nmsdk.version>
 
 		<!-- Plugin的属性定义 -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -797,6 +799,19 @@
 				<groupId>com.vmware</groupId>
 				<artifactId>vijava</artifactId>
 				<version>${vijava.version}</version>
+			</dependency>
+
+			<!-- netapp -->
+			<dependency>
+				<groupId>com.netapp</groupId>
+				<artifactId>nmsdk-runtime</artifactId>
+				<version>${nmsdk.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.netapp</groupId>
+				<artifactId>ontap-api</artifactId>
+				<version>${ontap.version}</version>
 			</dependency>
 
 		</dependencies>
