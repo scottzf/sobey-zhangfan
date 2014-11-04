@@ -60,8 +60,8 @@ import com.sobey.generate.loadbalancer.ELBPublicIPParameter;
 import com.sobey.generate.loadbalancer.LoadbalancerSoapService;
 import com.sobey.generate.storage.CreateEs3Parameter;
 import com.sobey.generate.storage.DeleteEs3Parameter;
+import com.sobey.generate.storage.ModifytEs3RuleParameter;
 import com.sobey.generate.storage.MountEs3Parameter;
-import com.sobey.generate.storage.RemountEs3Parameter;
 import com.sobey.generate.storage.StorageSoapService;
 import com.sobey.generate.storage.UmountEs3Parameter;
 import com.sobey.generate.switches.ESGParameter;
@@ -123,8 +123,6 @@ public class ApiServiceImpl implements ApiService {
 	 * ESG的默认名.
 	 */
 	private static String default_esg_name = "默认策略";
-
-	private static String default_netapp_ip = "10.10.2.34";
 
 	@Override
 	public WSResult createTenants(TenantsDTO tenantsDTO) {
@@ -760,6 +758,14 @@ public class ApiServiceImpl implements ApiService {
 
 		WSResult result = new WSResult();
 
+		// TODO 通过算法获得负载最轻的netapp controller.
+
+		StorageDTO storageDTO = (StorageDTO) cmdbuildSoapService.findStorage(storageId).getDto();
+
+		// netapp controller IP
+		IpaddressDTO controllerIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(storageDTO.getIpaddress())
+				.getDto();
+
 		// Step.1 获得租户、vlan信息
 		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(es3DTO.getTenants()).getDto();
 
@@ -769,11 +775,15 @@ public class ApiServiceImpl implements ApiService {
 
 		CreateEs3Parameter createEs3Parameter = new CreateEs3Parameter();
 		createEs3Parameter.setVolumeName(VolumeName);
-		createEs3Parameter.setVolumeSize(Integer.valueOf(es3DTO.getDiskSize().intValue()).toString());
-		createEs3Parameter.setClientIPaddress(default_netapp_ip);// TODO 默认加上控制器IP
+		createEs3Parameter.setVolumeSize(es3DTO.getDiskSize().toString());
+		createEs3Parameter.setControllerIP(controllerIP.getDescription());
+		createEs3Parameter.setUsername(storageDTO.getUsername());
+		createEs3Parameter.setPassword(storageDTO.getPassword());
 
-		if (!WSResult.SUCESS.equals(storageSoapService.createEs3ByStorage(createEs3Parameter).getCode())) {
-			result.setError(WSResult.SYSTEM_ERROR, "ES3创建失败,请联系管理员.");
+		com.sobey.generate.storage.WSResult wsResult = storageSoapService.createEs3ByStorage(createEs3Parameter);
+
+		if (!WSResult.SUCESS.equals(wsResult.getCode())) {
+			result.setError(wsResult.getCode(), wsResult.getMessage());
 			return result;
 		}
 
@@ -812,9 +822,10 @@ public class ApiServiceImpl implements ApiService {
 		// Step.1 获得ECS、ES3、Storage、IP信息
 		Es3DTO es3dto = (Es3DTO) cmdbuildSoapService.findEs3(es3Id).getDto();
 		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
+		StorageDTO storageDTO = (StorageDTO) cmdbuildSoapService.findStorage(es3dto.getStorage()).getDto();
 
 		// Step.2 将访问IP列表写入netapp controller中
-		wirteMountRule(es3dto, ecsDTO);
+		modifEs3Rule(es3dto, ecsDTO);
 
 		// Step.3 将ES3 和ECS的关联关系写入cmdbuild
 		cmdbuildSoapService.createMapEcsEs3(ecsId, es3Id);
@@ -822,16 +833,18 @@ public class ApiServiceImpl implements ApiService {
 		// Step.4 挂载volume
 
 		// netapp的控制IP
-		IpaddressDTO storageIP = (IpaddressDTO) cmdbuildSoapService
-				.findIpaddress(es3dto.getStorageDTO().getIpaddress()).getDto();
+		IpaddressDTO controllerIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(
+				es3dto.getStorageDTO().getIpaddress()).getDto();
 
 		// ECS的IP
 		IpaddressDTO ecsIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
 
 		MountEs3Parameter mountEs3Parameter = new MountEs3Parameter();
-		mountEs3Parameter.setClientIPaddress(ecsIP.getDescription());
-		mountEs3Parameter.setNetAppIPaddress(storageIP.getDescription());
 		mountEs3Parameter.setVolumeName(es3dto.getVolumeName());
+		mountEs3Parameter.setClientIP(ecsIP.getDescription());
+		mountEs3Parameter.setUsername(storageDTO.getUsername());
+		mountEs3Parameter.setPassword(storageDTO.getPassword());
+		mountEs3Parameter.setControllerIP(controllerIP.getDescription());
 
 		if (!WSResult.SUCESS.equals(storageSoapService.mountEs3ByStorage(mountEs3Parameter).getCode())) {
 			result.setError(WSResult.SYSTEM_ERROR, "ES3挂载失败,请联系管理员.");
@@ -848,64 +861,32 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	/**
-	 * 向netapp控制器写入可挂载的权限.<br>
+	 * 修改netapp卷的Client Permissions,即允许哪些IP可以挂载卷.<br>
 	 * 
-	 * netapp的权限是要将所有的ip都写入控制器中,但是后面会将前面的规则覆盖掉.<br>
 	 * 
-	 * 为了保证规则完成,需要将es3关联的所有ECS查询出来放入after、before list中.
-	 * 
-	 * @param es3dto
-	 * @param ecsDTO
-	 */
-	private void wirteMountRule(Es3DTO es3dto, EcsDTO ecsDTO) {
-
-		List<String> list = getEcsIpaddressByEs3(es3dto);
-
-		// 如果为null加入默认的netapp控制器IP
-		if (list.isEmpty()) {
-			list.add(default_netapp_ip);
-		}
-
-		RemountEs3Parameter remountEs3Parameter = new RemountEs3Parameter();
-		remountEs3Parameter.setVolumeName(es3dto.getVolumeName());
-		remountEs3Parameter.getBeforeClientIPaddress().addAll(list);
-
-		list.remove(default_netapp_ip);
-		list.remove(ecsDTO.getIpaddressDTO().getDescription());// 先去重
-		list.add(ecsDTO.getIpaddressDTO().getDescription());// 将需要挂载的ECS IP放入list中.
-
-		remountEs3Parameter.getAfterClientIPaddress().addAll(list);
-
-		storageSoapService.remountEs3ByStorage(remountEs3Parameter);
-	}
-
-	/**
-	 * 将指定的ES3从netapp控制器中排除权限<br>
-	 * 
-	 * netapp的权限是要将所有的ip都写入控制器中,但是后面会将前面的规则覆盖掉.
-	 * 
-	 * 为了保证规则完成,需要将es3关联的所有ECS查询出来放入after、before list中.
+	 * 为了保证规则完整,将es3关联的所有ECS的IP查询出来放入list中.
 	 * 
 	 * @param es3dto
 	 * @param ecsDTO
 	 */
-	private void wirteUmountRule(Es3DTO es3dto, EcsDTO ecsDTO) {
+	private void modifEs3Rule(Es3DTO es3dto, EcsDTO ecsDTO) {
 
 		List<String> list = getEcsIpaddressByEs3(es3dto);
 
-		RemountEs3Parameter remountEs3Parameter = new RemountEs3Parameter();
-		remountEs3Parameter.setVolumeName(es3dto.getVolumeName());
-		remountEs3Parameter.getBeforeClientIPaddress().addAll(list);
+		StorageDTO storageDTO = (StorageDTO) cmdbuildSoapService.findStorage(es3dto.getStorage()).getDto();
+		// netapp controller IP
+		IpaddressDTO controllerIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(storageDTO.getIpaddress())
+				.getDto();
 
-		list.remove(ecsDTO.getIpaddressDTO().getDescription());// 将需要卸载的ECS IP从List中删除.
+		ModifytEs3RuleParameter modifytEs3RuleParameter = new ModifytEs3RuleParameter();
 
-		if (list.isEmpty()) {
-			list.add(default_netapp_ip);
-		}
+		modifytEs3RuleParameter.setVolumeName(es3dto.getVolumeName());
+		modifytEs3RuleParameter.setControllerIP(controllerIP.getDescription());
+		modifytEs3RuleParameter.setUsername(storageDTO.getUsername());
+		modifytEs3RuleParameter.setPassword(storageDTO.getPassword());
+		modifytEs3RuleParameter.getClientIPs().addAll(list);
 
-		remountEs3Parameter.getAfterClientIPaddress().addAll(list);
-
-		storageSoapService.remountEs3ByStorage(remountEs3Parameter);
+		storageSoapService.modifytEs3RuleParameterByStorage(modifytEs3RuleParameter);
 	}
 
 	/**
@@ -938,11 +919,11 @@ public class ApiServiceImpl implements ApiService {
 		/**
 		 * Step.1 获得ECS、ES3信息
 		 * 
-		 * Step.2 ES3的IP从netapp控制器中排除权限<br>
+		 * Step.2 卸载volume
 		 * 
-		 * Step.3 卸载volume
+		 * Step.3 删除ES3 和ECS的关联关系,写入cmdbuild
 		 * 
-		 * Step.4 将ES3 和ECS的关联关系写入cmdbuild
+		 * Step.4 ES3的IP从netapp控制器中排除权限
 		 * 
 		 * Step.5 写入日志
 		 */
@@ -952,24 +933,33 @@ public class ApiServiceImpl implements ApiService {
 		// Step.1 获得ECS、ES3、Storage、IP信息
 		Es3DTO es3dto = (Es3DTO) cmdbuildSoapService.findEs3(es3Id).getDto();
 		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
+		StorageDTO storageDTO = (StorageDTO) cmdbuildSoapService.findStorage(es3dto.getStorage()).getDto();
+		// netapp controller IP
+		IpaddressDTO controllerIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(storageDTO.getIpaddress())
+				.getDto();
 
-		// Step.2 ES3的IP从netapp控制器中排除权限<br>
-		wirteUmountRule(es3dto, ecsDTO);
-
-		// Step.3 卸载volume
+		// Step.2 卸载volume
 		// ECS的IP
 		IpaddressDTO ecsIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
 
 		UmountEs3Parameter umountEs3Parameter = new UmountEs3Parameter();
-		umountEs3Parameter.setClientIPaddress(ecsIP.getDescription());
+		umountEs3Parameter.setClientIP(ecsIP.getDescription());
+		umountEs3Parameter.setUsername(storageDTO.getUsername());
+		umountEs3Parameter.setPassword(storageDTO.getPassword());
+		umountEs3Parameter.setControllerIP(controllerIP.getDescription());
 
-		if (!WSResult.SUCESS.equals(storageSoapService.umountEs3ByStorage(umountEs3Parameter).getCode())) {
-			result.setError(WSResult.SYSTEM_ERROR, "ES3卸载失败,请联系管理员.");
+		com.sobey.generate.storage.WSResult wsResult = storageSoapService.umountEs3ByStorage(umountEs3Parameter);
+
+		if (!WSResult.SUCESS.equals(wsResult.getCode())) {
+			result.setError(wsResult.getCode(), wsResult.getMessage());
 			return result;
 		}
 
-		// Step.4 将ES3 和ECS的关联关系写入cmdbuild
+		// Step.3 删除ES3 和ECS的关联关系,写入cmdbuild
 		cmdbuildSoapService.deleteMapEcsEs3(ecsId, es3Id);
+
+		// Step.4 ES3的IP从netapp控制器中排除权限
+		modifEs3Rule(es3dto, ecsDTO);
 
 		// Step.5 写入日志
 		createLog(es3dto.getTenants(), LookUpConstants.ServiceType.ES3.getValue(),
@@ -1003,8 +993,10 @@ public class ApiServiceImpl implements ApiService {
 		DeleteEs3Parameter deleteEs3Parameter = new DeleteEs3Parameter();
 		deleteEs3Parameter.setVolumeName(es3dto.getVolumeName());
 
-		if (!WSResult.SUCESS.equals(storageSoapService.deleteEs3ByStorage(deleteEs3Parameter).getCode())) {
-			result.setError(WSResult.SYSTEM_ERROR, "ES3删除失败,请联系管理员.");
+		com.sobey.generate.storage.WSResult wsResult = storageSoapService.deleteEs3ByStorage(deleteEs3Parameter);
+
+		if (!WSResult.SUCESS.equals(wsResult.getCode())) {
+			result.setError(wsResult.getCode(), wsResult.getMessage());
 			return result;
 		}
 

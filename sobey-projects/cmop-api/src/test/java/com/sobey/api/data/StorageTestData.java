@@ -1,15 +1,15 @@
 package com.sobey.api.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.sobey.generate.storage.CreateEs3Parameter;
 import com.sobey.generate.storage.DeleteEs3Parameter;
 import com.sobey.generate.storage.MountEs3Parameter;
-import com.sobey.generate.storage.RemountEs3Parameter;
 import com.sobey.generate.storage.UmountEs3Parameter;
 
 public class StorageTestData {
+
+	private static String host = "10.10.2.34";
+	private static String userName = "root";
+	private static String password = "XA@S0bey";
 
 	public static CreateEs3Parameter randomCreateEs3Parameter() {
 
@@ -17,7 +17,9 @@ public class StorageTestData {
 
 		parameter.setVolumeName("liukai");
 		parameter.setVolumeSize("20");
-		parameter.setClientIPaddress("10.10.2.42");
+		parameter.setControllerIP(host);
+		parameter.setUsername(userName);
+		parameter.setPassword(password);
 
 		return parameter;
 	}
@@ -27,6 +29,9 @@ public class StorageTestData {
 		DeleteEs3Parameter parameter = new DeleteEs3Parameter();
 
 		parameter.setVolumeName("liukai");
+		parameter.setControllerIP(host);
+		parameter.setUsername(userName);
+		parameter.setPassword(password);
 
 		return parameter;
 	}
@@ -36,8 +41,10 @@ public class StorageTestData {
 		MountEs3Parameter parameter = new MountEs3Parameter();
 
 		parameter.setVolumeName("liukai");
-		parameter.setNetAppIPaddress("10.10.2.34");
-		parameter.setClientIPaddress("10.10.2.42");
+		parameter.setClientIP("10.10.101.1");
+		parameter.setControllerIP(host);
+		parameter.setUsername(userName);
+		parameter.setPassword(password);
 
 		return parameter;
 
@@ -47,28 +54,10 @@ public class StorageTestData {
 
 		UmountEs3Parameter parameter = new UmountEs3Parameter();
 
-		parameter.setClientIPaddress("10.10.2.42");
-
-		return parameter;
-	}
-
-	public static RemountEs3Parameter randomRemountEs3Parameter() {
-
-		RemountEs3Parameter parameter = new RemountEs3Parameter();
-
-		parameter.setVolumeName("liukai");
-
-		List<String> beforeClientIPaddress = new ArrayList<String>();
-		beforeClientIPaddress.add("10.10.2.34");
-		beforeClientIPaddress.add("10.10.1.42");
-
-		List<String> afterClientIPaddress = new ArrayList<String>();
-		afterClientIPaddress.add("10.10.2.34");
-		afterClientIPaddress.add("10.10.2.41");
-		afterClientIPaddress.add("10.10.2.42");
-
-		parameter.getBeforeClientIPaddress().addAll(beforeClientIPaddress);
-		parameter.getAfterClientIPaddress().addAll(afterClientIPaddress);
+		parameter.setClientIP("10.10.101.1");
+		parameter.setControllerIP(host);
+		parameter.setUsername(userName);
+		parameter.setPassword(password);
 
 		return parameter;
 	}
