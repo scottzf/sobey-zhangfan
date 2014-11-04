@@ -12,15 +12,15 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.DeviceBasicDTO;
 @XmlType(name = "StorageDTO", namespace = WsConstants.NS)
 public class StorageDTO extends DeviceBasicDTO {
 
-	private String configText;
+	private String username;
 	private String password;
 
-	public String getConfigText() {
-		return configText;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setConfigText(String configText) {
-		this.configText = configText;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {
