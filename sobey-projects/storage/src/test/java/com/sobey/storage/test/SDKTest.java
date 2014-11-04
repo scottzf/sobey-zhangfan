@@ -58,37 +58,28 @@ public class SDKTest {
 	public void VolumeCreate() {
 		VolumeCreateRequest request = new VolumeCreateRequest();
 		request.withContainingAggrName("aggr0").withSize("20M").withVolume("xman");
-
 		runner.run(request);
-
 	}
 
 	@Test
 	public void VolumeDestroy() {
-
 		VolumeDestroyRequest request = new VolumeDestroyRequest();
 		request.setName("xman");
-
 		runner.run(request);
-
 	}
 
 	@Test
 	public void VolumeOffline() {
-
 		// 脱机
 		VolumeOfflineRequest request = new VolumeOfflineRequest();
 		request.setName("xman");
-
 		runner.run(request);
-
 	}
 
 	@Test
 	public void ExportfsListRules() {
 
 		// 获得卷挂载信息
-
 		NfsExportfsListRulesRequest ruleGetRequest = new NfsExportfsListRulesRequest();
 		ruleGetRequest.setPathname("/vol/xman");
 

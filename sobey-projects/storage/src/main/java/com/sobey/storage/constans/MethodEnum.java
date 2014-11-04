@@ -7,5 +7,5 @@ package com.sobey.storage.constans;
  * 
  */
 public enum MethodEnum {
-	create, delete, mount, umount, remount;
+	create, delete, mount, umount;
 }

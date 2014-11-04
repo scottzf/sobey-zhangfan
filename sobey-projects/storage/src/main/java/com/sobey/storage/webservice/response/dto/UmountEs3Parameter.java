@@ -8,10 +8,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.sobey.storage.constans.WsConstants;
 
 /**
- * netapp上,执行脚本所需参数的对象:
  * 
  * <pre>
- * clientIPaddress		客户端IP
+ * clientIP			卸载客户端IP
+ * controllerIP		netapp控制器IP
+ * username			netapp控制器登录名
+ * password			netapp控制器登录密码
  * </pre>
  * 
  * @author Administrator
@@ -22,16 +24,55 @@ import com.sobey.storage.constans.WsConstants;
 public class UmountEs3Parameter {
 
 	/**
-	 * 客户端IP
+	 * 卸载客户端IP
 	 */
-	private String clientIPaddress;
+	private String clientIP;
 
-	public String getClientIPaddress() {
-		return clientIPaddress;
+	/**
+	 * netapp控制器IP
+	 */
+	private String controllerIP;
+
+	/**
+	 * netapp控制器登录名
+	 */
+	private String username;
+
+	/**
+	 * netapp控制器登录密码
+	 */
+	private String password;
+
+	public String getClientIP() {
+		return clientIP;
 	}
 
-	public void setClientIPaddress(String clientIPaddress) {
-		this.clientIPaddress = clientIPaddress;
+	public void setClientIP(String clientIP) {
+		this.clientIP = clientIP;
+	}
+
+	public String getControllerIP() {
+		return controllerIP;
+	}
+
+	public void setControllerIP(String controllerIP) {
+		this.controllerIP = controllerIP;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	/**

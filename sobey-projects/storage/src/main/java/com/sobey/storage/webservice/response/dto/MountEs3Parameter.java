@@ -8,12 +8,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.sobey.storage.constans.WsConstants;
 
 /**
- * netapp上,执行脚本所需参数的对象:
- * 
  * <pre>
  * volumeName		卷名
- * clientIPaddress		客户端IP
- * netAppIPaddress		netApp Ip
+ * clientIP			挂载客户端IP
+ * controllerIP		netapp控制器IP
+ * username			netapp控制器登录名
+ * password			netapp控制器登录密码
  * </pre>
  * 
  * @author Administrator
@@ -29,14 +29,24 @@ public class MountEs3Parameter {
 	private String volumeName;
 
 	/**
-	 * 客户端IP
+	 * 挂载客户端IP
 	 */
-	private String clientIPaddress;
+	private String clientIP;
 
 	/**
-	 * netapp IP
+	 * netapp控制器IP
 	 */
-	private String netAppIPaddress;
+	private String controllerIP;
+
+	/**
+	 * netapp控制器登录名
+	 */
+	private String username;
+
+	/**
+	 * netapp控制器登录密码
+	 */
+	private String password;
 
 	public String getVolumeName() {
 		return volumeName;
@@ -46,20 +56,36 @@ public class MountEs3Parameter {
 		this.volumeName = volumeName;
 	}
 
-	public String getClientIPaddress() {
-		return clientIPaddress;
+	public String getClientIP() {
+		return clientIP;
 	}
 
-	public void setClientIPaddress(String clientIPaddress) {
-		this.clientIPaddress = clientIPaddress;
+	public void setClientIP(String clientIP) {
+		this.clientIP = clientIP;
 	}
 
-	public String getNetAppIPaddress() {
-		return netAppIPaddress;
+	public String getControllerIP() {
+		return controllerIP;
 	}
 
-	public void setNetAppIPaddress(String netAppIPaddress) {
-		this.netAppIPaddress = netAppIPaddress;
+	public void setControllerIP(String controllerIP) {
+		this.controllerIP = controllerIP;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	/**

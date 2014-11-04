@@ -6,8 +6,9 @@ import javax.jws.WebService;
 import com.sobey.storage.constans.WsConstants;
 import com.sobey.storage.webservice.response.dto.CreateEs3Parameter;
 import com.sobey.storage.webservice.response.dto.DeleteEs3Parameter;
+import com.sobey.storage.webservice.response.dto.Es3SizeParameter;
+import com.sobey.storage.webservice.response.dto.ModifytEs3RuleParameter;
 import com.sobey.storage.webservice.response.dto.MountEs3Parameter;
-import com.sobey.storage.webservice.response.dto.RemountEs3Parameter;
 import com.sobey.storage.webservice.response.dto.UmountEs3Parameter;
 import com.sobey.storage.webservice.response.result.WSResult;
 
@@ -21,7 +22,7 @@ import com.sobey.storage.webservice.response.result.WSResult;
 public interface StorageSoapService {
 
 	/**
-	 * 在netapp上执行脚本，创建Volume
+	 * 创建Volume
 	 * 
 	 * @param createEs3Parameter
 	 *            {@link CreateEs3Parameter}
@@ -30,7 +31,7 @@ public interface StorageSoapService {
 	WSResult createEs3ByStorage(@WebParam(name = "createEs3Parameter") CreateEs3Parameter createEs3Parameter);
 
 	/**
-	 * 在netapp上执行脚本，删除Volume
+	 * 删除Volume
 	 * 
 	 * @param deleteEs3Parameter
 	 *            {@link DeleteEs3Parameter}
@@ -39,7 +40,7 @@ public interface StorageSoapService {
 	WSResult deleteEs3ByStorage(@WebParam(name = "deleteEs3Parameter") DeleteEs3Parameter deleteEs3Parameter);
 
 	/**
-	 * 在netapp上执行脚本，挂载Volume
+	 * 通过在实例上执行脚本，挂载Volume
 	 * 
 	 * @param mountEs3Parameter
 	 *            {@link MountEs3Parameter}
@@ -48,7 +49,7 @@ public interface StorageSoapService {
 	WSResult mountEs3ByStorage(@WebParam(name = "mountEs3Parameter") MountEs3Parameter mountEs3Parameter);
 
 	/**
-	 * 在netapp上执行脚本，卸载Volume
+	 * 通过在实例上执行脚本，卸载Volume
 	 * 
 	 * @param umountEs3Parameter
 	 *            {@link UmountEs3Parameter}
@@ -57,12 +58,28 @@ public interface StorageSoapService {
 	WSResult umountEs3ByStorage(@WebParam(name = "umountEs3Parameter") UmountEs3Parameter umountEs3Parameter);
 
 	/**
-	 * 在netapp上执行脚本，修改Volume
+	 * 修改netapp卷的Client Permissions,即允许哪些IP可以挂载卷.
 	 * 
-	 * @param remountEs3Parameter
-	 *            {@link RemountEs3Parameter}
+	 * @param modifytEs3RuleParameter
 	 * @return
 	 */
-	WSResult remountEs3ByStorage(@WebParam(name = "remountEs3Parameter") RemountEs3Parameter remountEs3Parameter);
+	WSResult modifytEs3RuleParameterByStorage(
+			@WebParam(name = "modifytEs3RuleParameter") ModifytEs3RuleParameter modifytEs3RuleParameter);
+
+	/**
+	 * 获得卷总大小(bytes)
+	 * 
+	 * @param es3SizeParameter
+	 * @return
+	 */
+	String getEs3SizeTotal(@WebParam(name = "es3SizeParameter") Es3SizeParameter es3SizeParameter);
+
+	/**
+	 * 获得卷使用大小(bytes)
+	 * 
+	 * @param es3SizeParameter
+	 * @return
+	 */
+	String getEs3SizeUsed(@WebParam(name = "es3SizeParameter") Es3SizeParameter es3SizeParameter);
 
 }

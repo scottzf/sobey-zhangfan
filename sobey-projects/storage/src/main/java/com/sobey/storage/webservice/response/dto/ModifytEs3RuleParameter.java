@@ -1,5 +1,7 @@
 package com.sobey.storage.webservice.response.dto;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -10,7 +12,7 @@ import com.sobey.storage.constans.WsConstants;
 /**
  * <pre>
  * volumeName		卷名
- * volumeSize		卷大小,后面跟单位 eg:20M
+ * clientIPs		需要写入netapp Client Permissions 里的ip
  * controllerIP		netapp控制器IP
  * username			netapp控制器登录名
  * password			netapp控制器登录密码
@@ -19,19 +21,14 @@ import com.sobey.storage.constans.WsConstants;
  * @author Administrator
  * 
  */
-@XmlRootElement(name = "CreateEs3Parameter")
-@XmlType(name = "CreateEs3Parameter", namespace = WsConstants.NS)
-public class CreateEs3Parameter {
+@XmlRootElement(name = "ModifytEs3RuleParameter")
+@XmlType(name = "ModifytEs3RuleParameter", namespace = WsConstants.NS)
+public class ModifytEs3RuleParameter {
 
 	/**
 	 * 卷名
 	 */
 	private String volumeName;
-
-	/**
-	 * 卷大小,后面跟单位 eg:20M
-	 */
-	private String volumeSize;
 
 	/**
 	 * netapp控制器IP
@@ -48,20 +45,17 @@ public class CreateEs3Parameter {
 	 */
 	private String password;
 
+	/**
+	 * 需要写入netapp Client Permissions 里的ip
+	 */
+	private List<String> clientIPs;
+
 	public String getVolumeName() {
 		return volumeName;
 	}
 
 	public void setVolumeName(String volumeName) {
 		this.volumeName = volumeName;
-	}
-
-	public String getVolumeSize() {
-		return volumeSize;
-	}
-
-	public void setVolumeSize(String volumeSize) {
-		this.volumeSize = volumeSize;
 	}
 
 	public String getControllerIP() {
@@ -86,6 +80,14 @@ public class CreateEs3Parameter {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public List<String> getClientIPs() {
+		return clientIPs;
+	}
+
+	public void setClientIPs(List<String> clientIPs) {
+		this.clientIPs = clientIPs;
 	}
 
 	/**

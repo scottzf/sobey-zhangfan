@@ -10,7 +10,6 @@ import com.sobey.storage.constans.WsConstants;
 /**
  * <pre>
  * volumeName		卷名
- * volumeSize		卷大小,后面跟单位 eg:20M
  * controllerIP		netapp控制器IP
  * username			netapp控制器登录名
  * password			netapp控制器登录密码
@@ -19,19 +18,14 @@ import com.sobey.storage.constans.WsConstants;
  * @author Administrator
  * 
  */
-@XmlRootElement(name = "CreateEs3Parameter")
-@XmlType(name = "CreateEs3Parameter", namespace = WsConstants.NS)
-public class CreateEs3Parameter {
+@XmlRootElement(name = "Es3SizeInfoParameter")
+@XmlType(name = "Es3SizeInfoParameter", namespace = WsConstants.NS)
+public class Es3SizeParameter {
 
 	/**
 	 * 卷名
 	 */
 	private String volumeName;
-
-	/**
-	 * 卷大小,后面跟单位 eg:20M
-	 */
-	private String volumeSize;
 
 	/**
 	 * netapp控制器IP
@@ -54,14 +48,6 @@ public class CreateEs3Parameter {
 
 	public void setVolumeName(String volumeName) {
 		this.volumeName = volumeName;
-	}
-
-	public String getVolumeSize() {
-		return volumeSize;
-	}
-
-	public void setVolumeSize(String volumeSize) {
-		this.volumeSize = volumeSize;
 	}
 
 	public String getControllerIP() {
