@@ -44,6 +44,8 @@ public class NetAppService {
 
 	/**
 	 * netapp存储的基本单位 M
+	 * 
+	 * TODO 注意存储单位.测试环境无法创建GB大小的volume.故暂时用MB.
 	 */
 	private static String Default_StorageUntil = "M";
 

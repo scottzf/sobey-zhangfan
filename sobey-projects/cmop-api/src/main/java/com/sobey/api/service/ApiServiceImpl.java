@@ -1,10 +1,12 @@
 package com.sobey.api.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -101,8 +103,6 @@ public class ApiServiceImpl implements ApiService {
 
 	// 临时数据
 	public static Integer serverId = 258;
-
-	public static Integer storageId = 267;
 
 	/**
 	 * 默认管理网段:10.10.1.0
@@ -743,6 +743,55 @@ public class ApiServiceImpl implements ApiService {
 		return map;
 	}
 
+	/**
+	 * 获得负载最小的netapp controller
+	 * 
+	 * @return
+	 */
+	public StorageDTO minimumLoadStorage() {
+
+		/**
+		 * 遍历CMDBuild中所有的storage, 并将属于storage的ES3的存储容量相加放入一个集合.
+		 * 
+		 * 同时将存储容量和storage对象分别作为key,value存入一个hashmap.
+		 * 
+		 * 对集合排序后,获得值最小的存储容量,并根据存储容量获得storage对象.
+		 */
+
+		HashMap<String, Object> searchMap = new HashMap<String, Object>();
+		List<Object> storageDTOs = cmdbuildSoapService.getStorageList(CMDBuildUtil.wrapperSearchParams(searchMap))
+				.getDtoList().getDto();
+
+		List<Double> totals = new ArrayList<Double>();
+		HashMap<Double, Object> map = new HashMap<Double, Object>();
+
+		for (Object object : storageDTOs) {
+
+			StorageDTO storageDTO = (StorageDTO) object;
+
+			HashMap<String, Object> es3Map = new HashMap<String, Object>();
+			es3Map.put("EQ_storage", storageDTO.getId());
+
+			List<Object> es3List = cmdbuildSoapService.getEs3List(CMDBuildUtil.wrapperSearchParams(es3Map))
+					.getDtoList().getDto();
+
+			Double totalSize = NumberUtils.DOUBLE_ZERO;
+
+			for (Object obj : es3List) {
+				Es3DTO es3DTO = (Es3DTO) obj;
+				totalSize = MathsUtil.add(totalSize, es3DTO.getDiskSize());
+			}
+			totals.add(totalSize);
+
+			map.put(totalSize, storageDTO);
+
+		}
+
+		Collections.sort(totals);
+
+		return (StorageDTO) map.get(totals.get(0));
+	}
+
 	@Override
 	public WSResult createES3(Es3DTO es3DTO) {
 
@@ -758,9 +807,8 @@ public class ApiServiceImpl implements ApiService {
 
 		WSResult result = new WSResult();
 
-		// TODO 通过算法获得负载最轻的netapp controller.
-
-		StorageDTO storageDTO = (StorageDTO) cmdbuildSoapService.findStorage(storageId).getDto();
+		// 通过算法获得负载最轻的netapp controller.
+		StorageDTO storageDTO = minimumLoadStorage();
 
 		// netapp controller IP
 		IpaddressDTO controllerIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(storageDTO.getIpaddress())
@@ -789,7 +837,7 @@ public class ApiServiceImpl implements ApiService {
 
 		// Step.3 CMDBuild中创建ES3信息
 		es3DTO.setVolumeName(VolumeName);
-		es3DTO.setStorage(storageId);// TODO 通过算法得出负载最轻的Storage(NetappController).
+		es3DTO.setStorage(storageDTO.getId());
 
 		cmdbuildSoapService.createEs3(es3DTO);
 
