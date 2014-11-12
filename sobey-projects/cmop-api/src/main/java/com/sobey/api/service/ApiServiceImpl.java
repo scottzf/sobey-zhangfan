@@ -16,7 +16,6 @@ import com.sobey.api.webservice.response.result.WSResult;
 import com.sobey.core.utils.MathsUtil;
 import com.sobey.generate.cmdbuild.CmdbuildSoapService;
 import com.sobey.generate.cmdbuild.DTOListResult;
-import com.sobey.generate.cmdbuild.DTOResult;
 import com.sobey.generate.cmdbuild.DnsDTO;
 import com.sobey.generate.cmdbuild.DnsPolicyDTO;
 import com.sobey.generate.cmdbuild.EcsDTO;
@@ -695,34 +694,84 @@ public class ApiServiceImpl implements ApiService {
 
 		StringBuffer sb = new StringBuffer();
 
+		List<String> cmbuildList = new ArrayList<String>(); // CMDB中所有ECS list
+		List<String> vmwareList = new ArrayList<String>(); // vsphere中所有VM list
+
+		HashMap<String, Object> allEcsMap = new HashMap<String, Object>();
+		List<Object> list = cmdbuildSoapService.getEcsList(CMDBuildUtil.wrapperSearchParams(allEcsMap)).getDtoList()
+				.getDto();
+
+		for (Object object : list) {
+			EcsDTO ecsDTO = (EcsDTO) object;
+			cmbuildList.add(ecsDTO.getDescription());
+		}
+
+		for (java.util.Map.Entry<String, String> entry : vcenterMap.entrySet()) {
+			vmwareList.add(entry.getKey());
+		}
+
+		Collections.sort(cmbuildList);
+		Collections.sort(vmwareList);
+
+		// 去重,如果cmbuild里和vmware中对比有多余的,说明vm中实际不存在该VM,删除之.
+		cmbuildList.removeAll(vmwareList);
+
+		for (String str : cmbuildList) {
+			HashMap<String, Object> ecsMap = new HashMap<String, Object>();
+			ecsMap.put("EQ_description", str);
+			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcsByParams(CMDBuildUtil.wrapperSearchParams(ecsMap))
+					.getDto();
+
+			destroyECS(ecsDTO.getId());
+		}
+
 		for (java.util.Map.Entry<String, String> entry : vcenterMap.entrySet()) {
 
-			// Step.2 获得CMDBuild中的ECS和Server的关联关系
-			// 根据VM的名称获得CMDBuild中的对象Ecs
+			// 根据Host的名称获得CMDB中的对象Server
+			HashMap<String, Object> serverMap = new HashMap<String, Object>();
+			serverMap.put("EQ_description", entry.getValue());
+			ServerDTO serverDTO = (ServerDTO) cmdbuildSoapService.findServerByParams(
+					CMDBuildUtil.wrapperSearchParams(serverMap)).getDto();
+
+			// 根据VM的名称获得CMDB中的对象ECS
 			HashMap<String, Object> ecsMap = new HashMap<String, Object>();
 			ecsMap.put("EQ_description", entry.getKey());
-			DTOResult dtoResult = cmdbuildSoapService.findEcsByParams(CMDBuildUtil.wrapperSearchParams(ecsMap));
-			EcsDTO ecsDTO = (EcsDTO) dtoResult.getDto();
+			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcsByParams(CMDBuildUtil.wrapperSearchParams(ecsMap))
+					.getDto();
 
-			// 根据Host的名称获得CMDB中的对象Server
-			ServerDTO serverDTO = (ServerDTO) cmdbuildSoapService.findServer(ecsDTO.getServer()).getDto();
+			if (ecsDTO != null) {// ECS在CMDB中存在,更新关联关系
 
-			// Step.3 比较两个关联关系,已从vcenter中获得的关联关系为准,对CMDBuild数据进行更新
-			if (!entry.getValue().equals(serverDTO.getCode())) {
+				// 根据VM的名称获得在CMDB中关联的对象Server
+				ServerDTO serverCMDB = (ServerDTO) cmdbuildSoapService.findServer(ecsDTO.getServer()).getDto();
 
+				System.out.println("vcenter中对应的宿主机:" + entry.getValue());
+				System.out.println("CMDBuild中对应的宿主机:" + serverDTO.getDescription());
+				System.out.println();
 				sb.append("vcenter中对应的宿主机:" + entry.getValue() + "<br>");
 				sb.append("CMDBuild中对应的宿主机:" + serverDTO.getDescription() + "<br>");
 				sb.append("--------------------------------------------------");
 
-				HashMap<String, Object> serverMap = new HashMap<String, Object>();
-				serverMap.put("EQ_description", entry.getValue());
+				// 比较两个关联关系,已从vcenter中获得的关联关系为准,对CMDBuild数据进行更新
+				if (!entry.getValue().equals(serverCMDB.getCode())) {
+					ecsDTO.setServer(serverDTO.getId());
+					cmdbuildSoapService.updateEcs(ecsDTO.getId(), ecsDTO);
+				}
 
-				ServerDTO serverDTO2 = (ServerDTO) cmdbuildSoapService.findServerByParams(
-						CMDBuildUtil.wrapperSearchParams(serverMap)).getDto();
+			} else {// CMDBuild中ECS不存在,新增一个
 
-				ecsDTO.setServer(serverDTO2.getId());
-				cmdbuildSoapService.updateEcs(ecsDTO.getId(), ecsDTO);
+				EcsDTO newEcsDTO = new EcsDTO();
+				newEcsDTO.setAgentType(LookUpConstants.AgentType.VMware.getValue());
+				newEcsDTO.setDescription(entry.getKey());
+				newEcsDTO.setRemark(entry.getKey());
+
+				// TODO 参数必须,需要想办法
+				newEcsDTO.setEcsSpec(117);
+				newEcsDTO.setIdc(108);
+				newEcsDTO.setTenants(533);
+
+				cmdbuildSoapService.createEcs(newEcsDTO);
 			}
+
 		}
 
 		return sb.toString();
@@ -2123,7 +2172,9 @@ public class ApiServiceImpl implements ApiService {
 	public void deleteHost(Integer ecsId) {
 		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
 		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
-		zabbixSoapService.deleleHost(ipaddressDTO.getDescription());
+		if (ipaddressDTO != null) {
+			zabbixSoapService.deleleHost(ipaddressDTO.getDescription());
+		}
 	}
 
 	@Override
