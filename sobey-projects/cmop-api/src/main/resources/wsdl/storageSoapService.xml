@@ -7,13 +7,15 @@
 
   <xs:element name="DeleteEs3Parameter" type="tns:DeleteEs3Parameter"/>
 
-  <xs:element name="Es3SizeInfoParameter" type="tns:Es3SizeInfoParameter"/>
+  <xs:element name="Es3SizeParameter" type="tns:Es3SizeParameter"/>
 
   <xs:element name="ModifytEs3RuleParameter" type="tns:ModifytEs3RuleParameter"/>
 
   <xs:element name="MountEs3Parameter" type="tns:MountEs3Parameter"/>
 
   <xs:element name="UmountEs3Parameter" type="tns:UmountEs3Parameter"/>
+
+  <xs:element name="VolumeInfoDTO" type="tns:VolumeInfoDTO"/>
 
   <xs:element name="createEs3ByStorage" type="tns:createEs3ByStorage"/>
 
@@ -31,6 +33,10 @@
 
   <xs:element name="getEs3SizeUsedResponse" type="tns:getEs3SizeUsedResponse"/>
 
+  <xs:element name="getVolumeInfoDTO" type="tns:getVolumeInfoDTO"/>
+
+  <xs:element name="getVolumeInfoDTOResponse" type="tns:getVolumeInfoDTOResponse"/>
+
   <xs:element name="modifytEs3RuleParameterByStorage" type="tns:modifytEs3RuleParameterByStorage"/>
 
   <xs:element name="modifytEs3RuleParameterByStorageResponse" type="tns:modifytEs3RuleParameterByStorageResponse"/>
@@ -43,18 +49,62 @@
 
   <xs:element name="umountEs3ByStorageResponse" type="tns:umountEs3ByStorageResponse"/>
 
-  <xs:complexType name="getEs3SizeUsed">
+  <xs:complexType name="getVolumeInfoDTO">
     <xs:sequence>
-      <xs:element minOccurs="0" name="es3SizeParameter" type="tns:Es3SizeInfoParameter"/>
+      <xs:element minOccurs="0" name="es3SizeParameter" type="tns:Es3SizeParameter"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="Es3SizeInfoParameter">
+  <xs:complexType name="Es3SizeParameter">
     <xs:sequence>
       <xs:element minOccurs="0" name="controllerIP" type="xs:string"/>
       <xs:element minOccurs="0" name="password" type="xs:string"/>
       <xs:element minOccurs="0" name="username" type="xs:string"/>
       <xs:element minOccurs="0" name="volumeName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getVolumeInfoDTOResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOListResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DTOListResult">
+    <xs:complexContent>
+      <xs:extension base="tns:WSResult">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="dtoList">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="dto" type="xs:anyType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="WSResult">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="code" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="VolumeInfoDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="availableSize" type="xs:string"/>
+      <xs:element minOccurs="0" name="name" type="xs:string"/>
+      <xs:element minOccurs="0" name="totalSize" type="xs:string"/>
+      <xs:element minOccurs="0" name="usedSize" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getEs3SizeUsed">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="es3SizeParameter" type="tns:Es3SizeParameter"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -66,7 +116,7 @@
 
   <xs:complexType name="getEs3SizeTotal">
     <xs:sequence>
-      <xs:element minOccurs="0" name="es3SizeParameter" type="tns:Es3SizeInfoParameter"/>
+      <xs:element minOccurs="0" name="es3SizeParameter" type="tns:Es3SizeParameter"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -95,13 +145,6 @@
   <xs:complexType name="mountEs3ByStorageResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="WSResult">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="code" type="xs:string"/>
-      <xs:element minOccurs="0" name="message" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -201,6 +244,10 @@
     <wsdl:part element="tns:deleteEs3ByStorage" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getVolumeInfoDTO">
+    <wsdl:part element="tns:getVolumeInfoDTO" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getEs3SizeUsedResponse">
     <wsdl:part element="tns:getEs3SizeUsedResponse" name="parameters">
     </wsdl:part>
@@ -237,19 +284,29 @@
     <wsdl:part element="tns:createEs3ByStorageResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="modifytEs3RuleParameterByStorage">
-    <wsdl:part element="tns:modifytEs3RuleParameterByStorage" name="parameters">
+  <wsdl:message name="getVolumeInfoDTOResponse">
+    <wsdl:part element="tns:getVolumeInfoDTOResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="modifytEs3RuleParameterByStorageResponse">
-    <wsdl:part element="tns:modifytEs3RuleParameterByStorageResponse" name="parameters">
+  <wsdl:message name="modifytEs3RuleParameterByStorage">
+    <wsdl:part element="tns:modifytEs3RuleParameterByStorage" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteEs3ByStorageResponse">
     <wsdl:part element="tns:deleteEs3ByStorageResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="modifytEs3RuleParameterByStorageResponse">
+    <wsdl:part element="tns:modifytEs3RuleParameterByStorageResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:portType name="StorageSoapService">
+    <wsdl:operation name="getVolumeInfoDTO">
+      <wsdl:input message="tns:getVolumeInfoDTO" name="getVolumeInfoDTO">
+    </wsdl:input>
+      <wsdl:output message="tns:getVolumeInfoDTOResponse" name="getVolumeInfoDTOResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getEs3SizeUsed">
       <wsdl:input message="tns:getEs3SizeUsed" name="getEs3SizeUsed">
     </wsdl:input>
@@ -301,6 +358,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getEs3SizeUsedResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getVolumeInfoDTO">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getVolumeInfoDTO">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getVolumeInfoDTOResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>

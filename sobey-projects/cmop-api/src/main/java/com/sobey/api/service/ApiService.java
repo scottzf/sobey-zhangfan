@@ -303,4 +303,6 @@ public interface ApiService {
 	 */
 	public ZItemDTO getVolumeData(Integer es3Id);
 
+	public String syncVolume();
+
 }
