@@ -10,6 +10,8 @@ import com.sobey.storage.webservice.response.dto.Es3SizeParameter;
 import com.sobey.storage.webservice.response.dto.ModifytEs3RuleParameter;
 import com.sobey.storage.webservice.response.dto.MountEs3Parameter;
 import com.sobey.storage.webservice.response.dto.UmountEs3Parameter;
+import com.sobey.storage.webservice.response.dto.VolumeInfoDTO;
+import com.sobey.storage.webservice.response.result.DTOListResult;
 import com.sobey.storage.webservice.response.result.WSResult;
 
 /**
@@ -81,5 +83,13 @@ public interface StorageSoapService {
 	 * @return
 	 */
 	String getEs3SizeUsed(@WebParam(name = "es3SizeParameter") Es3SizeParameter es3SizeParameter);
+
+	/**
+	 * 获得controller下所有的卷
+	 * 
+	 * @param es3SizeParameter
+	 * @return
+	 */
+	DTOListResult<VolumeInfoDTO> getVolumeInfoDTO(@WebParam(name = "es3SizeParameter") Es3SizeParameter es3SizeParameter);
 
 }

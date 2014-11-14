@@ -26,6 +26,8 @@ import com.sobey.storage.webservice.response.dto.Es3SizeParameter;
 import com.sobey.storage.webservice.response.dto.ModifytEs3RuleParameter;
 import com.sobey.storage.webservice.response.dto.MountEs3Parameter;
 import com.sobey.storage.webservice.response.dto.UmountEs3Parameter;
+import com.sobey.storage.webservice.response.dto.VolumeInfoDTO;
+import com.sobey.storage.webservice.response.result.DTOListResult;
 import com.sobey.storage.webservice.response.result.WSResult;
 
 /**
@@ -222,7 +224,7 @@ public class NetAppService {
 		VolumeListInfoIterStartRequest volListReq = new VolumeListInfoIterStartRequest();
 		volListReq.setVolume(parameter.getVolumeName());
 
-		Iterator<VolumeInfo> volumeIter = runner.iterate(volListReq, 10);
+		Iterator<VolumeInfo> volumeIter = runner.iterate(volListReq);
 
 		String size = "";
 
@@ -233,6 +235,37 @@ public class NetAppService {
 
 		}
 		return size;
+	}
+
+	public DTOListResult<VolumeInfoDTO> getVolumeInfoDTO(Es3SizeParameter parameter) {
+
+		DTOListResult<VolumeInfoDTO> result = new DTOListResult<VolumeInfoDTO>();
+
+		ApiRunner runner = getApiRunner(parameter.getControllerIP(), parameter.getUsername(), parameter.getPassword());
+
+		VolumeListInfoIterStartRequest volListReq = new VolumeListInfoIterStartRequest();
+		Iterator<VolumeInfo> volumeIter = runner.iterate(volListReq);
+
+		VolumeInfo volume;
+
+		List<VolumeInfoDTO> dtos = new ArrayList<VolumeInfoDTO>();
+
+		while (volumeIter.hasNext()) {
+
+			volume = volumeIter.next();
+
+			VolumeInfoDTO volumeInfoDTO = new VolumeInfoDTO();
+			volumeInfoDTO.setName(volume.getName());
+			volumeInfoDTO.setTotalSize(volume.getSizeTotal().toString());
+			volumeInfoDTO.setUsedSize(volume.getSizeUsed().toString());
+			volumeInfoDTO.setAvailableSize(volume.getSizeAvailable().toString());
+			dtos.add(volumeInfoDTO);
+		}
+
+		result.setDtos(dtos);
+
+		return result;
+
 	}
 
 	/**

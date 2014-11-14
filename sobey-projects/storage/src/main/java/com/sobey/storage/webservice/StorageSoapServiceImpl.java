@@ -20,6 +20,8 @@ import com.sobey.storage.webservice.response.dto.Es3SizeParameter;
 import com.sobey.storage.webservice.response.dto.ModifytEs3RuleParameter;
 import com.sobey.storage.webservice.response.dto.MountEs3Parameter;
 import com.sobey.storage.webservice.response.dto.UmountEs3Parameter;
+import com.sobey.storage.webservice.response.dto.VolumeInfoDTO;
+import com.sobey.storage.webservice.response.result.DTOListResult;
 import com.sobey.storage.webservice.response.result.WSResult;
 
 @WebService(serviceName = "StorageSoapService", endpointInterface = "com.sobey.storage.webservice.StorageSoapService", targetNamespace = WsConstants.NS)
@@ -115,6 +117,11 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 	@Override
 	public WSResult modifytEs3RuleParameterByStorage(ModifytEs3RuleParameter modifytEs3RuleParameter) {
 		return service.modifyEs3Rule(modifytEs3RuleParameter);
+	}
+
+	@Override
+	public DTOListResult<VolumeInfoDTO> getVolumeInfoDTO(Es3SizeParameter es3SizeParameter) {
+		return service.getVolumeInfoDTO(es3SizeParameter);
 	}
 
 }
