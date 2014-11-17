@@ -10,12 +10,9 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Lists;
 import com.sobey.api.constans.LookUpConstants;
 import com.sobey.api.utils.CMDBuildUtil;
 import com.sobey.api.webservice.response.result.WSResult;
-import com.sobey.core.utils.Collections3;
 import com.sobey.core.utils.MathsUtil;
 import com.sobey.generate.cmdbuild.CmdbuildSoapService;
 import com.sobey.generate.cmdbuild.DTOListResult;
@@ -835,6 +832,7 @@ public class ApiServiceImpl implements ApiService {
 				Es3DTO es3DTO = (Es3DTO) obj;
 				totalSize = MathsUtil.add(totalSize, es3DTO.getDiskSize());
 			}
+
 			totals.add(totalSize);
 
 			map.put(totalSize, storageDTO);
@@ -879,7 +877,7 @@ public class ApiServiceImpl implements ApiService {
 		createEs3Parameter.setVolumeName(VolumeName);
 		createEs3Parameter.setVolumeSize(es3DTO.getDiskSize().toString());
 		createEs3Parameter.setControllerIP(controllerIP.getDescription());
-		createEs3Parameter.setUsername(storageDTO.getUsername());
+		createEs3Parameter.setUsername(storageDTO.getName());
 		createEs3Parameter.setPassword(storageDTO.getPassword());
 
 		com.sobey.generate.storage.WSResult wsResult = storageSoapService.createEs3ByStorage(createEs3Parameter);
@@ -944,7 +942,7 @@ public class ApiServiceImpl implements ApiService {
 		MountEs3Parameter mountEs3Parameter = new MountEs3Parameter();
 		mountEs3Parameter.setVolumeName(es3dto.getVolumeName());
 		mountEs3Parameter.setClientIP(ecsIP.getDescription());
-		mountEs3Parameter.setUsername(storageDTO.getUsername());
+		mountEs3Parameter.setUsername(storageDTO.getName());
 		mountEs3Parameter.setPassword(storageDTO.getPassword());
 		mountEs3Parameter.setControllerIP(controllerIP.getDescription());
 
@@ -984,7 +982,7 @@ public class ApiServiceImpl implements ApiService {
 
 		modifytEs3RuleParameter.setVolumeName(es3dto.getVolumeName());
 		modifytEs3RuleParameter.setControllerIP(controllerIP.getDescription());
-		modifytEs3RuleParameter.setUsername(storageDTO.getUsername());
+		modifytEs3RuleParameter.setUsername(storageDTO.getName());
 		modifytEs3RuleParameter.setPassword(storageDTO.getPassword());
 		modifytEs3RuleParameter.getClientIPs().addAll(list);
 
@@ -1046,7 +1044,7 @@ public class ApiServiceImpl implements ApiService {
 
 		UmountEs3Parameter umountEs3Parameter = new UmountEs3Parameter();
 		umountEs3Parameter.setClientIP(ecsIP.getDescription());
-		umountEs3Parameter.setUsername(storageDTO.getUsername());
+		umountEs3Parameter.setUsername(storageDTO.getName());
 		umountEs3Parameter.setPassword(storageDTO.getPassword());
 		umountEs3Parameter.setControllerIP(controllerIP.getDescription());
 
@@ -2218,7 +2216,7 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public String syncVolume() {
+	public void syncVolume() {
 
 		// 从CMDBuild中获得storage 列表(netapp Controller)
 		HashMap<String, Object> storageMap = new HashMap<String, Object>();
@@ -2233,11 +2231,13 @@ public class ApiServiceImpl implements ApiService {
 		for (Object obj : storages) {
 
 			StorageDTO storageDTO = (StorageDTO) obj;
+			IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(storageDTO.getIpaddress())
+					.getDto();
 
 			Es3SizeParameter es3SizeParameter = new Es3SizeParameter();
-			es3SizeParameter.setUsername(storageDTO.getUsername());
+			es3SizeParameter.setUsername(storageDTO.getName());
 			es3SizeParameter.setPassword(storageDTO.getPassword());
-			es3SizeParameter.setControllerIP(storageDTO.getIpaddressDTO().getDescription());
+			es3SizeParameter.setControllerIP(ipaddressDTO.getDescription());
 
 			// 根据storage 列表(netapp Controller) 获得每个controller下的卷列表
 			List<Object> volumes = storageSoapService.getVolumeInfoDTO(es3SizeParameter).getDtoList().getDto();
@@ -2254,29 +2254,36 @@ public class ApiServiceImpl implements ApiService {
 		HashMap<String, Object> es3Map = new HashMap<String, Object>();
 		List<Object> es3List = cmdbuildSoapService.getEs3List(CMDBuildUtil.wrapperSearchParams(es3Map)).getDtoList()
 				.getDto();
+
 		for (Object obj : es3List) {
 			Es3DTO es3DTO = (Es3DTO) obj;
-			es3List.add(es3DTO.getVolumeName());
+			cmdbuildES3List.add(es3DTO.getVolumeName());
 		}
 
 		Collections.sort(netappVolumes);
 		Collections.sort(cmdbuildES3List);
 
-		netappVolumes.removeAll(cmdbuildES3List);
+		List<String> netappVolumes1 = netappVolumes;
+		List<String> netappVolumes2 = netappVolumes;
 
-		if (!netappVolumes.isEmpty()) {
+		List<String> cmdbuildES3List1 = cmdbuildES3List;
+		List<String> cmdbuildES3List2 = cmdbuildES3List;
+
+		netappVolumes1.removeAll(cmdbuildES3List1);
+
+		if (!netappVolumes1.isEmpty()) {
 			// 如果netapp中存在cmdbuild没有的记录,则在cmdbuild中新增一条记录
 
-			for (String volumeName : netappVolumes) {
+			for (String volumeName : netappVolumes1) {
 				// TODO 此处处理需要更全面,如文本解析后数据越界,用户ID如果不存在等问题.
 
-				// 判断是否是数字
-				if (StringUtils.isNumeric(hashMap.get(volumeName))) {
-
-					Double totalSize = Double.valueOf(hashMap.get(volumeName));
+				// TODO 临时判断,测试环境下默认的卷.
+				if (!volumeName.equals("vol0")) {
 
 					String[] arr = StringUtils.split(volumeName, "_");
 					Integer tenantsId = Integer.valueOf(arr[1]);
+					System.out.println(hashMap.get(volumeName));
+					Double diskSize = MathsUtil.div(Double.valueOf(hashMap.get(volumeName)), 1048576D);// 将netapp查询的存储大小换算成G,除以1024*1024
 
 					Es3DTO es3DTO = new Es3DTO();
 					es3DTO.setAgentType(LookUpConstants.AgentType.NetApp.getValue());
@@ -2285,39 +2292,40 @@ public class ApiServiceImpl implements ApiService {
 					es3DTO.setVolumeName(volumeName);
 
 					// 缺少空间大小
-					es3DTO.setDiskSize(MathsUtil.div(totalSize, 1048576D));// 将netapp查询的存储大小换算成G, 除以1024*1024
+					es3DTO.setDiskSize(diskSize);
 					es3DTO.setEs3Type(LookUpConstants.ES3Type.高IOPS.getValue());
 
 					// TODO 参数必须,需要想办法,需要考虑到用户ID不存在的可能性.
 					es3DTO.setIdc(108);
 					es3DTO.setTenants(tenantsId);
-
-					createES3(es3DTO);
+					es3DTO.setVolumeName(volumeName);
+					es3DTO.setStorage(minimumLoadStorage().getId());
+					cmdbuildSoapService.createEs3(es3DTO);
 				}
 
 			}
 
 		}
 
-		cmdbuildES3List.remove(netappVolumes);
+		cmdbuildES3List2.remove(netappVolumes2);
 
-		if (!cmdbuildES3List.isEmpty()) {
+		if (!cmdbuildES3List2.isEmpty()) {
 			// 如果CMDBuild中有netapp中不存在的ES3信息,则将该信息删除.
 
-			for (String volumeName : cmdbuildES3List) {
-				HashMap<String, Object> removeES3Map = new HashMap<String, Object>();
-				removeES3Map.put("EQ_volumeName", volumeName);
-				Es3DTO es3dto = (Es3DTO) cmdbuildSoapService.findEs3ByParams(
-						CMDBuildUtil.wrapperSearchParams(removeES3Map)).getDto();
+			for (String volumeName : cmdbuildES3List2) {
+				if (!volumeName.equals("vol0")) {
 
-				if (es3dto != null) {
-					deleteES3(es3dto.getId());
+					HashMap<String, Object> removeES3Map = new HashMap<String, Object>();
+					removeES3Map.put("EQ_volumeName", volumeName);
+					Es3DTO es3dto = (Es3DTO) cmdbuildSoapService.findEs3ByParams(
+							CMDBuildUtil.wrapperSearchParams(removeES3Map)).getDto();
+
+					if (es3dto != null) {
+						cmdbuildSoapService.deleteEs3(es3dto.getId());
+					}
 				}
 			}
 		}
 
-		// 比较两个list
-
-		return null;
 	}
 }
