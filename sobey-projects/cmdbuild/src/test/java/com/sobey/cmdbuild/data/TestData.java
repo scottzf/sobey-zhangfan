@@ -641,7 +641,7 @@ public class TestData {
 		storage.setGdzcSn(RandomData.randomName("gdzcSn"));
 		storage.setRemark(RandomData.randomName("remark"));
 		storage.setPassword(RandomData.randomName("password"));
-		storage.setUsername(RandomData.randomName("username"));
+		storage.setName(RandomData.randomName("username"));
 
 		return storage;
 	}
