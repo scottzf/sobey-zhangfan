@@ -5,6 +5,8 @@ import javax.jws.WebService;
 
 import com.sobey.loadbalancer.constans.WsConstants;
 import com.sobey.loadbalancer.webservice.response.dto.ELBParameter;
+import com.sobey.loadbalancer.webservice.response.dto.ElbSync;
+import com.sobey.loadbalancer.webservice.response.result.DTOListResult;
 import com.sobey.loadbalancer.webservice.response.result.WSResult;
 
 /**
@@ -33,5 +35,12 @@ public interface LoadbalancerSoapService {
 	 * @return
 	 */
 	WSResult deleteELBByLoadbalancer(@WebParam(name = "elbParameter") ELBParameter elbParameter);
+
+	/**
+	 * 获得物理设备上elb相关的所有配置信息.
+	 * 
+	 * @return
+	 */
+	DTOListResult<ElbSync> getELBConfig();
 
 }

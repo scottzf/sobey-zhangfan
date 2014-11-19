@@ -305,4 +305,6 @@ public interface ApiService {
 
 	public void syncVolume();
 
+	public void syncELB();
+
 }

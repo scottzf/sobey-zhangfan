@@ -1,5 +1,8 @@
 package com.sobey.loadbalancer.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -9,15 +12,16 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.citrix.netscaler.nitro.exception.nitro_exception;
-import com.citrix.netscaler.nitro.resource.config.gslb.gslbservice;
-import com.citrix.netscaler.nitro.resource.config.gslb.gslbvserver;
-import com.citrix.netscaler.nitro.resource.config.gslb.gslbvserver_gslbservice_binding;
+import com.citrix.netscaler.nitro.resource.config.lb.lbvserver;
+import com.citrix.netscaler.nitro.resource.config.lb.lbvserver_binding;
 import com.citrix.netscaler.nitro.service.nitro_service;
 import com.citrix.netscaler.nitro.service.nitro_service.OnerrorEnum;
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.loadbalancer.data.TestData;
 import com.sobey.loadbalancer.service.LoadbalanceService;
 import com.sobey.loadbalancer.webservice.response.dto.ELBParameter;
+import com.sobey.loadbalancer.webservice.response.dto.ElbPolicySync;
+import com.sobey.loadbalancer.webservice.response.dto.ElbSync;
 
 /**
  * Elb单元测试.
@@ -57,25 +61,6 @@ public class ElbTest extends TestCase {
 	@Autowired
 	private LoadbalanceService service;
 
-	private nitro_service getnitro_service() {
-		nitro_service client = null;
-		try {
-			client = new nitro_service(LOADBALANCER_IP, LOADBALANCER_PROTOCOL);
-			client.set_credential(LOADBALANCER_USERNAME, LOADBALANCER_PASSWORD);
-			client.set_onerror(OnerrorEnum.CONTINUE);
-			client.set_warning(true);
-			client.set_certvalidation(false);
-			client.set_hostnameverification(false);
-			client.login();
-		} catch (nitro_exception e) {
-			e.printStackTrace();
-		} // 创建nitro的session
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		return client;
-	}
-
 	@Test
 	public void createElb() {
 		ELBParameter parameter = TestData.randomELBParameter();
@@ -89,67 +74,70 @@ public class ElbTest extends TestCase {
 	}
 
 	@Test
-	public void get_gslbvserver() {
+	public void get_lbvserver() {
+
+		nitro_service client = null;
 
 		/**
-		 * 获得GSLB的VS
-		 */
-
-		try {
-			gslbvserver[] result = gslbvserver.get(getnitro_service());
-			for (gslbvserver gslbvserver2 : result) {
-				System.out.println("get_gslbvserver - name= " + gslbvserver2.get_name() + ", servicetype= "
-						+ gslbvserver2.get_servicetype());
-			}
-		} catch (nitro_exception e) {
-			System.out.println("Exception::get_gslbvserver::errorcode=" + e.getErrorCode() + ",message="
-					+ e.getMessage());
-		} catch (Exception e) {
-			System.err.println("Exception::get_gslbvserver::message=" + e);
-		}
-	}
-
-	@Test
-	public void get_gslbservice() {
-
-		/**
-		 * 根据serviceName获得详情
+		 * 获得所有的ELB
 		 */
 		try {
-			gslbservice result = gslbservice.get(getnitro_service(), "113.142.30.14");
-			System.out.println("get_gslbservice - servicename= " + result.get_servicename() + ", servicetype= "
-					+ result.get_servicetype());
-		} catch (nitro_exception e) {
-			System.out.println("Exception::get_gslbservice::errorcode=" + e.getErrorCode() + ",message="
-					+ e.getMessage());
-		} catch (Exception e) {
-			System.err.println("Exception::get_gslbservice::message=" + e);
-		}
-	}
 
-	@Test
-	public void get_gslbvserver_service_binding() {
+			client = new nitro_service(LOADBALANCER_IP, LOADBALANCER_PROTOCOL);
+			client.set_credential(LOADBALANCER_USERNAME, LOADBALANCER_PASSWORD);
+			client.set_onerror(OnerrorEnum.CONTINUE);
+			client.set_warning(true);
+			client.set_certvalidation(false);
+			client.set_hostnameverification(false);
+			client.login();
 
-		/**
-		 * 获得VS关联的service
-		 */
+			lbvserver[] result = lbvserver.get(client);
 
-		try {
-			gslbvserver_gslbservice_binding[] result = gslbvserver_gslbservice_binding.get(getnitro_service(),
-					"lztest.sobeycache.com");
+			List<ElbSync> syncs = new ArrayList<ElbSync>();
+
 			if (result != null) {
-				for (int i = 0; i < result.length; i++) {
-					System.out.println("get_gslbvserver_service_binding - vserver name= " + result[i].get_name()
-							+ ", servicename= " + result[i].get_servicename());
+
+				for (lbvserver lbvserver2 : result) {
+
+					List<ElbPolicySync> policySyncs = new ArrayList<ElbPolicySync>();
+
+					lbvserver_binding lbvserver_binding = com.citrix.netscaler.nitro.resource.config.lb.lbvserver_binding
+							.get(client, lbvserver2.get_name());
+
+					if (lbvserver_binding.get_lbvserver_service_bindings() != null) {
+						for (int i = 0; i < lbvserver_binding.get_lbvserver_service_bindings().length; i++) {
+
+							ElbPolicySync policySync = new ElbPolicySync();
+							policySync.setElb(lbvserver2.get_ipv46());
+							policySync.setElbProtocol(lbvserver_binding.get_lbvserver_service_bindings()[i]
+									.get_servicetype());
+							policySync.setIpaddress(lbvserver_binding.get_lbvserver_service_bindings()[i].get_ipv46());
+							policySync.setSourcePort(lbvserver_binding.get_lbvserver_service_bindings()[i].get_port());
+							policySync.setTargetPort(lbvserver_binding.get_lbvserver_service_bindings()[i].get_port());
+							policySyncs.add(policySync);
+
+						}
+					}
+
+					ElbSync elbSync = new ElbSync();
+					elbSync.setVip(lbvserver2.get_ipv46());
+					elbSync.setPolicySyncs(policySyncs);
+					syncs.add(elbSync);
+
 				}
+
+				System.out.println(syncs);
 			} else {
-				System.out.println("Exception::get_gslbvserver_service_binding - Done");
+				System.out.println("Exception::get_lbvserver - Done");
 			}
+
+			client.logout();// 登出
+
 		} catch (nitro_exception e) {
-			System.out.println("Exception::get_gslbvserver_service_binding::errorcode=" + e.getErrorCode()
-					+ ",message=" + e.getMessage());
+			System.out
+					.println("Exception::get_lbvserver::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
 		} catch (Exception e) {
-			System.err.println("Exception::get_gslbvserver_service_binding::message=" + e);
+			System.err.println("Exception::get_lbvserver::message=" + e);
 		}
 	}
 

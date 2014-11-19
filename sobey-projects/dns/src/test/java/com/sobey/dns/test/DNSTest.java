@@ -9,8 +9,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.citrix.netscaler.nitro.exception.nitro_exception;
-import com.citrix.netscaler.nitro.resource.config.lb.lbvserver;
-import com.citrix.netscaler.nitro.resource.config.lb.lbvserver_binding;
+import com.citrix.netscaler.nitro.resource.config.gslb.gslbservice;
+import com.citrix.netscaler.nitro.resource.config.gslb.gslbvserver;
+import com.citrix.netscaler.nitro.resource.config.gslb.gslbvserver_gslbservice_binding;
 import com.citrix.netscaler.nitro.service.nitro_service;
 import com.citrix.netscaler.nitro.service.nitro_service.OnerrorEnum;
 import com.sobey.core.utils.PropertiesLoader;
@@ -90,54 +91,67 @@ public class DNSTest extends TestCase {
 	}
 
 	@Test
-	public void get_lbvserver() {
+	public void get_gslbvserver() {
 
 		/**
-		 * 获得所有的ELB
+		 * 获得GSLB的VS
 		 */
-		try {
-			lbvserver[] result = lbvserver.get(getnitro_service());
-			if (result != null) {
-				System.out.println("get_lbvserver result::length=" + result.length);
-				for (lbvserver lbvserver2 : result) {
-					System.out.println(lbvserver2.get_name());
-				}
 
-			} else {
-				System.out.println("Exception::get_lbvserver - Done");
+		try {
+			gslbvserver[] result = gslbvserver.get(getnitro_service());
+			for (gslbvserver gslbvserver2 : result) {
+				System.out.println("get_gslbvserver - name= " + gslbvserver2.get_name() + ", servicetype= "
+						+ gslbvserver2.get_servicetype());
 			}
 		} catch (nitro_exception e) {
-			System.out
-					.println("Exception::get_lbvserver::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
+			System.out.println("Exception::get_gslbvserver::errorcode=" + e.getErrorCode() + ",message="
+					+ e.getMessage());
 		} catch (Exception e) {
-			System.err.println("Exception::get_lbvserver::message=" + e);
+			System.err.println("Exception::get_gslbvserver::message=" + e);
 		}
 	}
 
 	@Test
-	public void getlbvserver_bindings() {
+	public void get_gslbservice() {
 
 		/**
-		 * 获得ELB的策略信息
+		 * 根据serviceName获得详情
 		 */
 		try {
-			lbvserver_binding obj = new lbvserver_binding();
-			obj.set_name("10.10.2.55-HTTP-80");
-			lbvserver_binding result = lbvserver_binding.get(getnitro_service(), "10.10.2.55-HTTP-80");
-			if (result.get_lbvserver_service_bindings() != null) {
-				System.out.println("getlbvserver_bindings result::length="
-						+ result.get_lbvserver_service_bindings().length);
-				for (int i = 0; i < result.get_lbvserver_service_bindings().length; i++) {
-					System.out.println("svc name " + result.get_lbvserver_service_bindings()[i].get_servicename());
-				}
-			} else {
-				System.out.println("getlbvserver_bindings - Done");
-			}
+			gslbservice result = gslbservice.get(getnitro_service(), "113.142.30.14");
+			System.out.println("get_gslbservice - servicename= " + result.get_servicename() + ", servicetype= "
+					+ result.get_servicetype());
 		} catch (nitro_exception e) {
-			System.out.println("Exception::getlbvserver_bindings::errorcode=" + e.getErrorCode() + ",message="
+			System.out.println("Exception::get_gslbservice::errorcode=" + e.getErrorCode() + ",message="
 					+ e.getMessage());
 		} catch (Exception e) {
-			System.err.println("Exception::getlbvserver_bindings::message=" + e);
+			System.err.println("Exception::get_gslbservice::message=" + e);
+		}
+	}
+
+	@Test
+	public void get_gslbvserver_service_binding() {
+
+		/**
+		 * 获得VS关联的service
+		 */
+
+		try {
+			gslbvserver_gslbservice_binding[] result = gslbvserver_gslbservice_binding.get(getnitro_service(),
+					"lztest.sobeycache.com");
+			if (result != null) {
+				for (int i = 0; i < result.length; i++) {
+					System.out.println("get_gslbvserver_service_binding - vserver name= " + result[i].get_name()
+							+ ", servicename= " + result[i].get_servicename());
+				}
+			} else {
+				System.out.println("Exception::get_gslbvserver_service_binding - Done");
+			}
+		} catch (nitro_exception e) {
+			System.out.println("Exception::get_gslbvserver_service_binding::errorcode=" + e.getErrorCode()
+					+ ",message=" + e.getMessage());
+		} catch (Exception e) {
+			System.err.println("Exception::get_gslbvserver_service_binding::message=" + e);
 		}
 	}
 

@@ -24,4 +24,9 @@ public class SyncTest extends TestCase {
 	public void syncVolume() {
 		service.syncVolume();
 	}
+
+	@Test
+	public void syncELB() {
+		service.syncELB();
+	}
 }

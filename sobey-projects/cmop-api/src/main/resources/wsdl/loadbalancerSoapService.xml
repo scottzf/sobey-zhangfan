@@ -9,6 +9,10 @@
 
   <xs:element name="ELBPublicIPParameter" type="tns:ELBPublicIPParameter"/>
 
+  <xs:element name="ElbPolicySync" type="tns:ElbPolicySync"/>
+
+  <xs:element name="ElbSync" type="tns:ElbSync"/>
+
   <xs:element name="createELBByLoadbalancer" type="tns:createELBByLoadbalancer"/>
 
   <xs:element name="createELBByLoadbalancerResponse" type="tns:createELBByLoadbalancerResponse"/>
@@ -16,6 +20,10 @@
   <xs:element name="deleteELBByLoadbalancer" type="tns:deleteELBByLoadbalancer"/>
 
   <xs:element name="deleteELBByLoadbalancerResponse" type="tns:deleteELBByLoadbalancerResponse"/>
+
+  <xs:element name="getELBConfig" type="tns:getELBConfig"/>
+
+  <xs:element name="getELBConfigResponse" type="tns:getELBConfigResponse"/>
 
   <xs:complexType name="createELBByLoadbalancer">
     <xs:sequence>
@@ -58,6 +66,49 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="getELBConfig">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="getELBConfigResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOListResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DTOListResult">
+    <xs:complexContent>
+      <xs:extension base="tns:WSResult">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="dtoList">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="dto" type="xs:anyType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ElbSync">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="policySyncs" nillable="true" type="tns:ElbPolicySync"/>
+      <xs:element minOccurs="0" name="vip" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ElbPolicySync">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="elb" type="xs:string"/>
+      <xs:element minOccurs="0" name="elbProtocol" type="xs:string"/>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="sourcePort" type="xs:int"/>
+      <xs:element minOccurs="0" name="targetPort" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="deleteELBByLoadbalancer">
     <xs:sequence>
       <xs:element minOccurs="0" name="elbParameter" type="tns:ELBParameter"/>
@@ -80,6 +131,14 @@
     <wsdl:part element="tns:deleteELBByLoadbalancer" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getELBConfigResponse">
+    <wsdl:part element="tns:getELBConfigResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getELBConfig">
+    <wsdl:part element="tns:getELBConfig" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="deleteELBByLoadbalancerResponse">
     <wsdl:part element="tns:deleteELBByLoadbalancerResponse" name="parameters">
     </wsdl:part>
@@ -93,6 +152,12 @@
       <wsdl:input message="tns:createELBByLoadbalancer" name="createELBByLoadbalancer">
     </wsdl:input>
       <wsdl:output message="tns:createELBByLoadbalancerResponse" name="createELBByLoadbalancerResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getELBConfig">
+      <wsdl:input message="tns:getELBConfig" name="getELBConfig">
+    </wsdl:input>
+      <wsdl:output message="tns:getELBConfigResponse" name="getELBConfigResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="deleteELBByLoadbalancer">
@@ -119,6 +184,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="deleteELBByLoadbalancerResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getELBConfig">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getELBConfig">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getELBConfigResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>

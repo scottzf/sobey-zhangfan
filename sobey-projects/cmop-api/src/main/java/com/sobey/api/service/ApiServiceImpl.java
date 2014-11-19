@@ -58,6 +58,8 @@ import com.sobey.generate.instance.RelationVMParameter.RelationMaps.Entry;
 import com.sobey.generate.loadbalancer.ELBParameter;
 import com.sobey.generate.loadbalancer.ELBPolicyParameter;
 import com.sobey.generate.loadbalancer.ELBPublicIPParameter;
+import com.sobey.generate.loadbalancer.ElbPolicySync;
+import com.sobey.generate.loadbalancer.ElbSync;
 import com.sobey.generate.loadbalancer.LoadbalancerSoapService;
 import com.sobey.generate.storage.CreateEs3Parameter;
 import com.sobey.generate.storage.DeleteEs3Parameter;
@@ -2325,6 +2327,121 @@ public class ApiServiceImpl implements ApiService {
 					}
 				}
 			}
+		}
+
+	}
+
+	@Override
+	public void syncELB() {
+
+		// 获得netscarler上所有的elb对象
+		List<Object> netscalerList = loadbalancerSoapService.getELBConfig().getDtoList().getDto();
+
+		// 获得cmdbuild中所有的elb对象
+		HashMap<String, Object> cmbuildMap = new HashMap<String, Object>();
+		List<Object> ElbDTOs = cmdbuildSoapService.getElbList(CMDBuildUtil.wrapperSearchParams(cmbuildMap))
+				.getDtoList().getDto();
+
+		List<String> elbNames = new ArrayList<String>();
+
+		for (Object object : ElbDTOs) {
+			ElbDTO elbDTO = (ElbDTO) object;
+			elbNames.add(elbDTO.getDescription());
+		}
+
+		for (Object object : netscalerList) {
+
+			ElbSync elbSync = (ElbSync) object;
+
+			if (elbNames.contains(elbSync.getVip())) {
+				// netscarler中的elb在cmdbuild中有数据存在.
+
+				// TODO 继续比较他们的策略是否相同?
+
+				// 将cmdbuild和netscarler进行比较,比较完成后,elbNames中如果还有数据,说明cmbuild有多余的数据.
+				elbNames.remove(elbSync.getVip());
+
+			} else {
+				// netscarler中的elb在cmdbuild中没有数据存在,将查询出来的数据保存至cmdbuild中.
+
+				HashMap<String, Object> ipMap = new HashMap<String, Object>();
+				ipMap.put("EQ_description", elbSync.getVip());
+
+				IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddressByParams(
+						CMDBuildUtil.wrapperSearchParams(ipMap)).getDto();
+
+				IdcDTO idcDTO = (IdcDTO) cmdbuildSoapService.findIdc(ipaddressDTO.getIdc()).getDto();
+
+				ElbDTO elbDTO = new ElbDTO();
+				elbDTO.setAgentType(LookUpConstants.AgentType.Netscaler.getValue());
+				elbDTO.setIpaddress(ipaddressDTO.getId());
+				elbDTO.setDescription(elbSync.getVip());
+				elbDTO.setIdc(idcDTO.getId());
+				// TODO 参数必须,需要想办法
+				elbDTO.setTenants(533);
+				cmdbuildSoapService.createElb(elbDTO);
+
+				// 策略
+				for (ElbPolicySync policySync : elbSync.getPolicySyncs()) {
+
+					// ECS的内网IP
+					HashMap<String, Object> ecsIPMap = new HashMap<String, Object>();
+					ecsIPMap.put("EQ_description", policySync.getIpaddress());
+					IpaddressDTO ipDto = (IpaddressDTO) cmdbuildSoapService.findIpaddressByParams(
+							CMDBuildUtil.wrapperSearchParams(ecsIPMap)).getDto();
+
+					// 协议
+					HashMap<String, Object> lookupPMap = new HashMap<String, Object>();
+					lookupPMap.put("EQ_description", policySync.getElbProtocol());
+					lookupPMap.put("EQ_type", "ELBProtocol");
+					LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUpByParams(
+							CMDBuildUtil.wrapperSearchParams(lookupPMap)).getDto();
+
+					// elb
+					HashMap<String, Object> elbMap = new HashMap<String, Object>();
+					elbMap.put("EQ_description", policySync.getElb());
+					ElbDTO dto = (ElbDTO) cmdbuildSoapService.findElbByParams(CMDBuildUtil.wrapperSearchParams(elbMap))
+							.getDto();
+
+					ElbPolicyDTO elbPolicyDTO = new ElbPolicyDTO();
+
+					elbPolicyDTO.setElb(dto.getId());
+					elbPolicyDTO.setElbProtocol(lookUpDTO.getId());
+
+					elbPolicyDTO.setDescription(lookUpDTO.getDescription() + "-" + policySync.getSourcePort() + "-"
+							+ policySync.getTargetPort());
+					elbPolicyDTO.setSourcePort(policySync.getSourcePort());
+					elbPolicyDTO.setTargetPort(policySync.getTargetPort());
+					elbPolicyDTO.setIpaddress(ipDto.getDescription());
+
+					cmdbuildSoapService.createElbPolicy(elbPolicyDTO);
+				}
+
+			}
+
+			// 删除cmdbuild中的elb
+			for (String elbName : elbNames) {
+
+				// elb
+				HashMap<String, Object> elbMap = new HashMap<String, Object>();
+				elbMap.put("EQ_description", elbName);
+				ElbDTO dto = (ElbDTO) cmdbuildSoapService.findElbByParams(CMDBuildUtil.wrapperSearchParams(elbMap))
+						.getDto();
+
+				if (dto != null) {
+
+					DTOListResult policyResult = getElbPolicyDTOList(dto.getId());
+
+					for (Object obj : policyResult.getDtoList().getDto()) {
+						ElbPolicyDTO policyDTO = (ElbPolicyDTO) obj;
+						cmdbuildSoapService.deleteElbPolicy(policyDTO.getId());
+					}
+
+					cmdbuildSoapService.deleteElb(dto.getId());
+				}
+
+			}
+
 		}
 
 	}
