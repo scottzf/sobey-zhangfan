@@ -133,8 +133,6 @@ public class LoadbalanceService {
 					syncs.add(elbSync);
 				}
 
-			} else {
-				System.out.println("Exception::getElbSyncList - Done");
 			}
 
 			// Step.6 保存配置

@@ -5,6 +5,8 @@ import javax.jws.WebService;
 
 import com.sobey.dns.constans.WsConstants;
 import com.sobey.dns.webservice.response.dto.DNSParameter;
+import com.sobey.dns.webservice.response.dto.DnsSync;
+import com.sobey.dns.webservice.response.result.DTOListResult;
 import com.sobey.dns.webservice.response.result.WSResult;
 
 /**
@@ -34,4 +36,10 @@ public interface DnsSoapService {
 	 */
 	WSResult deleteDNSByDNS(@WebParam(name = "dnsParameter") DNSParameter dnsParameter);
 
+	/**
+	 * 获得物理设备上DNS相关的所有配置信息.
+	 * 
+	 * @return
+	 */
+	DTOListResult<DnsSync> getDNSConfig();
 }

@@ -44,7 +44,9 @@ import com.sobey.generate.cmdbuild.VpnDTO;
 import com.sobey.generate.dns.DNSParameter;
 import com.sobey.generate.dns.DNSPolicyParameter;
 import com.sobey.generate.dns.DNSPublicIPParameter;
+import com.sobey.generate.dns.DnsPolicySync;
 import com.sobey.generate.dns.DnsSoapService;
+import com.sobey.generate.dns.DnsSync;
 import com.sobey.generate.firewall.EIPParameter;
 import com.sobey.generate.firewall.EIPPolicyParameter;
 import com.sobey.generate.firewall.FirewallSoapService;
@@ -2419,27 +2421,128 @@ public class ApiServiceImpl implements ApiService {
 
 			}
 
-			// 删除cmdbuild中的elb
-			for (String elbName : elbNames) {
+		}
+		
+		// 删除cmdbuild中的elb
+		for (String elbName : elbNames) {
 
-				// elb
-				HashMap<String, Object> elbMap = new HashMap<String, Object>();
-				elbMap.put("EQ_description", elbName);
-				ElbDTO dto = (ElbDTO) cmdbuildSoapService.findElbByParams(CMDBuildUtil.wrapperSearchParams(elbMap))
-						.getDto();
+			// elb
+			HashMap<String, Object> elbMap = new HashMap<String, Object>();
+			elbMap.put("EQ_description", elbName);
+			ElbDTO dto = (ElbDTO) cmdbuildSoapService.findElbByParams(CMDBuildUtil.wrapperSearchParams(elbMap))
+					.getDto();
 
-				if (dto != null) {
+			if (dto != null) {
 
-					DTOListResult policyResult = getElbPolicyDTOList(dto.getId());
+				DTOListResult policyResult = getElbPolicyDTOList(dto.getId());
 
-					for (Object obj : policyResult.getDtoList().getDto()) {
-						ElbPolicyDTO policyDTO = (ElbPolicyDTO) obj;
-						cmdbuildSoapService.deleteElbPolicy(policyDTO.getId());
-					}
-
-					cmdbuildSoapService.deleteElb(dto.getId());
+				for (Object obj : policyResult.getDtoList().getDto()) {
+					ElbPolicyDTO policyDTO = (ElbPolicyDTO) obj;
+					cmdbuildSoapService.deleteElbPolicy(policyDTO.getId());
 				}
 
+				cmdbuildSoapService.deleteElb(dto.getId());
+			}
+
+		}
+
+	}
+
+	@Override
+	public void syncDNS() {
+
+		// 获得netscarler上所有的dns对象
+		List<Object> netscalerList = dnsSoapService.getDNSConfig().getDtoList().getDto();
+
+		// 获得cmdbuild中所有的elb对象
+		HashMap<String, Object> cmbuildMap = new HashMap<String, Object>();
+		List<Object> dnsDTOs = cmdbuildSoapService.getDnsList(CMDBuildUtil.wrapperSearchParams(cmbuildMap))
+				.getDtoList().getDto();
+
+		List<String> dnsNames = new ArrayList<String>();
+
+		for (Object object : dnsDTOs) {
+			DnsDTO dnsDTO = (DnsDTO) object;
+			dnsNames.add(dnsDTO.getDescription());
+		}
+
+		for (Object object : netscalerList) {
+
+			DnsSync dnsSync = (DnsSync) object;
+
+			if (dnsNames.contains(dnsSync.getDomainName())) {
+				// netscarler中的dns在cmdbuild中有数据存在.
+
+				// TODO 继续比较他们的策略是否相同?
+
+				// 将cmdbuild和netscarler进行比较,比较完成后,dnsNames中如果还有数据,说明cmbuild有多余的数据.
+				dnsNames.remove(dnsSync.getDomainName());
+
+			} else {
+				// netscarler中的elb在cmdbuild中没有数据存在,将查询出来的数据保存至cmdbuild中.
+
+				// 将DNS信息写入CMDBuild
+				DnsDTO dnsDTO = new DnsDTO();
+				dnsDTO.setDomainType(LookUpConstants.DomainType.GSLB.getValue());
+				dnsDTO.setAgentType(LookUpConstants.AgentType.Netscaler.getValue());
+				dnsDTO.setDomainName(dnsSync.getDomainName());
+				dnsDTO.setDescription(dnsSync.getDomainName());
+				dnsDTO.setRemark(dnsSync.getDomainName());
+
+				// TODO 参数必须,需要想办法
+				dnsDTO.setIdc(108);
+				dnsDTO.setTenants(533);
+				cmdbuildSoapService.createDns(dnsDTO);
+
+				// 策略
+				for (DnsPolicySync policySync : dnsSync.getPolicySyncs()) {
+
+					// 协议
+					HashMap<String, Object> lookupPMap = new HashMap<String, Object>();
+					lookupPMap.put("EQ_description", policySync.getDnsProtocol());
+					lookupPMap.put("EQ_type", "DNSProtocol");
+					LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUpByParams(
+							CMDBuildUtil.wrapperSearchParams(lookupPMap)).getDto();
+
+					// dns
+					HashMap<String, Object> dnsMap = new HashMap<String, Object>();
+					dnsMap.put("EQ_description", policySync.getDns());
+					DnsDTO dto = (DnsDTO) cmdbuildSoapService.findDnsByParams(CMDBuildUtil.wrapperSearchParams(dnsMap))
+							.getDto();
+
+					DnsPolicyDTO policyDTO = new DnsPolicyDTO();
+					policyDTO.setDnsProtocol(lookUpDTO.getId());
+					policyDTO.setPort(policySync.getPort());
+					policyDTO.setIpaddress(policySync.getIpaddress());
+					policyDTO.setDescription(policySync.getDnsProtocol() + "-" + policySync.getPort());
+					policyDTO.setDns(dto.getId());
+
+					cmdbuildSoapService.createDnsPolicy(policyDTO);
+				}
+
+			}
+
+		}
+
+		// 删除cmdbuild中的elb
+		for (String dnsName : dnsNames) {
+
+			// dns
+			HashMap<String, Object> elbMap = new HashMap<String, Object>();
+			elbMap.put("EQ_description", dnsName);
+			DnsDTO dto = (DnsDTO) cmdbuildSoapService.findDnsByParams(CMDBuildUtil.wrapperSearchParams(elbMap))
+					.getDto();
+
+			if (dto != null) {
+
+				DTOListResult policyResult = geDnsPolicyDTOList(dto.getId());
+
+				for (Object obj : policyResult.getDtoList().getDto()) {
+					DnsPolicyDTO policyDTO = (DnsPolicyDTO) obj;
+					cmdbuildSoapService.deleteDnsPolicy(policyDTO.getId());
+				}
+
+				cmdbuildSoapService.deleteDns(dto.getId());
 			}
 
 		}

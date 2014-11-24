@@ -1,5 +1,8 @@
 package com.sobey.dns.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +21,8 @@ import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.dns.webservice.response.dto.DNSParameter;
 import com.sobey.dns.webservice.response.dto.DNSPolicyParameter;
 import com.sobey.dns.webservice.response.dto.DNSPublicIPParameter;
+import com.sobey.dns.webservice.response.dto.DnsPolicySync;
+import com.sobey.dns.webservice.response.dto.DnsSync;
 
 @Service
 public class DnsService {
@@ -105,6 +110,69 @@ public class DnsService {
 	 * appflowLog
 	 */
 	private static final String DNS_APPFLOWLOG = DNS_LOADER.getProperty("DNS_APPFLOWLOG");
+
+	public List<DnsSync> getDnsSyncList() {
+
+		List<DnsSync> syncs = new ArrayList<DnsSync>();
+
+		nitro_service client = null;
+
+		try {
+
+			client = new nitro_service(DNS_IP, DNS_PROTOCOL); // 创建nitro的session
+			client.set_credential(DNS_USERNAME, DNS_PASSWORD);
+			client.set_onerror(OnerrorEnum.CONTINUE);
+			client.set_warning(true);
+			client.set_certvalidation(false);
+			client.set_hostnameverification(false);
+			client.login();
+
+			// TODO 代码待实现
+
+			gslbvserver[] result = gslbvserver.get(client);
+
+			if (result != null) {
+
+				for (gslbvserver gslbvserver2 : result) {
+
+					List<DnsPolicySync> policySyncs = new ArrayList<DnsPolicySync>();
+
+					gslbvserver_gslbservice_binding[] gslbvserver_gslbservice_bindings = gslbvserver_gslbservice_binding
+							.get(client, gslbvserver2.get_name());
+
+					for (gslbvserver_gslbservice_binding gslbvserver_gslbservice_binding : gslbvserver_gslbservice_bindings) {
+
+						DnsPolicySync policySync = new DnsPolicySync();
+						policySync.setDns(gslbvserver2.get_name());
+						policySync.setDnsProtocol(gslbvserver_gslbservice_binding.get_servicetype());
+						policySync.setIpaddress(gslbvserver_gslbservice_binding.get_ipaddress());
+						policySync.setPort(gslbvserver_gslbservice_binding.get_port().toString());
+
+						policySyncs.add(policySync);
+					}
+
+					DnsSync dnsSync = new DnsSync();
+					dnsSync.setDomainName(gslbvserver2.get_name());
+					dnsSync.setDomainType("GSLB");
+					dnsSync.setPolicySyncs(policySyncs);
+					syncs.add(dnsSync);
+				}
+
+			}
+
+			// Step.6 保存配置
+			saveconfig(client);
+
+			client.logout();// 登出
+
+		} catch (nitro_exception e) {
+			logger.info("Exception::getElbSyncList::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::getElbSyncList::message=" + e);
+		}
+		return syncs;
+
+	}
 
 	/**
 	 * 创建域名类型为GSLB的DNS

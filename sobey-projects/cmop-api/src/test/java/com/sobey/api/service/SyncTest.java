@@ -29,4 +29,9 @@ public class SyncTest extends TestCase {
 	public void syncELB() {
 		service.syncELB();
 	}
+
+	@Test
+	public void syncDNS() {
+		service.syncDNS();
+	}
 }
