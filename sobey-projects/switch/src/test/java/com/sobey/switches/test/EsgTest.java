@@ -58,9 +58,10 @@ public class EsgTest implements PbulicProperties {
 
 		String command = service.deleteEsg(aclNumber);
 
+		System.out.println(command);
+
 		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, command, FILE_PATH);
 
-		System.out.println(command);
 		String result = FileUtils.readFileToString(new File(FILE_PATH));
 		System.err.println(result);
 	}
