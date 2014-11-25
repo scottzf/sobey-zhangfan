@@ -2331,6 +2331,8 @@ public class ApiServiceImpl implements ApiService {
 			}
 		}
 
+		System.out.println("netapp同步完成!!!!");
+
 	}
 
 	@Override
@@ -2422,7 +2424,7 @@ public class ApiServiceImpl implements ApiService {
 			}
 
 		}
-		
+
 		// 删除cmdbuild中的elb
 		for (String elbName : elbNames) {
 
@@ -2445,6 +2447,8 @@ public class ApiServiceImpl implements ApiService {
 			}
 
 		}
+
+		System.out.println("ELB同步完成!!!!");
 
 	}
 
@@ -2546,6 +2550,8 @@ public class ApiServiceImpl implements ApiService {
 			}
 
 		}
+
+		System.out.println("DNS同步完成!!!!");
 
 	}
 }
