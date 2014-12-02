@@ -364,8 +364,8 @@ public class VMService {
 
 						newNic.setConnectable(connectable11);
 
-						System.out.println("Setting UUID: " + uuid);
-						System.out.println("Setting portgroupKey: " + key);
+						// System.out.println("Setting UUID: " + uuid);
+						// System.out.println("Setting portgroupKey: " + key);
 
 						nicSpec.setDevice(newNic);
 
@@ -772,24 +772,32 @@ public class VMService {
 			VirtualMachine vm = getVirtualMachine(si, name);
 
 			VirtualMachineConfigInfo vmConfigInfo = vm.getConfig();
-			VirtualHardware vmHardware = vmConfigInfo.getHardware();
 
-			if (vm.getGuest().getNet().length != 0) {
-				vmInfoDTO.setVlanName(vm.getGuest().getNet()[0].getNetwork());
-			}
+			// TODO 临时添加,相应的服务器无法获得其内网IP地址
+			if (vm != null && !name.equals("10.10.2.36_Netscaler") && !name.equals("DataONTAP31-34")) {
 
-			vmInfoDTO.setGuestFullName(vmConfigInfo.getGuestFullName());
-			vmInfoDTO.setIpaddress(vm.getGuest().getIpAddress());
-			vmInfoDTO.setCpuNumber(Integer.valueOf(vmHardware.getNumCPU()).toString());
-			vmInfoDTO.setMemorySize(Integer.valueOf(vmHardware.getMemoryMB()).toString());
-			vmInfoDTO.setName(name);
+				VirtualHardware vmHardware = vmConfigInfo.getHardware();
 
-			VirtualDevice[] vmDevices = vmHardware.getDevice();
-			for (int i = 0; i < vmDevices.length; i++) {
-				if (vmDevices[i] instanceof VirtualEthernetCard) {
-					VirtualEthernetCard card = (VirtualEthernetCard) vmDevices[i];
-					vmInfoDTO.setMacIPaddress(card.getMacAddress());
+				if (vm.getGuest() != null) {
+					if (vm.getGuest().getNet().length != 0) {
+						vmInfoDTO.setVlanName(vm.getGuest().getNet()[0].getNetwork());
+					}
 				}
+
+				vmInfoDTO.setGuestFullName(vmConfigInfo.getGuestFullName());
+				vmInfoDTO.setIpaddress(vm.getGuest().getIpAddress());
+				vmInfoDTO.setCpuNumber(Integer.valueOf(vmHardware.getNumCPU()).toString());
+				vmInfoDTO.setMemorySize(Integer.valueOf(vmHardware.getMemoryMB()).toString());
+				vmInfoDTO.setName(name);
+
+				VirtualDevice[] vmDevices = vmHardware.getDevice();
+				for (int i = 0; i < vmDevices.length; i++) {
+					if (vmDevices[i] instanceof VirtualEthernetCard) {
+						VirtualEthernetCard card = (VirtualEthernetCard) vmDevices[i];
+						vmInfoDTO.setMacIPaddress(card.getMacAddress());
+					}
+				}
+
 			}
 
 		} catch (MalformedURLException e) {
