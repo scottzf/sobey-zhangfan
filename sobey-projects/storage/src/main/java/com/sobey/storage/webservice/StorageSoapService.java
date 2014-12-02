@@ -24,7 +24,7 @@ import com.sobey.storage.webservice.response.result.WSResult;
 public interface StorageSoapService {
 
 	/**
-	 * 创建Volume
+	 * 创建Volume by Netapp
 	 * 
 	 * @param createEs3Parameter
 	 *            {@link CreateEs3Parameter}
@@ -33,7 +33,7 @@ public interface StorageSoapService {
 	WSResult createEs3ByStorage(@WebParam(name = "createEs3Parameter") CreateEs3Parameter createEs3Parameter);
 
 	/**
-	 * 删除Volume
+	 * 删除Volume by Netapp
 	 * 
 	 * @param deleteEs3Parameter
 	 *            {@link DeleteEs3Parameter}
@@ -69,7 +69,7 @@ public interface StorageSoapService {
 			@WebParam(name = "modifytEs3RuleParameter") ModifytEs3RuleParameter modifytEs3RuleParameter);
 
 	/**
-	 * 获得卷总大小(bytes)
+	 * 获得卷总大小(bytes) by Netapp
 	 * 
 	 * @param es3SizeParameter
 	 * @return
@@ -77,7 +77,7 @@ public interface StorageSoapService {
 	String getEs3SizeTotal(@WebParam(name = "es3SizeParameter") Es3SizeParameter es3SizeParameter);
 
 	/**
-	 * 获得卷使用大小(bytes)
+	 * 获得卷使用大小(bytes) by Netapp
 	 * 
 	 * @param es3SizeParameter
 	 * @return
@@ -85,11 +85,29 @@ public interface StorageSoapService {
 	String getEs3SizeUsed(@WebParam(name = "es3SizeParameter") Es3SizeParameter es3SizeParameter);
 
 	/**
-	 * 获得controller下所有的卷
+	 * 获得controller下所有的卷 by Netapp
 	 * 
 	 * @param es3SizeParameter
 	 * @return
 	 */
 	DTOListResult<VolumeInfoDTO> getVolumeInfoDTO(@WebParam(name = "es3SizeParameter") Es3SizeParameter es3SizeParameter);
+
+	/**
+	 * 创建Volume by Nimble
+	 * 
+	 * @param createEs3Parameter
+	 *            {@link CreateEs3Parameter}
+	 * @return
+	 */
+	WSResult createEs3ByNimble(@WebParam(name = "createEs3Parameter") CreateEs3Parameter createEs3Parameter);
+
+	/**
+	 * 删除Volume by Nimble
+	 * 
+	 * @param deleteEs3Parameter
+	 *            {@link DeleteEs3Parameter}
+	 * @return
+	 */
+	WSResult deleteEs3ByNimble(@WebParam(name = "deleteEs3Parameter") DeleteEs3Parameter deleteEs3Parameter);
 
 }

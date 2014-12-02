@@ -884,7 +884,17 @@ public class ApiServiceImpl implements ApiService {
 		createEs3Parameter.setUsername(storageDTO.getName());
 		createEs3Parameter.setPassword(storageDTO.getPassword());
 
-		com.sobey.generate.storage.WSResult wsResult = storageSoapService.createEs3ByStorage(createEs3Parameter);
+		com.sobey.generate.storage.WSResult wsResult = new com.sobey.generate.storage.WSResult();
+
+		if (LookUpConstants.ES3Type.高IOPS.getValue().equals(es3DTO.getEs3Type())) {
+
+			wsResult = storageSoapService.createEs3ByStorage(createEs3Parameter);
+
+		} else if (LookUpConstants.ES3Type.高吞吐.getValue().equals(es3DTO.getEs3Type())) {
+			// TODO nimble agent
+		} else {
+
+		}
 
 		if (!WSResult.SUCESS.equals(wsResult.getCode())) {
 			result.setError(wsResult.getCode(), wsResult.getMessage());

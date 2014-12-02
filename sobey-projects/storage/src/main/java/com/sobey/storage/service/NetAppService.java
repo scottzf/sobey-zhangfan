@@ -31,7 +31,7 @@ import com.sobey.storage.webservice.response.result.DTOListResult;
 import com.sobey.storage.webservice.response.result.WSResult;
 
 /**
- * netapp 脚本模板生成类.
+ * Netapp Service.
  * 
  * @author Administrator
  * 
