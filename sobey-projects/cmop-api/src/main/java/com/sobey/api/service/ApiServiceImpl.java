@@ -56,6 +56,7 @@ import com.sobey.generate.instance.DestroyVMParameter;
 import com.sobey.generate.instance.InstanceSoapService;
 import com.sobey.generate.instance.PowerVMParameter;
 import com.sobey.generate.instance.ReconfigVMParameter;
+import com.sobey.generate.instance.VMInfoDTO;
 import com.sobey.generate.instance.RelationVMParameter.RelationMaps.Entry;
 import com.sobey.generate.loadbalancer.ELBParameter;
 import com.sobey.generate.loadbalancer.ELBPolicyParameter;
@@ -728,7 +729,7 @@ public class ApiServiceImpl implements ApiService {
 			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcsByParams(CMDBuildUtil.wrapperSearchParams(ecsMap))
 					.getDto();
 
-			destroyECS(ecsDTO.getId());
+			cmdbuildSoapService.deleteEcs(ecsDTO.getId());
 		}
 
 		for (java.util.Map.Entry<String, String> entry : vcenterMap.entrySet()) {
@@ -750,9 +751,6 @@ public class ApiServiceImpl implements ApiService {
 				// 根据VM的名称获得在CMDB中关联的对象Server
 				ServerDTO serverCMDB = (ServerDTO) cmdbuildSoapService.findServer(ecsDTO.getServer()).getDto();
 
-				System.out.println("vcenter中对应的宿主机:" + entry.getValue());
-				System.out.println("CMDBuild中对应的宿主机:" + serverDTO.getDescription());
-				System.out.println();
 				sb.append("vcenter中对应的宿主机:" + entry.getValue() + "<br>");
 				sb.append("CMDBuild中对应的宿主机:" + serverDTO.getDescription() + "<br>");
 				sb.append("--------------------------------------------------");
@@ -765,14 +763,24 @@ public class ApiServiceImpl implements ApiService {
 
 			} else {// CMDBuild中ECS不存在,新增一个
 
+				VMInfoDTO vmInfoDTO = (VMInfoDTO) instanceSoapService.getVMInfoDTO(entry.getKey()).getDto();
+
 				EcsDTO newEcsDTO = new EcsDTO();
 				newEcsDTO.setAgentType(LookUpConstants.AgentType.VMware.getValue());
 				newEcsDTO.setDescription(entry.getKey());
 				newEcsDTO.setRemark(entry.getKey());
 
+				HashMap<String, Object> ipMap = new HashMap<String, Object>();
+				ipMap.put("EQ_description", vmInfoDTO.getIpaddress());
+
+				IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddressByParams(
+						CMDBuildUtil.wrapperSearchParams(ipMap)).getDto();
+
+				newEcsDTO.setIdc(ipaddressDTO.getIdc());
+				newEcsDTO.setServer(serverDTO.getId());
+				newEcsDTO.setIpaddress(ipaddressDTO.getId());
 				// TODO 参数必须,需要想办法
 				newEcsDTO.setEcsSpec(117);
-				newEcsDTO.setIdc(108);
 				newEcsDTO.setTenants(533);
 
 				cmdbuildSoapService.createEcs(newEcsDTO);

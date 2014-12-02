@@ -13,6 +13,8 @@
 
   <xs:element name="RelationVMParameter" type="tns:RelationVMParameter"/>
 
+  <xs:element name="VMInfoDTO" type="tns:VMInfoDTO"/>
+
   <xs:element name="cloneVMByInstance" type="tns:cloneVMByInstance"/>
 
   <xs:element name="cloneVMByInstanceResponse" type="tns:cloneVMByInstanceResponse"/>
@@ -29,6 +31,10 @@
 
   <xs:element name="getVMAndHostRelationByInstanceResponse" type="tns:getVMAndHostRelationByInstanceResponse"/>
 
+  <xs:element name="getVMInfoDTO" type="tns:getVMInfoDTO"/>
+
+  <xs:element name="getVMInfoDTOResponse" type="tns:getVMInfoDTOResponse"/>
+
   <xs:element name="powerVMByInstance" type="tns:powerVMByInstance"/>
 
   <xs:element name="powerVMByInstanceResponse" type="tns:powerVMByInstanceResponse"/>
@@ -36,6 +42,47 @@
   <xs:element name="reconfigVMByInstance" type="tns:reconfigVMByInstance"/>
 
   <xs:element name="reconfigVMByInstanceResponse" type="tns:reconfigVMByInstanceResponse"/>
+
+  <xs:complexType name="getVMInfoDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="vmName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getVMInfoDTOResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DTOResult">
+    <xs:complexContent>
+      <xs:extension base="tns:WSResult">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="dto" type="xs:anyType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="WSResult">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="code" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="VMInfoDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="cpuNumber" type="xs:string"/>
+      <xs:element minOccurs="0" name="guestFullName" type="xs:string"/>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="macIPaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="memorySize" type="xs:string"/>
+      <xs:element minOccurs="0" name="name" type="xs:string"/>
+      <xs:element minOccurs="0" name="vlanName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
 
   <xs:complexType name="cloneVMByInstance">
     <xs:sequence>
@@ -61,13 +108,6 @@
   <xs:complexType name="cloneVMByInstanceResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="WSResult">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="code" type="xs:string"/>
-      <xs:element minOccurs="0" name="message" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -178,14 +218,6 @@
 
 </xs:schema>
   </wsdl:types>
-  <wsdl:message name="createPortGroupByInstance">
-    <wsdl:part element="tns:createPortGroupByInstance" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="destroyVMByInstance">
-    <wsdl:part element="tns:destroyVMByInstance" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="cloneVMByInstanceResponse">
     <wsdl:part element="tns:cloneVMByInstanceResponse" name="parameters">
     </wsdl:part>
@@ -196,14 +228,6 @@
   </wsdl:message>
   <wsdl:message name="reconfigVMByInstanceResponse">
     <wsdl:part element="tns:reconfigVMByInstanceResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="destroyVMByInstanceResponse">
-    <wsdl:part element="tns:destroyVMByInstanceResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="createPortGroupByInstanceResponse">
-    <wsdl:part element="tns:createPortGroupByInstanceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="cloneVMByInstance">
@@ -218,15 +242,45 @@
     <wsdl:part element="tns:powerVMByInstanceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="reconfigVMByInstance">
-    <wsdl:part element="tns:reconfigVMByInstance" name="parameters">
+  <wsdl:message name="getVMInfoDTO">
+    <wsdl:part element="tns:getVMInfoDTO" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getVMAndHostRelationByInstanceResponse">
     <wsdl:part element="tns:getVMAndHostRelationByInstanceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getVMInfoDTOResponse">
+    <wsdl:part element="tns:getVMInfoDTOResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="destroyVMByInstance">
+    <wsdl:part element="tns:destroyVMByInstance" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createPortGroupByInstance">
+    <wsdl:part element="tns:createPortGroupByInstance" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="destroyVMByInstanceResponse">
+    <wsdl:part element="tns:destroyVMByInstanceResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createPortGroupByInstanceResponse">
+    <wsdl:part element="tns:createPortGroupByInstanceResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reconfigVMByInstance">
+    <wsdl:part element="tns:reconfigVMByInstance" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:portType name="InstanceSoapService">
+    <wsdl:operation name="getVMInfoDTO">
+      <wsdl:input message="tns:getVMInfoDTO" name="getVMInfoDTO">
+    </wsdl:input>
+      <wsdl:output message="tns:getVMInfoDTOResponse" name="getVMInfoDTOResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="cloneVMByInstance">
       <wsdl:input message="tns:cloneVMByInstance" name="cloneVMByInstance">
     </wsdl:input>
@@ -272,6 +326,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="cloneVMByInstanceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getVMInfoDTO">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getVMInfoDTO">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getVMInfoDTOResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
