@@ -776,9 +776,13 @@ public class ApiServiceImpl implements ApiService {
 				IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddressByParams(
 						CMDBuildUtil.wrapperSearchParams(ipMap)).getDto();
 
-				newEcsDTO.setIdc(ipaddressDTO.getIdc());
+				if (ipaddressDTO != null) {
+					newEcsDTO.setIdc(ipaddressDTO.getIdc());
+					newEcsDTO.setIpaddress(ipaddressDTO.getId());
+				}
 				newEcsDTO.setServer(serverDTO.getId());
-				newEcsDTO.setIpaddress(ipaddressDTO.getId());
+				newEcsDTO.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
+
 				// TODO 参数必须,需要想办法
 				newEcsDTO.setEcsSpec(117);
 				newEcsDTO.setTenants(533);
@@ -2316,12 +2320,12 @@ public class ApiServiceImpl implements ApiService {
 					// 缺少空间大小
 					es3DTO.setDiskSize(diskSize);
 					es3DTO.setEs3Type(LookUpConstants.ES3Type.高IOPS.getValue());
+					es3DTO.setVolumeName(volumeName);
+					es3DTO.setStorage(minimumLoadStorage().getId());
 
 					// TODO 参数必须,需要想办法,需要考虑到用户ID不存在的可能性.
 					es3DTO.setIdc(108);
 					es3DTO.setTenants(tenantsId);
-					es3DTO.setVolumeName(volumeName);
-					es3DTO.setStorage(minimumLoadStorage().getId());
 					cmdbuildSoapService.createEs3(es3DTO);
 				}
 
