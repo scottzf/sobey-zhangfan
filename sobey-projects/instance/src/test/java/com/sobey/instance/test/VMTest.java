@@ -21,10 +21,18 @@ import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
+import com.vmware.vim25.InvalidProperty;
+import com.vmware.vim25.RuntimeFault;
+import com.vmware.vim25.VirtualDevice;
+import com.vmware.vim25.VirtualDisk;
+import com.vmware.vim25.VirtualEthernetCard;
+import com.vmware.vim25.VirtualHardware;
+import com.vmware.vim25.VirtualMachineConfigInfo;
 import com.vmware.vim25.mo.Folder;
 import com.vmware.vim25.mo.InventoryNavigator;
 import com.vmware.vim25.mo.ManagedEntity;
 import com.vmware.vim25.mo.ServiceInstance;
+import com.vmware.vim25.mo.VirtualMachine;
 
 @ContextConfiguration({ "classpath:applicationContext.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -70,6 +78,44 @@ public class VMTest extends TestCase {
 		}
 
 		si.getServerConnection().logout();
+	}
+
+	@Test
+	public void VMInfo() throws InvalidProperty, RuntimeFault, RemoteException, MalformedURLException {
+
+		ServiceInstance si = new ServiceInstance(new URL("https://10.10.2.20/sdk"), "root", "vmware", true);
+		Folder rootFolder = si.getRootFolder();
+
+		VirtualMachine myVM = (VirtualMachine) new InventoryNavigator(rootFolder).searchManagedEntity("VirtualMachine",
+				"liukai02@sobey.com-10.10.101.2");
+
+		System.out.println(">>>>>>>>>>>>>>>>>" + myVM.getGuest().getNet()[0].getNetwork());
+
+		VirtualMachineConfigInfo myVMInfo = myVM.getConfig();
+		
+		System.out.println(myVMInfo.getGuestFullName());
+
+		System.out.println(myVM.getGuest().getIpAddress());
+
+		VirtualHardware vmHardware = myVMInfo.getHardware();
+
+		System.out.println("\n============ CPU个数：" + vmHardware.getNumCPU());
+		System.out.println("\n============ 内存大小：" + vmHardware.getMemoryMB());
+
+		VirtualDevice[] vmDevices = vmHardware.getDevice();
+		for (int i = 0; i < vmDevices.length; i++) {
+			if (vmDevices[i] instanceof VirtualDisk) {
+				VirtualDisk vmDisk = (VirtualDisk) vmDevices[i];
+				System.out.println("\n============ 存储大小" + vmDisk.getCapacityInKB());
+			}
+
+			if (vmDevices[i] instanceof VirtualEthernetCard) {
+				VirtualEthernetCard card = (VirtualEthernetCard) vmDevices[i];
+				System.out.println("\n============ mac地址：" + card.getMacAddress());
+			}
+		}
+		si.getServerConnection().logout();
+
 	}
 
 	@Test
