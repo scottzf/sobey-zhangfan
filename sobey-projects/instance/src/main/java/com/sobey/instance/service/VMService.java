@@ -771,17 +771,16 @@ public class VMService {
 
 			VirtualMachine vm = getVirtualMachine(si, name);
 
-			VirtualMachineConfigInfo vmConfigInfo = vm.getConfig();
+			if (vm != null) {
 
-			// TODO 临时添加,相应的服务器无法获得其内网IP地址
-			if (vm != null && !name.equals("10.10.2.36_Netscaler") && !name.equals("DataONTAP31-34")) {
+				// 判断虚拟机是否安装有vmware tools.
+
+				VirtualMachineConfigInfo vmConfigInfo = vm.getConfig();
 
 				VirtualHardware vmHardware = vmConfigInfo.getHardware();
 
-				if (vm.getGuest() != null) {
-					if (vm.getGuest().getNet().length != 0) {
-						vmInfoDTO.setVlanName(vm.getGuest().getNet()[0].getNetwork());
-					}
+				if (vm.getGuest().getNet() != null) {
+					vmInfoDTO.setVlanName(vm.getGuest().getNet()[0].getNetwork());
 				}
 
 				vmInfoDTO.setGuestFullName(vmConfigInfo.getGuestFullName());
@@ -789,6 +788,7 @@ public class VMService {
 				vmInfoDTO.setCpuNumber(Integer.valueOf(vmHardware.getNumCPU()).toString());
 				vmInfoDTO.setMemorySize(Integer.valueOf(vmHardware.getMemoryMB()).toString());
 				vmInfoDTO.setName(name);
+				vmInfoDTO.setStatus(vm.getGuest().getGuestState());// running or notRunning
 
 				VirtualDevice[] vmDevices = vmHardware.getDevice();
 				for (int i = 0; i < vmDevices.length; i++) {

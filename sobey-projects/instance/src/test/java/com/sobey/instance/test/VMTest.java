@@ -21,6 +21,7 @@ import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
+import com.sobey.instance.webservice.response.dto.VMInfoDTO;
 import com.vmware.vim25.InvalidProperty;
 import com.vmware.vim25.RuntimeFault;
 import com.vmware.vim25.VirtualDevice;
@@ -87,35 +88,50 @@ public class VMTest extends TestCase {
 		Folder rootFolder = si.getRootFolder();
 
 		VirtualMachine myVM = (VirtualMachine) new InventoryNavigator(rootFolder).searchManagedEntity("VirtualMachine",
-				"liukai02@sobey.com-10.10.101.2");
+		// "liukai02@sobey.com-10.10.101.5");
+		// "10.10.2.36_Netscaler`");
+				"DataONTAP31-34");
 
-		System.out.println(">>>>>>>>>>>>>>>>>" + myVM.getGuest().getNet()[0].getNetwork());
+		/**
+		 * VM是否关机只和status有关系,
+		 * 
+		 * 如果没有安装vmare tools ,myVM为null,不记录入CMDB的服务资源
+		 * 
+		 * netapp controller 适配器vcenter中能查出4个,但是通过SDK无法获得:myVM.getGuest().getNet()为null 分析是vmware tools
+		 * 属于第三方/独立运行,故无法通过Guest获得.
+		 */
 
 		VirtualMachineConfigInfo myVMInfo = myVM.getConfig();
-		
-		System.out.println(myVMInfo.getGuestFullName());
-
-		System.out.println(myVM.getGuest().getIpAddress());
 
 		VirtualHardware vmHardware = myVMInfo.getHardware();
 
-		System.out.println("\n============ CPU个数：" + vmHardware.getNumCPU());
-		System.out.println("\n============ 内存大小：" + vmHardware.getMemoryMB());
+		System.err.println("============ VM状态：" + myVM.getGuest().getGuestState());
+		System.out.println("============ 操作系统：" + myVMInfo.getGuestFullName());
+		System.out.println("============ IP地址：" + myVM.getGuest().getIpAddress());
+		System.out.println("============ CPU个数：" + vmHardware.getNumCPU());
+		System.out.println("============ 内存大小：" + vmHardware.getMemoryMB());
+		System.out.println("============ 网络适配器：" + myVM.getGuest().getNet());
 
 		VirtualDevice[] vmDevices = vmHardware.getDevice();
 		for (int i = 0; i < vmDevices.length; i++) {
 			if (vmDevices[i] instanceof VirtualDisk) {
 				VirtualDisk vmDisk = (VirtualDisk) vmDevices[i];
-				System.out.println("\n============ 存储大小" + vmDisk.getCapacityInKB());
+				System.out.println("============ 存储大小" + vmDisk.getCapacityInKB());
 			}
 
 			if (vmDevices[i] instanceof VirtualEthernetCard) {
 				VirtualEthernetCard card = (VirtualEthernetCard) vmDevices[i];
-				System.out.println("\n============ mac地址：" + card.getMacAddress());
+				System.out.println("============ mac地址：" + card.getMacAddress());
 			}
 		}
 		si.getServerConnection().logout();
 
+	}
+
+	@Test
+	public void getVMInfoDTO() {
+		VMInfoDTO dto = service.getVMInfoDTO("10.10.2.36_Netscaler");
+		System.out.println(dto);
 	}
 
 	@Test
