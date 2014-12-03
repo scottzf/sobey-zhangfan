@@ -18,6 +18,7 @@ public class VMInfoDTO {
 	private String macIPaddress;
 	private String guestFullName;
 	private String vlanName;
+	private String status;
 
 	public String getName() {
 		return name;
@@ -73,6 +74,14 @@ public class VMInfoDTO {
 
 	public void setVlanName(String vlanName) {
 		this.vlanName = vlanName;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	/**
