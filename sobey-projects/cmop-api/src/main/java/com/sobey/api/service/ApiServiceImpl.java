@@ -781,7 +781,13 @@ public class ApiServiceImpl implements ApiService {
 					newEcsDTO.setIpaddress(ipaddressDTO.getId());
 				}
 				newEcsDTO.setServer(serverDTO.getId());
-				newEcsDTO.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
+
+				// running为通过vcenter sdk获得当前VM运行状态.
+				if ("running".equals(vmInfoDTO.getStatus())) {
+					newEcsDTO.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
+				} else {
+					newEcsDTO.setEcsStatus(LookUpConstants.ECSStatus.停止.getValue());
+				}
 
 				// TODO 参数必须,需要想办法
 				newEcsDTO.setEcsSpec(117);
