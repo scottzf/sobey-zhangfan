@@ -3,6 +3,7 @@ package com.sobey.instance.test;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.Map.Entry;
 
 import junit.framework.TestCase;
@@ -76,6 +77,33 @@ public class VMTest extends TestCase {
 			System.err.println("resourcePools[" + i + "]=" + resourcePools[i].getName());
 			System.out.println(resourcePools[i].getMOR().getType());
 			System.out.println(resourcePools[i].getMOR().get_value());
+		}
+
+		si.getServerConnection().logout();
+	}
+
+	@Test
+	public void getResourcesInfo() throws RemoteException, MalformedURLException {
+		ServiceInstance si = new ServiceInstance(new URL("https://10.10.2.20/sdk"), "root", "vmware", true);
+		Folder rootFolder = si.getRootFolder();
+
+		HashMap<String, String> map = new HashMap<String, String>();
+
+		ManagedEntity[] resourcePools = new InventoryNavigator(rootFolder).searchManagedEntities(new String[][] {
+				{ "ResourcePool", "name" }, { "HostSystem", "name" } }, true);
+		for (int i = 0; i < resourcePools.length; i++) {
+			System.err.println(resourcePools[i].getMOR().get_value());
+
+			if (i + 1 != resourcePools.length) {
+
+				map.put(resourcePools[i].getMOR().get_value(), resourcePools[i + 1].getMOR().get_value());
+			}
+
+		}
+
+		for (Entry<String, String> entity : map.entrySet()) {
+			System.out.println(entity.getKey());
+			System.out.println(entity.getValue());
 		}
 
 		si.getServerConnection().logout();
