@@ -89,6 +89,16 @@
 						<li><a href="${ctx}/zabbix/history/">ECS历史监控</a></li>
 						<li><a href="${ctx}/zabbix/volume/">云存储用量查询</a></li>
 					</ul></li>
+
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">同步<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="${ctx}/sync/ecs/">同步ECS</a></li>
+						<li><a href="${ctx}/sync/es3/">同步ES3</a></li>
+						<li><a href="${ctx}/sync/dns/">同步DNS</a></li>
+						<li><a href="${ctx}/sync/elb/">同步ELB</a></li>
+					</ul></li>
+
 			</ul>
 		</div>
 		<!--/.nav-collapse -->

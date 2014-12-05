@@ -303,4 +303,19 @@ public interface ApiService {
 	 */
 	public ZItemDTO getVolumeData(Integer es3Id);
 
+	/**
+	 * 同步netapp
+	 */
+	public void syncVolume();
+
+	/**
+	 * 同步netscarler中的ELB
+	 */
+	public void syncELB();
+
+	/**
+	 * 同步netscarler中的GSLB DNS
+	 */
+	public void syncDNS();
+
 }

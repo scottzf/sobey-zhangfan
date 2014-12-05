@@ -18,20 +18,20 @@ import com.sobey.cmdbuild.entity.basic.DeviceBasic;
 @Table(name = "storage", schema = "public")
 public class Storage extends DeviceBasic {
 
-	private String username;
+	private String name;
 	private String password;
 	private Set<StorageHistory> storageHistories = new HashSet<StorageHistory>(0);
 
 	public Storage() {
 	}
 
-	@Column(name = "username", length = 100)
-	public String getUsername() {
-		return username;
+	@Column(name = "name", length = 100)
+	public String getName() {
+		return name;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Column(name = "password", length = 100)

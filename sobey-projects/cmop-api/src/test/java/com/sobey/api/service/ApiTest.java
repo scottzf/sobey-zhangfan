@@ -44,7 +44,7 @@ public class ApiTest extends TestCase {
 		}
 	}
 
-	// @Test
+	@Test
 	public void createtenants() {
 
 		TenantsDTO tenantsDTO = new TenantsDTO();
@@ -94,11 +94,6 @@ public class ApiTest extends TestCase {
 		Integer ecsSpecId = 130;
 		Integer ecsId = 430;
 		service.reconfigECS(ecsId, ecsSpecId);
-	}
-
-	@Test
-	public void syncVM() {
-		System.out.println(service.syncVM("xa"));
 	}
 
 	@Test
@@ -168,12 +163,6 @@ public class ApiTest extends TestCase {
 
 	@Test
 	public void dissociateEIP() {
-		service.dissociateEIP(1940, 1612);
-	}
-
-	@Test
-	public void aa() {
-		// policyParameter.setSourcePort(NetworkUtil.getPortFromProtocol(protocols[i]));
 		service.dissociateEIP(1940, 1612);
 	}
 

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.sobey.core.utils.JschUtil;
 import com.sobey.core.utils.TelnetUtil;
 import com.sobey.switches.PbulicProperties;
 import com.sobey.switches.data.TestData;
@@ -47,7 +48,9 @@ public class VlanTest extends TestCase implements PbulicProperties {
 
 		System.out.println(command);
 
-		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, command, FILE_PATH);
+		JschUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, command, FILE_PATH);
+
+		// TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, command, FILE_PATH);
 
 		String result = FileUtils.readFileToString(new File(FILE_PATH));
 
@@ -59,9 +62,11 @@ public class VlanTest extends TestCase implements PbulicProperties {
 	@Test
 	public void deleteVlanInCore() throws IOException {
 
-		Integer vlanId = 101; // 临时数据
+		Integer vlanId = 80; // 临时数据
 
 		String command = service.deleteVlanOnAccessLayer(vlanId);
+
+		System.out.println(command);
 
 		TelnetUtil.execCommand(CORE_IP, CORE_USERNAME, CORE_PASSWORD, command, FILE_PATH);
 

@@ -18,8 +18,8 @@ import com.sobey.storage.constans.WsConstants;
  * @author Administrator
  * 
  */
-@XmlRootElement(name = "Es3SizeInfoParameter")
-@XmlType(name = "Es3SizeInfoParameter", namespace = WsConstants.NS)
+@XmlRootElement(name = "Es3SizeParameter")
+@XmlType(name = "Es3SizeParameter", namespace = WsConstants.NS)
 public class Es3SizeParameter {
 
 	/**

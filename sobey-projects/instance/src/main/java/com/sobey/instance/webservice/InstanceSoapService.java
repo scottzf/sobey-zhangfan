@@ -9,6 +9,8 @@ import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
+import com.sobey.instance.webservice.response.dto.VMInfoDTO;
+import com.sobey.instance.webservice.response.result.DTOResult;
 import com.sobey.instance.webservice.response.result.WSResult;
 
 /**
@@ -76,4 +78,12 @@ public interface InstanceSoapService {
 	WSResult createPortGroupByInstance(@WebParam(name = "vlanId") Integer vlanId,
 			@WebParam(name = "datacenter") String datacenter);
 
+	/**
+	 * 根据虚拟机名称获得虚拟机信息
+	 * 
+	 * @param vmName
+	 *            虚拟机名称
+	 * @return
+	 */
+	DTOResult<VMInfoDTO> getVMInfoDTO(@WebParam(name = "vmName") String vmName);
 }
