@@ -53,7 +53,7 @@ import com.vmware.vim25.mo.VirtualMachine;
  * @author Steve Jin
  */
 
-public class VmDiskOp {
+public class AddVmDisk {
 
 	public static void main(String[] args) throws Exception {
 
