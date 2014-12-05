@@ -47,12 +47,6 @@ import com.vmware.vim25.mo.ServiceInstance;
 import com.vmware.vim25.mo.Task;
 import com.vmware.vim25.mo.VirtualMachine;
 
-/**
- * http://vijava.sf.net
- * 
- * @author Steve Jin
- */
-
 public class AddVmDisk {
 
 	public static void main(String[] args) throws Exception {
