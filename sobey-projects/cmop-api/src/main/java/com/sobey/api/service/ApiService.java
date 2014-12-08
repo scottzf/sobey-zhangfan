@@ -20,6 +20,8 @@ import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.TagDTO;
 import com.sobey.generate.cmdbuild.TagRelation;
 import com.sobey.generate.cmdbuild.TenantsDTO;
+import com.sobey.generate.instance.CreateVMDiskParameter;
+import com.sobey.generate.instance.DeleteVMDiskParameter;
 import com.sobey.generate.zabbix.ZHistoryItemDTO;
 import com.sobey.generate.zabbix.ZItemDTO;
 
@@ -31,6 +33,10 @@ public interface ApiService {
 	 * @param tenantsDTO
 	 */
 	public WSResult createTenants(TenantsDTO tenantsDTO);
+
+	public void createES3(CreateVMDiskParameter createVMDiskParameter);
+
+	public void deleteES3(DeleteVMDiskParameter deleteVMDiskParameter);
 
 	/**
 	 * 创建一个ECS
@@ -77,6 +83,15 @@ public interface ApiService {
 	 * @param es3DTO
 	 */
 	public WSResult createES3(Es3DTO es3DTO);
+
+	/**
+	 * 创建ES3(nimble专用)
+	 * 
+	 * @param es3DTO
+	 * @param vmName
+	 * @return
+	 */
+	public WSResult createES3(Es3DTO es3DTO, String vmName);
 
 	/**
 	 * 挂载ES3

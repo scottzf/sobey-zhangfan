@@ -52,12 +52,14 @@ import com.sobey.generate.firewall.EIPPolicyParameter;
 import com.sobey.generate.firewall.FirewallSoapService;
 import com.sobey.generate.firewall.VPNUserParameter;
 import com.sobey.generate.instance.CloneVMParameter;
+import com.sobey.generate.instance.CreateVMDiskParameter;
+import com.sobey.generate.instance.DeleteVMDiskParameter;
 import com.sobey.generate.instance.DestroyVMParameter;
 import com.sobey.generate.instance.InstanceSoapService;
 import com.sobey.generate.instance.PowerVMParameter;
 import com.sobey.generate.instance.ReconfigVMParameter;
-import com.sobey.generate.instance.VMInfoDTO;
 import com.sobey.generate.instance.RelationVMParameter.RelationMaps.Entry;
+import com.sobey.generate.instance.VMInfoDTO;
 import com.sobey.generate.loadbalancer.ELBParameter;
 import com.sobey.generate.loadbalancer.ELBPolicyParameter;
 import com.sobey.generate.loadbalancer.ELBPublicIPParameter;
@@ -868,6 +870,11 @@ public class ApiServiceImpl implements ApiService {
 
 	@Override
 	public WSResult createES3(Es3DTO es3DTO) {
+		return createES3(es3DTO, "");
+	}
+
+	@Override
+	public WSResult createES3(Es3DTO es3DTO, String vmName) {
 
 		/**
 		 * Step.1 获得租户、vlan信息
@@ -892,24 +899,30 @@ public class ApiServiceImpl implements ApiService {
 		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(es3DTO.getTenants()).getDto();
 
 		// Step.2 创建volume
+
 		// 卷名在netapp中应该是唯一的,故实际的卷名: 租户定义的名称+租户ID
 		String VolumeName = es3DTO.getDescription() + "_" + tenantsDTO.getId();
-
-		CreateEs3Parameter createEs3Parameter = new CreateEs3Parameter();
-		createEs3Parameter.setVolumeName(VolumeName);
-		createEs3Parameter.setVolumeSize(es3DTO.getDiskSize().toString());
-		createEs3Parameter.setControllerIP(controllerIP.getDescription());
-		createEs3Parameter.setUsername(storageDTO.getName());
-		createEs3Parameter.setPassword(storageDTO.getPassword());
 
 		com.sobey.generate.storage.WSResult wsResult = new com.sobey.generate.storage.WSResult();
 
 		if (LookUpConstants.ES3Type.高IOPS.getValue().equals(es3DTO.getEs3Type())) {
 
+			CreateEs3Parameter createEs3Parameter = new CreateEs3Parameter();
+			createEs3Parameter.setVolumeName(VolumeName);
+			createEs3Parameter.setVolumeSize(es3DTO.getDiskSize().toString());
+			createEs3Parameter.setControllerIP(controllerIP.getDescription());
+			createEs3Parameter.setUsername(storageDTO.getName());
+			createEs3Parameter.setPassword(storageDTO.getPassword());
 			wsResult = storageSoapService.createEs3ByStorage(createEs3Parameter);
 
 		} else if (LookUpConstants.ES3Type.高吞吐.getValue().equals(es3DTO.getEs3Type())) {
-			// TODO nimble agent
+
+			CreateVMDiskParameter createVMDiskParameter = new CreateVMDiskParameter();
+			createVMDiskParameter.setDatacenter("xa");
+			createVMDiskParameter.setDiskName(VolumeName);
+			createVMDiskParameter.setDiskSize(es3DTO.getDiskSize().toString());
+			createVMDiskParameter.setVmName(vmName);
+			instanceSoapService.createES3ByInstance(createVMDiskParameter);
 		} else {
 
 		}
@@ -2582,4 +2595,17 @@ public class ApiServiceImpl implements ApiService {
 		System.out.println("DNS同步完成!!!!");
 
 	}
+
+	@Override
+	public void createES3(CreateVMDiskParameter createVMDiskParameter) {
+		instanceSoapService.createES3ByInstance(createVMDiskParameter);
+
+	}
+
+	@Override
+	public void deleteES3(DeleteVMDiskParameter deleteVMDiskParameter) {
+		instanceSoapService.deleteES3ByInstance(deleteVMDiskParameter);
+
+	}
+
 }

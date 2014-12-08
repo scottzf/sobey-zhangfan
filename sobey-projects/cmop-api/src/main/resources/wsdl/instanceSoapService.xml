@@ -5,6 +5,10 @@
 
   <xs:element name="CloneVMParameter" type="tns:CloneVMParameter"/>
 
+  <xs:element name="CreateVMDiskParameter" type="tns:CreateVMDiskParameter"/>
+
+  <xs:element name="DeleteVMDiskParameter" type="tns:DeleteVMDiskParameter"/>
+
   <xs:element name="DestroyVMParameter" type="tns:DestroyVMParameter"/>
 
   <xs:element name="PowerVMParameter" type="tns:PowerVMParameter"/>
@@ -19,9 +23,17 @@
 
   <xs:element name="cloneVMByInstanceResponse" type="tns:cloneVMByInstanceResponse"/>
 
+  <xs:element name="createES3ByInstance" type="tns:createES3ByInstance"/>
+
+  <xs:element name="createES3ByInstanceResponse" type="tns:createES3ByInstanceResponse"/>
+
   <xs:element name="createPortGroupByInstance" type="tns:createPortGroupByInstance"/>
 
   <xs:element name="createPortGroupByInstanceResponse" type="tns:createPortGroupByInstanceResponse"/>
+
+  <xs:element name="deleteES3ByInstance" type="tns:deleteES3ByInstance"/>
+
+  <xs:element name="deleteES3ByInstanceResponse" type="tns:deleteES3ByInstanceResponse"/>
 
   <xs:element name="destroyVMByInstance" type="tns:destroyVMByInstance"/>
 
@@ -85,6 +97,27 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="deleteES3ByInstance">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="deleteVMDiskParameter" type="tns:DeleteVMDiskParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DeleteVMDiskParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
+      <xs:element minOccurs="0" name="diskName" type="xs:string"/>
+      <xs:element minOccurs="0" name="diskSize" type="xs:string"/>
+      <xs:element minOccurs="0" name="vmName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteES3ByInstanceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="cloneVMByInstance">
     <xs:sequence>
       <xs:element minOccurs="0" name="cloneVMParameter" type="tns:CloneVMParameter"/>
@@ -126,6 +159,27 @@
   </xs:complexType>
 
   <xs:complexType name="destroyVMByInstanceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createES3ByInstance">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="createVMDiskParameter" type="tns:CreateVMDiskParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="CreateVMDiskParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
+      <xs:element minOccurs="0" name="diskName" type="xs:string"/>
+      <xs:element minOccurs="0" name="diskSize" type="xs:string"/>
+      <xs:element minOccurs="0" name="vmName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createES3ByInstanceResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
     </xs:sequence>
@@ -223,6 +277,14 @@
     <wsdl:part element="tns:cloneVMByInstanceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="createES3ByInstanceResponse">
+    <wsdl:part element="tns:createES3ByInstanceResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createES3ByInstance">
+    <wsdl:part element="tns:createES3ByInstance" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="powerVMByInstance">
     <wsdl:part element="tns:powerVMByInstance" name="parameters">
     </wsdl:part>
@@ -243,6 +305,10 @@
     <wsdl:part element="tns:powerVMByInstanceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="deleteES3ByInstanceResponse">
+    <wsdl:part element="tns:deleteES3ByInstanceResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getVMInfoDTO">
     <wsdl:part element="tns:getVMInfoDTO" name="parameters">
     </wsdl:part>
@@ -255,12 +321,16 @@
     <wsdl:part element="tns:getVMInfoDTOResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="createPortGroupByInstance">
+    <wsdl:part element="tns:createPortGroupByInstance" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="destroyVMByInstance">
     <wsdl:part element="tns:destroyVMByInstance" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="createPortGroupByInstance">
-    <wsdl:part element="tns:createPortGroupByInstance" name="parameters">
+  <wsdl:message name="deleteES3ByInstance">
+    <wsdl:part element="tns:deleteES3ByInstance" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="destroyVMByInstanceResponse">
@@ -282,6 +352,12 @@
       <wsdl:output message="tns:getVMInfoDTOResponse" name="getVMInfoDTOResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="deleteES3ByInstance">
+      <wsdl:input message="tns:deleteES3ByInstance" name="deleteES3ByInstance">
+    </wsdl:input>
+      <wsdl:output message="tns:deleteES3ByInstanceResponse" name="deleteES3ByInstanceResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="cloneVMByInstance">
       <wsdl:input message="tns:cloneVMByInstance" name="cloneVMByInstance">
     </wsdl:input>
@@ -292,6 +368,12 @@
       <wsdl:input message="tns:destroyVMByInstance" name="destroyVMByInstance">
     </wsdl:input>
       <wsdl:output message="tns:destroyVMByInstanceResponse" name="destroyVMByInstanceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createES3ByInstance">
+      <wsdl:input message="tns:createES3ByInstance" name="createES3ByInstance">
+    </wsdl:input>
+      <wsdl:output message="tns:createES3ByInstanceResponse" name="createES3ByInstanceResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="powerVMByInstance">
@@ -330,6 +412,15 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="deleteES3ByInstance">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteES3ByInstance">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteES3ByInstanceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getVMInfoDTO">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="getVMInfoDTO">
@@ -345,6 +436,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="destroyVMByInstanceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createES3ByInstance">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createES3ByInstance">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createES3ByInstanceResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
