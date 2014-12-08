@@ -167,17 +167,36 @@ public class ApiTest extends TestCase {
 	}
 
 	@Test
-	public void getItemTest() {
-		// System.out.println(service.getItem(3002, ItemEnum.Free_disk_space_on.getName()).getLastValue());
+	public void getHistoryData() {
 
-		ZHistoryItemDTO dtos = service.getHistoryData(161, ItemEnum.SDA的读性能.getName());
+		ZHistoryItemDTO dtos = service.getHistoryData(2290, ItemEnum.SDA的tps.getName());
 
 		for (ZItemDTO item : dtos.getZItemDTOs()) {
 			System.out.println(item.getItemid());
 			System.out.println(item.getClock());
 			System.out.println(item.getValue());
+			System.err.println(item.getUnits());
+
 			System.out.println();
 
 		}
+	}
+	
+	@Test
+	public void getItemTest() {
+		
+		
+		//Free_disk_space_on
+		
+		//traffic_in
+		//traffic_out
+		
+		ZItemDTO dtos = service.getCurrentData(2290, ItemEnum.Free_disk_space_on.getName());
+		System.out.println(dtos.getItemid());
+		System.out.println(dtos.getClock());
+		System.out.println(dtos.getValue());
+		System.err.println(dtos.getUnits());
+
+		 
 	}
 }
