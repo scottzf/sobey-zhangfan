@@ -15,6 +15,8 @@ import com.google.common.collect.Maps;
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.instance.constans.DataCenterEnum;
 import com.sobey.instance.webservice.response.dto.CloneVMParameter;
+import com.sobey.instance.webservice.response.dto.CreateVMDiskParameter;
+import com.sobey.instance.webservice.response.dto.DeleteVMDiskParameter;
 import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
@@ -40,6 +42,7 @@ import com.vmware.vim25.CustomizationSysprepRebootOption;
 import com.vmware.vim25.CustomizationUserData;
 import com.vmware.vim25.CustomizationWinOptions;
 import com.vmware.vim25.DVPortgroupConfigSpec;
+import com.vmware.vim25.DatastoreSummary;
 import com.vmware.vim25.DistributedVirtualSwitchPortConnection;
 import com.vmware.vim25.InvalidProperty;
 import com.vmware.vim25.ManagedObjectReference;
@@ -49,8 +52,11 @@ import com.vmware.vim25.TaskInfoState;
 import com.vmware.vim25.VMwareDVSPortSetting;
 import com.vmware.vim25.VirtualDevice;
 import com.vmware.vim25.VirtualDeviceConfigSpec;
+import com.vmware.vim25.VirtualDeviceConfigSpecFileOperation;
 import com.vmware.vim25.VirtualDeviceConfigSpecOperation;
 import com.vmware.vim25.VirtualDeviceConnectInfo;
+import com.vmware.vim25.VirtualDisk;
+import com.vmware.vim25.VirtualDiskFlatVer2BackingInfo;
 import com.vmware.vim25.VirtualEthernetCard;
 import com.vmware.vim25.VirtualEthernetCardDistributedVirtualPortBackingInfo;
 import com.vmware.vim25.VirtualHardware;
@@ -62,6 +68,7 @@ import com.vmware.vim25.VirtualVmxnet3;
 import com.vmware.vim25.VmwareDistributedVirtualSwitchVlanIdSpec;
 import com.vmware.vim25.mo.CustomizationSpecManager;
 import com.vmware.vim25.mo.Datacenter;
+import com.vmware.vim25.mo.Datastore;
 import com.vmware.vim25.mo.DistributedVirtualPortgroup;
 import com.vmware.vim25.mo.DistributedVirtualSwitch;
 import com.vmware.vim25.mo.Folder;
@@ -392,6 +399,199 @@ public class VMService {
 		}
 
 		return retVal;
+	}
+
+	/**
+	 * 删除为VM分配存储空间
+	 * 
+	 * @param parameter
+	 * @return
+	 */
+	public boolean deleteVMDisk(DeleteVMDiskParameter parameter) {
+
+		try {
+
+			ServiceInstance si = getServiceInstance(parameter.getDatacenter());
+
+			VirtualMachine vm = getVirtualMachine(si, parameter.getVmName());
+
+			VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
+
+			String dsName = getFreeDatastoreName(vm, Long.valueOf(parameter.getDiskSize()));
+			String diskName = parameter.getDiskName();
+			String fileName = "[" + dsName + "] " + vm.getName() + "/" + diskName + ".vmdk";
+
+			VirtualDeviceConfigSpec vdiskSpec = createRemoveDiskConfigSpec(vm.getConfig(), fileName);
+			vmConfigSpec.setDeviceChange(new VirtualDeviceConfigSpec[] { vdiskSpec });
+			Task task = vm.reconfigVM_Task(vmConfigSpec);
+
+			if (task.waitForTask() != Task.SUCCESS) {
+				logger.info("Failure -:   cannot be created stroage");
+				return false;
+			}
+
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return true;
+	}
+
+	/**
+	 * 为VM分配存储空间
+	 * 
+	 * 磁盘模式VirtualDiskMode包含几种选项。 不同的FileBacking对不同的磁盘模式支持不同。
+	 * 
+	 * append :Changes are appended to the redo log; you revoke changes by removing the undo log.
+	 * 
+	 * independent_nonpersistent :Same as nonpersistent, but not affected by snapshots.
+	 * 
+	 * independent_persistent :Same as persistent, but not affected by snapshots.
+	 * 
+	 * nonpersistent :Changes to virtual disk are made to a redo log and discarded at power off.
+	 * 
+	 * persistent :Changes are immediately and permanently written to the virtual disk.
+	 * 
+	 * undoable :Changes are made to a redo log, but you are given the option to commit or undo.
+	 * 
+	 * @param parameter
+	 * @return
+	 */
+	public boolean createVMDisk(CreateVMDiskParameter parameter) {
+
+		try {
+
+			ServiceInstance si = getServiceInstance(parameter.getDatacenter());
+
+			VirtualMachine vm = getVirtualMachine(si, parameter.getVmName());
+
+			VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
+
+			String diskMode = "persistent";
+			long diskSize = Long.valueOf(parameter.getDiskSize()); // 存储大小,单位GB
+			String diskName = parameter.getDiskName(); // 存储名称
+
+			VirtualDeviceConfigSpec vdiskSpec = createAddDiskConfigSpec(vm, diskSize, diskMode, diskName);
+			VirtualDeviceConfigSpec[] vdiskSpecArray = { vdiskSpec };
+			vmConfigSpec.setDeviceChange(vdiskSpecArray);
+
+			Task task = vm.reconfigVM_Task(vmConfigSpec);
+
+			if (task.waitForTask() != Task.SUCCESS) {
+				logger.info("Failure -:   cannot be created stroage");
+				return false;
+			}
+
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return true;
+	}
+
+	private static VirtualDeviceConfigSpec createAddDiskConfigSpec(VirtualMachine vm, long diskSize, String diskMode,
+			String diskName) throws Exception {
+		VirtualDeviceConfigSpec diskSpec = new VirtualDeviceConfigSpec();
+		VirtualMachineConfigInfo vmConfig = (VirtualMachineConfigInfo) vm.getConfig();
+		VirtualDevice[] vds = vmConfig.getHardware().getDevice();
+
+		VirtualDisk disk = new VirtualDisk();
+		VirtualDiskFlatVer2BackingInfo diskfileBacking = new VirtualDiskFlatVer2BackingInfo();
+
+		int key = 0;
+
+		for (int k = 0; k < vds.length; k++) {
+			if (vds[k].getDeviceInfo().getLabel().equalsIgnoreCase("SCSI Controller 0")) {
+				key = vds[k].getKey();
+			}
+		}
+
+		int j = 0;
+		for (VirtualDevice virtualDevice : vds) {
+			if (virtualDevice instanceof VirtualDisk) {
+				j++;
+			}
+		}
+
+		int unitNumber = j;
+
+		String dsName = getFreeDatastoreName(vm, diskSize);
+		if (dsName == null) {
+			return null;
+		}
+		String fileName = "[" + dsName + "] " + vm.getName() + "/" + diskName + ".vmdk";
+
+		diskfileBacking.setDiskMode(diskMode);
+		diskfileBacking.setFileName(fileName);
+		diskfileBacking.setThinProvisioned(true);
+		diskfileBacking.setSplit(false);// split：标明磁盘文件是以多个不大于2GB的文件，还是单独文件存储
+		diskfileBacking.setWriteThrough(false);// writeThrough：标明磁盘文件是直接写入洗盘还是缓冲
+
+		disk.setControllerKey(key);
+		disk.setUnitNumber(unitNumber);
+		disk.setBacking(diskfileBacking);
+		disk.setCapacityInKB(1024 * 1024 * diskSize);
+		disk.setKey(1);
+
+		diskSpec.setOperation(VirtualDeviceConfigSpecOperation.add);
+		diskSpec.setFileOperation(VirtualDeviceConfigSpecFileOperation.create);
+		diskSpec.setDevice(disk);
+		return diskSpec;
+	}
+
+	private static VirtualDeviceConfigSpec createRemoveDiskConfigSpec(VirtualMachineConfigInfo vmConfig, String diskName)
+			throws Exception {
+		VirtualDeviceConfigSpec diskSpec = new VirtualDeviceConfigSpec();
+		VirtualDisk disk = (VirtualDisk) findVirtualDevice(vmConfig, diskName);
+
+		if (disk != null) {
+			diskSpec.setOperation(VirtualDeviceConfigSpecOperation.remove);
+			// remove the following line can keep the disk file
+			diskSpec.setFileOperation(VirtualDeviceConfigSpecFileOperation.destroy);
+			diskSpec.setDevice(disk);
+			return diskSpec;
+		} else {
+			throw new Exception("No device found: " + diskName);
+		}
+	}
+
+	private static VirtualDevice findVirtualDevice(VirtualMachineConfigInfo cfg, String name) {
+		VirtualDevice[] devices = cfg.getHardware().getDevice();
+
+		for (int i = 0; devices != null && i < devices.length; i++) {
+
+			if (devices[i] instanceof VirtualDisk) {
+
+				VirtualDiskFlatVer2BackingInfo backingInfo = (VirtualDiskFlatVer2BackingInfo) devices[i].getBacking();
+
+				if (backingInfo.getFileName().equals(name)) {
+					return devices[i];
+				}
+
+			}
+		}
+		return null;
+	}
+
+	private static String getFreeDatastoreName(VirtualMachine vm, long size) throws Exception {
+		String dsName = null;
+		Datastore[] datastores = vm.getDatastores();
+		for (int i = 0; i < datastores.length; i++) {
+			DatastoreSummary ds = datastores[i].getSummary();
+			if (ds.getFreeSpace() > size) {
+				dsName = ds.getName();
+				break;
+			}
+		}
+		return dsName;
 	}
 
 	public boolean cloneVM(CloneVMParameter parameter) {
