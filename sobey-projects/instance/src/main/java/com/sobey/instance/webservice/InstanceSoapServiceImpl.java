@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.sobey.instance.constans.WsConstants;
 import com.sobey.instance.service.VMService;
 import com.sobey.instance.webservice.response.dto.CloneVMParameter;
+import com.sobey.instance.webservice.response.dto.CreateVMDiskParameter;
+import com.sobey.instance.webservice.response.dto.DeleteVMDiskParameter;
 import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
@@ -107,6 +109,33 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	public DTOResult<VMInfoDTO> getVMInfoDTO(String vmName) {
 		DTOResult<VMInfoDTO> result = new DTOResult<VMInfoDTO>();
 		result.setDto(service.getVMInfoDTO(vmName));
+		return result;
+	}
+
+	@Override
+	public WSResult createES3ByInstance(CreateVMDiskParameter createVMDiskParameter) {
+
+		WSResult result = new WSResult();
+
+		boolean flag = service.createVMDisk(createVMDiskParameter);
+
+		if (!flag) {
+			result.setError(WSResult.SYSTEM_ERROR, "存储创建失败");
+		}
+
+		return result;
+	}
+
+	@Override
+	public WSResult deleteES3ByInstance(DeleteVMDiskParameter deleteVMDiskParameter) {
+		WSResult result = new WSResult();
+
+		boolean flag = service.deleteVMDisk(deleteVMDiskParameter);
+
+		if (!flag) {
+			result.setError(WSResult.SYSTEM_ERROR, "存储删除失败");
+		}
+
 		return result;
 	}
 
