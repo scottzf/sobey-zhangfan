@@ -2,7 +2,7 @@ package com.sobey.instance.constans;
 
 /**
  * 数据中心的定义
- * 
+ * 增加常量说明
  * @author Administrator
  * 
  */

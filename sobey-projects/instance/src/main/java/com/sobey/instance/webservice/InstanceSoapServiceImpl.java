@@ -13,6 +13,8 @@ import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
+import com.sobey.instance.webservice.response.dto.VMInfoDTO;
+import com.sobey.instance.webservice.response.result.DTOResult;
 import com.sobey.instance.webservice.response.result.WSResult;
 
 @WebService(serviceName = "InstanceSoapService", endpointInterface = "com.sobey.instance.webservice.InstanceSoapService", targetNamespace = WsConstants.NS)
@@ -98,6 +100,13 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 			result.setError(WSResult.SYSTEM_ERROR, "分布式端口组创建失败");
 		}
 
+		return result;
+	}
+
+	@Override
+	public DTOResult<VMInfoDTO> getVMInfoDTO(String vmName) {
+		DTOResult<VMInfoDTO> result = new DTOResult<VMInfoDTO>();
+		result.setDto(service.getVMInfoDTO(vmName));
 		return result;
 	}
 

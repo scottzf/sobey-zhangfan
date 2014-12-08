@@ -1780,7 +1780,7 @@
     <xs:complexContent>
       <xs:extension base="tns:deviceBasicDTO">
         <xs:sequence>
-          <xs:element minOccurs="0" name="configText" type="xs:string"/>
+          <xs:element minOccurs="0" name="name" type="xs:string"/>
           <xs:element minOccurs="0" name="password" type="xs:string"/>
         </xs:sequence>
       </xs:extension>

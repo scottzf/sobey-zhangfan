@@ -19,6 +19,7 @@ import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
+import com.sobey.instance.webservice.response.dto.VMInfoDTO;
 import com.vmware.vim25.CustomizationAdapterMapping;
 import com.vmware.vim25.CustomizationFixedIp;
 import com.vmware.vim25.CustomizationFixedName;
@@ -52,6 +53,7 @@ import com.vmware.vim25.VirtualDeviceConfigSpecOperation;
 import com.vmware.vim25.VirtualDeviceConnectInfo;
 import com.vmware.vim25.VirtualEthernetCard;
 import com.vmware.vim25.VirtualEthernetCardDistributedVirtualPortBackingInfo;
+import com.vmware.vim25.VirtualHardware;
 import com.vmware.vim25.VirtualMachineCloneSpec;
 import com.vmware.vim25.VirtualMachineConfigInfo;
 import com.vmware.vim25.VirtualMachineConfigSpec;
@@ -362,8 +364,8 @@ public class VMService {
 
 						newNic.setConnectable(connectable11);
 
-						System.out.println("Setting UUID: " + uuid);
-						System.out.println("Setting portgroupKey: " + key);
+						// System.out.println("Setting UUID: " + uuid);
+						// System.out.println("Setting portgroupKey: " + key);
 
 						nicSpec.setDevice(newNic);
 
@@ -755,6 +757,61 @@ public class VMService {
 		RelationVMParameter parameter = new RelationVMParameter();
 		parameter.setRelationMaps(map);
 		return parameter;
+	}
+
+	public VMInfoDTO getVMInfoDTO(String name) {
+
+		ServiceInstance si = null;
+
+		VMInfoDTO vmInfoDTO = new VMInfoDTO();
+
+		try {
+
+			si = getServiceInstance(DataCenterEnum.CD.toString());
+
+			VirtualMachine vm = getVirtualMachine(si, name);
+
+			if (vm != null) {
+
+				// 判断虚拟机是否安装有vmware tools.
+
+				VirtualMachineConfigInfo vmConfigInfo = vm.getConfig();
+
+				VirtualHardware vmHardware = vmConfigInfo.getHardware();
+
+				if (vm.getGuest().getNet() != null) {
+					vmInfoDTO.setVlanName(vm.getGuest().getNet()[0].getNetwork());
+				}
+
+				vmInfoDTO.setGuestFullName(vmConfigInfo.getGuestFullName());
+				vmInfoDTO.setIpaddress(vm.getGuest().getIpAddress());
+				vmInfoDTO.setCpuNumber(Integer.valueOf(vmHardware.getNumCPU()).toString());
+				vmInfoDTO.setMemorySize(Integer.valueOf(vmHardware.getMemoryMB()).toString());
+				vmInfoDTO.setName(name);
+				vmInfoDTO.setStatus(vm.getGuest().getGuestState());// running or notRunning
+
+				VirtualDevice[] vmDevices = vmHardware.getDevice();
+				for (int i = 0; i < vmDevices.length; i++) {
+					if (vmDevices[i] instanceof VirtualEthernetCard) {
+						VirtualEthernetCard card = (VirtualEthernetCard) vmDevices[i];
+						vmInfoDTO.setMacIPaddress(card.getMacAddress());
+					}
+				}
+
+			}
+
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (InvalidProperty e) {
+			e.printStackTrace();
+		} catch (RuntimeFault e) {
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+
+		return vmInfoDTO;
+
 	}
 
 	/**

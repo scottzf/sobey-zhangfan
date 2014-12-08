@@ -60,9 +60,9 @@ public class JschUtil {
 
 			channel.setOutputStream(System.out);
 
-			channel.connect(15 * 1000);
+			channel.connect(10 * 1000);
 
-			Thread.sleep(18 * 1000);
+			Thread.sleep(3 * 1000);
 
 			channel.disconnect();
 			session.disconnect();
@@ -122,9 +122,9 @@ public class JschUtil {
 
 			channel.setOutputStream(fileOutputStream);
 
-			channel.connect(15 * 1000);
+			channel.connect(10 * 1000);
 
-			Thread.sleep(18 * 1000);
+			Thread.sleep(3 * 1000);
 
 			channel.disconnect();
 			session.disconnect();

@@ -18,7 +18,7 @@ public class TerminalResultHandle {
 	private static final String MOUNT_ERROR_ALREAD_YMOUNTED = "already mounted";
 	private static final String MOUNT_ERROR_CANNOT_CREATE_DIRECTORY = "mkdir: cannot create directory";
 	private static final String UMOUNT_ERROR = "not mounted";
-	private static final String remount_ERROR = "not exported";
+	private static final String UMOUNT_ERROR_BUSY = "device is busy";
 
 	public static WSResult ResultHandle(String info, MethodEnum methodEnum) {
 
@@ -54,12 +54,8 @@ public class TerminalResultHandle {
 			if (info.contains(UMOUNT_ERROR)) {
 				result.setError(WSResult.SYSTEM_ERROR, "卷未挂载");
 			}
-
-			break;
-		case remount:
-
-			if (info.contains(remount_ERROR)) {
-				result.setError(WSResult.SYSTEM_ERROR, "卷不存在");
+			if (info.contains(UMOUNT_ERROR_BUSY)) {
+				result.setError(WSResult.SYSTEM_ERROR, "卷在使用中");
 			}
 
 			break;

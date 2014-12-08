@@ -640,8 +640,8 @@ public class TestData {
 		storage.setSn(RandomData.randomName("sn"));
 		storage.setGdzcSn(RandomData.randomName("gdzcSn"));
 		storage.setRemark(RandomData.randomName("remark"));
-		storage.setConfigText(RandomData.randomName("configText"));
 		storage.setPassword(RandomData.randomName("password"));
+		storage.setName(RandomData.randomName("username"));
 
 		return storage;
 	}

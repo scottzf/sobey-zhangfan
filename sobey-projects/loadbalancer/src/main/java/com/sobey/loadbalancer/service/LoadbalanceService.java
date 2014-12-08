@@ -1,6 +1,8 @@
 package com.sobey.loadbalancer.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -14,6 +16,7 @@ import com.citrix.netscaler.nitro.resource.config.basic.servicegroup;
 import com.citrix.netscaler.nitro.resource.config.basic.servicegroup_servicegroupmember_binding;
 import com.citrix.netscaler.nitro.resource.config.lb.lbmonitor_service_binding;
 import com.citrix.netscaler.nitro.resource.config.lb.lbvserver;
+import com.citrix.netscaler.nitro.resource.config.lb.lbvserver_binding;
 import com.citrix.netscaler.nitro.resource.config.lb.lbvserver_service_binding;
 import com.citrix.netscaler.nitro.resource.config.ns.nsconfig;
 import com.citrix.netscaler.nitro.service.nitro_service;
@@ -22,6 +25,8 @@ import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.loadbalancer.webservice.response.dto.ELBParameter;
 import com.sobey.loadbalancer.webservice.response.dto.ELBPolicyParameter;
 import com.sobey.loadbalancer.webservice.response.dto.ELBPublicIPParameter;
+import com.sobey.loadbalancer.webservice.response.dto.ElbPolicySync;
+import com.sobey.loadbalancer.webservice.response.dto.ElbSync;
 
 @Service
 public class LoadbalanceService {
@@ -80,6 +85,69 @@ public class LoadbalanceService {
 	 */
 	private static final String LOADBALANCER_DEFAULT_SERVER_PORT = LOADBALANCER_LOADER
 			.getProperty("LOADBALANCER_DEFAULT_SERVER_PORT");
+
+	public List<ElbSync> getElbSyncList() {
+
+		List<ElbSync> syncs = new ArrayList<ElbSync>();
+
+		nitro_service client = null;
+
+		try {
+
+			client = new nitro_service(LOADBALANCER_IP, LOADBALANCER_PROTOCOL); // 创建nitro的session
+			client.set_credential(LOADBALANCER_USERNAME, LOADBALANCER_PASSWORD);
+			client.set_onerror(OnerrorEnum.CONTINUE);
+			client.set_warning(true);
+			client.set_certvalidation(false);
+			client.set_hostnameverification(false);
+			client.login();
+
+			lbvserver[] result = lbvserver.get(client);
+			if (result != null) {
+
+				for (lbvserver lbvserver2 : result) {
+
+					List<ElbPolicySync> policySyncs = new ArrayList<ElbPolicySync>();
+
+					lbvserver_binding lbvserver_binding = com.citrix.netscaler.nitro.resource.config.lb.lbvserver_binding
+							.get(client, lbvserver2.get_name());
+
+					if (lbvserver_binding.get_lbvserver_service_bindings() != null) {
+						for (int i = 0; i < lbvserver_binding.get_lbvserver_service_bindings().length; i++) {
+
+							ElbPolicySync policySync = new ElbPolicySync();
+							policySync.setElb(lbvserver2.get_ipv46());
+							policySync.setElbProtocol(lbvserver_binding.get_lbvserver_service_bindings()[i]
+									.get_servicetype());
+							policySync.setIpaddress(lbvserver_binding.get_lbvserver_service_bindings()[i].get_ipv46());
+							policySync.setSourcePort(lbvserver_binding.get_lbvserver_service_bindings()[i].get_port());
+							policySync.setTargetPort(lbvserver_binding.get_lbvserver_service_bindings()[i].get_port());
+							policySyncs.add(policySync);
+
+						}
+					}
+
+					ElbSync elbSync = new ElbSync();
+					elbSync.setVip(lbvserver2.get_ipv46());
+					elbSync.setPolicySyncs(policySyncs);
+					syncs.add(elbSync);
+				}
+
+			}
+
+			// Step.6 保存配置
+			saveconfig(client);
+
+			client.logout();// 登出
+
+		} catch (nitro_exception e) {
+			logger.info("Exception::getElbSyncList::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
+		} catch (Exception e) {
+			logger.info("Exception::getElbSyncList::message=" + e);
+		}
+		return syncs;
+
+	}
 
 	/**
 	 * 创建DNS

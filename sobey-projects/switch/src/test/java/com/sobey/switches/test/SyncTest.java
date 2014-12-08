@@ -20,7 +20,7 @@ import com.sobey.switches.PbulicProperties;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SyncTest implements PbulicProperties {
 
-	// @Test
+	 @Test
 	public void readSwtichCFGForAclNumber() throws IOException {
 		String result = FileUtils.readFileToString(new File("D:\\h3c_startup.1.cfg"), "GBK");
 		String str = StringUtils.substringAfter(result, "#\r\nacl");
@@ -30,7 +30,7 @@ public class SyncTest implements PbulicProperties {
 		FileUtils.writeStringToFile(file, str2, "UTF-8");
 	}
 
-	// @Test
+	 @Test
 	public void readSwtichCFGForVlan() throws IOException {
 		String result = FileUtils.readFileToString(new File("D:\\h3c_startup.1.cfg"), "GBK");
 		String str = StringUtils.substringAfter(result, "#\r\ninterface Vlan-interface");
@@ -57,7 +57,7 @@ public class SyncTest implements PbulicProperties {
 
 	}
 
-	// @Test
+	 @Test
 	public void readACLNumber() throws IOException {
 
 		List<String> list = FileUtils.readLines(new File("D:\\aclNumber.txt"), "UTF-8");

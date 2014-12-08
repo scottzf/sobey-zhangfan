@@ -9,6 +9,10 @@
 
   <xs:element name="DNSPublicIPParameter" type="tns:DNSPublicIPParameter"/>
 
+  <xs:element name="DnsPolicySync" type="tns:DnsPolicySync"/>
+
+  <xs:element name="DnsSync" type="tns:DnsSync"/>
+
   <xs:element name="createDNSByDNS" type="tns:createDNSByDNS"/>
 
   <xs:element name="createDNSByDNSResponse" type="tns:createDNSByDNSResponse"/>
@@ -16,6 +20,61 @@
   <xs:element name="deleteDNSByDNS" type="tns:deleteDNSByDNS"/>
 
   <xs:element name="deleteDNSByDNSResponse" type="tns:deleteDNSByDNSResponse"/>
+
+  <xs:element name="getDNSConfig" type="tns:getDNSConfig"/>
+
+  <xs:element name="getDNSConfigResponse" type="tns:getDNSConfigResponse"/>
+
+  <xs:complexType name="getDNSConfig">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="getDNSConfigResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOListResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DTOListResult">
+    <xs:complexContent>
+      <xs:extension base="tns:WSResult">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="dtoList">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="dto" type="xs:anyType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="WSResult">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="code" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DnsSync">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="cnameDomain" type="xs:string"/>
+      <xs:element minOccurs="0" name="domainName" type="xs:string"/>
+      <xs:element minOccurs="0" name="domainType" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="policySyncs" nillable="true" type="tns:DnsPolicySync"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DnsPolicySync">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="dns" type="xs:string"/>
+      <xs:element minOccurs="0" name="dnsProtocol" type="xs:string"/>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="port" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
 
   <xs:complexType name="deleteDNSByDNS">
     <xs:sequence>
@@ -51,13 +110,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="WSResult">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="code" type="xs:string"/>
-      <xs:element minOccurs="0" name="message" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="createDNSByDNS">
     <xs:sequence>
       <xs:element minOccurs="0" name="dnsParameter" type="tns:DNSParameter"/>
@@ -76,6 +128,14 @@
     <wsdl:part element="tns:createDNSByDNSResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getDNSConfigResponse">
+    <wsdl:part element="tns:getDNSConfigResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getDNSConfig">
+    <wsdl:part element="tns:getDNSConfig" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="deleteDNSByDNS">
     <wsdl:part element="tns:deleteDNSByDNS" name="parameters">
     </wsdl:part>
@@ -89,6 +149,12 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="DnsSoapService">
+    <wsdl:operation name="getDNSConfig">
+      <wsdl:input message="tns:getDNSConfig" name="getDNSConfig">
+    </wsdl:input>
+      <wsdl:output message="tns:getDNSConfigResponse" name="getDNSConfigResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="deleteDNSByDNS">
       <wsdl:input message="tns:deleteDNSByDNS" name="deleteDNSByDNS">
     </wsdl:input>
@@ -110,6 +176,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="deleteDNSByDNSResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDNSConfig">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getDNSConfig">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getDNSConfigResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>

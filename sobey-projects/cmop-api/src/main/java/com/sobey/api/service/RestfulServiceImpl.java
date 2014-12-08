@@ -359,7 +359,7 @@ public class RestfulServiceImpl implements RestfulService {
 		Es3DTO es3DTO = new Es3DTO();
 		es3DTO.setAgentType(LookUpConstants.AgentType.NetApp.getValue());
 		es3DTO.setDescription(es3Name);
-		es3DTO.setDiskSize(es3Size);// TODO 注意单位,脚本用的MB,而页面是GB,测试环境无法创建GB大小的volume.
+		es3DTO.setDiskSize(es3Size);
 		es3DTO.setEs3Type(lookUpDTO.getId());
 		es3DTO.setIdc(idcDTO.getId());
 		es3DTO.setVolumeName(es3Name);
