@@ -251,26 +251,32 @@ public class ApiController {
 	@RequestMapping(value = "/currentData/{ecsName}/{itemKey}/{accessKey}", method = RequestMethod.GET)
 	public ZItemDTO getCurrentData(@PathVariable("ecsName") String ecsName, @PathVariable("itemKey") String itemKey,
 			@PathVariable("accessKey") String accessKey) throws UnsupportedEncodingException {
-		return servie.getCurrentData(URLEscape(ecsName), itemKey, accessKey);
+		return servie.getCurrentData(URLEscape(ecsName), URLEscape(itemKey), accessKey);
 	}
 
 	@RequestMapping(value = "/historyData/{ecsName}/{itemKey}/{accessKey}", method = RequestMethod.GET)
 	public ZHistoryItemDTO getHistoryData(@PathVariable("ecsName") String ecsName,
 			@PathVariable("itemKey") String itemKey, @PathVariable("accessKey") String accessKey)
 			throws UnsupportedEncodingException {
-		return servie.getHistoryData(URLEscape(ecsName), itemKey, accessKey);
+		return servie.getHistoryData(URLEscape(ecsName), URLEscape(itemKey), accessKey);
 	}
 
 	@RequestMapping(value = "/storageCurrentData/{es3Name}/{itemKey}/{accessKey}", method = RequestMethod.GET)
 	public ZItemDTO getStorageCurrentData(@PathVariable("es3Name") String es3Name,
-			@PathVariable("accessKey") String accessKey) throws UnsupportedEncodingException {
-		return servie.getStorageCurrentData(URLEscape(es3Name), accessKey);
+			@PathVariable("itemKey") String itemKey, @PathVariable("accessKey") String accessKey)
+			throws UnsupportedEncodingException {
+		
+		System.out.println(itemKey);
+		System.out.println(URLEscape(itemKey));
+		System.out.println(URLEscape(es3Name));
+		return servie.getStorageCurrentData(URLEscape(es3Name), URLEscape(itemKey), accessKey);
 	}
 
 	@RequestMapping(value = "/storageHistoryData/{es3Name}/{itemKey}/{accessKey}", method = RequestMethod.GET)
 	public ZHistoryItemDTO gettStorageHistoryData(@PathVariable("es3Name") String es3Name,
-			@PathVariable("accessKey") String accessKey) throws UnsupportedEncodingException {
-		return servie.getStorageHistoryData(URLEscape(es3Name), accessKey);
+			@PathVariable("itemKey") String itemKey, @PathVariable("accessKey") String accessKey)
+			throws UnsupportedEncodingException {
+		return servie.getStorageHistoryData(URLEscape(es3Name), URLEscape(itemKey), accessKey);
 	}
 
 	/********** Tenants ***********/

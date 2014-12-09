@@ -1,5 +1,9 @@
 package com.sobey.api.constans;
 
+import java.util.Map;
+
+import com.google.common.collect.Maps;
+
 
 /**
  * zabbix 监控项目及键值
@@ -8,11 +12,11 @@ package com.sobey.api.constans;
  */
 public enum ItemEnum {
 
-	Used_disk_space_on("vfs.fs.size[/,used]"),
+	硬盘已用空间("vfs.fs.size[/,used]"),
 	Used_disk_space_on_boot("vfs.fs.size[/boot,used]"),
 	Total_swap_space("system.swap.size[,total]"),
 	Total_memory("	vm.memory.size[total]"),
-	Total_disk_space_on("	vfs.fs.size[/,total]"),
+	硬盘总大小("	vfs.fs.size[/,total]"),
 	Total_disk_space_on_boot("vfs.fs.size[/boot,total]"),
 	System_uptime("system.uptime"),
 	System_information("system.uname"),
@@ -34,9 +38,9 @@ public enum ItemEnum {
 	Free_swap_space("system.swap.size[,free]"),
 	Free_inodes_on_percentage("vfs.fs.inode[/,pfree]"),
 	Free_inodes_on_boot_percentage("vfs.fs.inode[/boot,pfree]"),
-	Free_disk_space_on_percentage("vfs.fs.size[/,pfree]"),
+	硬盘可用空间百分比("vfs.fs.size[/,pfree]"),
 	Free_disk_space_on_boot_percentage("vfs.fs.size[/boot,pfree]"),
-	Free_disk_space_on("vfs.fs.size[/,free]"),
+	硬盘可用空间("vfs.fs.size[/,free]"),
 	Free_disk_space_on_boot("vfs.fs.size[/boot,free]"),
 	CPU_load_avg15("system.cpu.load[percpu,avg15]"),
 	CPU_load_avg5("system.cpu.load[percpu,avg5]"),
@@ -55,6 +59,17 @@ public enum ItemEnum {
 	Agent_ping("agent.ping"),
 	var_tmp是否可写("check_dir_rw");
 
+	
+	public static final Map<String, String> map = Maps.newLinkedHashMap();
+
+	static {
+		for (ItemEnum e : ItemEnum.values()) {
+
+			map.put(e.name(), e.name);
+
+		}
+	}
+	
 	private String name;
 
 	private ItemEnum(String name) {

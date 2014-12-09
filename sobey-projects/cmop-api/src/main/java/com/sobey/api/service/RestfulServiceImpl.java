@@ -8,6 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sobey.api.constans.ES3MonitorItemEnum;
+import com.sobey.api.constans.ItemEnum;
 import com.sobey.api.constans.LookUpConstants;
 import com.sobey.api.entity.DnsEntity;
 import com.sobey.api.entity.EcsEntity;
@@ -1259,7 +1261,7 @@ public class RestfulServiceImpl implements RestfulService {
 			return null;
 		}
 
-		return apiService.getCurrentData(ecsDTO.getId(), itemKey);
+		return apiService.getCurrentData(ecsDTO.getId(), ItemEnum.map.get(itemKey));
 	}
 
 	@Override
@@ -1275,7 +1277,7 @@ public class RestfulServiceImpl implements RestfulService {
 			return null;
 		}
 
-		return apiService.getHistoryData(ecsDTO.getId(), itemKey);
+		return apiService.getHistoryData(ecsDTO.getId(), ItemEnum.map.get(itemKey));
 	}
 
 	@Override
@@ -1312,7 +1314,7 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public ZItemDTO getStorageCurrentData(String es3Name, String accessKey) {
+	public ZItemDTO getStorageCurrentData(String es3Name, String itemKey, String accessKey) {
 
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
 		if (tenantsDTO == null) {
@@ -1328,14 +1330,62 @@ public class RestfulServiceImpl implements RestfulService {
 		if (storageDTO == null) {
 			return null;
 		}
-		
-		String itemKey = "VolSpace[/vol/" + es3Name + "/]";
 
-		return zabbixSoapService.getZItem(storageDTO.getDescription(), itemKey);
+		return zabbixSoapService.getZItem(storageDTO.getDescription(), getZabbixKey(itemKey, es3Name));
+	}
+
+	/**
+	 * 根据不同的Es3监控枚举参数转换成zabbix中的键值.<br>
+	 * 
+	 * eg: VolStatus[/vol/db_sobeyedu/]
+	 * 
+	 * @param itemKey
+	 * @param es3Name
+	 * @return
+	 */
+	private String getZabbixKey(String itemKey, String es3Name) {
+
+		String value = "";
+
+		switch (ES3MonitorItemEnum.valueOf(itemKey)) {
+
+		case 存储已用空间:
+
+			value = "VolSpace[/vol/" + es3Name + "/]";
+
+			break;
+
+		case 存储已用空间百分比:
+
+			value = "VolSpacePercent[/vol/" + es3Name + "/]";
+
+			break;
+
+		case 存储总大小:
+
+			// TODO zabbix无该键值
+			break;
+
+		case 存储总大小百分比:
+
+			// TODO zabbix无该键值
+			break;
+		case 存储状态:
+
+			value = "VolStatus[/vol/" + es3Name + "/]";
+
+			break;
+
+		default:
+			break;
+		}
+
+		return value;
+
 	}
 
 	@Override
-	public ZHistoryItemDTO getStorageHistoryData(String es3Name, String accessKey) {
+	public ZHistoryItemDTO getStorageHistoryData(String es3Name, String itemKey, String accessKey) {
 
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
 		if (tenantsDTO == null) {
@@ -1352,9 +1402,7 @@ public class RestfulServiceImpl implements RestfulService {
 			return null;
 		}
 
-		String itemKey = "VolSpace[/vol/" + es3Name + "/]";
-
-		return zabbixSoapService.getZHistoryItem(storageDTO.getDescription(), itemKey);
+		return zabbixSoapService.getZHistoryItem(storageDTO.getDescription(), getZabbixKey(itemKey, es3Name));
 	}
 
 }

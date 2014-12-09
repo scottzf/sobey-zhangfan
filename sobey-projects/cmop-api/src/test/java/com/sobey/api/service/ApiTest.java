@@ -181,22 +181,20 @@ public class ApiTest extends TestCase {
 
 		}
 	}
-	
+
 	@Test
 	public void getItemTest() {
-		
-		
-		//Free_disk_space_on
-		
-		//traffic_in
-		//traffic_out
-		
-		ZItemDTO dtos = service.getCurrentData(2290, ItemEnum.Free_disk_space_on.getName());
+
+		// Free_disk_space_on
+
+		// traffic_in
+		// traffic_out
+
+		ZItemDTO dtos = service.getCurrentData(2290, ItemEnum.硬盘已用空间.getName());
 		System.out.println(dtos.getItemid());
 		System.out.println(dtos.getClock());
 		System.out.println(dtos.getValue());
 		System.err.println(dtos.getUnits());
 
-		 
 	}
 }

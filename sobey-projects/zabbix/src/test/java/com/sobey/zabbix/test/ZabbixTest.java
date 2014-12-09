@@ -151,6 +151,10 @@ public class ZabbixTest extends TestCase {
 
 		// 监控netapp卷大小,需要注意获得卷所在的controller,获得controller的hostID后,在根据key查询卷大小.key 的组合格式.
 		ZItemDTO item = getItem(hostId, "VolSpace[/vol/data_gdsyxh/]");
+		
+		
+		//VolSpacePercent 已用百分比
+		//VolStatus
 		System.out.println(item.getItemid());
 		System.out.println(item.getClock());
 		System.out.println(item.getValue());
