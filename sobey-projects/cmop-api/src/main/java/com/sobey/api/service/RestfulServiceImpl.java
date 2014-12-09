@@ -44,6 +44,7 @@ import com.sobey.generate.cmdbuild.MapEipDnsDTO;
 import com.sobey.generate.cmdbuild.MapEipElbDTO;
 import com.sobey.generate.cmdbuild.MapTagServiceDTO;
 import com.sobey.generate.cmdbuild.ServiceDTO;
+import com.sobey.generate.cmdbuild.StorageDTO;
 import com.sobey.generate.cmdbuild.TagDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.dns.DnsSoapService;
@@ -1308,6 +1309,52 @@ public class RestfulServiceImpl implements RestfulService {
 
 		return result;
 
+	}
+
+	@Override
+	public ZItemDTO getStorageCurrentData(String es3Name, String accessKey) {
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			return null;
+		}
+
+		Es3DTO es3DTO = findEs3DTO(tenantsDTO.getId(), es3Name);
+		if (es3DTO == null) {
+			return null;
+		}
+
+		StorageDTO storageDTO = (StorageDTO) cmdbuildSoapService.findStorage(es3DTO.getStorage()).getDto();
+		if (storageDTO == null) {
+			return null;
+		}
+		
+		String itemKey = "VolSpace[/vol/" + es3Name + "/]";
+
+		return zabbixSoapService.getZItem(storageDTO.getDescription(), itemKey);
+	}
+
+	@Override
+	public ZHistoryItemDTO getStorageHistoryData(String es3Name, String accessKey) {
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			return null;
+		}
+
+		Es3DTO es3DTO = findEs3DTO(tenantsDTO.getId(), es3Name);
+		if (es3DTO == null) {
+			return null;
+		}
+
+		StorageDTO storageDTO = (StorageDTO) cmdbuildSoapService.findStorage(es3DTO.getStorage()).getDto();
+		if (storageDTO == null) {
+			return null;
+		}
+
+		String itemKey = "VolSpace[/vol/" + es3Name + "/]";
+
+		return zabbixSoapService.getZHistoryItem(storageDTO.getDescription(), itemKey);
 	}
 
 }

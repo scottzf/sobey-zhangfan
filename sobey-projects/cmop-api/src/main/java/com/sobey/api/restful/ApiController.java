@@ -261,6 +261,18 @@ public class ApiController {
 		return servie.getHistoryData(URLEscape(ecsName), itemKey, accessKey);
 	}
 
+	@RequestMapping(value = "/storageCurrentData/{es3Name}/{itemKey}/{accessKey}", method = RequestMethod.GET)
+	public ZItemDTO getStorageCurrentData(@PathVariable("es3Name") String es3Name,
+			@PathVariable("accessKey") String accessKey) throws UnsupportedEncodingException {
+		return servie.getStorageCurrentData(URLEscape(es3Name), accessKey);
+	}
+
+	@RequestMapping(value = "/storageHistoryData/{es3Name}/{itemKey}/{accessKey}", method = RequestMethod.GET)
+	public ZHistoryItemDTO gettStorageHistoryData(@PathVariable("es3Name") String es3Name,
+			@PathVariable("accessKey") String accessKey) throws UnsupportedEncodingException {
+		return servie.getStorageHistoryData(URLEscape(es3Name), accessKey);
+	}
+
 	/********** Tenants ***********/
 
 	@RequestMapping(value = "/TenantsResult/{accessKey}", method = RequestMethod.GET)

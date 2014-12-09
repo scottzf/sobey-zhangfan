@@ -105,4 +105,8 @@ public interface RestfulService {
 
 	public ZHistoryItemDTO getHistoryData(String ecsName, String itemKey, String accessKey);
 
+	public ZItemDTO getStorageCurrentData(String es3Name, String accessKey);
+
+	public ZHistoryItemDTO getStorageHistoryData(String es3Name, String accessKey);
+
 }
