@@ -22,6 +22,7 @@ public class Ecs extends ServiceBasic {
 	private Integer ecsSpec;
 	private Integer server;
 	private Integer ecsStatus;
+	private String osName;
 	private Set<EcsHistory> ecsHistories = new HashSet<EcsHistory>(0);
 
 	public Ecs() {
@@ -61,6 +62,15 @@ public class Ecs extends ServiceBasic {
 
 	public void setEcsStatus(Integer ecsStatus) {
 		this.ecsStatus = ecsStatus;
+	}
+
+	@Column(name = "os_name", length = 100)
+	public String getOsName() {
+		return osName;
+	}
+
+	public void setOsName(String osName) {
+		this.osName = osName;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ecs")

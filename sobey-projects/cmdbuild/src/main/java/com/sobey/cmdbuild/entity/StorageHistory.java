@@ -17,7 +17,7 @@ import com.sobey.cmdbuild.entity.basic.DeviceHistoryBasic;
 public class StorageHistory extends DeviceHistoryBasic {
 
 	private Storage storage;
-	private String username;
+	private String name;
 
 	public StorageHistory() {
 	}
@@ -32,13 +32,13 @@ public class StorageHistory extends DeviceHistoryBasic {
 		this.storage = storage;
 	}
 
-	@Column(name = "username", length = 100)
-	public String getUsername() {
-		return username;
+	@Column(name = "name", length = 100)
+	public String getName() {
+		return name;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

@@ -19,6 +19,7 @@ public class Es3 extends ServiceBasic {
 	private Integer es3Type;
 	private Integer diskSize;
 	private Integer storage;
+	private Integer es3Status;
 	private Set<Es3History> es3Histories = new HashSet<Es3History>(0);
 
 	public Es3() {
@@ -58,6 +59,15 @@ public class Es3 extends ServiceBasic {
 
 	public void setStorage(Integer storage) {
 		this.storage = storage;
+	}
+
+	@Column(name = "es3_status")
+	public Integer getEs3Status() {
+		return es3Status;
+	}
+
+	public void setEs3Status(Integer es3Status) {
+		this.es3Status = es3Status;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "es3")
