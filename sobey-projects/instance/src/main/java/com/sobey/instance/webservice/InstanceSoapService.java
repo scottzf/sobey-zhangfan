@@ -8,6 +8,7 @@ import com.sobey.instance.webservice.response.dto.CloneVMParameter;
 import com.sobey.instance.webservice.response.dto.CreateVMDiskParameter;
 import com.sobey.instance.webservice.response.dto.DeleteVMDiskParameter;
 import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
+import com.sobey.instance.webservice.response.dto.HostsDTO;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
@@ -87,7 +88,8 @@ public interface InstanceSoapService {
 	 *            虚拟机名称
 	 * @return
 	 */
-	DTOResult<VMInfoDTO> getVMInfoDTO(@WebParam(name = "vmName") String vmName);
+	DTOResult<VMInfoDTO> getVMInfoDTO(@WebParam(name = "vmName") String vmName,
+			@WebParam(name = "datacenter") String datacenter);
 
 	/**
 	 * 为虚拟机分配存储空间
@@ -104,4 +106,6 @@ public interface InstanceSoapService {
 	 * @return
 	 */
 	WSResult deleteES3ByInstance(@WebParam(name = "deleteVMDiskParameter") DeleteVMDiskParameter deleteVMDiskParameter);
+
+	HostsDTO getHostsDTO(@WebParam(name = "datacenter") String datacenter);
 }

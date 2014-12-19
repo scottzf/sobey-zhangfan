@@ -12,6 +12,7 @@ import com.sobey.instance.webservice.response.dto.CloneVMParameter;
 import com.sobey.instance.webservice.response.dto.CreateVMDiskParameter;
 import com.sobey.instance.webservice.response.dto.DeleteVMDiskParameter;
 import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
+import com.sobey.instance.webservice.response.dto.HostsDTO;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
@@ -106,9 +107,9 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	}
 
 	@Override
-	public DTOResult<VMInfoDTO> getVMInfoDTO(String vmName) {
+	public DTOResult<VMInfoDTO> getVMInfoDTO(String vmName, String datacenter) {
 		DTOResult<VMInfoDTO> result = new DTOResult<VMInfoDTO>();
-		result.setDto(service.getVMInfoDTO(vmName));
+		result.setDto(service.getVMInfoDTO(vmName, datacenter));
 		return result;
 	}
 
@@ -137,6 +138,13 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 		}
 
 		return result;
+	}
+
+	@Override
+	public HostsDTO getHostsDTO(String datacenter) {
+		HostsDTO dto = new HostsDTO();
+		dto.setHostName(service.getHost(datacenter));
+		return dto;
 	}
 
 }
