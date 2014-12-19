@@ -9,6 +9,8 @@
 	<!-- optional -->
 
 	<import resource="webservice/applicationContext-soap-server.xml" />
+	<!-- 
 	<import resource="schedule/applicationContext-quartz-cron-local.xml" />
+	 -->
 
 </beans>
