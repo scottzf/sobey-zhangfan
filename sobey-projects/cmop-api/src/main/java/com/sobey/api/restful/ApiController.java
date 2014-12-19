@@ -265,10 +265,6 @@ public class ApiController {
 	public ZItemDTO getStorageCurrentData(@PathVariable("es3Name") String es3Name,
 			@PathVariable("itemKey") String itemKey, @PathVariable("accessKey") String accessKey)
 			throws UnsupportedEncodingException {
-		
-		System.out.println(itemKey);
-		System.out.println(URLEscape(itemKey));
-		System.out.println(URLEscape(es3Name));
 		return servie.getStorageCurrentData(URLEscape(es3Name), URLEscape(itemKey), accessKey);
 	}
 

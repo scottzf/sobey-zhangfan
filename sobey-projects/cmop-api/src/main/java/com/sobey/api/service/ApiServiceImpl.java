@@ -783,8 +783,6 @@ public class ApiServiceImpl implements ApiService {
 
 				} else {// CMDBuild中ECS不存在,新增一个
 
-					System.out.println(entry.getKey());
-
 					VMInfoDTO vmInfoDTO = (VMInfoDTO) instanceSoapService.getVMInfoDTO(entry.getKey(), datacenter)
 							.getDto();
 
@@ -839,8 +837,6 @@ public class ApiServiceImpl implements ApiService {
 		// Step.1 获得虚拟机和宿主机的实际关联关系
 		HashMap<String, String> vcenterMap = wrapperRelationVM(datacenter);
 
-		System.out.println(vcenterMap.size());
-
 		for (java.util.Map.Entry<String, String> entry : vcenterMap.entrySet()) {
 
 			if (StringUtils.countMatches(entry.getKey(), ".") == 3) {
@@ -849,19 +845,16 @@ public class ApiServiceImpl implements ApiService {
 				ipaddressDTO.setDescription(entry.getKey());
 				ipaddressDTO.setIdc(getIDCId(datacenter));
 				ipaddressDTO.setIpAddressStatus(LookUpConstants.IPAddressStatus.已使用.getValue());
-				ipaddressDTO.setIpAddressPool(66); // private pool
+				ipaddressDTO.setIpAddressPool(LookUpConstants.IPAddressPool.PrivatePool.getValue());
+
 				// 遍历所有的vlan,比较虚拟机的IP属于哪个vlan中,再将vlanID获得
 				ipaddressDTO.setVlan(getVlanIdByIpaddress(entry.getKey()));
-				if (getVlanIdByIpaddress(entry.getKey()) == 0) {
-					System.out.println(entry.getKey());
-				}
 
 				cmdbuildSoapService.createIpaddress(ipaddressDTO);
 
 			}
 		}
 		System.out.println("Done.");
-
 	}
 
 	/**
@@ -2466,7 +2459,6 @@ public class ApiServiceImpl implements ApiService {
 
 					String[] arr = StringUtils.split(volumeName, "_");
 					Integer tenantsId = Integer.valueOf(arr[1]);
-					System.out.println(hashMap.get(volumeName));
 					Double diskSize = MathsUtil.div(Double.valueOf(hashMap.get(volumeName)), 1048576D);// 将netapp查询的存储大小换算成G,除以1024*1024
 
 					Es3DTO es3DTO = new Es3DTO();
@@ -2512,7 +2504,6 @@ public class ApiServiceImpl implements ApiService {
 		}
 
 		System.out.println("netapp同步完成!!!!");
-
 	}
 
 	@Override
@@ -2629,7 +2620,6 @@ public class ApiServiceImpl implements ApiService {
 		}
 
 		System.out.println("ELB同步完成!!!!");
-
 	}
 
 	@Override
@@ -2732,7 +2722,6 @@ public class ApiServiceImpl implements ApiService {
 		}
 
 		System.out.println("DNS同步完成!!!!");
-
 	}
 
 	@Override
@@ -2755,7 +2744,7 @@ public class ApiServiceImpl implements ApiService {
 			ipaddressDTO.setDescription(hostName);
 			ipaddressDTO.setIdc(getIDCId(datacenter));
 			ipaddressDTO.setIpAddressStatus(LookUpConstants.IPAddressStatus.已使用.getValue());
-			ipaddressDTO.setIpAddressPool(66); // private pool
+			ipaddressDTO.setIpAddressPool(LookUpConstants.IPAddressPool.PrivatePool.getValue()); // private pool
 			// 遍历所有的vlan,比较虚拟机的IP属于哪个vlan中,再将vlanID获得
 			ipaddressDTO.setVlan(getVlanIdByIpaddress(hostName));
 
@@ -2774,8 +2763,8 @@ public class ApiServiceImpl implements ApiService {
 
 			ServerDTO serverDTO = new ServerDTO();
 			serverDTO.setDescription(hostName);
-			serverDTO.setDeviceSpec(116);
 			serverDTO.setIdc(getIDCId(datacenter));
+			serverDTO.setDeviceSpec(116);
 			serverDTO.setRack(120);
 			serverDTO.setRemark(hostName);
 			serverDTO.setSite("1");

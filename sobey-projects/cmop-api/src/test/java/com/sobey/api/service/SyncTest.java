@@ -17,19 +17,21 @@ public class SyncTest extends TestCase {
 	@Autowired
 	public ApiService service;
 
+	private static String datacenter = DataCenterEnum.西安核心数据中心.toString();
+
 	@Test
 	public void syncVM() {
-		System.out.println(service.syncVM(DataCenterEnum.西安核心数据中心.toString()));
+		service.syncVM(datacenter);
 	}
 
 	@Test
 	public void syncHost() {
-		service.syncHost(DataCenterEnum.西安核心数据中心.toString());
+		service.syncHost(datacenter);
 	}
 
 	@Test
 	public void syncVMIpaddress() {
-		service.syncVMIpaddress(DataCenterEnum.西安核心数据中心.toString());
+		service.syncVMIpaddress(datacenter);
 	}
 
 	@Test
