@@ -1358,12 +1358,18 @@
     <xs:complexContent>
       <xs:extension base="tns:serviceBasicDTO">
         <xs:sequence>
+          <xs:element minOccurs="0" name="adapterName" type="xs:string"/>
+          <xs:element minOccurs="0" name="cpuNumber" type="xs:string"/>
+          <xs:element minOccurs="0" name="datastoreName" type="xs:string"/>
+          <xs:element minOccurs="0" name="diskSize" type="xs:string"/>
           <xs:element minOccurs="0" name="ecsSpec" type="xs:int"/>
           <xs:element minOccurs="0" name="ecsSpecDTO" type="tns:EcsSpecDTO"/>
           <xs:element minOccurs="0" name="ecsStatus" type="xs:int"/>
           <xs:element minOccurs="0" name="ecsStatusText" type="xs:string"/>
           <xs:element minOccurs="0" name="ipaddress" type="xs:int"/>
           <xs:element minOccurs="0" name="ipaddressDTO" type="tns:IpaddressDTO"/>
+          <xs:element minOccurs="0" name="memorySize" type="xs:string"/>
+          <xs:element minOccurs="0" name="osName" type="xs:string"/>
           <xs:element minOccurs="0" name="server" type="xs:int"/>
           <xs:element minOccurs="0" name="serverDTO" type="tns:ServerDTO"/>
         </xs:sequence>

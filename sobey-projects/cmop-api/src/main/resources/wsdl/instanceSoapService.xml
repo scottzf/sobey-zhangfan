@@ -11,6 +11,8 @@
 
   <xs:element name="DestroyVMParameter" type="tns:DestroyVMParameter"/>
 
+  <xs:element name="HostsDTO" type="tns:HostsDTO"/>
+
   <xs:element name="PowerVMParameter" type="tns:PowerVMParameter"/>
 
   <xs:element name="ReconfigVMParameter" type="tns:ReconfigVMParameter"/>
@@ -39,6 +41,10 @@
 
   <xs:element name="destroyVMByInstanceResponse" type="tns:destroyVMByInstanceResponse"/>
 
+  <xs:element name="getHostsDTO" type="tns:getHostsDTO"/>
+
+  <xs:element name="getHostsDTOResponse" type="tns:getHostsDTOResponse"/>
+
   <xs:element name="getVMAndHostRelationByInstance" type="tns:getVMAndHostRelationByInstance"/>
 
   <xs:element name="getVMAndHostRelationByInstanceResponse" type="tns:getVMAndHostRelationByInstanceResponse"/>
@@ -58,6 +64,7 @@
   <xs:complexType name="getVMInfoDTO">
     <xs:sequence>
       <xs:element minOccurs="0" name="vmName" type="xs:string"/>
+      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -87,6 +94,8 @@
   <xs:complexType name="VMInfoDTO">
     <xs:sequence>
       <xs:element minOccurs="0" name="cpuNumber" type="xs:string"/>
+      <xs:element minOccurs="0" name="datastore" type="xs:string"/>
+      <xs:element minOccurs="0" name="diskSize" type="xs:string"/>
       <xs:element minOccurs="0" name="guestFullName" type="xs:string"/>
       <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
       <xs:element minOccurs="0" name="macIPaddress" type="xs:string"/>
@@ -142,6 +151,24 @@
   <xs:complexType name="cloneVMByInstanceResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getHostsDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getHostsDTOResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:HostsDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="HostsDTO">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="hostName" nillable="true" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -281,12 +308,12 @@
     <wsdl:part element="tns:createES3ByInstanceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="createES3ByInstance">
-    <wsdl:part element="tns:createES3ByInstance" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="powerVMByInstance">
     <wsdl:part element="tns:powerVMByInstance" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createES3ByInstance">
+    <wsdl:part element="tns:createES3ByInstance" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="reconfigVMByInstanceResponse">
@@ -309,12 +336,20 @@
     <wsdl:part element="tns:deleteES3ByInstanceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getHostsDTO">
+    <wsdl:part element="tns:getHostsDTO" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getVMInfoDTO">
     <wsdl:part element="tns:getVMInfoDTO" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getVMAndHostRelationByInstanceResponse">
     <wsdl:part element="tns:getVMAndHostRelationByInstanceResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getHostsDTOResponse">
+    <wsdl:part element="tns:getHostsDTOResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getVMInfoDTOResponse">
@@ -362,6 +397,12 @@
       <wsdl:input message="tns:cloneVMByInstance" name="cloneVMByInstance">
     </wsdl:input>
       <wsdl:output message="tns:cloneVMByInstanceResponse" name="cloneVMByInstanceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getHostsDTO">
+      <wsdl:input message="tns:getHostsDTO" name="getHostsDTO">
+    </wsdl:input>
+      <wsdl:output message="tns:getHostsDTOResponse" name="getHostsDTOResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="destroyVMByInstance">
@@ -427,6 +468,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getVMInfoDTOResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getHostsDTO">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getHostsDTO">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getHostsDTOResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
