@@ -128,7 +128,7 @@ public class ZabbixTest extends TestCase {
 
 		String hostId = getHostId("10.10.101.1");
 
-		ZItemDTO item = getItem(hostId, ItemEnum.Free_disk_space_on.getName());
+		ZItemDTO item = getItem(hostId, ItemEnum.系统盘可用空间百分比.getValue());
 
 		ZHistoryItemDTO zHistoryItemDTO = gethistory(hostId, item.getItemid());
 
@@ -151,10 +151,9 @@ public class ZabbixTest extends TestCase {
 
 		// 监控netapp卷大小,需要注意获得卷所在的controller,获得controller的hostID后,在根据key查询卷大小.key 的组合格式.
 		ZItemDTO item = getItem(hostId, "VolSpace[/vol/data_gdsyxh/]");
-		
-		
-		//VolSpacePercent 已用百分比
-		//VolStatus
+
+		// VolSpacePercent 已用百分比
+		// VolStatus
 		System.out.println(item.getItemid());
 		System.out.println(item.getClock());
 		System.out.println(item.getValue());
