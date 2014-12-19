@@ -8,7 +8,7 @@ package com.sobey.instance.constans;
  */
 public enum DataCenterEnum {
 
-	CD("cd"), XA("xa");
+	CD("cd"), XA("xa"), XA2("xa2");
 
 	private String datacenter;
 
