@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Maps;
+import com.sobey.core.utils.MathsUtil;
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.instance.constans.DataCenterEnum;
 import com.sobey.instance.webservice.response.dto.CloneVMParameter;
@@ -44,6 +45,7 @@ import com.vmware.vim25.CustomizationWinOptions;
 import com.vmware.vim25.DVPortgroupConfigSpec;
 import com.vmware.vim25.DatastoreSummary;
 import com.vmware.vim25.DistributedVirtualSwitchPortConnection;
+import com.vmware.vim25.GuestNicInfo;
 import com.vmware.vim25.InvalidProperty;
 import com.vmware.vim25.ManagedObjectReference;
 import com.vmware.vim25.RuntimeFault;
@@ -64,6 +66,7 @@ import com.vmware.vim25.VirtualMachineCloneSpec;
 import com.vmware.vim25.VirtualMachineConfigInfo;
 import com.vmware.vim25.VirtualMachineConfigSpec;
 import com.vmware.vim25.VirtualMachineRelocateSpec;
+import com.vmware.vim25.VirtualMachineRuntimeInfo;
 import com.vmware.vim25.VirtualVmxnet3;
 import com.vmware.vim25.VmwareDistributedVirtualSwitchVlanIdSpec;
 import com.vmware.vim25.mo.CustomizationSpecManager;
@@ -72,13 +75,14 @@ import com.vmware.vim25.mo.Datastore;
 import com.vmware.vim25.mo.DistributedVirtualPortgroup;
 import com.vmware.vim25.mo.DistributedVirtualSwitch;
 import com.vmware.vim25.mo.Folder;
+import com.vmware.vim25.mo.HostSystem;
 import com.vmware.vim25.mo.InventoryNavigator;
 import com.vmware.vim25.mo.ManagedEntity;
 import com.vmware.vim25.mo.Network;
-import com.vmware.vim25.mo.ResourcePool;
 import com.vmware.vim25.mo.ServiceInstance;
 import com.vmware.vim25.mo.Task;
 import com.vmware.vim25.mo.VirtualMachine;
+import com.vmware.vim25.mo.util.MorUtil;
 
 @Service
 public class VMService {
@@ -128,6 +132,22 @@ public class VMService {
 	 * password
 	 */
 	private static final String INSTANCE_PASSWORD_XA = INSTANCE_LOADER.getProperty("INSTANCE_PASSWORD_XA");
+
+	/********** 西安2 ***********/
+	/**
+	 * IP
+	 */
+	private static final String INSTANCE_IP_XA2 = INSTANCE_LOADER.getProperty("INSTANCE_IP_XA2");
+
+	/**
+	 * Username
+	 */
+	private static final String INSTANCE_USERNAME_XA2 = INSTANCE_LOADER.getProperty("INSTANCE_USERNAME_XA2");
+
+	/**
+	 * password
+	 */
+	private static final String INSTANCE_PASSWORD_XA2 = INSTANCE_LOADER.getProperty("INSTANCE_PASSWORD_XA2");
 
 	/**
 	 * 网卡名
@@ -932,6 +952,7 @@ public class VMService {
 			ServiceInstance si = getServiceInstance(datacenter);
 
 			ManagedEntity[] mes = new InventoryNavigator(si.getRootFolder()).searchManagedEntities("VirtualMachine");
+
 			if (mes == null || mes.length == 0) {
 				return null;
 			}
@@ -939,12 +960,16 @@ public class VMService {
 			for (int i = 0; i < mes.length; i++) {
 
 				VirtualMachine vm = (VirtualMachine) mes[i];
+				VirtualMachineRuntimeInfo vmri = (VirtualMachineRuntimeInfo) vm.getRuntime();
 
-				ResourcePool pool = vm.getResourcePool();
+				ManagedObjectReference host = vmri.getHost();
+				ManagedObjectReference managedObjectReference = new ManagedObjectReference();
+				managedObjectReference.setType("HostSystem");
+				managedObjectReference.setVal(host.getVal());
+				HostSystem hostSystem = (HostSystem) MorUtil.createExactManagedEntity(si.getServerConnection(),
+						managedObjectReference);
 
-				if (pool != null) {
-					map.put(vm.getName(), pool.getParent().getName());
-				}
+				map.put(vm.getName(), hostSystem.getName());
 
 			}
 
@@ -959,7 +984,7 @@ public class VMService {
 		return parameter;
 	}
 
-	public VMInfoDTO getVMInfoDTO(String name) {
+	public VMInfoDTO getVMInfoDTO(String name, String datacenter) {
 
 		ServiceInstance si = null;
 
@@ -967,7 +992,7 @@ public class VMService {
 
 		try {
 
-			si = getServiceInstance(DataCenterEnum.CD.toString());
+			si = getServiceInstance(datacenter);
 
 			VirtualMachine vm = getVirtualMachine(si, name);
 
@@ -979,8 +1004,23 @@ public class VMService {
 
 				VirtualHardware vmHardware = vmConfigInfo.getHardware();
 
-				if (vm.getGuest().getNet() != null) {
-					vmInfoDTO.setVlanName(vm.getGuest().getNet()[0].getNetwork());
+				// 网络适配器
+				if (vm.getGuest().getNet() != null && vm.getGuest().getNet().length != 0) {
+					String vlanName = "";
+					for (GuestNicInfo nicInfo : vm.getGuest().getNet()) {
+						vlanName += nicInfo.getNetwork() + " ";
+					}
+					vmInfoDTO.setVlanName(vlanName);
+				}
+
+				// 存储器
+				if (vm.getDatastores() != null && vm.getDatastores().length != 0) {
+
+					String datastores = "";
+					for (Datastore datastore : vm.getDatastores()) {
+						datastores += datastore.getName() + " ";
+					}
+					vmInfoDTO.setDatastore(datastores);
 				}
 
 				vmInfoDTO.setGuestFullName(vmConfigInfo.getGuestFullName());
@@ -990,11 +1030,21 @@ public class VMService {
 				vmInfoDTO.setName(name);
 				vmInfoDTO.setStatus(vm.getGuest().getGuestState());// running or notRunning
 
-				VirtualDevice[] vmDevices = vmHardware.getDevice();
-				for (int i = 0; i < vmDevices.length; i++) {
-					if (vmDevices[i] instanceof VirtualEthernetCard) {
-						VirtualEthernetCard card = (VirtualEthernetCard) vmDevices[i];
-						vmInfoDTO.setMacIPaddress(card.getMacAddress());
+				if (vmHardware != null) {
+					VirtualDevice[] vmDevices = vmHardware.getDevice();
+					for (int i = 0; i < vmDevices.length; i++) {
+
+						if (vmDevices[i] instanceof VirtualEthernetCard) {
+							VirtualEthernetCard card = (VirtualEthernetCard) vmDevices[i];
+							vmInfoDTO.setMacIPaddress(card.getMacAddress());
+						}
+
+						if (vmDevices[i] instanceof VirtualDisk) {
+							VirtualDisk vmDisk = (VirtualDisk) vmDevices[i];
+							// 硬盘空间大小单位为KB,此处将硬盘大小除以1024*1024得到GB的单位.
+							vmInfoDTO.setDiskSize(String.valueOf(MathsUtil.div(vmDisk.getCapacityInKB(), 1048576)));
+						}
+
 					}
 				}
 
@@ -1011,7 +1061,36 @@ public class VMService {
 		}
 
 		return vmInfoDTO;
+	}
 
+	public ArrayList<String> getHost(String datacenter) {
+
+		ServiceInstance si = null;
+
+		ArrayList<String> list = new ArrayList<String>();
+
+		try {
+
+			si = getServiceInstance(datacenter);
+
+			ManagedEntity[] resourcePools = new InventoryNavigator(si.getRootFolder())
+					.searchManagedEntities("HostSystem");
+
+			for (int i = 0; i < resourcePools.length; i++) {
+				list.add(resourcePools[i].getName());
+			}
+
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (InvalidProperty e) {
+			e.printStackTrace();
+		} catch (RuntimeFault e) {
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+
+		return list;
 	}
 
 	/**
@@ -1027,6 +1106,8 @@ public class VMService {
 			return new ServiceInstance(new URL(INSTANCE_IP_CD), INSTANCE_USERNAME_CD, INSTANCE_PASSWORD_CD, true);
 		} else if (DataCenterEnum.XA.toString().equalsIgnoreCase(datacenter)) {
 			return new ServiceInstance(new URL(INSTANCE_IP_XA), INSTANCE_USERNAME_XA, INSTANCE_PASSWORD_XA, true);
+		} else if (DataCenterEnum.XA2.toString().equalsIgnoreCase(datacenter)) {
+			return new ServiceInstance(new URL(INSTANCE_IP_XA2), INSTANCE_USERNAME_XA2, INSTANCE_PASSWORD_XA2, true);
 		} else {
 			return new ServiceInstance(new URL(INSTANCE_IP_XA), INSTANCE_USERNAME_XA, INSTANCE_PASSWORD_XA, true);
 		}
