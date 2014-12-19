@@ -333,4 +333,13 @@ public interface ApiService {
 	 */
 	public void syncDNS();
 
+	/**
+	 * 将vCenter中的Host同步至CMDBuild中的Server. 注意:调用前,需要将Host的IP先导入CMDBuild中.
+	 * 
+	 * @param datacenter
+	 */
+	public void syncHost(String datacenter);
+
+	public void syncVMIpaddress(String datacenter);
+
 }

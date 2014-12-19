@@ -55,6 +55,7 @@ import com.sobey.generate.instance.CloneVMParameter;
 import com.sobey.generate.instance.CreateVMDiskParameter;
 import com.sobey.generate.instance.DeleteVMDiskParameter;
 import com.sobey.generate.instance.DestroyVMParameter;
+import com.sobey.generate.instance.HostsDTO;
 import com.sobey.generate.instance.InstanceSoapService;
 import com.sobey.generate.instance.PowerVMParameter;
 import com.sobey.generate.instance.ReconfigVMParameter;
@@ -111,6 +112,7 @@ public class ApiServiceImpl implements ApiService {
 
 	// 临时数据
 	public static Integer serverId = 258;
+	public static Integer idcId = 110; // 110 112
 
 	/**
 	 * 默认管理网段:10.10.1.0
@@ -707,6 +709,7 @@ public class ApiServiceImpl implements ApiService {
 		List<String> vmwareList = new ArrayList<String>(); // vsphere中所有VM list
 
 		HashMap<String, Object> allEcsMap = new HashMap<String, Object>();
+		allEcsMap.put("EQ_idc", idcId);
 		List<Object> list = cmdbuildSoapService.getEcsList(CMDBuildUtil.wrapperSearchParams(allEcsMap)).getDtoList()
 				.getDto();
 
@@ -736,71 +739,195 @@ public class ApiServiceImpl implements ApiService {
 
 		for (java.util.Map.Entry<String, String> entry : vcenterMap.entrySet()) {
 
-			// 根据Host的名称获得CMDB中的对象Server
-			HashMap<String, Object> serverMap = new HashMap<String, Object>();
-			serverMap.put("EQ_description", entry.getValue());
-			ServerDTO serverDTO = (ServerDTO) cmdbuildSoapService.findServerByParams(
-					CMDBuildUtil.wrapperSearchParams(serverMap)).getDto();
+			// 只有虚拟机为IP格式的才能导入
+			if (StringUtils.countMatches(entry.getKey(), ".") == 3) {
 
-			// 根据VM的名称获得CMDB中的对象ECS
-			HashMap<String, Object> ecsMap = new HashMap<String, Object>();
-			ecsMap.put("EQ_description", entry.getKey());
-			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcsByParams(CMDBuildUtil.wrapperSearchParams(ecsMap))
-					.getDto();
+				// 根据Host的名称获得CMDB中的对象Server
+				HashMap<String, Object> serverMap = new HashMap<String, Object>();
+				serverMap.put("EQ_description", entry.getValue());
+				ServerDTO serverDTO = (ServerDTO) cmdbuildSoapService.findServerByParams(
+						CMDBuildUtil.wrapperSearchParams(serverMap)).getDto();
 
-			if (ecsDTO != null) {// ECS在CMDB中存在,更新关联关系
+				// 根据VM的名称获得CMDB中的对象ECS
+				HashMap<String, Object> ecsMap = new HashMap<String, Object>();
+				ecsMap.put("EQ_description", entry.getKey());
+				EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcsByParams(CMDBuildUtil.wrapperSearchParams(ecsMap))
+						.getDto();
 
-				// 根据VM的名称获得在CMDB中关联的对象Server
-				ServerDTO serverCMDB = (ServerDTO) cmdbuildSoapService.findServer(ecsDTO.getServer()).getDto();
+				if (ecsDTO != null) {// ECS在CMDB中存在,更新关联关系
 
-				sb.append("vcenter中对应的宿主机:" + entry.getValue() + "<br>");
-				sb.append("CMDBuild中对应的宿主机:" + serverDTO.getDescription() + "<br>");
-				sb.append("--------------------------------------------------");
+					// 根据VM的名称获得在CMDB中关联的对象Server
+					ServerDTO serverCMDB = (ServerDTO) cmdbuildSoapService.findServer(ecsDTO.getServer()).getDto();
 
-				// 比较两个关联关系,已从vcenter中获得的关联关系为准,对CMDBuild数据进行更新
-				if (!entry.getValue().equals(serverCMDB.getCode())) {
-					ecsDTO.setServer(serverDTO.getId());
-					cmdbuildSoapService.updateEcs(ecsDTO.getId(), ecsDTO);
+					sb.append("vcenter中对应的宿主机:" + entry.getValue() + "<br>");
+					sb.append("CMDBuild中对应的宿主机:" + serverDTO.getDescription() + "<br>");
+					sb.append("--------------------------------------------------");
+
+					// 比较两个关联关系,已从vcenter中获得的关联关系为准,对CMDBuild数据进行更新
+					if (!entry.getValue().equals(serverCMDB.getCode())) {
+						ecsDTO.setServer(serverDTO.getId());
+						cmdbuildSoapService.updateEcs(ecsDTO.getId(), ecsDTO);
+					}
+
+				} else {// CMDBuild中ECS不存在,新增一个
+
+					System.out.println(entry.getKey());
+
+					VMInfoDTO vmInfoDTO = (VMInfoDTO) instanceSoapService.getVMInfoDTO(entry.getKey(), datacenter)
+							.getDto();
+
+					EcsDTO newEcsDTO = new EcsDTO();
+					newEcsDTO.setAgentType(LookUpConstants.AgentType.VMware.getValue());
+					newEcsDTO.setDescription(entry.getKey());
+					newEcsDTO.setRemark(entry.getKey());
+
+					HashMap<String, Object> ipMap = new HashMap<String, Object>();
+					ipMap.put("EQ_description", vmInfoDTO.getIpaddress());
+
+					IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddressByParams(
+							CMDBuildUtil.wrapperSearchParams(ipMap)).getDto();
+
+					if (ipaddressDTO != null) {
+						newEcsDTO.setIdc(ipaddressDTO.getIdc());
+						newEcsDTO.setIpaddress(ipaddressDTO.getId());
+					}
+
+					newEcsDTO.setServer(serverDTO.getId());
+
+					// running为通过vcenter sdk获得当前VM运行状态.
+					if ("running".equals(vmInfoDTO.getStatus())) {
+						newEcsDTO.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
+					} else {
+						newEcsDTO.setEcsStatus(LookUpConstants.ECSStatus.停止.getValue());
+					}
+
+					newEcsDTO.setOsName(vmInfoDTO.getGuestFullName());
+					newEcsDTO.setAdapterName(vmInfoDTO.getVlanName());
+					newEcsDTO.setDatastoreName(vmInfoDTO.getDatastore());
+					newEcsDTO.setCpuNumber(vmInfoDTO.getCpuNumber());
+					newEcsDTO.setMemorySize(vmInfoDTO.getMemorySize());
+					newEcsDTO.setDiskSize(vmInfoDTO.getDiskSize());
+
+					// TODO 参数必须,需要想办法
+					newEcsDTO.setEcsSpec(118);
+					newEcsDTO.setTenants(114);
+
+					cmdbuildSoapService.createEcs(newEcsDTO);
 				}
 
-			} else {// CMDBuild中ECS不存在,新增一个
+			}
+		}
 
-				VMInfoDTO vmInfoDTO = (VMInfoDTO) instanceSoapService.getVMInfoDTO(entry.getKey()).getDto();
+		return sb.toString();
+	}
 
-				EcsDTO newEcsDTO = new EcsDTO();
-				newEcsDTO.setAgentType(LookUpConstants.AgentType.VMware.getValue());
-				newEcsDTO.setDescription(entry.getKey());
-				newEcsDTO.setRemark(entry.getKey());
+	@Override
+	public void syncVMIpaddress(String datacenter) {
 
-				HashMap<String, Object> ipMap = new HashMap<String, Object>();
-				ipMap.put("EQ_description", vmInfoDTO.getIpaddress());
+		// Step.1 获得虚拟机和宿主机的实际关联关系
+		HashMap<String, String> vcenterMap = wrapperRelationVM(datacenter);
 
-				IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddressByParams(
-						CMDBuildUtil.wrapperSearchParams(ipMap)).getDto();
+		System.out.println(vcenterMap.size());
 
-				if (ipaddressDTO != null) {
-					newEcsDTO.setIdc(ipaddressDTO.getIdc());
-					newEcsDTO.setIpaddress(ipaddressDTO.getId());
+		for (java.util.Map.Entry<String, String> entry : vcenterMap.entrySet()) {
+
+			if (StringUtils.countMatches(entry.getKey(), ".") == 3) {
+
+				IpaddressDTO ipaddressDTO = new IpaddressDTO();
+				ipaddressDTO.setDescription(entry.getKey());
+				ipaddressDTO.setIdc(idcId); // 西安
+				ipaddressDTO.setIpAddressStatus(LookUpConstants.IPAddressStatus.已使用.getValue());
+				ipaddressDTO.setIpAddressPool(66); // private pool
+				// 遍历所有的vlan,比较虚拟机的IP属于哪个vlan中,再将vlanID获得
+				ipaddressDTO.setVlan(getVlanIdByIpaddress(entry.getKey()));
+				if (getVlanIdByIpaddress(entry.getKey()) == 0) {
+					System.out.println(entry.getKey());
 				}
-				newEcsDTO.setServer(serverDTO.getId());
 
-				// running为通过vcenter sdk获得当前VM运行状态.
-				if ("running".equals(vmInfoDTO.getStatus())) {
-					newEcsDTO.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
-				} else {
-					newEcsDTO.setEcsStatus(LookUpConstants.ECSStatus.停止.getValue());
+				cmdbuildSoapService.createIpaddress(ipaddressDTO);
+
+			}
+		}
+		System.out.println("Done.");
+
+	}
+
+	/**
+	 * 将从vCenter中获得的VM IP对比CMDBuild,获得该IP所在的VlanID.
+	 * 
+	 * @param vmInfoDTO
+	 * @return
+	 */
+	private Integer getVlanIdByIpaddress(String ipaddress) {
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		List<Object> list = cmdbuildSoapService.getVlanList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+				.getDto();
+
+		Integer vlanId = 0;
+
+		if (ipaddress != null) {
+
+			String vmIP = StringUtils.substringBeforeLast(ipaddress, ".");
+
+			for (Object object : list) {
+				VlanDTO vlanDTO = (VlanDTO) object;
+
+				if (vmIP.equals(StringUtils.substringBeforeLast(vlanDTO.getSegment(), "."))) {
+					vlanId = vlanDTO.getId();
+					break;
 				}
 
-				// TODO 参数必须,需要想办法
-				newEcsDTO.setEcsSpec(117);
-				newEcsDTO.setTenants(533);
+				// TODO 权宜之计,待后续删除或修改.如vlan10,包含了两个网段172.20.0.0、172.20.1.0，在此需要人工的做一些判断。
 
-				cmdbuildSoapService.createEcs(newEcsDTO);
+				// 172.20.0.0
+				// 172.20.1.0 vlan10 645
+				if ("172.20.0".equals(vmIP) || "172.20.1".equals(vmIP)) {
+					vlanId = 645;
+					break;
+				}
+
+				// 172.20.2.0
+				// 172.20.3.0 vlan2 649
+				if ("172.20.2".equals(vmIP) || "172.20.3".equals(vmIP)) {
+					vlanId = 649;
+					break;
+				}
+
+				// 172.20.4.0
+				// 172.20.5.0 vlan4 653
+				if ("172.20.4".equals(vmIP) || "172.20.5".equals(vmIP)) {
+					vlanId = 653;
+					break;
+				}
+
+				// 172.20.6.0
+				// 172.20.7.0 vlan6 657
+				if ("172.20.6".equals(vmIP) || "172.20.7".equals(vmIP)) {
+					vlanId = 657;
+					break;
+				}
+
+				// 172.20.12.0
+				// 172.20.13.0 vlan12 661
+				if ("172.20.12".equals(vmIP) || "172.20.13".equals(vmIP)) {
+					vlanId = 661;
+					break;
+				}
+
+				// 172.20.14.0
+				// 172.20.15.0 vlan14 665
+				if ("172.20.14".equals(vmIP) || "172.20.15".equals(vmIP)) {
+					vlanId = 665;
+					break;
+				}
+
 			}
 
 		}
 
-		return sb.toString();
+		return vlanId;
+
 	}
 
 	/**
@@ -2605,6 +2732,53 @@ public class ApiServiceImpl implements ApiService {
 	@Override
 	public void deleteES3(DeleteVMDiskParameter deleteVMDiskParameter) {
 		instanceSoapService.deleteES3ByInstance(deleteVMDiskParameter);
+
+	}
+
+	private void insertHostIP(String datacenter, HostsDTO dto) {
+
+		for (String hostName : dto.getHostName()) {
+
+			IpaddressDTO ipaddressDTO = new IpaddressDTO();
+			ipaddressDTO.setDescription(hostName);
+			ipaddressDTO.setIdc(idcId); // 西安
+			ipaddressDTO.setIpAddressStatus(LookUpConstants.IPAddressStatus.已使用.getValue());
+			ipaddressDTO.setIpAddressPool(66); // private pool
+			// 遍历所有的vlan,比较虚拟机的IP属于哪个vlan中,再将vlanID获得
+			ipaddressDTO.setVlan(getVlanIdByIpaddress(hostName));
+
+			cmdbuildSoapService.createIpaddress(ipaddressDTO);
+		}
+	}
+
+	@Override
+	public void syncHost(String datacenter) {
+
+		HostsDTO dto = instanceSoapService.getHostsDTO(datacenter);
+
+		insertHostIP(datacenter, dto);
+
+		for (String hostName : dto.getHostName()) {
+
+			ServerDTO serverDTO = new ServerDTO();
+			serverDTO.setDescription(hostName);
+			serverDTO.setDeviceSpec(116);
+			serverDTO.setIdc(idcId);
+			serverDTO.setRack(120);
+			serverDTO.setRemark(hostName);
+			serverDTO.setSite("1");
+			serverDTO.setResgroup("Resgroup-1");
+
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("EQ_description", hostName);
+
+			IpaddressDTO value = (IpaddressDTO) cmdbuildSoapService.findIpaddressByParams(
+					CMDBuildUtil.wrapperSearchParams(map)).getDto();
+
+			serverDTO.setIpaddress(value.getId());
+
+			cmdbuildSoapService.createServer(serverDTO);
+		}
 
 	}
 

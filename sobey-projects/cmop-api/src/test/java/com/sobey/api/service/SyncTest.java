@@ -21,6 +21,16 @@ public class SyncTest extends TestCase {
 	}
 
 	@Test
+	public void syncHost() {
+		service.syncHost("xa");
+	}
+
+	@Test
+	public void syncVMIpaddress() {
+		service.syncVMIpaddress("xa");
+	}
+
+	@Test
 	public void syncVolume() {
 		service.syncVolume();
 	}
@@ -34,4 +44,5 @@ public class SyncTest extends TestCase {
 	public void syncDNS() {
 		service.syncDNS();
 	}
+
 }
