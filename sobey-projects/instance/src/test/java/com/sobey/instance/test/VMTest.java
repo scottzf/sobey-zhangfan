@@ -219,7 +219,7 @@ public class VMTest extends TestCase {
 
 	@Test
 	public void getVMInfoDTO() {
-		VMInfoDTO dto = service.getVMInfoDTO("172.20.1.64", DataCenterEnum.XA.toString());
+		VMInfoDTO dto = service.getVMInfoDTO("172.20.1.64", DataCenterEnum.西安核心数据中心.toString());
 		System.out.println(dto);
 	}
 
@@ -232,7 +232,7 @@ public class VMTest extends TestCase {
 
 	@Test
 	public void changeVlan() {
-		service.changeVlan(DataCenterEnum.XA.toString(), "Sobey123", 100);
+		service.changeVlan(DataCenterEnum.西安核心数据中心.toString(), "Sobey123", 100);
 	}
 
 	@Test

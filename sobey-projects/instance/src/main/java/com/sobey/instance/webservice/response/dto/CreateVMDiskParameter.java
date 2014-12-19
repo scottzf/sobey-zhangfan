@@ -40,7 +40,6 @@ public class CreateVMDiskParameter {
 		this.diskName = diskName;
 	}
 
-	
 	public String getDatacenter() {
 		return datacenter;
 	}

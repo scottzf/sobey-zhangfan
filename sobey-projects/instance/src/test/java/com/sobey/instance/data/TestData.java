@@ -19,15 +19,15 @@ public class TestData {
 		parameter.setvMName("oncommand");
 		parameter.setvMSUserName("Sobey");
 		parameter.setVlanId(2);
-		parameter.setDatacenter(DataCenterEnum.XA.toString());
+		parameter.setDatacenter(DataCenterEnum.西安核心数据中心.toString());
 
 		// Linux
-//		parameter.setvMTemplateName("CnetOS6.5");
-//		parameter.setvMTemplateOS("Linux");
+		// parameter.setvMTemplateName("CnetOS6.5");
+		// parameter.setvMTemplateOS("Linux");
 
 		// Windows
-		 parameter.setvMTemplateName("WinServer2008R2");
-		 parameter.setvMTemplateOS("Windows");
+		parameter.setvMTemplateName("WinServer2008R2");
+		parameter.setvMTemplateOS("Windows");
 		return parameter;
 	}
 
@@ -35,13 +35,13 @@ public class TestData {
 
 		DestroyVMParameter parameter = new DestroyVMParameter();
 		parameter.setvMName("liukai");
-		parameter.setDatacenter(DataCenterEnum.XA.toString());
+		parameter.setDatacenter(DataCenterEnum.西安核心数据中心.toString());
 		return parameter;
 	}
 
 	public static ReconfigVMParameter randomReconfigVMParameter() {
 		ReconfigVMParameter parameter = new ReconfigVMParameter();
-		parameter.setDatacenter(DataCenterEnum.XA.toString());
+		parameter.setDatacenter(DataCenterEnum.西安核心数据中心.toString());
 		parameter.setvMName("liukai");
 		parameter.setcPUNumber(4);
 		parameter.setMemoryMB(4096L);
@@ -50,7 +50,7 @@ public class TestData {
 
 	public static PowerVMParameter randomPowerVMParameter() {
 		PowerVMParameter parameter = new PowerVMParameter();
-		parameter.setDatacenter(DataCenterEnum.XA.toString());
+		parameter.setDatacenter(DataCenterEnum.西安核心数据中心.toString());
 		parameter.setvMName("liukai");
 		parameter.setPowerOperation("poweroff");
 		return parameter;

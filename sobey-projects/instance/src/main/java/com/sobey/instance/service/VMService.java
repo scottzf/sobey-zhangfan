@@ -1102,15 +1102,33 @@ public class VMService {
 	 */
 	private ServiceInstance getServiceInstance(String datacenter) throws RemoteException, MalformedURLException {
 
-		if (DataCenterEnum.CD.toString().equalsIgnoreCase(datacenter)) {
-			return new ServiceInstance(new URL(INSTANCE_IP_CD), INSTANCE_USERNAME_CD, INSTANCE_PASSWORD_CD, true);
-		} else if (DataCenterEnum.XA.toString().equalsIgnoreCase(datacenter)) {
-			return new ServiceInstance(new URL(INSTANCE_IP_XA), INSTANCE_USERNAME_XA, INSTANCE_PASSWORD_XA, true);
-		} else if (DataCenterEnum.XA2.toString().equalsIgnoreCase(datacenter)) {
-			return new ServiceInstance(new URL(INSTANCE_IP_XA2), INSTANCE_USERNAME_XA2, INSTANCE_PASSWORD_XA2, true);
-		} else {
-			return new ServiceInstance(new URL(INSTANCE_IP_XA), INSTANCE_USERNAME_XA, INSTANCE_PASSWORD_XA, true);
+		ServiceInstance serviceInstance = null;
+
+		switch (DataCenterEnum.valueOf(datacenter)) {
+		case 西安核心数据中心:
+
+			serviceInstance = new ServiceInstance(new URL(INSTANCE_IP_XA), INSTANCE_USERNAME_XA, INSTANCE_PASSWORD_XA,
+					true);
+			break;
+
+		case 西安核心数据中心2:
+
+			serviceInstance = new ServiceInstance(new URL(INSTANCE_IP_XA2), INSTANCE_USERNAME_XA2,
+					INSTANCE_PASSWORD_XA2, true);
+			break;
+
+		case 成都核心数据中心:
+
+			serviceInstance = new ServiceInstance(new URL(INSTANCE_IP_CD), INSTANCE_USERNAME_CD, INSTANCE_PASSWORD_CD,
+					true);
+			break;
+
+		default:
+			break;
 		}
+
+		return serviceInstance;
+
 	}
 
 	/**

@@ -82,7 +82,7 @@ public class VMNetworkTest extends TestCase {
 	@Test
 	public void createDVSPortGroupTest() throws RemoteException, MalformedURLException, InterruptedException {
 
-		ServiceInstance si = getServiceInstance(DataCenterEnum.XA.toString());
+		ServiceInstance si = getServiceInstance(DataCenterEnum.西安核心数据中心.toString());
 
 		DistributedVirtualSwitch dvs = (DistributedVirtualSwitch) new InventoryNavigator(si.getRootFolder())
 				.searchManagedEntity("DistributedVirtualSwitch", "DSwitch");
@@ -98,7 +98,7 @@ public class VMNetworkTest extends TestCase {
 	@Test
 	public void createDVSTest() throws RemoteException, MalformedURLException, InterruptedException {
 
-		ServiceInstance si = getServiceInstance(DataCenterEnum.XA.toString());
+		ServiceInstance si = getServiceInstance(DataCenterEnum.西安核心数据中心.toString());
 		Datacenter dc = (Datacenter) si.getSearchIndex().findByInventoryPath("成都测试数据中心");
 
 		createDVS(dc);
@@ -117,7 +117,7 @@ public class VMNetworkTest extends TestCase {
 
 		try {
 
-			ServiceInstance si = getServiceInstance(DataCenterEnum.XA.toString());
+			ServiceInstance si = getServiceInstance(DataCenterEnum.西安核心数据中心.toString());
 
 			Folder rootFolder = si.getRootFolder();
 
@@ -388,9 +388,9 @@ public class VMNetworkTest extends TestCase {
 	 */
 	private ServiceInstance getServiceInstance(String datacenter) throws RemoteException, MalformedURLException {
 
-		if (DataCenterEnum.CD.toString().equalsIgnoreCase(datacenter)) {
+		if (DataCenterEnum.成都核心数据中心.toString().equalsIgnoreCase(datacenter)) {
 			return new ServiceInstance(new URL(INSTANCE_IP_CD), INSTANCE_USERNAME_CD, INSTANCE_PASSWORD_CD, true);
-		} else if (DataCenterEnum.XA.toString().equalsIgnoreCase(datacenter)) {
+		} else if (DataCenterEnum.西安核心数据中心.toString().equalsIgnoreCase(datacenter)) {
 			return new ServiceInstance(new URL(INSTANCE_IP_XA), INSTANCE_USERNAME_XA, INSTANCE_PASSWORD_XA, true);
 		}
 
