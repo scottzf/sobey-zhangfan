@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.sobey.api.constans.DataCenterEnum;
+
 @ContextConfiguration({ "classpath:applicationContext.xml", "classpath:applicationContext-api.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SyncTest extends TestCase {
@@ -17,17 +19,17 @@ public class SyncTest extends TestCase {
 
 	@Test
 	public void syncVM() {
-		System.out.println(service.syncVM("xa"));
+		System.out.println(service.syncVM(DataCenterEnum.西安核心数据中心.toString()));
 	}
 
 	@Test
 	public void syncHost() {
-		service.syncHost("xa");
+		service.syncHost(DataCenterEnum.西安核心数据中心.toString());
 	}
 
 	@Test
 	public void syncVMIpaddress() {
-		service.syncVMIpaddress("xa");
+		service.syncVMIpaddress(DataCenterEnum.西安核心数据中心.toString());
 	}
 
 	@Test

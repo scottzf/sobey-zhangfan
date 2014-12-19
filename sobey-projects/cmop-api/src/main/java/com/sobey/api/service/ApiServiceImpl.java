@@ -112,7 +112,6 @@ public class ApiServiceImpl implements ApiService {
 
 	// 临时数据
 	public static Integer serverId = 258;
-	public static Integer idcId = 110; // 110 112
 
 	/**
 	 * 默认管理网段:10.10.1.0
@@ -689,6 +688,19 @@ public class ApiServiceImpl implements ApiService {
 		return result;
 	}
 
+	/**
+	 * 根据IDC名称获得IDC的Id
+	 * 
+	 * @param datacenter
+	 * @return
+	 */
+	private Integer getIDCId(String datacenter) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_description", datacenter);
+		IdcDTO dto = (IdcDTO) cmdbuildSoapService.findIdcByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
+		return dto.getId();
+	}
+
 	@Override
 	public String syncVM(String datacenter) {
 
@@ -709,7 +721,7 @@ public class ApiServiceImpl implements ApiService {
 		List<String> vmwareList = new ArrayList<String>(); // vsphere中所有VM list
 
 		HashMap<String, Object> allEcsMap = new HashMap<String, Object>();
-		allEcsMap.put("EQ_idc", idcId);
+		allEcsMap.put("EQ_idc", getIDCId(datacenter));
 		List<Object> list = cmdbuildSoapService.getEcsList(CMDBuildUtil.wrapperSearchParams(allEcsMap)).getDtoList()
 				.getDto();
 
@@ -835,7 +847,7 @@ public class ApiServiceImpl implements ApiService {
 
 				IpaddressDTO ipaddressDTO = new IpaddressDTO();
 				ipaddressDTO.setDescription(entry.getKey());
-				ipaddressDTO.setIdc(idcId); // 西安
+				ipaddressDTO.setIdc(getIDCId(datacenter));
 				ipaddressDTO.setIpAddressStatus(LookUpConstants.IPAddressStatus.已使用.getValue());
 				ipaddressDTO.setIpAddressPool(66); // private pool
 				// 遍历所有的vlan,比较虚拟机的IP属于哪个vlan中,再将vlanID获得
@@ -2741,7 +2753,7 @@ public class ApiServiceImpl implements ApiService {
 
 			IpaddressDTO ipaddressDTO = new IpaddressDTO();
 			ipaddressDTO.setDescription(hostName);
-			ipaddressDTO.setIdc(idcId); // 西安
+			ipaddressDTO.setIdc(getIDCId(datacenter));
 			ipaddressDTO.setIpAddressStatus(LookUpConstants.IPAddressStatus.已使用.getValue());
 			ipaddressDTO.setIpAddressPool(66); // private pool
 			// 遍历所有的vlan,比较虚拟机的IP属于哪个vlan中,再将vlanID获得
@@ -2763,7 +2775,7 @@ public class ApiServiceImpl implements ApiService {
 			ServerDTO serverDTO = new ServerDTO();
 			serverDTO.setDescription(hostName);
 			serverDTO.setDeviceSpec(116);
-			serverDTO.setIdc(idcId);
+			serverDTO.setIdc(getIDCId(datacenter));
 			serverDTO.setRack(120);
 			serverDTO.setRemark(hostName);
 			serverDTO.setSite("1");
