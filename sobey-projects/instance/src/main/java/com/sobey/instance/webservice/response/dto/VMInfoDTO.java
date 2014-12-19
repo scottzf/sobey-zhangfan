@@ -11,38 +11,16 @@ import com.sobey.instance.constans.WsConstants;
 @XmlType(name = "VMInfoDTO", namespace = WsConstants.NS)
 public class VMInfoDTO {
 
-	private String name;
-	private String ipaddress;
-	private String memorySize;
 	private String cpuNumber;
-	private String macIPaddress;
+	private String datastore;
+	private String diskSize;
 	private String guestFullName;
-	private String vlanName;
+	private String ipaddress;
+	private String macIPaddress;
+	private String memorySize;
+	private String name;
 	private String status;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getIpaddress() {
-		return ipaddress;
-	}
-
-	public void setIpaddress(String ipaddress) {
-		this.ipaddress = ipaddress;
-	}
-
-	public String getMemorySize() {
-		return memorySize;
-	}
-
-	public void setMemorySize(String memorySize) {
-		this.memorySize = memorySize;
-	}
+	private String vlanName;
 
 	public String getCpuNumber() {
 		return cpuNumber;
@@ -52,12 +30,20 @@ public class VMInfoDTO {
 		this.cpuNumber = cpuNumber;
 	}
 
-	public String getMacIPaddress() {
-		return macIPaddress;
+	public String getDatastore() {
+		return datastore;
 	}
 
-	public void setMacIPaddress(String macIPaddress) {
-		this.macIPaddress = macIPaddress;
+	public void setDatastore(String datastore) {
+		this.datastore = datastore;
+	}
+
+	public String getDiskSize() {
+		return diskSize;
+	}
+
+	public void setDiskSize(String diskSize) {
+		this.diskSize = diskSize;
 	}
 
 	public String getGuestFullName() {
@@ -68,12 +54,36 @@ public class VMInfoDTO {
 		this.guestFullName = guestFullName;
 	}
 
-	public String getVlanName() {
-		return vlanName;
+	public String getIpaddress() {
+		return ipaddress;
 	}
 
-	public void setVlanName(String vlanName) {
-		this.vlanName = vlanName;
+	public void setIpaddress(String ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public String getMacIPaddress() {
+		return macIPaddress;
+	}
+
+	public void setMacIPaddress(String macIPaddress) {
+		this.macIPaddress = macIPaddress;
+	}
+
+	public String getMemorySize() {
+		return memorySize;
+	}
+
+	public void setMemorySize(String memorySize) {
+		this.memorySize = memorySize;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getStatus() {
@@ -82,6 +92,14 @@ public class VMInfoDTO {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getVlanName() {
+		return vlanName;
+	}
+
+	public void setVlanName(String vlanName) {
+		this.vlanName = vlanName;
 	}
 
 	/**
