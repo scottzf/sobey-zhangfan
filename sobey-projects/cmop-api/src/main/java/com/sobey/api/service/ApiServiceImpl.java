@@ -798,7 +798,6 @@ public class ApiServiceImpl implements ApiService {
 							CMDBuildUtil.wrapperSearchParams(ipMap)).getDto();
 
 					if (ipaddressDTO != null) {
-						newEcsDTO.setIdc(ipaddressDTO.getIdc());
 						newEcsDTO.setIpaddress(ipaddressDTO.getId());
 					}
 
@@ -817,6 +816,7 @@ public class ApiServiceImpl implements ApiService {
 					newEcsDTO.setCpuNumber(vmInfoDTO.getCpuNumber());
 					newEcsDTO.setMemorySize(vmInfoDTO.getMemorySize());
 					newEcsDTO.setDiskSize(vmInfoDTO.getDiskSize());
+					newEcsDTO.setIdc(getIDCId(datacenter));
 
 					// TODO 参数必须,需要想办法
 					newEcsDTO.setEcsSpec(118);
