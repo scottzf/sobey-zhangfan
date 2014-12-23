@@ -11,10 +11,30 @@ import com.sobey.storage.constans.WsConstants;
 @XmlType(name = "VolumeInfoDTO", namespace = WsConstants.NS)
 public class VolumeInfoDTO {
 
+	/**
+	 * 卷名
+	 */
 	private String name;
+
+	/**
+	 * 空间总大小(GB)
+	 */
 	private String totalSize;
+
+	/**
+	 * 已用空间大小(GB)
+	 */
 	private String usedSize;
-	private String AvailableSize;
+
+	/**
+	 * 可用空间大小(GB)
+	 */
+	private String availableSize;
+
+	/**
+	 * snapshot保留块大小(GB)
+	 */
+	private String snapshotBlocksReservedSize;
 
 	public String getName() {
 		return name;
@@ -41,11 +61,19 @@ public class VolumeInfoDTO {
 	}
 
 	public String getAvailableSize() {
-		return AvailableSize;
+		return availableSize;
 	}
 
 	public void setAvailableSize(String availableSize) {
-		AvailableSize = availableSize;
+		this.availableSize = availableSize;
+	}
+
+	public String getSnapshotBlocksReservedSize() {
+		return snapshotBlocksReservedSize;
+	}
+
+	public void setSnapshotBlocksReservedSize(String snapshotBlocksReservedSize) {
+		this.snapshotBlocksReservedSize = snapshotBlocksReservedSize;
 	}
 
 	/**

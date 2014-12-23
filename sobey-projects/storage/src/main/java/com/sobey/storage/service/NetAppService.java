@@ -20,12 +20,11 @@ import com.netapp.nmsdk.ontap.api.volume.VolumeDestroyRequest;
 import com.netapp.nmsdk.ontap.api.volume.VolumeInfo;
 import com.netapp.nmsdk.ontap.api.volume.VolumeListInfoIterStartRequest;
 import com.netapp.nmsdk.ontap.api.volume.VolumeOfflineRequest;
+import com.sobey.core.utils.MathsUtil;
 import com.sobey.storage.webservice.response.dto.CreateEs3Parameter;
 import com.sobey.storage.webservice.response.dto.DeleteEs3Parameter;
-import com.sobey.storage.webservice.response.dto.Es3SizeParameter;
 import com.sobey.storage.webservice.response.dto.ModifytEs3RuleParameter;
-import com.sobey.storage.webservice.response.dto.MountEs3Parameter;
-import com.sobey.storage.webservice.response.dto.UmountEs3Parameter;
+import com.sobey.storage.webservice.response.dto.NetAppParameter;
 import com.sobey.storage.webservice.response.dto.VolumeInfoDTO;
 import com.sobey.storage.webservice.response.result.DTOListResult;
 import com.sobey.storage.webservice.response.result.WSResult;
@@ -47,9 +46,9 @@ public class NetAppService {
 	/**
 	 * netapp存储的基本单位 M
 	 * 
-	 * TODO 注意存储单位.测试环境无法创建GB大小的volume.故暂时用MB.
+	 * TODO 注意存储单位.测试环境无法创建GB大小的volume.故暂时用M(GB).
 	 */
-	private static String Default_StorageUntil = "M";
+	private static String Default_StorageUntil = "G";
 
 	/**
 	 * netapp连接器
@@ -185,59 +184,7 @@ public class NetAppService {
 		runner.run(request);
 	}
 
-	/**
-	 * 获得ES3总大小
-	 * 
-	 * @param parameter
-	 * @return
-	 */
-	public String getEs3SizeTotal(Es3SizeParameter parameter) {
-
-		ApiRunner runner = getApiRunner(parameter.getControllerIP(), parameter.getUsername(), parameter.getPassword());
-
-		VolumeListInfoIterStartRequest volListReq = new VolumeListInfoIterStartRequest();
-		volListReq.setVolume(parameter.getVolumeName());
-
-		Iterator<VolumeInfo> volumeIter = runner.iterate(volListReq, 10);
-
-		String size = "";
-
-		while (volumeIter.hasNext()) {
-
-			VolumeInfo volume = volumeIter.next();
-			size = volume.getSizeTotal().toString();
-
-		}
-		return size;
-	}
-
-	/**
-	 * 获得ES3已使用大小
-	 * 
-	 * @param parameter
-	 * @return
-	 */
-	public String getEs3SizeUsed(Es3SizeParameter parameter) {
-
-		ApiRunner runner = getApiRunner(parameter.getControllerIP(), parameter.getUsername(), parameter.getPassword());
-
-		VolumeListInfoIterStartRequest volListReq = new VolumeListInfoIterStartRequest();
-		volListReq.setVolume(parameter.getVolumeName());
-
-		Iterator<VolumeInfo> volumeIter = runner.iterate(volListReq);
-
-		String size = "";
-
-		while (volumeIter.hasNext()) {
-
-			VolumeInfo volume = volumeIter.next();
-			size = volume.getSizeUsed().toString();
-
-		}
-		return size;
-	}
-
-	public DTOListResult<VolumeInfoDTO> getVolumeInfoDTO(Es3SizeParameter parameter) {
+	public DTOListResult<VolumeInfoDTO> getVolumeInfoDTO(NetAppParameter parameter) {
 
 		DTOListResult<VolumeInfoDTO> result = new DTOListResult<VolumeInfoDTO>();
 
@@ -256,9 +203,16 @@ public class NetAppService {
 
 			VolumeInfoDTO volumeInfoDTO = new VolumeInfoDTO();
 			volumeInfoDTO.setName(volume.getName());
-			volumeInfoDTO.setTotalSize(volume.getSizeTotal().toString());
-			volumeInfoDTO.setUsedSize(volume.getSizeUsed().toString());
-			volumeInfoDTO.setAvailableSize(volume.getSizeAvailable().toString());
+
+			// bytes -> GB 1073741824 = 1024*1024*1024
+			volumeInfoDTO.setTotalSize(String.valueOf(MathsUtil.div(volume.getSizeTotal().doubleValue(), 1073741824)));
+			volumeInfoDTO.setUsedSize(String.valueOf(MathsUtil.div(volume.getSizeUsed().doubleValue(), 1073741824)));
+			volumeInfoDTO.setAvailableSize(String.valueOf(MathsUtil.div(volume.getSizeAvailable().doubleValue(),
+					1073741824)));
+
+			// 1048576 = 1024*1024
+			volumeInfoDTO.setSnapshotBlocksReservedSize(String.valueOf(MathsUtil.div(volume.getSnapshotBlocksReserved()
+					.doubleValue(), 1048576)));
 			dtos.add(volumeInfoDTO);
 		}
 
@@ -266,43 +220,6 @@ public class NetAppService {
 
 		return result;
 
-	}
-
-	/**
-	 * 调用在<b>netapp脚本服务器</b>的挂载volume脚本.<br>
-	 * eg:
-	 * 
-	 * <pre>
-	 * /root/sc/mountdisk.sh 10.10.1.18 10.10.1.6 liukai
-	 * </pre>
-	 * 
-	 * @param parameter
-	 *            {@link MountEs3Parameter}
-	 * @return
-	 */
-	public String mountEs3(MountEs3Parameter parameter) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("/root/sc/mountdisk.sh ").append(parameter.getClientIP()).append(" ")
-				.append(parameter.getControllerIP()).append(" ").append(parameter.getVolumeName()).append("\n");
-		return sb.toString();
-	}
-
-	/**
-	 * 调用在<b>netapp脚本服务器</b>上的卸载volume脚本.<br>
-	 * eg:
-	 * 
-	 * <pre>
-	 * /root/sc/umountdiks.sh 10.10.1.18
-	 * </pre>
-	 * 
-	 * @param parameter
-	 *            {@link UmountEs3Parameter}
-	 * @return
-	 */
-	public String umountEs3(UmountEs3Parameter parameter) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("/root/sc/umountdiks.sh ").append(parameter.getClientIP()).append(" \n");
-		return sb.toString();
 	}
 
 }

@@ -8,9 +8,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.sobey.storage.constans.WsConstants;
 
 /**
- * 
  * <pre>
- * clientIP			卸载客户端IP
+ * volumeName		卷名
  * controllerIP		netapp控制器IP
  * username			netapp控制器登录名
  * password			netapp控制器登录密码
@@ -19,14 +18,14 @@ import com.sobey.storage.constans.WsConstants;
  * @author Administrator
  * 
  */
-@XmlRootElement(name = "UmountEs3Parameter")
-@XmlType(name = "UmountEs3Parameter", namespace = WsConstants.NS)
-public class UmountEs3Parameter {
+@XmlRootElement(name = "NetAppParameter")
+@XmlType(name = "NetAppParameter", namespace = WsConstants.NS)
+public class NetAppParameter {
 
 	/**
-	 * 卸载客户端IP
+	 * 卷名
 	 */
-	private String clientIP;
+	private String volumeName;
 
 	/**
 	 * netapp控制器IP
@@ -43,12 +42,12 @@ public class UmountEs3Parameter {
 	 */
 	private String password;
 
-	public String getClientIP() {
-		return clientIP;
+	public String getVolumeName() {
+		return volumeName;
 	}
 
-	public void setClientIP(String clientIP) {
-		this.clientIP = clientIP;
+	public void setVolumeName(String volumeName) {
+		this.volumeName = volumeName;
 	}
 
 	public String getControllerIP() {

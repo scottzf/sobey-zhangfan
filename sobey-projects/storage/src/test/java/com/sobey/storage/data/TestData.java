@@ -5,10 +5,7 @@ import java.util.List;
 
 import com.sobey.storage.webservice.response.dto.CreateEs3Parameter;
 import com.sobey.storage.webservice.response.dto.DeleteEs3Parameter;
-import com.sobey.storage.webservice.response.dto.Es3SizeParameter;
 import com.sobey.storage.webservice.response.dto.ModifytEs3RuleParameter;
-import com.sobey.storage.webservice.response.dto.MountEs3Parameter;
-import com.sobey.storage.webservice.response.dto.UmountEs3Parameter;
 
 public class TestData {
 
@@ -41,29 +38,6 @@ public class TestData {
 		return parameter;
 	}
 
-	public static MountEs3Parameter randomMountEs3Parameter() {
-
-		MountEs3Parameter parameter = new MountEs3Parameter();
-
-		parameter.setVolumeName("liukai");
-		parameter.setClientIP("10.10.101.1");
-		parameter.setControllerIP(controllerIP);
-		parameter.setUsername(username);
-		parameter.setPassword(password);
-
-		return parameter;
-
-	}
-
-	public static UmountEs3Parameter randomUmountEs3Parameter() {
-
-		UmountEs3Parameter parameter = new UmountEs3Parameter();
-
-		parameter.setClientIP("10.10.101.1");
-
-		return parameter;
-	}
-
 	public static ModifytEs3RuleParameter randomModifytEs3RuleParameter() {
 
 		ModifytEs3RuleParameter parameter = new ModifytEs3RuleParameter();
@@ -79,18 +53,6 @@ public class TestData {
 		clientIPs.add("10.10.101.2");
 
 		parameter.setClientIPs(clientIPs);
-
-		return parameter;
-	}
-
-	public static Es3SizeParameter randomEs3SizeParameter() {
-
-		Es3SizeParameter parameter = new Es3SizeParameter();
-
-		parameter.setControllerIP(controllerIP);
-		parameter.setUsername(username);
-		parameter.setPassword(password);
-		parameter.setVolumeName("liukai");
 
 		return parameter;
 	}
