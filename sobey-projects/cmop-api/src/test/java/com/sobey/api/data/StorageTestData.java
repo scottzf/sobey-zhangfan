@@ -2,8 +2,6 @@ package com.sobey.api.data;
 
 import com.sobey.generate.storage.CreateEs3Parameter;
 import com.sobey.generate.storage.DeleteEs3Parameter;
-import com.sobey.generate.storage.MountEs3Parameter;
-import com.sobey.generate.storage.UmountEs3Parameter;
 
 public class StorageTestData {
 
@@ -29,32 +27,6 @@ public class StorageTestData {
 		DeleteEs3Parameter parameter = new DeleteEs3Parameter();
 
 		parameter.setVolumeName("liukai");
-		parameter.setControllerIP(host);
-		parameter.setUsername(userName);
-		parameter.setPassword(password);
-
-		return parameter;
-	}
-
-	public static MountEs3Parameter randomMountEs3Parameter() {
-
-		MountEs3Parameter parameter = new MountEs3Parameter();
-
-		parameter.setVolumeName("liukai");
-		parameter.setClientIP("10.10.101.1");
-		parameter.setControllerIP(host);
-		parameter.setUsername(userName);
-		parameter.setPassword(password);
-
-		return parameter;
-
-	}
-
-	public static UmountEs3Parameter randomUmountEs3Parameter() {
-
-		UmountEs3Parameter parameter = new UmountEs3Parameter();
-
-		parameter.setClientIP("10.10.101.1");
 		parameter.setControllerIP(host);
 		parameter.setUsername(userName);
 		parameter.setPassword(password);

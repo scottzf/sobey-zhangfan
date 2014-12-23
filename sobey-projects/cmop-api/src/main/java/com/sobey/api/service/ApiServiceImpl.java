@@ -69,11 +69,9 @@ import com.sobey.generate.loadbalancer.ElbSync;
 import com.sobey.generate.loadbalancer.LoadbalancerSoapService;
 import com.sobey.generate.storage.CreateEs3Parameter;
 import com.sobey.generate.storage.DeleteEs3Parameter;
-import com.sobey.generate.storage.Es3SizeParameter;
 import com.sobey.generate.storage.ModifytEs3RuleParameter;
-import com.sobey.generate.storage.MountEs3Parameter;
+import com.sobey.generate.storage.NetAppParameter;
 import com.sobey.generate.storage.StorageSoapService;
-import com.sobey.generate.storage.UmountEs3Parameter;
 import com.sobey.generate.storage.VolumeInfoDTO;
 import com.sobey.generate.switches.ESGParameter;
 import com.sobey.generate.switches.RuleParameter;
@@ -1088,9 +1086,7 @@ public class ApiServiceImpl implements ApiService {
 		 * 
 		 * Step.3 将ES3 和ECS的关联关系写入cmdbuild
 		 * 
-		 * Step.4 挂载volume
-		 * 
-		 * Step.5 写入日志
+		 * Step.4 写入日志
 		 * 
 		 */
 
@@ -1099,7 +1095,6 @@ public class ApiServiceImpl implements ApiService {
 		// Step.1 获得ECS、ES3、Storage、IP信息
 		Es3DTO es3dto = (Es3DTO) cmdbuildSoapService.findEs3(es3Id).getDto();
 		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
-		StorageDTO storageDTO = (StorageDTO) cmdbuildSoapService.findStorage(es3dto.getStorage()).getDto();
 
 		// Step.2 将访问IP列表写入netapp controller中
 		modifEs3Rule(es3dto, ecsDTO);
@@ -1107,28 +1102,7 @@ public class ApiServiceImpl implements ApiService {
 		// Step.3 将ES3 和ECS的关联关系写入cmdbuild
 		cmdbuildSoapService.createMapEcsEs3(ecsId, es3Id);
 
-		// Step.4 挂载volume
-
-		// netapp的控制IP
-		IpaddressDTO controllerIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(
-				es3dto.getStorageDTO().getIpaddress()).getDto();
-
-		// ECS的IP
-		IpaddressDTO ecsIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
-
-		MountEs3Parameter mountEs3Parameter = new MountEs3Parameter();
-		mountEs3Parameter.setVolumeName(es3dto.getVolumeName());
-		mountEs3Parameter.setClientIP(ecsIP.getDescription());
-		mountEs3Parameter.setUsername(storageDTO.getName());
-		mountEs3Parameter.setPassword(storageDTO.getPassword());
-		mountEs3Parameter.setControllerIP(controllerIP.getDescription());
-
-		if (!WSResult.SUCESS.equals(storageSoapService.mountEs3ByStorage(mountEs3Parameter).getCode())) {
-			result.setError(WSResult.SYSTEM_ERROR, "ES3挂载失败,请联系管理员.");
-			return result;
-		}
-
-		// Step.5 写入日志
+		// Step.4 写入日志
 		createLog(es3dto.getTenants(), LookUpConstants.ServiceType.ES3.getValue(),
 				LookUpConstants.OperateType.挂载.getValue(), LookUpConstants.Result.成功.getValue());
 
@@ -1210,27 +1184,6 @@ public class ApiServiceImpl implements ApiService {
 		// Step.1 获得ECS、ES3、Storage、IP信息
 		Es3DTO es3dto = (Es3DTO) cmdbuildSoapService.findEs3(es3Id).getDto();
 		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
-		StorageDTO storageDTO = (StorageDTO) cmdbuildSoapService.findStorage(es3dto.getStorage()).getDto();
-		// netapp controller IP
-		IpaddressDTO controllerIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(storageDTO.getIpaddress())
-				.getDto();
-
-		// Step.2 卸载volume
-		// ECS的IP
-		IpaddressDTO ecsIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
-
-		UmountEs3Parameter umountEs3Parameter = new UmountEs3Parameter();
-		umountEs3Parameter.setClientIP(ecsIP.getDescription());
-		umountEs3Parameter.setUsername(storageDTO.getName());
-		umountEs3Parameter.setPassword(storageDTO.getPassword());
-		umountEs3Parameter.setControllerIP(controllerIP.getDescription());
-
-		com.sobey.generate.storage.WSResult wsResult = storageSoapService.umountEs3ByStorage(umountEs3Parameter);
-
-		if (!WSResult.SUCESS.equals(wsResult.getCode())) {
-			result.setError(wsResult.getCode(), wsResult.getMessage());
-			return result;
-		}
 
 		// Step.3 删除ES3 和ECS的关联关系,写入cmdbuild
 		cmdbuildSoapService.deleteMapEcsEs3(ecsId, es3Id);
@@ -2411,13 +2364,13 @@ public class ApiServiceImpl implements ApiService {
 			IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(storageDTO.getIpaddress())
 					.getDto();
 
-			Es3SizeParameter es3SizeParameter = new Es3SizeParameter();
-			es3SizeParameter.setUsername(storageDTO.getName());
-			es3SizeParameter.setPassword(storageDTO.getPassword());
-			es3SizeParameter.setControllerIP(ipaddressDTO.getDescription());
+			NetAppParameter parameter = new NetAppParameter();
+			parameter.setUsername(storageDTO.getName());
+			parameter.setPassword(storageDTO.getPassword());
+			parameter.setControllerIP(ipaddressDTO.getDescription());
 
 			// 根据storage 列表(netapp Controller) 获得每个controller下的卷列表
-			List<Object> volumes = storageSoapService.getVolumeInfoDTO(es3SizeParameter).getDtoList().getDto();
+			List<Object> volumes = storageSoapService.getVolumeInfoDTO(parameter).getDtoList().getDto();
 			for (Object object : volumes) {
 				VolumeInfoDTO volumeInfoDTO = (VolumeInfoDTO) object;
 				netappVolumes.add(volumeInfoDTO.getName());
