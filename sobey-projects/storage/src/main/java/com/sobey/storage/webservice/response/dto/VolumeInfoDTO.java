@@ -66,10 +66,12 @@ public class VolumeInfoDTO {
 	 */
 	private String snapshotSize;
 
+	public VolumeInfoDTO() {
+	}
+
 	public VolumeInfoDTO(String name, String status, String maximumFiles, String currentFiles, String aggregateName,
 			String type, String isThinProvisioned, String totalSize, String usedSize, String availableSize,
 			String snapshotSize) {
-		super();
 		this.name = name;
 		this.status = status;
 		this.maximumFiles = maximumFiles;
