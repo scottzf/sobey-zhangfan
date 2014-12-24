@@ -131,6 +131,11 @@ public class ApiServiceImpl implements ApiService {
 	 */
 	private static String default_esg_name = "默认策略";
 
+	/**
+	 * 默认的租户ID
+	 */
+	private static final Integer tenantsId = 114;
+
 	@Override
 	public WSResult createTenants(TenantsDTO tenantsDTO) {
 
@@ -818,7 +823,7 @@ public class ApiServiceImpl implements ApiService {
 
 					// TODO 参数必须,需要想办法
 					newEcsDTO.setEcsSpec(118);
-					newEcsDTO.setTenants(114);
+					newEcsDTO.setTenants(tenantsId);
 
 					cmdbuildSoapService.createEcs(newEcsDTO);
 				}
@@ -2346,7 +2351,7 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public void syncVolume() {
+	public void syncVolume(String datacenter) {
 
 		// 从CMDBuild中获得storage 列表(netapp Controller)
 		HashMap<String, Object> storageMap = new HashMap<String, Object>();
@@ -2371,6 +2376,7 @@ public class ApiServiceImpl implements ApiService {
 
 			// 根据storage 列表(netapp Controller) 获得每个controller下的卷列表
 			List<Object> volumes = storageSoapService.getVolumeInfoDTO(parameter).getDtoList().getDto();
+
 			for (Object object : volumes) {
 				VolumeInfoDTO volumeInfoDTO = (VolumeInfoDTO) object;
 				netappVolumes.add(volumeInfoDTO.getName());
@@ -2426,10 +2432,10 @@ public class ApiServiceImpl implements ApiService {
 					es3DTO.setVolumeName(volumeName);
 					es3DTO.setStorage(minimumLoadStorage().getId());
 
+					es3DTO.setIdc(getIDCId(datacenter));
 					// TODO 参数必须,需要想办法,需要考虑到用户ID不存在的可能性.
-					es3DTO.setIdc(108);
 					es3DTO.setTenants(tenantsId);
-					cmdbuildSoapService.createEs3(es3DTO);
+					// cmdbuildSoapService.createEs3(es3DTO);
 				}
 
 			}

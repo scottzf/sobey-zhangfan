@@ -321,7 +321,7 @@ public interface ApiService {
 	/**
 	 * 同步netapp
 	 */
-	public void syncVolume();
+	public void syncVolume(String datacenter);
 
 	/**
 	 * 同步netscarler中的ELB

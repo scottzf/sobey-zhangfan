@@ -36,7 +36,7 @@ public class SyncTest extends TestCase {
 
 	@Test
 	public void syncVolume() {
-		service.syncVolume();
+		service.syncVolume(datacenter);
 	}
 
 	@Test

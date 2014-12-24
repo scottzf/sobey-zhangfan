@@ -27,6 +27,7 @@ import com.sobey.storage.webservice.response.dto.ModifytEs3RuleParameter;
 import com.sobey.storage.webservice.response.dto.NetAppParameter;
 import com.sobey.storage.webservice.response.dto.VolumeInfoDTO;
 import com.sobey.storage.webservice.response.result.DTOListResult;
+import com.sobey.storage.webservice.response.result.DTOResult;
 import com.sobey.storage.webservice.response.result.WSResult;
 
 /**
@@ -193,41 +194,71 @@ public class NetAppService {
 		VolumeListInfoIterStartRequest volListReq = new VolumeListInfoIterStartRequest();
 		Iterator<VolumeInfo> volumeIter = runner.iterate(volListReq);
 
-		VolumeInfo volume;
-
 		List<VolumeInfoDTO> dtos = new ArrayList<VolumeInfoDTO>();
 
 		while (volumeIter.hasNext()) {
 
-			volume = volumeIter.next();
-
-			// bytes -> GB 1073741824 = 1024*1024*1024
-			String totalSize = String.valueOf(MathsUtil.div(volume.getSizeTotal().doubleValue(), 1073741824));
-			String usedSize = String.valueOf(MathsUtil.div(volume.getSizeUsed().doubleValue(), 1073741824));
-			String availableSize = String.valueOf(MathsUtil.div(volume.getSizeAvailable().doubleValue(), 1073741824));
-
-			// 1048576 = 1024*1024
-			String snapshotSize = String.valueOf(MathsUtil.div(volume.getSnapshotBlocksReserved().doubleValue(),
-					1048576));
-
-			// 是否是精简模式(Thin Provisioned),"volume" = "NO" ,"none" = "YES"
-			String isThinProvisioned = "";
-			if ("volume".equals(volume.getSpaceReserve())) {
-				isThinProvisioned = "NO";
-			} else {
-				isThinProvisioned = "YES";
-			}
-
-			VolumeInfoDTO volumeInfoDTO = new VolumeInfoDTO(volume.getName(), volume.getState(), volume.getFilesTotal()
-					.toString(), volume.getFilesUsed().toString(), volume.getContainingAggregate(), volume.getType(),
-					isThinProvisioned, totalSize, usedSize, availableSize, snapshotSize);
-
-			dtos.add(volumeInfoDTO);
+			dtos.add(wrapVolumeInfoDTO(volumeIter.next()));
 		}
 
 		result.setDtos(dtos);
 
 		return result;
+	}
+
+	public DTOResult<VolumeInfoDTO> findVolumeInfoDTO(NetAppParameter parameter) {
+
+		DTOResult<VolumeInfoDTO> result = new DTOResult<VolumeInfoDTO>();
+
+		ApiRunner runner = getApiRunner(parameter.getControllerIP(), parameter.getUsername(), parameter.getPassword());
+
+		VolumeListInfoIterStartRequest volListReq = new VolumeListInfoIterStartRequest();
+		volListReq.setVolume(parameter.getVolumeName());// 指定卷名可以查询该卷的信息.
+
+		Iterator<VolumeInfo> volumeIter = runner.iterate(volListReq);
+
+		List<VolumeInfoDTO> dtos = new ArrayList<VolumeInfoDTO>();
+
+		while (volumeIter.hasNext()) {
+			dtos.add(wrapVolumeInfoDTO(volumeIter.next()));
+		}
+
+		if (!dtos.isEmpty()) {
+			result.setDto(dtos.get(0));
+		}
+
+		return result;
+	}
+
+	/**
+	 * VolumeInfo -> VolumeInfoDTO
+	 * 
+	 * @param volume
+	 * @return
+	 */
+	private VolumeInfoDTO wrapVolumeInfoDTO(VolumeInfo volume) {
+
+		// bytes -> GB 1073741824 = 1024*1024*1024
+		String totalSize = String.valueOf(MathsUtil.div(volume.getSizeTotal().doubleValue(), 1073741824));
+		String usedSize = String.valueOf(MathsUtil.div(volume.getSizeUsed().doubleValue(), 1073741824));
+		String availableSize = String.valueOf(MathsUtil.div(volume.getSizeAvailable().doubleValue(), 1073741824));
+
+		// 1048576 = 1024*1024
+		String snapshotSize = String.valueOf(MathsUtil.div(volume.getSnapshotBlocksReserved().doubleValue(), 1048576));
+
+		// 是否是精简模式(Thin Provisioned),"volume" = "NO" ,"none" = "YES"
+		String isThinProvisioned = "";
+		if ("volume".equals(volume.getSpaceReserve())) {
+			isThinProvisioned = "NO";
+		} else {
+			isThinProvisioned = "YES";
+		}
+
+		VolumeInfoDTO volumeInfoDTO = new VolumeInfoDTO(volume.getName(), volume.getState(), volume.getFilesTotal()
+				.toString(), volume.getFilesUsed().toString(), volume.getContainingAggregate(), volume.getType(),
+				isThinProvisioned, totalSize, usedSize, availableSize, snapshotSize);
+
+		return volumeInfoDTO;
 	}
 
 }

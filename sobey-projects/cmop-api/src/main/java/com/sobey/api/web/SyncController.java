@@ -56,7 +56,7 @@ public class SyncController {
 	@RequestMapping(value = "/es3/", method = RequestMethod.POST)
 	public String syncES3(RedirectAttributes redirectAttributes) {
 
-		service.syncVolume();
+		service.syncVolume("");
 
 		redirectAttributes.addFlashAttribute("message", "同步完成.");
 

@@ -1,6 +1,5 @@
 package com.sobey.storage.webservice;
 
-import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.apache.cxf.feature.Features;
@@ -14,6 +13,7 @@ import com.sobey.storage.webservice.response.dto.ModifytEs3RuleParameter;
 import com.sobey.storage.webservice.response.dto.NetAppParameter;
 import com.sobey.storage.webservice.response.dto.VolumeInfoDTO;
 import com.sobey.storage.webservice.response.result.DTOListResult;
+import com.sobey.storage.webservice.response.result.DTOResult;
 import com.sobey.storage.webservice.response.result.WSResult;
 
 @WebService(serviceName = "StorageSoapService", endpointInterface = "com.sobey.storage.webservice.StorageSoapService", targetNamespace = WsConstants.NS)
@@ -24,12 +24,12 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 	private NetAppService netAppService;
 
 	@Override
-	public WSResult createEs3ByStorage(@WebParam(name = "createEs3Parameter") CreateEs3Parameter createEs3Parameter) {
+	public WSResult createEs3ByStorage(CreateEs3Parameter createEs3Parameter) {
 		return netAppService.createEs3(createEs3Parameter);
 	}
 
 	@Override
-	public WSResult deleteEs3ByStorage(@WebParam(name = "deleteEs3Parameter") DeleteEs3Parameter deleteEs3Parameter) {
+	public WSResult deleteEs3ByStorage(DeleteEs3Parameter deleteEs3Parameter) {
 		return netAppService.deleteEs3(deleteEs3Parameter);
 	}
 
@@ -39,8 +39,13 @@ public class StorageSoapServiceImpl implements StorageSoapService {
 	}
 
 	@Override
-	public DTOListResult<VolumeInfoDTO> getVolumeInfoDTO(NetAppParameter es3SizeParameter) {
-		return netAppService.getVolumeInfoDTO(es3SizeParameter);
+	public DTOListResult<VolumeInfoDTO> getVolumeInfoDTO(NetAppParameter netAppParameter) {
+		return netAppService.getVolumeInfoDTO(netAppParameter);
+	}
+
+	@Override
+	public DTOResult<VolumeInfoDTO> findVolumeInfoDTO(NetAppParameter netAppParameter) {
+		return netAppService.findVolumeInfoDTO(netAppParameter);
 	}
 
 }
