@@ -39,7 +39,7 @@ import com.sobey.storage.webservice.response.result.WSResult;
 public class NetAppService {
 
 	/**
-	 * netapp中默认的聚合名
+	 * netapp中默认的聚合名 : aggr1
 	 */
 	private static String Default_AggrName = "aggr1";
 

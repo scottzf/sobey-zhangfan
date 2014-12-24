@@ -75,10 +75,16 @@
 
   <xs:complexType name="VolumeInfoDTO">
     <xs:sequence>
+      <xs:element minOccurs="0" name="aggregateName" type="xs:string"/>
       <xs:element minOccurs="0" name="availableSize" type="xs:string"/>
+      <xs:element minOccurs="0" name="currentFiles" type="xs:string"/>
+      <xs:element minOccurs="0" name="isThinProvisioned" type="xs:string"/>
+      <xs:element minOccurs="0" name="maximumFiles" type="xs:string"/>
       <xs:element minOccurs="0" name="name" type="xs:string"/>
-      <xs:element minOccurs="0" name="snapshotBlocksReservedSize" type="xs:string"/>
+      <xs:element minOccurs="0" name="snapshotSize" type="xs:string"/>
+      <xs:element minOccurs="0" name="status" type="xs:string"/>
       <xs:element minOccurs="0" name="totalSize" type="xs:string"/>
+      <xs:element minOccurs="0" name="type" type="xs:string"/>
       <xs:element minOccurs="0" name="usedSize" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
