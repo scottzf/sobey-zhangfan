@@ -22,15 +22,20 @@ import com.netapp.nmsdk.ontap.api.volume.VolumeListInfoIterStartRequest;
 import com.netapp.nmsdk.ontap.api.volume.VolumeOfflineRequest;
 import com.sobey.core.utils.MathsUtil;
 
+/**
+ * netapp sdk测试
+ * 
+ * @author Administrator
+ *
+ */
 public class SDKTest {
 
+	/**
+	 * netapp 控制器IP,登录账号,登录密码.
+	 */
 	private static String host = "172.20.0.11";
 	private static String userName = "liukai";
 	private static String password = "liukai@s0bey";
-
-	// private static String host = "10.10.2.34";
-	// private static String userName = "root";
-	// private static String password = "XA@S0bey";
 
 	Protocol protocol = Protocol.INSECURE_HTTPS;
 
@@ -41,9 +46,9 @@ public class SDKTest {
 	public void volList() {
 
 		VolumeListInfoIterStartRequest volListReq = new VolumeListInfoIterStartRequest();
-		// volListReq.setVolume("sobey533");
+		// volListReq.setVolume("sobey533");//指定卷名可以查询该卷的信息.
 
-		Iterator<VolumeInfo> volumeIter = runner.iterate(volListReq, 10);
+		Iterator<VolumeInfo> volumeIter = runner.iterate(volListReq, 100);
 
 		VolumeInfo volume;
 
@@ -52,15 +57,21 @@ public class SDKTest {
 			System.out.println("------------------------------------------------");
 			volume = volumeIter.next();
 			System.out.println("Name               : " + volume.getName());
+			System.out.println("Status             : " + volume.getState());
+			System.out.println("Maximum Files      : " + volume.getFilesTotal());
+			System.out.println("Current Files      : " + volume.getFilesUsed());
+			System.out.println("Aggregate          : " + volume.getContainingAggregate());
 			System.out.println("Type               : " + volume.getType());
-			System.out.println("State              : " + volume.getState());
-			System.out.println("Total size (GB) : " + MathsUtil.div(volume.getSizeTotal().doubleValue(), 1073741824));
-			System.out.println("Used size (GB)  : " + MathsUtil.div(volume.getSizeUsed().doubleValue(), 1073741824));
-			System.out.println("Available size (GB)  : "
+
+			// 是否是精简模式(Thin Provisioned),"volume" = "NO" ,"none" = "YES"
+			System.out.println("Space Reserve      : " + volume.getSpaceReserve());
+			System.out
+					.println("Total size (GB)    : " + MathsUtil.div(volume.getSizeTotal().doubleValue(), 1073741824));
+			System.out.println("Used size (GB)     : " + MathsUtil.div(volume.getSizeUsed().doubleValue(), 1073741824));
+			System.out.println("Available size (GB): "
 					+ MathsUtil.div(volume.getSizeAvailable().doubleValue(), 1073741824));
-			System.out.println("Snapshot Blocks Reserved size (GB) : "
+			System.out.println("Snapshot size (GB) : "
 					+ MathsUtil.div(volume.getSnapshotBlocksReserved().doubleValue(), 1048576));
-			System.out.println("------------------------------------------------");
 			i++;
 		}
 		System.out.println(i);

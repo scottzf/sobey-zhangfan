@@ -17,7 +17,37 @@ public class VolumeInfoDTO {
 	private String name;
 
 	/**
-	 * 空间总大小(GB)
+	 * 卷状态
+	 */
+	private String status;
+
+	/**
+	 * 最大文件数
+	 */
+	private String maximumFiles;
+
+	/**
+	 * 当前文件数
+	 */
+	private String currentFiles;
+
+	/**
+	 * 簇名
+	 */
+	private String aggregateName;
+
+	/**
+	 * 卷类型
+	 */
+	private String type;
+
+	/**
+	 * 是否是精简模式
+	 */
+	private String isThinProvisioned;
+
+	/**
+	 * 空间总大小(GB),不包含snapshot大小.
 	 */
 	private String totalSize;
 
@@ -34,7 +64,24 @@ public class VolumeInfoDTO {
 	/**
 	 * snapshot保留块大小(GB)
 	 */
-	private String snapshotBlocksReservedSize;
+	private String snapshotSize;
+
+	public VolumeInfoDTO(String name, String status, String maximumFiles, String currentFiles, String aggregateName,
+			String type, String isThinProvisioned, String totalSize, String usedSize, String availableSize,
+			String snapshotSize) {
+		super();
+		this.name = name;
+		this.status = status;
+		this.maximumFiles = maximumFiles;
+		this.currentFiles = currentFiles;
+		this.aggregateName = aggregateName;
+		this.type = type;
+		this.isThinProvisioned = isThinProvisioned;
+		this.totalSize = totalSize;
+		this.usedSize = usedSize;
+		this.availableSize = availableSize;
+		this.snapshotSize = snapshotSize;
+	}
 
 	public String getName() {
 		return name;
@@ -42,6 +89,54 @@ public class VolumeInfoDTO {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getMaximumFiles() {
+		return maximumFiles;
+	}
+
+	public void setMaximumFiles(String maximumFiles) {
+		this.maximumFiles = maximumFiles;
+	}
+
+	public String getCurrentFiles() {
+		return currentFiles;
+	}
+
+	public void setCurrentFiles(String currentFiles) {
+		this.currentFiles = currentFiles;
+	}
+
+	public String getAggregateName() {
+		return aggregateName;
+	}
+
+	public void setAggregateName(String aggregateName) {
+		this.aggregateName = aggregateName;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getIsThinProvisioned() {
+		return isThinProvisioned;
+	}
+
+	public void setIsThinProvisioned(String isThinProvisioned) {
+		this.isThinProvisioned = isThinProvisioned;
 	}
 
 	public String getTotalSize() {
@@ -68,12 +163,12 @@ public class VolumeInfoDTO {
 		this.availableSize = availableSize;
 	}
 
-	public String getSnapshotBlocksReservedSize() {
-		return snapshotBlocksReservedSize;
+	public String getSnapshotSize() {
+		return snapshotSize;
 	}
 
-	public void setSnapshotBlocksReservedSize(String snapshotBlocksReservedSize) {
-		this.snapshotBlocksReservedSize = snapshotBlocksReservedSize;
+	public void setSnapshotSize(String snapshotSize) {
+		this.snapshotSize = snapshotSize;
 	}
 
 	/**

@@ -35,7 +35,6 @@ public class StorageTest extends TestCase implements PbulicProperties {
 		WSResult result = service.createEs3(parameter);
 		System.out.println(result.getCode());
 		System.out.println(result.getMessage());
-
 	}
 
 	@Test

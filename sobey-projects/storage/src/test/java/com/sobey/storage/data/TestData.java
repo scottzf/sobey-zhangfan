@@ -7,6 +7,12 @@ import com.sobey.storage.webservice.response.dto.CreateEs3Parameter;
 import com.sobey.storage.webservice.response.dto.DeleteEs3Parameter;
 import com.sobey.storage.webservice.response.dto.ModifytEs3RuleParameter;
 
+/**
+ * 测试数据
+ * 
+ * @author Administrator
+ *
+ */
 public class TestData {
 
 	private static String controllerIP = "10.10.2.34";

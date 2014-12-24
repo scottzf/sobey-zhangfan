@@ -41,14 +41,14 @@ public class NetAppService {
 	/**
 	 * netapp中默认的聚合名
 	 */
-	private static String Default_AggrName = "aggr0";
+	private static String Default_AggrName = "aggr1";
 
 	/**
-	 * netapp存储的基本单位 M
+	 * netapp存储的基本单位
 	 * 
-	 * TODO 注意存储单位.测试环境无法创建GB大小的volume.故暂时用M(GB).
+	 * TODO 注意存储单位.测试环境无法创建GB大小的volume,故暂时用MB(M),待部署到生成环境应该切换成GB.
 	 */
-	private static String Default_StorageUntil = "G";
+	private static String Default_StorageUntil = "M";
 
 	/**
 	 * netapp连接器
@@ -201,25 +201,33 @@ public class NetAppService {
 
 			volume = volumeIter.next();
 
-			VolumeInfoDTO volumeInfoDTO = new VolumeInfoDTO();
-			volumeInfoDTO.setName(volume.getName());
-
 			// bytes -> GB 1073741824 = 1024*1024*1024
-			volumeInfoDTO.setTotalSize(String.valueOf(MathsUtil.div(volume.getSizeTotal().doubleValue(), 1073741824)));
-			volumeInfoDTO.setUsedSize(String.valueOf(MathsUtil.div(volume.getSizeUsed().doubleValue(), 1073741824)));
-			volumeInfoDTO.setAvailableSize(String.valueOf(MathsUtil.div(volume.getSizeAvailable().doubleValue(),
-					1073741824)));
+			String totalSize = String.valueOf(MathsUtil.div(volume.getSizeTotal().doubleValue(), 1073741824));
+			String usedSize = String.valueOf(MathsUtil.div(volume.getSizeUsed().doubleValue(), 1073741824));
+			String availableSize = String.valueOf(MathsUtil.div(volume.getSizeAvailable().doubleValue(), 1073741824));
 
 			// 1048576 = 1024*1024
-			volumeInfoDTO.setSnapshotBlocksReservedSize(String.valueOf(MathsUtil.div(volume.getSnapshotBlocksReserved()
-					.doubleValue(), 1048576)));
+			String snapshotSize = String.valueOf(MathsUtil.div(volume.getSnapshotBlocksReserved().doubleValue(),
+					1048576));
+
+			// 是否是精简模式(Thin Provisioned),"volume" = "NO" ,"none" = "YES"
+			String isThinProvisioned = "";
+			if ("volume".equals(volume.getSpaceReserve())) {
+				isThinProvisioned = "NO";
+			} else {
+				isThinProvisioned = "YES";
+			}
+
+			VolumeInfoDTO volumeInfoDTO = new VolumeInfoDTO(volume.getName(), volume.getState(), volume.getFilesTotal()
+					.toString(), volume.getFilesUsed().toString(), volume.getContainingAggregate(), volume.getType(),
+					isThinProvisioned, totalSize, usedSize, availableSize, snapshotSize);
+
 			dtos.add(volumeInfoDTO);
 		}
 
 		result.setDtos(dtos);
 
 		return result;
-
 	}
 
 }
