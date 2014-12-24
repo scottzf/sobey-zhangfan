@@ -21,6 +21,10 @@
 
   <xs:element name="deleteEs3ByStorageResponse" type="tns:deleteEs3ByStorageResponse"/>
 
+  <xs:element name="findVolumeInfoDTO" type="tns:findVolumeInfoDTO"/>
+
+  <xs:element name="findVolumeInfoDTOResponse" type="tns:findVolumeInfoDTOResponse"/>
+
   <xs:element name="getVolumeInfoDTO" type="tns:getVolumeInfoDTO"/>
 
   <xs:element name="getVolumeInfoDTOResponse" type="tns:getVolumeInfoDTOResponse"/>
@@ -29,9 +33,9 @@
 
   <xs:element name="modifytEs3RuleParameterByStorageResponse" type="tns:modifytEs3RuleParameterByStorageResponse"/>
 
-  <xs:complexType name="getVolumeInfoDTO">
+  <xs:complexType name="findVolumeInfoDTO">
     <xs:sequence>
-      <xs:element minOccurs="0" name="es3SizeParameter" type="tns:NetAppParameter"/>
+      <xs:element minOccurs="0" name="netAppParameter" type="tns:NetAppParameter"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -44,23 +48,17 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="getVolumeInfoDTOResponse">
+  <xs:complexType name="findVolumeInfoDTOResponse">
     <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:DTOListResult"/>
+      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="DTOListResult">
+  <xs:complexType name="DTOResult">
     <xs:complexContent>
       <xs:extension base="tns:WSResult">
         <xs:sequence>
-          <xs:element minOccurs="0" name="dtoList">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element maxOccurs="unbounded" minOccurs="0" name="dto" type="xs:anyType"/>
-              </xs:sequence>
-            </xs:complexType>
-          </xs:element>
+          <xs:element minOccurs="0" name="dto" type="xs:anyType"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -87,6 +85,34 @@
       <xs:element minOccurs="0" name="type" type="xs:string"/>
       <xs:element minOccurs="0" name="usedSize" type="xs:string"/>
     </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getVolumeInfoDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="netAppParameter" type="tns:NetAppParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getVolumeInfoDTOResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOListResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DTOListResult">
+    <xs:complexContent>
+      <xs:extension base="tns:WSResult">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="dtoList">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="dto" type="xs:anyType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="modifytEs3RuleParameterByStorage">
@@ -164,6 +190,10 @@
     <wsdl:part element="tns:getVolumeInfoDTO" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="findVolumeInfoDTOResponse">
+    <wsdl:part element="tns:findVolumeInfoDTOResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="createEs3ByStorageResponse">
     <wsdl:part element="tns:createEs3ByStorageResponse" name="parameters">
     </wsdl:part>
@@ -174,6 +204,10 @@
   </wsdl:message>
   <wsdl:message name="getVolumeInfoDTOResponse">
     <wsdl:part element="tns:getVolumeInfoDTOResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findVolumeInfoDTO">
+    <wsdl:part element="tns:findVolumeInfoDTO" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createEs3ByStorage">
@@ -189,6 +223,12 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="StorageSoapService">
+    <wsdl:operation name="findVolumeInfoDTO">
+      <wsdl:input message="tns:findVolumeInfoDTO" name="findVolumeInfoDTO">
+    </wsdl:input>
+      <wsdl:output message="tns:findVolumeInfoDTOResponse" name="findVolumeInfoDTOResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getVolumeInfoDTO">
       <wsdl:input message="tns:getVolumeInfoDTO" name="getVolumeInfoDTO">
     </wsdl:input>
@@ -216,6 +256,15 @@
   </wsdl:portType>
   <wsdl:binding name="StorageSoapServiceSoapBinding" type="tns:StorageSoapService">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="findVolumeInfoDTO">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findVolumeInfoDTO">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findVolumeInfoDTOResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getVolumeInfoDTO">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="getVolumeInfoDTO">
