@@ -820,6 +820,7 @@ public class ApiServiceImpl implements ApiService {
 					newEcsDTO.setMemorySize(vmInfoDTO.getMemorySize());
 					newEcsDTO.setDiskSize(vmInfoDTO.getDiskSize());
 					newEcsDTO.setIdc(getIDCId(datacenter));
+					newEcsDTO.setMacAddress(vmInfoDTO.getMacIPaddress());
 
 					// TODO 参数必须,需要想办法
 					newEcsDTO.setEcsSpec(118);
@@ -989,7 +990,7 @@ public class ApiServiceImpl implements ApiService {
 
 			for (Object obj : es3List) {
 				Es3DTO es3DTO = (Es3DTO) obj;
-				totalSize = MathsUtil.add(totalSize, es3DTO.getDiskSize());
+				totalSize = MathsUtil.add(totalSize, Double.valueOf(es3DTO.getTotalSize()));
 			}
 
 			totals.add(totalSize);
@@ -1044,7 +1045,7 @@ public class ApiServiceImpl implements ApiService {
 
 			CreateEs3Parameter createEs3Parameter = new CreateEs3Parameter();
 			createEs3Parameter.setVolumeName(VolumeName);
-			createEs3Parameter.setVolumeSize(es3DTO.getDiskSize().toString());
+			createEs3Parameter.setVolumeSize(es3DTO.getTotalSize());
 			createEs3Parameter.setControllerIP(controllerIP.getDescription());
 			createEs3Parameter.setUsername(storageDTO.getName());
 			createEs3Parameter.setPassword(storageDTO.getPassword());
@@ -1055,7 +1056,7 @@ public class ApiServiceImpl implements ApiService {
 			CreateVMDiskParameter createVMDiskParameter = new CreateVMDiskParameter();
 			createVMDiskParameter.setDatacenter("xa");
 			createVMDiskParameter.setDiskName(VolumeName);
-			createVMDiskParameter.setDiskSize(es3DTO.getDiskSize().toString());
+			createVMDiskParameter.setDiskSize(es3DTO.getTotalSize());
 			createVMDiskParameter.setVmName(vmName);
 			instanceSoapService.createES3ByInstance(createVMDiskParameter);
 		} else {
@@ -2353,19 +2354,28 @@ public class ApiServiceImpl implements ApiService {
 	@Override
 	public void syncVolume(String datacenter) {
 
-		// 从CMDBuild中获得storage 列表(netapp Controller)
-		HashMap<String, Object> storageMap = new HashMap<String, Object>();
-		storageMap.put("EQ_idc", getIDCId(datacenter));
-		List<Object> storages = cmdbuildSoapService.getStorageList(CMDBuildUtil.wrapperSearchParams(storageMap))
+		// 从CMDBuild中根据datacenter获得ES3 列表
+		HashMap<String, Object> es3Map = new HashMap<String, Object>();
+		es3Map.put("EQ_idc", getIDCId(datacenter));
+		List<Object> es3List = cmdbuildSoapService.getEs3List(CMDBuildUtil.wrapperSearchParams(es3Map)).getDtoList()
+				.getDto();
+
+		// CMDBuild所有ES3的信息
+		List<String> cmdbuildES3List = new ArrayList<String>();
+		for (Object obj : es3List) {
+			Es3DTO es3DTO = (Es3DTO) obj;
+			cmdbuildES3List.add(es3DTO.getVolumeName());
+		}
+
+		// 从CMDBuild中根据datacenter获得storage 列表(netapp Controller)
+		HashMap<String, Object> controllerMap = new HashMap<String, Object>();
+		controllerMap.put("EQ_idc", getIDCId(datacenter));
+		List<Object> controllers = cmdbuildSoapService.getStorageList(CMDBuildUtil.wrapperSearchParams(controllerMap))
 				.getDtoList().getDto();
 
-		// netapp下所有的卷信息.
-		List<String> netappVolumes = new ArrayList<String>();
+		for (Object obj : controllers) {
 
-		HashMap<String, String> hashMap = new HashMap<String, String>();
-
-		for (Object obj : storages) {
-
+			// 获得controller的信息,并将信息填充至NetAppParameter
 			StorageDTO storageDTO = (StorageDTO) obj;
 			IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(storageDTO.getIpaddress())
 					.getDto();
@@ -2379,87 +2389,77 @@ public class ApiServiceImpl implements ApiService {
 			List<Object> volumes = storageSoapService.getVolumeInfoDTO(parameter).getDtoList().getDto();
 
 			for (Object object : volumes) {
+
 				VolumeInfoDTO volumeInfoDTO = (VolumeInfoDTO) object;
-				netappVolumes.add(volumeInfoDTO.getName());
-				hashMap.put(volumeInfoDTO.getName(), volumeInfoDTO.getTotalSize());
+
+				// 根据netapp中的卷名查询CMDB中是否存在该卷
+				HashMap<String, Object> volumeMap = new HashMap<String, Object>();
+				volumeMap.put("EQ_volumeName", volumeInfoDTO.getName());
+				Es3DTO es3DTO = (Es3DTO) cmdbuildSoapService.findEs3ByParams(
+						CMDBuildUtil.wrapperSearchParams(volumeMap)).getDto();
+
+				if (es3DTO != null) {
+
+					// 在CMDB中该卷存在,只做更新.
+
+					es3DTO.setAggreName(volumeInfoDTO.getAggregateName());
+					es3DTO.setMaximumFiles(volumeInfoDTO.getMaximumFiles());
+					es3DTO.setAvailableSize(volumeInfoDTO.getAvailableSize());
+					es3DTO.setCurrentFiles(volumeInfoDTO.getCurrentFiles());
+					es3DTO.setEs3Status(volumeInfoDTO.getStatus());
+					es3DTO.setUsedSizePre(volumeInfoDTO.getUsedSizePre());
+					es3DTO.setUsedSize(volumeInfoDTO.getUsedSize());
+					es3DTO.setTotalSize(volumeInfoDTO.getTotalSize());
+					es3DTO.setThinProvisioned(volumeInfoDTO.getIsThinProvisioned());
+					es3DTO.setSnapshotSize(volumeInfoDTO.getSnapshotSize());
+
+					cmdbuildSoapService.updateEs3(es3DTO.getId(), es3DTO);
+
+				} else {
+
+					// 在CMDB中该卷不存在,增加.
+
+					Es3DTO newEs3DTO = new Es3DTO();
+					newEs3DTO.setAgentType(LookUpConstants.AgentType.NetApp.getValue());
+					newEs3DTO.setDescription(volumeInfoDTO.getName());
+					newEs3DTO.setEs3Type(LookUpConstants.ES3Type.高IOPS.getValue());
+					newEs3DTO.setStorage(storageDTO.getId());
+					newEs3DTO.setIdc(getIDCId(datacenter));
+					// TODO 参数必须,需要想办法.
+					newEs3DTO.setTenants(tenantsId);
+					newEs3DTO.setVolumeName(volumeInfoDTO.getName());
+					newEs3DTO.setAggreName(volumeInfoDTO.getAggregateName());
+					newEs3DTO.setMaximumFiles(volumeInfoDTO.getMaximumFiles());
+					newEs3DTO.setAvailableSize(volumeInfoDTO.getAvailableSize());
+					newEs3DTO.setCurrentFiles(volumeInfoDTO.getCurrentFiles());
+					newEs3DTO.setEs3Status(volumeInfoDTO.getStatus());
+					newEs3DTO.setUsedSizePre(volumeInfoDTO.getUsedSizePre());
+					newEs3DTO.setUsedSize(volumeInfoDTO.getUsedSize());
+					newEs3DTO.setTotalSize(volumeInfoDTO.getTotalSize());
+					newEs3DTO.setThinProvisioned(volumeInfoDTO.getIsThinProvisioned());
+					newEs3DTO.setSnapshotSize(volumeInfoDTO.getSnapshotSize());
+
+					cmdbuildSoapService.createEs3(newEs3DTO);
+				}
+
+				/**
+				 * 对CMDBuild所有ES3的List进行remove操作:对netapp 卷列表进行遍历,根据卷名将cmdbuildES3List相同的卷名进行排除.
+				 * 
+				 * 如ES3的List中有值,表示CMDB中存在netapp中不存在的卷信息,删除之.
+				 */
+				cmdbuildES3List.remove(volumeInfoDTO.getName());
 			}
 		}
 
-		// CMDBuild所有ES3的信息
-		List<String> cmdbuildES3List = new ArrayList<String>();
+		// 删除CMDB中多余的值
+		for (String volumeName : cmdbuildES3List) {
 
-		HashMap<String, Object> es3Map = new HashMap<String, Object>();
-		List<Object> es3List = cmdbuildSoapService.getEs3List(CMDBuildUtil.wrapperSearchParams(es3Map)).getDtoList()
-				.getDto();
-
-		for (Object obj : es3List) {
-			Es3DTO es3DTO = (Es3DTO) obj;
-			cmdbuildES3List.add(es3DTO.getVolumeName());
-		}
-
-		Collections.sort(netappVolumes);
-		Collections.sort(cmdbuildES3List);
-
-		List<String> netappVolumes1 = netappVolumes;
-		List<String> netappVolumes2 = netappVolumes;
-
-		List<String> cmdbuildES3List1 = cmdbuildES3List;
-		List<String> cmdbuildES3List2 = cmdbuildES3List;
-
-		netappVolumes1.removeAll(cmdbuildES3List1);
-
-		if (!netappVolumes1.isEmpty()) {
-			// 如果netapp中存在cmdbuild没有的记录,则在cmdbuild中新增一条记录
-
-			for (String volumeName : netappVolumes1) {
-				// TODO 此处处理需要更全面,如文本解析后数据越界,用户ID如果不存在等问题.
-
-				// TODO 临时判断,测试环境下默认的卷.
-				if (!volumeName.equals("vol0")) {
-
-					String[] arr = StringUtils.split(volumeName, "_");
-					Integer tenantsId = Integer.valueOf(arr[1]);
-					Double diskSize = MathsUtil.div(Double.valueOf(hashMap.get(volumeName)), 1048576D);// 将netapp查询的存储大小换算成G,除以1024*1024
-
-					Es3DTO es3DTO = new Es3DTO();
-					es3DTO.setAgentType(LookUpConstants.AgentType.NetApp.getValue());
-					es3DTO.setDescription(arr[0]);
-					es3DTO.setRemark(volumeName);
-					es3DTO.setVolumeName(volumeName);
-
-					// 缺少空间大小
-					es3DTO.setDiskSize(diskSize);
-					es3DTO.setEs3Type(LookUpConstants.ES3Type.高IOPS.getValue());
-					es3DTO.setVolumeName(volumeName);
-					es3DTO.setStorage(minimumLoadStorage().getId());
-
-					es3DTO.setIdc(getIDCId(datacenter));
-					// TODO 参数必须,需要想办法,需要考虑到用户ID不存在的可能性.
-					es3DTO.setTenants(tenantsId);
-					// cmdbuildSoapService.createEs3(es3DTO);
-				}
-
-			}
-
-		}
-
-		cmdbuildES3List2.remove(netappVolumes2);
-
-		if (!cmdbuildES3List2.isEmpty()) {
-			// 如果CMDBuild中有netapp中不存在的ES3信息,则将该信息删除.
-
-			for (String volumeName : cmdbuildES3List2) {
-				if (!volumeName.equals("vol0")) {
-
-					HashMap<String, Object> removeES3Map = new HashMap<String, Object>();
-					removeES3Map.put("EQ_volumeName", volumeName);
-					Es3DTO es3dto = (Es3DTO) cmdbuildSoapService.findEs3ByParams(
-							CMDBuildUtil.wrapperSearchParams(removeES3Map)).getDto();
-
-					if (es3dto != null) {
-						cmdbuildSoapService.deleteEs3(es3dto.getId());
-					}
-				}
+			HashMap<String, Object> removeES3Map = new HashMap<String, Object>();
+			removeES3Map.put("EQ_volumeName", volumeName);
+			Es3DTO es3dto = (Es3DTO) cmdbuildSoapService
+					.findEs3ByParams(CMDBuildUtil.wrapperSearchParams(removeES3Map)).getDto();
+			if (es3dto != null) {
+				cmdbuildSoapService.deleteEs3(es3dto.getId());
 			}
 		}
 
