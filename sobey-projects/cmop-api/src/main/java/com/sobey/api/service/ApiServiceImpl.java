@@ -134,7 +134,12 @@ public class ApiServiceImpl implements ApiService {
 	/**
 	 * 默认的租户ID
 	 */
-	private static final Integer tenantsId = 114;
+	private static final Integer default_tenantsId = 114;
+
+	/**
+	 * 默认的ECS规格ID
+	 */
+	private static final Integer default_ecsSpecId = 118;
 
 	@Override
 	public WSResult createTenants(TenantsDTO tenantsDTO) {
@@ -823,8 +828,8 @@ public class ApiServiceImpl implements ApiService {
 					newEcsDTO.setMacAddress(vmInfoDTO.getMacIPaddress());
 
 					// TODO 参数必须,需要想办法
-					newEcsDTO.setEcsSpec(118);
-					newEcsDTO.setTenants(tenantsId);
+					newEcsDTO.setEcsSpec(default_ecsSpecId);
+					newEcsDTO.setTenants(default_tenantsId);
 
 					cmdbuildSoapService.createEcs(newEcsDTO);
 				}
@@ -2426,7 +2431,7 @@ public class ApiServiceImpl implements ApiService {
 					newEs3DTO.setStorage(storageDTO.getId());
 					newEs3DTO.setIdc(getIDCId(datacenter));
 					// TODO 参数必须,需要想办法.
-					newEs3DTO.setTenants(tenantsId);
+					newEs3DTO.setTenants(default_tenantsId);
 					newEs3DTO.setVolumeName(volumeInfoDTO.getName());
 					newEs3DTO.setAggreName(volumeInfoDTO.getAggregateName());
 					newEs3DTO.setMaximumFiles(volumeInfoDTO.getMaximumFiles());
