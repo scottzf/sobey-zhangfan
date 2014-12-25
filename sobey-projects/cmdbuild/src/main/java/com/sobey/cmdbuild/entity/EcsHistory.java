@@ -27,6 +27,7 @@ public class EcsHistory extends ServiceHistoryBasic {
 	private String memorySize;
 	private String datastoreName;
 	private String diskSize;
+	private String macAddress;
 
 	public EcsHistory() {
 	}
@@ -129,6 +130,15 @@ public class EcsHistory extends ServiceHistoryBasic {
 
 	public void setDiskSize(String diskSize) {
 		this.diskSize = diskSize;
+	}
+
+	@Column(name = "mac_address", length = 100)
+	public String getMacAddress() {
+		return macAddress;
+	}
+
+	public void setMacAddress(String macAddress) {
+		this.macAddress = macAddress;
 	}
 
 }

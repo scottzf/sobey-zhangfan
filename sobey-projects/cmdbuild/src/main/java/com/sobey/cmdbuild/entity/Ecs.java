@@ -28,6 +28,7 @@ public class Ecs extends ServiceBasic {
 	private String memorySize;
 	private String datastoreName;
 	private String diskSize;
+	private String macAddress;
 
 	private Set<EcsHistory> ecsHistories = new HashSet<EcsHistory>(0);
 
@@ -122,6 +123,15 @@ public class Ecs extends ServiceBasic {
 
 	public void setDiskSize(String diskSize) {
 		this.diskSize = diskSize;
+	}
+
+	@Column(name = "mac_address", length = 100)
+	public String getMacAddress() {
+		return macAddress;
+	}
+
+	public void setMacAddress(String macAddress) {
+		this.macAddress = macAddress;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ecs")

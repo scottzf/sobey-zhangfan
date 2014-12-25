@@ -250,7 +250,7 @@ public class TestData {
 		es3.setVolumeName(RandomData.randomName("volumeName"));
 		es3.setStorage(storageId);
 		es3.setEs3Type(es3TypeId);
-		es3.setDiskSize(1000);
+		es3.setTotalSize("1000");
 
 		return es3;
 	}
