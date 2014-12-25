@@ -75,7 +75,7 @@ public class SDKTest {
 					+ MathsUtil.div(volume.getSnapshotBlocksReserved().doubleValue(), 1048576));
 
 			VolumeInfoDTO volumeInfoDTO = wrapVolumeInfoDTO(volume);
-			System.out.println(volumeInfoDTO);
+			System.out.println("Used size (%)      : " + volumeInfoDTO.getUsedSizePre());
 			i++;
 		}
 		System.out.println(i);
@@ -83,13 +83,15 @@ public class SDKTest {
 
 	private VolumeInfoDTO wrapVolumeInfoDTO(VolumeInfo volume) {
 
-		// bytes -> GB 1073741824 = 1024*1024*1024
-		String totalSize = String.valueOf(MathsUtil.div(volume.getSizeTotal().doubleValue(), 1073741824));
-		String usedSize = String.valueOf(MathsUtil.div(volume.getSizeUsed().doubleValue(), 1073741824));
-		String availableSize = String.valueOf(MathsUtil.div(volume.getSizeAvailable().doubleValue(), 1073741824));
-
 		// 1048576 = 1024*1024
-		String snapshotSize = String.valueOf(MathsUtil.div(volume.getSnapshotBlocksReserved().doubleValue(), 1048576));
+		Double snapshotSize = MathsUtil.div(volume.getSnapshotBlocksReserved().doubleValue(), 1048576);
+
+		// bytes -> GB 1073741824 = 1024*1024*1024
+		// totalSize =卷实际大小+卷snapshot大小
+		Double totalSize = MathsUtil.add(MathsUtil.div(volume.getSizeTotal().doubleValue(), 1073741824), snapshotSize);
+		Double usedSize = MathsUtil.div(volume.getSizeUsed().doubleValue(), 1073741824);
+		Double availableSize = MathsUtil.div(volume.getSizeAvailable().doubleValue(), 1073741824);
+		String usedSizePre = String.valueOf(MathsUtil.div(usedSize, totalSize));
 
 		// 是否是精简模式(Thin Provisioned),"volume" = "NO" ,"none" = "YES"
 		String isThinProvisioned = "";
@@ -101,7 +103,8 @@ public class SDKTest {
 
 		VolumeInfoDTO volumeInfoDTO = new VolumeInfoDTO(volume.getName(), volume.getState(), volume.getFilesTotal()
 				.toString(), volume.getFilesUsed().toString(), volume.getContainingAggregate(), volume.getType(),
-				isThinProvisioned, totalSize, usedSize, availableSize, snapshotSize);
+				isThinProvisioned, String.valueOf(totalSize), String.valueOf(usedSize), usedSizePre,
+				String.valueOf(availableSize), String.valueOf(snapshotSize));
 
 		return volumeInfoDTO;
 	}

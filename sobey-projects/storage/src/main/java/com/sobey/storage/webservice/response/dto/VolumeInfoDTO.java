@@ -32,7 +32,7 @@ public class VolumeInfoDTO {
 	private String currentFiles;
 
 	/**
-	 * 簇名
+	 * 聚合名
 	 */
 	private String aggregateName;
 
@@ -57,6 +57,11 @@ public class VolumeInfoDTO {
 	private String usedSize;
 
 	/**
+	 * 已用空间百分比(%)
+	 */
+	private String usedSizePre;
+
+	/**
 	 * 可用空间大小(GB)
 	 */
 	private String availableSize;
@@ -70,8 +75,9 @@ public class VolumeInfoDTO {
 	}
 
 	public VolumeInfoDTO(String name, String status, String maximumFiles, String currentFiles, String aggregateName,
-			String type, String isThinProvisioned, String totalSize, String usedSize, String availableSize,
-			String snapshotSize) {
+			String type, String isThinProvisioned, String totalSize, String usedSize, String usedSizePre,
+			String availableSize, String snapshotSize) {
+		super();
 		this.name = name;
 		this.status = status;
 		this.maximumFiles = maximumFiles;
@@ -81,6 +87,7 @@ public class VolumeInfoDTO {
 		this.isThinProvisioned = isThinProvisioned;
 		this.totalSize = totalSize;
 		this.usedSize = usedSize;
+		this.usedSizePre = usedSizePre;
 		this.availableSize = availableSize;
 		this.snapshotSize = snapshotSize;
 	}
@@ -155,6 +162,14 @@ public class VolumeInfoDTO {
 
 	public void setUsedSize(String usedSize) {
 		this.usedSize = usedSize;
+	}
+
+	public String getUsedSizePre() {
+		return usedSizePre;
+	}
+
+	public void setUsedSizePre(String usedSizePre) {
+		this.usedSizePre = usedSizePre;
 	}
 
 	public String getAvailableSize() {
