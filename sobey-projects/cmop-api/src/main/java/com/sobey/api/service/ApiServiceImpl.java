@@ -2355,6 +2355,7 @@ public class ApiServiceImpl implements ApiService {
 
 		// 从CMDBuild中获得storage 列表(netapp Controller)
 		HashMap<String, Object> storageMap = new HashMap<String, Object>();
+		storageMap.put("EQ_idc", getIDCId(datacenter));
 		List<Object> storages = cmdbuildSoapService.getStorageList(CMDBuildUtil.wrapperSearchParams(storageMap))
 				.getDtoList().getDto();
 
