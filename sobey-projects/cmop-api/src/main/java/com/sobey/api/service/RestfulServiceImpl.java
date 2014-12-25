@@ -322,7 +322,7 @@ public class RestfulServiceImpl implements RestfulService {
 		}
 
 		Es3Entity entity = new Es3Entity(es3DTO.getCode(), es3DTO.getRemark(), es3DTO.getDescription(),
-				es3DTO.getDiskSize() + "GB", es3DTO.getEs3TypeText());
+				es3DTO.getTotalSize() + "GB", es3DTO.getEs3TypeText());
 
 		result.setDto(entity);
 
@@ -362,7 +362,7 @@ public class RestfulServiceImpl implements RestfulService {
 		Es3DTO es3DTO = new Es3DTO();
 		es3DTO.setAgentType(LookUpConstants.AgentType.NetApp.getValue());
 		es3DTO.setDescription(es3Name);
-		es3DTO.setDiskSize(es3Size);
+		es3DTO.setTotalSize(es3Size.toString());
 		es3DTO.setEs3Type(lookUpDTO.getId());
 		es3DTO.setIdc(idcDTO.getId());
 		es3DTO.setVolumeName(es3Name);

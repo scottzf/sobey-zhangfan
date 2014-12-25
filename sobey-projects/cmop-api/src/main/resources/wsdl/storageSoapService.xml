@@ -84,6 +84,7 @@
       <xs:element minOccurs="0" name="totalSize" type="xs:string"/>
       <xs:element minOccurs="0" name="type" type="xs:string"/>
       <xs:element minOccurs="0" name="usedSize" type="xs:string"/>
+      <xs:element minOccurs="0" name="usedSizePre" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 

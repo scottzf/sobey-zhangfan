@@ -72,7 +72,7 @@ public class Es3Controller {
 		Es3DTO es3dto = new Es3DTO();
 		es3dto.setAgentType(LookUpConstants.AgentType.NetApp.getValue());
 		es3dto.setDescription(volumeName);
-		es3dto.setDiskSize(volumeSize);
+		es3dto.setTotalSize(volumeSize.toString());
 		es3dto.setEs3Type(es3TypeId);
 		es3dto.setIdc(idcId);
 		es3dto.setVolumeName(volumeName);

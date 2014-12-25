@@ -1368,6 +1368,7 @@
           <xs:element minOccurs="0" name="ecsStatusText" type="xs:string"/>
           <xs:element minOccurs="0" name="ipaddress" type="xs:int"/>
           <xs:element minOccurs="0" name="ipaddressDTO" type="tns:IpaddressDTO"/>
+          <xs:element minOccurs="0" name="macAddress" type="xs:string"/>
           <xs:element minOccurs="0" name="memorySize" type="xs:string"/>
           <xs:element minOccurs="0" name="osName" type="xs:string"/>
           <xs:element minOccurs="0" name="server" type="xs:int"/>
@@ -1771,11 +1772,20 @@
     <xs:complexContent>
       <xs:extension base="tns:serviceBasicDTO">
         <xs:sequence>
-          <xs:element minOccurs="0" name="diskSize" type="xs:double"/>
+          <xs:element minOccurs="0" name="aggreName" type="xs:string"/>
+          <xs:element minOccurs="0" name="availableSize" type="xs:string"/>
+          <xs:element minOccurs="0" name="currentFiles" type="xs:string"/>
+          <xs:element minOccurs="0" name="es3Status" type="xs:string"/>
           <xs:element minOccurs="0" name="es3Type" type="xs:int"/>
           <xs:element minOccurs="0" name="es3TypeText" type="xs:string"/>
+          <xs:element minOccurs="0" name="maximumFiles" type="xs:string"/>
+          <xs:element minOccurs="0" name="snapshotSize" type="xs:string"/>
           <xs:element minOccurs="0" name="storage" type="xs:int"/>
           <xs:element minOccurs="0" name="storageDTO" type="tns:StorageDTO"/>
+          <xs:element minOccurs="0" name="thinProvisioned" type="xs:string"/>
+          <xs:element minOccurs="0" name="totalSize" type="xs:string"/>
+          <xs:element minOccurs="0" name="usedSize" type="xs:string"/>
+          <xs:element minOccurs="0" name="usedSizePre" type="xs:string"/>
           <xs:element minOccurs="0" name="volumeName" type="xs:string"/>
         </xs:sequence>
       </xs:extension>
