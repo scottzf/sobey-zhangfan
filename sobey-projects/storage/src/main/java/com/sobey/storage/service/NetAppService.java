@@ -251,9 +251,9 @@ public class NetAppService {
 		// 是否是精简模式(Thin Provisioned),"volume" = "NO" ,"none" = "YES"
 		String isThinProvisioned = "";
 		if ("volume".equals(volume.getSpaceReserve())) {
-			isThinProvisioned = "NO";
+			isThinProvisioned = "No";
 		} else {
-			isThinProvisioned = "YES";
+			isThinProvisioned = "Yes";
 		}
 
 		VolumeInfoDTO volumeInfoDTO = new VolumeInfoDTO(volume.getName(), volume.getState(), volume.getFilesTotal()
