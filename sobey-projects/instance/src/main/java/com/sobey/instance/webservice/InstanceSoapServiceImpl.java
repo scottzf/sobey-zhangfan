@@ -12,11 +12,12 @@ import com.sobey.instance.webservice.response.dto.CloneVMParameter;
 import com.sobey.instance.webservice.response.dto.CreateVMDiskParameter;
 import com.sobey.instance.webservice.response.dto.DeleteVMDiskParameter;
 import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
-import com.sobey.instance.webservice.response.dto.HostsDTO;
+import com.sobey.instance.webservice.response.dto.HostInfoDTO;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
 import com.sobey.instance.webservice.response.dto.VMInfoDTO;
+import com.sobey.instance.webservice.response.result.DTOListResult;
 import com.sobey.instance.webservice.response.result.DTOResult;
 import com.sobey.instance.webservice.response.result.WSResult;
 
@@ -107,7 +108,7 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	}
 
 	@Override
-	public DTOResult<VMInfoDTO> getVMInfoDTO(String vmName, String datacenter) {
+	public DTOResult<VMInfoDTO> findVMInfoDTO(String vmName, String datacenter) {
 		DTOResult<VMInfoDTO> result = new DTOResult<VMInfoDTO>();
 		result.setDto(service.getVMInfoDTO(vmName, datacenter));
 		return result;
@@ -141,10 +142,17 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	}
 
 	@Override
-	public HostsDTO getHostsDTO(String datacenter) {
-		HostsDTO dto = new HostsDTO();
-		dto.setHostName(service.getHost(datacenter));
-		return dto;
+	public DTOListResult<HostInfoDTO> getHostInfoDTO(String datacenter) {
+		DTOListResult<HostInfoDTO> result = new DTOListResult<HostInfoDTO>();
+		result.setDtos(service.getHostInfoDTO(datacenter));
+		return result;
+	}
+
+	@Override
+	public DTOResult<HostInfoDTO> findHostInfoDTO(String hostName, String datacenter) {
+		DTOResult<HostInfoDTO> result = new DTOResult<HostInfoDTO>();
+		result.setDto(service.findHostInfoDTO(datacenter, hostName));
+		return result;
 	}
 
 }

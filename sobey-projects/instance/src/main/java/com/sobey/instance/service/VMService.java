@@ -19,6 +19,7 @@ import com.sobey.instance.webservice.response.dto.CloneVMParameter;
 import com.sobey.instance.webservice.response.dto.CreateVMDiskParameter;
 import com.sobey.instance.webservice.response.dto.DeleteVMDiskParameter;
 import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
+import com.sobey.instance.webservice.response.dto.HostInfoDTO;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
@@ -69,6 +70,7 @@ import com.vmware.vim25.VirtualMachineRelocateSpec;
 import com.vmware.vim25.VirtualMachineRuntimeInfo;
 import com.vmware.vim25.VirtualVmxnet3;
 import com.vmware.vim25.VmwareDistributedVirtualSwitchVlanIdSpec;
+import com.vmware.vim25.mo.ComputeResource;
 import com.vmware.vim25.mo.CustomizationSpecManager;
 import com.vmware.vim25.mo.Datacenter;
 import com.vmware.vim25.mo.Datastore;
@@ -739,9 +741,9 @@ public class VMService {
 			 * 后期应该做到CMDBuild查询宿主机的负载能力,找出负载最低的宿主机, 并根据名称查出ManagedObjectReference对象的value.
 			 */
 			ManagedObjectReference pool = new ManagedObjectReference();
-			pool.set_value("resgroup-8");
+			pool.set_value("resgroup-42");
 			pool.setType("ResourcePool");
-			pool.setVal("resgroup-8");
+			pool.setVal("resgroup-42");
 
 			VirtualMachineRelocateSpec relocateSpec = new VirtualMachineRelocateSpec();
 			relocateSpec.setPool(pool);
@@ -1063,21 +1065,79 @@ public class VMService {
 		return vmInfoDTO;
 	}
 
-	public ArrayList<String> getHost(String datacenter) {
+	/**
+	 * HostSystem -> HostInfoDTO
+	 * 
+	 * @param host
+	 * @return
+	 */
+	private HostInfoDTO wrapHostInfoDTO(HostSystem host) {
+
+		ComputeResource computeResource = (ComputeResource) host.getParent();
+
+		HostInfoDTO hostInfoDTO = new HostInfoDTO();
+
+		// 频率由HZ -> GHZ = HZ/1024*1024*1024
+		hostInfoDTO.setCpuHz(String.valueOf(MathsUtil.div(Double.valueOf(host.getHardware().getCpuInfo().getHz()),
+				1073741824)));
+
+		// 转换成MB 1024*1024 = 1048576
+		hostInfoDTO.setMemorySize(String.valueOf(MathsUtil.div(host.getHardware().getMemorySize(), 1048576)));
+
+		hostInfoDTO.setCpuNumber(String.valueOf(host.getHardware().getCpuInfo().getNumCpuCores()));
+		hostInfoDTO.setModel(host.getHardware().getSystemInfo().getModel());
+		hostInfoDTO.setName(host.getName());
+		hostInfoDTO.setResourcePool(computeResource.getResourcePool().getMOR().getVal());
+		hostInfoDTO.setVendor(host.getHardware().getSystemInfo().getVendor());
+		return hostInfoDTO;
+
+	}
+
+	public HostInfoDTO findHostInfoDTO(String datacenter, String hostName) {
 
 		ServiceInstance si = null;
 
-		ArrayList<String> list = new ArrayList<String>();
+		HostInfoDTO dto = null;
 
 		try {
 
 			si = getServiceInstance(datacenter);
 
-			ManagedEntity[] resourcePools = new InventoryNavigator(si.getRootFolder())
-					.searchManagedEntities("HostSystem");
+			HostSystem host = (HostSystem) new InventoryNavigator(si.getRootFolder()).searchManagedEntity("HostSystem",
+					hostName);
 
-			for (int i = 0; i < resourcePools.length; i++) {
-				list.add(resourcePools[i].getName());
+			dto = wrapHostInfoDTO(host);
+
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (InvalidProperty e) {
+			e.printStackTrace();
+		} catch (RuntimeFault e) {
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+
+		return dto;
+	}
+
+	public ArrayList<HostInfoDTO> getHostInfoDTO(String datacenter) {
+
+		ServiceInstance si = null;
+
+		ArrayList<HostInfoDTO> list = new ArrayList<HostInfoDTO>();
+
+		try {
+
+			si = getServiceInstance(datacenter);
+
+			ManagedEntity[] entities = new InventoryNavigator(si.getRootFolder()).searchManagedEntities("HostSystem");
+
+			for (int i = 0; i < entities.length; i++) {
+
+				HostSystem host = (HostSystem) entities[i];
+
+				list.add(wrapHostInfoDTO(host));
 			}
 
 		} catch (MalformedURLException e) {
