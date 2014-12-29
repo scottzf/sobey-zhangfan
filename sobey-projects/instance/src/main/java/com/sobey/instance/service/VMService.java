@@ -736,14 +736,13 @@ public class VMService {
 
 			// 设置ResourcePool
 			/**
-			 * TODO 重要:宿主机暂时写死,宿主机的Value可以在VMTest中的PrintInventory方法查出来.
+			 * TODO 重要:宿主机暂时写死,宿主机的ResourcePool可以根据宿主机名称得到.
 			 * 
 			 * 后期应该做到CMDBuild查询宿主机的负载能力,找出负载最低的宿主机, 并根据名称查出ManagedObjectReference对象的value.
 			 */
 			ManagedObjectReference pool = new ManagedObjectReference();
 			pool.set_value("resgroup-42");
 			pool.setType("ResourcePool");
-			pool.setVal("resgroup-42");
 
 			VirtualMachineRelocateSpec relocateSpec = new VirtualMachineRelocateSpec();
 			relocateSpec.setPool(pool);

@@ -1432,6 +1432,9 @@
           <xs:element minOccurs="0" name="isp" type="xs:int"/>
           <xs:element minOccurs="0" name="ispText" type="xs:string"/>
           <xs:element minOccurs="0" name="netmask" type="xs:string"/>
+          <xs:element minOccurs="0" name="segment" type="xs:string"/>
+          <xs:element minOccurs="0" name="tenants" type="xs:int"/>
+          <xs:element minOccurs="0" name="tenantsDTO" type="tns:TenantsDTO"/>
           <xs:element minOccurs="0" name="vlan" type="xs:int"/>
           <xs:element minOccurs="0" name="vlanDTO" type="tns:VlanDTO"/>
         </xs:sequence>
@@ -1447,6 +1450,22 @@
           <xs:element minOccurs="0" name="city" type="xs:string"/>
           <xs:element minOccurs="0" name="phone" type="xs:string"/>
           <xs:element minOccurs="0" name="zip" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="TenantsDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:basicDTO">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="accessKey" type="xs:string"/>
+          <xs:element minOccurs="0" name="aclNumber" type="xs:int"/>
+          <xs:element minOccurs="0" name="company" type="xs:string"/>
+          <xs:element minOccurs="0" name="createInfo" type="xs:string"/>
+          <xs:element minOccurs="0" name="email" type="xs:string"/>
+          <xs:element minOccurs="0" name="password" type="xs:string"/>
+          <xs:element minOccurs="0" name="phone" type="xs:string"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -1470,27 +1489,16 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="TenantsDTO">
-    <xs:complexContent>
-      <xs:extension base="tns:basicDTO">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="accessKey" type="xs:string"/>
-          <xs:element minOccurs="0" name="aclNumber" type="xs:int"/>
-          <xs:element minOccurs="0" name="company" type="xs:string"/>
-          <xs:element minOccurs="0" name="createInfo" type="xs:string"/>
-          <xs:element minOccurs="0" name="email" type="xs:string"/>
-          <xs:element minOccurs="0" name="password" type="xs:string"/>
-          <xs:element minOccurs="0" name="phone" type="xs:string"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
   <xs:complexType name="ServerDTO">
     <xs:complexContent>
       <xs:extension base="tns:deviceBasicDTO">
         <xs:sequence>
+          <xs:element minOccurs="0" name="cpuHz" type="xs:string"/>
+          <xs:element minOccurs="0" name="cpuNumber" type="xs:string"/>
+          <xs:element minOccurs="0" name="memorySize" type="xs:string"/>
+          <xs:element minOccurs="0" name="model" type="xs:string"/>
           <xs:element minOccurs="0" name="resgroup" type="xs:string"/>
+          <xs:element minOccurs="0" name="vendor" type="xs:string"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
