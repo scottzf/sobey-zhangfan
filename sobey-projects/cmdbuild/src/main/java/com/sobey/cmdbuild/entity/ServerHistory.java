@@ -18,6 +18,11 @@ public class ServerHistory extends DeviceHistoryBasic {
 
 	private Server server;
 	private String resgroup;
+	private String vendor;
+	private String model;
+	private String memorySize;
+	private String cpuNumber;
+	private String cpuHz;
 
 	public ServerHistory() {
 	}
@@ -39,6 +44,51 @@ public class ServerHistory extends DeviceHistoryBasic {
 
 	public void setResgroup(String resgroup) {
 		this.resgroup = resgroup;
+	}
+
+	@Column(name = "vendor", length = 100)
+	public String getVendor() {
+		return vendor;
+	}
+
+	public void setVendor(String vendor) {
+		this.vendor = vendor;
+	}
+
+	@Column(name = "model", length = 100)
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	@Column(name = "memory_size", length = 100)
+	public String getMemorySize() {
+		return memorySize;
+	}
+
+	public void setMemorySize(String memorySize) {
+		this.memorySize = memorySize;
+	}
+
+	@Column(name = "cpu_number", length = 100)
+	public String getCpuNumber() {
+		return cpuNumber;
+	}
+
+	public void setCpuNumber(String cpuNumber) {
+		this.cpuNumber = cpuNumber;
+	}
+
+	@Column(name = "cpu_hz", length = 100)
+	public String getCpuHz() {
+		return cpuHz;
+	}
+
+	public void setCpuHz(String cpuHz) {
+		this.cpuHz = cpuHz;
 	}
 
 }

@@ -18,7 +18,6 @@ public class Es3 extends ServiceBasic {
 	private String volumeName;
 	private Integer es3Type;
 	private Integer storage;
-
 	private String es3Status;
 	private String thinProvisioned;
 	private String totalSize;
