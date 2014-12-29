@@ -75,7 +75,7 @@ public interface ApiService {
 	 * @param datacenter
 	 * @return
 	 */
-	public String syncVM(String datacenter);
+	public void syncVM(String datacenter);
 
 	/**
 	 * 创建ES3

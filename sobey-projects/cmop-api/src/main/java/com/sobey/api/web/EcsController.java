@@ -158,7 +158,8 @@ public class EcsController {
 	@RequestMapping(value = "/sync/", method = RequestMethod.POST)
 	public String sync(@RequestParam(value = "remark") String remark, RedirectAttributes redirectAttributes) {
 
-		redirectAttributes.addFlashAttribute("message", service.syncVM(remark));
+		service.syncVM(remark);
+		redirectAttributes.addFlashAttribute("message", "同步完成");
 
 		return "redirect:/instance/sync/";
 	}
