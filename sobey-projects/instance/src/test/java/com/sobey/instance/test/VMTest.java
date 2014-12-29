@@ -33,11 +33,13 @@ import com.vmware.vim25.VirtualEthernetCard;
 import com.vmware.vim25.VirtualHardware;
 import com.vmware.vim25.VirtualMachineConfigInfo;
 import com.vmware.vim25.VirtualMachineRuntimeInfo;
+import com.vmware.vim25.mo.ComputeResource;
 import com.vmware.vim25.mo.Datastore;
 import com.vmware.vim25.mo.Folder;
 import com.vmware.vim25.mo.HostSystem;
 import com.vmware.vim25.mo.InventoryNavigator;
 import com.vmware.vim25.mo.ManagedEntity;
+import com.vmware.vim25.mo.Network;
 import com.vmware.vim25.mo.ServiceInstance;
 import com.vmware.vim25.mo.VirtualMachine;
 import com.vmware.vim25.mo.util.MorUtil;
@@ -101,8 +103,8 @@ public class VMTest extends TestCase {
 
 	@Test
 	public void PrintInventory() throws RemoteException, MalformedURLException {
-		ServiceInstance si = new ServiceInstance(new URL("https://172.20.0.19/sdk"), "administrator@vsphere.local",
-				"Newmed!@s0bey", true);
+		ServiceInstance si = new ServiceInstance(new URL("https://172.16.2.252/sdk"), "administrator@vsphere.local",
+				"vmware", true);
 		Folder rootFolder = si.getRootFolder();
 
 		System.out.println("============ Data Centers ============");
@@ -125,13 +127,17 @@ public class VMTest extends TestCase {
 				"HostSystem", "name" }, }, true);
 		for (int i = 0; i < hosts.length; i++) {
 			System.out.println("host[" + i + "]=" + hosts[i].getName());
+			ComputeResource cr = (ComputeResource) hosts[i].getParent();
+			System.err.println(cr.getResourcePool().getMOR().getVal());
 		}
 
 		System.out.println("\n============ ResourcePools ============");
-		ManagedEntity[] resourcePools = new InventoryNavigator(rootFolder).searchManagedEntities(new String[][] {
-				{ "ResourcePool", "name" }, { "HostSystem", "name" } }, true);
+		ManagedEntity[] resourcePools = new InventoryNavigator(rootFolder).searchManagedEntities(new String[][] { {
+				"ResourcePool", "name" } }, true);
+
 		for (int i = 0; i < resourcePools.length; i++) {
 			System.err.println("resourcePools[" + i + "]=" + resourcePools[i].getName());
+			System.out.println(resourcePools[i]);
 			System.out.println(resourcePools[i].getMOR().getType());
 			System.out.println(resourcePools[i].getMOR().get_value());
 		}
@@ -215,6 +221,39 @@ public class VMTest extends TestCase {
 		}
 		si.getServerConnection().logout();
 
+	}
+
+	@Test
+	public void HostInfo() throws InvalidProperty, RuntimeFault, RemoteException, MalformedURLException {
+
+		ServiceInstance si = new ServiceInstance(new URL("https://172.16.2.252/sdk"), "administrator@vsphere.local",
+				"vmware", true);
+
+		// 主机
+		HostSystem host = (HostSystem) new InventoryNavigator(si.getRootFolder()).searchManagedEntity("HostSystem",
+				"172.16.2.31");
+
+		ComputeResource computeResource = (ComputeResource) host.getParent();
+
+		System.out.println(host.getName());
+		System.out.println("============ ResourcePool：" + computeResource.getResourcePool().getMOR().getVal());
+		System.out.println("============ 制造商：" + host.getHardware().getSystemInfo().getVendor());
+		System.out.println("============ 型号：" + host.getHardware().getSystemInfo().getModel());
+		System.out.println("============ 内存大小：" + host.getHardware().getMemorySize());
+		System.out.println("============ CPU数量：" + host.getHardware().getCpuInfo().getNumCpuCores());
+		// 频率由HZ -> GHZ = HZ/1024*1024*1024
+		System.out.println("============ CPU频率："
+				+ MathsUtil.div(Double.valueOf(host.getHardware().getCpuInfo().getHz()), 1073741824));
+
+		for (Datastore datastore : host.getDatastores()) {
+			System.out.println("============ 存储器：" + datastore.getName());
+		}
+
+		for (Network network : host.getNetworks()) {
+			System.out.println("============ 网络：" + network.getName());
+		}
+
+		si.getServerConnection().logout();
 	}
 
 	@Test
