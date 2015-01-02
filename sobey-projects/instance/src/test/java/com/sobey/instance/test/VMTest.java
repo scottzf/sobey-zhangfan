@@ -3,10 +3,7 @@
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.util.HashMap;
 import java.util.Map.Entry;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +20,6 @@ import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
-import com.sobey.instance.webservice.response.dto.VMInfoDTO;
 import com.vmware.vim25.InvalidProperty;
 import com.vmware.vim25.ManagedObjectReference;
 import com.vmware.vim25.RuntimeFault;
@@ -39,30 +35,37 @@ import com.vmware.vim25.mo.Folder;
 import com.vmware.vim25.mo.HostSystem;
 import com.vmware.vim25.mo.InventoryNavigator;
 import com.vmware.vim25.mo.ManagedEntity;
-import com.vmware.vim25.mo.Network;
 import com.vmware.vim25.mo.ServiceInstance;
 import com.vmware.vim25.mo.VirtualMachine;
 import com.vmware.vim25.mo.util.MorUtil;
 
 @ContextConfiguration({ "classpath:applicationContext.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
-public class VMTest extends TestCase {
+public class VMTest {
 
 	@Autowired
 	private VMService service;
 
+	// private static final String url = "https://172.20.0.19/sdk";
+	// private static final String user = "administrator@vsphere.local";
+	// private static final String password = "Newmed!@s0bey";
+
+	private static final String url = "https://172.16.2.252/sdk";
+	private static final String user = "administrator@vsphere.local";
+	private static final String password = "vmware";
+
 	@Test
 	public void getVMHostRelationship() throws RemoteException, MalformedURLException {
 
-		ServiceInstance si = new ServiceInstance(new URL("https://172.20.0.19/sdk"), "administrator@vsphere.local",
-				"Newmed!@s0bey", true);
+		ServiceInstance si = new ServiceInstance(new URL(url), user, password, true);
+
 		Folder rootFolder = si.getRootFolder();
 
 		System.out.println("\n============ Virtual Machines ============");
+
 		ManagedEntity[] vms = new InventoryNavigator(rootFolder).searchManagedEntities(new String[][] { {
 				"VirtualMachine", "name" }, }, true);
 
-		System.out.println(vms.length);
 		for (int i = 0; i < vms.length; i++) {
 			System.out.println("vm[" + i + "]=" + vms[i].getName());
 			VirtualMachineRuntimeInfo vmri = (VirtualMachineRuntimeInfo) ((VirtualMachine) vms[i]).getRuntime();
@@ -80,11 +83,12 @@ public class VMTest extends TestCase {
 	@Test
 	public void getHostVMRelationship() throws RemoteException, MalformedURLException {
 
-		ServiceInstance si = new ServiceInstance(new URL("https://172.20.0.19/sdk"), "administrator@vsphere.local",
-				"Newmed!@s0bey", true);
+		ServiceInstance si = new ServiceInstance(new URL(url), user, password, true);
+
 		Folder rootFolder = si.getRootFolder();
 
 		System.out.println("\n============ Virtual Machines ============");
+
 		ManagedEntity[] hosts = new InventoryNavigator(rootFolder).searchManagedEntities(new String[][] { {
 				"HostSystem", "name" }, }, true);
 
@@ -103,8 +107,9 @@ public class VMTest extends TestCase {
 
 	@Test
 	public void PrintInventory() throws RemoteException, MalformedURLException {
-		ServiceInstance si = new ServiceInstance(new URL("https://172.16.2.252/sdk"), "administrator@vsphere.local",
-				"vmware", true);
+
+		ServiceInstance si = new ServiceInstance(new URL(url), user, password, true);
+
 		Folder rootFolder = si.getRootFolder();
 
 		System.out.println("============ Data Centers ============");
@@ -132,9 +137,9 @@ public class VMTest extends TestCase {
 		}
 
 		System.out.println("\n============ ResourcePools ============");
- 
-		ManagedEntity[] resourcePools = new InventoryNavigator(rootFolder).searchManagedEntities(new String[][] {
-				{ "ResourcePool", "name" } }, true);
+
+		ManagedEntity[] resourcePools = new InventoryNavigator(rootFolder).searchManagedEntities(new String[][] { {
+				"ResourcePool", "name" } }, true);
 
 		for (int i = 0; i < resourcePools.length; i++) {
 			System.err.println("resourcePools[" + i + "]=" + resourcePools[i].getName());
@@ -147,42 +152,14 @@ public class VMTest extends TestCase {
 	}
 
 	@Test
-	public void getResourcesInfo() throws RemoteException, MalformedURLException {
-		ServiceInstance si = new ServiceInstance(new URL("https://172.20.0.19/sdk"), "administrator@vsphere.local",
-				"Newmed!@s0bey", true);
-		Folder rootFolder = si.getRootFolder();
-
-		HashMap<String, String> map = new HashMap<String, String>();
-
-		ManagedEntity[] resourcePools = new InventoryNavigator(rootFolder).searchManagedEntities(new String[][] {
-				{ "ResourcePool", "name" }, { "HostSystem", "name" } }, true);
-		for (int i = 0; i < resourcePools.length; i++) {
-			// System.err.println(resourcePools[i].getMOR().get_value());
-
-			if (i + 1 != resourcePools.length) {
-
-				map.put(resourcePools[i].getMOR().get_value(), resourcePools[i + 1].getMOR().get_value());
-			}
-
-		}
-
-		for (Entry<String, String> entity : map.entrySet()) {
-			System.out.println(entity.getKey());
-			System.err.println(entity.getValue());
-		}
-
-		si.getServerConnection().logout();
-	}
-
-	@Test
 	public void VMInfo() throws InvalidProperty, RuntimeFault, RemoteException, MalformedURLException {
 
-		ServiceInstance si = new ServiceInstance(new URL("https://172.20.0.19/sdk"), "administrator@vsphere.local",
-				"Newmed!@s0bey", true);
+		ServiceInstance si = new ServiceInstance(new URL(url), user, password, true);
+
 		Folder rootFolder = si.getRootFolder();
 
 		VirtualMachine myVM = (VirtualMachine) new InventoryNavigator(rootFolder).searchManagedEntity("VirtualMachine",
-				"172.20.1.64");
+				"6001-01");
 
 		/**
 		 * VM是否关机只和status有关系,
@@ -227,8 +204,7 @@ public class VMTest extends TestCase {
 	@Test
 	public void HostInfo() throws InvalidProperty, RuntimeFault, RemoteException, MalformedURLException {
 
-		ServiceInstance si = new ServiceInstance(new URL("https://172.16.2.252/sdk"), "administrator@vsphere.local",
-				"vmware", true);
+		ServiceInstance si = new ServiceInstance(new URL(url), user, password, true);
 
 		// 主机
 		HostSystem host = (HostSystem) new InventoryNavigator(si.getRootFolder()).searchManagedEntity("HostSystem",
@@ -246,56 +222,44 @@ public class VMTest extends TestCase {
 		System.out.println("============ CPU频率："
 				+ MathsUtil.div(Double.valueOf(host.getHardware().getCpuInfo().getHz()), 1073741824));
 
-		for (Datastore datastore : host.getDatastores()) {
-			System.out.println("============ 存储器：" + datastore.getName());
-		}
-
-		for (Network network : host.getNetworks()) {
-			System.out.println("============ 网络：" + network.getName());
-		}
+		// for (Datastore datastore : host.getDatastores()) {
+		// System.out.println("============ 存储器：" + datastore.getName());
+		// }
+		//
+		// for (Network network : host.getNetworks()) {
+		// System.out.println("============ 网络：" + network.getName());
+		// }
 
 		si.getServerConnection().logout();
-	}
-
-	@Test
-	public void getVMInfoDTO() {
-		VMInfoDTO dto = service.getVMInfoDTO("172.20.1.64", DataCenterEnum.西安核心数据中心.toString());
-		System.out.println(dto);
 	}
 
 	@Test
 	public void cloneVM() {
 		CloneVMParameter parameter = TestData.randomCloneVMParameter();
 		service.cloneVM(parameter);
-		service.changeVlan(parameter.getDatacenter(), parameter.getvMName(), parameter.getVlanId());
-	}
-
-	@Test
-	public void changeVlan() {
-		service.changeVlan(DataCenterEnum.西安核心数据中心.toString(), "Sobey123", 100);
 	}
 
 	@Test
 	public void destroyVM() {
 		DestroyVMParameter parameter = TestData.randomDestroyVMParameter();
-		assertTrue(service.destroyVM(parameter));
+		service.destroyVM(parameter);
 	}
 
 	@Test
 	public void reconfigVM() {
 		ReconfigVMParameter parameter = TestData.randomReconfigVMParameter();
-		assertTrue(service.reconfigVM(parameter));
+		service.reconfigVM(parameter).getCode();
 	}
 
 	@Test
 	public void powerVM() {
 		PowerVMParameter parameter = TestData.randomPowerVMParameter();
-		assertTrue(service.powerVM(parameter));
+		service.powerVM(parameter);
 	}
 
 	@Test
-	public void getVM() {
-		RelationVMParameter parameter = service.getVMAndHostRelation("XA");
+	public void relationVM() {
+		RelationVMParameter parameter = service.getRelationVM(DataCenterEnum.成都核心数据中心.toString());
 		for (Entry<String, String> element : parameter.getRelationMaps().entrySet()) {
 			System.out.println("VM:" + element.getKey());
 			System.out.println("Host:" + element.getValue());
