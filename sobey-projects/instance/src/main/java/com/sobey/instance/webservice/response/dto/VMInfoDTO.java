@@ -11,95 +11,134 @@ import com.sobey.instance.constans.WsConstants;
 @XmlType(name = "VMInfoDTO", namespace = WsConstants.NS)
 public class VMInfoDTO {
 
+	/**
+	 * CPU 数量
+	 */
 	private String cpuNumber;
+
+	/**
+	 * 数据中心
+	 */
 	private String datastore;
-	private String diskSize;
+
+	/**
+	 * 硬盘大小(GB)
+	 */
+	private String diskGB;
+
+	/**
+	 * 操作系统
+	 */
 	private String guestFullName;
+
+	/**
+	 * VM IP地址
+	 */
 	private String ipaddress;
+
+	/**
+	 * Mac 地址
+	 */
 	private String macIPaddress;
-	private String memorySize;
-	private String name;
+
+	/**
+	 * 内存大小(MB)
+	 */
+	private String memoryMB;
+
+	/**
+	 * 虚拟机绑定端口组,多个用","分隔
+	 */
+	private String portGroups;
+
+	/**
+	 * VM运行状态
+	 */
 	private String status;
-	private String vlanName;
+
+	/**
+	 * VM名称
+	 */
+	private String vmName;
 
 	public String getCpuNumber() {
 		return cpuNumber;
-	}
-
-	public void setCpuNumber(String cpuNumber) {
-		this.cpuNumber = cpuNumber;
 	}
 
 	public String getDatastore() {
 		return datastore;
 	}
 
-	public void setDatastore(String datastore) {
-		this.datastore = datastore;
-	}
-
-	public String getDiskSize() {
-		return diskSize;
-	}
-
-	public void setDiskSize(String diskSize) {
-		this.diskSize = diskSize;
+	public String getDiskGB() {
+		return diskGB;
 	}
 
 	public String getGuestFullName() {
 		return guestFullName;
 	}
 
-	public void setGuestFullName(String guestFullName) {
-		this.guestFullName = guestFullName;
-	}
-
 	public String getIpaddress() {
 		return ipaddress;
-	}
-
-	public void setIpaddress(String ipaddress) {
-		this.ipaddress = ipaddress;
 	}
 
 	public String getMacIPaddress() {
 		return macIPaddress;
 	}
 
-	public void setMacIPaddress(String macIPaddress) {
-		this.macIPaddress = macIPaddress;
+	public String getMemoryMB() {
+		return memoryMB;
 	}
 
-	public String getMemorySize() {
-		return memorySize;
-	}
-
-	public void setMemorySize(String memorySize) {
-		this.memorySize = memorySize;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	public String getPortGroups() {
+		return portGroups;
 	}
 
 	public String getStatus() {
 		return status;
 	}
 
+	public String getVmName() {
+		return vmName;
+	}
+
+	public void setCpuNumber(String cpuNumber) {
+		this.cpuNumber = cpuNumber;
+	}
+
+	public void setDatastore(String datastore) {
+		this.datastore = datastore;
+	}
+
+	public void setDiskGB(String diskGB) {
+		this.diskGB = diskGB;
+	}
+
+	public void setGuestFullName(String guestFullName) {
+		this.guestFullName = guestFullName;
+	}
+
+	public void setIpaddress(String ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public void setMacIPaddress(String macIPaddress) {
+		this.macIPaddress = macIPaddress;
+	}
+
+	public void setMemoryMB(String memoryMB) {
+		this.memoryMB = memoryMB;
+	}
+
+	public void setPortGroups(String portGroups) {
+		this.portGroups = portGroups;
+	}
+
 	public void setStatus(String status) {
 		this.status = status;
 	}
 
-	public String getVlanName() {
-		return vlanName;
-	}
-
-	public void setVlanName(String vlanName) {
-		this.vlanName = vlanName;
+	public void setVmName(String vmName) {
+		this.vmName = vmName;
 	}
 
 	/**

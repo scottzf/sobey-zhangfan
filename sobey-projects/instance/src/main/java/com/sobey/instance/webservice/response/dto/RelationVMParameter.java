@@ -10,7 +10,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.sobey.instance.constans.WsConstants;
 
 /**
- * webservice不能直接传递对象,故用一个对象对其包装.
+ * 
+ * 获得Host和VM的关联关系 webservice不能直接传递对象,故用一个对象对其包装.
  * 
  * @author Administrator
  * 
@@ -19,19 +20,26 @@ import com.sobey.instance.constans.WsConstants;
 @XmlType(name = "RelationVMParameter", namespace = WsConstants.NS)
 public class RelationVMParameter {
 
+	/**
+	 * 数据中心
+	 */
 	private String datacenter;
+
+	/**
+	 * Host和VM的关系:key为VM名称,value为Host名称.
+	 */
 	private HashMap<String, String> relationMaps;
 
 	public String getDatacenter() {
 		return datacenter;
 	}
 
-	public void setDatacenter(String datacenter) {
-		this.datacenter = datacenter;
-	}
-
 	public HashMap<String, String> getRelationMaps() {
 		return relationMaps;
+	}
+
+	public void setDatacenter(String datacenter) {
+		this.datacenter = datacenter;
 	}
 
 	public void setRelationMaps(HashMap<String, String> relationMaps) {

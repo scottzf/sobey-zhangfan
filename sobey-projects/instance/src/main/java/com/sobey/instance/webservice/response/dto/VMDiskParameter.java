@@ -7,20 +7,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.instance.constans.WsConstants;
 
-/**
- * 修改VM配置的参数对象
- * 
- * @author Administrator
- *
- */
-@XmlRootElement(name = "ReconfigVMParameter")
-@XmlType(name = "ReconfigVMParameter", namespace = WsConstants.NS)
-public class ReconfigVMParameter {
-
-	/**
-	 * CPU数量
-	 */
-	private Integer cpuNumber;
+@XmlRootElement(name = "VMDiskParameter")
+@XmlType(name = "VMDiskParameter", namespace = WsConstants.NS)
+public class VMDiskParameter {
 
 	/**
 	 * 数据中心
@@ -28,41 +17,46 @@ public class ReconfigVMParameter {
 	private String datacenter;
 
 	/**
-	 * 内存大小(MB)
+	 * 存储器大小(GB)
 	 */
-	private Long memoryMB;
+	private String diskGB;
+
+	/**
+	 * 存储器名称
+	 */
+	private String diskName;
 
 	/**
 	 * VM名称
 	 */
 	private String vmName;
 
-	public Integer getCpuNumber() {
-		return cpuNumber;
-	}
-
 	public String getDatacenter() {
 		return datacenter;
 	}
 
-	public Long getMemoryMB() {
-		return memoryMB;
+	public String getDiskGB() {
+		return diskGB;
+	}
+
+	public String getDiskName() {
+		return diskName;
 	}
 
 	public String getVmName() {
 		return vmName;
 	}
 
-	public void setCpuNumber(Integer cpuNumber) {
-		this.cpuNumber = cpuNumber;
-	}
-
 	public void setDatacenter(String datacenter) {
 		this.datacenter = datacenter;
 	}
 
-	public void setMemoryMB(Long memoryMB) {
-		this.memoryMB = memoryMB;
+	public void setDiskGB(String diskGB) {
+		this.diskGB = diskGB;
+	}
+
+	public void setDiskName(String diskName) {
+		this.diskName = diskName;
 	}
 
 	public void setVmName(String vmName) {
@@ -76,4 +70,5 @@ public class ReconfigVMParameter {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
+
 }

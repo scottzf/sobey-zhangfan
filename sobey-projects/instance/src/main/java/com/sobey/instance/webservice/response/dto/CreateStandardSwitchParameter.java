@@ -8,19 +8,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.sobey.instance.constans.WsConstants;
 
 /**
- * 修改VM配置的参数对象
+ * 创建标准交换机的参数对象
  * 
  * @author Administrator
  *
  */
-@XmlRootElement(name = "ReconfigVMParameter")
-@XmlType(name = "ReconfigVMParameter", namespace = WsConstants.NS)
-public class ReconfigVMParameter {
-
-	/**
-	 * CPU数量
-	 */
-	private Integer cpuNumber;
+@XmlRootElement(name = "CreateStandardSwitchParameter")
+@XmlType(name = "CreateStandardSwitchParameter", namespace = WsConstants.NS)
+public class CreateStandardSwitchParameter {
 
 	/**
 	 * 数据中心
@@ -28,45 +23,37 @@ public class ReconfigVMParameter {
 	private String datacenter;
 
 	/**
-	 * 内存大小(MB)
+	 * 宿主机名称
 	 */
-	private Long memoryMB;
+	private String hostName;
 
 	/**
-	 * VM名称
+	 * 标准交换机名称
 	 */
-	private String vmName;
-
-	public Integer getCpuNumber() {
-		return cpuNumber;
-	}
+	private String virtualSwitchName;
 
 	public String getDatacenter() {
 		return datacenter;
 	}
 
-	public Long getMemoryMB() {
-		return memoryMB;
+	public String getHostName() {
+		return hostName;
 	}
 
-	public String getVmName() {
-		return vmName;
-	}
-
-	public void setCpuNumber(Integer cpuNumber) {
-		this.cpuNumber = cpuNumber;
+	public String getVirtualSwitchName() {
+		return virtualSwitchName;
 	}
 
 	public void setDatacenter(String datacenter) {
 		this.datacenter = datacenter;
 	}
 
-	public void setMemoryMB(Long memoryMB) {
-		this.memoryMB = memoryMB;
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
 	}
 
-	public void setVmName(String vmName) {
-		this.vmName = vmName;
+	public void setVirtualSwitchName(String virtualSwitchName) {
+		this.virtualSwitchName = virtualSwitchName;
 	}
 
 	/**
@@ -76,4 +63,5 @@ public class ReconfigVMParameter {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
+
 }

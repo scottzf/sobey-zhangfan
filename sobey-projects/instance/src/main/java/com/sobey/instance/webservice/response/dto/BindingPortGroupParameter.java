@@ -8,19 +8,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.sobey.instance.constans.WsConstants;
 
 /**
- * 修改VM配置的参数对象
+ * 为主机绑定端口组的参数对象
  * 
  * @author Administrator
  *
  */
-@XmlRootElement(name = "ReconfigVMParameter")
-@XmlType(name = "ReconfigVMParameter", namespace = WsConstants.NS)
-public class ReconfigVMParameter {
-
-	/**
-	 * CPU数量
-	 */
-	private Integer cpuNumber;
+@XmlRootElement(name = "BindingPortGroupParameter")
+@XmlType(name = "BindingPortGroupParameter", namespace = WsConstants.NS)
+public class BindingPortGroupParameter {
 
 	/**
 	 * 数据中心
@@ -28,41 +23,33 @@ public class ReconfigVMParameter {
 	private String datacenter;
 
 	/**
-	 * 内存大小(MB)
+	 * 端口组名称
 	 */
-	private Long memoryMB;
+	private String portGroupName;
 
 	/**
 	 * VM名称
 	 */
 	private String vmName;
 
-	public Integer getCpuNumber() {
-		return cpuNumber;
-	}
-
 	public String getDatacenter() {
 		return datacenter;
 	}
 
-	public Long getMemoryMB() {
-		return memoryMB;
+	public String getPortGroupName() {
+		return portGroupName;
 	}
 
 	public String getVmName() {
 		return vmName;
 	}
 
-	public void setCpuNumber(Integer cpuNumber) {
-		this.cpuNumber = cpuNumber;
-	}
-
 	public void setDatacenter(String datacenter) {
 		this.datacenter = datacenter;
 	}
 
-	public void setMemoryMB(Long memoryMB) {
-		this.memoryMB = memoryMB;
+	public void setPortGroupName(String portGroupName) {
+		this.portGroupName = portGroupName;
 	}
 
 	public void setVmName(String vmName) {
@@ -76,4 +63,5 @@ public class ReconfigVMParameter {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
+
 }
