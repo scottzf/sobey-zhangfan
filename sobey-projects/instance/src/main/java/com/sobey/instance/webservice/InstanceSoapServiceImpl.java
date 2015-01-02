@@ -1,21 +1,25 @@
 package com.sobey.instance.webservice;
 
-import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.apache.cxf.feature.Features;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sobey.instance.constans.WsConstants;
+import com.sobey.instance.service.DiskService;
+import com.sobey.instance.service.HostService;
+import com.sobey.instance.service.NetworkService;
 import com.sobey.instance.service.VMService;
+import com.sobey.instance.webservice.response.dto.BindingPortGroupParameter;
 import com.sobey.instance.webservice.response.dto.CloneVMParameter;
-import com.sobey.instance.webservice.response.dto.CreateVMDiskParameter;
-import com.sobey.instance.webservice.response.dto.DeleteVMDiskParameter;
+import com.sobey.instance.webservice.response.dto.CreatePortGroupParameter;
+import com.sobey.instance.webservice.response.dto.CreateStandardSwitchParameter;
 import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
 import com.sobey.instance.webservice.response.dto.HostInfoDTO;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
+import com.sobey.instance.webservice.response.dto.VMDiskParameter;
 import com.sobey.instance.webservice.response.dto.VMInfoDTO;
 import com.sobey.instance.webservice.response.result.DTOListResult;
 import com.sobey.instance.webservice.response.result.DTOResult;
@@ -26,133 +30,80 @@ import com.sobey.instance.webservice.response.result.WSResult;
 public class InstanceSoapServiceImpl implements InstanceSoapService {
 
 	@Autowired
-	public VMService service;
+	public VMService vmService;
+
+	@Autowired
+	public NetworkService networkService;
+
+	@Autowired
+	public DiskService diskService;
+
+	@Autowired
+	public HostService hostService;
 
 	@Override
-	public WSResult cloneVMByInstance(@WebParam(name = "cloneVMParameter") CloneVMParameter cloneVMParameter) {
-
-		WSResult result = new WSResult();
-
-		boolean flag = service.cloneVM(cloneVMParameter);
-
-		if (!flag) {
-			result.setError(WSResult.SYSTEM_ERROR, "克隆失败");
-		}
-
-		if (!service.changeVlan(cloneVMParameter.getDatacenter(), cloneVMParameter.getvMName(),
-				cloneVMParameter.getVlanId())) {
-			result.setError(WSResult.SYSTEM_ERROR, "Vlan分配失败");
-		}
-
-		return result;
+	public WSResult cloneVMByInstance(CloneVMParameter cloneVMParameter) {
+		return vmService.cloneVM(cloneVMParameter);
 	}
 
 	@Override
-	public WSResult destroyVMByInstance(@WebParam(name = "destroyVMParameter") DestroyVMParameter destroyVMParameter) {
-
-		WSResult result = new WSResult();
-
-		boolean flag = service.destroyVM(destroyVMParameter);
-
-		if (!flag) {
-			result.setError(WSResult.SYSTEM_ERROR, "销毁失败");
-		}
-
-		return result;
+	public WSResult destroyVMByInstance(DestroyVMParameter destroyVMParameter) {
+		return vmService.destroyVM(destroyVMParameter);
 	}
 
 	@Override
-	public WSResult reconfigVMByInstance(@WebParam(name = "reconfigVMParameter") ReconfigVMParameter reconfigVMParameter) {
-
-		WSResult result = new WSResult();
-
-		boolean flag = service.reconfigVM(reconfigVMParameter);
-
-		if (!flag) {
-			result.setError(WSResult.SYSTEM_ERROR, "配置更改失败");
-		}
-
-		return result;
+	public WSResult reconfigVMByInstance(ReconfigVMParameter reconfigVMParameter) {
+		return vmService.reconfigVM(reconfigVMParameter);
 	}
 
 	@Override
-	public WSResult powerVMByInstance(@WebParam(name = "powerVMParameter") PowerVMParameter powerVMParameter) {
-
-		WSResult result = new WSResult();
-
-		boolean flag = service.powerVM(powerVMParameter);
-
-		if (!flag) {
-			result.setError(WSResult.SYSTEM_ERROR, "电源操作失败");
-		}
-
-		return result;
+	public WSResult powerVMByInstance(PowerVMParameter powerVMParameter) {
+		return vmService.powerVM(powerVMParameter);
 	}
 
 	@Override
-	public RelationVMParameter getVMAndHostRelationByInstance(@WebParam(name = "datacenter") String datacenter) {
-		return service.getVMAndHostRelation(datacenter);
-	}
-
-	@Override
-	public WSResult createPortGroupByInstance(Integer vlanId, String datacenter) {
-
-		WSResult result = new WSResult();
-		boolean flag = service.addDVSPortGroup(vlanId, datacenter);
-
-		if (!flag) {
-			result.setError(WSResult.SYSTEM_ERROR, "分布式端口组创建失败");
-		}
-
-		return result;
+	public RelationVMParameter getRelationByInstance(String datacenter) {
+		return vmService.getRelationVM(datacenter);
 	}
 
 	@Override
 	public DTOResult<VMInfoDTO> findVMInfoDTO(String vmName, String datacenter) {
-		DTOResult<VMInfoDTO> result = new DTOResult<VMInfoDTO>();
-		result.setDto(service.getVMInfoDTO(vmName, datacenter));
-		return result;
+		return vmService.findVMInfoDTO(vmName, datacenter);
 	}
 
 	@Override
-	public WSResult createES3ByInstance(CreateVMDiskParameter createVMDiskParameter) {
-
-		WSResult result = new WSResult();
-
-		boolean flag = service.createVMDisk(createVMDiskParameter);
-
-		if (!flag) {
-			result.setError(WSResult.SYSTEM_ERROR, "存储创建失败");
-		}
-
-		return result;
+	public WSResult createStandardSwitchByInstance(CreateStandardSwitchParameter createStandardSwitchParameter) {
+		return networkService.createStandardSwitch(createStandardSwitchParameter);
 	}
 
 	@Override
-	public WSResult deleteES3ByInstance(DeleteVMDiskParameter deleteVMDiskParameter) {
-		WSResult result = new WSResult();
+	public WSResult createPortGroupInstance(CreatePortGroupParameter createPortGroupParameter) {
+		return networkService.createPortGroup(createPortGroupParameter);
+	}
 
-		boolean flag = service.deleteVMDisk(deleteVMDiskParameter);
+	@Override
+	public WSResult bindingPortGroupInstance(BindingPortGroupParameter bindingPortGroupParameter) {
+		return networkService.bindingPortGroup(bindingPortGroupParameter);
+	}
 
-		if (!flag) {
-			result.setError(WSResult.SYSTEM_ERROR, "存储删除失败");
-		}
+	@Override
+	public WSResult createVMDiskByInstance(VMDiskParameter vmDiskParameter) {
+		return diskService.createVMDisk(vmDiskParameter);
+	}
 
-		return result;
+	@Override
+	public WSResult deleteVMDiskByInstance(VMDiskParameter vmDiskParameter) {
+		return diskService.deleteVMDisk(vmDiskParameter);
 	}
 
 	@Override
 	public DTOListResult<HostInfoDTO> getHostInfoDTO(String datacenter) {
-		DTOListResult<HostInfoDTO> result = new DTOListResult<HostInfoDTO>();
-		result.setDtos(service.getHostInfoDTO(datacenter));
-		return result;
+		return hostService.getHostInfoDTOs(datacenter);
 	}
 
 	@Override
 	public DTOResult<HostInfoDTO> findHostInfoDTO(String hostName, String datacenter) {
-		DTOResult<HostInfoDTO> result = new DTOResult<HostInfoDTO>();
-		result.setDto(service.findHostInfoDTO(datacenter, hostName));
-		return result;
+		return hostService.findHostInfoDTO(hostName, datacenter);
 	}
 
 }
