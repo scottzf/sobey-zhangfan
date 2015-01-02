@@ -1,4 +1,4 @@
-package com.sobey.instance.test;
+﻿package com.sobey.instance.test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -132,8 +132,9 @@ public class VMTest extends TestCase {
 		}
 
 		System.out.println("\n============ ResourcePools ============");
-		ManagedEntity[] resourcePools = new InventoryNavigator(rootFolder).searchManagedEntities(new String[][] { {
-				"ResourcePool", "name" } }, true);
+ 
+		ManagedEntity[] resourcePools = new InventoryNavigator(rootFolder).searchManagedEntities(new String[][] {
+				{ "ResourcePool", "name" } }, true);
 
 		for (int i = 0; i < resourcePools.length; i++) {
 			System.err.println("resourcePools[" + i + "]=" + resourcePools[i].getName());
