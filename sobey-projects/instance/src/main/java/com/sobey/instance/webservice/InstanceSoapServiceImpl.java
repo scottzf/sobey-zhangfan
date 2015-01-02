@@ -9,10 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.sobey.instance.constans.WsConstants;
 import com.sobey.instance.service.VMService;
 import com.sobey.instance.webservice.response.dto.CloneVMParameter;
+import com.sobey.instance.webservice.response.dto.CreateVMDiskParameter;
+import com.sobey.instance.webservice.response.dto.DeleteVMDiskParameter;
 import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
+import com.sobey.instance.webservice.response.dto.HostInfoDTO;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
+import com.sobey.instance.webservice.response.dto.VMInfoDTO;
+import com.sobey.instance.webservice.response.result.DTOListResult;
+import com.sobey.instance.webservice.response.result.DTOResult;
 import com.sobey.instance.webservice.response.result.WSResult;
 
 @WebService(serviceName = "InstanceSoapService", endpointInterface = "com.sobey.instance.webservice.InstanceSoapService", targetNamespace = WsConstants.NS)
@@ -98,6 +104,54 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 			result.setError(WSResult.SYSTEM_ERROR, "分布式端口组创建失败");
 		}
 
+		return result;
+	}
+
+	@Override
+	public DTOResult<VMInfoDTO> findVMInfoDTO(String vmName, String datacenter) {
+		DTOResult<VMInfoDTO> result = new DTOResult<VMInfoDTO>();
+		result.setDto(service.getVMInfoDTO(vmName, datacenter));
+		return result;
+	}
+
+	@Override
+	public WSResult createES3ByInstance(CreateVMDiskParameter createVMDiskParameter) {
+
+		WSResult result = new WSResult();
+
+		boolean flag = service.createVMDisk(createVMDiskParameter);
+
+		if (!flag) {
+			result.setError(WSResult.SYSTEM_ERROR, "存储创建失败");
+		}
+
+		return result;
+	}
+
+	@Override
+	public WSResult deleteES3ByInstance(DeleteVMDiskParameter deleteVMDiskParameter) {
+		WSResult result = new WSResult();
+
+		boolean flag = service.deleteVMDisk(deleteVMDiskParameter);
+
+		if (!flag) {
+			result.setError(WSResult.SYSTEM_ERROR, "存储删除失败");
+		}
+
+		return result;
+	}
+
+	@Override
+	public DTOListResult<HostInfoDTO> getHostInfoDTO(String datacenter) {
+		DTOListResult<HostInfoDTO> result = new DTOListResult<HostInfoDTO>();
+		result.setDtos(service.getHostInfoDTO(datacenter));
+		return result;
+	}
+
+	@Override
+	public DTOResult<HostInfoDTO> findHostInfoDTO(String hostName, String datacenter) {
+		DTOResult<HostInfoDTO> result = new DTOResult<HostInfoDTO>();
+		result.setDto(service.findHostInfoDTO(datacenter, hostName));
 		return result;
 	}
 

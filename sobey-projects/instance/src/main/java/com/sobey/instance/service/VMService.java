@@ -12,13 +12,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Maps;
+import com.sobey.core.utils.MathsUtil;
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.instance.constans.DataCenterEnum;
 import com.sobey.instance.webservice.response.dto.CloneVMParameter;
+import com.sobey.instance.webservice.response.dto.CreateVMDiskParameter;
+import com.sobey.instance.webservice.response.dto.DeleteVMDiskParameter;
 import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
+import com.sobey.instance.webservice.response.dto.HostInfoDTO;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
+import com.sobey.instance.webservice.response.dto.VMInfoDTO;
 import com.vmware.vim25.CustomizationAdapterMapping;
 import com.vmware.vim25.CustomizationFixedIp;
 import com.vmware.vim25.CustomizationFixedName;
@@ -39,7 +44,9 @@ import com.vmware.vim25.CustomizationSysprepRebootOption;
 import com.vmware.vim25.CustomizationUserData;
 import com.vmware.vim25.CustomizationWinOptions;
 import com.vmware.vim25.DVPortgroupConfigSpec;
+import com.vmware.vim25.DatastoreSummary;
 import com.vmware.vim25.DistributedVirtualSwitchPortConnection;
+import com.vmware.vim25.GuestNicInfo;
 import com.vmware.vim25.InvalidProperty;
 import com.vmware.vim25.ManagedObjectReference;
 import com.vmware.vim25.RuntimeFault;
@@ -48,28 +55,36 @@ import com.vmware.vim25.TaskInfoState;
 import com.vmware.vim25.VMwareDVSPortSetting;
 import com.vmware.vim25.VirtualDevice;
 import com.vmware.vim25.VirtualDeviceConfigSpec;
+import com.vmware.vim25.VirtualDeviceConfigSpecFileOperation;
 import com.vmware.vim25.VirtualDeviceConfigSpecOperation;
 import com.vmware.vim25.VirtualDeviceConnectInfo;
+import com.vmware.vim25.VirtualDisk;
+import com.vmware.vim25.VirtualDiskFlatVer2BackingInfo;
 import com.vmware.vim25.VirtualEthernetCard;
 import com.vmware.vim25.VirtualEthernetCardDistributedVirtualPortBackingInfo;
+import com.vmware.vim25.VirtualHardware;
 import com.vmware.vim25.VirtualMachineCloneSpec;
 import com.vmware.vim25.VirtualMachineConfigInfo;
 import com.vmware.vim25.VirtualMachineConfigSpec;
 import com.vmware.vim25.VirtualMachineRelocateSpec;
+import com.vmware.vim25.VirtualMachineRuntimeInfo;
 import com.vmware.vim25.VirtualVmxnet3;
 import com.vmware.vim25.VmwareDistributedVirtualSwitchVlanIdSpec;
+import com.vmware.vim25.mo.ComputeResource;
 import com.vmware.vim25.mo.CustomizationSpecManager;
 import com.vmware.vim25.mo.Datacenter;
+import com.vmware.vim25.mo.Datastore;
 import com.vmware.vim25.mo.DistributedVirtualPortgroup;
 import com.vmware.vim25.mo.DistributedVirtualSwitch;
 import com.vmware.vim25.mo.Folder;
+import com.vmware.vim25.mo.HostSystem;
 import com.vmware.vim25.mo.InventoryNavigator;
 import com.vmware.vim25.mo.ManagedEntity;
 import com.vmware.vim25.mo.Network;
-import com.vmware.vim25.mo.ResourcePool;
 import com.vmware.vim25.mo.ServiceInstance;
 import com.vmware.vim25.mo.Task;
 import com.vmware.vim25.mo.VirtualMachine;
+import com.vmware.vim25.mo.util.MorUtil;
 
 @Service
 public class VMService {
@@ -119,6 +134,22 @@ public class VMService {
 	 * password
 	 */
 	private static final String INSTANCE_PASSWORD_XA = INSTANCE_LOADER.getProperty("INSTANCE_PASSWORD_XA");
+
+	/********** 西安2 ***********/
+	/**
+	 * IP
+	 */
+	private static final String INSTANCE_IP_XA2 = INSTANCE_LOADER.getProperty("INSTANCE_IP_XA2");
+
+	/**
+	 * Username
+	 */
+	private static final String INSTANCE_USERNAME_XA2 = INSTANCE_LOADER.getProperty("INSTANCE_USERNAME_XA2");
+
+	/**
+	 * password
+	 */
+	private static final String INSTANCE_PASSWORD_XA2 = INSTANCE_LOADER.getProperty("INSTANCE_PASSWORD_XA2");
 
 	/**
 	 * 网卡名
@@ -362,8 +393,8 @@ public class VMService {
 
 						newNic.setConnectable(connectable11);
 
-						System.out.println("Setting UUID: " + uuid);
-						System.out.println("Setting portgroupKey: " + key);
+						// System.out.println("Setting UUID: " + uuid);
+						// System.out.println("Setting portgroupKey: " + key);
 
 						nicSpec.setDevice(newNic);
 
@@ -390,6 +421,199 @@ public class VMService {
 		}
 
 		return retVal;
+	}
+
+	/**
+	 * 删除为VM分配存储空间
+	 * 
+	 * @param parameter
+	 * @return
+	 */
+	public boolean deleteVMDisk(DeleteVMDiskParameter parameter) {
+
+		try {
+
+			ServiceInstance si = getServiceInstance(parameter.getDatacenter());
+
+			VirtualMachine vm = getVirtualMachine(si, parameter.getVmName());
+
+			VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
+
+			String dsName = getFreeDatastoreName(vm, Long.valueOf(parameter.getDiskSize()));
+			String diskName = parameter.getDiskName();
+			String fileName = "[" + dsName + "] " + vm.getName() + "/" + diskName + ".vmdk";
+
+			VirtualDeviceConfigSpec vdiskSpec = createRemoveDiskConfigSpec(vm.getConfig(), fileName);
+			vmConfigSpec.setDeviceChange(new VirtualDeviceConfigSpec[] { vdiskSpec });
+			Task task = vm.reconfigVM_Task(vmConfigSpec);
+
+			if (task.waitForTask() != Task.SUCCESS) {
+				logger.info("Failure -:   cannot be created stroage");
+				return false;
+			}
+
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return true;
+	}
+
+	/**
+	 * 为VM分配存储空间
+	 * 
+	 * 磁盘模式VirtualDiskMode包含几种选项。 不同的FileBacking对不同的磁盘模式支持不同。
+	 * 
+	 * append :Changes are appended to the redo log; you revoke changes by removing the undo log.
+	 * 
+	 * independent_nonpersistent :Same as nonpersistent, but not affected by snapshots.
+	 * 
+	 * independent_persistent :Same as persistent, but not affected by snapshots.
+	 * 
+	 * nonpersistent :Changes to virtual disk are made to a redo log and discarded at power off.
+	 * 
+	 * persistent :Changes are immediately and permanently written to the virtual disk.
+	 * 
+	 * undoable :Changes are made to a redo log, but you are given the option to commit or undo.
+	 * 
+	 * @param parameter
+	 * @return
+	 */
+	public boolean createVMDisk(CreateVMDiskParameter parameter) {
+
+		try {
+
+			ServiceInstance si = getServiceInstance(parameter.getDatacenter());
+
+			VirtualMachine vm = getVirtualMachine(si, parameter.getVmName());
+
+			VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
+
+			String diskMode = "persistent";
+			long diskSize = Long.valueOf(parameter.getDiskSize()); // 存储大小,单位GB
+			String diskName = parameter.getDiskName(); // 存储名称
+
+			VirtualDeviceConfigSpec vdiskSpec = createAddDiskConfigSpec(vm, diskSize, diskMode, diskName);
+			VirtualDeviceConfigSpec[] vdiskSpecArray = { vdiskSpec };
+			vmConfigSpec.setDeviceChange(vdiskSpecArray);
+
+			Task task = vm.reconfigVM_Task(vmConfigSpec);
+
+			if (task.waitForTask() != Task.SUCCESS) {
+				logger.info("Failure -:   cannot be created stroage");
+				return false;
+			}
+
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return true;
+	}
+
+	private static VirtualDeviceConfigSpec createAddDiskConfigSpec(VirtualMachine vm, long diskSize, String diskMode,
+			String diskName) throws Exception {
+		VirtualDeviceConfigSpec diskSpec = new VirtualDeviceConfigSpec();
+		VirtualMachineConfigInfo vmConfig = (VirtualMachineConfigInfo) vm.getConfig();
+		VirtualDevice[] vds = vmConfig.getHardware().getDevice();
+
+		VirtualDisk disk = new VirtualDisk();
+		VirtualDiskFlatVer2BackingInfo diskfileBacking = new VirtualDiskFlatVer2BackingInfo();
+
+		int key = 0;
+
+		for (int k = 0; k < vds.length; k++) {
+			if (vds[k].getDeviceInfo().getLabel().equalsIgnoreCase("SCSI Controller 0")) {
+				key = vds[k].getKey();
+			}
+		}
+
+		int j = 0;
+		for (VirtualDevice virtualDevice : vds) {
+			if (virtualDevice instanceof VirtualDisk) {
+				j++;
+			}
+		}
+
+		int unitNumber = j;
+
+		String dsName = getFreeDatastoreName(vm, diskSize);
+		if (dsName == null) {
+			return null;
+		}
+		String fileName = "[" + dsName + "] " + vm.getName() + "/" + diskName + ".vmdk";
+
+		diskfileBacking.setDiskMode(diskMode);
+		diskfileBacking.setFileName(fileName);
+		diskfileBacking.setThinProvisioned(true);
+		diskfileBacking.setSplit(false);// split：标明磁盘文件是以多个不大于2GB的文件，还是单独文件存储
+		diskfileBacking.setWriteThrough(false);// writeThrough：标明磁盘文件是直接写入洗盘还是缓冲
+
+		disk.setControllerKey(key);
+		disk.setUnitNumber(unitNumber);
+		disk.setBacking(diskfileBacking);
+		disk.setCapacityInKB(1024 * 1024 * diskSize);
+		disk.setKey(1);
+
+		diskSpec.setOperation(VirtualDeviceConfigSpecOperation.add);
+		diskSpec.setFileOperation(VirtualDeviceConfigSpecFileOperation.create);
+		diskSpec.setDevice(disk);
+		return diskSpec;
+	}
+
+	private static VirtualDeviceConfigSpec createRemoveDiskConfigSpec(VirtualMachineConfigInfo vmConfig, String diskName)
+			throws Exception {
+		VirtualDeviceConfigSpec diskSpec = new VirtualDeviceConfigSpec();
+		VirtualDisk disk = (VirtualDisk) findVirtualDevice(vmConfig, diskName);
+
+		if (disk != null) {
+			diskSpec.setOperation(VirtualDeviceConfigSpecOperation.remove);
+			// remove the following line can keep the disk file
+			diskSpec.setFileOperation(VirtualDeviceConfigSpecFileOperation.destroy);
+			diskSpec.setDevice(disk);
+			return diskSpec;
+		} else {
+			throw new Exception("No device found: " + diskName);
+		}
+	}
+
+	private static VirtualDevice findVirtualDevice(VirtualMachineConfigInfo cfg, String name) {
+		VirtualDevice[] devices = cfg.getHardware().getDevice();
+
+		for (int i = 0; devices != null && i < devices.length; i++) {
+
+			if (devices[i] instanceof VirtualDisk) {
+
+				VirtualDiskFlatVer2BackingInfo backingInfo = (VirtualDiskFlatVer2BackingInfo) devices[i].getBacking();
+
+				if (backingInfo.getFileName().equals(name)) {
+					return devices[i];
+				}
+
+			}
+		}
+		return null;
+	}
+
+	private static String getFreeDatastoreName(VirtualMachine vm, long size) throws Exception {
+		String dsName = null;
+		Datastore[] datastores = vm.getDatastores();
+		for (int i = 0; i < datastores.length; i++) {
+			DatastoreSummary ds = datastores[i].getSummary();
+			if (ds.getFreeSpace() > size) {
+				dsName = ds.getName();
+				break;
+			}
+		}
+		return dsName;
 	}
 
 	public boolean cloneVM(CloneVMParameter parameter) {
@@ -512,14 +736,13 @@ public class VMService {
 
 			// 设置ResourcePool
 			/**
-			 * TODO 重要:宿主机暂时写死,宿主机的Value可以在VMTest中的PrintInventory方法查出来.
+			 * TODO 重要:宿主机暂时写死,宿主机的ResourcePool可以根据宿主机名称得到.
 			 * 
 			 * 后期应该做到CMDBuild查询宿主机的负载能力,找出负载最低的宿主机, 并根据名称查出ManagedObjectReference对象的value.
 			 */
 			ManagedObjectReference pool = new ManagedObjectReference();
-			pool.set_value("resgroup-8");
+			pool.set_value("resgroup-42");
 			pool.setType("ResourcePool");
-			pool.setVal("resgroup-8");
 
 			VirtualMachineRelocateSpec relocateSpec = new VirtualMachineRelocateSpec();
 			relocateSpec.setPool(pool);
@@ -730,6 +953,7 @@ public class VMService {
 			ServiceInstance si = getServiceInstance(datacenter);
 
 			ManagedEntity[] mes = new InventoryNavigator(si.getRootFolder()).searchManagedEntities("VirtualMachine");
+
 			if (mes == null || mes.length == 0) {
 				return null;
 			}
@@ -737,12 +961,16 @@ public class VMService {
 			for (int i = 0; i < mes.length; i++) {
 
 				VirtualMachine vm = (VirtualMachine) mes[i];
+				VirtualMachineRuntimeInfo vmri = (VirtualMachineRuntimeInfo) vm.getRuntime();
 
-				ResourcePool pool = vm.getResourcePool();
+				ManagedObjectReference host = vmri.getHost();
+				ManagedObjectReference managedObjectReference = new ManagedObjectReference();
+				managedObjectReference.setType("HostSystem");
+				managedObjectReference.setVal(host.getVal());
+				HostSystem hostSystem = (HostSystem) MorUtil.createExactManagedEntity(si.getServerConnection(),
+						managedObjectReference);
 
-				if (pool != null) {
-					map.put(vm.getName(), pool.getParent().getName());
-				}
+				map.put(vm.getName(), hostSystem.getName());
 
 			}
 
@@ -757,6 +985,173 @@ public class VMService {
 		return parameter;
 	}
 
+	public VMInfoDTO getVMInfoDTO(String name, String datacenter) {
+
+		ServiceInstance si = null;
+
+		VMInfoDTO vmInfoDTO = new VMInfoDTO();
+
+		try {
+
+			si = getServiceInstance(datacenter);
+
+			VirtualMachine vm = getVirtualMachine(si, name);
+
+			if (vm != null) {
+
+				// 判断虚拟机是否安装有vmware tools.
+
+				VirtualMachineConfigInfo vmConfigInfo = vm.getConfig();
+
+				VirtualHardware vmHardware = vmConfigInfo.getHardware();
+
+				// 网络适配器
+				if (vm.getGuest().getNet() != null && vm.getGuest().getNet().length != 0) {
+					String vlanName = "";
+					for (GuestNicInfo nicInfo : vm.getGuest().getNet()) {
+						vlanName += nicInfo.getNetwork() + " ";
+					}
+					vmInfoDTO.setVlanName(vlanName);
+				}
+
+				// 存储器
+				if (vm.getDatastores() != null && vm.getDatastores().length != 0) {
+
+					String datastores = "";
+					for (Datastore datastore : vm.getDatastores()) {
+						datastores += datastore.getName() + " ";
+					}
+					vmInfoDTO.setDatastore(datastores);
+				}
+
+				vmInfoDTO.setGuestFullName(vmConfigInfo.getGuestFullName());
+				vmInfoDTO.setIpaddress(vm.getGuest().getIpAddress());
+				vmInfoDTO.setCpuNumber(Integer.valueOf(vmHardware.getNumCPU()).toString());
+				vmInfoDTO.setMemorySize(Integer.valueOf(vmHardware.getMemoryMB()).toString());
+				vmInfoDTO.setName(name);
+				vmInfoDTO.setStatus(vm.getGuest().getGuestState());// running or notRunning
+
+				if (vmHardware != null) {
+					VirtualDevice[] vmDevices = vmHardware.getDevice();
+					for (int i = 0; i < vmDevices.length; i++) {
+
+						if (vmDevices[i] instanceof VirtualEthernetCard) {
+							VirtualEthernetCard card = (VirtualEthernetCard) vmDevices[i];
+							vmInfoDTO.setMacIPaddress(card.getMacAddress());
+						}
+
+						if (vmDevices[i] instanceof VirtualDisk) {
+							VirtualDisk vmDisk = (VirtualDisk) vmDevices[i];
+							// 硬盘空间大小单位为KB,此处将硬盘大小除以1024*1024得到GB的单位.
+							vmInfoDTO.setDiskSize(String.valueOf(MathsUtil.div(vmDisk.getCapacityInKB(), 1048576)));
+						}
+
+					}
+				}
+
+			}
+
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (InvalidProperty e) {
+			e.printStackTrace();
+		} catch (RuntimeFault e) {
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+
+		return vmInfoDTO;
+	}
+
+	/**
+	 * HostSystem -> HostInfoDTO
+	 * 
+	 * @param host
+	 * @return
+	 */
+	private HostInfoDTO wrapHostInfoDTO(HostSystem host) {
+
+		ComputeResource computeResource = (ComputeResource) host.getParent();
+
+		HostInfoDTO hostInfoDTO = new HostInfoDTO();
+
+		// 频率由HZ -> GHZ = HZ/1024*1024*1024
+		hostInfoDTO.setCpuHz(String.valueOf(MathsUtil.div(Double.valueOf(host.getHardware().getCpuInfo().getHz()),
+				1073741824)));
+
+		// 转换成MB 1024*1024 = 1048576
+		hostInfoDTO.setMemorySize(String.valueOf(MathsUtil.div(host.getHardware().getMemorySize(), 1048576)));
+
+		hostInfoDTO.setCpuNumber(String.valueOf(host.getHardware().getCpuInfo().getNumCpuCores()));
+		hostInfoDTO.setModel(host.getHardware().getSystemInfo().getModel());
+		hostInfoDTO.setName(host.getName());
+		hostInfoDTO.setResourcePool(computeResource.getResourcePool().getMOR().getVal());
+		hostInfoDTO.setVendor(host.getHardware().getSystemInfo().getVendor());
+		return hostInfoDTO;
+
+	}
+
+	public HostInfoDTO findHostInfoDTO(String datacenter, String hostName) {
+
+		ServiceInstance si = null;
+
+		HostInfoDTO dto = null;
+
+		try {
+
+			si = getServiceInstance(datacenter);
+
+			HostSystem host = (HostSystem) new InventoryNavigator(si.getRootFolder()).searchManagedEntity("HostSystem",
+					hostName);
+
+			dto = wrapHostInfoDTO(host);
+
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (InvalidProperty e) {
+			e.printStackTrace();
+		} catch (RuntimeFault e) {
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+
+		return dto;
+	}
+
+	public ArrayList<HostInfoDTO> getHostInfoDTO(String datacenter) {
+
+		ServiceInstance si = null;
+
+		ArrayList<HostInfoDTO> list = new ArrayList<HostInfoDTO>();
+
+		try {
+
+			si = getServiceInstance(datacenter);
+
+			ManagedEntity[] entities = new InventoryNavigator(si.getRootFolder()).searchManagedEntities("HostSystem");
+
+			for (int i = 0; i < entities.length; i++) {
+
+				HostSystem host = (HostSystem) entities[i];
+
+				list.add(wrapHostInfoDTO(host));
+			}
+
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (InvalidProperty e) {
+			e.printStackTrace();
+		} catch (RuntimeFault e) {
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
 	/**
 	 * 初始化一个服务实例
 	 * 
@@ -766,13 +1161,33 @@ public class VMService {
 	 */
 	private ServiceInstance getServiceInstance(String datacenter) throws RemoteException, MalformedURLException {
 
-		if (DataCenterEnum.CD.toString().equalsIgnoreCase(datacenter)) {
-			return new ServiceInstance(new URL(INSTANCE_IP_CD), INSTANCE_USERNAME_CD, INSTANCE_PASSWORD_CD, true);
-		} else if (DataCenterEnum.XA.toString().equalsIgnoreCase(datacenter)) {
-			return new ServiceInstance(new URL(INSTANCE_IP_XA), INSTANCE_USERNAME_XA, INSTANCE_PASSWORD_XA, true);
-		} else {
-			return new ServiceInstance(new URL(INSTANCE_IP_XA), INSTANCE_USERNAME_XA, INSTANCE_PASSWORD_XA, true);
+		ServiceInstance serviceInstance = null;
+
+		switch (DataCenterEnum.valueOf(datacenter)) {
+		case 西安核心数据中心:
+
+			serviceInstance = new ServiceInstance(new URL(INSTANCE_IP_XA), INSTANCE_USERNAME_XA, INSTANCE_PASSWORD_XA,
+					true);
+			break;
+
+		case 西安核心数据中心2:
+
+			serviceInstance = new ServiceInstance(new URL(INSTANCE_IP_XA2), INSTANCE_USERNAME_XA2,
+					INSTANCE_PASSWORD_XA2, true);
+			break;
+
+		case 成都核心数据中心:
+
+			serviceInstance = new ServiceInstance(new URL(INSTANCE_IP_CD), INSTANCE_USERNAME_CD, INSTANCE_PASSWORD_CD,
+					true);
+			break;
+
+		default:
+			break;
 		}
+
+		return serviceInstance;
+
 	}
 
 	/**

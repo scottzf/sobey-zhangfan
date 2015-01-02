@@ -12,20 +12,21 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.ServiceBasicDTO;
 @XmlType(name = "Es3DTO", namespace = WsConstants.NS)
 public class Es3DTO extends ServiceBasicDTO {
 
-	private Double diskSize;
 	private Integer es3Type;
 	private String es3TypeText;
 	private Integer storage;
 	private StorageDTO storageDTO;
 	private String volumeName;
-
-	public Double getDiskSize() {
-		return diskSize;
-	}
-
-	public void setDiskSize(Double diskSize) {
-		this.diskSize = diskSize;
-	}
+	private String es3Status;
+	private String thinProvisioned;
+	private String totalSize;
+	private String usedSize;
+	private String usedSizePre;
+	private String availableSize;
+	private String snapshotSize;
+	private String aggreName;
+	private String maximumFiles;
+	private String currentFiles;
 
 	public Integer getEs3Type() {
 		return es3Type;
@@ -65,6 +66,86 @@ public class Es3DTO extends ServiceBasicDTO {
 
 	public void setVolumeName(String volumeName) {
 		this.volumeName = volumeName;
+	}
+
+	public String getEs3Status() {
+		return es3Status;
+	}
+
+	public void setEs3Status(String es3Status) {
+		this.es3Status = es3Status;
+	}
+
+	public String getThinProvisioned() {
+		return thinProvisioned;
+	}
+
+	public void setThinProvisioned(String thinProvisioned) {
+		this.thinProvisioned = thinProvisioned;
+	}
+
+	public String getTotalSize() {
+		return totalSize;
+	}
+
+	public void setTotalSize(String totalSize) {
+		this.totalSize = totalSize;
+	}
+
+	public String getUsedSize() {
+		return usedSize;
+	}
+
+	public void setUsedSize(String usedSize) {
+		this.usedSize = usedSize;
+	}
+
+	public String getUsedSizePre() {
+		return usedSizePre;
+	}
+
+	public void setUsedSizePre(String usedSizePre) {
+		this.usedSizePre = usedSizePre;
+	}
+
+	public String getAvailableSize() {
+		return availableSize;
+	}
+
+	public void setAvailableSize(String availableSize) {
+		this.availableSize = availableSize;
+	}
+
+	public String getSnapshotSize() {
+		return snapshotSize;
+	}
+
+	public void setSnapshotSize(String snapshotSize) {
+		this.snapshotSize = snapshotSize;
+	}
+
+	public String getAggreName() {
+		return aggreName;
+	}
+
+	public void setAggreName(String aggreName) {
+		this.aggreName = aggreName;
+	}
+
+	public String getMaximumFiles() {
+		return maximumFiles;
+	}
+
+	public void setMaximumFiles(String maximumFiles) {
+		this.maximumFiles = maximumFiles;
+	}
+
+	public String getCurrentFiles() {
+		return currentFiles;
+	}
+
+	public void setCurrentFiles(String currentFiles) {
+		this.currentFiles = currentFiles;
 	}
 
 	/**

@@ -250,7 +250,7 @@ public class TestData {
 		es3.setVolumeName(RandomData.randomName("volumeName"));
 		es3.setStorage(storageId);
 		es3.setEs3Type(es3TypeId);
-		es3.setDiskSize(1000);
+		es3.setTotalSize("1000");
 
 		return es3;
 	}
@@ -640,8 +640,8 @@ public class TestData {
 		storage.setSn(RandomData.randomName("sn"));
 		storage.setGdzcSn(RandomData.randomName("gdzcSn"));
 		storage.setRemark(RandomData.randomName("remark"));
-		storage.setConfigText(RandomData.randomName("configText"));
 		storage.setPassword(RandomData.randomName("password"));
+		storage.setName(RandomData.randomName("username"));
 
 		return storage;
 	}

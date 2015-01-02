@@ -22,8 +22,11 @@ public class IpaddressDTO extends BasicDTO {
 	private Integer isp;
 	private String ispText;
 	private String netmask;
+	private String segment;
 	private Integer vlan;
 	private VlanDTO vlanDTO;
+	private Integer tenants;
+	private TenantsDTO tenantsDTO;
 
 	public String getGateway() {
 		return gateway;
@@ -105,6 +108,14 @@ public class IpaddressDTO extends BasicDTO {
 		this.netmask = netmask;
 	}
 
+	public String getSegment() {
+		return segment;
+	}
+
+	public void setSegment(String segment) {
+		this.segment = segment;
+	}
+
 	public Integer getVlan() {
 		return vlan;
 	}
@@ -119,6 +130,22 @@ public class IpaddressDTO extends BasicDTO {
 
 	public void setVlanDTO(VlanDTO vlanDTO) {
 		this.vlanDTO = vlanDTO;
+	}
+
+	public Integer getTenants() {
+		return tenants;
+	}
+
+	public void setTenants(Integer tenants) {
+		this.tenants = tenants;
+	}
+
+	public TenantsDTO getTenantsDTO() {
+		return tenantsDTO;
+	}
+
+	public void setTenantsDTO(TenantsDTO tenantsDTO) {
+		this.tenantsDTO = tenantsDTO;
 	}
 
 	/**

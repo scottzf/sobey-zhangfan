@@ -44,7 +44,7 @@ public class ApiTest extends TestCase {
 		}
 	}
 
-	// @Test
+	@Test
 	public void createtenants() {
 
 		TenantsDTO tenantsDTO = new TenantsDTO();
@@ -94,11 +94,6 @@ public class ApiTest extends TestCase {
 		Integer ecsSpecId = 130;
 		Integer ecsId = 430;
 		service.reconfigECS(ecsId, ecsSpecId);
-	}
-
-	@Test
-	public void syncVM() {
-		System.out.println(service.syncVM("xa"));
 	}
 
 	@Test
@@ -172,23 +167,28 @@ public class ApiTest extends TestCase {
 	}
 
 	@Test
-	public void aa() {
-		// policyParameter.setSourcePort(NetworkUtil.getPortFromProtocol(protocols[i]));
-		service.dissociateEIP(1940, 1612);
-	}
+	public void getHistoryData() {
 
-	@Test
-	public void getItemTest() {
-		// System.out.println(service.getItem(3002, ItemEnum.Free_disk_space_on.getName()).getLastValue());
-
-		ZHistoryItemDTO dtos = service.getHistoryData(161, ItemEnum.SDA的读性能.getName());
+		ZHistoryItemDTO dtos = service.getHistoryData(2290, ItemEnum.网络流量out.getValue());
 
 		for (ZItemDTO item : dtos.getZItemDTOs()) {
 			System.out.println(item.getItemid());
 			System.out.println(item.getClock());
 			System.out.println(item.getValue());
+			System.err.println(item.getUnits());
 			System.out.println();
 
 		}
+	}
+
+	@Test
+	public void getItemTest() {
+
+		ZItemDTO dtos = service.getCurrentData(2290, ItemEnum.网络流量in.getValue());
+		System.out.println(dtos.getItemid());
+		System.out.println(dtos.getClock());
+		System.out.println(dtos.getValue());
+		System.err.println(dtos.getUnits());
+
 	}
 }

@@ -20,6 +20,13 @@ public class EcsDTO extends ServiceBasicDTO {
 	private IpaddressDTO ipaddressDTO;
 	private Integer server;
 	private ServerDTO ServerDTO;
+	private String osName;
+	private String adapterName;
+	private String cpuNumber;
+	private String memorySize;
+	private String datastoreName;
+	private String diskSize;
+	private String macAddress;
 
 	public Integer getEcsSpec() {
 		return ecsSpec;
@@ -83,6 +90,62 @@ public class EcsDTO extends ServiceBasicDTO {
 
 	public void setServerDTO(ServerDTO serverDTO) {
 		ServerDTO = serverDTO;
+	}
+
+	public String getOsName() {
+		return osName;
+	}
+
+	public void setOsName(String osName) {
+		this.osName = osName;
+	}
+
+	public String getAdapterName() {
+		return adapterName;
+	}
+
+	public void setAdapterName(String adapterName) {
+		this.adapterName = adapterName;
+	}
+
+	public String getCpuNumber() {
+		return cpuNumber;
+	}
+
+	public void setCpuNumber(String cpuNumber) {
+		this.cpuNumber = cpuNumber;
+	}
+
+	public String getMemorySize() {
+		return memorySize;
+	}
+
+	public void setMemorySize(String memorySize) {
+		this.memorySize = memorySize;
+	}
+
+	public String getDatastoreName() {
+		return datastoreName;
+	}
+
+	public void setDatastoreName(String datastoreName) {
+		this.datastoreName = datastoreName;
+	}
+
+	public String getDiskSize() {
+		return diskSize;
+	}
+
+	public void setDiskSize(String diskSize) {
+		this.diskSize = diskSize;
+	}
+
+	public String getMacAddress() {
+		return macAddress;
+	}
+
+	public void setMacAddress(String macAddress) {
+		this.macAddress = macAddress;
 	}
 
 	/**

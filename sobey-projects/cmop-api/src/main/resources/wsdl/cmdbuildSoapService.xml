@@ -1358,12 +1358,19 @@
     <xs:complexContent>
       <xs:extension base="tns:serviceBasicDTO">
         <xs:sequence>
+          <xs:element minOccurs="0" name="adapterName" type="xs:string"/>
+          <xs:element minOccurs="0" name="cpuNumber" type="xs:string"/>
+          <xs:element minOccurs="0" name="datastoreName" type="xs:string"/>
+          <xs:element minOccurs="0" name="diskSize" type="xs:string"/>
           <xs:element minOccurs="0" name="ecsSpec" type="xs:int"/>
           <xs:element minOccurs="0" name="ecsSpecDTO" type="tns:EcsSpecDTO"/>
           <xs:element minOccurs="0" name="ecsStatus" type="xs:int"/>
           <xs:element minOccurs="0" name="ecsStatusText" type="xs:string"/>
           <xs:element minOccurs="0" name="ipaddress" type="xs:int"/>
           <xs:element minOccurs="0" name="ipaddressDTO" type="tns:IpaddressDTO"/>
+          <xs:element minOccurs="0" name="macAddress" type="xs:string"/>
+          <xs:element minOccurs="0" name="memorySize" type="xs:string"/>
+          <xs:element minOccurs="0" name="osName" type="xs:string"/>
           <xs:element minOccurs="0" name="server" type="xs:int"/>
           <xs:element minOccurs="0" name="serverDTO" type="tns:ServerDTO"/>
         </xs:sequence>
@@ -1425,6 +1432,9 @@
           <xs:element minOccurs="0" name="isp" type="xs:int"/>
           <xs:element minOccurs="0" name="ispText" type="xs:string"/>
           <xs:element minOccurs="0" name="netmask" type="xs:string"/>
+          <xs:element minOccurs="0" name="segment" type="xs:string"/>
+          <xs:element minOccurs="0" name="tenants" type="xs:int"/>
+          <xs:element minOccurs="0" name="tenantsDTO" type="tns:TenantsDTO"/>
           <xs:element minOccurs="0" name="vlan" type="xs:int"/>
           <xs:element minOccurs="0" name="vlanDTO" type="tns:VlanDTO"/>
         </xs:sequence>
@@ -1440,6 +1450,22 @@
           <xs:element minOccurs="0" name="city" type="xs:string"/>
           <xs:element minOccurs="0" name="phone" type="xs:string"/>
           <xs:element minOccurs="0" name="zip" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="TenantsDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:basicDTO">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="accessKey" type="xs:string"/>
+          <xs:element minOccurs="0" name="aclNumber" type="xs:int"/>
+          <xs:element minOccurs="0" name="company" type="xs:string"/>
+          <xs:element minOccurs="0" name="createInfo" type="xs:string"/>
+          <xs:element minOccurs="0" name="email" type="xs:string"/>
+          <xs:element minOccurs="0" name="password" type="xs:string"/>
+          <xs:element minOccurs="0" name="phone" type="xs:string"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -1463,27 +1489,16 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="TenantsDTO">
-    <xs:complexContent>
-      <xs:extension base="tns:basicDTO">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="accessKey" type="xs:string"/>
-          <xs:element minOccurs="0" name="aclNumber" type="xs:int"/>
-          <xs:element minOccurs="0" name="company" type="xs:string"/>
-          <xs:element minOccurs="0" name="createInfo" type="xs:string"/>
-          <xs:element minOccurs="0" name="email" type="xs:string"/>
-          <xs:element minOccurs="0" name="password" type="xs:string"/>
-          <xs:element minOccurs="0" name="phone" type="xs:string"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
   <xs:complexType name="ServerDTO">
     <xs:complexContent>
       <xs:extension base="tns:deviceBasicDTO">
         <xs:sequence>
+          <xs:element minOccurs="0" name="cpuHz" type="xs:string"/>
+          <xs:element minOccurs="0" name="cpuNumber" type="xs:string"/>
+          <xs:element minOccurs="0" name="memorySize" type="xs:string"/>
+          <xs:element minOccurs="0" name="model" type="xs:string"/>
           <xs:element minOccurs="0" name="resgroup" type="xs:string"/>
+          <xs:element minOccurs="0" name="vendor" type="xs:string"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -1765,11 +1780,20 @@
     <xs:complexContent>
       <xs:extension base="tns:serviceBasicDTO">
         <xs:sequence>
-          <xs:element minOccurs="0" name="diskSize" type="xs:double"/>
+          <xs:element minOccurs="0" name="aggreName" type="xs:string"/>
+          <xs:element minOccurs="0" name="availableSize" type="xs:string"/>
+          <xs:element minOccurs="0" name="currentFiles" type="xs:string"/>
+          <xs:element minOccurs="0" name="es3Status" type="xs:string"/>
           <xs:element minOccurs="0" name="es3Type" type="xs:int"/>
           <xs:element minOccurs="0" name="es3TypeText" type="xs:string"/>
+          <xs:element minOccurs="0" name="maximumFiles" type="xs:string"/>
+          <xs:element minOccurs="0" name="snapshotSize" type="xs:string"/>
           <xs:element minOccurs="0" name="storage" type="xs:int"/>
           <xs:element minOccurs="0" name="storageDTO" type="tns:StorageDTO"/>
+          <xs:element minOccurs="0" name="thinProvisioned" type="xs:string"/>
+          <xs:element minOccurs="0" name="totalSize" type="xs:string"/>
+          <xs:element minOccurs="0" name="usedSize" type="xs:string"/>
+          <xs:element minOccurs="0" name="usedSizePre" type="xs:string"/>
           <xs:element minOccurs="0" name="volumeName" type="xs:string"/>
         </xs:sequence>
       </xs:extension>
@@ -1780,7 +1804,7 @@
     <xs:complexContent>
       <xs:extension base="tns:deviceBasicDTO">
         <xs:sequence>
-          <xs:element minOccurs="0" name="configText" type="xs:string"/>
+          <xs:element minOccurs="0" name="name" type="xs:string"/>
           <xs:element minOccurs="0" name="password" type="xs:string"/>
         </xs:sequence>
       </xs:extension>

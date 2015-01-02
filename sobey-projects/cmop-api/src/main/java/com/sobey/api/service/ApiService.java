@@ -20,6 +20,8 @@ import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.TagDTO;
 import com.sobey.generate.cmdbuild.TagRelation;
 import com.sobey.generate.cmdbuild.TenantsDTO;
+import com.sobey.generate.instance.CreateVMDiskParameter;
+import com.sobey.generate.instance.DeleteVMDiskParameter;
 import com.sobey.generate.zabbix.ZHistoryItemDTO;
 import com.sobey.generate.zabbix.ZItemDTO;
 
@@ -31,6 +33,10 @@ public interface ApiService {
 	 * @param tenantsDTO
 	 */
 	public WSResult createTenants(TenantsDTO tenantsDTO);
+
+	public void createES3(CreateVMDiskParameter createVMDiskParameter);
+
+	public void deleteES3(DeleteVMDiskParameter deleteVMDiskParameter);
 
 	/**
 	 * 创建一个ECS
@@ -69,7 +75,7 @@ public interface ApiService {
 	 * @param datacenter
 	 * @return
 	 */
-	public String syncVM(String datacenter);
+	public void syncVM(String datacenter);
 
 	/**
 	 * 创建ES3
@@ -77,6 +83,15 @@ public interface ApiService {
 	 * @param es3DTO
 	 */
 	public WSResult createES3(Es3DTO es3DTO);
+
+	/**
+	 * 创建ES3(nimble专用)
+	 * 
+	 * @param es3DTO
+	 * @param vmName
+	 * @return
+	 */
+	public WSResult createES3(Es3DTO es3DTO, String vmName);
 
 	/**
 	 * 挂载ES3
@@ -302,5 +317,29 @@ public interface ApiService {
 	 * @return
 	 */
 	public ZItemDTO getVolumeData(Integer es3Id);
+
+	/**
+	 * 同步netapp
+	 */
+	public void syncVolume(String datacenter);
+
+	/**
+	 * 同步netscarler中的ELB
+	 */
+	public void syncELB();
+
+	/**
+	 * 同步netscarler中的GSLB DNS
+	 */
+	public void syncDNS();
+
+	/**
+	 * 将vCenter中的Host同步至CMDBuild中的Server. 注意:调用前,需要将Host的IP先导入CMDBuild中.
+	 * 
+	 * @param datacenter
+	 */
+	public void syncHost(String datacenter);
+
+	public void syncVMIpaddress(String datacenter);
 
 }

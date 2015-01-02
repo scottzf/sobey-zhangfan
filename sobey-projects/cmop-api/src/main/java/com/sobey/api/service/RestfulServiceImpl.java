@@ -8,6 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sobey.api.constans.ES3MonitorItemEnum;
+import com.sobey.api.constans.ItemEnum;
 import com.sobey.api.constans.LookUpConstants;
 import com.sobey.api.entity.DnsEntity;
 import com.sobey.api.entity.EcsEntity;
@@ -44,6 +46,7 @@ import com.sobey.generate.cmdbuild.MapEipDnsDTO;
 import com.sobey.generate.cmdbuild.MapEipElbDTO;
 import com.sobey.generate.cmdbuild.MapTagServiceDTO;
 import com.sobey.generate.cmdbuild.ServiceDTO;
+import com.sobey.generate.cmdbuild.StorageDTO;
 import com.sobey.generate.cmdbuild.TagDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.dns.DnsSoapService;
@@ -319,7 +322,7 @@ public class RestfulServiceImpl implements RestfulService {
 		}
 
 		Es3Entity entity = new Es3Entity(es3DTO.getCode(), es3DTO.getRemark(), es3DTO.getDescription(),
-				es3DTO.getDiskSize() + "GB", es3DTO.getEs3TypeText());
+				es3DTO.getTotalSize() + "GB", es3DTO.getEs3TypeText());
 
 		result.setDto(entity);
 
@@ -359,7 +362,7 @@ public class RestfulServiceImpl implements RestfulService {
 		Es3DTO es3DTO = new Es3DTO();
 		es3DTO.setAgentType(LookUpConstants.AgentType.NetApp.getValue());
 		es3DTO.setDescription(es3Name);
-		es3DTO.setDiskSize(es3Size);// TODO 注意单位,脚本用的MB,而页面是GB,测试环境无法创建GB大小的volume.
+		es3DTO.setTotalSize(es3Size.toString());
 		es3DTO.setEs3Type(lookUpDTO.getId());
 		es3DTO.setIdc(idcDTO.getId());
 		es3DTO.setVolumeName(es3Name);
@@ -1258,7 +1261,7 @@ public class RestfulServiceImpl implements RestfulService {
 			return null;
 		}
 
-		return apiService.getCurrentData(ecsDTO.getId(), itemKey);
+		return apiService.getCurrentData(ecsDTO.getId(), ItemEnum.map.get(itemKey));
 	}
 
 	@Override
@@ -1274,7 +1277,7 @@ public class RestfulServiceImpl implements RestfulService {
 			return null;
 		}
 
-		return apiService.getHistoryData(ecsDTO.getId(), itemKey);
+		return apiService.getHistoryData(ecsDTO.getId(), ItemEnum.map.get(itemKey));
 	}
 
 	@Override
@@ -1308,6 +1311,98 @@ public class RestfulServiceImpl implements RestfulService {
 
 		return result;
 
+	}
+
+	@Override
+	public ZItemDTO getStorageCurrentData(String es3Name, String itemKey, String accessKey) {
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			return null;
+		}
+
+		Es3DTO es3DTO = findEs3DTO(tenantsDTO.getId(), es3Name);
+		if (es3DTO == null) {
+			return null;
+		}
+
+		StorageDTO storageDTO = (StorageDTO) cmdbuildSoapService.findStorage(es3DTO.getStorage()).getDto();
+		if (storageDTO == null) {
+			return null;
+		}
+
+		return zabbixSoapService.getZItem(storageDTO.getDescription(), getZabbixKey(itemKey, es3Name));
+	}
+
+	/**
+	 * 根据不同的Es3监控枚举参数转换成zabbix中的键值.<br>
+	 * 
+	 * eg: VolStatus[/vol/db_sobeyedu/]
+	 * 
+	 * @param itemKey
+	 * @param es3Name
+	 * @return
+	 */
+	private String getZabbixKey(String itemKey, String es3Name) {
+
+		String value = "";
+
+		switch (ES3MonitorItemEnum.valueOf(itemKey)) {
+
+		case 存储已用空间:
+
+			value = "VolSpace[/vol/" + es3Name + "/]";
+
+			break;
+
+		case 存储已用空间百分比:
+
+			value = "VolSpacePercent[/vol/" + es3Name + "/]";
+
+			break;
+
+		case 存储总大小:
+
+			// TODO zabbix无该键值
+			break;
+
+		case 存储总大小百分比:
+
+			// TODO zabbix无该键值
+			break;
+		case 存储状态:
+
+			value = "VolStatus[/vol/" + es3Name + "/]";
+
+			break;
+
+		default:
+			break;
+		}
+
+		return value;
+
+	}
+
+	@Override
+	public ZHistoryItemDTO getStorageHistoryData(String es3Name, String itemKey, String accessKey) {
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			return null;
+		}
+
+		Es3DTO es3DTO = findEs3DTO(tenantsDTO.getId(), es3Name);
+		if (es3DTO == null) {
+			return null;
+		}
+
+		StorageDTO storageDTO = (StorageDTO) cmdbuildSoapService.findStorage(es3DTO.getStorage()).getDto();
+		if (storageDTO == null) {
+			return null;
+		}
+
+		return zabbixSoapService.getZHistoryItem(storageDTO.getDescription(), getZabbixKey(itemKey, es3Name));
 	}
 
 }

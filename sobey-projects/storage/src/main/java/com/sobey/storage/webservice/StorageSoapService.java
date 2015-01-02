@@ -6,9 +6,11 @@ import javax.jws.WebService;
 import com.sobey.storage.constans.WsConstants;
 import com.sobey.storage.webservice.response.dto.CreateEs3Parameter;
 import com.sobey.storage.webservice.response.dto.DeleteEs3Parameter;
-import com.sobey.storage.webservice.response.dto.MountEs3Parameter;
-import com.sobey.storage.webservice.response.dto.RemountEs3Parameter;
-import com.sobey.storage.webservice.response.dto.UmountEs3Parameter;
+import com.sobey.storage.webservice.response.dto.ModifytEs3RuleParameter;
+import com.sobey.storage.webservice.response.dto.NetAppParameter;
+import com.sobey.storage.webservice.response.dto.VolumeInfoDTO;
+import com.sobey.storage.webservice.response.result.DTOListResult;
+import com.sobey.storage.webservice.response.result.DTOResult;
 import com.sobey.storage.webservice.response.result.WSResult;
 
 /**
@@ -21,7 +23,7 @@ import com.sobey.storage.webservice.response.result.WSResult;
 public interface StorageSoapService {
 
 	/**
-	 * 在netapp上执行脚本，创建Volume
+	 * 创建Volume
 	 * 
 	 * @param createEs3Parameter
 	 *            {@link CreateEs3Parameter}
@@ -30,7 +32,7 @@ public interface StorageSoapService {
 	WSResult createEs3ByStorage(@WebParam(name = "createEs3Parameter") CreateEs3Parameter createEs3Parameter);
 
 	/**
-	 * 在netapp上执行脚本，删除Volume
+	 * 删除Volume
 	 * 
 	 * @param deleteEs3Parameter
 	 *            {@link DeleteEs3Parameter}
@@ -39,30 +41,30 @@ public interface StorageSoapService {
 	WSResult deleteEs3ByStorage(@WebParam(name = "deleteEs3Parameter") DeleteEs3Parameter deleteEs3Parameter);
 
 	/**
-	 * 在netapp上执行脚本，挂载Volume
+	 * 修改netapp卷的Client Permissions,即允许哪些IP可以挂载卷.
 	 * 
-	 * @param mountEs3Parameter
-	 *            {@link MountEs3Parameter}
+	 * @param modifytEs3RuleParameter
+	 *            {@link ModifytEs3RuleParameter}
 	 * @return
 	 */
-	WSResult mountEs3ByStorage(@WebParam(name = "mountEs3Parameter") MountEs3Parameter mountEs3Parameter);
+	WSResult modifytEs3RuleParameterByStorage(
+			@WebParam(name = "modifytEs3RuleParameter") ModifytEs3RuleParameter modifytEs3RuleParameter);
 
 	/**
-	 * 在netapp上执行脚本，卸载Volume
+	 * 获得controller下所有的卷
 	 * 
-	 * @param umountEs3Parameter
-	 *            {@link UmountEs3Parameter}
+	 * @param netAppParameter
+	 *            {@link NetAppParameter}
 	 * @return
 	 */
-	WSResult umountEs3ByStorage(@WebParam(name = "umountEs3Parameter") UmountEs3Parameter umountEs3Parameter);
+	DTOListResult<VolumeInfoDTO> getVolumeInfoDTO(@WebParam(name = "netAppParameter") NetAppParameter netAppParameter);
 
 	/**
-	 * 在netapp上执行脚本，修改Volume
+	 * 根据卷名获得卷信息
 	 * 
-	 * @param remountEs3Parameter
-	 *            {@link RemountEs3Parameter}
+	 * @param volumeName
+	 *            卷名
 	 * @return
 	 */
-	WSResult remountEs3ByStorage(@WebParam(name = "remountEs3Parameter") RemountEs3Parameter remountEs3Parameter);
-
+	DTOResult<VolumeInfoDTO> findVolumeInfoDTO(@WebParam(name = "netAppParameter") NetAppParameter netAppParameter);
 }

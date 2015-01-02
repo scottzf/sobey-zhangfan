@@ -11,16 +11,80 @@ import com.sobey.instance.constans.WsConstants;
 @XmlType(name = "CloneVMParameter", namespace = WsConstants.NS)
 public class CloneVMParameter {
 
+	private String datacenter;
+	private String description;
+	private String gateway;
+	private String ipaddress;
+	private String subNetMask;
+	private Integer vlanId;
+	private String vMName;
+	private String vMSUserName;
 	private String vMTemplateName;
 	private String vMTemplateOS;
-	private String vMName;
-	private String ipaddress;
-	private String gateway;
-	private String subNetMask;
-	private String datacenter;
-	private String vMSUserName;
-	private String description;
-	private Integer vlanId;
+
+	public String getDatacenter() {
+		return datacenter;
+	}
+
+	public void setDatacenter(String datacenter) {
+		this.datacenter = datacenter;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getGateway() {
+		return gateway;
+	}
+
+	public void setGateway(String gateway) {
+		this.gateway = gateway;
+	}
+
+	public String getIpaddress() {
+		return ipaddress;
+	}
+
+	public void setIpaddress(String ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public String getSubNetMask() {
+		return subNetMask;
+	}
+
+	public void setSubNetMask(String subNetMask) {
+		this.subNetMask = subNetMask;
+	}
+
+	public Integer getVlanId() {
+		return vlanId;
+	}
+
+	public void setVlanId(Integer vlanId) {
+		this.vlanId = vlanId;
+	}
+
+	public String getvMName() {
+		return vMName;
+	}
+
+	public void setvMName(String vMName) {
+		this.vMName = vMName;
+	}
+
+	public String getvMSUserName() {
+		return vMSUserName;
+	}
+
+	public void setvMSUserName(String vMSUserName) {
+		this.vMSUserName = vMSUserName;
+	}
 
 	public String getvMTemplateName() {
 		return vMTemplateName;
@@ -36,70 +100,6 @@ public class CloneVMParameter {
 
 	public void setvMTemplateOS(String vMTemplateOS) {
 		this.vMTemplateOS = vMTemplateOS;
-	}
-
-	public String getvMName() {
-		return vMName;
-	}
-
-	public void setvMName(String vMName) {
-		this.vMName = vMName;
-	}
-
-	public String getIpaddress() {
-		return ipaddress;
-	}
-
-	public void setIpaddress(String ipaddress) {
-		this.ipaddress = ipaddress;
-	}
-
-	public String getGateway() {
-		return gateway;
-	}
-
-	public void setGateway(String gateway) {
-		this.gateway = gateway;
-	}
-
-	public String getSubNetMask() {
-		return subNetMask;
-	}
-
-	public void setSubNetMask(String subNetMask) {
-		this.subNetMask = subNetMask;
-	}
-
-	public String getDatacenter() {
-		return datacenter;
-	}
-
-	public void setDatacenter(String datacenter) {
-		this.datacenter = datacenter;
-	}
-
-	public String getvMSUserName() {
-		return vMSUserName;
-	}
-
-	public void setvMSUserName(String vMSUserName) {
-		this.vMSUserName = vMSUserName;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Integer getVlanId() {
-		return vlanId;
-	}
-
-	public void setVlanId(Integer vlanId) {
-		this.vlanId = vlanId;
 	}
 
 	/**

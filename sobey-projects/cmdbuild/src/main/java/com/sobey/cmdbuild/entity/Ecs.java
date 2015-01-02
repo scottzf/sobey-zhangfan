@@ -22,6 +22,14 @@ public class Ecs extends ServiceBasic {
 	private Integer ecsSpec;
 	private Integer server;
 	private Integer ecsStatus;
+	private String osName;
+	private String adapterName;
+	private String cpuNumber;
+	private String memorySize;
+	private String datastoreName;
+	private String diskSize;
+	private String macAddress;
+
 	private Set<EcsHistory> ecsHistories = new HashSet<EcsHistory>(0);
 
 	public Ecs() {
@@ -61,6 +69,69 @@ public class Ecs extends ServiceBasic {
 
 	public void setEcsStatus(Integer ecsStatus) {
 		this.ecsStatus = ecsStatus;
+	}
+
+	@Column(name = "os_name", length = 100)
+	public String getOsName() {
+		return osName;
+	}
+
+	public void setOsName(String osName) {
+		this.osName = osName;
+	}
+
+	@Column(name = "adapter_name", length = 200)
+	public String getAdapterName() {
+		return adapterName;
+	}
+
+	public void setAdapterName(String adapterName) {
+		this.adapterName = adapterName;
+	}
+
+	@Column(name = "cpu_number", length = 100)
+	public String getCpuNumber() {
+		return cpuNumber;
+	}
+
+	public void setCpuNumber(String cpuNumber) {
+		this.cpuNumber = cpuNumber;
+	}
+
+	@Column(name = "memory_size", length = 100)
+	public String getMemorySize() {
+		return memorySize;
+	}
+
+	public void setMemorySize(String memorySize) {
+		this.memorySize = memorySize;
+	}
+
+	@Column(name = "datastore_name", length = 200)
+	public String getDatastoreName() {
+		return datastoreName;
+	}
+
+	public void setDatastoreName(String datastoreName) {
+		this.datastoreName = datastoreName;
+	}
+
+	@Column(name = "disk_size", length = 100)
+	public String getDiskSize() {
+		return diskSize;
+	}
+
+	public void setDiskSize(String diskSize) {
+		this.diskSize = diskSize;
+	}
+
+	@Column(name = "mac_address", length = 100)
+	public String getMacAddress() {
+		return macAddress;
+	}
+
+	public void setMacAddress(String macAddress) {
+		this.macAddress = macAddress;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ecs")

@@ -6882,6 +6882,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			}
 			dto.setIpAddressPoolText(findLookUp(dto.getIpAddressPool()).getDto().getDescription());
 			dto.setIpAddressStatusText(findLookUp(dto.getIpAddressStatus()).getDto().getDescription());
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
 
 			result.setDto(dto);
 
@@ -6918,6 +6919,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			}
 			dto.setIpAddressPoolText(findLookUp(dto.getIpAddressPool()).getDto().getDescription());
 			dto.setIpAddressStatusText(findLookUp(dto.getIpAddressStatus()).getDto().getDescription());
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
 
 			result.setDto(dto);
 

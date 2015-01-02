@@ -3,6 +3,7 @@ package com.sobey.cmdbuild.webservice.infrastructure;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import org.junit.Test;
@@ -37,6 +38,34 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 	 * 全局Description
 	 */
 	private String description = "";
+
+	public static Date startDate = new Date(System.currentTimeMillis());
+
+	@Test
+	public void insert() {
+
+		for (int i = 100; i < 131; i++) {
+
+			Vlan vlan = new Vlan();
+
+			vlan.setRemark("vlan" + i);
+			vlan.setSegment("172.28." + i + ".0");
+			vlan.setNetMask("255.255.255.0");
+			vlan.setGateway("172.28." + i + ".254");
+
+			vlan.setId(0);
+			vlan.setDescription("vlan" + i + "_cd");
+			vlan.setBeginDate(startDate);
+			// vlan.setTenants(tenantsId);
+			vlan.setIdc(527);
+			vlan.setVlanStatus(99);
+
+			VlanDTO dto = BeanMapper.map(vlan, VlanDTO.class);
+			cmdbuildSoapService.createVlan(dto);
+
+		}
+
+	}
 
 	@Test
 	public void testAll() {

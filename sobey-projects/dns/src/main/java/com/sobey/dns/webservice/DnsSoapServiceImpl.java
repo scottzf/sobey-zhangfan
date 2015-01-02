@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.sobey.dns.constans.WsConstants;
 import com.sobey.dns.service.DnsService;
 import com.sobey.dns.webservice.response.dto.DNSParameter;
+import com.sobey.dns.webservice.response.dto.DnsSync;
+import com.sobey.dns.webservice.response.result.DTOListResult;
 import com.sobey.dns.webservice.response.result.WSResult;
 
 @WebService(serviceName = "DnsSoapService", endpointInterface = "com.sobey.dns.webservice.DnsSoapService", targetNamespace = WsConstants.NS)
@@ -42,6 +44,17 @@ public class DnsSoapServiceImpl implements DnsSoapService {
 		}
 
 		return result;
+	}
+
+	@Override
+	public DTOListResult<DnsSync> getDNSConfig() {
+
+		DTOListResult<DnsSync> result = new DTOListResult<DnsSync>();
+
+		result.setDtos(service.getDnsSyncList());
+
+		return result;
+
 	}
 
 }

@@ -28,6 +28,8 @@ public class IpaddressHistory extends BasicEntity {
 	private Integer ipaddressStatus;
 	private String netMask;
 	private String gateway;
+	private String segment;
+	private Integer tenants;
 
 	public IpaddressHistory() {
 	}
@@ -104,6 +106,24 @@ public class IpaddressHistory extends BasicEntity {
 
 	public void setGateway(String gateway) {
 		this.gateway = gateway;
+	}
+
+	@Column(name = "segment", length = 100)
+	public String getSegment() {
+		return segment;
+	}
+
+	public void setSegment(String segment) {
+		this.segment = segment;
+	}
+
+	@Column(name = "tenants")
+	public Integer getTenants() {
+		return tenants;
+	}
+
+	public void setTenants(Integer tenants) {
+		this.tenants = tenants;
 	}
 
 }

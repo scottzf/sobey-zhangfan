@@ -26,6 +26,8 @@ public class Ipaddress extends BasicEntity {
 	private String netMask;
 	private String remark;
 	private String gateway;
+	private String segment;
+	private Integer tenants;
 
 	private Set<IpaddressHistory> ipaddressHistories = new HashSet<IpaddressHistory>(0);
 
@@ -102,6 +104,24 @@ public class Ipaddress extends BasicEntity {
 
 	public void setGateway(String gateway) {
 		this.gateway = gateway;
+	}
+
+	@Column(name = "segment", length = 100)
+	public String getSegment() {
+		return segment;
+	}
+
+	public void setSegment(String segment) {
+		this.segment = segment;
+	}
+
+	@Column(name = "tenants")
+	public Integer getTenants() {
+		return tenants;
+	}
+
+	public void setTenants(Integer tenants) {
+		this.tenants = tenants;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ipaddress")
