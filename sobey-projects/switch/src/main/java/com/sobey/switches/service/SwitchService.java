@@ -1,10 +1,15 @@
 package com.sobey.switches.service;
 
-import java.util.List;
+import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.sobey.switches.webservice.response.dto.RuleParameter;
+import com.sobey.switches.utils.JsonRPCUtil;
+import com.sobey.switches.utils.SDNPropertiesUtil;
+import com.sobey.switches.webservice.response.dto.SwitchPolicyParameter;
+import com.sobey.switches.webservice.response.result.WSResult;
 
 /**
  * Switches 脚本模板生成类.
@@ -15,273 +20,82 @@ import com.sobey.switches.webservice.response.dto.RuleParameter;
 @Service
 public class SwitchService {
 
-	private static final String DEFAULT_SYMBOL = "\r";
+	private static Logger logger = LoggerFactory.getLogger(SwitchService.class);
 
-	/**
-	 * 生成在<b>接入层交换机</b>执行的创建Vlan脚本.<br>
-	 * 
-	 * Example:
-	 * 
-	 * <pre>
-	 * system-view
-	 * vlan  80 
-	 * quit
-	 * save
-	 * y
-	 * y
-	 * quit
-	 * </pre>
-	 * 
-	 * @param vlanId
-	 *            Vlan编号
-	 * @param gateway
-	 *            网关
-	 * @param netMask
-	 *            子网掩码
-	 * @return
-	 */
-	public String createVlanOnAccessLayer(Integer vlanId, String gateway, String netMask) {
+	public WSResult createPolicyInSwitch(SwitchPolicyParameter parameter) {
 
-		StringBuilder sb = new StringBuilder();
+		WSResult result = new WSResult();
 
-		sb.append("system-view").append(DEFAULT_SYMBOL);
-		sb.append("vlan").append(" ").append(vlanId).append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
-		sb.append("save").append(DEFAULT_SYMBOL);
-		sb.append("y").append(DEFAULT_SYMBOL);
-		sb.append("y").append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
-		sb.append(DEFAULT_SYMBOL);
+		try {
 
-		return sb.toString();
-	}
+			// 配置VLAN
+			String[] vlanConfig = generateVlanConfigString(parameter.getVlanId()); // 配置面向服务器的接口的命令
+			JsonRPCUtil.executeJsonRPCRequest(SDNPropertiesUtil.getProperty("TOR-A_SWITCH_URL"), vlanConfig);
 
-	/**
-	 * 生成在<b>核心交换机</b>执行的创建Vlan脚本.<br>
-	 * 
-	 * Example:
-	 * 
-	 * <pre>
-	 * system-view
-	 * vlan 80
-	 * quit
-	 * interface Vlan-interface 80
-	 * ip address 172.21.71.254 255.255.255.0
-	 * save
-	 * y
-	 * y
-	 * quit
-	 * </pre>
-	 * 
-	 * @param vlanId
-	 *            Vlan编号
-	 * @param gateway
-	 *            网关
-	 * @param netMask
-	 *            子网掩码
-	 * @return
-	 */
-	public String createVlanOnCoreLayer(Integer vlanId, String gateway, String netMask) {
+			// 生成交换机执行命令
+			String[] interfaceConfig = generateInterfaceConfigString(parameter.getEthName(), parameter.getVlanId()); // 配置面向服务器的接口的命令
+			JsonRPCUtil.executeJsonRPCRequest(SDNPropertiesUtil.getProperty("TOR-A_SWITCH_URL"), interfaceConfig); // 交换机ip地址暂时空着
 
-		StringBuilder sb = new StringBuilder();
+			// 在置顶交换机之间建NVGRE隧道ID
+			String[] nvgreConfig = generateNVGREConfigString(parameter.getVlanId()); // 配置NVGRE的命令
+			JsonRPCUtil.executeJsonRPCRequest(SDNPropertiesUtil.getProperty("TOR-A_SWITCH_URL"), nvgreConfig); // 交换机ip地址暂时空着
 
-		sb.append("system-view").append(DEFAULT_SYMBOL);
-		sb.append("vlan").append(" ").append(vlanId).append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
-		sb.append("interface Vlan-interface").append(" ").append(vlanId).append(DEFAULT_SYMBOL);
-		sb.append("ip address").append(" ").append(gateway).append(" ").append(netMask).append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
-		sb.append("save").append(DEFAULT_SYMBOL);
-		sb.append("y").append(DEFAULT_SYMBOL);
-		sb.append("y").append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
-		sb.append(DEFAULT_SYMBOL);
-
-		return sb.toString();
-	}
-
-	/**
-	 * 生成在<b>接入层交换机</b>执行的删除Vlan脚本
-	 * 
-	 * Example:
-	 * 
-	 * <pre>
-	 * system-view
-	 * undo vlan 80
-	 * quit
-	 * save
-	 * y
-	 * y
-	 * quit
-	 * </pre>
-	 * 
-	 * @param vlanId
-	 *            Vlan编号
-	 * @return
-	 */
-	public String deleteVlanOnAccessLayer(Integer vlanId) {
-
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("system-view").append(DEFAULT_SYMBOL);
-		sb.append("undo vlan").append(" ").append(vlanId).append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
-		sb.append("save").append(DEFAULT_SYMBOL);
-		sb.append("y").append(DEFAULT_SYMBOL);
-		sb.append("y").append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
-		sb.append(DEFAULT_SYMBOL);
-
-		return sb.toString();
-	}
-
-	/**
-	 * 生成在<b>核心交换机</b>执行的删除Vlan脚本<br>
-	 * 
-	 * Example:
-	 * 
-	 * <pre>
-	 * system-view
-	 * undo vlan 80
-	 * quit
-	 * save
-	 * y
-	 * y
-	 * quit
-	 * </pre>
-	 * 
-	 * @param vlanId
-	 *            Vlan编号
-	 * @return
-	 */
-	public String deleteVlanOnCoreLayer(Integer vlanId) {
-
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("system-view").append(DEFAULT_SYMBOL);
-		sb.append("undo vlan").append(" ").append(vlanId).append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
-		sb.append("save").append(DEFAULT_SYMBOL);
-		sb.append("y").append(DEFAULT_SYMBOL);
-		sb.append("y").append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
-		sb.append(DEFAULT_SYMBOL);
-
-		return sb.toString();
-	}
-
-	/**
-	 * 生成在<b>交换机</b>执行的创建ESG脚本.<br>
-	 * 
-	 * Example:
-	 * 
-	 * <pre>
-	 * system-view
-	 * acl number 3014
-	 * description gdsyxh
-	 * rule permit ip source 172.20.27.0 0.0.0.255 destination 172.20.0.11 0.0.0.0
-	 * rule permit ip source 172.20.27.0 0.0.0.255 destination 172.20.0.109 0.0.0.0
-	 * rule permit ip source 172.20.27.0 0.0.0.255 destination 172.20.0.6 0.0.0.0
-	 * rule permit ip source 172.20.27.0 0.0.0.255 destination 172.20.14.48 0.0.0.0
-	 * rule deny ip source 172.20.27.0 0.0.0.255 destination 172.20.0.0 0.0.255.255
-	 * rule deny ip source 172.20.27.0 0.0.0.255 destination 172.30.0.0 0.0.255.255
-	 * rule permit ip
-	 * quit
-	 * 
-	 * interface Vlan-interface 71
-	 * packet-filter 3014 inbound
-	 * quit
-	 * save
-	 * y
-	 * y
-	 * </pre>
-	 * 
-	 * @param aclNumber
-	 *            acl编号(3000-3999)
-	 * @param vlanId
-	 *            Vlan编号
-	 * @param desc
-	 *            描述
-	 * @param permits
-	 *            许可ip列表
-	 * @param denys
-	 *            拒绝ip列表
-	 * @return
-	 */
-	public String createEsg(Integer aclNumber, Integer vlanId, String desc, List<RuleParameter> permits,
-			List<RuleParameter> denys) {
-
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("system-view").append(DEFAULT_SYMBOL);
-		sb.append("acl number").append(" ").append(aclNumber).append(DEFAULT_SYMBOL);
-		sb.append("description").append(" ").append(desc).append(DEFAULT_SYMBOL);
-
-		for (RuleParameter ruleParameter : permits) {
-			sb.append("rule permit ip source").append(" ").append(ruleParameter.getSource()).append(" ")
-					.append(ruleParameter.getSourceNetMask()).append(" ").append("destination").append(" ")
-					.append(ruleParameter.getDestination()).append(" ").append(ruleParameter.getDestinationNetMask())
-					.append(DEFAULT_SYMBOL);
+		} catch (IOException e) {
+			logger.info("createPolicyInSwitch::" + e);
+			result.setError(WSResult.SYSTEM_ERROR, "IO操作错误.");
 		}
 
-		for (RuleParameter ruleParameter : denys) {
-			sb.append("rule deny ip source").append(" ").append(ruleParameter.getSource()).append(" ")
-					.append(ruleParameter.getSourceNetMask()).append(" ").append("destination").append(" ")
-					.append(ruleParameter.getDestination()).append(" ").append(ruleParameter.getDestinationNetMask())
-					.append(DEFAULT_SYMBOL);
-		}
-
-		sb.append("rule  permit ip").append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
-
-		sb.append("interface Vlan-interface").append(" ").append(vlanId).append(DEFAULT_SYMBOL);
-		sb.append("packet-filter").append(" ").append(aclNumber).append(" ").append("inbound").append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
-		sb.append("save").append(DEFAULT_SYMBOL);
-		sb.append("y").append(DEFAULT_SYMBOL);
-		sb.append("y").append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
-		sb.append(DEFAULT_SYMBOL);
-
-		return sb.toString();
+		return result;
 	}
 
 	/**
-	 * 生成在<b>交换机</b>执行的删除ESG脚本.<br>
+	 * 生成vlan配置
 	 * 
-	 * Example:
-	 * 
-	 * <pre>
-	 * system-view
-	 * undo acl number 3014
-	 * quit
-	 * save
-	 * y
-	 * y
-	 * </pre>
-	 * 
-	 * @param aclNumber
-	 *            acl编号(3000-3999)
+	 * @param vlanId
 	 * @return
 	 */
-	public String deleteEsg(Integer aclNumber) {
+	private static String[] generateVlanConfigString(int vlanId) {
+		String str1 = "configure terminal"; // 进入配置模式
+		String str2 = "VLAN database"; // 进入VLAN模式
+		String str3 = "VLAN " + vlanId; // 创建面向服务器的VLAN
+		String str4 = "VLAN 4094"; // 创建上行VLAN
+		String str5 = "exit"; // 退出VLAN模式
+		String[] cmds = { str1, str2, str3, str4, str5 };
+		return cmds;
+	}
 
-		StringBuilder sb = new StringBuilder();
+	/**
+	 * 生成NVGRE配置
+	 * 
+	 * @param vlanId
+	 * @return
+	 */
+	private String[] generateNVGREConfigString(int vlanId) {
+		// TODO source 和 peer 的IP来源
+		String str1 = "configure terminal"; // 进入配置模式
+		String str2 = "nvgre"; // 进入NVGRE模式
+		String str3 = "source 172.31.255.1"; // 设置NVGRE报文的外层IP源地址
+		String str4 = "vlan " + vlanId + " tunnel-id " + vlanId; // 将id为vlanId的VLAN映射到tunnel ID中
+		String str5 = "vlan " + vlanId + " peer 172.31.255.2"; // 在id为vlanId的vlanId中创建到TOR B的隧道
+		String[] cmds = { str1, str2, str3, str4, str5 };
+		return cmds;
+	}
 
-		sb.append("system-view").append(DEFAULT_SYMBOL);
-		sb.append("undo acl number").append(" ").append(aclNumber).append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
-		sb.append("save").append(DEFAULT_SYMBOL);
-		sb.append("y").append(DEFAULT_SYMBOL);
-		sb.append("y").append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
-		sb.append(DEFAULT_SYMBOL);
-
-		return sb.toString();
+	/**
+	 * 生成接口配置
+	 * 
+	 * @param swInterface
+	 * @param vlanId
+	 * @return
+	 */
+	private String[] generateInterfaceConfigString(String swInterface, int vlanId) {
+		String str1 = "configure terminal"; // 进入配置模式
+		String str2 = "interface " + swInterface; // 进入接口模式
+		String str3 = "no shutdown"; // 打开接口
+		String str4 = "switchport mode trunk"; // 设置面向服务器的接口为trunk模式
+		String str5 = "switchport trunk allowed vlan add " + vlanId; // 允许vlanId标记的VLAN报文通过
+		String[] cmds = { str1, str2, str3, str4, str5 };
+		return cmds;
 	}
 
 }
