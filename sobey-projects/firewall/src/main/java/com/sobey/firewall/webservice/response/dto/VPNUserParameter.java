@@ -30,9 +30,24 @@ import com.sobey.firewall.constans.WsConstants;
 public class VPNUserParameter {
 
 	/**
+	 * 防火墙(路由)IP地址
+	 */
+	private String url;
+
+	/**
+	 * 防火墙(路由)登录名
+	 */
+	private String userName;
+
+	/**
+	 * 防火墙(路由)登录密码
+	 */
+	private String password;
+
+	/**
 	 * 防火墙中的策略ID,从2000起递增.
 	 */
-	private Integer firewallPolicyId;
+	private Integer policyId;
 
 	/**
 	 * Vlan编号(code)
@@ -42,7 +57,7 @@ public class VPNUserParameter {
 	/**
 	 * IP
 	 */
-	private ArrayList<String> ipaddress;
+	private ArrayList<String> ipaddresses;
 
 	/**
 	 * 网段
@@ -64,12 +79,36 @@ public class VPNUserParameter {
 	 */
 	private String vpnPassword;
 
-	public Integer getFirewallPolicyId() {
-		return firewallPolicyId;
+	public String getUrl() {
+		return url;
 	}
 
-	public void setFirewallPolicyId(Integer firewallPolicyId) {
-		this.firewallPolicyId = firewallPolicyId;
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Integer getPolicyId() {
+		return policyId;
+	}
+
+	public void setPolicyId(Integer policyId) {
+		this.policyId = policyId;
 	}
 
 	public Integer getVlanId() {
@@ -80,12 +119,12 @@ public class VPNUserParameter {
 		VlanId = vlanId;
 	}
 
-	public ArrayList<String> getIpaddress() {
-		return ipaddress;
+	public ArrayList<String> getIpaddresses() {
+		return ipaddresses;
 	}
 
-	public void setIpaddress(ArrayList<String> ipaddress) {
-		this.ipaddress = ipaddress;
+	public void setIpaddresses(ArrayList<String> ipaddresses) {
+		this.ipaddresses = ipaddresses;
 	}
 
 	public ArrayList<String> getSegments() {

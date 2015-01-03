@@ -28,6 +28,21 @@ import com.sobey.firewall.constans.WsConstants;
 public class EIPParameter {
 
 	/**
+	 * 防火墙(路由)IP地址
+	 */
+	private String url;
+
+	/**
+	 * 防火墙(路由)登录名
+	 */
+	private String userName;
+
+	/**
+	 * 防火墙(路由)登录密码
+	 */
+	private String password;
+
+	/**
 	 * 公网IP
 	 */
 	private String internetIP;
@@ -51,6 +66,30 @@ public class EIPParameter {
 	 * 所有映射策略集合
 	 */
 	private ArrayList<String> allPolicies;
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
 	public String getInternetIP() {
 		return internetIP;
