@@ -46,6 +46,9 @@ public class TerminalResultHandle {
 		case changeVPN:
 
 			break;
+		case bingdingRouter:
+
+			break;
 		default:
 			break;
 		}

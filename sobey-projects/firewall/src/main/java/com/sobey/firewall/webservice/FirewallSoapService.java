@@ -5,6 +5,7 @@ import javax.jws.WebService;
 
 import com.sobey.firewall.constans.WsConstants;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
+import com.sobey.firewall.webservice.response.dto.RouterParameter;
 import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
 import com.sobey.firewall.webservice.response.result.WSResult;
 
@@ -16,6 +17,8 @@ import com.sobey.firewall.webservice.response.result.WSResult;
  */
 @WebService(name = "FirewallSoapService", targetNamespace = WsConstants.NS)
 public interface FirewallSoapService {
+
+	WSResult bindingSubnetRouter(@WebParam(name = "routerParameter") RouterParameter routerParameter);
 
 	/**
 	 * 在防火墙上执行脚本，创建EIP

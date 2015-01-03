@@ -1,56 +1,89 @@
 package com.sobey.firewall.test;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.sobey.firewall.PbulicProperties;
+import com.sobey.firewall.data.TestData;
+import com.sobey.firewall.webservice.response.dto.RouterParameter;
+import com.sobey.firewall.webservice.response.dto.SubnetParameter;
 
 @ContextConfiguration({ "classpath:applicationContext.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SyncTest implements PbulicProperties {
 
+	private static final String ENTER_SIGN = "\r";
+
 	@Test
-	public void readVIP() throws IOException {
-		String result = FileUtils.readFileToString(new File("D:\\cmop_test"), "UTF-8");
-		String str = StringUtils.substringBetween(result, "config firewall vip", "config firewall vipgrp");
-		String str2 = StringUtils.substringBefore(str, "end");
-		File file = new File("D:\\VIP.txt");
-		FileUtils.writeStringToFile(file, str2, "UTF-8");
+	public void test() {
+
+		StringBuilder sb = new StringBuilder();
+
+		String segment = " 10.10.10.0";
+		String subnetMask = "255.255.255.0";
+		String gateway = "10.10.10.254";
+
+		sb.append("config firewall address").append(ENTER_SIGN);
+		sb.append("edit ").append("\"").append(segment).append("\"").append(ENTER_SIGN);
+		sb.append("set subnet ").append(gateway).append(" ").append(subnetMask).append(ENTER_SIGN);
+		sb.append("next");
+		System.out.println(sb.toString());
 	}
 
 	@Test
-	public void readVIPPolicy() throws IOException {
+	public void a() {
 
-		List<String> list = FileUtils.readLines(new File("D:\\VIP.txt"), "UTF-8");
+		StringBuilder sb = new StringBuilder();
 
-		for (String str : list) {
-			if (str.contains("edit")) {
-				System.out.println("协议:" + StringUtils.substringBetween(str, "-", "-"));
-			} else if (str.contains("set extip")) {
-				String[] arr = StringUtils.split(str);
-				System.out.println("公网IP:" + arr[2]);
-			} else if (str.contains("set mappedip")) {
-				String[] arr = StringUtils.split(str);
-				System.out.println("映射IP:" + arr[2]);
-			} else if (str.contains("set extport")) {
-				String[] arr = StringUtils.split(str);
-				System.out.println("输出端口:" + arr[2]);
-			} else if (str.contains("set mappedport")) {
-				String[] arr = StringUtils.split(str);
-				System.out.println("映射端口端口:" + arr[2]);
-			} else {
+		RouterParameter routerParameter = TestData.randomRouterParameter();
 
+		ArrayList<SubnetParameter> list = routerParameter.getSubnetParameters();
+
+		for (int i = 0; i < list.size(); i++) {
+
+			SubnetParameter subnet = list.get(i);
+
+			String segment = subnet.getSegment();
+			String subnetMask = subnet.getSubnetMask();
+			String gateway = subnet.getGateway();
+
+			sb.append("config firewall address").append(ENTER_SIGN);
+			sb.append("edit ").append("\"").append(segment).append("\"").append(ENTER_SIGN);
+			sb.append("set subnet ").append(gateway).append(" ").append(subnetMask).append(ENTER_SIGN);
+			sb.append("next");
+
+			sb.append("config firewall policy").append(ENTER_SIGN);
+			sb.append("edit ").append(subnet.getPolicyId()).append(ENTER_SIGN);
+
+			sb.append("set srcintf ").append("\"").append("port").append(subnet.getSegment()).append("\"")
+					.append(ENTER_SIGN);
+			sb.append("set srcaddr ").append("\"").append(subnet.getSegment()).append("\"").append(ENTER_SIGN);
+
+			// new 一个新的list出来,将传递进来的list填充进去,并将循环中的自身对象remove出去,这样就达到源对应多个目标的目的.
+			ArrayList<SubnetParameter> parameters = new ArrayList<SubnetParameter>();
+			parameters.addAll(list);
+			parameters.remove(subnet);
+
+			for (SubnetParameter subnetParameter : parameters) {
+				sb.append("set dstintf ").append("\"").append("port").append(subnetParameter.getSegment()).append("\"")
+						.append(ENTER_SIGN);
+				sb.append("set dstaddr ").append("\"").append(subnetParameter.getSegment()).append("\"")
+						.append(ENTER_SIGN);
 			}
+			sb.append("set schedule ").append("\"").append("always").append("\"").append(ENTER_SIGN);
+			sb.append("set service ").append("\"").append("ALL").append("\"").append(ENTER_SIGN);
+			sb.append("next");
+
 		}
 
+		System.out.println(sb.toString());
+
+		// TelnetUtil.execCommand(routerParameter.getIpaddress(), routerParameter.getUserName(),
+		// routerParameter.getPassword(), sb.toString());
 	}
 
 }

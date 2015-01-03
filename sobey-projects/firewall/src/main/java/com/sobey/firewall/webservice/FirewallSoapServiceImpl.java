@@ -11,27 +11,18 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Lists;
-import com.sobey.core.utils.PropertiesLoader;
+import com.sobey.core.utils.Identities;
 import com.sobey.core.utils.TelnetUtil;
 import com.sobey.firewall.constans.MethodEnum;
 import com.sobey.firewall.constans.WsConstants;
 import com.sobey.firewall.service.FirewallService;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
+import com.sobey.firewall.webservice.response.dto.RouterParameter;
 import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
 import com.sobey.firewall.webservice.response.result.WSResult;
 
 @WebService(serviceName = "FirewallSoapService", endpointInterface = "com.sobey.firewall.webservice.FirewallSoapService", targetNamespace = WsConstants.NS)
 public class FirewallSoapServiceImpl implements FirewallSoapService {
-
-	/**
-	 * 加载applicationContext.propertie文件
-	 */
-	protected static PropertiesLoader FIREWALL_LOADER = new PropertiesLoader("classpath:/firewall.properties");
-
-	/* 防火墙登录 */
-	protected static final String FIREWALL_IP = FIREWALL_LOADER.getProperty("FIREWALL_IP");
-	protected static final String FIREWALL_USERNAME = FIREWALL_LOADER.getProperty("FIREWALL_USERNAME");
-	protected static final String FIREWALL_PASSWORD = FIREWALL_LOADER.getProperty("FIREWALL_PASSWORD");
 
 	@Autowired
 	private FirewallService service;
@@ -48,11 +39,11 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 	}
 
 	@Override
-	public WSResult createEIPByFirewall(@WebParam(name = "eipParameter") EIPParameter eipParameter) {
+	public WSResult createEIPByFirewall(EIPParameter eipParameter) {
 
 		WSResult result = new WSResult();
 
-		// TODO 用于测试环境临时加入的一条
+		// TODO 用于测试环境临时加入的一条,需要看租户的防火墙默认IP是什么
 		ArrayList<String> allPolicies = Lists.newArrayList();
 		allPolicies.add("119.6.200.204");
 		eipParameter.setAllPolicies(allPolicies);
@@ -61,7 +52,8 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 
 		String filePath = getFilePath(eipParameter.getPrivateIP());
 
-		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command, filePath);
+		TelnetUtil.execCommand(eipParameter.getUrl(), eipParameter.getUserName(), eipParameter.getPassword(), command,
+				filePath);
 
 		try {
 
@@ -77,11 +69,11 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 	}
 
 	@Override
-	public WSResult deleteEIPByFirewall(@WebParam(name = "eipParameter") EIPParameter eipParameter) {
+	public WSResult deleteEIPByFirewall(EIPParameter eipParameter) {
 
 		WSResult result = new WSResult();
 
-		// TODO 用于测试环境临时加入的一条
+		// TODO 用于测试环境临时加入的一条,需要看租户的防火墙默认IP是什么
 		ArrayList<String> allPolicies = Lists.newArrayList();
 		allPolicies.add("119.6.200.204");
 		eipParameter.setAllPolicies(allPolicies);
@@ -90,7 +82,8 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 
 		String filePath = getFilePath(eipParameter.getPrivateIP());
 
-		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command, filePath);
+		TelnetUtil.execCommand(eipParameter.getUrl(), eipParameter.getUserName(), eipParameter.getPassword(), command,
+				filePath);
 
 		try {
 
@@ -114,7 +107,8 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 
 		String filePath = getFilePath(vpnUserParameter.getVpnUser());
 
-		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command, filePath);
+		TelnetUtil.execCommand(vpnUserParameter.getUrl(), vpnUserParameter.getUserName(),
+				vpnUserParameter.getPassword(), command, filePath);
 
 		try {
 
@@ -138,7 +132,8 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 
 		String filePath = getFilePath(vpnUserParameter.getVpnUser());
 
-		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command, filePath);
+		TelnetUtil.execCommand(vpnUserParameter.getUrl(), vpnUserParameter.getUserName(),
+				vpnUserParameter.getPassword(), command, filePath);
 
 		try {
 
@@ -163,13 +158,40 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 
 		String filePath = getFilePath(vpnUserParameter.getVpnUser());
 
-		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command, filePath);
+		TelnetUtil.execCommand(vpnUserParameter.getUrl(), vpnUserParameter.getUserName(),
+				vpnUserParameter.getPassword(), command, filePath);
 
 		try {
 
 			String resultStr = FileUtils.readFileToString(new File(filePath));
 
 			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.changeVPN);
+
+		} catch (IOException e) {
+			result.setDefaultError();
+		}
+
+		return result;
+
+	}
+
+	@Override
+	public WSResult bindingSubnetRouter(RouterParameter routerParameter) {
+
+		WSResult result = new WSResult();
+
+		String command = service.bindingRouter(routerParameter);
+
+		String filePath = getFilePath(Identities.uuid());
+
+		TelnetUtil.execCommand(routerParameter.getUrl(), routerParameter.getUserName(), routerParameter.getPassword(),
+				command, filePath);
+
+		try {
+
+			String resultStr = FileUtils.readFileToString(new File(filePath));
+
+			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.bingdingRouter);
 
 		} catch (IOException e) {
 			result.setDefaultError();

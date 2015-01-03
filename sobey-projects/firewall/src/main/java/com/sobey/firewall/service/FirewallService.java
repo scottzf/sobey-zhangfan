@@ -1,5 +1,6 @@
 package com.sobey.firewall.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -9,6 +10,8 @@ import com.sobey.core.utils.Collections3;
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
 import com.sobey.firewall.webservice.response.dto.EIPPolicyParameter;
+import com.sobey.firewall.webservice.response.dto.RouterParameter;
+import com.sobey.firewall.webservice.response.dto.SubnetParameter;
 import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
 
 /**
@@ -407,7 +410,7 @@ public class FirewallService {
 		 * 如果是网关,则接下来的两个参数应该为: 网关 和 255.255.255.0
 		 */
 
-		for (String ipaddress : parameter.getIpaddress()) {
+		for (String ipaddress : parameter.getIpaddresses()) {
 			sb.append("config firewall address").append(DEFAULT_SYMBOL);
 			sb.append("edit ").append("\"").append(generateAddressNameByIP(ipaddress)).append("\"")
 					.append(DEFAULT_SYMBOL);
@@ -448,7 +451,7 @@ public class FirewallService {
 		sb.append(DEFAULT_SYMBOL);
 
 		sb.append("config firewall policy").append(DEFAULT_SYMBOL);
-		sb.append("edit ").append(parameter.getFirewallPolicyId()).append(DEFAULT_SYMBOL);
+		sb.append("edit ").append(parameter.getPolicyId()).append(DEFAULT_SYMBOL);
 		sb.append("set srcintf ").append("\"").append(FIREWALL_SRCINTF).append("\"").append(DEFAULT_SYMBOL);
 		sb.append("set dstintf ").append("\"").append(FIREWALL_DSTINTF).append("\"").append(DEFAULT_SYMBOL);
 		sb.append("set srcaddr ").append("\"").append(FIREWALL_SRCADDR).append("\"").append(DEFAULT_SYMBOL);
@@ -548,7 +551,7 @@ public class FirewallService {
 		 * 
 		 * 如果是网关,则接下来的两个参数应该为: 网关 和 255.255.255.0
 		 */
-		for (String ipaddress : parameter.getIpaddress()) {
+		for (String ipaddress : parameter.getIpaddresses()) {
 			sb.append("config firewall address").append(DEFAULT_SYMBOL);
 			sb.append("edit ").append("\"").append(generateAddressNameByIP(ipaddress)).append("\"")
 					.append(DEFAULT_SYMBOL);
@@ -574,7 +577,7 @@ public class FirewallService {
 
 		// Step.2
 		sb.append("config firewall policy").append(DEFAULT_SYMBOL);
-		sb.append("edit ").append(parameter.getFirewallPolicyId()).append(DEFAULT_SYMBOL);
+		sb.append("edit ").append(parameter.getPolicyId()).append(DEFAULT_SYMBOL);
 		sb.append("set srcintf ").append("\"").append(FIREWALL_SRCINTF).append("\"").append(DEFAULT_SYMBOL);
 		sb.append("set dstintf ").append("\"").append(FIREWALL_DSTINTF).append("\"").append(DEFAULT_SYMBOL);
 		sb.append("set srcaddr ").append("\"").append(FIREWALL_SRCADDR).append("\"").append(DEFAULT_SYMBOL);
@@ -661,7 +664,7 @@ public class FirewallService {
 		 * 
 		 * 如果是网关,则接下来的两个参数应该为: 网关 和 255.255.255.0
 		 */
-		for (String ipaddress : parameter.getIpaddress()) {
+		for (String ipaddress : parameter.getIpaddresses()) {
 			addressList.add(generateAddressNameByIP(ipaddress));
 		}
 
@@ -671,7 +674,7 @@ public class FirewallService {
 
 		// Step.1
 		sb.append("config firewall policy").append(DEFAULT_SYMBOL);
-		sb.append("delete ").append(parameter.getFirewallPolicyId()).append(DEFAULT_SYMBOL);
+		sb.append("delete ").append(parameter.getPolicyId()).append(DEFAULT_SYMBOL);
 		sb.append("end").append(DEFAULT_SYMBOL);
 		sb.append(DEFAULT_SYMBOL);
 
@@ -696,6 +699,57 @@ public class FirewallService {
 		}
 
 		sb.append("quit").append(DEFAULT_SYMBOL);
+
+		return sb.toString();
+	}
+
+	/**
+	 * 路由绑定子网
+	 * 
+	 * @param parameter
+	 * @return
+	 */
+	public String bindingRouter(RouterParameter parameter) {
+
+		StringBuilder sb = new StringBuilder();
+
+		ArrayList<SubnetParameter> list = parameter.getSubnetParameters();
+
+		for (int i = 0; i < list.size(); i++) {
+
+			SubnetParameter subnet = list.get(i);
+
+			String segment = subnet.getSegment();
+			String subnetMask = subnet.getSubnetMask();
+			String gateway = subnet.getGateway();
+
+			sb.append("config firewall address").append(DEFAULT_SYMBOL);
+			sb.append("edit ").append("\"").append(segment).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set subnet ").append(gateway).append(" ").append(subnetMask).append(DEFAULT_SYMBOL);
+			sb.append("next");
+
+			sb.append("config firewall policy").append(DEFAULT_SYMBOL);
+			sb.append("edit ").append(subnet.getPolicyId()).append(DEFAULT_SYMBOL);
+
+			sb.append("set srcintf ").append("\"").append("port").append(subnet.getSegment()).append("\"")
+					.append(DEFAULT_SYMBOL);
+			sb.append("set srcaddr ").append("\"").append(subnet.getSegment()).append("\"").append(DEFAULT_SYMBOL);
+
+			// new 一个新的list,将参数中的list填充进去,并将循环中的自身对象remove出去,这样就达到源对应多个目标的目的.
+			ArrayList<SubnetParameter> parameters = new ArrayList<SubnetParameter>();
+			parameters.addAll(list);
+			parameters.remove(subnet);
+
+			for (SubnetParameter subnetParameter : parameters) {
+				sb.append("set dstintf ").append("\"").append("port").append(subnetParameter.getSegment()).append("\"")
+						.append(DEFAULT_SYMBOL);
+				sb.append("set dstaddr ").append("\"").append(subnetParameter.getSegment()).append("\"")
+						.append(DEFAULT_SYMBOL);
+			}
+			sb.append("set schedule ").append("\"").append("always").append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set service ").append("\"").append("ALL").append("\"").append(DEFAULT_SYMBOL);
+			sb.append("next");
+		}
 
 		return sb.toString();
 	}

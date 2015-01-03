@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import com.google.common.collect.Lists;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
 import com.sobey.firewall.webservice.response.dto.EIPPolicyParameter;
+import com.sobey.firewall.webservice.response.dto.RouterParameter;
+import com.sobey.firewall.webservice.response.dto.SubnetParameter;
 import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
 
 public class TestData {
@@ -39,7 +41,7 @@ public class TestData {
 
 		VPNUserParameter parameter = new VPNUserParameter();
 
-		parameter.setFirewallPolicyId(2000);
+		parameter.setPolicyId(2000);
 		parameter.setNetMask("255.255.255.0");
 		parameter.setVlanId(80);
 		parameter.setVpnUser("liukai01");
@@ -54,7 +56,42 @@ public class TestData {
 		ipaddress.add(ip);
 
 		parameter.setSegments(segments);
-		parameter.setIpaddress(ipaddress);
+		parameter.setIpaddresses(ipaddress);
+		return parameter;
+	}
+
+	public static RouterParameter randomRouterParameter() {
+
+		ArrayList<SubnetParameter> subnetParameters = new ArrayList<SubnetParameter>();
+
+		SubnetParameter subnetParameterA = new SubnetParameter();
+		subnetParameterA.setGateway("173.20.10.254");
+		subnetParameterA.setSegment("173.20.10.0");
+		subnetParameterA.setSubnetMask("255.255.255.0");
+		subnetParameterA.setPolicyId(10);
+
+		SubnetParameter subnetParameterB = new SubnetParameter();
+		subnetParameterB.setGateway("173.20.11.254");
+		subnetParameterB.setSegment("173.20.11.0");
+		subnetParameterB.setSubnetMask("255.255.255.0");
+		subnetParameterB.setPolicyId(11);
+
+		SubnetParameter subnetParameterC = new SubnetParameter();
+		subnetParameterC.setGateway("173.20.12.254");
+		subnetParameterC.setSegment("173.20.12.0");
+		subnetParameterC.setSubnetMask("255.255.255.0");
+		subnetParameterC.setPolicyId(12);
+
+		subnetParameters.add(subnetParameterA);
+		subnetParameters.add(subnetParameterB);
+		subnetParameters.add(subnetParameterC);
+
+		RouterParameter parameter = new RouterParameter();
+
+		parameter.setUrl("192.168.1.1");
+		parameter.setUserName("admin");
+		parameter.setPassword("admin");
+		parameter.setSubnetParameters(subnetParameters);
 		return parameter;
 	}
 
