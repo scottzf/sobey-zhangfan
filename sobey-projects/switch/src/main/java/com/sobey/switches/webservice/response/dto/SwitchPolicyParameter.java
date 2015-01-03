@@ -18,25 +18,25 @@ import com.sobey.switches.constans.WsConstants;
 public class SwitchPolicyParameter {
 
 	/**
-	 * 网卡名
+	 * 宿主机IP
 	 */
-	private String ethName;
+	private String hostIp;
 
 	/**
 	 * Vlan编号
 	 */
 	private Integer vlanId;
 
-	public String getEthName() {
-		return ethName;
+	public String getHostIp() {
+		return hostIp;
 	}
 
 	public Integer getVlanId() {
 		return vlanId;
 	}
 
-	public void setEthName(String ethName) {
-		this.ethName = ethName;
+	public void setHostIp(String hostIp) {
+		this.hostIp = hostIp;
 	}
 
 	public void setVlanId(Integer vlanId) {
