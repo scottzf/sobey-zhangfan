@@ -51,6 +51,7 @@
 		<vijava.version>55b20130927</vijava.version>
 		<ontap.version>8.2</ontap.version>
 		<nmsdk.version>5.2</nmsdk.version>
+		<ganymed.version>262</ganymed.version>
 
 		<!-- Plugin的属性定义 -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -785,6 +786,12 @@
 				<groupId>com.jcraft</groupId>
 				<artifactId>jsch</artifactId>
 				<version>${jsch.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>ch.ethz.ganymed</groupId>
+				<artifactId>ganymed-ssh2</artifactId>
+				<version>${ganymed.version}</version>
 			</dependency>
 
 			<!-- Netscaler -->
