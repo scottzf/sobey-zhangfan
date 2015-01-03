@@ -1,6 +1,5 @@
 package com.sobey.loadbalancer.webservice;
 
-import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.apache.cxf.feature.Features;
@@ -21,42 +20,18 @@ public class LoadbalancerSoapServiceImpl implements LoadbalancerSoapService {
 	public LoadbalanceService service;
 
 	@Override
-	public WSResult createELBByLoadbalancer(@WebParam(name = "elbParameter") ELBParameter elbParameter) {
-
-		WSResult result = new WSResult();
-
-		boolean flag = service.createElb(elbParameter);
-
-		if (!flag) {
-			result.setError(WSResult.SYSTEM_ERROR, "Elb创建失败");
-		}
-
-		return result;
-
+	public WSResult createELBByLoadbalancer(  ELBParameter elbParameter) {
+		return service.createElb(elbParameter);
 	}
 
 	@Override
-	public WSResult deleteELBByLoadbalancer(@WebParam(name = "elbParameter") ELBParameter elbParameter) {
-
-		WSResult result = new WSResult();
-
-		boolean flag = service.deleteElb(elbParameter);
-
-		if (!flag) {
-			result.setError(WSResult.SYSTEM_ERROR, "Elb删除失败");
-		}
-
-		return result;
+	public WSResult deleteELBByLoadbalancer( ELBParameter elbParameter) {
+		return service.deleteElb(elbParameter);
 	}
 
 	@Override
-	public DTOListResult<ElbSync> getELBConfig() {
-
-		DTOListResult<ElbSync> result = new DTOListResult<ElbSync>();
-
-		result.setDtos(service.getElbSyncList());
-
-		return result;
+	public DTOListResult<ElbSync> getELBConfig(ELBParameter elbParameter) {
+		return service.getElbSyncList(elbParameter);
 	}
 
 }

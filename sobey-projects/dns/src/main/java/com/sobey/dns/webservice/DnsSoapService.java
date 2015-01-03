@@ -41,5 +41,5 @@ public interface DnsSoapService {
 	 * 
 	 * @return
 	 */
-	DTOListResult<DnsSync> getDNSConfig();
+	DTOListResult<DnsSync> getDNSConfig(@WebParam(name = "dnsParameter") DNSParameter dnsParameter);
 }

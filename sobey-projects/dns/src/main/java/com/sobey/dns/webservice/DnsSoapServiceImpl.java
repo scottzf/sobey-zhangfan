@@ -1,6 +1,5 @@
 package com.sobey.dns.webservice;
 
-import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,42 +18,20 @@ public class DnsSoapServiceImpl implements DnsSoapService {
 	public DnsService service;
 
 	@Override
-	public WSResult createDNSByDNS(@WebParam(name = "dnsParameter") DNSParameter dnsParameter) {
+	public WSResult createDNSByDNS(DNSParameter dnsParameter) {
 
-		WSResult result = new WSResult();
-
-		boolean flag = service.createGSLB(dnsParameter);
-
-		if (!flag) {
-			result.setError(WSResult.SYSTEM_ERROR, "DNS创建失败");
-		}
-
-		return result;
+		return service.createGSLB(dnsParameter);
 	}
 
 	@Override
-	public WSResult deleteDNSByDNS(@WebParam(name = "dnsParameter") DNSParameter dnsParameter) {
+	public WSResult deleteDNSByDNS(DNSParameter dnsParameter) {
 
-		WSResult result = new WSResult();
-
-		boolean flag = service.deleteGSLB(dnsParameter);
-
-		if (!flag) {
-			result.setError(WSResult.SYSTEM_ERROR, "DNS删除失败");
-		}
-
-		return result;
+		return service.deleteGSLB(dnsParameter);
 	}
 
 	@Override
-	public DTOListResult<DnsSync> getDNSConfig() {
-
-		DTOListResult<DnsSync> result = new DTOListResult<DnsSync>();
-
-		result.setDtos(service.getDnsSyncList());
-
-		return result;
-
+	public DTOListResult<DnsSync> getDNSConfig(DNSParameter dnsParameter) {
+		return service.getDnsSyncList(dnsParameter);
 	}
 
 }
