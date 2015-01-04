@@ -94,7 +94,7 @@ public class JsonRPCUtil {
 	 * @param whSwitch
 	 * @return
 	 */
-	private static String getSwitchIPByInterfaceStr(String whSwitch) {
+	public static String getSwitchIPByInterfaceStr(String whSwitch) {
 
 		if (RPCConstants.PORT_SWITCH_TOR_A.equals(whSwitch)) {
 			return SDNPropertiesUtil.getProperty("TOR-A_SWITCH_URL");

@@ -18,13 +18,13 @@ public class H3CUtil {
 	 * @param cmd
 	 * @return
 	 */
-	public static String getCommandResponse(String ip, String username, String password) throws Exception {
+	public static String getCommandResponse(String ip) throws Exception {
 		String cmd = "dis arp | begin " + ip;
 		// 连接
 		Connection connection = new Connection(SDNPropertiesUtil.getProperty("G4_SW1_CORE_IP"), 22);
 		connection.connect();
 		// 登陆
-		Boolean mark = connection.authenticateWithPassword(username, password);
+		Boolean mark = connection.authenticateWithPassword(SDNPropertiesUtil.getProperty("G4_SW1_CORE_USERNAME"), SDNPropertiesUtil.getProperty("G4_SW1_CORE_PASSWORD"));
 		StringBuffer sb = new StringBuffer();
 		if (mark == true) {
 			// 执行

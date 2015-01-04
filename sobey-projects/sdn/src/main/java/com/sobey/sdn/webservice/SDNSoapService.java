@@ -33,3 +33,4 @@ public interface SDNSoapService {
 	public void bindingRouter(Router router, List<Subnet> subnets)throws Exception;
 
 }
+ 

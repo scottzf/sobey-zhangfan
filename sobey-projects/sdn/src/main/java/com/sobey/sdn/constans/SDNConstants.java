@@ -2,7 +2,7 @@ package com.sobey.sdn.constans;
 
 public class SDNConstants {
 
-	public static final String SWITCH_NAME = "vSwtich0";   // 标准虚拟网络交换机
+	public static final String SWITCH_NAME = "vSwitch0";   // 标准虚拟网络交换机
 	
 	public static final String ENTER_SIGN = "\r";   //换行符
 	

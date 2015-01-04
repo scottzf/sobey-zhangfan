@@ -2,6 +2,8 @@ package com.sobey.sdn.service.impl;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,7 @@ import com.sobey.sdn.bean.Subnet;
 import com.sobey.sdn.constans.SDNConstants;
 import com.sobey.sdn.parameterObject.SubnetParameter;
 import com.sobey.sdn.service.SDNService;
+import com.sobey.sdn.util.H3CUtil;
 import com.sobey.sdn.util.JsonRPCUtil;
 import com.sobey.sdn.util.SDNPropertiesUtil;
 import com.sobey.sdn.util.VcenterUtil;
@@ -50,10 +53,13 @@ import com.vmware.vim25.VirtualMachineConfigInfo;
 import com.vmware.vim25.VirtualMachineConfigSpec;
 import com.vmware.vim25.VirtualMachineRelocateSpec;
 import com.vmware.vim25.mo.CustomizationSpecManager;
+import com.vmware.vim25.mo.Datacenter;
 import com.vmware.vim25.mo.Folder;
 import com.vmware.vim25.mo.HostNetworkSystem;
 import com.vmware.vim25.mo.HostSystem;
 import com.vmware.vim25.mo.InventoryNavigator;
+import com.vmware.vim25.mo.ManagedEntity;
+import com.vmware.vim25.mo.Network;
 import com.vmware.vim25.mo.ServiceInstance;
 import com.vmware.vim25.mo.Task;
 import com.vmware.vim25.mo.VirtualMachine;
@@ -64,23 +70,45 @@ public class SDNServiceImpl implements SDNService {
 	@Override
 	public String createECS(ECS ecs, int vlanId, String hostIp, String tenantId, String vmName, Subnet subnet) {
 		try {
-
 			// 按规则生成租户对应的本地VLAN
 			String portGroupName = tenantId + "_SDN " + vlanId;
 
-			// 创建端口组
-			createPortGroup(hostIp, tenantId, vlanId);
+			// 判断端口是否存在
+			Boolean mark = checkNetworkIsExist(portGroupName);
+			if (!mark) {
+				createPortGroup(hostIp, portGroupName, vlanId); // 创建端口组
+			}
+
+			// 设置云主机相关属性
+			ecs.setEcsName(vmName); // 设置虚拟机名称
+			ecs.setHostIp(hostIp); // 设置虚拟机所在宿主机IP
+			// ecs.setLocalIp("192.168.15.17"); // 内网ip
+			ecs.setGateway(subnet.getGateway()); // 网关
+			ecs.setSubnetMask(subnet.getSubnetMask()); // 掩码
 
 			// 根据虚拟机名称clone虚拟机，设置虚拟机的内网IP
-			cloneVM(ecs);
+			String result = cloneVM(ecs);
+			if(result != null){
+				return "clone虚拟机失败！";
+			}
 
 			// 标准网络交换机绑定VM
 			bindingvSwitch(vmName, portGroupName);
 
 			// 4.在盛科交换机上创建策略
-			String swInterface = "eth-0-26";
+			// 根据主机IP,在核心交换机获得与该主机相连的交换机相关信息
+			String macAndPort = H3CUtil.getCommandResponse(hostIp); // 获得核心交换机上经过处理的相应结果字符串
 
-			createPolicyInSwitch(vlanId, swInterface);
+			String vm_mac = getMacByVM(vmName).replace(":", "");   //获得虚拟机的Mac地址
+			String[] macs = vm_mac.split(":");
+			String mac = macs[0]+macs[1]+"."+macs[2]+macs[3]+"."+macs[4]+macs[5];
+			String whichSW = macAndPort.substring(macAndPort.indexOf("&") + 1); // 根据处理规则得出对应接口
+
+			String swUrl = JsonRPCUtil.getSwitchIPByInterfaceStr(whichSW); // 根据对应接口获得对应置顶交换机URL
+
+			String swInterface = JsonRPCUtil.getSwitchPortByMac(whichSW, mac); // 获得主机与交换机哪个接口相连
+
+			createPolicyInSwitch(vlanId, swUrl, swInterface);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -89,21 +117,31 @@ public class SDNServiceImpl implements SDNService {
 		return null;
 	}
 
-	private void createPolicyInSwitch(int vlanId, String swInterface) throws IOException {
+	private String getMacByVM(String vmName) throws Exception{
+		
+		ServiceInstance si = VcenterUtil.getServiceInstance();
+
+		VirtualMachine vm = (VirtualMachine) new InventoryNavigator(si.getRootFolder()).searchManagedEntity(
+				"VirtualMachine", vmName);
+		String mac = vm.getGuest().getNet()[0].getMacAddress();
+		return mac;
+	}
+
+	private void createPolicyInSwitch(int vlanId, String swUrl, String swInterface) throws IOException {
 
 		// 配置VLAN
 		String[] vlan_Config_cmds = generateVlanConfigString(vlanId); // 配置面向服务器的接口的命令
 
-		JsonRPCUtil.executeJsonRPCRequest(SDNPropertiesUtil.getProperty("TOR-A_SWITCH_URL"), vlan_Config_cmds); // 交换机ip地址暂时空着
+		JsonRPCUtil.executeJsonRPCRequest(swUrl, vlan_Config_cmds); // 执行
 		// 生成交换机执行命令
 		String[] interfaceConfig_cmds = generateInterfaceConfigString(swInterface, vlanId); // 配置面向服务器的接口的命令
 
 		// Apache HTTP client以POST方式执行CLI命令
-		JsonRPCUtil.executeJsonRPCRequest(SDNPropertiesUtil.getProperty("TOR-A_SWITCH_URL"), interfaceConfig_cmds); // 交换机ip地址暂时空着
+		JsonRPCUtil.executeJsonRPCRequest(swUrl, interfaceConfig_cmds); // 执行
 
 		// 在置顶交换机之间建NVGRE隧道ID
-		String[] nvgre_cmds = generateNvgreConfigString(vlanId); // 配置NVGRE的命令
-		JsonRPCUtil.executeJsonRPCRequest(SDNPropertiesUtil.getProperty("TOR-A_SWITCH_URL"), nvgre_cmds); // 交换机ip地址暂时空着
+		String[] nvgre_cmds = generateNvgreConfigString(swUrl, vlanId); // 配置NVGRE的命令
+		JsonRPCUtil.executeJsonRPCRequest(swUrl, nvgre_cmds); // 执行
 
 	}
 
@@ -113,16 +151,23 @@ public class SDNServiceImpl implements SDNService {
 		String str3 = "VLAN " + vlanId; // 创建面向服务器的VLAN
 		String str4 = "VLAN 4094"; // 创建上行VLAN
 		String str5 = "exit"; // 退出VLAN模式
-		String[] cmds = { str1, str2, str3, str4, str5 };
+		String str6 = "copy running-config startup-config"; // 保存配置信息
+		String[] cmds = { str1, str2, str3, str4, str5, str6 };
 		return cmds;
 	}
 
-	private String[] generateNvgreConfigString(int vlanId) {
+	private String[] generateNvgreConfigString(String swUrl, int vlanId) {
 		String str1 = "configure terminal"; // 进入配置模式
 		String str2 = "nvgre"; // 进入NVGRE模式
-		String str3 = "source 172.31.255.1"; // 设置NVGRE报文的外层IP源地址
+		String sourceIp = "172.31.255.2"; // 置顶交换机源IP
+		String peerIp = "172.31.255.1"; // 置顶交换机peer IP
+		if ("10.2.2.8".equals(swUrl)) {
+			sourceIp = "172.31.255.1";
+			peerIp = "172.31.255.2";
+		}
+		String str3 = "source " + sourceIp; // 设置NVGRE报文的外层IP源地址
 		String str4 = "vlan " + vlanId + " tunnel-id " + vlanId; // 将id为vlanId的VLAN映射到tunnel ID中
-		String str5 = "vlan " + vlanId + " peer 172.31.255.2"; // 在id为vlanId的vlanId中创建到TOR B的隧道
+		String str5 = "vlan " + vlanId + " peer " + peerIp; // 在id为vlanId的vlanId中创建到TOR B的隧道
 		String[] cmds = { str1, str2, str3, str4, str5 };
 		return cmds;
 	}
@@ -201,26 +246,6 @@ public class SDNServiceImpl implements SDNService {
 	}
 
 	/**
-	 * 获取租户ID
-	 * 
-	 * @return
-	 */
-	private String getECSNameByTenementId() {
-
-		return "sobeyTest";
-	}
-
-	/**
-	 * 根据子网为虚拟机生成内网IP
-	 * 
-	 * @param subnet
-	 * @return
-	 */
-	private String getLocalIpBySubnet(Subnet subnet) {
-		return null;
-	}
-
-	/**
 	 * 绑定虚拟机和端口组
 	 * 
 	 * @param vmName
@@ -275,8 +300,7 @@ public class SDNServiceImpl implements SDNService {
 		String vmTemplateName = ecs.getTemplateName(); // 模板名称
 		String vmTemplateOS = ecs.getTemplateOS(); // 模板操作系统
 
-		// 根据租户ID按规则生成虚拟机名
-		String vmName = ecs.getEcsId();
+		String vmName = ecs.getEcsName(); // 虚拟机名
 
 		/**
 		 * 根据云主机参数clone虚拟机
@@ -411,9 +435,15 @@ public class SDNServiceImpl implements SDNService {
 		 * 后期应该做到CMDBuild查询宿主机的负载能力,找出负载最低的宿主机, 并根据名称查出ManagedObjectReference对象的value.
 		 */
 		ManagedObjectReference pool = new ManagedObjectReference();
-		pool.set_value("resgroup-42");
+		pool.set_value("resgroup-8");
 		pool.setType("ResourcePool");
-		pool.setVal("resgroup-42");
+		pool.setVal("resgroup-8");
+
+		if ("172.16.2.32".equals(ecs.getHostIp())) {
+			pool.set_value("resgroup-42");
+			pool.setType("ResourcePool");
+			pool.setVal("resgroup-42");
+		}
 
 		VirtualMachineRelocateSpec relocateSpec = new VirtualMachineRelocateSpec();
 		relocateSpec.setPool(pool);
@@ -428,10 +458,10 @@ public class SDNServiceImpl implements SDNService {
 
 		if (task.waitForTask() != Task.SUCCESS) {
 			return null;
+		} else {
+			return "clone虚拟机失败！";
 		}
 
-		// 为虚拟机设置网络适配器相关信息:设备状态设置为已连接、网络标签、虚拟机的备注.
-		return null;
 	}
 
 	@Override
@@ -510,19 +540,144 @@ public class SDNServiceImpl implements SDNService {
 		// 5、关联NVGRE报文的外层IP源地址、NVGRE tunnel-id；
 		// 6、关联NVGRE隧道；
 
+		String vRouterName = router.getRouterName(); // vRouter名称 参数
+		String hostIp = router.getHostIp();  //宿主机IP
+
 		ServiceInstance si = VcenterUtil.getServiceInstance();
-
-		String vRouterName = ""; // vRouter名称 参数
-
-		cloneVRouter(router);
-		// 虚拟机克隆方案创建
-		VirtualMachineCloneSpec cloneSpec = new VirtualMachineCloneSpec();
 
 		// 获得vRouter模板
 		VirtualMachine vRouter = (VirtualMachine) new InventoryNavigator(si.getRootFolder()).searchManagedEntity(
-				"VirtualMachine", "vRouter_FG");
+				"VirtualMachine", SDNPropertiesUtil.getProperty("VROUTER_TEMPLATE"));
 
+		// 虚拟机克隆方案创建
+		VirtualMachineCloneSpec cloneSpec = new VirtualMachineCloneSpec();
+
+		// CustomizationSpec数据对象类型包含需要自定义虚拟机部署时或将其迁移到新的主机的信息。
+		//CustomizationSpec cspec = new CustomizationSpec();
+		CustomizationSpecInfo info = new CustomizationSpecInfo();
+		CustomizationSpecItem specItem = new CustomizationSpecItem();
+
+		CustomizationAdapterMapping adaptorMap = new CustomizationAdapterMapping();
+		CustomizationIPSettings adapter = new CustomizationIPSettings();
+		CustomizationFixedIp fixedIp = new CustomizationFixedIp();// 指定使用固定ip
+		CustomizationGlobalIPSettings gIP = new CustomizationGlobalIPSettings();
+
+		info.setDescription("Linux");
+		info.setName("Sobey");
+		info.setType("Linux");// 设置克隆机器的操作系统类型
+
+		specItem.setInfo(info);
+		//specItem.setSpec(cspec);
+
+		// dns列表
+		String dnsList[] = new String[] { "8.8.8.8" };
+		String ipAddress = "172.16.35.2"; // 自定义的内网IP
+		String subNetMask = "255.255.255.0";
+
+		adapter.setDnsServerList(dnsList);
+		adapter.setGateway(new String[] { "172.16.35.1" });
+		adapter.setIp(fixedIp);
+		adapter.setSubnetMask(subNetMask);
+
+		fixedIp.setIpAddress(ipAddress);
+		adaptorMap.setAdapter(adapter);
+
+		// 不能使用MAC设置
+		String dnsSuffixList[] = new String[] { "sobey.com", "sobey.cn" };
+		gIP.setDnsSuffixList(dnsSuffixList);
+		gIP.setDnsServerList(dnsList);
+
+		CustomizationFixedName computerName = new CustomizationFixedName();
+		computerName.setName("cmop");// 无法确认VM用户名是否能为中文,目前暂定为所有都是cmop
+
+		CustomizationAdapterMapping[] nicSettingMap = new CustomizationAdapterMapping[] { adaptorMap };
+
+		CustomizationSpecManager specManager = si.getCustomizationSpecManager();
+
+		CustomizationLinuxOptions linuxOptions = new CustomizationLinuxOptions();
+		CustomizationLinuxPrep cLinuxPrep = new CustomizationLinuxPrep();
+		cLinuxPrep.setDomain("sobey.com");
+		cLinuxPrep.setHostName(computerName);
+		cLinuxPrep.setHwClockUTC(true);
+		cLinuxPrep.setTimeZone("Asia/Shanghai");
+
+		//cspec.setOptions(linuxOptions);
+		//cspec.setIdentity(cLinuxPrep);
+//		cspec.setGlobalIPSettings(gIP);
+//		cspec.setNicSettingMap(nicSettingMap);
+//		cspec.setEncryptionKey(specManager.getEncryptionKey());
+
+		// 设置ResourcePool
+		/**
+		 * TODO 重要:宿主机暂时写死,宿主机的Value可以在VMTest中的PrintInventory方法查出来.
+		 * 
+		 * 后期应该做到CMDBuild查询宿主机的负载能力,找出负载最低的宿主机, 并根据名称查出ManagedObjectReference对象的value.
+		 */
+		ManagedObjectReference pool = new ManagedObjectReference();
+		pool.set_value("resgroup-8");
+		pool.setType("ResourcePool");
+		pool.setVal("resgroup-8");
+
+		if ("172.16.2.32".equals(hostIp)) {
+			pool.set_value("resgroup-42");
+			pool.setType("ResourcePool");
+			pool.setVal("resgroup-42");
+		}
+
+		VirtualMachineRelocateSpec relocateSpec = new VirtualMachineRelocateSpec();
+		relocateSpec.setPool(pool);
+		cloneSpec.setLocation(relocateSpec);
+		cloneSpec.setPowerOn(true);
+		cloneSpec.setTemplate(false);
+		//cloneSpec.setCustomization(cspec);
+
+		//vRouter.checkCustomizationSpec(specItem.getSpec());
+
+		vRouter.cloneVM_Task((Folder) vRouter.getParent(), vRouterName, cloneSpec);
+		cloneVRouter(router);
 		return null;
+	}
+
+	/**
+	 * 所有的网络设备名称的集合
+	 * 
+	 * @param datacenter
+	 *            数据中心
+	 * @return
+	 */
+	private Boolean checkNetworkIsExist(String portGroupName) throws Exception {
+
+		ServiceInstance si = VcenterUtil.getServiceInstance();
+		Folder rootFolder = si.getRootFolder();
+
+		List<String> list = new ArrayList<String>();
+		Datacenter dc = null;
+		List<Network> networks = new ArrayList<Network>();
+
+		ManagedEntity[] datacenters = rootFolder.getChildEntity();
+
+		// 获得数据中心
+		for (int i = 0; i < datacenters.length; i++) {
+			if (datacenters[i] instanceof Datacenter) {
+				dc = (Datacenter) datacenters[i];
+				break;
+			}
+		}
+
+		// 获得网络
+		for (ManagedEntity entity : dc.getNetworkFolder().getChildEntity()) {
+			if (entity instanceof Network) {
+				networks.add(((Network) entity));
+			}
+		}
+
+		for (Network each : networks) {
+			list.add(each.getName());
+		}
+		if (list.contains(portGroupName)) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

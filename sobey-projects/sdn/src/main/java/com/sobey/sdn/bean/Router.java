@@ -9,6 +9,8 @@ public class Router {
 	private String tenantId;   //租户ID
 	
 	private String localIp;   //内网IP
+	
+	private String eIp;   //公网IP（***** 目前设计为具有路由功能的防火墙  所以添加eIp）
 
 	public String getRouterName() {
 		return routerName;
@@ -40,6 +42,14 @@ public class Router {
 
 	public void setLocalIp(String localIp) {
 		this.localIp = localIp;
+	}
+
+	public String geteIp() {
+		return eIp;
+	}
+
+	public void seteIp(String eIp) {
+		this.eIp = eIp;
 	}
 	
 }
