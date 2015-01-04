@@ -21,131 +21,122 @@ public class IpaddressDTO extends BasicDTO {
 	private String ipAddressStatusText;
 	private Integer isp;
 	private String ispText;
-	private String netmask;
+	private String netMask;
+	private String remark;
 	private String segment;
-	private Integer vlan;
-	private VlanDTO vlanDTO;
-	private Integer tenants;
-	private TenantsDTO tenantsDTO;
+	private Integer subnet;
+	private SubnetDTO subnetDTO;
 
 	public String getGateway() {
 		return gateway;
-	}
-
-	public void setGateway(String gateway) {
-		this.gateway = gateway;
 	}
 
 	public Integer getIdc() {
 		return idc;
 	}
 
-	public void setIdc(Integer idc) {
-		this.idc = idc;
-	}
-
 	public IdcDTO getIdcDTO() {
 		return idcDTO;
-	}
-
-	public void setIdcDTO(IdcDTO idcDTO) {
-		this.idcDTO = idcDTO;
 	}
 
 	public Integer getIpAddressPool() {
 		return ipAddressPool;
 	}
 
-	public void setIpAddressPool(Integer ipAddressPool) {
-		this.ipAddressPool = ipAddressPool;
-	}
-
 	public String getIpAddressPoolText() {
 		return ipAddressPoolText;
-	}
-
-	public void setIpAddressPoolText(String ipAddressPoolText) {
-		this.ipAddressPoolText = ipAddressPoolText;
 	}
 
 	public Integer getIpAddressStatus() {
 		return ipAddressStatus;
 	}
 
-	public void setIpAddressStatus(Integer ipAddressStatus) {
-		this.ipAddressStatus = ipAddressStatus;
-	}
-
 	public String getIpAddressStatusText() {
 		return ipAddressStatusText;
-	}
-
-	public void setIpAddressStatusText(String ipAddressStatusText) {
-		this.ipAddressStatusText = ipAddressStatusText;
 	}
 
 	public Integer getIsp() {
 		return isp;
 	}
 
-	public void setIsp(Integer isp) {
-		this.isp = isp;
-	}
-
 	public String getIspText() {
 		return ispText;
 	}
 
-	public void setIspText(String ispText) {
-		this.ispText = ispText;
+	public String getNetMask() {
+		return netMask;
 	}
 
-	public String getNetmask() {
-		return netmask;
-	}
-
-	public void setNetmask(String netmask) {
-		this.netmask = netmask;
+	public String getRemark() {
+		return remark;
 	}
 
 	public String getSegment() {
 		return segment;
 	}
 
+	public Integer getSubnet() {
+		return subnet;
+	}
+
+	public SubnetDTO getSubnetDTO() {
+		return subnetDTO;
+	}
+
+	public void setGateway(String gateway) {
+		this.gateway = gateway;
+	}
+
+	public void setIdc(Integer idc) {
+		this.idc = idc;
+	}
+
+	public void setIdcDTO(IdcDTO idcDTO) {
+		this.idcDTO = idcDTO;
+	}
+
+	public void setIpAddressPool(Integer ipAddressPool) {
+		this.ipAddressPool = ipAddressPool;
+	}
+
+	public void setIpAddressPoolText(String ipAddressPoolText) {
+		this.ipAddressPoolText = ipAddressPoolText;
+	}
+
+	public void setIpAddressStatus(Integer ipAddressStatus) {
+		this.ipAddressStatus = ipAddressStatus;
+	}
+
+	public void setIpAddressStatusText(String ipAddressStatusText) {
+		this.ipAddressStatusText = ipAddressStatusText;
+	}
+
+	public void setIsp(Integer isp) {
+		this.isp = isp;
+	}
+
+	public void setIspText(String ispText) {
+		this.ispText = ispText;
+	}
+
+	public void setNetMask(String netMask) {
+		this.netMask = netMask;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
 	public void setSegment(String segment) {
 		this.segment = segment;
 	}
 
-	public Integer getVlan() {
-		return vlan;
+	public void setSubnet(Integer subnet) {
+		this.subnet = subnet;
 	}
 
-	public void setVlan(Integer vlan) {
-		this.vlan = vlan;
-	}
-
-	public VlanDTO getVlanDTO() {
-		return vlanDTO;
-	}
-
-	public void setVlanDTO(VlanDTO vlanDTO) {
-		this.vlanDTO = vlanDTO;
-	}
-
-	public Integer getTenants() {
-		return tenants;
-	}
-
-	public void setTenants(Integer tenants) {
-		this.tenants = tenants;
-	}
-
-	public TenantsDTO getTenantsDTO() {
-		return tenantsDTO;
-	}
-
-	public void setTenantsDTO(TenantsDTO tenantsDTO) {
-		this.tenantsDTO = tenantsDTO;
+	public void setSubnetDTO(SubnetDTO subnetDTO) {
+		this.subnetDTO = subnetDTO;
 	}
 
 	/**

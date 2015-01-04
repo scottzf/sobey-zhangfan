@@ -23,13 +23,11 @@
 
   <xs:element name="Es3DTO" type="tns:Es3DTO"/>
 
-  <xs:element name="EsgDTO" type="tns:EsgDTO"/>
-
-  <xs:element name="EsgPolicyDTO" type="tns:EsgPolicyDTO"/>
-
   <xs:element name="FirewallDTO" type="tns:FirewallDTO"/>
 
   <xs:element name="FirewallPortDTO" type="tns:FirewallPortDTO"/>
+
+  <xs:element name="FirewallServiceDTO" type="tns:FirewallServiceDTO"/>
 
   <xs:element name="HardDiskDTO" type="tns:HardDiskDTO"/>
 
@@ -51,8 +49,6 @@
 
   <xs:element name="MapEcsEs3DTO" type="tns:MapEcsEs3DTO"/>
 
-  <xs:element name="MapEcsEsgDTO" type="tns:MapEcsEsgDTO"/>
-
   <xs:element name="MapEipDnsDTO" type="tns:MapEipDnsDTO"/>
 
   <xs:element name="MapEipElbDTO" type="tns:MapEipElbDTO"/>
@@ -66,6 +62,8 @@
   <xs:element name="NicPortDTO" type="tns:NicPortDTO"/>
 
   <xs:element name="RackDTO" type="tns:RackDTO"/>
+
+  <xs:element name="RouterDTO" type="tns:RouterDTO"/>
 
   <xs:element name="SearchParams" type="tns:SearchParams"/>
 
@@ -81,6 +79,8 @@
 
   <xs:element name="StoragePortDTO" type="tns:StoragePortDTO"/>
 
+  <xs:element name="SubnetDTO" type="tns:SubnetDTO"/>
+
   <xs:element name="SwitchPortDTO" type="tns:SwitchPortDTO"/>
 
   <xs:element name="SwitchesDTO" type="tns:SwitchesDTO"/>
@@ -94,10 +94,6 @@
   <xs:element name="VlanDTO" type="tns:VlanDTO"/>
 
   <xs:element name="VpnDTO" type="tns:VpnDTO"/>
-
-  <xs:element name="allocateIpaddress" type="tns:allocateIpaddress"/>
-
-  <xs:element name="allocateIpaddressResponse" type="tns:allocateIpaddressResponse"/>
 
   <xs:element name="createDeviceSpec" type="tns:createDeviceSpec"/>
 
@@ -139,14 +135,6 @@
 
   <xs:element name="createEs3Response" type="tns:createEs3Response"/>
 
-  <xs:element name="createEsg" type="tns:createEsg"/>
-
-  <xs:element name="createEsgPolicy" type="tns:createEsgPolicy"/>
-
-  <xs:element name="createEsgPolicyResponse" type="tns:createEsgPolicyResponse"/>
-
-  <xs:element name="createEsgResponse" type="tns:createEsgResponse"/>
-
   <xs:element name="createFirewall" type="tns:createFirewall"/>
 
   <xs:element name="createFirewallPort" type="tns:createFirewallPort"/>
@@ -154,6 +142,10 @@
   <xs:element name="createFirewallPortResponse" type="tns:createFirewallPortResponse"/>
 
   <xs:element name="createFirewallResponse" type="tns:createFirewallResponse"/>
+
+  <xs:element name="createFirewallService" type="tns:createFirewallService"/>
+
+  <xs:element name="createFirewallServiceResponse" type="tns:createFirewallServiceResponse"/>
 
   <xs:element name="createHardDisk" type="tns:createHardDisk"/>
 
@@ -191,10 +183,6 @@
 
   <xs:element name="createMapEcsEs3Response" type="tns:createMapEcsEs3Response"/>
 
-  <xs:element name="createMapEcsEsg" type="tns:createMapEcsEsg"/>
-
-  <xs:element name="createMapEcsEsgResponse" type="tns:createMapEcsEsgResponse"/>
-
   <xs:element name="createMapEipDns" type="tns:createMapEipDns"/>
 
   <xs:element name="createMapEipDnsResponse" type="tns:createMapEipDnsResponse"/>
@@ -223,6 +211,10 @@
 
   <xs:element name="createRackResponse" type="tns:createRackResponse"/>
 
+  <xs:element name="createRouter" type="tns:createRouter"/>
+
+  <xs:element name="createRouterResponse" type="tns:createRouterResponse"/>
+
   <xs:element name="createServer" type="tns:createServer"/>
 
   <xs:element name="createServerPort" type="tns:createServerPort"/>
@@ -242,6 +234,10 @@
   <xs:element name="createStoragePortResponse" type="tns:createStoragePortResponse"/>
 
   <xs:element name="createStorageResponse" type="tns:createStorageResponse"/>
+
+  <xs:element name="createSubnet" type="tns:createSubnet"/>
+
+  <xs:element name="createSubnetResponse" type="tns:createSubnetResponse"/>
 
   <xs:element name="createSwitchPort" type="tns:createSwitchPort"/>
 
@@ -307,14 +303,6 @@
 
   <xs:element name="deleteEs3Response" type="tns:deleteEs3Response"/>
 
-  <xs:element name="deleteEsg" type="tns:deleteEsg"/>
-
-  <xs:element name="deleteEsgPolicy" type="tns:deleteEsgPolicy"/>
-
-  <xs:element name="deleteEsgPolicyResponse" type="tns:deleteEsgPolicyResponse"/>
-
-  <xs:element name="deleteEsgResponse" type="tns:deleteEsgResponse"/>
-
   <xs:element name="deleteFirewall" type="tns:deleteFirewall"/>
 
   <xs:element name="deleteFirewallPort" type="tns:deleteFirewallPort"/>
@@ -322,6 +310,10 @@
   <xs:element name="deleteFirewallPortResponse" type="tns:deleteFirewallPortResponse"/>
 
   <xs:element name="deleteFirewallResponse" type="tns:deleteFirewallResponse"/>
+
+  <xs:element name="deleteFirewallService" type="tns:deleteFirewallService"/>
+
+  <xs:element name="deleteFirewallServiceResponse" type="tns:deleteFirewallServiceResponse"/>
 
   <xs:element name="deleteHardDisk" type="tns:deleteHardDisk"/>
 
@@ -355,10 +347,6 @@
 
   <xs:element name="deleteMapEcsEs3Response" type="tns:deleteMapEcsEs3Response"/>
 
-  <xs:element name="deleteMapEcsEsg" type="tns:deleteMapEcsEsg"/>
-
-  <xs:element name="deleteMapEcsEsgResponse" type="tns:deleteMapEcsEsgResponse"/>
-
   <xs:element name="deleteMapEipDns" type="tns:deleteMapEipDns"/>
 
   <xs:element name="deleteMapEipDnsResponse" type="tns:deleteMapEipDnsResponse"/>
@@ -387,6 +375,10 @@
 
   <xs:element name="deleteRackResponse" type="tns:deleteRackResponse"/>
 
+  <xs:element name="deleteRouter" type="tns:deleteRouter"/>
+
+  <xs:element name="deleteRouterResponse" type="tns:deleteRouterResponse"/>
+
   <xs:element name="deleteServer" type="tns:deleteServer"/>
 
   <xs:element name="deleteServerPort" type="tns:deleteServerPort"/>
@@ -406,6 +398,10 @@
   <xs:element name="deleteStoragePortResponse" type="tns:deleteStoragePortResponse"/>
 
   <xs:element name="deleteStorageResponse" type="tns:deleteStorageResponse"/>
+
+  <xs:element name="deleteSubnet" type="tns:deleteSubnet"/>
+
+  <xs:element name="deleteSubnetResponse" type="tns:deleteSubnetResponse"/>
 
   <xs:element name="deleteSwitchPort" type="tns:deleteSwitchPort"/>
 
@@ -511,22 +507,6 @@
 
   <xs:element name="findEs3Response" type="tns:findEs3Response"/>
 
-  <xs:element name="findEsg" type="tns:findEsg"/>
-
-  <xs:element name="findEsgByParams" type="tns:findEsgByParams"/>
-
-  <xs:element name="findEsgByParamsResponse" type="tns:findEsgByParamsResponse"/>
-
-  <xs:element name="findEsgPolicy" type="tns:findEsgPolicy"/>
-
-  <xs:element name="findEsgPolicyByParams" type="tns:findEsgPolicyByParams"/>
-
-  <xs:element name="findEsgPolicyByParamsResponse" type="tns:findEsgPolicyByParamsResponse"/>
-
-  <xs:element name="findEsgPolicyResponse" type="tns:findEsgPolicyResponse"/>
-
-  <xs:element name="findEsgResponse" type="tns:findEsgResponse"/>
-
   <xs:element name="findFirewall" type="tns:findFirewall"/>
 
   <xs:element name="findFirewallByParams" type="tns:findFirewallByParams"/>
@@ -542,6 +522,14 @@
   <xs:element name="findFirewallPortResponse" type="tns:findFirewallPortResponse"/>
 
   <xs:element name="findFirewallResponse" type="tns:findFirewallResponse"/>
+
+  <xs:element name="findFirewallService" type="tns:findFirewallService"/>
+
+  <xs:element name="findFirewallServiceByParams" type="tns:findFirewallServiceByParams"/>
+
+  <xs:element name="findFirewallServiceByParamsResponse" type="tns:findFirewallServiceByParamsResponse"/>
+
+  <xs:element name="findFirewallServiceResponse" type="tns:findFirewallServiceResponse"/>
 
   <xs:element name="findHardDisk" type="tns:findHardDisk"/>
 
@@ -623,14 +611,6 @@
 
   <xs:element name="findMapEcsEs3Response" type="tns:findMapEcsEs3Response"/>
 
-  <xs:element name="findMapEcsEsg" type="tns:findMapEcsEsg"/>
-
-  <xs:element name="findMapEcsEsgByParams" type="tns:findMapEcsEsgByParams"/>
-
-  <xs:element name="findMapEcsEsgByParamsResponse" type="tns:findMapEcsEsgByParamsResponse"/>
-
-  <xs:element name="findMapEcsEsgResponse" type="tns:findMapEcsEsgResponse"/>
-
   <xs:element name="findMapEipDns" type="tns:findMapEipDns"/>
 
   <xs:element name="findMapEipDnsByParams" type="tns:findMapEipDnsByParams"/>
@@ -687,6 +667,14 @@
 
   <xs:element name="findRackResponse" type="tns:findRackResponse"/>
 
+  <xs:element name="findRouter" type="tns:findRouter"/>
+
+  <xs:element name="findRouterByParams" type="tns:findRouterByParams"/>
+
+  <xs:element name="findRouterByParamsResponse" type="tns:findRouterByParamsResponse"/>
+
+  <xs:element name="findRouterResponse" type="tns:findRouterResponse"/>
+
   <xs:element name="findServer" type="tns:findServer"/>
 
   <xs:element name="findServerByParams" type="tns:findServerByParams"/>
@@ -734,6 +722,14 @@
   <xs:element name="findStoragePortResponse" type="tns:findStoragePortResponse"/>
 
   <xs:element name="findStorageResponse" type="tns:findStorageResponse"/>
+
+  <xs:element name="findSubnet" type="tns:findSubnet"/>
+
+  <xs:element name="findSubnetByParams" type="tns:findSubnetByParams"/>
+
+  <xs:element name="findSubnetByParamsResponse" type="tns:findSubnetByParamsResponse"/>
+
+  <xs:element name="findSubnetResponse" type="tns:findSubnetResponse"/>
 
   <xs:element name="findSwitchPort" type="tns:findSwitchPort"/>
 
@@ -863,22 +859,6 @@
 
   <xs:element name="getEs3PaginationResponse" type="tns:getEs3PaginationResponse"/>
 
-  <xs:element name="getEsgList" type="tns:getEsgList"/>
-
-  <xs:element name="getEsgListResponse" type="tns:getEsgListResponse"/>
-
-  <xs:element name="getEsgPagination" type="tns:getEsgPagination"/>
-
-  <xs:element name="getEsgPaginationResponse" type="tns:getEsgPaginationResponse"/>
-
-  <xs:element name="getEsgPolicyList" type="tns:getEsgPolicyList"/>
-
-  <xs:element name="getEsgPolicyListResponse" type="tns:getEsgPolicyListResponse"/>
-
-  <xs:element name="getEsgPolicyPagination" type="tns:getEsgPolicyPagination"/>
-
-  <xs:element name="getEsgPolicyPaginationResponse" type="tns:getEsgPolicyPaginationResponse"/>
-
   <xs:element name="getFirewallList" type="tns:getFirewallList"/>
 
   <xs:element name="getFirewallListResponse" type="tns:getFirewallListResponse"/>
@@ -894,6 +874,14 @@
   <xs:element name="getFirewallPortPagination" type="tns:getFirewallPortPagination"/>
 
   <xs:element name="getFirewallPortPaginationResponse" type="tns:getFirewallPortPaginationResponse"/>
+
+  <xs:element name="getFirewallServiceList" type="tns:getFirewallServiceList"/>
+
+  <xs:element name="getFirewallServiceListResponse" type="tns:getFirewallServiceListResponse"/>
+
+  <xs:element name="getFirewallServicePagination" type="tns:getFirewallServicePagination"/>
+
+  <xs:element name="getFirewallServicePaginationResponse" type="tns:getFirewallServicePaginationResponse"/>
 
   <xs:element name="getHardDiskList" type="tns:getHardDiskList"/>
 
@@ -975,14 +963,6 @@
 
   <xs:element name="getMapEcsEs3PaginationResponse" type="tns:getMapEcsEs3PaginationResponse"/>
 
-  <xs:element name="getMapEcsEsgList" type="tns:getMapEcsEsgList"/>
-
-  <xs:element name="getMapEcsEsgListResponse" type="tns:getMapEcsEsgListResponse"/>
-
-  <xs:element name="getMapEcsEsgPagination" type="tns:getMapEcsEsgPagination"/>
-
-  <xs:element name="getMapEcsEsgPaginationResponse" type="tns:getMapEcsEsgPaginationResponse"/>
-
   <xs:element name="getMapEipDnsList" type="tns:getMapEipDnsList"/>
 
   <xs:element name="getMapEipDnsListResponse" type="tns:getMapEipDnsListResponse"/>
@@ -1047,6 +1027,14 @@
 
   <xs:element name="getRackPaginationResponse" type="tns:getRackPaginationResponse"/>
 
+  <xs:element name="getRouterList" type="tns:getRouterList"/>
+
+  <xs:element name="getRouterListResponse" type="tns:getRouterListResponse"/>
+
+  <xs:element name="getRouterPagination" type="tns:getRouterPagination"/>
+
+  <xs:element name="getRouterPaginationResponse" type="tns:getRouterPaginationResponse"/>
+
   <xs:element name="getServerList" type="tns:getServerList"/>
 
   <xs:element name="getServerListResponse" type="tns:getServerListResponse"/>
@@ -1094,6 +1082,14 @@
   <xs:element name="getStoragePortPagination" type="tns:getStoragePortPagination"/>
 
   <xs:element name="getStoragePortPaginationResponse" type="tns:getStoragePortPaginationResponse"/>
+
+  <xs:element name="getSubnetList" type="tns:getSubnetList"/>
+
+  <xs:element name="getSubnetListResponse" type="tns:getSubnetListResponse"/>
+
+  <xs:element name="getSubnetPagination" type="tns:getSubnetPagination"/>
+
+  <xs:element name="getSubnetPaginationResponse" type="tns:getSubnetPaginationResponse"/>
 
   <xs:element name="getSwitchPortList" type="tns:getSwitchPortList"/>
 
@@ -1147,18 +1143,6 @@
 
   <xs:element name="getVpnPaginationResponse" type="tns:getVpnPaginationResponse"/>
 
-  <xs:element name="initIpaddress" type="tns:initIpaddress"/>
-
-  <xs:element name="initIpaddressResponse" type="tns:initIpaddressResponse"/>
-
-  <xs:element name="insertIpaddress" type="tns:insertIpaddress"/>
-
-  <xs:element name="insertIpaddressResponse" type="tns:insertIpaddressResponse"/>
-
-  <xs:element name="insertVlan" type="tns:insertVlan"/>
-
-  <xs:element name="insertVlanResponse" type="tns:insertVlanResponse"/>
-
   <xs:element name="updateDeviceSpec" type="tns:updateDeviceSpec"/>
 
   <xs:element name="updateDeviceSpecResponse" type="tns:updateDeviceSpecResponse"/>
@@ -1199,14 +1183,6 @@
 
   <xs:element name="updateEs3Response" type="tns:updateEs3Response"/>
 
-  <xs:element name="updateEsg" type="tns:updateEsg"/>
-
-  <xs:element name="updateEsgPolicy" type="tns:updateEsgPolicy"/>
-
-  <xs:element name="updateEsgPolicyResponse" type="tns:updateEsgPolicyResponse"/>
-
-  <xs:element name="updateEsgResponse" type="tns:updateEsgResponse"/>
-
   <xs:element name="updateFirewall" type="tns:updateFirewall"/>
 
   <xs:element name="updateFirewallPort" type="tns:updateFirewallPort"/>
@@ -1214,6 +1190,10 @@
   <xs:element name="updateFirewallPortResponse" type="tns:updateFirewallPortResponse"/>
 
   <xs:element name="updateFirewallResponse" type="tns:updateFirewallResponse"/>
+
+  <xs:element name="updateFirewallService" type="tns:updateFirewallService"/>
+
+  <xs:element name="updateFirewallServiceResponse" type="tns:updateFirewallServiceResponse"/>
 
   <xs:element name="updateHardDisk" type="tns:updateHardDisk"/>
 
@@ -1251,6 +1231,10 @@
 
   <xs:element name="updateRackResponse" type="tns:updateRackResponse"/>
 
+  <xs:element name="updateRouter" type="tns:updateRouter"/>
+
+  <xs:element name="updateRouterResponse" type="tns:updateRouterResponse"/>
+
   <xs:element name="updateServer" type="tns:updateServer"/>
 
   <xs:element name="updateServerPort" type="tns:updateServerPort"/>
@@ -1270,6 +1254,10 @@
   <xs:element name="updateStoragePortResponse" type="tns:updateStoragePortResponse"/>
 
   <xs:element name="updateStorageResponse" type="tns:updateStorageResponse"/>
+
+  <xs:element name="updateSubnet" type="tns:updateSubnet"/>
+
+  <xs:element name="updateSubnetResponse" type="tns:updateSubnetResponse"/>
 
   <xs:element name="updateSwitchPort" type="tns:updateSwitchPort"/>
 
@@ -1366,6 +1354,8 @@
           <xs:element minOccurs="0" name="ecsSpecDTO" type="tns:EcsSpecDTO"/>
           <xs:element minOccurs="0" name="ecsStatus" type="xs:int"/>
           <xs:element minOccurs="0" name="ecsStatusText" type="xs:string"/>
+          <xs:element minOccurs="0" name="ecsType" type="xs:int"/>
+          <xs:element minOccurs="0" name="ecsTypeText" type="xs:string"/>
           <xs:element minOccurs="0" name="ipaddress" type="xs:int"/>
           <xs:element minOccurs="0" name="ipaddressDTO" type="tns:IpaddressDTO"/>
           <xs:element minOccurs="0" name="macAddress" type="xs:string"/>
@@ -1384,8 +1374,11 @@
         <xs:sequence>
           <xs:element minOccurs="0" name="agentType" type="xs:int"/>
           <xs:element minOccurs="0" name="agentTypeText" type="xs:string"/>
+          <xs:element minOccurs="0" name="createTime" type="xs:dateTime"/>
           <xs:element minOccurs="0" name="idc" type="xs:int"/>
           <xs:element minOccurs="0" name="idcDTO" type="tns:IdcDTO"/>
+          <xs:element minOccurs="0" name="subnet" type="xs:int"/>
+          <xs:element minOccurs="0" name="subnetDTO" type="tns:SubnetDTO"/>
           <xs:element minOccurs="0" name="tenants" type="xs:int"/>
           <xs:element minOccurs="0" name="tenantsDTO" type="tns:TenantsDTO"/>
         </xs:sequence>
@@ -1431,12 +1424,10 @@
           <xs:element minOccurs="0" name="ipAddressStatusText" type="xs:string"/>
           <xs:element minOccurs="0" name="isp" type="xs:int"/>
           <xs:element minOccurs="0" name="ispText" type="xs:string"/>
-          <xs:element minOccurs="0" name="netmask" type="xs:string"/>
+          <xs:element minOccurs="0" name="netMask" type="xs:string"/>
           <xs:element minOccurs="0" name="segment" type="xs:string"/>
-          <xs:element minOccurs="0" name="tenants" type="xs:int"/>
-          <xs:element minOccurs="0" name="tenantsDTO" type="tns:TenantsDTO"/>
-          <xs:element minOccurs="0" name="vlan" type="xs:int"/>
-          <xs:element minOccurs="0" name="vlanDTO" type="tns:VlanDTO"/>
+          <xs:element minOccurs="0" name="subnet" type="xs:int"/>
+          <xs:element minOccurs="0" name="subnetDTO" type="tns:SubnetDTO"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -1455,6 +1446,22 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:complexType name="SubnetDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:basicDTO">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="gateway" type="xs:string"/>
+          <xs:element minOccurs="0" name="idc" type="xs:int"/>
+          <xs:element minOccurs="0" name="idcDTO" type="tns:IdcDTO"/>
+          <xs:element minOccurs="0" name="netMask" type="xs:string"/>
+          <xs:element minOccurs="0" name="segment" type="xs:string"/>
+          <xs:element minOccurs="0" name="tenants" type="xs:int"/>
+          <xs:element minOccurs="0" name="tenantsDTO" type="tns:TenantsDTO"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
   <xs:complexType name="TenantsDTO">
     <xs:complexContent>
       <xs:extension base="tns:basicDTO">
@@ -1466,24 +1473,6 @@
           <xs:element minOccurs="0" name="email" type="xs:string"/>
           <xs:element minOccurs="0" name="password" type="xs:string"/>
           <xs:element minOccurs="0" name="phone" type="xs:string"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="VlanDTO">
-    <xs:complexContent>
-      <xs:extension base="tns:basicDTO">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="gateway" type="xs:string"/>
-          <xs:element minOccurs="0" name="idc" type="xs:int"/>
-          <xs:element minOccurs="0" name="idcDTO" type="tns:IdcDTO"/>
-          <xs:element minOccurs="0" name="netMask" type="xs:string"/>
-          <xs:element minOccurs="0" name="segment" type="xs:string"/>
-          <xs:element minOccurs="0" name="tenants" type="xs:int"/>
-          <xs:element minOccurs="0" name="tenantsDTO" type="tns:TenantsDTO"/>
-          <xs:element minOccurs="0" name="vlanStatus" type="xs:int"/>
-          <xs:element minOccurs="0" name="vlanStatusText" type="xs:string"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -1611,28 +1600,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="getMapEcsEsgPagination">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
-      <xs:element minOccurs="0" name="pageNumber" type="xs:int"/>
-      <xs:element minOccurs="0" name="pageSize" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="getMapEcsEsgPaginationResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:PaginationResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="MapEcsEsgDTO">
-    <xs:complexContent>
-      <xs:extension base="tns:mapBasicDTO">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
   <xs:complexType name="findDnsPolicy">
     <xs:sequence>
       <xs:element minOccurs="0" name="id" type="xs:int"/>
@@ -1691,35 +1658,6 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
     </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="getEsgPolicyPagination">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
-      <xs:element minOccurs="0" name="pageNumber" type="xs:int"/>
-      <xs:element minOccurs="0" name="pageSize" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="getEsgPolicyPaginationResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:PaginationResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="EsgPolicyDTO">
-    <xs:complexContent>
-      <xs:extension base="tns:basicDTO">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="esg" type="xs:int"/>
-          <xs:element minOccurs="0" name="policyType" type="xs:int"/>
-          <xs:element minOccurs="0" name="policyTypeText" type="xs:string"/>
-          <xs:element minOccurs="0" name="port" type="xs:int"/>
-          <xs:element minOccurs="0" name="sourceIP" type="xs:string"/>
-          <xs:element minOccurs="0" name="targetIP" type="xs:string"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="findTag">
@@ -1913,18 +1851,6 @@
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="insertVlan">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="vlanDTOList" type="tns:VlanDTO"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="insertVlanResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
-    </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="findMapEipElbByParams">
@@ -2177,18 +2103,6 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="findMapEcsEsgByParams">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="findMapEcsEsgByParamsResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="updateLoadBalancer">
     <xs:sequence>
       <xs:element minOccurs="0" name="id" type="xs:int"/>
@@ -2380,6 +2294,39 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
     </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="VlanDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:basicDTO">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="gateway" type="xs:string"/>
+          <xs:element minOccurs="0" name="idc" type="xs:int"/>
+          <xs:element minOccurs="0" name="idcDTO" type="tns:IdcDTO"/>
+          <xs:element minOccurs="0" name="netMask" type="xs:string"/>
+          <xs:element minOccurs="0" name="nic" type="xs:int"/>
+          <xs:element minOccurs="0" name="nicDTO" type="tns:NicDTO"/>
+          <xs:element minOccurs="0" name="segment" type="xs:string"/>
+          <xs:element minOccurs="0" name="subnet" type="xs:int"/>
+          <xs:element minOccurs="0" name="subnetDTO" type="tns:SubnetDTO"/>
+          <xs:element minOccurs="0" name="tenants" type="xs:int"/>
+          <xs:element minOccurs="0" name="tenantsDTO" type="tns:TenantsDTO"/>
+          <xs:element minOccurs="0" name="vlanId" type="xs:int"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NicDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:componentBasicDTO">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="nicRate" type="xs:int"/>
+          <xs:element minOccurs="0" name="nicRateText" type="xs:string"/>
+          <xs:element minOccurs="0" name="portNumber" type="xs:int"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="createLoadBalancerPort">
@@ -2640,6 +2587,19 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="updateSubnet">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:int"/>
+      <xs:element minOccurs="0" name="subnetDTO" type="tns:SubnetDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="updateSubnetResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="getTenantsList">
     <xs:sequence>
       <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
@@ -2695,19 +2655,6 @@
   </xs:complexType>
 
   <xs:complexType name="updateMemoryResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="updateEsgPolicy">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="id" type="xs:int"/>
-      <xs:element minOccurs="0" name="esgPolicyDTO" type="tns:EsgPolicyDTO"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="updateEsgPolicyResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
     </xs:sequence>
@@ -2789,6 +2736,26 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:complexType name="getRouterList">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getRouterListResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOListResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RouterDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:serviceBasicDTO">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
   <xs:complexType name="updateServer">
     <xs:sequence>
       <xs:element minOccurs="0" name="id" type="xs:int"/>
@@ -2826,6 +2793,28 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="getFirewallServicePagination">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
+      <xs:element minOccurs="0" name="pageNumber" type="xs:int"/>
+      <xs:element minOccurs="0" name="pageSize" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getFirewallServicePaginationResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:PaginationResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="FirewallServiceDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:serviceBasicDTO">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
   <xs:complexType name="getMemoryList">
     <xs:sequence>
       <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
@@ -2835,53 +2824,6 @@
   <xs:complexType name="getMemoryListResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:DTOListResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="findEsgByParams">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="findEsgByParamsResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="EsgDTO">
-    <xs:complexContent>
-      <xs:extension base="tns:serviceBasicDTO">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="isDefault" type="xs:boolean"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="deleteMapEcsEsg">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="ecsId" type="xs:int"/>
-      <xs:element minOccurs="0" name="esgId" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="deleteMapEcsEsgResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="findEsgPolicy">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="id" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="findEsgPolicyResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -2987,6 +2929,18 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="createFirewallService">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="firewallServiceDTO" type="tns:FirewallServiceDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createFirewallServiceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="getStoragePortPagination">
     <xs:sequence>
       <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
@@ -3032,19 +2986,6 @@
   </xs:complexType>
 
   <xs:complexType name="createEipResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="updateEsg">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="id" type="xs:int"/>
-      <xs:element minOccurs="0" name="esgDTO" type="tns:EsgDTO"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="updateEsgResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
     </xs:sequence>
@@ -3111,18 +3052,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="findVpn">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="id" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="findVpnResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="findFirewallPort">
     <xs:sequence>
       <xs:element minOccurs="0" name="id" type="xs:int"/>
@@ -3144,6 +3073,18 @@
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="findVpn">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findVpnResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="deleteFirewallPort">
@@ -3213,18 +3154,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="NicDTO">
-    <xs:complexContent>
-      <xs:extension base="tns:componentBasicDTO">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="nicRate" type="xs:int"/>
-          <xs:element minOccurs="0" name="nicRateText" type="xs:string"/>
-          <xs:element minOccurs="0" name="portNumber" type="xs:int"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
   <xs:complexType name="updateNicResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
@@ -3238,18 +3167,6 @@
   </xs:complexType>
 
   <xs:complexType name="deleteElbResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="createEsgPolicy">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="esgPolicyDTO" type="tns:EsgPolicyDTO"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="createEsgPolicyResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
     </xs:sequence>
@@ -3418,18 +3335,6 @@
   <xs:complexType name="createElbPolicyResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="getMapEcsEsgList">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="getMapEcsEsgListResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:DTOListResult"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -3658,18 +3563,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="createEsg">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="esgDTO" type="tns:EsgDTO"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="createEsgResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="getVlanPagination">
     <xs:sequence>
       <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
@@ -3746,13 +3639,13 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="getEsgPolicyList">
+  <xs:complexType name="getFirewallServiceList">
     <xs:sequence>
       <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="getEsgPolicyListResponse">
+  <xs:complexType name="getFirewallServiceListResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:DTOListResult"/>
     </xs:sequence>
@@ -3820,27 +3713,15 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="findEsgPolicyByParams">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="findEsgPolicyByParamsResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="findEsg">
+  <xs:complexType name="deleteSubnet">
     <xs:sequence>
       <xs:element minOccurs="0" name="id" type="xs:int"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="findEsgResponse">
+  <xs:complexType name="deleteSubnetResponse">
     <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
+      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -3890,6 +3771,19 @@
   <xs:complexType name="getServiceListResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:DTOListResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="updateFirewallService">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:int"/>
+      <xs:element minOccurs="0" name="firewallServiceDTO" type="tns:FirewallServiceDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="updateFirewallServiceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -3978,18 +3872,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="insertIpaddress">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="ipaddressDTOList" type="tns:IpaddressDTO"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="insertIpaddressResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="deleteLoadBalancer">
     <xs:sequence>
       <xs:element minOccurs="0" name="id" type="xs:int"/>
@@ -4060,6 +3942,18 @@
   <xs:complexType name="updateVpnResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findRouterByParams">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findRouterByParamsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -4424,6 +4318,18 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="findRouter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findRouterResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="findDnsPolicyByParams">
     <xs:sequence>
       <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
@@ -4571,6 +4477,18 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="findSubnet">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findSubnetResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="createVpn">
     <xs:sequence>
       <xs:element minOccurs="0" name="vpnDTO" type="tns:VpnDTO"/>
@@ -4609,18 +4527,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="allocateIpaddress">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="id" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="allocateIpaddressResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="getNicPagination">
     <xs:sequence>
       <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
@@ -4632,6 +4538,18 @@
   <xs:complexType name="getNicPaginationResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:PaginationResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findSubnetByParams">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findSubnetByParamsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -4709,6 +4627,18 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="deleteRouter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteRouterResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="createMapEcsElb">
     <xs:sequence>
       <xs:element minOccurs="0" name="ecsId" type="xs:int"/>
@@ -4722,13 +4652,27 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="getEsgList">
+  <xs:complexType name="getRouterPagination">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
+      <xs:element minOccurs="0" name="pageNumber" type="xs:int"/>
+      <xs:element minOccurs="0" name="pageSize" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getRouterPaginationResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:PaginationResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getSubnetList">
     <xs:sequence>
       <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="getEsgListResponse">
+  <xs:complexType name="getSubnetListResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:DTOListResult"/>
     </xs:sequence>
@@ -4770,6 +4714,18 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="deleteFirewallService">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteFirewallServiceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="getVpnPagination">
     <xs:sequence>
       <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
@@ -4779,6 +4735,20 @@
   </xs:complexType>
 
   <xs:complexType name="getVpnPaginationResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:PaginationResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getSubnetPagination">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
+      <xs:element minOccurs="0" name="pageNumber" type="xs:int"/>
+      <xs:element minOccurs="0" name="pageSize" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getSubnetPaginationResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:PaginationResult"/>
     </xs:sequence>
@@ -4878,30 +4848,6 @@
   <xs:complexType name="findLoadBalancerByParamsResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="findMapEcsEsg">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="id" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="findMapEcsEsgResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="deleteEsg">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="id" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="deleteEsgResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -5005,6 +4951,18 @@
   <xs:complexType name="getStoragePaginationResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:PaginationResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findFirewallService">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findFirewallServiceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -5158,6 +5116,19 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="updateRouter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:int"/>
+      <xs:element minOccurs="0" name="routerDTO" type="tns:RouterDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="updateRouterResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="getEipList">
     <xs:sequence>
       <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
@@ -5280,20 +5251,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="getEsgPagination">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
-      <xs:element minOccurs="0" name="pageNumber" type="xs:int"/>
-      <xs:element minOccurs="0" name="pageSize" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="getEsgPaginationResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:PaginationResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="createStoragePort">
     <xs:sequence>
       <xs:element minOccurs="0" name="storagePortDTO" type="tns:StoragePortDTO"/>
@@ -5345,19 +5302,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="createMapEcsEsg">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="ecsId" type="xs:int"/>
-      <xs:element minOccurs="0" name="esgId" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="createMapEcsEsgResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="deleteIpaddress">
     <xs:sequence>
       <xs:element minOccurs="0" name="id" type="xs:int"/>
@@ -5365,18 +5309,6 @@
   </xs:complexType>
 
   <xs:complexType name="deleteIpaddressResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="deleteEsgPolicy">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="id" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="deleteEsgPolicyResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
     </xs:sequence>
@@ -5404,18 +5336,6 @@
   <xs:complexType name="findMapTagServiceResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="initIpaddress">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="id" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="initIpaddressResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -5643,6 +5563,30 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="findFirewallServiceByParams">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findFirewallServiceByParamsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createRouter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="routerDTO" type="tns:RouterDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createRouterResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="updateLoadBalancerPort">
     <xs:sequence>
       <xs:element minOccurs="0" name="id" type="xs:int"/>
@@ -5715,6 +5659,18 @@
   <xs:complexType name="findServiceResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createSubnet">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="subnetDTO" type="tns:SubnetDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createSubnetResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -5834,18 +5790,6 @@
   </wsdl:message>
   <wsdl:message name="getMapEipElbListResponse">
     <wsdl:part element="tns:getMapEipElbListResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="getEsgPolicyPagination">
-    <wsdl:part element="tns:getEsgPolicyPagination" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="findMapEcsEsg">
-    <wsdl:part element="tns:findMapEcsEsg" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="findMapEcsEsgResponse">
-    <wsdl:part element="tns:findMapEcsEsgResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteStorageBoxResponse">
@@ -5968,16 +5912,16 @@
     <wsdl:part element="tns:createNicResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="insertVlanResponse">
-    <wsdl:part element="tns:insertVlanResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="deleteMapEcsEsgResponse">
-    <wsdl:part element="tns:deleteMapEcsEsgResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getDnsPolicyList">
     <wsdl:part element="tns:getDnsPolicyList" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRouterPaginationResponse">
+    <wsdl:part element="tns:getRouterPaginationResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findFirewallService">
+    <wsdl:part element="tns:findFirewallService" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createVpnResponse">
@@ -6004,16 +5948,12 @@
     <wsdl:part element="tns:findSwitchesResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="insertIpaddress">
-    <wsdl:part element="tns:insertIpaddress" name="parameters">
+  <wsdl:message name="deleteRouterResponse">
+    <wsdl:part element="tns:deleteRouterResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createLog">
     <wsdl:part element="tns:createLog" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="updateEsgResponse">
-    <wsdl:part element="tns:updateEsgResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getServerPortListResponse">
@@ -6042,6 +5982,10 @@
   </wsdl:message>
   <wsdl:message name="updateFirewall">
     <wsdl:part element="tns:updateFirewall" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findRouterByParams">
+    <wsdl:part element="tns:findRouterByParams" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createDeviceSpec">
@@ -6108,10 +6052,6 @@
     <wsdl:part element="tns:createStorage" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="insertVlan">
-    <wsdl:part element="tns:insertVlan" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="deleteNicResponse">
     <wsdl:part element="tns:deleteNicResponse" name="parameters">
     </wsdl:part>
@@ -6134,6 +6074,10 @@
   </wsdl:message>
   <wsdl:message name="getEcsSpecListResponse">
     <wsdl:part element="tns:getEcsSpecListResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findRouterResponse">
+    <wsdl:part element="tns:findRouterResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findMapEipElb">
@@ -6166,6 +6110,10 @@
   </wsdl:message>
   <wsdl:message name="getMapEcsElbPaginationResponse">
     <wsdl:part element="tns:getMapEcsElbPaginationResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findFirewallServiceByParamsResponse">
+    <wsdl:part element="tns:findFirewallServiceByParamsResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findEipPolicyByParams">
@@ -6216,6 +6164,10 @@
     <wsdl:part element="tns:getElbListResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="createRouter">
+    <wsdl:part element="tns:createRouter" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="updateEcsResponse">
     <wsdl:part element="tns:updateEcsResponse" name="parameters">
     </wsdl:part>
@@ -6232,16 +6184,16 @@
     <wsdl:part element="tns:deleteMapEcsElb" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="findRouterByParamsResponse">
+    <wsdl:part element="tns:findRouterByParamsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="updateStoragePortResponse">
     <wsdl:part element="tns:updateStoragePortResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="updateNicResponse">
     <wsdl:part element="tns:updateNicResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="updateEsgPolicy">
-    <wsdl:part element="tns:updateEsgPolicy" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getDeviceSpecList">
@@ -6258,6 +6210,10 @@
   </wsdl:message>
   <wsdl:message name="getNicPortList">
     <wsdl:part element="tns:getNicPortList" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRouterListResponse">
+    <wsdl:part element="tns:getRouterListResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findEipByParams">
@@ -6300,10 +6256,6 @@
     <wsdl:part element="tns:getServiceList" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="deleteEsgResponse">
-    <wsdl:part element="tns:deleteEsgResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="findMemoryByParams">
     <wsdl:part element="tns:findMemoryByParams" name="parameters">
     </wsdl:part>
@@ -6322,18 +6274,6 @@
   </wsdl:message>
   <wsdl:message name="findTenantsResponse">
     <wsdl:part element="tns:findTenantsResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="getMapEcsEsgListResponse">
-    <wsdl:part element="tns:getMapEcsEsgListResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="initIpaddress">
-    <wsdl:part element="tns:initIpaddress" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="allocateIpaddress">
-    <wsdl:part element="tns:allocateIpaddress" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createIpaddress">
@@ -6364,10 +6304,6 @@
     <wsdl:part element="tns:createTenants" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="findEsgPolicyByParams">
-    <wsdl:part element="tns:findEsgPolicyByParams" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="findVlan">
     <wsdl:part element="tns:findVlan" name="parameters">
     </wsdl:part>
@@ -6388,20 +6324,20 @@
     <wsdl:part element="tns:updateDnsPolicyResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="findElbByParamsResponse">
-    <wsdl:part element="tns:findElbByParamsResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="createServer">
     <wsdl:part element="tns:createServer" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getStoragePaginationResponse">
-    <wsdl:part element="tns:getStoragePaginationResponse" name="parameters">
+  <wsdl:message name="findElbByParamsResponse">
+    <wsdl:part element="tns:findElbByParamsResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getEsgPolicyList">
-    <wsdl:part element="tns:getEsgPolicyList" name="parameters">
+  <wsdl:message name="createSubnetResponse">
+    <wsdl:part element="tns:createSubnetResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getStoragePaginationResponse">
+    <wsdl:part element="tns:getStoragePaginationResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findEcs">
@@ -6418,6 +6354,10 @@
   </wsdl:message>
   <wsdl:message name="deleteMapEipDns">
     <wsdl:part element="tns:deleteMapEipDns" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteFirewallService">
+    <wsdl:part element="tns:deleteFirewallService" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteEcsSpec">
@@ -6444,6 +6384,14 @@
     <wsdl:part element="tns:getFirewallPaginationResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getSubnetPaginationResponse">
+    <wsdl:part element="tns:getSubnetPaginationResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRouterList">
+    <wsdl:part element="tns:getRouterList" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getMapTagServiceList">
     <wsdl:part element="tns:getMapTagServiceList" name="parameters">
     </wsdl:part>
@@ -6458,6 +6406,10 @@
   </wsdl:message>
   <wsdl:message name="updateDnsResponse">
     <wsdl:part element="tns:updateDnsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createFirewallServiceResponse">
+    <wsdl:part element="tns:createFirewallServiceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getMapEipDnsPaginationResponse">
@@ -6482,10 +6434,6 @@
   </wsdl:message>
   <wsdl:message name="deleteEcsResponse">
     <wsdl:part element="tns:deleteEcsResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="getEsgPolicyPaginationResponse">
-    <wsdl:part element="tns:getEsgPolicyPaginationResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteStorageBox">
@@ -6520,12 +6468,12 @@
     <wsdl:part element="tns:updateRack" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getMapEcsEsgList">
-    <wsdl:part element="tns:getMapEcsEsgList" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getIpaddressPagination">
     <wsdl:part element="tns:getIpaddressPagination" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createSubnet">
+    <wsdl:part element="tns:createSubnet" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteServerResponse">
@@ -6556,16 +6504,8 @@
     <wsdl:part element="tns:deleteLoadBalancerPortResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getEsgPaginationResponse">
-    <wsdl:part element="tns:getEsgPaginationResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="createSwitchPortResponse">
     <wsdl:part element="tns:createSwitchPortResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="findMapEcsEsgByParamsResponse">
-    <wsdl:part element="tns:findMapEcsEsgByParamsResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createServerPortResponse">
@@ -6594,10 +6534,6 @@
   </wsdl:message>
   <wsdl:message name="getLookUpListResponse">
     <wsdl:part element="tns:getLookUpListResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="getMapEcsEsgPagination">
-    <wsdl:part element="tns:getMapEcsEsgPagination" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="updateNicPortResponse">
@@ -6652,10 +6588,6 @@
     <wsdl:part element="tns:createStoragePortResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="findEsgPolicyByParamsResponse">
-    <wsdl:part element="tns:findEsgPolicyByParamsResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getStorageBoxPaginationResponse">
     <wsdl:part element="tns:getStorageBoxPaginationResponse" name="parameters">
     </wsdl:part>
@@ -6674,6 +6606,10 @@
   </wsdl:message>
   <wsdl:message name="getMaxPolicyId">
     <wsdl:part element="tns:getMaxPolicyId" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateFirewallServiceResponse">
+    <wsdl:part element="tns:updateFirewallServiceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findEcsSpec">
@@ -6702,10 +6638,6 @@
   </wsdl:message>
   <wsdl:message name="createStoragePort">
     <wsdl:part element="tns:createStoragePort" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="updateEsgPolicyResponse">
-    <wsdl:part element="tns:updateEsgPolicyResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteMemory">
@@ -6750,6 +6682,10 @@
   </wsdl:message>
   <wsdl:message name="getDnsList">
     <wsdl:part element="tns:getDnsList" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSubnetPagination">
+    <wsdl:part element="tns:getSubnetPagination" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createElbPolicyResponse">
@@ -6840,20 +6776,12 @@
     <wsdl:part element="tns:getLoadBalancerPortPaginationResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="findEsgPolicyResponse">
-    <wsdl:part element="tns:findEsgPolicyResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="findVlanByParams">
     <wsdl:part element="tns:findVlanByParams" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createLogResponse">
     <wsdl:part element="tns:createLogResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="getMapEcsEsgPaginationResponse">
-    <wsdl:part element="tns:getMapEcsEsgPaginationResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteEcs">
@@ -6908,12 +6836,12 @@
     <wsdl:part element="tns:updateNicPort" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="findDeviceSpecByParamsResponse">
-    <wsdl:part element="tns:findDeviceSpecByParamsResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getEipPaginationResponse">
     <wsdl:part element="tns:getEipPaginationResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findDeviceSpecByParamsResponse">
+    <wsdl:part element="tns:findDeviceSpecByParamsResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteStorage">
@@ -6936,6 +6864,10 @@
     <wsdl:part element="tns:findMapEcsEipByParams" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="findFirewallServiceResponse">
+    <wsdl:part element="tns:findFirewallServiceResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="findVlanByParamsResponse">
     <wsdl:part element="tns:findVlanByParamsResponse" name="parameters">
     </wsdl:part>
@@ -6946,6 +6878,10 @@
   </wsdl:message>
   <wsdl:message name="findSwitchesByParamsResponse">
     <wsdl:part element="tns:findSwitchesByParamsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findSubnet">
+    <wsdl:part element="tns:findSubnet" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteVlanResponse">
@@ -7136,6 +7072,10 @@
     <wsdl:part element="tns:getDnsPolicyPagination" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="deleteSubnetResponse">
+    <wsdl:part element="tns:deleteSubnetResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="deleteServerPort">
     <wsdl:part element="tns:deleteServerPort" name="parameters">
     </wsdl:part>
@@ -7172,8 +7112,8 @@
     <wsdl:part element="tns:createMapTagServiceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="findMapEcsEsgByParams">
-    <wsdl:part element="tns:findMapEcsEsgByParams" name="parameters">
+  <wsdl:message name="getFirewallServicePaginationResponse">
+    <wsdl:part element="tns:getFirewallServicePaginationResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findMapEipElbByParams">
@@ -7216,6 +7156,10 @@
     <wsdl:part element="tns:getElbPolicyPagination" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="deleteRouter">
+    <wsdl:part element="tns:deleteRouter" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="createEcsSpecResponse">
     <wsdl:part element="tns:createEcsSpecResponse" name="parameters">
     </wsdl:part>
@@ -7240,10 +7184,6 @@
     <wsdl:part element="tns:findVpnByParamsResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="createEsgResponse">
-    <wsdl:part element="tns:createEsgResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getLoadBalancerList">
     <wsdl:part element="tns:getLoadBalancerList" name="parameters">
     </wsdl:part>
@@ -7258,10 +7198,6 @@
   </wsdl:message>
   <wsdl:message name="getLoadBalancerPortListResponse">
     <wsdl:part element="tns:getLoadBalancerPortListResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="createEsgPolicyResponse">
-    <wsdl:part element="tns:createEsgPolicyResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findElbPolicy">
@@ -7284,6 +7220,10 @@
     <wsdl:part element="tns:createMapEcsEipResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getRouterPagination">
+    <wsdl:part element="tns:getRouterPagination" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="updateVpnResponse">
     <wsdl:part element="tns:updateVpnResponse" name="parameters">
     </wsdl:part>
@@ -7298,6 +7238,10 @@
   </wsdl:message>
   <wsdl:message name="updateIdc">
     <wsdl:part element="tns:updateIdc" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateRouterResponse">
+    <wsdl:part element="tns:updateRouterResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteElb">
@@ -7340,10 +7284,6 @@
     <wsdl:part element="tns:findFirewall" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="findEsg">
-    <wsdl:part element="tns:findEsg" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="updateElbPolicyResponse">
     <wsdl:part element="tns:updateElbPolicyResponse" name="parameters">
     </wsdl:part>
@@ -7376,10 +7316,6 @@
     <wsdl:part element="tns:updateServerResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="deleteEsgPolicyResponse">
-    <wsdl:part element="tns:deleteEsgPolicyResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="findLoadBalancerPortByParams">
     <wsdl:part element="tns:findLoadBalancerPortByParams" name="parameters">
     </wsdl:part>
@@ -7398,6 +7334,10 @@
   </wsdl:message>
   <wsdl:message name="deleteRack">
     <wsdl:part element="tns:deleteRack" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createRouterResponse">
+    <wsdl:part element="tns:createRouterResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getHardDiskPagination">
@@ -7438,6 +7378,10 @@
   </wsdl:message>
   <wsdl:message name="updateEcs">
     <wsdl:part element="tns:updateEcs" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateSubnet">
+    <wsdl:part element="tns:updateSubnet" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findIdc">
@@ -7508,14 +7452,6 @@
     <wsdl:part element="tns:findHardDiskResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getEsgPagination">
-    <wsdl:part element="tns:getEsgPagination" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="getEsgList">
-    <wsdl:part element="tns:getEsgList" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getStoragePortPagination">
     <wsdl:part element="tns:getStoragePortPagination" name="parameters">
     </wsdl:part>
@@ -7526,10 +7462,6 @@
   </wsdl:message>
   <wsdl:message name="findLoadBalancerPort">
     <wsdl:part element="tns:findLoadBalancerPort" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="findEsgPolicy">
-    <wsdl:part element="tns:findEsgPolicy" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findLoadBalancerPortResponse">
@@ -7548,16 +7480,12 @@
     <wsdl:part element="tns:findStoragePortByParams" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getEsgListResponse">
-    <wsdl:part element="tns:getEsgListResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="updateNic">
     <wsdl:part element="tns:updateNic" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="createMapEcsEsg">
-    <wsdl:part element="tns:createMapEcsEsg" name="parameters">
+  <wsdl:message name="findSubnetByParamsResponse">
+    <wsdl:part element="tns:findSubnetByParamsResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getStoragePagination">
@@ -7576,12 +7504,20 @@
     <wsdl:part element="tns:getEcsListResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="updateSubnetResponse">
+    <wsdl:part element="tns:updateSubnetResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="findEcsSpecByParamsResponse">
     <wsdl:part element="tns:findEcsSpecByParamsResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getTagPaginationResponse">
     <wsdl:part element="tns:getTagPaginationResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findFirewallServiceByParams">
+    <wsdl:part element="tns:findFirewallServiceByParams" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findServiceResponse">
@@ -7604,8 +7540,8 @@
     <wsdl:part element="tns:deleteFirewallResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="deleteEsgPolicy">
-    <wsdl:part element="tns:deleteEsgPolicy" name="parameters">
+  <wsdl:message name="getSubnetListResponse">
+    <wsdl:part element="tns:getSubnetListResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getSwitchesListResponse">
@@ -7624,12 +7560,12 @@
     <wsdl:part element="tns:getLogList" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="deleteVpnResponse">
-    <wsdl:part element="tns:deleteVpnResponse" name="parameters">
+  <wsdl:message name="deleteFirewallServiceResponse">
+    <wsdl:part element="tns:deleteFirewallServiceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getEsgPolicyListResponse">
-    <wsdl:part element="tns:getEsgPolicyListResponse" name="parameters">
+  <wsdl:message name="deleteVpnResponse">
+    <wsdl:part element="tns:deleteVpnResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findMapEcsEs3Response">
@@ -7658,6 +7594,10 @@
   </wsdl:message>
   <wsdl:message name="findMapEipElbResponse">
     <wsdl:part element="tns:findMapEipElbResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findRouter">
+    <wsdl:part element="tns:findRouter" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getMapEipDnsList">
@@ -7692,16 +7632,16 @@
     <wsdl:part element="tns:findMapEipElbByParamsResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getSubnetList">
+    <wsdl:part element="tns:getSubnetList" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="findDnsPolicyByParamsResponse">
     <wsdl:part element="tns:findDnsPolicyByParamsResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findMapEcsEip">
     <wsdl:part element="tns:findMapEcsEip" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="findEsgByParamsResponse">
-    <wsdl:part element="tns:findEsgByParamsResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findIdcResponse">
@@ -7788,10 +7728,6 @@
     <wsdl:part element="tns:findElbPolicyByParamsResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="updateEsg">
-    <wsdl:part element="tns:updateEsg" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="findEs3">
     <wsdl:part element="tns:findEs3" name="parameters">
     </wsdl:part>
@@ -7812,10 +7748,6 @@
     <wsdl:part element="tns:createLoadBalancerPortResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="initIpaddressResponse">
-    <wsdl:part element="tns:initIpaddressResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="createLoadBalancer">
     <wsdl:part element="tns:createLoadBalancer" name="parameters">
     </wsdl:part>
@@ -7832,20 +7764,16 @@
     <wsdl:part element="tns:getVlanListResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="findSubnetResponse">
+    <wsdl:part element="tns:findSubnetResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getMapEcsElbList">
     <wsdl:part element="tns:getMapEcsElbList" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findDns">
     <wsdl:part element="tns:findDns" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="createEsgPolicy">
-    <wsdl:part element="tns:createEsgPolicy" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="allocateIpaddressResponse">
-    <wsdl:part element="tns:allocateIpaddressResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getServerPortPaginationResponse">
@@ -7868,10 +7796,6 @@
     <wsdl:part element="tns:getNicPortListResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="findEsgByParams">
-    <wsdl:part element="tns:findEsgByParams" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="findServerByParamsResponse">
     <wsdl:part element="tns:findServerByParamsResponse" name="parameters">
     </wsdl:part>
@@ -7886,6 +7810,10 @@
   </wsdl:message>
   <wsdl:message name="findRack">
     <wsdl:part element="tns:findRack" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findSubnetByParams">
+    <wsdl:part element="tns:findSubnetByParams" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="updateIpaddress">
@@ -7956,12 +7884,12 @@
     <wsdl:part element="tns:getServerList" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="findEcsSpecByParams">
-    <wsdl:part element="tns:findEcsSpecByParams" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="createMapTagService">
     <wsdl:part element="tns:createMapTagService" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findEcsSpecByParams">
+    <wsdl:part element="tns:findEcsSpecByParams" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findLoadBalancer">
@@ -7992,8 +7920,8 @@
     <wsdl:part element="tns:getMemoryListResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="deleteMapEcsEsg">
-    <wsdl:part element="tns:deleteMapEcsEsg" name="parameters">
+  <wsdl:message name="getFirewallServiceListResponse">
+    <wsdl:part element="tns:getFirewallServiceListResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createDns">
@@ -8002,10 +7930,6 @@
   </wsdl:message>
   <wsdl:message name="getLogPagination">
     <wsdl:part element="tns:getLogPagination" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="deleteEsg">
-    <wsdl:part element="tns:deleteEsg" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="updateEipPolicy">
@@ -8024,10 +7948,6 @@
     <wsdl:part element="tns:updateIpaddressResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="createEsg">
-    <wsdl:part element="tns:createEsg" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="updateElb">
     <wsdl:part element="tns:updateElb" name="parameters">
     </wsdl:part>
@@ -8038,6 +7958,10 @@
   </wsdl:message>
   <wsdl:message name="getMapEcsElbListResponse">
     <wsdl:part element="tns:getMapEcsElbListResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateRouter">
+    <wsdl:part element="tns:updateRouter" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getIdcPaginationResponse">
@@ -8072,6 +7996,10 @@
     <wsdl:part element="tns:findElb" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="deleteSubnet">
+    <wsdl:part element="tns:deleteSubnet" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="updateSwitchPortResponse">
     <wsdl:part element="tns:updateSwitchPortResponse" name="parameters">
     </wsdl:part>
@@ -8086,6 +8014,10 @@
   </wsdl:message>
   <wsdl:message name="getEcsSpecPagination">
     <wsdl:part element="tns:getEcsSpecPagination" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateFirewallService">
+    <wsdl:part element="tns:updateFirewallService" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createEcsSpec">
@@ -8108,12 +8040,16 @@
     <wsdl:part element="tns:getSwitchPortPaginationResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="createMapEcsEsgResponse">
-    <wsdl:part element="tns:createMapEcsEsgResponse" name="parameters">
+  <wsdl:message name="getFirewallServicePagination">
+    <wsdl:part element="tns:getFirewallServicePagination" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findStorage">
     <wsdl:part element="tns:findStorage" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFirewallServiceList">
+    <wsdl:part element="tns:getFirewallServiceList" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findDnsPolicy">
@@ -8134,10 +8070,6 @@
   </wsdl:message>
   <wsdl:message name="createServerPort">
     <wsdl:part element="tns:createServerPort" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="insertIpaddressResponse">
-    <wsdl:part element="tns:insertIpaddressResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createNic">
@@ -8172,16 +8104,16 @@
     <wsdl:part element="tns:findMapEcsElbResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="createFirewallService">
+    <wsdl:part element="tns:createFirewallService" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="findEipPolicyByParamsResponse">
     <wsdl:part element="tns:findEipPolicyByParamsResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findSwitchPort">
     <wsdl:part element="tns:findSwitchPort" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="findEsgResponse">
-    <wsdl:part element="tns:findEsgResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getSwitchesPagination">
@@ -8205,12 +8137,6 @@
       <wsdl:output message="tns:findMapEipElbResponse" name="findMapEipElbResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getMapEcsEsgPagination">
-      <wsdl:input message="tns:getMapEcsEsgPagination" name="getMapEcsEsgPagination">
-    </wsdl:input>
-      <wsdl:output message="tns:getMapEcsEsgPaginationResponse" name="getMapEcsEsgPaginationResponse">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="findDnsPolicy">
       <wsdl:input message="tns:findDnsPolicy" name="findDnsPolicy">
     </wsdl:input>
@@ -8227,12 +8153,6 @@
       <wsdl:input message="tns:createIpaddress" name="createIpaddress">
     </wsdl:input>
       <wsdl:output message="tns:createIpaddressResponse" name="createIpaddressResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getEsgPolicyPagination">
-      <wsdl:input message="tns:getEsgPolicyPagination" name="getEsgPolicyPagination">
-    </wsdl:input>
-      <wsdl:output message="tns:getEsgPolicyPaginationResponse" name="getEsgPolicyPaginationResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="findTag">
@@ -8269,12 +8189,6 @@
       <wsdl:input message="tns:findVpnByParams" name="findVpnByParams">
     </wsdl:input>
       <wsdl:output message="tns:findVpnByParamsResponse" name="findVpnByParamsResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="insertVlan">
-      <wsdl:input message="tns:insertVlan" name="insertVlan">
-    </wsdl:input>
-      <wsdl:output message="tns:insertVlanResponse" name="insertVlanResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="findMapEipElbByParams">
@@ -8347,12 +8261,6 @@
       <wsdl:input message="tns:findMemory" name="findMemory">
     </wsdl:input>
       <wsdl:output message="tns:findMemoryResponse" name="findMemoryResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="findMapEcsEsgByParams">
-      <wsdl:input message="tns:findMapEcsEsgByParams" name="findMapEcsEsgByParams">
-    </wsdl:input>
-      <wsdl:output message="tns:findMapEcsEsgByParamsResponse" name="findMapEcsEsgByParamsResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateLoadBalancer">
@@ -8535,6 +8443,12 @@
       <wsdl:output message="tns:deleteSwitchPortResponse" name="deleteSwitchPortResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="updateSubnet">
+      <wsdl:input message="tns:updateSubnet" name="updateSubnet">
+    </wsdl:input>
+      <wsdl:output message="tns:updateSubnetResponse" name="updateSubnetResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getTenantsList">
       <wsdl:input message="tns:getTenantsList" name="getTenantsList">
     </wsdl:input>
@@ -8557,12 +8471,6 @@
       <wsdl:input message="tns:updateMemory" name="updateMemory">
     </wsdl:input>
       <wsdl:output message="tns:updateMemoryResponse" name="updateMemoryResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="updateEsgPolicy">
-      <wsdl:input message="tns:updateEsgPolicy" name="updateEsgPolicy">
-    </wsdl:input>
-      <wsdl:output message="tns:updateEsgPolicyResponse" name="updateEsgPolicyResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="deleteDnsPolicy">
@@ -8595,6 +8503,12 @@
       <wsdl:output message="tns:findEipPolicyResponse" name="findEipPolicyResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getRouterList">
+      <wsdl:input message="tns:getRouterList" name="getRouterList">
+    </wsdl:input>
+      <wsdl:output message="tns:getRouterListResponse" name="getRouterListResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="updateServer">
       <wsdl:input message="tns:updateServer" name="updateServer">
     </wsdl:input>
@@ -8613,28 +8527,16 @@
       <wsdl:output message="tns:getRackListResponse" name="getRackListResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getFirewallServicePagination">
+      <wsdl:input message="tns:getFirewallServicePagination" name="getFirewallServicePagination">
+    </wsdl:input>
+      <wsdl:output message="tns:getFirewallServicePaginationResponse" name="getFirewallServicePaginationResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getMemoryList">
       <wsdl:input message="tns:getMemoryList" name="getMemoryList">
     </wsdl:input>
       <wsdl:output message="tns:getMemoryListResponse" name="getMemoryListResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="findEsgByParams">
-      <wsdl:input message="tns:findEsgByParams" name="findEsgByParams">
-    </wsdl:input>
-      <wsdl:output message="tns:findEsgByParamsResponse" name="findEsgByParamsResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="deleteMapEcsEsg">
-      <wsdl:input message="tns:deleteMapEcsEsg" name="deleteMapEcsEsg">
-    </wsdl:input>
-      <wsdl:output message="tns:deleteMapEcsEsgResponse" name="deleteMapEcsEsgResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="findEsgPolicy">
-      <wsdl:input message="tns:findEsgPolicy" name="findEsgPolicy">
-    </wsdl:input>
-      <wsdl:output message="tns:findEsgPolicyResponse" name="findEsgPolicyResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="createSwitchPort">
@@ -8679,6 +8581,12 @@
       <wsdl:output message="tns:createMapTagServiceResponse" name="createMapTagServiceResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="createFirewallService">
+      <wsdl:input message="tns:createFirewallService" name="createFirewallService">
+    </wsdl:input>
+      <wsdl:output message="tns:createFirewallServiceResponse" name="createFirewallServiceResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getStoragePortPagination">
       <wsdl:input message="tns:getStoragePortPagination" name="getStoragePortPagination">
     </wsdl:input>
@@ -8701,12 +8609,6 @@
       <wsdl:input message="tns:createEip" name="createEip">
     </wsdl:input>
       <wsdl:output message="tns:createEipResponse" name="createEipResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="updateEsg">
-      <wsdl:input message="tns:updateEsg" name="updateEsg">
-    </wsdl:input>
-      <wsdl:output message="tns:updateEsgResponse" name="updateEsgResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="findServer">
@@ -8739,16 +8641,16 @@
       <wsdl:output message="tns:createLoadBalancerResponse" name="createLoadBalancerResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="findVpn">
-      <wsdl:input message="tns:findVpn" name="findVpn">
-    </wsdl:input>
-      <wsdl:output message="tns:findVpnResponse" name="findVpnResponse">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="findFirewallPort">
       <wsdl:input message="tns:findFirewallPort" name="findFirewallPort">
     </wsdl:input>
       <wsdl:output message="tns:findFirewallPortResponse" name="findFirewallPortResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findVpn">
+      <wsdl:input message="tns:findVpn" name="findVpn">
+    </wsdl:input>
+      <wsdl:output message="tns:findVpnResponse" name="findVpnResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="deleteFirewallPort">
@@ -8791,12 +8693,6 @@
       <wsdl:input message="tns:deleteElb" name="deleteElb">
     </wsdl:input>
       <wsdl:output message="tns:deleteElbResponse" name="deleteElbResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="createEsgPolicy">
-      <wsdl:input message="tns:createEsgPolicy" name="createEsgPolicy">
-    </wsdl:input>
-      <wsdl:output message="tns:createEsgPolicyResponse" name="createEsgPolicyResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="deleteServerPort">
@@ -8875,12 +8771,6 @@
       <wsdl:input message="tns:createElbPolicy" name="createElbPolicy">
     </wsdl:input>
       <wsdl:output message="tns:createElbPolicyResponse" name="createElbPolicyResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getMapEcsEsgList">
-      <wsdl:input message="tns:getMapEcsEsgList" name="getMapEcsEsgList">
-    </wsdl:input>
-      <wsdl:output message="tns:getMapEcsEsgListResponse" name="getMapEcsEsgListResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getEipPolicyPagination">
@@ -8985,12 +8875,6 @@
       <wsdl:output message="tns:getVpnListResponse" name="getVpnListResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="createEsg">
-      <wsdl:input message="tns:createEsg" name="createEsg">
-    </wsdl:input>
-      <wsdl:output message="tns:createEsgResponse" name="createEsgResponse">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getVlanPagination">
       <wsdl:input message="tns:getVlanPagination" name="getVlanPagination">
     </wsdl:input>
@@ -9027,10 +8911,10 @@
       <wsdl:output message="tns:getElbPaginationResponse" name="getElbPaginationResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getEsgPolicyList">
-      <wsdl:input message="tns:getEsgPolicyList" name="getEsgPolicyList">
+    <wsdl:operation name="getFirewallServiceList">
+      <wsdl:input message="tns:getFirewallServiceList" name="getFirewallServiceList">
     </wsdl:input>
-      <wsdl:output message="tns:getEsgPolicyListResponse" name="getEsgPolicyListResponse">
+      <wsdl:output message="tns:getFirewallServiceListResponse" name="getFirewallServiceListResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getDeviceSpecList">
@@ -9057,16 +8941,10 @@
       <wsdl:output message="tns:createStorageBoxResponse" name="createStorageBoxResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="findEsgPolicyByParams">
-      <wsdl:input message="tns:findEsgPolicyByParams" name="findEsgPolicyByParams">
+    <wsdl:operation name="deleteSubnet">
+      <wsdl:input message="tns:deleteSubnet" name="deleteSubnet">
     </wsdl:input>
-      <wsdl:output message="tns:findEsgPolicyByParamsResponse" name="findEsgPolicyByParamsResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="findEsg">
-      <wsdl:input message="tns:findEsg" name="findEsg">
-    </wsdl:input>
-      <wsdl:output message="tns:findEsgResponse" name="findEsgResponse">
+      <wsdl:output message="tns:deleteSubnetResponse" name="deleteSubnetResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="createTenants">
@@ -9091,6 +8969,12 @@
       <wsdl:input message="tns:getServiceList" name="getServiceList">
     </wsdl:input>
       <wsdl:output message="tns:getServiceListResponse" name="getServiceListResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateFirewallService">
+      <wsdl:input message="tns:updateFirewallService" name="updateFirewallService">
+    </wsdl:input>
+      <wsdl:output message="tns:updateFirewallServiceResponse" name="updateFirewallServiceResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getMapEipElbPagination">
@@ -9129,12 +9013,6 @@
       <wsdl:output message="tns:createRackResponse" name="createRackResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="insertIpaddress">
-      <wsdl:input message="tns:insertIpaddress" name="insertIpaddress">
-    </wsdl:input>
-      <wsdl:output message="tns:insertIpaddressResponse" name="insertIpaddressResponse">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="deleteLoadBalancer">
       <wsdl:input message="tns:deleteLoadBalancer" name="deleteLoadBalancer">
     </wsdl:input>
@@ -9169,6 +9047,12 @@
       <wsdl:input message="tns:updateVpn" name="updateVpn">
     </wsdl:input>
       <wsdl:output message="tns:updateVpnResponse" name="updateVpnResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findRouterByParams">
+      <wsdl:input message="tns:findRouterByParams" name="findRouterByParams">
+    </wsdl:input>
+      <wsdl:output message="tns:findRouterByParamsResponse" name="findRouterByParamsResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateDnsPolicy">
@@ -9333,6 +9217,12 @@
       <wsdl:output message="tns:createMapEcsEs3Response" name="createMapEcsEs3Response">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="findRouter">
+      <wsdl:input message="tns:findRouter" name="findRouter">
+    </wsdl:input>
+      <wsdl:output message="tns:findRouterResponse" name="findRouterResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="findDnsPolicyByParams">
       <wsdl:input message="tns:findDnsPolicyByParams" name="findDnsPolicyByParams">
     </wsdl:input>
@@ -9405,6 +9295,12 @@
       <wsdl:output message="tns:createNicPortResponse" name="createNicPortResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="findSubnet">
+      <wsdl:input message="tns:findSubnet" name="findSubnet">
+    </wsdl:input>
+      <wsdl:output message="tns:findSubnetResponse" name="findSubnetResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="createVpn">
       <wsdl:input message="tns:createVpn" name="createVpn">
     </wsdl:input>
@@ -9423,16 +9319,16 @@
       <wsdl:output message="tns:findStorageResponse" name="findStorageResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="allocateIpaddress">
-      <wsdl:input message="tns:allocateIpaddress" name="allocateIpaddress">
-    </wsdl:input>
-      <wsdl:output message="tns:allocateIpaddressResponse" name="allocateIpaddressResponse">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getNicPagination">
       <wsdl:input message="tns:getNicPagination" name="getNicPagination">
     </wsdl:input>
       <wsdl:output message="tns:getNicPaginationResponse" name="getNicPaginationResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findSubnetByParams">
+      <wsdl:input message="tns:findSubnetByParams" name="findSubnetByParams">
+    </wsdl:input>
+      <wsdl:output message="tns:findSubnetByParamsResponse" name="findSubnetByParamsResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="findFirewallPortByParams">
@@ -9471,16 +9367,28 @@
       <wsdl:output message="tns:findLoadBalancerPortResponse" name="findLoadBalancerPortResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="deleteRouter">
+      <wsdl:input message="tns:deleteRouter" name="deleteRouter">
+    </wsdl:input>
+      <wsdl:output message="tns:deleteRouterResponse" name="deleteRouterResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="createMapEcsElb">
       <wsdl:input message="tns:createMapEcsElb" name="createMapEcsElb">
     </wsdl:input>
       <wsdl:output message="tns:createMapEcsElbResponse" name="createMapEcsElbResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getEsgList">
-      <wsdl:input message="tns:getEsgList" name="getEsgList">
+    <wsdl:operation name="getRouterPagination">
+      <wsdl:input message="tns:getRouterPagination" name="getRouterPagination">
     </wsdl:input>
-      <wsdl:output message="tns:getEsgListResponse" name="getEsgListResponse">
+      <wsdl:output message="tns:getRouterPaginationResponse" name="getRouterPaginationResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubnetList">
+      <wsdl:input message="tns:getSubnetList" name="getSubnetList">
+    </wsdl:input>
+      <wsdl:output message="tns:getSubnetListResponse" name="getSubnetListResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="findStorageBox">
@@ -9501,10 +9409,22 @@
       <wsdl:output message="tns:getMapEipElbListResponse" name="getMapEipElbListResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="deleteFirewallService">
+      <wsdl:input message="tns:deleteFirewallService" name="deleteFirewallService">
+    </wsdl:input>
+      <wsdl:output message="tns:deleteFirewallServiceResponse" name="deleteFirewallServiceResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getVpnPagination">
       <wsdl:input message="tns:getVpnPagination" name="getVpnPagination">
     </wsdl:input>
       <wsdl:output message="tns:getVpnPaginationResponse" name="getVpnPaginationResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubnetPagination">
+      <wsdl:input message="tns:getSubnetPagination" name="getSubnetPagination">
+    </wsdl:input>
+      <wsdl:output message="tns:getSubnetPaginationResponse" name="getSubnetPaginationResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateEip">
@@ -9555,18 +9475,6 @@
       <wsdl:output message="tns:findLoadBalancerByParamsResponse" name="findLoadBalancerByParamsResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="findMapEcsEsg">
-      <wsdl:input message="tns:findMapEcsEsg" name="findMapEcsEsg">
-    </wsdl:input>
-      <wsdl:output message="tns:findMapEcsEsgResponse" name="findMapEcsEsgResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="deleteEsg">
-      <wsdl:input message="tns:deleteEsg" name="deleteEsg">
-    </wsdl:input>
-      <wsdl:output message="tns:deleteEsgResponse" name="deleteEsgResponse">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="createMapEipDns">
       <wsdl:input message="tns:createMapEipDns" name="createMapEipDns">
     </wsdl:input>
@@ -9613,6 +9521,12 @@
       <wsdl:input message="tns:getStoragePagination" name="getStoragePagination">
     </wsdl:input>
       <wsdl:output message="tns:getStoragePaginationResponse" name="getStoragePaginationResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findFirewallService">
+      <wsdl:input message="tns:findFirewallService" name="findFirewallService">
+    </wsdl:input>
+      <wsdl:output message="tns:findFirewallServiceResponse" name="findFirewallServiceResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getLookUpList">
@@ -9687,6 +9601,12 @@
       <wsdl:output message="tns:deleteDeviceSpecResponse" name="deleteDeviceSpecResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="updateRouter">
+      <wsdl:input message="tns:updateRouter" name="updateRouter">
+    </wsdl:input>
+      <wsdl:output message="tns:updateRouterResponse" name="updateRouterResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getEipList">
       <wsdl:input message="tns:getEipList" name="getEipList">
     </wsdl:input>
@@ -9747,12 +9667,6 @@
       <wsdl:output message="tns:updateVlanResponse" name="updateVlanResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getEsgPagination">
-      <wsdl:input message="tns:getEsgPagination" name="getEsgPagination">
-    </wsdl:input>
-      <wsdl:output message="tns:getEsgPaginationResponse" name="getEsgPaginationResponse">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="createStoragePort">
       <wsdl:input message="tns:createStoragePort" name="createStoragePort">
     </wsdl:input>
@@ -9777,22 +9691,10 @@
       <wsdl:output message="tns:getEcsSpecPaginationResponse" name="getEcsSpecPaginationResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="createMapEcsEsg">
-      <wsdl:input message="tns:createMapEcsEsg" name="createMapEcsEsg">
-    </wsdl:input>
-      <wsdl:output message="tns:createMapEcsEsgResponse" name="createMapEcsEsgResponse">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="deleteIpaddress">
       <wsdl:input message="tns:deleteIpaddress" name="deleteIpaddress">
     </wsdl:input>
       <wsdl:output message="tns:deleteIpaddressResponse" name="deleteIpaddressResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="deleteEsgPolicy">
-      <wsdl:input message="tns:deleteEsgPolicy" name="deleteEsgPolicy">
-    </wsdl:input>
-      <wsdl:output message="tns:deleteEsgPolicyResponse" name="deleteEsgPolicyResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="deleteMapEcsEip">
@@ -9805,12 +9707,6 @@
       <wsdl:input message="tns:findMapTagService" name="findMapTagService">
     </wsdl:input>
       <wsdl:output message="tns:findMapTagServiceResponse" name="findMapTagServiceResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="initIpaddress">
-      <wsdl:input message="tns:initIpaddress" name="initIpaddress">
-    </wsdl:input>
-      <wsdl:output message="tns:initIpaddressResponse" name="initIpaddressResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getElbPolicyPagination">
@@ -9921,6 +9817,18 @@
       <wsdl:output message="tns:findLoadBalancerResponse" name="findLoadBalancerResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="findFirewallServiceByParams">
+      <wsdl:input message="tns:findFirewallServiceByParams" name="findFirewallServiceByParams">
+    </wsdl:input>
+      <wsdl:output message="tns:findFirewallServiceByParamsResponse" name="findFirewallServiceByParamsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createRouter">
+      <wsdl:input message="tns:createRouter" name="createRouter">
+    </wsdl:input>
+      <wsdl:output message="tns:createRouterResponse" name="createRouterResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="updateLoadBalancerPort">
       <wsdl:input message="tns:updateLoadBalancerPort" name="updateLoadBalancerPort">
     </wsdl:input>
@@ -9955,6 +9863,12 @@
       <wsdl:input message="tns:findService" name="findService">
     </wsdl:input>
       <wsdl:output message="tns:findServiceResponse" name="findServiceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createSubnet">
+      <wsdl:input message="tns:createSubnet" name="createSubnet">
+    </wsdl:input>
+      <wsdl:output message="tns:createSubnetResponse" name="createSubnetResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="findMapEcsEipByParams">
@@ -10032,15 +9946,6 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getMapEcsEsgPagination">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="getMapEcsEsgPagination">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="getMapEcsEsgPaginationResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="createIpaddress">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="createIpaddress">
@@ -10056,15 +9961,6 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="findTagResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getEsgPolicyPagination">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="getEsgPolicyPagination">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="getEsgPolicyPaginationResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -10110,15 +10006,6 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getServerPortPaginationResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="insertVlan">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="insertVlan">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="insertVlanResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -10218,15 +10105,6 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getTagRelationResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="findMapEcsEsgByParams">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="findMapEcsEsgByParams">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="findMapEcsEsgByParamsResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -10446,21 +10324,21 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="findEs3">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="findEs3">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="findEs3Response">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getMapEcsEipList">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="getMapEcsEipList">
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getMapEcsEipListResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findEs3">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findEs3">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findEs3Response">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -10536,21 +10414,21 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="updateSubnet">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="updateSubnet">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateSubnetResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="updateMemory">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="updateMemory">
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="updateMemoryResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="updateEsgPolicy">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="updateEsgPolicy">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="updateEsgPolicyResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -10599,6 +10477,15 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getRouterList">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getRouterList">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getRouterListResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="updateServer">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="updateServer">
@@ -10617,21 +10504,21 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getFirewallServicePagination">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getFirewallServicePagination">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getFirewallServicePaginationResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getRackList">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="getRackList">
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getRackListResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="findEsgByParams">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="findEsgByParams">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="findEsgByParamsResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -10644,30 +10531,12 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="deleteMapEcsEsg">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="deleteMapEcsEsg">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="deleteMapEcsEsgResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="createSwitchPort">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="createSwitchPort">
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="createSwitchPortResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="findEsgPolicy">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="findEsgPolicy">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="findEsgPolicyResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -10704,6 +10573,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="findIdcByParamsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createFirewallService">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createFirewallService">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createFirewallServiceResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -10761,15 +10639,6 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="updateEsg">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="updateEsg">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="updateEsgResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="findServer">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="findServer">
@@ -10815,21 +10684,21 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="findVpn">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="findVpn">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="findVpnResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="findFirewallPort">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="findFirewallPort">
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="findFirewallPortResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findVpn">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findVpn">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findVpnResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -10878,15 +10747,6 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="deleteElb">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="deleteElb">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="deleteElbResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="updateNic">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="updateNic">
@@ -10896,12 +10756,12 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="createEsgPolicy">
+    <wsdl:operation name="deleteElb">
       <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="createEsgPolicy">
+      <wsdl:input name="deleteElb">
         <soap:body use="literal"/>
       </wsdl:input>
-      <wsdl:output name="createEsgPolicyResponse">
+      <wsdl:output name="deleteElbResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -11019,15 +10879,6 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="createElbPolicyResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getMapEcsEsgList">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="getMapEcsEsgList">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="getMapEcsEsgListResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -11184,15 +11035,6 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="createEsg">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="createEsg">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="createEsgResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getLoadBalancerPortList">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="getLoadBalancerPortList">
@@ -11247,21 +11089,21 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getFirewallServiceList">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getFirewallServiceList">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getFirewallServiceListResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getDeviceSpecList">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="getDeviceSpecList">
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getDeviceSpecListResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getEsgPolicyList">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="getEsgPolicyList">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="getEsgPolicyListResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -11292,21 +11134,12 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="findEsg">
+    <wsdl:operation name="deleteSubnet">
       <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="findEsg">
+      <wsdl:input name="deleteSubnet">
         <soap:body use="literal"/>
       </wsdl:input>
-      <wsdl:output name="findEsgResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="findEsgPolicyByParams">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="findEsgPolicyByParams">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="findEsgPolicyByParamsResponse">
+      <wsdl:output name="deleteSubnetResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -11364,6 +11197,15 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="updateFirewallService">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="updateFirewallService">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateFirewallServiceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getNicList">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="getNicList">
@@ -11397,15 +11239,6 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="createRackResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="insertIpaddress">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="insertIpaddress">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="insertIpaddressResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -11451,6 +11284,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getSwitchPortListResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findRouterByParams">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findRouterByParams">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findRouterByParamsResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -11706,6 +11548,15 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="findRouter">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findRouter">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findRouterResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="findDnsPolicyByParams">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="findDnsPolicyByParams">
@@ -11823,6 +11674,15 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="findSubnet">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findSubnet">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findSubnetResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="findStorage">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="findStorage">
@@ -11841,21 +11701,21 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="allocateIpaddress">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="allocateIpaddress">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="allocateIpaddressResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getNicPagination">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="getNicPagination">
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getNicPaginationResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findSubnetByParams">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findSubnetByParams">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findSubnetByParamsResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -11913,6 +11773,15 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="deleteRouter">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteRouter">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteRouterResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="createMapEcsElb">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="createMapEcsElb">
@@ -11922,21 +11791,21 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getEsgList">
+    <wsdl:operation name="getRouterPagination">
       <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="getEsgList">
+      <wsdl:input name="getRouterPagination">
         <soap:body use="literal"/>
       </wsdl:input>
-      <wsdl:output name="getEsgListResponse">
+      <wsdl:output name="getRouterPaginationResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="findStorageBox">
+    <wsdl:operation name="getSubnetList">
       <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="findStorageBox">
+      <wsdl:input name="getSubnetList">
         <soap:body use="literal"/>
       </wsdl:input>
-      <wsdl:output name="findStorageBoxResponse">
+      <wsdl:output name="getSubnetListResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -11949,12 +11818,39 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="findStorageBox">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findStorageBox">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findStorageBoxResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getMapEipElbList">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="getMapEipElbList">
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getMapEipElbListResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteFirewallService">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteFirewallService">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteFirewallServiceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubnetPagination">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getSubnetPagination">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getSubnetPaginationResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -12039,24 +11935,6 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="findMapEcsEsg">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="findMapEcsEsg">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="findMapEcsEsgResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="deleteEsg">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="deleteEsg">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="deleteEsgResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="createMapEipDns">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="createMapEipDns">
@@ -12126,6 +12004,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="updateElbResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findFirewallService">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findFirewallService">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findFirewallServiceResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -12237,6 +12124,15 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="updateRouter">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="updateRouter">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateRouterResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getEipList">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="getEipList">
@@ -12318,15 +12214,6 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getEsgPagination">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="getEsgPagination">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="getEsgPaginationResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="updateVlan">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="updateVlan">
@@ -12342,15 +12229,6 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="createStoragePortResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="createMapEcsEsg">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="createMapEcsEsg">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="createMapEcsEsgResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -12390,15 +12268,6 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="deleteEsgPolicy">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="deleteEsgPolicy">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="deleteEsgPolicyResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="deleteMapEcsEip">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="deleteMapEcsEip">
@@ -12423,15 +12292,6 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getElbPolicyPaginationResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="initIpaddress">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="initIpaddress">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="initIpaddressResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -12588,6 +12448,24 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="createRouter">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createRouter">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createRouterResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findFirewallServiceByParams">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findFirewallServiceByParams">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findFirewallServiceByParamsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="updateLoadBalancerPort">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="updateLoadBalancerPort">
@@ -12621,6 +12499,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="findHardDiskByParamsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createSubnet">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createSubnet">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createSubnetResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>

@@ -11,24 +11,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
-import com.sobey.cmdbuild.entity.EsgPolicy;
-import com.sobey.cmdbuild.repository.EsgPolicyDao;
+import com.sobey.cmdbuild.entity.FirewallService;
+import com.sobey.cmdbuild.repository.FirewallServiceDao;
 import com.sobey.cmdbuild.service.BasicSevcie;
-import com.sobey.cmdbuild.webservice.response.dto.EsgPolicyDTO;
+import com.sobey.cmdbuild.webservice.response.dto.FirewallServiceDTO;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.core.mapper.BeanMapper;
 import com.sobey.core.persistence.DynamicSpecifications;
 import com.sobey.core.persistence.SearchFilter;
 
 /**
- * EsgPolicy的service类.
+ * Router的service类.
  */
 @Service
 @Transactional
-public class EsgPolicyService extends BasicSevcie {
+public class FirewallServiceService extends BasicSevcie {
 
 	@Autowired
-	private EsgPolicyDao esgPolicyDao;
+	private FirewallServiceDao dao;
 
 	/**
 	 * 创建动态查询条件组合.
@@ -36,15 +36,15 @@ public class EsgPolicyService extends BasicSevcie {
 	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
 	 * 
 	 * @param searchParams
-	 * @return Specification<EsgPolicy>
+	 * @return Specification<FirewallService>
 	 */
-	private Specification<EsgPolicy> buildSpecification(Map<String, Object> searchParams) {
+	private Specification<FirewallService> buildSpecification(Map<String, Object> searchParams) {
 
 		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
 
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 
-		return DynamicSpecifications.bySearchFilter(filters.values(), EsgPolicy.class);
+		return DynamicSpecifications.bySearchFilter(filters.values(), FirewallService.class);
 	}
 
 	/**
@@ -52,18 +52,18 @@ public class EsgPolicyService extends BasicSevcie {
 	 * 
 	 * @param id
 	 */
-	public void deleteEsgPolicy(Integer id) {
-		esgPolicyDao.delete(id);
+	public void deleteFirewallService(Integer id) {
+		dao.delete(id);
 	}
 
 	/**
 	 * 根据ID获得对象
 	 * 
 	 * @param id
-	 * @return EsgPolicy
+	 * @return FirewallService
 	 */
-	public EsgPolicy findEsgPolicy(Integer id) {
-		return esgPolicyDao.findOne(id);
+	public FirewallService findFirewallService(Integer id) {
+		return dao.findOne(id);
 	}
 
 	/**
@@ -77,14 +77,14 @@ public class EsgPolicyService extends BasicSevcie {
 	 * 
 	 * @param searchParams
 	 *            动态查询条件Map
-	 * @return EsgPolicy
+	 * @return FirewallService
 	 */
-	public EsgPolicy findEsgPolicy(Map<String, Object> searchParams) {
-		return esgPolicyDao.findOne(buildSpecification(searchParams));
+	public FirewallService findFirewallService(Map<String, Object> searchParams) {
+		return dao.findOne(buildSpecification(searchParams));
 	}
 
 	/**
-	 * EsgPolicyDTO webservice分页查询.
+	 * FirewallServiceDTO webservice分页查询.
 	 * 
 	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
 	 * 
@@ -94,14 +94,14 @@ public class EsgPolicyService extends BasicSevcie {
 	 *            当前页数,最小为1.
 	 * @param pageSize
 	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<EsgPolicyDTO>
+	 * @return PaginationResult<FirewallServiceDTO>
 	 */
-	public PaginationResult<EsgPolicyDTO> getEsgPolicyDTOPagination(Map<String, Object> searchParams, int pageNumber,
-			int pageSize) {
+	public PaginationResult<FirewallServiceDTO> getFirewallServiceDTOPagination(Map<String, Object> searchParams,
+			int pageNumber, int pageSize) {
 
-		Page<EsgPolicy> page = getEsgPolicyPage(searchParams, pageNumber, pageSize);
+		Page<FirewallService> page = getFirewallServicePage(searchParams, pageNumber, pageSize);
 
-		List<EsgPolicyDTO> dtos = BeanMapper.mapList(page.getContent(), EsgPolicyDTO.class);
+		List<FirewallServiceDTO> dtos = BeanMapper.mapList(page.getContent(), FirewallServiceDTO.class);
 
 		return fillPaginationResult(page, dtos);
 	}
@@ -117,10 +117,10 @@ public class EsgPolicyService extends BasicSevcie {
 	 * 
 	 * @param searchParams
 	 *            动态查询条件Map
-	 * @return List<EsgPolicy>
+	 * @return List<FirewallService>
 	 */
-	public List<EsgPolicy> getEsgPolicyList(Map<String, Object> searchParams) {
-		return esgPolicyDao.findAll(buildSpecification(searchParams));
+	public List<FirewallService> getFirewallServiceList(Map<String, Object> searchParams) {
+		return dao.findAll(buildSpecification(searchParams));
 	}
 
 	/**
@@ -129,24 +129,25 @@ public class EsgPolicyService extends BasicSevcie {
 	 * @param searchParams
 	 * @param pageNumber
 	 * @param pageSize
-	 * @return Page<EsgPolicy>
+	 * @return Page<FirewallService>
 	 */
-	private Page<EsgPolicy> getEsgPolicyPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
+	private Page<FirewallService> getFirewallServicePage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
 
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
-		Specification<EsgPolicy> spec = buildSpecification(searchParams);
+		Specification<FirewallService> spec = buildSpecification(searchParams);
 
-		return esgPolicyDao.findAll(spec, pageRequest);
+		return dao.findAll(spec, pageRequest);
 	}
 
 	/**
 	 * 新增、保存对象
 	 * 
-	 * @param EsgPolicy
-	 * @return EsgPolicy
+	 * @param FirewallService
+	 * @return FirewallService
 	 */
-	public EsgPolicy saveOrUpdate(EsgPolicy esgPolicy) {
-		return esgPolicyDao.save(esgPolicy);
+	public FirewallService saveOrUpdate(FirewallService firewallService) {
+		return dao.save(firewallService);
 	}
+
 }

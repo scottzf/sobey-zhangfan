@@ -18,83 +18,18 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "ipaddress", schema = "public")
 public class Ipaddress extends BasicEntity {
 
-	private Integer vlan;
+	private String gateway;
 	private Integer idc;
-	private Integer isp;
 	private Integer ipaddressPool;
 	private Integer ipaddressStatus;
+	private Integer isp;
 	private String netMask;
 	private String remark;
-	private String gateway;
 	private String segment;
-	private Integer tenants;
-
+	private Integer subnet;
 	private Set<IpaddressHistory> ipaddressHistories = new HashSet<IpaddressHistory>(0);
 
 	public Ipaddress() {
-	}
-
-	@Column(name = "vlan")
-	public Integer getVlan() {
-		return vlan;
-	}
-
-	public void setVlan(Integer vlan) {
-		this.vlan = vlan;
-	}
-
-	@Column(name = "idc")
-	public Integer getIdc() {
-		return idc;
-	}
-
-	public void setIdc(Integer idc) {
-		this.idc = idc;
-	}
-
-	@Column(name = "isp")
-	public Integer getIsp() {
-		return isp;
-	}
-
-	public void setIsp(Integer isp) {
-		this.isp = isp;
-	}
-
-	@Column(name = "ipaddress_pool")
-	public Integer getIpaddressPool() {
-		return ipaddressPool;
-	}
-
-	public void setIpaddressPool(Integer ipaddressPool) {
-		this.ipaddressPool = ipaddressPool;
-	}
-
-	@Column(name = "ipaddress_status")
-	public Integer getIpaddressStatus() {
-		return ipaddressStatus;
-	}
-
-	public void setIpaddressStatus(Integer ipaddressStatus) {
-		this.ipaddressStatus = ipaddressStatus;
-	}
-
-	@Column(name = "net_mask", length = 100)
-	public String getNetMask() {
-		return netMask;
-	}
-
-	public void setNetMask(String netMask) {
-		this.netMask = netMask;
-	}
-
-	@Column(name = "remark", length = 200)
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
 	}
 
 	@Column(name = "gateway", length = 100)
@@ -102,26 +37,9 @@ public class Ipaddress extends BasicEntity {
 		return gateway;
 	}
 
-	public void setGateway(String gateway) {
-		this.gateway = gateway;
-	}
-
-	@Column(name = "segment", length = 100)
-	public String getSegment() {
-		return segment;
-	}
-
-	public void setSegment(String segment) {
-		this.segment = segment;
-	}
-
-	@Column(name = "tenants")
-	public Integer getTenants() {
-		return tenants;
-	}
-
-	public void setTenants(Integer tenants) {
-		this.tenants = tenants;
+	@Column(name = "idc")
+	public Integer getIdc() {
+		return idc;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ipaddress")
@@ -129,8 +47,79 @@ public class Ipaddress extends BasicEntity {
 		return ipaddressHistories;
 	}
 
+	@Column(name = "ipaddress_pool")
+	public Integer getIpaddressPool() {
+		return ipaddressPool;
+	}
+
+	@Column(name = "ipaddress_status")
+	public Integer getIpaddressStatus() {
+		return ipaddressStatus;
+	}
+
+	@Column(name = "isp")
+	public Integer getIsp() {
+		return isp;
+	}
+
+	@Column(name = "net_mask", length = 100)
+	public String getNetMask() {
+		return netMask;
+	}
+
+	@Column(name = "remark", length = 200)
+	public String getRemark() {
+		return remark;
+	}
+
+	@Column(name = "segment", length = 100)
+	public String getSegment() {
+		return segment;
+	}
+
+	@Column(name = "subnet")
+	public Integer getSubnet() {
+		return subnet;
+	}
+
+	public void setGateway(String gateway) {
+		this.gateway = gateway;
+	}
+
+	public void setIdc(Integer idc) {
+		this.idc = idc;
+	}
+
 	public void setIpaddressHistories(Set<IpaddressHistory> ipaddressHistories) {
 		this.ipaddressHistories = ipaddressHistories;
+	}
+
+	public void setIpaddressPool(Integer ipaddressPool) {
+		this.ipaddressPool = ipaddressPool;
+	}
+
+	public void setIpaddressStatus(Integer ipaddressStatus) {
+		this.ipaddressStatus = ipaddressStatus;
+	}
+
+	public void setIsp(Integer isp) {
+		this.isp = isp;
+	}
+
+	public void setNetMask(String netMask) {
+		this.netMask = netMask;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public void setSegment(String segment) {
+		this.segment = segment;
+	}
+
+	public void setSubnet(Integer subnet) {
+		this.subnet = subnet;
 	}
 
 }

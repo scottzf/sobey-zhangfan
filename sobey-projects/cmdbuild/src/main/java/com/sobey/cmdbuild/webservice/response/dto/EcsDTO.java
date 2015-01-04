@@ -27,6 +27,8 @@ public class EcsDTO extends ServiceBasicDTO {
 	private String datastoreName;
 	private String diskSize;
 	private String macAddress;
+	private Integer ecsType;
+	private String ecsTypeText;
 
 	public Integer getEcsSpec() {
 		return ecsSpec;
@@ -146,6 +148,22 @@ public class EcsDTO extends ServiceBasicDTO {
 
 	public void setMacAddress(String macAddress) {
 		this.macAddress = macAddress;
+	}
+
+	public Integer getEcsType() {
+		return ecsType;
+	}
+
+	public void setEcsType(Integer ecsType) {
+		this.ecsType = ecsType;
+	}
+
+	public String getEcsTypeText() {
+		return ecsTypeText;
+	}
+
+	public void setEcsTypeText(String ecsTypeText) {
+		this.ecsTypeText = ecsTypeText;
 	}
 
 	/**

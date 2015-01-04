@@ -58,7 +58,6 @@ public class VlanSoapTest extends BaseFunctionalTestCase {
 			vlan.setBeginDate(startDate);
 			// vlan.setTenants(tenantsId);
 			vlan.setIdc(527);
-			vlan.setVlanStatus(99);
 
 			VlanDTO dto = BeanMapper.map(vlan, VlanDTO.class);
 			cmdbuildSoapService.createVlan(dto);

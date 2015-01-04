@@ -25,10 +25,9 @@ import com.sobey.cmdbuild.entity.EipPolicy;
 import com.sobey.cmdbuild.entity.Elb;
 import com.sobey.cmdbuild.entity.ElbPolicy;
 import com.sobey.cmdbuild.entity.Es3;
-import com.sobey.cmdbuild.entity.Esg;
-import com.sobey.cmdbuild.entity.EsgPolicy;
 import com.sobey.cmdbuild.entity.Firewall;
 import com.sobey.cmdbuild.entity.FirewallPort;
+import com.sobey.cmdbuild.entity.FirewallService;
 import com.sobey.cmdbuild.entity.HardDisk;
 import com.sobey.cmdbuild.entity.Idc;
 import com.sobey.cmdbuild.entity.Ipaddress;
@@ -39,7 +38,6 @@ import com.sobey.cmdbuild.entity.LookUp;
 import com.sobey.cmdbuild.entity.MapEcsEip;
 import com.sobey.cmdbuild.entity.MapEcsElb;
 import com.sobey.cmdbuild.entity.MapEcsEs3;
-import com.sobey.cmdbuild.entity.MapEcsEsg;
 import com.sobey.cmdbuild.entity.MapEipDns;
 import com.sobey.cmdbuild.entity.MapEipElb;
 import com.sobey.cmdbuild.entity.MapTagService;
@@ -47,12 +45,14 @@ import com.sobey.cmdbuild.entity.Memory;
 import com.sobey.cmdbuild.entity.Nic;
 import com.sobey.cmdbuild.entity.NicPort;
 import com.sobey.cmdbuild.entity.Rack;
+import com.sobey.cmdbuild.entity.Router;
 import com.sobey.cmdbuild.entity.Server;
 import com.sobey.cmdbuild.entity.ServerPort;
 import com.sobey.cmdbuild.entity.Service;
 import com.sobey.cmdbuild.entity.Storage;
 import com.sobey.cmdbuild.entity.StorageBox;
 import com.sobey.cmdbuild.entity.StoragePort;
+import com.sobey.cmdbuild.entity.Subnet;
 import com.sobey.cmdbuild.entity.SwitchPort;
 import com.sobey.cmdbuild.entity.Switches;
 import com.sobey.cmdbuild.entity.Tag;
@@ -69,10 +69,9 @@ import com.sobey.cmdbuild.webservice.response.dto.EipPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ElbDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ElbPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.Es3DTO;
-import com.sobey.cmdbuild.webservice.response.dto.EsgDTO;
-import com.sobey.cmdbuild.webservice.response.dto.EsgPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.FirewallDTO;
 import com.sobey.cmdbuild.webservice.response.dto.FirewallPortDTO;
+import com.sobey.cmdbuild.webservice.response.dto.FirewallServiceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.HardDiskDTO;
 import com.sobey.cmdbuild.webservice.response.dto.IdcDTO;
 import com.sobey.cmdbuild.webservice.response.dto.IpaddressDTO;
@@ -83,7 +82,6 @@ import com.sobey.cmdbuild.webservice.response.dto.LookUpDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapEcsEipDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapEcsElbDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapEcsEs3DTO;
-import com.sobey.cmdbuild.webservice.response.dto.MapEcsEsgDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapEipDnsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapEipElbDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapTagServiceDTO;
@@ -91,12 +89,14 @@ import com.sobey.cmdbuild.webservice.response.dto.MemoryDTO;
 import com.sobey.cmdbuild.webservice.response.dto.NicDTO;
 import com.sobey.cmdbuild.webservice.response.dto.NicPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.RackDTO;
+import com.sobey.cmdbuild.webservice.response.dto.RouterDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ServerDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ServerPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ServiceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.StorageBoxDTO;
 import com.sobey.cmdbuild.webservice.response.dto.StorageDTO;
 import com.sobey.cmdbuild.webservice.response.dto.StoragePortDTO;
+import com.sobey.cmdbuild.webservice.response.dto.SubnetDTO;
 import com.sobey.cmdbuild.webservice.response.dto.SwitchPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.SwitchesDTO;
 import com.sobey.cmdbuild.webservice.response.dto.TagDTO;
@@ -1633,6 +1633,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			// LookUp
 			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
 			dto.setEcsStatusText(findLookUp(dto.getEcsStatus()).getDto().getDescription());
+			dto.setEcsTypeText(findLookUp(dto.getEcsType()).getDto().getDescription());
 
 			result.setDto(dto);
 
@@ -1670,6 +1671,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			// LookUp
 			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
 			dto.setEcsStatusText(findLookUp(dto.getEcsStatus()).getDto().getDescription());
+			dto.setEcsTypeText(findLookUp(dto.getEcsType()).getDto().getDescription());
 
 			result.setDto(dto);
 
@@ -1783,7 +1785,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			List<MapEcsEip> eips = comm.mapEcsEipService.getMapEcsEipList(paramsMap);
 			List<MapEcsElb> elbs = comm.mapEcsElbService.getMapEcsElbList(paramsMap);
 			List<MapEcsEs3> es3s = comm.mapEcsEs3Service.getMapEcsEs3List(paramsMap);
-			List<MapEcsEsg> esgs = comm.mapEcsEsgService.getMapEcsEsgList(paramsMap);
 
 			Map<String, Object> tagParamsMap = Maps.newHashMap();
 			tagParamsMap.put("EQ_idObj2", id);
@@ -1799,10 +1800,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			for (MapEcsEs3 map : es3s) {
 				deleteMapEcsEs3(id, map.getIdObj2());
-			}
-
-			for (MapEcsEsg map : esgs) {
-				deleteMapEcsEsg(id, map.getIdObj2());
 			}
 
 			for (MapTagService map : tags) {
@@ -2770,223 +2767,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public DTOResult<EsgDTO> findEsg(Integer id) {
-
-		DTOResult<EsgDTO> result = new DTOResult<EsgDTO>();
-
-		try {
-
-			Validate.notNull(id, ERROR.INPUT_NULL);
-
-			Esg esg = comm.esgService.findEsg(id);
-
-			Validate.notNull(esg, ERROR.OBJECT_NULL);
-
-			EsgDTO dto = BeanMapper.map(esg, EsgDTO.class);
-
-			// Reference
-			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
-			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
-
-			// LookUp
-			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
-
-			result.setDto(dto);
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public DTOResult<EsgDTO> findEsgByParams(SearchParams searchParams) {
-
-		DTOResult<EsgDTO> result = new DTOResult<EsgDTO>();
-
-		try {
-
-			Validate.notNull(searchParams, ERROR.INPUT_NULL);
-
-			Esg esg = comm.esgService.findEsg(searchParams.getParamsMap());
-
-			Validate.notNull(esg, ERROR.OBJECT_NULL);
-
-			EsgDTO dto = BeanMapper.map(esg, EsgDTO.class);
-
-			// Reference
-			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
-			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
-
-			// LookUp
-			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
-			result.setDto(dto);
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e, ERROR.MORE_RESULT);
-		}
-	}
-
-	@Override
-	public IdResult createEsg(EsgDTO esgDTO) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			Validate.notNull(esgDTO, ERROR.INPUT_NULL);
-
-			// 验证description是否唯一.如果不为null,则弹出错误.
-
-			Map<String, Object> paramsMap = Maps.newHashMap();
-
-			paramsMap.put("EQ_description", esgDTO.getDescription());
-			paramsMap.put("EQ_tenants", esgDTO.getTenants());
-
-			Validate.isTrue(comm.esgService.findEsg(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
-
-			Esg esg = BeanMapper.map(esgDTO, Esg.class);
-			esg.setCode("ESG-" + Identities.randomBase62(8));
-			esg.setUser(DEFAULT_USER);
-			esg.setId(0);
-
-			BeanValidators.validateWithException(validator, esg);
-
-			comm.esgService.saveOrUpdate(esg);
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public IdResult updateEsg(Integer id, EsgDTO esgDTO) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			Validate.notNull(esgDTO, ERROR.INPUT_NULL);
-
-			Esg esg = comm.esgService.findEsg(id);
-
-			Map<String, Object> paramsMap = Maps.newHashMap();
-
-			paramsMap.put("EQ_description", esgDTO.getDescription());
-			paramsMap.put("EQ_tenants", esgDTO.getTenants());
-
-			// 验证description是否唯一.如果不为null,则弹出错误.
-			Validate.isTrue(
-					comm.esgService.findEsg(paramsMap) == null || esg.getDescription().equals(esgDTO.getDescription()),
-					ERROR.OBJECT_DUPLICATE);
-
-			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
-			BeanMapper.copy(BeanMapper.map(esgDTO, Esg.class), esg);
-
-			esg.setUser(DEFAULT_USER);
-			esg.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			esg.setIdClass(TableNameUtil.getTableName(Esg.class));
-
-			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
-			BeanValidators.validateWithException(validator, esg);
-
-			comm.esgService.saveOrUpdate(esg);
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public IdResult deleteEsg(Integer id) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			Validate.notNull(id, ERROR.INPUT_NULL);
-
-			// 删除Esg,同时也需要将Esg和其他服务资源的关联关系也一并删除掉.
-			Map<String, Object> paramsMap = Maps.newHashMap();
-			paramsMap.put("EQ_idObj2", id);
-
-			List<MapEcsEsg> esgs = comm.mapEcsEsgService.getMapEcsEsgList(paramsMap);
-			List<MapTagService> tags = comm.mapTagServiceService.getMapTagServiceList(paramsMap);
-
-			for (MapEcsEsg map : esgs) {
-				deleteMapEcsEsg(map.getIdObj1(), id);
-			}
-
-			for (MapTagService map : tags) {
-				deleteMapTagService(map.getIdObj1(), id);
-			}
-
-			Esg esg = comm.esgService.findEsg(id);
-
-			Validate.notNull(esg, ERROR.OBJECT_NULL);
-
-			esg.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
-
-			comm.esgService.saveOrUpdate(esg);
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public DTOListResult<EsgDTO> getEsgList(SearchParams searchParams) {
-		DTOListResult<EsgDTO> result = new DTOListResult<EsgDTO>();
-
-		try {
-
-			result.setDtos(BeanMapper.mapList(comm.esgService.getEsgList(searchParams.getParamsMap()), EsgDTO.class));
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public PaginationResult<EsgDTO> getEsgPagination(SearchParams searchParams, Integer pageNumber, Integer pageSize) {
-
-		PaginationResult<EsgDTO> result = new PaginationResult<EsgDTO>();
-
-		try {
-
-			return comm.esgService.getEsgDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
 	public DTOResult<VpnDTO> findVpn(Integer id) {
 
 		DTOResult<VpnDTO> result = new DTOResult<VpnDTO>();
@@ -3742,340 +3522,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 		try {
 
 			return comm.dnsPolicyService.getDnsPolicyDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public DTOResult<EsgPolicyDTO> findEsgPolicy(Integer id) {
-
-		DTOResult<EsgPolicyDTO> result = new DTOResult<EsgPolicyDTO>();
-
-		try {
-
-			Validate.notNull(id, ERROR.INPUT_NULL);
-
-			EsgPolicy esgPolicy = comm.esgPolicyService.findEsgPolicy(id);
-
-			Validate.notNull(esgPolicy, ERROR.OBJECT_NULL);
-
-			EsgPolicyDTO dto = BeanMapper.map(esgPolicy, EsgPolicyDTO.class);
-
-			// LookUp
-			dto.setPolicyTypeText(findLookUp(dto.getPolicyType()).getDto().getDescription());
-
-			result.setDto(dto);
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public DTOResult<EsgPolicyDTO> findEsgPolicyByParams(SearchParams searchParams) {
-
-		DTOResult<EsgPolicyDTO> result = new DTOResult<EsgPolicyDTO>();
-
-		try {
-
-			Validate.notNull(searchParams, ERROR.INPUT_NULL);
-
-			EsgPolicy esgPolicy = comm.esgPolicyService.findEsgPolicy(searchParams.getParamsMap());
-
-			Validate.notNull(esgPolicy, ERROR.OBJECT_NULL);
-
-			EsgPolicyDTO dto = BeanMapper.map(esgPolicy, EsgPolicyDTO.class);
-
-			// LookUp
-			dto.setPolicyTypeText(findLookUp(dto.getPolicyType()).getDto().getDescription());
-
-			result.setDto(dto);
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public IdResult createEsgPolicy(EsgPolicyDTO esgPolicyDTO) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			Validate.notNull(esgPolicyDTO, ERROR.INPUT_NULL);
-
-			// 将DTO对象转换至Entity对象
-			EsgPolicy esgPolicy = BeanMapper.map(esgPolicyDTO, EsgPolicy.class);
-			esgPolicy.setCode("ESGPolicy-" + Identities.randomBase62(8));
-			esgPolicy.setUser(DEFAULT_USER);
-			esgPolicy.setId(0);
-
-			BeanValidators.validateWithException(validator, esgPolicy);
-
-			comm.esgPolicyService.saveOrUpdate(esgPolicy);
-
-			return result;
-
-		} catch (ConstraintViolationException e) {
-			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
-			return handleParameterError(result, e, message);
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public IdResult updateEsgPolicy(Integer id, EsgPolicyDTO esgPolicyDTO) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			Validate.notNull(esgPolicyDTO, ERROR.INPUT_NULL);
-
-			EsgPolicy esgPolicy = comm.esgPolicyService.findEsgPolicy(id);
-
-			Validate.notNull(esgPolicy, ERROR.OBJECT_NULL);
-
-			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
-			BeanMapper.copy(BeanMapper.map(esgPolicyDTO, EsgPolicy.class), esgPolicy);
-
-			esgPolicy.setUser(DEFAULT_USER);
-			esgPolicy.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			esgPolicy.setIdClass(TableNameUtil.getTableName(EsgPolicy.class));
-
-			BeanValidators.validateWithException(validator, esgPolicy);
-
-			comm.esgPolicyService.saveOrUpdate(esgPolicy);
-
-			return result;
-
-		} catch (ConstraintViolationException e) {
-			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
-			return handleParameterError(result, e, message);
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public IdResult deleteEsgPolicy(Integer id) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			Validate.notNull(id, ERROR.INPUT_NULL);
-
-			EsgPolicy esgPolicy = comm.esgPolicyService.findEsgPolicy(id);
-
-			Validate.notNull(esgPolicy, ERROR.OBJECT_NULL);
-
-			esgPolicy.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
-
-			comm.esgPolicyService.saveOrUpdate(esgPolicy);
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public DTOListResult<EsgPolicyDTO> getEsgPolicyList(SearchParams searchParams) {
-
-		DTOListResult<EsgPolicyDTO> result = new DTOListResult<EsgPolicyDTO>();
-
-		try {
-
-			result.setDtos(BeanMapper.mapList(comm.esgPolicyService.getEsgPolicyList(searchParams.getParamsMap()),
-					EsgPolicyDTO.class));
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public PaginationResult<EsgPolicyDTO> getEsgPolicyPagination(SearchParams searchParams, Integer pageNumber,
-			Integer pageSize) {
-
-		PaginationResult<EsgPolicyDTO> result = new PaginationResult<EsgPolicyDTO>();
-
-		try {
-
-			return comm.esgPolicyService.getEsgPolicyDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public DTOResult<MapEcsEsgDTO> findMapEcsEsg(Integer id) {
-
-		DTOResult<MapEcsEsgDTO> result = new DTOResult<MapEcsEsgDTO>();
-
-		try {
-
-			Validate.notNull(id, ERROR.INPUT_NULL);
-
-			MapEcsEsg map = comm.mapEcsEsgService.findMapEcsEsg(id);
-
-			Validate.notNull(map, ERROR.OBJECT_NULL);
-
-			MapEcsEsgDTO dto = BeanMapper.map(map, MapEcsEsgDTO.class);
-
-			result.setDto(dto);
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-
-	}
-
-	@Override
-	public DTOResult<MapEcsEsgDTO> findMapEcsEsgByParams(SearchParams searchParams) {
-
-		DTOResult<MapEcsEsgDTO> result = new DTOResult<MapEcsEsgDTO>();
-
-		try {
-
-			Validate.notNull(searchParams, ERROR.INPUT_NULL);
-
-			MapEcsEsg map = comm.mapEcsEsgService.findMapEcsEsg(searchParams.getParamsMap());
-
-			Validate.notNull(map, ERROR.OBJECT_NULL);
-
-			MapEcsEsgDTO dto = BeanMapper.map(map, MapEcsEsgDTO.class);
-
-			result.setDto(dto);
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public IdResult createMapEcsEsg(Integer ecsId, Integer esgId) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			MapEcsEsg map = new MapEcsEsg();
-
-			map.setId(0);
-			map.setIdObj1(ecsId);
-			map.setIdObj2(esgId);
-			map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
-			map.setIdClass2(TableNameUtil.getTableName(Esg.class));
-			map.setUser(DEFAULT_USER);
-
-			comm.mapEcsEsgService.saveOrUpdate(map);
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public IdResult deleteMapEcsEsg(Integer ecsId, Integer esgId) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			Validate.notNull(ecsId, ERROR.INPUT_NULL);
-			Validate.notNull(esgId, ERROR.INPUT_NULL);
-
-			Map<String, Object> paramsMap = Maps.newHashMap();
-			paramsMap.put("EQ_idObj1", ecsId);
-			paramsMap.put("EQ_idObj2", esgId);
-
-			MapEcsEsg map = comm.mapEcsEsgService.findMapEcsEsg(paramsMap);
-
-			Validate.notNull(map, ERROR.OBJECT_NULL);
-
-			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
-
-			comm.mapEcsEsgService.saveOrUpdate(map);
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public DTOListResult<MapEcsEsgDTO> getMapEcsEsgList(SearchParams searchParams) {
-
-		DTOListResult<MapEcsEsgDTO> result = new DTOListResult<MapEcsEsgDTO>();
-
-		try {
-
-			result.setDtos(BeanMapper.mapList(comm.mapEcsEsgService.getMapEcsEsgList(searchParams.getParamsMap()),
-					MapEcsEsgDTO.class));
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-	}
-
-	@Override
-	public PaginationResult<MapEcsEsgDTO> getMapEcsEsgPagination(SearchParams searchParams, Integer pageNumber,
-			Integer pageSize) {
-
-		PaginationResult<MapEcsEsgDTO> result = new PaginationResult<MapEcsEsgDTO>();
-
-		try {
-
-			return comm.mapEcsEsgService.getMapEcsEsgDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);
@@ -4881,7 +4327,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			ElbDTO elbDTO = findElb(serviceId).getDto();
 			EipDTO eipDTO = findEip(serviceId).getDto();
 			DnsDTO dnsDTO = findDns(serviceId).getDto();
-			EsgDTO esgDTO = findEsg(serviceId).getDto();
 
 			if (ecsDTO != null) {
 				map.setIdClass2(Ecs.class.getSimpleName());
@@ -4893,8 +4338,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 				map.setIdClass2(Eip.class.getSimpleName());
 			} else if (dnsDTO != null) {
 				map.setIdClass2(Dns.class.getSimpleName());
-			} else if (esgDTO != null) {
-				map.setIdClass2(Esg.class.getSimpleName());
 			} else {
 				System.out.println("没有找到资源!");
 			}
@@ -6874,7 +6317,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			IpaddressDTO dto = BeanMapper.map(ipaddress, IpaddressDTO.class);
 
 			// Reference
-			dto.setVlanDTO(findVlan(dto.getVlan()).getDto());
+			dto.setSubnetDTO(findSubnet(dto.getSubnet()).getDto());
 
 			// LookUp
 			if (dto.getIsp() != null) {
@@ -6882,7 +6325,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			}
 			dto.setIpAddressPoolText(findLookUp(dto.getIpAddressPool()).getDto().getDescription());
 			dto.setIpAddressStatusText(findLookUp(dto.getIpAddressStatus()).getDto().getDescription());
-			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
 
 			result.setDto(dto);
 
@@ -6911,7 +6353,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			IpaddressDTO dto = BeanMapper.map(ipaddress, IpaddressDTO.class);
 
 			// Reference
-			dto.setVlanDTO(findVlan(dto.getVlan()).getDto());
+			dto.setSubnetDTO(findSubnet(dto.getSubnet()).getDto());
 
 			// LookUp
 			if (dto.getIsp() != null) {
@@ -6919,7 +6361,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			}
 			dto.setIpAddressPoolText(findLookUp(dto.getIpAddressPool()).getDto().getDescription());
 			dto.setIpAddressStatusText(findLookUp(dto.getIpAddressStatus()).getDto().getDescription());
-			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
 
 			result.setDto(dto);
 
@@ -6944,7 +6385,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			// 验证description是否在统一Vlan下唯一.如果不为null,则弹出错误.
 			Map<String, Object> paramsMap = Maps.newHashMap();
 			paramsMap.put("EQ_description", ipaddressDTO.getDescription());
-			paramsMap.put("EQ_vlan", ipaddressDTO.getVlan());
+			paramsMap.put("EQ_subnet", ipaddressDTO.getSubnet());
 
 			Validate.isTrue(comm.ipaddressService.findIpaddress(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
@@ -6985,7 +6426,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			// 验证description是否在统一Vlan下唯一.如果不为null,则弹出错误.
 			Map<String, Object> paramsMap = Maps.newHashMap();
 			paramsMap.put("EQ_description", ipaddressDTO.getDescription());
-			paramsMap.put("EQ_vlan", ipaddressDTO.getVlan());
+			paramsMap.put("EQ_subnet", ipaddressDTO.getSubnet());
 
 			// 验证description是否唯一.如果不为null,则弹出错误.
 			Validate.isTrue(comm.ipaddressService.findIpaddress(paramsMap) == null
@@ -7075,57 +6516,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public IdResult allocateIpaddress(Integer id) {
-		return changeIpaddressStatus(id, LookUpConstants.IPAddressStatus.已使用.getValue());
-	}
-
-	@Override
-	public IdResult insertIpaddress(List<IpaddressDTO> ipaddressDTOList) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IdResult initIpaddress(Integer id) {
-		return changeIpaddressStatus(id, LookUpConstants.IPAddressStatus.未使用.getValue());
-	}
-
-	/**
-	 * 修改Ipaddress对象的ipaddressStatus.
-	 * 
-	 * @param id
-	 *            ipaddress Id
-	 * @param ipaddressStatus
-	 *            ipaddress状态 {@link LookUpConstants.IPAddressStatus}
-	 * @return
-	 */
-	private IdResult changeIpaddressStatus(Integer id, Integer ipaddressStatus) {
-
-		IdResult result = new IdResult();
-
-		try {
-
-			Validate.notNull(id, ERROR.INPUT_NULL);
-
-			Ipaddress ipaddress = comm.ipaddressService.findIpaddress(id);
-
-			Validate.notNull(ipaddress, ERROR.OBJECT_NULL);
-
-			ipaddress.setIpaddressStatus(ipaddressStatus);
-
-			comm.ipaddressService.saveOrUpdate(ipaddress);
-
-			return result;
-
-		} catch (IllegalArgumentException e) {
-			return handleParameterError(result, e);
-		} catch (RuntimeException e) {
-			return handleGeneralError(result, e);
-		}
-
-	}
-
-	@Override
 	public DTOResult<VlanDTO> findVlan(Integer id) {
 
 		DTOResult<VlanDTO> result = new DTOResult<VlanDTO>();
@@ -7204,7 +6594,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			// 将DTO对象转换至Entity对象
 			Vlan vlan = BeanMapper.map(vlanDTO, Vlan.class);
-			vlan.setVlanStatus(LookUpConstants.VlanStatus.未使用.getValue());
 			vlan.setCode("Vlan-" + Identities.randomBase62(8));
 			vlan.setUser(DEFAULT_USER);
 			vlan.setId(0);
@@ -7323,12 +6712,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 		} catch (RuntimeException e) {
 			return handleGeneralError(result, e);
 		}
-	}
-
-	@Override
-	public IdResult insertVlan(List<VlanDTO> vlanDTOList) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -8650,6 +8033,584 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 		try {
 
 			return comm.serviceService.getServiceDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<RouterDTO> findRouter(Integer id) {
+
+		DTOResult<RouterDTO> result = new DTOResult<RouterDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Router router = comm.routerService.findRouter(id);
+
+			Validate.notNull(router, ERROR.OBJECT_NULL);
+
+			RouterDTO dto = BeanMapper.map(router, RouterDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<RouterDTO> findRouterByParams(SearchParams searchParams) {
+
+		DTOResult<RouterDTO> result = new DTOResult<RouterDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Router router = comm.routerService.findRouter(searchParams.getParamsMap());
+
+			Validate.notNull(router, ERROR.OBJECT_NULL);
+
+			RouterDTO dto = BeanMapper.map(router, RouterDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e, ERROR.MORE_RESULT);
+		}
+	}
+
+	@Override
+	public IdResult createRouter(RouterDTO routerDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(routerDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+			paramsMap.put("EQ_description", routerDTO.getDescription());
+			paramsMap.put("EQ_tenants", routerDTO.getTenants());
+
+			Validate.isTrue(comm.routerService.findRouter(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			Router router = BeanMapper.map(routerDTO, Router.class);
+			router.setCode("Router-" + Identities.randomBase62(8));
+			router.setUser(DEFAULT_USER);
+			router.setId(0);
+
+			BeanValidators.validateWithException(validator, router);
+
+			comm.routerService.saveOrUpdate(router);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult updateRouter(Integer id, RouterDTO routerDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(routerDTO, ERROR.INPUT_NULL);
+
+			Router router = comm.routerService.findRouter(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", routerDTO.getDescription());
+			paramsMap.put("EQ_tenants", routerDTO.getTenants());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(
+					comm.routerService.findRouter(paramsMap) == null
+							|| router.getDescription().equals(routerDTO.getDescription()), ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(routerDTO, Router.class), routerDTO);
+
+			router.setUser(DEFAULT_USER);
+			router.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			router.setIdClass(TableNameUtil.getTableName(SwitchPort.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, router);
+
+			comm.routerService.saveOrUpdate(router);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteRouter(Integer id) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Router router = comm.routerService.findRouter(id);
+
+			Validate.notNull(router, ERROR.OBJECT_NULL);
+
+			router.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.routerService.saveOrUpdate(router);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOListResult<RouterDTO> getRouterList(SearchParams searchParams) {
+
+		DTOListResult<RouterDTO> result = new DTOListResult<RouterDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.routerService.getRouterList(searchParams.getParamsMap()),
+					RouterDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<RouterDTO> getRouterPagination(SearchParams searchParams, Integer pageNumber,
+			Integer pageSize) {
+
+		PaginationResult<RouterDTO> result = new PaginationResult<RouterDTO>();
+
+		try {
+
+			return comm.routerService.getRouterDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<FirewallServiceDTO> findFirewallService(Integer id) {
+
+		DTOResult<FirewallServiceDTO> result = new DTOResult<FirewallServiceDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			FirewallService firewallService = comm.firewallServiceService.findFirewallService(id);
+
+			Validate.notNull(firewallService, ERROR.OBJECT_NULL);
+
+			FirewallServiceDTO dto = BeanMapper.map(firewallService, FirewallServiceDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<FirewallServiceDTO> findFirewallServiceByParams(SearchParams searchParams) {
+
+		DTOResult<FirewallServiceDTO> result = new DTOResult<FirewallServiceDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			FirewallService firewallService = comm.firewallServiceService.findFirewallService(searchParams
+					.getParamsMap());
+
+			Validate.notNull(firewallService, ERROR.OBJECT_NULL);
+
+			FirewallServiceDTO dto = BeanMapper.map(firewallService, FirewallServiceDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult createFirewallService(FirewallServiceDTO firewallServiceDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(firewallServiceDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+			paramsMap.put("EQ_description", firewallServiceDTO.getDescription());
+			paramsMap.put("EQ_tenants", firewallServiceDTO.getTenants());
+
+			Validate.isTrue(comm.firewallServiceService.findFirewallService(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			FirewallService firewallService = BeanMapper.map(firewallServiceDTO, FirewallService.class);
+			firewallService.setCode("FirewallService-" + Identities.randomBase62(8));
+			firewallService.setUser(DEFAULT_USER);
+			firewallService.setId(0);
+
+			BeanValidators.validateWithException(validator, firewallService);
+
+			comm.firewallServiceService.saveOrUpdate(firewallService);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public IdResult updateFirewallService(Integer id, FirewallServiceDTO firewallServiceDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(firewallServiceDTO, ERROR.INPUT_NULL);
+
+			FirewallService firewallService = comm.firewallServiceService.findFirewallService(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", firewallServiceDTO.getDescription());
+			paramsMap.put("EQ_tenants", firewallServiceDTO.getTenants());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(comm.firewallServiceService.findFirewallService(paramsMap) == null
+					|| firewallService.getDescription().equals(firewallServiceDTO.getDescription()),
+					ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(firewallServiceDTO, Router.class), firewallServiceDTO);
+
+			firewallService.setUser(DEFAULT_USER);
+			firewallService.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			firewallService.setIdClass(TableNameUtil.getTableName(SwitchPort.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, firewallService);
+
+			comm.firewallServiceService.saveOrUpdate(firewallService);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteFirewallService(Integer id) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			FirewallService firewallService = comm.firewallServiceService.findFirewallService(id);
+
+			Validate.notNull(firewallService, ERROR.OBJECT_NULL);
+
+			firewallService.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.firewallServiceService.saveOrUpdate(firewallService);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOListResult<FirewallServiceDTO> getFirewallServiceList(SearchParams searchParams) {
+
+		DTOListResult<FirewallServiceDTO> result = new DTOListResult<FirewallServiceDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(
+					comm.firewallServiceService.getFirewallServiceList(searchParams.getParamsMap()),
+					FirewallServiceDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<FirewallServiceDTO> getFirewallServicePagination(SearchParams searchParams,
+			Integer pageNumber, Integer pageSize) {
+
+		PaginationResult<FirewallServiceDTO> result = new PaginationResult<FirewallServiceDTO>();
+
+		try {
+
+			return comm.firewallServiceService.getFirewallServiceDTOPagination(searchParams.getParamsMap(), pageNumber,
+					pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<SubnetDTO> findSubnet(Integer id) {
+
+		DTOResult<SubnetDTO> result = new DTOResult<SubnetDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Subnet subnet = comm.subnetService.findSubnet(id);
+
+			Validate.notNull(subnet, ERROR.OBJECT_NULL);
+
+			SubnetDTO dto = BeanMapper.map(subnet, SubnetDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<SubnetDTO> findSubnetByParams(SearchParams searchParams) {
+
+		DTOResult<SubnetDTO> result = new DTOResult<SubnetDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Subnet subnet = comm.subnetService.findSubnet(searchParams.getParamsMap());
+
+			Validate.notNull(subnet, ERROR.OBJECT_NULL);
+
+			SubnetDTO dto = BeanMapper.map(subnet, SubnetDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult createSubnet(SubnetDTO subnetDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(subnetDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+			paramsMap.put("EQ_description", subnetDTO.getDescription());
+			paramsMap.put("EQ_tenants", subnetDTO.getTenants());
+
+			Validate.isTrue(comm.subnetService.findSubnet(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
+
+			Subnet subnet = BeanMapper.map(subnetDTO, Subnet.class);
+			subnet.setCode("Subnet-" + Identities.randomBase62(8));
+			subnet.setUser(DEFAULT_USER);
+			subnet.setId(0);
+
+			BeanValidators.validateWithException(validator, subnet);
+
+			comm.subnetService.saveOrUpdate(subnet);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult updateSubnet(Integer id, SubnetDTO subnetDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(subnetDTO, ERROR.INPUT_NULL);
+
+			Subnet subnet = comm.subnetService.findSubnet(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", subnetDTO.getDescription());
+			paramsMap.put("EQ_tenants", subnetDTO.getTenants());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(
+					comm.subnetService.findSubnet(paramsMap) == null
+							|| subnet.getDescription().equals(subnetDTO.getDescription()), ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(subnetDTO, Router.class), subnetDTO);
+
+			subnet.setUser(DEFAULT_USER);
+			subnet.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			subnet.setIdClass(TableNameUtil.getTableName(SwitchPort.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, subnet);
+
+			comm.subnetService.saveOrUpdate(subnet);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteSubnet(Integer id) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Subnet subnet = comm.subnetService.findSubnet(id);
+
+			Validate.notNull(subnet, ERROR.OBJECT_NULL);
+
+			subnet.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.subnetService.saveOrUpdate(subnet);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public DTOListResult<SubnetDTO> getSubnetList(SearchParams searchParams) {
+
+		DTOListResult<SubnetDTO> result = new DTOListResult<SubnetDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.subnetService.getSubnetList(searchParams.getParamsMap()),
+					SubnetDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<SubnetDTO> getSubnetPagination(SearchParams searchParams, Integer pageNumber,
+			Integer pageSize) {
+
+		PaginationResult<SubnetDTO> result = new PaginationResult<SubnetDTO>();
+
+		try {
+
+			return comm.subnetService.getSubnetDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);

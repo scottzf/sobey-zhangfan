@@ -11,16 +11,15 @@ import com.sobey.cmdbuild.service.iaas.EipService;
 import com.sobey.cmdbuild.service.iaas.ElbPolicyService;
 import com.sobey.cmdbuild.service.iaas.ElbService;
 import com.sobey.cmdbuild.service.iaas.Es3Service;
-import com.sobey.cmdbuild.service.iaas.EsgPolicyService;
-import com.sobey.cmdbuild.service.iaas.EsgService;
+import com.sobey.cmdbuild.service.iaas.FirewallServiceService;
 import com.sobey.cmdbuild.service.iaas.LogService;
 import com.sobey.cmdbuild.service.iaas.MapEcsEipService;
 import com.sobey.cmdbuild.service.iaas.MapEcsElbService;
 import com.sobey.cmdbuild.service.iaas.MapEcsEs3Service;
-import com.sobey.cmdbuild.service.iaas.MapEcsEsgService;
 import com.sobey.cmdbuild.service.iaas.MapEipDnsService;
 import com.sobey.cmdbuild.service.iaas.MapEipElbService;
 import com.sobey.cmdbuild.service.iaas.MapTagServiceService;
+import com.sobey.cmdbuild.service.iaas.RouterService;
 import com.sobey.cmdbuild.service.iaas.ServiceService;
 import com.sobey.cmdbuild.service.iaas.VpnService;
 import com.sobey.cmdbuild.service.infrastructure.CustomService;
@@ -38,6 +37,7 @@ import com.sobey.cmdbuild.service.infrastructure.ServerService;
 import com.sobey.cmdbuild.service.infrastructure.StorageBoxService;
 import com.sobey.cmdbuild.service.infrastructure.StoragePortService;
 import com.sobey.cmdbuild.service.infrastructure.StorageService;
+import com.sobey.cmdbuild.service.infrastructure.SubnetService;
 import com.sobey.cmdbuild.service.infrastructure.SwitchPortService;
 import com.sobey.cmdbuild.service.infrastructure.SwitchesService;
 import com.sobey.cmdbuild.service.infrastructure.VlanService;
@@ -92,16 +92,13 @@ public class CommonService {
 	public Es3Service es3Service;
 
 	@Autowired
-	public EsgPolicyService esgPolicyService;
-
-	@Autowired
-	public EsgService esgService;
-
-	@Autowired
 	public FirewallPortService firewallPortService;
 
 	@Autowired
 	public FirewallService firewallService;
+
+	@Autowired
+	public FirewallServiceService firewallServiceService;
 
 	@Autowired
 	public HardDiskService hardDiskService;
@@ -134,7 +131,7 @@ public class CommonService {
 	public MapEcsEs3Service mapEcsEs3Service;
 
 	@Autowired
-	public MapEcsEsgService mapEcsEsgService;
+	public RouterService mapEcsEsgService;
 
 	@Autowired
 	public MapEipDnsService mapEipDnsService;
@@ -158,6 +155,9 @@ public class CommonService {
 	public RackService rackService;
 
 	@Autowired
+	public RouterService routerService;
+
+	@Autowired
 	public ServerPortService serverPortService;
 
 	@Autowired
@@ -174,6 +174,9 @@ public class CommonService {
 
 	@Autowired
 	public StorageService storageService;
+
+	@Autowired
+	public SubnetService subnetService;
 
 	@Autowired
 	public SwitchesService switchesService;

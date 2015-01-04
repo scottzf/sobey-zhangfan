@@ -1,4 +1,4 @@
-package com.sobey.cmdbuild.service.iaas;
+package com.sobey.cmdbuild.service.infrastructure;
 
 import java.util.List;
 import java.util.Map;
@@ -11,24 +11,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
-import com.sobey.cmdbuild.entity.Esg;
-import com.sobey.cmdbuild.repository.EsgDao;
+import com.sobey.cmdbuild.entity.Subnet;
+import com.sobey.cmdbuild.repository.SubnetDao;
 import com.sobey.cmdbuild.service.BasicSevcie;
-import com.sobey.cmdbuild.webservice.response.dto.EsgDTO;
+import com.sobey.cmdbuild.webservice.response.dto.SubnetDTO;
 import com.sobey.cmdbuild.webservice.response.result.PaginationResult;
 import com.sobey.core.mapper.BeanMapper;
 import com.sobey.core.persistence.DynamicSpecifications;
 import com.sobey.core.persistence.SearchFilter;
 
 /**
- * Esg的service类.
+ * Ipaddress的service类.
  */
 @Service
 @Transactional
-public class EsgService extends BasicSevcie {
+public class SubnetService extends BasicSevcie {
 
 	@Autowired
-	private EsgDao esgDao;
+	private SubnetDao dao;
 
 	/**
 	 * 创建动态查询条件组合.
@@ -36,15 +36,15 @@ public class EsgService extends BasicSevcie {
 	 * 自定义的查询在此进行组合.默认获得状态为"A"的有效对象.
 	 * 
 	 * @param searchParams
-	 * @return Specification<Esg>
+	 * @return Specification<Subnet>
 	 */
-	private Specification<Esg> buildSpecification(Map<String, Object> searchParams) {
+	private Specification<Subnet> buildSpecification(Map<String, Object> searchParams) {
 
 		searchParams.put("EQ_status", CMDBuildConstants.STATUS_ACTIVE);
 
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 
-		return DynamicSpecifications.bySearchFilter(filters.values(), Esg.class);
+		return DynamicSpecifications.bySearchFilter(filters.values(), Subnet.class);
 	}
 
 	/**
@@ -52,18 +52,18 @@ public class EsgService extends BasicSevcie {
 	 * 
 	 * @param id
 	 */
-	public void deleteEsg(Integer id) {
-		esgDao.delete(id);
+	public void deleteSubnet(Integer id) {
+		dao.delete(id);
 	}
 
 	/**
 	 * 根据ID获得对象
 	 * 
 	 * @param id
-	 * @return Esg
+	 * @return Subnet
 	 */
-	public Esg findEsg(Integer id) {
-		return esgDao.findOne(id);
+	public Subnet findSubnet(Integer id) {
+		return dao.findOne(id);
 	}
 
 	/**
@@ -77,14 +77,14 @@ public class EsgService extends BasicSevcie {
 	 * 
 	 * @param searchParams
 	 *            动态查询条件Map
-	 * @return Esg
+	 * @return Subnet
 	 */
-	public Esg findEsg(Map<String, Object> searchParams) {
-		return esgDao.findOne(buildSpecification(searchParams));
+	public Subnet findSubnet(Map<String, Object> searchParams) {
+		return dao.findOne(buildSpecification(searchParams));
 	}
 
 	/**
-	 * EsgDTO webservice分页查询.
+	 * SubnetDTO webservice分页查询.
 	 * 
 	 * 将Page<T>重新组织成符合DTO格式的分页格式对象.
 	 * 
@@ -94,13 +94,14 @@ public class EsgService extends BasicSevcie {
 	 *            当前页数,最小为1.
 	 * @param pageSize
 	 *            当前页大小,如每页为10行
-	 * @return PaginationResult<EsgDTO>
+	 * @return PaginationResult<SubnetDTO>
 	 */
-	public PaginationResult<EsgDTO> getEsgDTOPagination(Map<String, Object> searchParams, int pageNumber, int pageSize) {
+	public PaginationResult<SubnetDTO> getSubnetDTOPagination(Map<String, Object> searchParams, int pageNumber,
+			int pageSize) {
 
-		Page<Esg> page = getEsgPage(searchParams, pageNumber, pageSize);
+		Page<Subnet> page = getSubnetPage(searchParams, pageNumber, pageSize);
 
-		List<EsgDTO> dtos = BeanMapper.mapList(page.getContent(), EsgDTO.class);
+		List<SubnetDTO> dtos = BeanMapper.mapList(page.getContent(), SubnetDTO.class);
 
 		return fillPaginationResult(page, dtos);
 	}
@@ -116,10 +117,10 @@ public class EsgService extends BasicSevcie {
 	 * 
 	 * @param searchParams
 	 *            动态查询条件Map
-	 * @return List<Esg>
+	 * @return List<Subnet>
 	 */
-	public List<Esg> getEsgList(Map<String, Object> searchParams) {
-		return esgDao.findAll(buildSpecification(searchParams));
+	public List<Subnet> getSubnetList(Map<String, Object> searchParams) {
+		return dao.findAll(buildSpecification(searchParams));
 	}
 
 	/**
@@ -128,24 +129,24 @@ public class EsgService extends BasicSevcie {
 	 * @param searchParams
 	 * @param pageNumber
 	 * @param pageSize
-	 * @return Page<Esg>
+	 * @return Page<Subnet>
 	 */
-	private Page<Esg> getEsgPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
+	private Page<Subnet> getSubnetPage(Map<String, Object> searchParams, int pageNumber, int pageSize) {
 
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
-		Specification<Esg> spec = buildSpecification(searchParams);
+		Specification<Subnet> spec = buildSpecification(searchParams);
 
-		return esgDao.findAll(spec, pageRequest);
+		return dao.findAll(spec, pageRequest);
 	}
 
 	/**
 	 * 新增、保存对象
 	 * 
-	 * @param Esg
-	 * @return Esg
+	 * @param Subnet
+	 * @return Subnet
 	 */
-	public Esg saveOrUpdate(Esg esg) {
-		return esgDao.save(esg);
+	public Subnet saveOrUpdate(Subnet subnet) {
+		return dao.save(subnet);
 	}
 }

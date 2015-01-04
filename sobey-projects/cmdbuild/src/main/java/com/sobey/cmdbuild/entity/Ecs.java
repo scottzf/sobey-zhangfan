@@ -29,6 +29,7 @@ public class Ecs extends ServiceBasic {
 	private String datastoreName;
 	private String diskSize;
 	private String macAddress;
+	private Integer ecsType;
 
 	private Set<EcsHistory> ecsHistories = new HashSet<EcsHistory>(0);
 
@@ -132,6 +133,15 @@ public class Ecs extends ServiceBasic {
 
 	public void setMacAddress(String macAddress) {
 		this.macAddress = macAddress;
+	}
+
+	@Column(name = "ecs_type")
+	public Integer getEcsType() {
+		return ecsType;
+	}
+
+	public void setEcsType(Integer ecsType) {
+		this.ecsType = ecsType;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ecs")

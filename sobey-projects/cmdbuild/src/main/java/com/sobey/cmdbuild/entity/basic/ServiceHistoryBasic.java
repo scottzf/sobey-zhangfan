@@ -20,46 +20,23 @@ import javax.persistence.TemporalType;
 @MappedSuperclass
 public class ServiceHistoryBasic extends BasicEntity {
 
-	protected Integer tenants;
-	protected Integer idc;
 	protected Integer agentType;
-	protected String remark;
+	protected Date creataTime;
 	protected Date endDate;
-
-	@Column(name = "tenants")
-	public Integer getTenants() {
-		return tenants;
-	}
-
-	public void setTenants(Integer tenants) {
-		this.tenants = tenants;
-	}
-
-	@Column(name = "idc")
-	public Integer getIdc() {
-		return idc;
-	}
-
-	public void setIdc(Integer idc) {
-		this.idc = idc;
-	}
+	protected Integer idc;
+	protected String remark;
+	protected Integer subnet;
+	protected Integer tenants;
 
 	@Column(name = "agent_type")
 	public Integer getAgentType() {
 		return agentType;
 	}
 
-	public void setAgentType(Integer agentType) {
-		this.agentType = agentType;
-	}
-
-	@Column(name = "remark", length = 200)
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_time", nullable = false, length = 29)
+	public Date getCreataTime() {
+		return creataTime;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -68,8 +45,52 @@ public class ServiceHistoryBasic extends BasicEntity {
 		return endDate;
 	}
 
+	@Column(name = "idc")
+	public Integer getIdc() {
+		return idc;
+	}
+
+	@Column(name = "remark", length = 200)
+	public String getRemark() {
+		return remark;
+	}
+
+	@Column(name = "subnet")
+	public Integer getSubnet() {
+		return subnet;
+	}
+
+	@Column(name = "tenants")
+	public Integer getTenants() {
+		return tenants;
+	}
+
+	public void setAgentType(Integer agentType) {
+		this.agentType = agentType;
+	}
+
+	public void setCreataTime(Date creataTime) {
+		this.creataTime = creataTime;
+	}
+
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+
+	public void setIdc(Integer idc) {
+		this.idc = idc;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public void setSubnet(Integer subnet) {
+		this.subnet = subnet;
+	}
+
+	public void setTenants(Integer tenants) {
+		this.tenants = tenants;
 	}
 
 }

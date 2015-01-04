@@ -22,14 +22,12 @@ public class IpaddressHistory extends BasicEntity {
 
 	private Ipaddress ipaddress;
 	private Date endDate;
-	private Integer vlan;
 	private Integer isp;
 	private Integer ipaddressPool;
 	private Integer ipaddressStatus;
 	private String netMask;
 	private String gateway;
 	private String segment;
-	private Integer tenants;
 
 	public IpaddressHistory() {
 	}
@@ -52,15 +50,6 @@ public class IpaddressHistory extends BasicEntity {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
-	}
-
-	@Column(name = "vlan")
-	public Integer getVlan() {
-		return vlan;
-	}
-
-	public void setVlan(Integer vlan) {
-		this.vlan = vlan;
 	}
 
 	@Column(name = "isp")
@@ -115,15 +104,6 @@ public class IpaddressHistory extends BasicEntity {
 
 	public void setSegment(String segment) {
 		this.segment = segment;
-	}
-
-	@Column(name = "tenants")
-	public Integer getTenants() {
-		return tenants;
-	}
-
-	public void setTenants(Integer tenants) {
-		this.tenants = tenants;
 	}
 
 }

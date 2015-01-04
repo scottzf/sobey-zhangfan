@@ -28,7 +28,6 @@ import com.sobey.cmdbuild.entity.Log;
 import com.sobey.cmdbuild.entity.MapEcsEip;
 import com.sobey.cmdbuild.entity.MapEcsElb;
 import com.sobey.cmdbuild.entity.MapEcsEs3;
-import com.sobey.cmdbuild.entity.MapEcsEsg;
 import com.sobey.cmdbuild.entity.MapEipDns;
 import com.sobey.cmdbuild.entity.MapEipElb;
 import com.sobey.cmdbuild.entity.MapTagService;
@@ -360,7 +359,6 @@ public class TestData {
 		ipaddress.setDescription(RandomData.randomName("description"));
 		ipaddress.setIpaddressStatus(LookUpConstants.IPAddressStatus.未使用.getValue());
 		ipaddress.setIpaddressPool(ipaddressPoolId);
-		ipaddress.setVlan(vlanId);
 		ipaddress.setIdc(idcId);
 		ipaddress.setIsp(ispId);
 		ipaddress.setBeginDate(startDate);
@@ -460,19 +458,6 @@ public class TestData {
 		map.setIdObj2(es3Id);
 		map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
 		map.setIdClass2(TableNameUtil.getTableName(Es3.class));
-
-		return map;
-	}
-
-	public static MapEcsEsg randomMapEcsEsg() {
-
-		MapEcsEsg map = new MapEcsEsg();
-
-		map.setId(0);
-		map.setIdObj1(ecsId);
-		map.setIdObj2(esgId);
-		map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
-		map.setIdClass2(TableNameUtil.getTableName(Esg.class));
 
 		return map;
 	}
@@ -762,7 +747,6 @@ public class TestData {
 		vlan.setBeginDate(startDate);
 		vlan.setTenants(tenantsId);
 		vlan.setIdc(idcId);
-		vlan.setVlanStatus(vlanStatusId);
 		vlan.setRemark(RandomData.randomName("remark"));
 		vlan.setSegment(RandomData.randomName("segment"));
 		vlan.setNetMask(RandomData.randomName("netMask"));
