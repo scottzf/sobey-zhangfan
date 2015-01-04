@@ -46,7 +46,7 @@ public class FirewallTestData {
 
 		VPNUserParameter parameter = new VPNUserParameter();
 
-		parameter.setFirewallPolicyId(2000);
+		parameter.setPolicyId(2000);
 		parameter.setNetMask("255.255.255.0");
 		parameter.setVlanId(80);
 		parameter.setVpnUser("liukai01");
@@ -63,7 +63,7 @@ public class FirewallTestData {
 		ipaddress.add(ip);
 
 		parameter.getSegments().addAll(segments);
-		parameter.getIpaddress().addAll(ipaddress);
+		parameter.getIpaddresses().addAll(ipaddress);
 		return parameter;
 	}
 
