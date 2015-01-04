@@ -33,7 +33,12 @@
 
   <xs:complexType name="ELBParameter">
     <xs:sequence>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
+      <xs:element minOccurs="0" name="port" type="xs:int"/>
+      <xs:element minOccurs="0" name="protocol" type="xs:string"/>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="publicIPs" nillable="true" type="tns:ELBPublicIPParameter"/>
+      <xs:element minOccurs="0" name="url" type="xs:string"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
       <xs:element minOccurs="0" name="vip" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
@@ -67,7 +72,9 @@
   </xs:complexType>
 
   <xs:complexType name="getELBConfig">
-    <xs:sequence/>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="elbParameter" type="tns:ELBParameter"/>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="getELBConfigResponse">

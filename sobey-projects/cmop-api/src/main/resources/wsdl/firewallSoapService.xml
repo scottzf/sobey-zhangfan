@@ -7,7 +7,15 @@
 
   <xs:element name="EIPPolicyParameter" type="tns:EIPPolicyParameter"/>
 
+  <xs:element name="RouterParameter" type="tns:RouterParameter"/>
+
+  <xs:element name="SubnetParameter" type="tns:SubnetParameter"/>
+
   <xs:element name="VPNUserParameter" type="tns:VPNUserParameter"/>
+
+  <xs:element name="bindingSubnetRouter" type="tns:bindingSubnetRouter"/>
+
+  <xs:element name="bindingSubnetRouterResponse" type="tns:bindingSubnetRouterResponse"/>
 
   <xs:element name="changeVPNUserAccesssAddressByFirewall" type="tns:changeVPNUserAccesssAddressByFirewall"/>
 
@@ -37,10 +45,13 @@
 
   <xs:complexType name="VPNUserParameter">
     <xs:sequence>
-      <xs:element minOccurs="0" name="firewallPolicyId" type="xs:int"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="ipaddress" nillable="true" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="ipaddresses" nillable="true" type="xs:string"/>
       <xs:element minOccurs="0" name="netMask" type="xs:string"/>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
+      <xs:element minOccurs="0" name="policyId" type="xs:int"/>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="segments" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="url" type="xs:string"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
       <xs:element minOccurs="0" name="vlanId" type="xs:int"/>
       <xs:element minOccurs="0" name="vpnPassword" type="xs:string"/>
       <xs:element minOccurs="0" name="vpnUser" type="xs:string"/>
@@ -60,6 +71,36 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="bindingSubnetRouter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="routerParameter" type="tns:RouterParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RouterParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="subnetParameters" nillable="true" type="tns:SubnetParameter"/>
+      <xs:element minOccurs="0" name="url" type="xs:string"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SubnetParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="gateway" type="xs:string"/>
+      <xs:element minOccurs="0" name="policyId" type="xs:int"/>
+      <xs:element minOccurs="0" name="segment" type="xs:string"/>
+      <xs:element minOccurs="0" name="subnetMask" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="bindingSubnetRouterResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="createEIPByFirewall">
     <xs:sequence>
       <xs:element minOccurs="0" name="eipParameter" type="tns:EIPParameter"/>
@@ -71,8 +112,11 @@
       <xs:element maxOccurs="unbounded" minOccurs="0" name="allPolicies" nillable="true" type="xs:string"/>
       <xs:element minOccurs="0" name="internetIP" type="xs:string"/>
       <xs:element minOccurs="0" name="isp" type="xs:int"/>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="policies" nillable="true" type="tns:EIPPolicyParameter"/>
       <xs:element minOccurs="0" name="privateIP" type="xs:string"/>
+      <xs:element minOccurs="0" name="url" type="xs:string"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -136,6 +180,10 @@
     <wsdl:part element="tns:changeVPNUserAccesssAddressByFirewallResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="bindingSubnetRouterResponse">
+    <wsdl:part element="tns:bindingSubnetRouterResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="createVPNUserByFirewall">
     <wsdl:part element="tns:createVPNUserByFirewall" name="parameters">
     </wsdl:part>
@@ -156,6 +204,10 @@
     <wsdl:part element="tns:deleteEIPByFirewallResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="bindingSubnetRouter">
+    <wsdl:part element="tns:bindingSubnetRouter" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="deleteEIPByFirewall">
     <wsdl:part element="tns:deleteEIPByFirewall" name="parameters">
     </wsdl:part>
@@ -173,6 +225,12 @@
       <wsdl:input message="tns:deleteVPNUserByFirewall" name="deleteVPNUserByFirewall">
     </wsdl:input>
       <wsdl:output message="tns:deleteVPNUserByFirewallResponse" name="deleteVPNUserByFirewallResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="bindingSubnetRouter">
+      <wsdl:input message="tns:bindingSubnetRouter" name="bindingSubnetRouter">
+    </wsdl:input>
+      <wsdl:output message="tns:bindingSubnetRouterResponse" name="bindingSubnetRouterResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="createEIPByFirewall">
@@ -202,6 +260,15 @@
   </wsdl:portType>
   <wsdl:binding name="FirewallSoapServiceSoapBinding" type="tns:FirewallSoapService">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="bindingSubnetRouter">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="bindingSubnetRouter">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="bindingSubnetRouterResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="deleteVPNUserByFirewall">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="deleteVPNUserByFirewall">
