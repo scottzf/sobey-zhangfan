@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.annotations.Insert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +28,7 @@ import com.sobey.generate.cmdbuild.ElbPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.IpaddressDTO;
+import com.sobey.generate.cmdbuild.MapEcsEs3DTO;
 import com.sobey.generate.cmdbuild.NicDTO;
 import com.sobey.generate.cmdbuild.ServerDTO;
 import com.sobey.generate.cmdbuild.SubnetDTO;
@@ -578,23 +578,46 @@ public class ApiServiceImpl implements ApiService {
 		// Step.3 写入CMDBuild
 		cmdbuildSoapService.createEs3(es3DTO);
 
+		// ECS和ES3的关联关系
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_description", es3DTO.getDescription());
+
+		Es3DTO queryEs3DTO = (Es3DTO) cmdbuildSoapService.findEs3ByParams(CMDBuildUtil.wrapperSearchParams(map))
+				.getDto();
+		cmdbuildSoapService.createMapEcsEs3(ecsId, queryEs3DTO.getId());
+
 		return result;
 	}
 
 	@Override
 	public WSResult deleteES3(Integer es3Id) {
 
+		WSResult result = new WSResult();
+
 		Es3DTO es3DTO = (Es3DTO) cmdbuildSoapService.findEs3(es3Id).getDto();
 		IdcDTO idcDTO = (IdcDTO) cmdbuildSoapService.findIdc(es3DTO.getIdc()).getDto();
 
-		// Step.2 为ECS分配存储空间
-		VMDiskParameter vmDiskParameter = new VMDiskParameter();
-		vmDiskParameter.setDatacenter(idcDTO.getDescription());
-		vmDiskParameter.setDiskGB(es3DTO.getTotalSize());
-		vmDiskParameter.setDiskName(es3DTO.getDescription());
-		vmDiskParameter.setVmName(ecsDTO.getDescription());// TODO ecs和es3应该是1对N的关系
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_idObj2", es3Id);
+		List<Object> objects = cmdbuildSoapService.getMapEcsEs3List(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+				.getDto();
 
-		instanceSoapService.deleteVMDiskByInstance(vmDiskParameter);
+		for (Object object : objects) {
+			MapEcsEs3DTO mapEcsEs3DTO = (MapEcsEs3DTO) object;
+
+			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(Integer.valueOf(mapEcsEs3DTO.getIdObj1())).getDto();
+
+			// Step.2 为ECS分配存储空间
+			VMDiskParameter vmDiskParameter = new VMDiskParameter();
+			vmDiskParameter.setDatacenter(idcDTO.getDescription());
+			vmDiskParameter.setDiskGB(es3DTO.getTotalSize());
+			vmDiskParameter.setDiskName(es3DTO.getDescription());
+			vmDiskParameter.setVmName(ecsDTO.getDescription());
+
+			instanceSoapService.deleteVMDiskByInstance(vmDiskParameter);
+		}
+
+		return result;
 	}
 
 	@Override
