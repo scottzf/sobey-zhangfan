@@ -73,6 +73,8 @@ public interface CmdbuildSoapService {
 
 	Integer getMaxPolicyId();
 
+	Integer findMaxVlanId(Integer nicId, Integer subnetId);
+
 	// ==============================//
 	// =========== LookUp ===========//
 	// == 系统默认表,只读取,不写入 ==//
@@ -757,6 +759,10 @@ public interface CmdbuildSoapService {
 
 	PaginationResult<IpaddressDTO> getIpaddressPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	IdResult initIpaddress(@WebParam(name = "id") Integer id);
+	
+	IdResult allocateIpaddress(@WebParam(name = "id") Integer id);
 
 	// ==============================//
 	// ============ Vlan ============//
