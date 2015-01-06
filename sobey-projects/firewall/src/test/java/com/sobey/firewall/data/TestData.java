@@ -27,8 +27,8 @@ public class TestData {
 
 		EIPPolicyParameter policyParameter = new EIPPolicyParameter();
 		policyParameter.setProtocolText("tcp");
-		policyParameter.setSourcePort(80);
-		policyParameter.setTargetPort(80);
+		policyParameter.setSourcePort(10);
+		policyParameter.setTargetPort(10);
 
 		policies.add(policyParameter);
 
@@ -43,7 +43,7 @@ public class TestData {
 
 		parameter.setPolicyId(2000);
 		parameter.setNetMask("255.255.255.0");
-		parameter.setVlanId(80);
+		parameter.setVlanId(10);
 		parameter.setVpnUser("liukai01");
 		parameter.setVpnPassword("123456");
 
@@ -66,21 +66,24 @@ public class TestData {
 
 		SubnetParameter subnetParameterA = new SubnetParameter();
 		subnetParameterA.setGateway("173.20.10.254");
-		subnetParameterA.setSegment("173.20.10.0");
+		subnetParameterA.setSegment("173.20.10.0/24");
 		subnetParameterA.setSubnetMask("255.255.255.0");
 		subnetParameterA.setPolicyId(10);
+		subnetParameterA.setPortName("port10");
 
 		SubnetParameter subnetParameterB = new SubnetParameter();
 		subnetParameterB.setGateway("173.20.11.254");
-		subnetParameterB.setSegment("173.20.11.0");
+		subnetParameterB.setSegment("173.20.11.0/24");
 		subnetParameterB.setSubnetMask("255.255.255.0");
 		subnetParameterB.setPolicyId(11);
+		subnetParameterB.setPortName("port11");
 
 		SubnetParameter subnetParameterC = new SubnetParameter();
 		subnetParameterC.setGateway("173.20.12.254");
-		subnetParameterC.setSegment("173.20.12.0");
+		subnetParameterC.setSegment("173.20.12.0/24");
 		subnetParameterC.setSubnetMask("255.255.255.0");
 		subnetParameterC.setPolicyId(12);
+		subnetParameterC.setPortName("port12");
 
 		subnetParameters.add(subnetParameterA);
 		subnetParameters.add(subnetParameterB);
@@ -92,6 +95,19 @@ public class TestData {
 		parameter.setUserName("admin");
 		parameter.setPassword("admin");
 		parameter.setSubnetParameters(subnetParameters);
+		return parameter;
+	}
+
+	public static SubnetParameter randomSubnetParameter() {
+
+		SubnetParameter parameter = new SubnetParameter();
+
+		parameter.setGateway("173.20.10.254");
+		parameter.setSegment("173.20.10.0/24");
+		parameter.setSubnetMask("255.255.255.0");
+		parameter.setPolicyId(10);
+		parameter.setPortName("port10");
+
 		return parameter;
 	}
 

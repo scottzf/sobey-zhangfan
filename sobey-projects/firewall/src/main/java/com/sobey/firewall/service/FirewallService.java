@@ -731,8 +731,7 @@ public class FirewallService {
 			sb.append("config firewall policy").append(DEFAULT_SYMBOL);
 			sb.append("edit ").append(subnet.getPolicyId()).append(DEFAULT_SYMBOL);
 
-			sb.append("set srcintf ").append("\"").append("port").append(subnet.getSegment()).append("\"")
-					.append(DEFAULT_SYMBOL);
+			sb.append("set srcintf ").append("\"").append(subnet.getPortName()).append("\"").append(DEFAULT_SYMBOL);
 			sb.append("set srcaddr ").append("\"").append(subnet.getSegment()).append("\"").append(DEFAULT_SYMBOL);
 
 			// new 一个新的list,将参数中的list填充进去,并将循环中的自身对象remove出去,这样就达到源对应多个目标的目的.
@@ -741,7 +740,7 @@ public class FirewallService {
 			parameters.remove(subnet);
 
 			for (SubnetParameter subnetParameter : parameters) {
-				sb.append("set dstintf ").append("\"").append("port").append(subnetParameter.getSegment()).append("\"")
+				sb.append("set dstintf ").append("\"").append(subnetParameter.getPortName()).append("\"")
 						.append(DEFAULT_SYMBOL);
 				sb.append("set dstaddr ").append("\"").append(subnetParameter.getSegment()).append("\"")
 						.append(DEFAULT_SYMBOL);
