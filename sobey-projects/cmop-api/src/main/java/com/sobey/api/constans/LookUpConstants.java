@@ -190,17 +190,6 @@ public class LookUpConstants {
 	}
 
 	/**
-	 * ECS电源操作
-	 * 
-	 * 
-	 * @author Administrator
-	 * 
-	 */
-	public enum powerOperation {
-		poweroff, poweron;
-	}
-
-	/**
 	 * 描述LookUp中Result的Description和Id.
 	 * 
 	 * <pre>
