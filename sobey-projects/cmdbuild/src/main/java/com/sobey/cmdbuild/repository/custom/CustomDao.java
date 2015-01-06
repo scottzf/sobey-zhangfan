@@ -10,4 +10,6 @@ public interface CustomDao {
 
 	public List<Object[]> getTagRelation(Integer serviceId);
 
+	public Integer selectMaxVlanId(Integer nicId ,Integer subnetId);
+
 }

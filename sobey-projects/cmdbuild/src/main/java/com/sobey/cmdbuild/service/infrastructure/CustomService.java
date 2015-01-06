@@ -26,7 +26,7 @@ public class CustomService {
 	 * 
 	 * @return
 	 */
-	public int selectMaxAclNumber() {
+	public Integer selectMaxAclNumber() {
 
 		Integer aclNumber = customDao.selectMaxAclNumber();
 		return (int) MathsUtil.add(aclNumber == null ? 3000 : aclNumber, 1);
@@ -37,9 +37,21 @@ public class CustomService {
 	 * 
 	 * @return
 	 */
-	public int selectMaxPolicyId() {
+	public Integer selectMaxPolicyId() {
 		Integer policyId = customDao.selectMaxPolicyId();
 		return (int) MathsUtil.add(policyId == null ? 2000 : policyId, 1);
+	}
+
+	/**
+	 * 根据nicId和subnet获得数据库中Vlan的最大值,并加上1.
+	 * 
+	 * @param nicId
+	 * @param subnetId
+	 * @return
+	 */
+	public Integer selectMaxVlanId(Integer nicId, Integer subnetId) {
+		Integer vlanId = customDao.selectMaxVlanId(nicId, subnetId);
+		return (int) MathsUtil.add(vlanId == null ? 4 : vlanId, 1);
 	}
 
 	public List<TagRelation> getTagRelation(Integer serviceId) {
