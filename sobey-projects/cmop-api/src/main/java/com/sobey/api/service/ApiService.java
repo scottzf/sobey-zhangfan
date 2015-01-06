@@ -11,6 +11,7 @@ import com.sobey.generate.cmdbuild.EipPolicyDTO;
 import com.sobey.generate.cmdbuild.ElbDTO;
 import com.sobey.generate.cmdbuild.ElbPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
+import com.sobey.generate.cmdbuild.SubnetDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 
 public interface ApiService {
@@ -21,9 +22,9 @@ public interface ApiService {
 
 	// ==================== Subnet ====================//
 
-	public WSResult createSubnet();
+	public WSResult createSubnet(SubnetDTO subnetDTO);
 
-	public WSResult deleteSubnet();
+	public WSResult deleteSubnet(Integer subnetId);
 
 	// ==================== ECS ====================//
 
@@ -37,7 +38,7 @@ public interface ApiService {
 
 	// ==================== ES3 ====================//
 
-	public WSResult createES3(Es3DTO es3DTO, String vmName);
+	public WSResult createES3(Es3DTO es3DTO, Integer ecsId);
 
 	public WSResult deleteES3(Integer es3Id);
 

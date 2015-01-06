@@ -95,6 +95,10 @@
 
   <xs:element name="VpnDTO" type="tns:VpnDTO"/>
 
+  <xs:element name="allocateIpaddress" type="tns:allocateIpaddress"/>
+
+  <xs:element name="allocateIpaddressResponse" type="tns:allocateIpaddressResponse"/>
+
   <xs:element name="createDeviceSpec" type="tns:createDeviceSpec"/>
 
   <xs:element name="createDeviceSpecResponse" type="tns:createDeviceSpecResponse"/>
@@ -635,6 +639,10 @@
 
   <xs:element name="findMapTagServiceResponse" type="tns:findMapTagServiceResponse"/>
 
+  <xs:element name="findMaxVlanId" type="tns:findMaxVlanId"/>
+
+  <xs:element name="findMaxVlanIdResponse" type="tns:findMaxVlanIdResponse"/>
+
   <xs:element name="findMemory" type="tns:findMemory"/>
 
   <xs:element name="findMemoryByParams" type="tns:findMemoryByParams"/>
@@ -1142,6 +1150,10 @@
   <xs:element name="getVpnPagination" type="tns:getVpnPagination"/>
 
   <xs:element name="getVpnPaginationResponse" type="tns:getVpnPaginationResponse"/>
+
+  <xs:element name="initIpaddress" type="tns:initIpaddress"/>
+
+  <xs:element name="initIpaddressResponse" type="tns:initIpaddressResponse"/>
 
   <xs:element name="updateDeviceSpec" type="tns:updateDeviceSpec"/>
 
@@ -2879,6 +2891,19 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:complexType name="findMaxVlanId">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:int"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findMaxVlanIdResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="updateEcs">
     <xs:sequence>
       <xs:element minOccurs="0" name="id" type="xs:int"/>
@@ -4527,6 +4552,18 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="allocateIpaddress">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="allocateIpaddressResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="getNicPagination">
     <xs:sequence>
       <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
@@ -5336,6 +5373,18 @@
   <xs:complexType name="findMapTagServiceResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="initIpaddress">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="initIpaddressResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -6276,6 +6325,14 @@
     <wsdl:part element="tns:findTenantsResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="initIpaddress">
+    <wsdl:part element="tns:initIpaddress" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="allocateIpaddress">
+    <wsdl:part element="tns:allocateIpaddress" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="createIpaddress">
     <wsdl:part element="tns:createIpaddress" name="parameters">
     </wsdl:part>
@@ -6550,6 +6607,10 @@
   </wsdl:message>
   <wsdl:message name="deleteElbResponse">
     <wsdl:part element="tns:deleteElbResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findMaxVlanIdResponse">
+    <wsdl:part element="tns:findMaxVlanIdResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="updateElbPolicy">
@@ -7126,6 +7187,10 @@
   </wsdl:message>
   <wsdl:message name="getEcsPaginationResponse">
     <wsdl:part element="tns:getEcsPaginationResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findMaxVlanId">
+    <wsdl:part element="tns:findMaxVlanId" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteElbPolicy">
@@ -7748,6 +7813,10 @@
     <wsdl:part element="tns:createLoadBalancerPortResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="initIpaddressResponse">
+    <wsdl:part element="tns:initIpaddressResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="createLoadBalancer">
     <wsdl:part element="tns:createLoadBalancer" name="parameters">
     </wsdl:part>
@@ -7774,6 +7843,10 @@
   </wsdl:message>
   <wsdl:message name="findDns">
     <wsdl:part element="tns:findDns" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="allocateIpaddressResponse">
+    <wsdl:part element="tns:allocateIpaddressResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getServerPortPaginationResponse">
@@ -7884,12 +7957,12 @@
     <wsdl:part element="tns:getServerList" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="createMapTagService">
-    <wsdl:part element="tns:createMapTagService" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="findEcsSpecByParams">
     <wsdl:part element="tns:findEcsSpecByParams" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createMapTagService">
+    <wsdl:part element="tns:createMapTagService" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findLoadBalancer">
@@ -8555,6 +8628,12 @@
       <wsdl:input message="tns:findHardDisk" name="findHardDisk">
     </wsdl:input>
       <wsdl:output message="tns:findHardDiskResponse" name="findHardDiskResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findMaxVlanId">
+      <wsdl:input message="tns:findMaxVlanId" name="findMaxVlanId">
+    </wsdl:input>
+      <wsdl:output message="tns:findMaxVlanIdResponse" name="findMaxVlanIdResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateEcs">
@@ -9319,6 +9398,12 @@
       <wsdl:output message="tns:findStorageResponse" name="findStorageResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="allocateIpaddress">
+      <wsdl:input message="tns:allocateIpaddress" name="allocateIpaddress">
+    </wsdl:input>
+      <wsdl:output message="tns:allocateIpaddressResponse" name="allocateIpaddressResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getNicPagination">
       <wsdl:input message="tns:getNicPagination" name="getNicPagination">
     </wsdl:input>
@@ -9707,6 +9792,12 @@
       <wsdl:input message="tns:findMapTagService" name="findMapTagService">
     </wsdl:input>
       <wsdl:output message="tns:findMapTagServiceResponse" name="findMapTagServiceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="initIpaddress">
+      <wsdl:input message="tns:initIpaddress" name="initIpaddress">
+    </wsdl:input>
+      <wsdl:output message="tns:initIpaddressResponse" name="initIpaddressResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getElbPolicyPagination">
@@ -10537,6 +10628,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="createSwitchPortResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findMaxVlanId">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findMaxVlanId">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findMaxVlanIdResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -11701,6 +11801,15 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="allocateIpaddress">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="allocateIpaddress">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="allocateIpaddressResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getNicPagination">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="getNicPagination">
@@ -12292,6 +12401,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getElbPolicyPaginationResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="initIpaddress">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="initIpaddress">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="initIpaddressResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
