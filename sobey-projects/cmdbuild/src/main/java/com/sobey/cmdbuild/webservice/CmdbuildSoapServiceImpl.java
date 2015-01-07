@@ -15,6 +15,10 @@ import com.sobey.cmdbuild.constants.CMDBuildConstants;
 import com.sobey.cmdbuild.constants.ERROR;
 import com.sobey.cmdbuild.constants.LookUpConstants;
 import com.sobey.cmdbuild.constants.WsConstants;
+import com.sobey.cmdbuild.entity.ConfigFirewallAddress;
+import com.sobey.cmdbuild.entity.ConfigFirewallPolicy;
+import com.sobey.cmdbuild.entity.ConfigRouterStatic;
+import com.sobey.cmdbuild.entity.ConfigSystemInterface;
 import com.sobey.cmdbuild.entity.DeviceSpec;
 import com.sobey.cmdbuild.entity.Dns;
 import com.sobey.cmdbuild.entity.DnsPolicy;
@@ -59,6 +63,10 @@ import com.sobey.cmdbuild.entity.Tag;
 import com.sobey.cmdbuild.entity.Tenants;
 import com.sobey.cmdbuild.entity.Vlan;
 import com.sobey.cmdbuild.entity.Vpn;
+import com.sobey.cmdbuild.webservice.response.dto.ConfigFirewallAddressDTO;
+import com.sobey.cmdbuild.webservice.response.dto.ConfigFirewallPolicyDTO;
+import com.sobey.cmdbuild.webservice.response.dto.ConfigRouterStaticDTO;
+import com.sobey.cmdbuild.webservice.response.dto.ConfigSystemInterfaceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DeviceSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DnsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DnsPolicyDTO;
@@ -1966,7 +1974,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 		} catch (RuntimeException e) {
 			return handleGeneralError(result, e);
 		}
-
 	}
 
 	@Override
@@ -7365,7 +7372,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 		} catch (RuntimeException e) {
 			return handleGeneralError(result, e);
 		}
-
 	}
 
 	@Override
@@ -8203,7 +8209,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			router.setUser(DEFAULT_USER);
 			router.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			router.setIdClass(TableNameUtil.getTableName(SwitchPort.class));
+			router.setIdClass(TableNameUtil.getTableName(Router.class));
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, router);
@@ -8392,11 +8398,11 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 					ERROR.OBJECT_DUPLICATE);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
-			BeanMapper.copy(BeanMapper.map(firewallServiceDTO, Router.class), firewallServiceDTO);
+			BeanMapper.copy(BeanMapper.map(firewallServiceDTO, FirewallService.class), firewallServiceDTO);
 
 			firewallService.setUser(DEFAULT_USER);
 			firewallService.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			firewallService.setIdClass(TableNameUtil.getTableName(SwitchPort.class));
+			firewallService.setIdClass(TableNameUtil.getTableName(FirewallService.class));
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, firewallService);
@@ -8660,6 +8666,846 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 		try {
 
 			return comm.subnetService.getSubnetDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<ConfigFirewallAddressDTO> findConfigFirewallAddress(Integer id) {
+
+		DTOResult<ConfigFirewallAddressDTO> result = new DTOResult<ConfigFirewallAddressDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			ConfigFirewallAddress configFirewallAddress = comm.configFirewallAddressService
+					.findConfigFirewallAddress(id);
+
+			Validate.notNull(configFirewallAddress, ERROR.OBJECT_NULL);
+
+			ConfigFirewallAddressDTO dto = BeanMapper.map(configFirewallAddress, ConfigFirewallAddressDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setSubnetDTO(findSubnet(dto.getSubnet()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<ConfigFirewallAddressDTO> findConfigFirewallAddressByParams(SearchParams searchParams) {
+
+		DTOResult<ConfigFirewallAddressDTO> result = new DTOResult<ConfigFirewallAddressDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			ConfigFirewallAddress configFirewallAddress = comm.configFirewallAddressService
+					.findConfigFirewallAddress(searchParams.getParamsMap());
+
+			Validate.notNull(configFirewallAddress, ERROR.OBJECT_NULL);
+
+			ConfigFirewallAddressDTO dto = BeanMapper.map(configFirewallAddress, ConfigFirewallAddressDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setSubnetDTO(findSubnet(dto.getSubnet()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public IdResult createConfigFirewallAddress(ConfigFirewallAddressDTO configFirewallAddressDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(configFirewallAddressDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", configFirewallAddressDTO.getDescription());
+			paramsMap.put("EQ_tenants", configFirewallAddressDTO.getTenants());
+
+			Validate.isTrue(comm.configFirewallAddressService.findConfigFirewallAddress(paramsMap) == null,
+					ERROR.OBJECT_DUPLICATE);
+
+			ConfigFirewallAddress configFirewallAddress = BeanMapper.map(configFirewallAddressDTO,
+					ConfigFirewallAddress.class);
+			configFirewallAddress.setCode("CFA" + Identities.randomBase62(8));
+			configFirewallAddress.setUser(DEFAULT_USER);
+			configFirewallAddress.setId(0);
+
+			BeanValidators.validateWithException(validator, configFirewallAddress);
+
+			comm.configFirewallAddressService.saveOrUpdate(configFirewallAddress);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult updateConfigFirewallAddress(Integer id, ConfigFirewallAddressDTO configFirewallAddressDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(configFirewallAddressDTO, ERROR.INPUT_NULL);
+
+			ConfigFirewallAddress configFirewallAddress = comm.configFirewallAddressService
+					.findConfigFirewallAddress(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", configFirewallAddressDTO.getDescription());
+			paramsMap.put("EQ_tenants", configFirewallAddressDTO.getTenants());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(comm.configFirewallAddressService.findConfigFirewallAddress(paramsMap) == null
+					|| configFirewallAddress.getDescription().equals(configFirewallAddressDTO.getDescription()),
+					ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(configFirewallAddressDTO, ConfigFirewallAddress.class),
+					configFirewallAddressDTO);
+
+			configFirewallAddress.setUser(DEFAULT_USER);
+			configFirewallAddress.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			configFirewallAddress.setIdClass(TableNameUtil.getTableName(ConfigFirewallAddress.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, configFirewallAddress);
+
+			comm.configFirewallAddressService.saveOrUpdate(configFirewallAddress);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteConfigFirewallAddress(Integer id) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			ConfigFirewallAddress configFirewallAddress = comm.configFirewallAddressService
+					.findConfigFirewallAddress(id);
+
+			Validate.notNull(configFirewallAddress, ERROR.OBJECT_NULL);
+
+			configFirewallAddress.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.configFirewallAddressService.saveOrUpdate(configFirewallAddress);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOListResult<ConfigFirewallAddressDTO> getConfigFirewallAddressList(SearchParams searchParams) {
+
+		DTOListResult<ConfigFirewallAddressDTO> result = new DTOListResult<ConfigFirewallAddressDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(
+					comm.configFirewallAddressService.getConfigFirewallAddressList(searchParams.getParamsMap()),
+					ConfigFirewallAddressDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<ConfigFirewallAddressDTO> getConfigFirewallAddressPagination(SearchParams searchParams,
+			Integer pageNumber, Integer pageSize) {
+
+		PaginationResult<ConfigFirewallAddressDTO> result = new PaginationResult<ConfigFirewallAddressDTO>();
+
+		try {
+
+			return comm.configFirewallAddressService.getConfigFirewallAddressDTOPagination(searchParams.getParamsMap(),
+					pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<ConfigFirewallPolicyDTO> findConfigFirewallPolicy(Integer id) {
+
+		DTOResult<ConfigFirewallPolicyDTO> result = new DTOResult<ConfigFirewallPolicyDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			ConfigFirewallPolicy configFirewallPolicy = comm.configFirewallPolicyService.findConfigFirewallPolicy(id);
+
+			Validate.notNull(configFirewallPolicy, ERROR.OBJECT_NULL);
+
+			ConfigFirewallPolicyDTO dto = BeanMapper.map(configFirewallPolicy, ConfigFirewallPolicyDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+
+			// LookUp
+			dto.setPolicyTypeText(findLookUp(dto.getPolicyType()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<ConfigFirewallPolicyDTO> findConfigFirewallPolicyByParams(SearchParams searchParams) {
+
+		DTOResult<ConfigFirewallPolicyDTO> result = new DTOResult<ConfigFirewallPolicyDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			ConfigFirewallPolicy configFirewallPolicy = comm.configFirewallPolicyService
+					.findConfigFirewallPolicy(searchParams.getParamsMap());
+
+			Validate.notNull(configFirewallPolicy, ERROR.OBJECT_NULL);
+
+			ConfigFirewallPolicyDTO dto = BeanMapper.map(configFirewallPolicy, ConfigFirewallPolicyDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+
+			// LookUp
+			dto.setPolicyTypeText(findLookUp(dto.getPolicyType()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public IdResult createConfigFirewallPolicy(ConfigFirewallPolicyDTO configFirewallPolicyDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(configFirewallPolicyDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", configFirewallPolicyDTO.getDescription());
+			paramsMap.put("EQ_tenants", configFirewallPolicyDTO.getTenants());
+
+			Validate.isTrue(comm.configFirewallPolicyService.findConfigFirewallPolicy(paramsMap) == null,
+					ERROR.OBJECT_DUPLICATE);
+
+			ConfigFirewallPolicy configFirewallPolicy = BeanMapper.map(configFirewallPolicyDTO,
+					ConfigFirewallPolicy.class);
+			configFirewallPolicy.setCode("CFP" + Identities.randomBase62(8));
+			configFirewallPolicy.setUser(DEFAULT_USER);
+			configFirewallPolicy.setId(0);
+
+			BeanValidators.validateWithException(validator, configFirewallPolicy);
+
+			comm.configFirewallPolicyService.saveOrUpdate(configFirewallPolicy);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult updateConfigFirewallPolicy(Integer id, ConfigFirewallPolicyDTO configFirewallPolicyDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(configFirewallPolicyDTO, ERROR.INPUT_NULL);
+
+			ConfigFirewallPolicy configFirewallPolicy = comm.configFirewallPolicyService.findConfigFirewallPolicy(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", configFirewallPolicyDTO.getDescription());
+			paramsMap.put("EQ_tenants", configFirewallPolicyDTO.getTenants());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(comm.configFirewallPolicyService.findConfigFirewallPolicy(paramsMap) == null
+					|| configFirewallPolicy.getDescription().equals(configFirewallPolicyDTO.getDescription()),
+					ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(configFirewallPolicyDTO, ConfigFirewallPolicy.class),
+					configFirewallPolicyDTO);
+
+			configFirewallPolicy.setUser(DEFAULT_USER);
+			configFirewallPolicy.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			configFirewallPolicy.setIdClass(TableNameUtil.getTableName(ConfigFirewallPolicy.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, configFirewallPolicy);
+
+			comm.configFirewallPolicyService.saveOrUpdate(configFirewallPolicy);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteConfigFirewallPolicy(Integer id) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			ConfigFirewallPolicy configFirewallPolicy = comm.configFirewallPolicyService.findConfigFirewallPolicy(id);
+
+			Validate.notNull(configFirewallPolicy, ERROR.OBJECT_NULL);
+
+			configFirewallPolicy.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.configFirewallPolicyService.saveOrUpdate(configFirewallPolicy);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOListResult<ConfigFirewallPolicyDTO> getConfigFirewallPolicyList(SearchParams searchParams) {
+
+		DTOListResult<ConfigFirewallPolicyDTO> result = new DTOListResult<ConfigFirewallPolicyDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(
+					comm.configFirewallPolicyService.getConfigFirewallPolicyList(searchParams.getParamsMap()),
+					ConfigFirewallPolicyDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<ConfigFirewallPolicyDTO> getConfigFirewallPolicyPagination(SearchParams searchParams,
+			Integer pageNumber, Integer pageSize) {
+
+		PaginationResult<ConfigFirewallPolicyDTO> result = new PaginationResult<ConfigFirewallPolicyDTO>();
+
+		try {
+
+			return comm.configFirewallPolicyService.getConfigFirewallPolicyDTOPagination(searchParams.getParamsMap(),
+					pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<ConfigRouterStaticDTO> findConfigRouterStatic(Integer id) {
+
+		DTOResult<ConfigRouterStaticDTO> result = new DTOResult<ConfigRouterStaticDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			ConfigRouterStatic configRouterStatic = comm.configRouterStaticService.findConfigRouterStatic(id);
+
+			Validate.notNull(configRouterStatic, ERROR.OBJECT_NULL);
+
+			ConfigRouterStaticDTO dto = BeanMapper.map(configRouterStatic, ConfigRouterStaticDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setEipDTO(findEip(dto.getEip()).getDto());
+
+			// LookUp
+			dto.setIspText(findLookUp(dto.getIsp()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<ConfigRouterStaticDTO> findConfigRouterStaticByParams(SearchParams searchParams) {
+
+		DTOResult<ConfigRouterStaticDTO> result = new DTOResult<ConfigRouterStaticDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			ConfigRouterStatic configRouterStatic = comm.configRouterStaticService.findConfigRouterStatic(searchParams
+					.getParamsMap());
+
+			Validate.notNull(configRouterStatic, ERROR.OBJECT_NULL);
+
+			ConfigRouterStaticDTO dto = BeanMapper.map(configRouterStatic, ConfigRouterStaticDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setEipDTO(findEip(dto.getEip()).getDto());
+
+			// LookUp
+			dto.setIspText(findLookUp(dto.getIsp()).getDto().getDescription());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult createConfigRouterStatic(ConfigRouterStaticDTO configRouterStaticDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(configRouterStaticDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", configRouterStaticDTO.getDescription());
+			paramsMap.put("EQ_tenants", configRouterStaticDTO.getTenants());
+
+			Validate.isTrue(comm.configRouterStaticService.findConfigRouterStatic(paramsMap) == null,
+					ERROR.OBJECT_DUPLICATE);
+
+			ConfigRouterStatic configRouterStatic = BeanMapper.map(configRouterStaticDTO, ConfigRouterStatic.class);
+			configRouterStatic.setCode("CRS" + Identities.randomBase62(8));
+			configRouterStatic.setUser(DEFAULT_USER);
+			configRouterStatic.setId(0);
+
+			BeanValidators.validateWithException(validator, configRouterStatic);
+
+			comm.configRouterStaticService.saveOrUpdate(configRouterStatic);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult updateConfigRouterStatic(Integer id, ConfigRouterStaticDTO configRouterStaticDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(configRouterStaticDTO, ERROR.INPUT_NULL);
+
+			ConfigRouterStatic configRouterStatic = comm.configRouterStaticService.findConfigRouterStatic(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", configRouterStaticDTO.getDescription());
+			paramsMap.put("EQ_tenants", configRouterStaticDTO.getTenants());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(comm.configRouterStaticService.findConfigRouterStatic(paramsMap) == null
+					|| configRouterStatic.getDescription().equals(configRouterStaticDTO.getDescription()),
+					ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(configRouterStaticDTO, ConfigRouterStatic.class), configRouterStaticDTO);
+
+			configRouterStatic.setUser(DEFAULT_USER);
+			configRouterStatic.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			configRouterStatic.setIdClass(TableNameUtil.getTableName(ConfigRouterStatic.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, configRouterStatic);
+
+			comm.configRouterStaticService.saveOrUpdate(configRouterStatic);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteConfigRouterStatic(Integer id) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			ConfigRouterStatic configRouterStatic = comm.configRouterStaticService.findConfigRouterStatic(id);
+
+			Validate.notNull(configRouterStatic, ERROR.OBJECT_NULL);
+
+			configRouterStatic.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.configRouterStaticService.saveOrUpdate(configRouterStatic);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOListResult<ConfigRouterStaticDTO> getConfigRouterStaticList(SearchParams searchParams) {
+
+		DTOListResult<ConfigRouterStaticDTO> result = new DTOListResult<ConfigRouterStaticDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(
+					comm.configRouterStaticService.getConfigRouterStaticList(searchParams.getParamsMap()),
+					ConfigRouterStaticDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<ConfigRouterStaticDTO> getConfigRouterStaticPagination(SearchParams searchParams,
+			Integer pageNumber, Integer pageSize) {
+
+		PaginationResult<ConfigRouterStaticDTO> result = new PaginationResult<ConfigRouterStaticDTO>();
+
+		try {
+
+			return comm.configRouterStaticService.getConfigRouterStaticDTOPagination(searchParams.getParamsMap(),
+					pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<ConfigSystemInterfaceDTO> findConfigSystemInterface(Integer id) {
+
+		DTOResult<ConfigSystemInterfaceDTO> result = new DTOResult<ConfigSystemInterfaceDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			ConfigSystemInterface configSystemInterface = comm.configSystemInterfaceService
+					.findConfigSystemInterface(id);
+
+			Validate.notNull(configSystemInterface, ERROR.OBJECT_NULL);
+
+			ConfigSystemInterfaceDTO dto = BeanMapper.map(configSystemInterface, ConfigSystemInterfaceDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setEipDTO(findEip(dto.getEip()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<ConfigSystemInterfaceDTO> findConfigSystemInterfaceByParams(SearchParams searchParams) {
+
+		DTOResult<ConfigSystemInterfaceDTO> result = new DTOResult<ConfigSystemInterfaceDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			ConfigSystemInterface configSystemInterface = comm.configSystemInterfaceService
+					.findConfigSystemInterface(searchParams.getParamsMap());
+
+			Validate.notNull(configSystemInterface, ERROR.OBJECT_NULL);
+
+			ConfigSystemInterfaceDTO dto = BeanMapper.map(configSystemInterface, ConfigSystemInterfaceDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setEipDTO(findEip(dto.getEip()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult createConfigSystemInterface(ConfigSystemInterfaceDTO configSystemInterfaceDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(configSystemInterfaceDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", configSystemInterfaceDTO.getDescription());
+			paramsMap.put("EQ_tenants", configSystemInterfaceDTO.getTenants());
+
+			Validate.isTrue(comm.configSystemInterfaceService.findConfigSystemInterface(paramsMap) == null,
+					ERROR.OBJECT_DUPLICATE);
+
+			ConfigSystemInterface configSystemInterface = BeanMapper.map(configSystemInterfaceDTO,
+					ConfigSystemInterface.class);
+			configSystemInterface.setCode("CSI" + Identities.randomBase62(8));
+			configSystemInterface.setUser(DEFAULT_USER);
+			configSystemInterface.setId(0);
+
+			BeanValidators.validateWithException(validator, configSystemInterface);
+
+			comm.configSystemInterfaceService.saveOrUpdate(configSystemInterface);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult updateConfigSystemInterface(Integer id, ConfigSystemInterfaceDTO configSystemInterfaceDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(configSystemInterfaceDTO, ERROR.INPUT_NULL);
+
+			ConfigSystemInterface configSystemInterface = comm.configSystemInterfaceService
+					.findConfigSystemInterface(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", configSystemInterfaceDTO.getDescription());
+			paramsMap.put("EQ_tenants", configSystemInterfaceDTO.getTenants());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(comm.configSystemInterfaceService.findConfigSystemInterface(paramsMap) == null
+					|| configSystemInterface.getDescription().equals(configSystemInterfaceDTO.getDescription()),
+					ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(configSystemInterfaceDTO, ConfigSystemInterface.class),
+					configSystemInterfaceDTO);
+
+			configSystemInterface.setUser(DEFAULT_USER);
+			configSystemInterface.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			configSystemInterface.setIdClass(TableNameUtil.getTableName(ConfigSystemInterface.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, configSystemInterface);
+
+			comm.configSystemInterfaceService.saveOrUpdate(configSystemInterface);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteConfigSystemInterface(Integer id) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			ConfigSystemInterface configSystemInterface = comm.configSystemInterfaceService
+					.findConfigSystemInterface(id);
+
+			Validate.notNull(configSystemInterface, ERROR.OBJECT_NULL);
+
+			configSystemInterface.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.configSystemInterfaceService.saveOrUpdate(configSystemInterface);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOListResult<ConfigSystemInterfaceDTO> getConfigSystemInterfaceList(SearchParams searchParams) {
+
+		DTOListResult<ConfigSystemInterfaceDTO> result = new DTOListResult<ConfigSystemInterfaceDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(
+					comm.configSystemInterfaceService.getConfigSystemInterfaceList(searchParams.getParamsMap()),
+					ConfigSystemInterfaceDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<ConfigSystemInterfaceDTO> getConfigSystemInterfacePagination(SearchParams searchParams,
+			Integer pageNumber, Integer pageSize) {
+
+		PaginationResult<ConfigSystemInterfaceDTO> result = new PaginationResult<ConfigSystemInterfaceDTO>();
+
+		try {
+
+			return comm.configSystemInterfaceService.getConfigSystemInterfaceDTOPagination(searchParams.getParamsMap(),
+					pageNumber, pageSize);
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);

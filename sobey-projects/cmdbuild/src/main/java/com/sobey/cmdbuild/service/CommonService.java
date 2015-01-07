@@ -3,6 +3,10 @@ package com.sobey.cmdbuild.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sobey.cmdbuild.service.iaas.ConfigFirewallAddressService;
+import com.sobey.cmdbuild.service.iaas.ConfigFirewallPolicyService;
+import com.sobey.cmdbuild.service.iaas.ConfigRouterStaticService;
+import com.sobey.cmdbuild.service.iaas.ConfigSystemInterfaceService;
 import com.sobey.cmdbuild.service.iaas.DnsPolicyService;
 import com.sobey.cmdbuild.service.iaas.DnsService;
 import com.sobey.cmdbuild.service.iaas.EcsService;
@@ -57,6 +61,18 @@ import com.sobey.cmdbuild.service.specification.EcsSpecService;
  */
 @Service
 public class CommonService {
+
+	@Autowired
+	public ConfigFirewallAddressService configFirewallAddressService;
+	
+	@Autowired
+	public ConfigFirewallPolicyService configFirewallPolicyService;
+
+	@Autowired
+	public ConfigRouterStaticService configRouterStaticService;
+
+	@Autowired
+	public ConfigSystemInterfaceService configSystemInterfaceService;
 
 	@Autowired
 	public CustomService customService;
@@ -183,16 +199,18 @@ public class CommonService {
 
 	@Autowired
 	public SwitchPortService switchPortService;
-
+	
 	@Autowired
 	public TagService tagService;
-
+	
 	@Autowired
 	public TenantsService tenantsService;
-
+	
 	@Autowired
 	public VlanService vlanService;
-
+	
 	@Autowired
 	public VpnService vpnService;
+	
+	
 }

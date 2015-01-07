@@ -6,6 +6,10 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import com.sobey.cmdbuild.constants.WsConstants;
+import com.sobey.cmdbuild.webservice.response.dto.ConfigFirewallAddressDTO;
+import com.sobey.cmdbuild.webservice.response.dto.ConfigFirewallPolicyDTO;
+import com.sobey.cmdbuild.webservice.response.dto.ConfigRouterStaticDTO;
+import com.sobey.cmdbuild.webservice.response.dto.ConfigSystemInterfaceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DeviceSpecDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DnsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DnsPolicyDTO;
@@ -761,7 +765,7 @@ public interface CmdbuildSoapService {
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	IdResult initIpaddress(@WebParam(name = "id") Integer id);
-	
+
 	IdResult allocateIpaddress(@WebParam(name = "id") Integer id);
 
 	// ==============================//
@@ -939,6 +943,104 @@ public interface CmdbuildSoapService {
 	DTOListResult<ServiceDTO> getServiceList(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	PaginationResult<ServiceDTO> getServicePagination(@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	/********** Firewall Config **************/
+
+	// ==============================//
+	// ==== ConfigFirewallAddress ====//
+	// ==============================//
+
+	DTOResult<ConfigFirewallAddressDTO> findConfigFirewallAddress(@WebParam(name = "id") Integer id);
+
+	DTOResult<ConfigFirewallAddressDTO> findConfigFirewallAddressByParams(
+			@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createConfigFirewallAddress(
+			@WebParam(name = "configFirewallAddressDTO") ConfigFirewallAddressDTO configFirewallAddressDTO);
+
+	IdResult updateConfigFirewallAddress(@WebParam(name = "id") Integer id,
+			@WebParam(name = "configFirewallAddressDTO") ConfigFirewallAddressDTO configFirewallAddressDTO);
+
+	IdResult deleteConfigFirewallAddress(@WebParam(name = "id") Integer id);
+
+	DTOListResult<ConfigFirewallAddressDTO> getConfigFirewallAddressList(
+			@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<ConfigFirewallAddressDTO> getConfigFirewallAddressPagination(
+			@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// ==== ConfigFirewallPolicy ====//
+	// ==============================//
+
+	DTOResult<ConfigFirewallPolicyDTO> findConfigFirewallPolicy(@WebParam(name = "id") Integer id);
+
+	DTOResult<ConfigFirewallPolicyDTO> findConfigFirewallPolicyByParams(
+			@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createConfigFirewallPolicy(
+			@WebParam(name = "configFirewallPolicyDTO") ConfigFirewallPolicyDTO configFirewallPolicyDTO);
+
+	IdResult updateConfigFirewallPolicy(@WebParam(name = "id") Integer id,
+			@WebParam(name = "configFirewallPolicyDTO") ConfigFirewallPolicyDTO configFirewallPolicyDTO);
+
+	IdResult deleteConfigFirewallPolicy(@WebParam(name = "id") Integer id);
+
+	DTOListResult<ConfigFirewallPolicyDTO> getConfigFirewallPolicyList(
+			@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<ConfigFirewallPolicyDTO> getConfigFirewallPolicyPagination(
+			@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// ====== ConfigRouterStatic ====//
+	// ==============================//
+
+	DTOResult<ConfigRouterStaticDTO> findConfigRouterStatic(@WebParam(name = "id") Integer id);
+
+	DTOResult<ConfigRouterStaticDTO> findConfigRouterStaticByParams(
+			@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createConfigRouterStatic(
+			@WebParam(name = "configRouterStaticDTO") ConfigRouterStaticDTO configRouterStaticDTO);
+
+	IdResult updateConfigRouterStatic(@WebParam(name = "id") Integer id,
+			@WebParam(name = "configRouterStaticDTO") ConfigRouterStaticDTO configRouterStaticDTO);
+
+	IdResult deleteConfigRouterStatic(@WebParam(name = "id") Integer id);
+
+	DTOListResult<ConfigRouterStaticDTO> getConfigRouterStaticList(
+			@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<ConfigRouterStaticDTO> getConfigRouterStaticPagination(
+			@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// ==== ConfigSystemInterface ===//
+	// ==============================//
+
+	DTOResult<ConfigSystemInterfaceDTO> findConfigSystemInterface(@WebParam(name = "id") Integer id);
+
+	DTOResult<ConfigSystemInterfaceDTO> findConfigSystemInterfaceByParams(
+			@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createConfigSystemInterface(
+			@WebParam(name = "configSystemInterfaceDTO") ConfigSystemInterfaceDTO configSystemInterfaceDTO);
+
+	IdResult updateConfigSystemInterface(@WebParam(name = "id") Integer id,
+			@WebParam(name = "configSystemInterfaceDTO") ConfigSystemInterfaceDTO configSystemInterfaceDTO);
+
+	IdResult deleteConfigSystemInterface(@WebParam(name = "id") Integer id);
+
+	DTOListResult<ConfigSystemInterfaceDTO> getConfigSystemInterfaceList(
+			@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<ConfigSystemInterfaceDTO> getConfigSystemInterfacePagination(
+			@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 }
