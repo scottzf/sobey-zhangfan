@@ -3,10 +3,12 @@ package com.sobey.firewall.data;
 import java.util.ArrayList;
 
 import com.google.common.collect.Lists;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallPolicyParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigRouterStaticParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigSystemInterfaceParameter;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
 import com.sobey.firewall.webservice.response.dto.EIPPolicyParameter;
-import com.sobey.firewall.webservice.response.dto.RouterParameter;
-import com.sobey.firewall.webservice.response.dto.SubnetParameter;
 import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
 
 public class TestData {
@@ -60,53 +62,43 @@ public class TestData {
 		return parameter;
 	}
 
-	public static RouterParameter randomRouterParameter() {
+	public static ConfigSystemInterfaceParameter randomConfigSystemInterfaceParameter() {
 
-		ArrayList<SubnetParameter> subnetParameters = new ArrayList<SubnetParameter>();
+		ConfigSystemInterfaceParameter parameter = new ConfigSystemInterfaceParameter();
+		parameter.setGateway("173.20.10.254");
+		parameter.setInterfaceName("port9");
+		parameter.setSubnetMask("255.255.255.0");
 
-		SubnetParameter subnetParameterA = new SubnetParameter();
-		subnetParameterA.setGateway("173.20.10.254");
-		subnetParameterA.setSegment("173.20.10.0/24");
-		subnetParameterA.setSubnetMask("255.255.255.0");
-		subnetParameterA.setPolicyId(10);
-		subnetParameterA.setPortName("port10");
-
-		SubnetParameter subnetParameterB = new SubnetParameter();
-		subnetParameterB.setGateway("173.20.11.254");
-		subnetParameterB.setSegment("173.20.11.0/24");
-		subnetParameterB.setSubnetMask("255.255.255.0");
-		subnetParameterB.setPolicyId(11);
-		subnetParameterB.setPortName("port11");
-
-		SubnetParameter subnetParameterC = new SubnetParameter();
-		subnetParameterC.setGateway("173.20.12.254");
-		subnetParameterC.setSegment("173.20.12.0/24");
-		subnetParameterC.setSubnetMask("255.255.255.0");
-		subnetParameterC.setPolicyId(12);
-		subnetParameterC.setPortName("port12");
-
-		subnetParameters.add(subnetParameterA);
-		subnetParameters.add(subnetParameterB);
-		subnetParameters.add(subnetParameterC);
-
-		RouterParameter parameter = new RouterParameter();
-
-		parameter.setUrl("192.168.1.1");
-		parameter.setUserName("admin");
-		parameter.setPassword("admin");
-		parameter.setSubnetParameters(subnetParameters);
 		return parameter;
 	}
 
-	public static SubnetParameter randomSubnetParameter() {
+	public static ConfigRouterStaticParameter randomConfigRouterStaticParameter() {
 
-		SubnetParameter parameter = new SubnetParameter();
+		ConfigRouterStaticParameter parameter = new ConfigRouterStaticParameter();
+		parameter.setInterfaceName("port1");
+		parameter.setRouterId(199);
+		parameter.setIspGateway("221.237.156.1");
 
+		return parameter;
+	}
+
+	public static ConfigFirewallAddressParameter randomConfigFirewallAddressParameter() {
+		ConfigFirewallAddressParameter parameter = new ConfigFirewallAddressParameter();
 		parameter.setGateway("173.20.10.254");
 		parameter.setSegment("173.20.10.0/24");
 		parameter.setSubnetMask("255.255.255.0");
-		parameter.setPolicyId(10);
-		parameter.setPortName("port10");
+		return parameter;
+	}
+
+	public static ConfigFirewallPolicyParameter randomConfigFirewallPolicyParameter() {
+
+		ConfigFirewallPolicyParameter parameter = new ConfigFirewallPolicyParameter();
+		parameter.setSrcintf("port5");
+		parameter.setSrcaddr("172.20.20.0/24");
+		parameter.setDstintf("port6");
+		parameter.setDstaddr("172.20.30./24");
+		parameter.setPolicyId(58);
+		parameter.setPolicyType("Subnet");
 
 		return parameter;
 	}

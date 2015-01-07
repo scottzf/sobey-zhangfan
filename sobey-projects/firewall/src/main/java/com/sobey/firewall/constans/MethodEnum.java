@@ -7,5 +7,5 @@ package com.sobey.firewall.constans;
  * 
  */
 public enum MethodEnum {
-	createEip, deleteEip, createVPN, deleteVPN, changeVPN, bingdingRouter;
+	createEip, deleteEip, createVPN, deleteVPN, changeVPN, bingdingRouter, ConfigSystemInterface, ConfigFirewallAddress, ConfigFirewallPolicy, ConfigRouterStatic;
 }

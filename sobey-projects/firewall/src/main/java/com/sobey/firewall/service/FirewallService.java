@@ -3,15 +3,18 @@ package com.sobey.firewall.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
 import com.sobey.core.utils.Collections3;
 import com.sobey.core.utils.PropertiesLoader;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallPolicyParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigRouterStaticParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigSystemInterfaceParameter;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
 import com.sobey.firewall.webservice.response.dto.EIPPolicyParameter;
-import com.sobey.firewall.webservice.response.dto.RouterParameter;
-import com.sobey.firewall.webservice.response.dto.SubnetParameter;
 import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
 
 /**
@@ -703,51 +706,71 @@ public class FirewallService {
 		return sb.toString();
 	}
 
-	/**
-	 * 路由绑定子网
-	 * 
-	 * @param parameter
-	 * @return
-	 */
-	public String bindingRouter(RouterParameter parameter) {
+	public String ConfigSystemInterfaceScrip(ArrayList<ConfigSystemInterfaceParameter> configSystemInterfaceParameters) {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("config system interface").append(DEFAULT_SYMBOL);
+
+		for (ConfigSystemInterfaceParameter parameter : configSystemInterfaceParameters) {
+			sb.append("edit ").append("\"").append(parameter.getInterfaceName()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set ip ").append(parameter.getGateway()).append(" ").append(parameter.getSubnetMask())
+					.append(DEFAULT_SYMBOL);
+			sb.append("set allowaccess ping https ssh telnet http").append(DEFAULT_SYMBOL);
+			sb.append("set type physical").append(DEFAULT_SYMBOL);
+			sb.append("set snmp-index 8").append(DEFAULT_SYMBOL);
+		}
+
+		return sb.toString();
+	}
+
+	public String ConfigFirewallAddressScrip(ArrayList<ConfigFirewallAddressParameter> configFirewallAddressParameters) {
 
 		StringBuilder sb = new StringBuilder();
 
-		ArrayList<SubnetParameter> list = parameter.getSubnetParameters();
-
-		for (int i = 0; i < list.size(); i++) {
-
-			SubnetParameter subnet = list.get(i);
-
-			String segment = subnet.getSegment();
-			String subnetMask = subnet.getSubnetMask();
-			String gateway = subnet.getGateway();
-
+		for (ConfigFirewallAddressParameter parameter : configFirewallAddressParameters) {
 			sb.append("config firewall address").append(DEFAULT_SYMBOL);
-			sb.append("edit ").append("\"").append(segment).append("\"").append(DEFAULT_SYMBOL);
-			sb.append("set subnet ").append(gateway).append(" ").append(subnetMask).append(DEFAULT_SYMBOL);
-			sb.append("next");
+			sb.append("edit ").append("\"").append(parameter.getSegment()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set subnet ").append(parameter.getGateway()).append(" ").append(parameter.getSubnetMask())
+					.append(DEFAULT_SYMBOL);
+			sb.append("next").append(DEFAULT_SYMBOL);
+		}
 
-			sb.append("config firewall policy").append(DEFAULT_SYMBOL);
-			sb.append("edit ").append(subnet.getPolicyId()).append(DEFAULT_SYMBOL);
+		return sb.toString();
+	}
 
-			sb.append("set srcintf ").append("\"").append(subnet.getPortName()).append("\"").append(DEFAULT_SYMBOL);
-			sb.append("set srcaddr ").append("\"").append(subnet.getSegment()).append("\"").append(DEFAULT_SYMBOL);
+	public String ConfigFirewallPolicyScrip(ArrayList<ConfigFirewallPolicyParameter> configFirewallPolicyParameters) {
 
-			// new 一个新的list,将参数中的list填充进去,并将循环中的自身对象remove出去,这样就达到源对应多个目标的目的.
-			ArrayList<SubnetParameter> parameters = new ArrayList<SubnetParameter>();
-			parameters.addAll(list);
-			parameters.remove(subnet);
+		StringBuilder sb = new StringBuilder();
 
-			for (SubnetParameter subnetParameter : parameters) {
-				sb.append("set dstintf ").append("\"").append(subnetParameter.getPortName()).append("\"")
-						.append(DEFAULT_SYMBOL);
-				sb.append("set dstaddr ").append("\"").append(subnetParameter.getSegment()).append("\"")
-						.append(DEFAULT_SYMBOL);
-			}
+		sb.append("config firewall policy").append(DEFAULT_SYMBOL);
+
+		for (ConfigFirewallPolicyParameter parameter : configFirewallPolicyParameters) {
+			sb.append("edit ").append(parameter.getPolicyId()).append(DEFAULT_SYMBOL);
+			sb.append("set srcintf ").append("\"").append(parameter.getSrcintf()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set srcaddr ").append("\"").append(parameter.getSrcaddr()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set dstintf ").append("\"").append(parameter.getDstintf()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set dstaddr ").append("\"").append(parameter.getDstaddr()).append("\"").append(DEFAULT_SYMBOL);
 			sb.append("set schedule ").append("\"").append("always").append("\"").append(DEFAULT_SYMBOL);
 			sb.append("set service ").append("\"").append("ALL").append("\"").append(DEFAULT_SYMBOL);
-			sb.append("next");
+
+			if (StringUtils.equalsIgnoreCase("Internet", parameter.getPolicyType())) {
+				sb.append("set nat enable").append(DEFAULT_SYMBOL);
+			}
+			sb.append("next").append(DEFAULT_SYMBOL);
+		}
+
+		return sb.toString();
+	}
+
+	public String ConfigRouterStaticScrip(ArrayList<ConfigRouterStaticParameter> configRouterStaticParameters) {
+
+		StringBuilder sb = new StringBuilder();
+
+		for (ConfigRouterStaticParameter parameter : configRouterStaticParameters) {
+			sb.append("config router static").append(DEFAULT_SYMBOL);
+			sb.append("edit ").append(parameter.getRouterId()).append(DEFAULT_SYMBOL);
+			sb.append("set device ").append(parameter.getInterfaceName()).append(DEFAULT_SYMBOL);
+			sb.append("set gateway ").append(parameter.getIspGateway()).append(DEFAULT_SYMBOL);
 		}
 
 		return sb.toString();

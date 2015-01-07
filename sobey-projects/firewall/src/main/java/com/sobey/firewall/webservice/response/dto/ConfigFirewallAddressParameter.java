@@ -7,29 +7,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.firewall.constans.WsConstants;
 
-/**
- * 防火墙上,绑定路由时Subnet对象
- * 
- * @author Administrator
- */
-@XmlRootElement(name = "SubnetParameter")
-@XmlType(name = "SubnetParameter", namespace = WsConstants.NS)
-public class SubnetParameter {
+@XmlRootElement(name = "ConfigFirewallAddressParameter")
+@XmlType(name = "ConfigFirewallAddressParameter", namespace = WsConstants.NS)
+public class ConfigFirewallAddressParameter {
 
 	/**
 	 * 网关
 	 */
 	private String gateway;
-
-	/**
-	 * 和子网绑定的策略Id,策略Id生成策略应该是递增.
-	 */
-	private Integer policyId;
-
-	/**
-	 * 防火墙中的接口名
-	 */
-	private String portName;
 
 	/**
 	 * 网段
@@ -45,14 +30,6 @@ public class SubnetParameter {
 		return gateway;
 	}
 
-	public Integer getPolicyId() {
-		return policyId;
-	}
-
-	public String getPortName() {
-		return portName;
-	}
-
 	public String getSegment() {
 		return segment;
 	}
@@ -63,14 +40,6 @@ public class SubnetParameter {
 
 	public void setGateway(String gateway) {
 		this.gateway = gateway;
-	}
-
-	public void setPolicyId(Integer policyId) {
-		this.policyId = policyId;
-	}
-
-	public void setPortName(String portName) {
-		this.portName = portName;
 	}
 
 	public void setSegment(String segment) {
@@ -88,4 +57,5 @@ public class SubnetParameter {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
+
 }
