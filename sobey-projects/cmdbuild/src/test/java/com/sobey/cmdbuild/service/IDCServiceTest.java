@@ -56,7 +56,7 @@ public class IDCServiceTest {
 
 	@Test
 	public void selectMaxPolicyId() {
-		System.out.println(customService.selectMaxPolicyId());
+		System.out.println(customService.selectMaxPolicyId(11));
 	}
 
 	public Idc find() {

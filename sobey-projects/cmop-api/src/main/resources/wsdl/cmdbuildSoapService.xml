@@ -1107,6 +1107,10 @@
 
   <xs:element name="getMaxPolicyIdResponse" type="tns:getMaxPolicyIdResponse"/>
 
+  <xs:element name="getMaxRouterId" type="tns:getMaxRouterId"/>
+
+  <xs:element name="getMaxRouterIdResponse" type="tns:getMaxRouterIdResponse"/>
+
   <xs:element name="getMemoryList" type="tns:getMemoryList"/>
 
   <xs:element name="getMemoryListResponse" type="tns:getMemoryListResponse"/>
@@ -3623,7 +3627,9 @@
   </xs:complexType>
 
   <xs:complexType name="getMaxPolicyId">
-    <xs:sequence/>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:int"/>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="getMaxPolicyIdResponse">
@@ -5987,6 +5993,18 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="getMaxRouterId">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getMaxRouterIdResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="getConfigFirewallPolicyList">
     <xs:sequence>
       <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
@@ -7998,6 +8016,10 @@
     <wsdl:part element="tns:findLog" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getMaxRouterIdResponse">
+    <wsdl:part element="tns:getMaxRouterIdResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getServerPortList">
     <wsdl:part element="tns:getServerPortList" name="parameters">
     </wsdl:part>
@@ -8024,6 +8046,10 @@
   </wsdl:message>
   <wsdl:message name="getFirewallPortPaginationResponse">
     <wsdl:part element="tns:getFirewallPortPaginationResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getMaxRouterId">
+    <wsdl:part element="tns:getMaxRouterId" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteTagResponse">
@@ -10753,6 +10779,12 @@
       <wsdl:input message="tns:deleteMapEipElb" name="deleteMapEipElb">
     </wsdl:input>
       <wsdl:output message="tns:deleteMapEipElbResponse" name="deleteMapEipElbResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMaxRouterId">
+      <wsdl:input message="tns:getMaxRouterId" name="getMaxRouterId">
+    </wsdl:input>
+      <wsdl:output message="tns:getMaxRouterIdResponse" name="getMaxRouterIdResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getConfigFirewallPolicyList">
@@ -13623,6 +13655,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="deleteMapEipElbResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMaxRouterId">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getMaxRouterId">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getMaxRouterIdResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
