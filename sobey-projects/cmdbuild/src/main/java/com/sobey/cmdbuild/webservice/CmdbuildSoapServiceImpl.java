@@ -138,8 +138,13 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public Integer getMaxPolicyId() {
-		return comm.customService.selectMaxPolicyId();
+	public Integer getMaxPolicyId(Integer tenantsId) {
+		return comm.customService.selectMaxPolicyId(tenantsId);
+	}
+
+	@Override
+	public Integer getMaxRouterId(Integer tenantsId) {
+		return comm.customService.selectMaxRouterId(tenantsId);
 	}
 
 	@Override

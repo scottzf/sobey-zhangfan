@@ -33,13 +33,23 @@ public class CustomService {
 	}
 
 	/**
-	 * 获得数据库中PolicyId的最大值,并加上1.
+	 * 获得tenants中PolicyId的最大值,并加上1.
 	 * 
 	 * @return
 	 */
-	public Integer selectMaxPolicyId() {
-		Integer policyId = customDao.selectMaxPolicyId();
-		return (int) MathsUtil.add(policyId == null ? 2000 : policyId, 1);
+	public Integer selectMaxPolicyId(Integer tenantsId) {
+		Integer policyId = customDao.selectMaxPolicyId(tenantsId);
+		return (int) MathsUtil.add(policyId == null ? 1 : policyId, 1);
+	}
+
+	/**
+	 * 获得tenants中RouterId的最大值,并加上1.
+	 * 
+	 * @return
+	 */
+	public Integer selectMaxRouterId(Integer tenantsId) {
+		Integer routerId = customDao.selectMaxRouterId(tenantsId);
+		return (int) MathsUtil.add(routerId == null ? 1 : routerId, 1);
 	}
 
 	/**
@@ -77,4 +87,5 @@ public class CustomService {
 
 		return relations;
 	}
+
 }

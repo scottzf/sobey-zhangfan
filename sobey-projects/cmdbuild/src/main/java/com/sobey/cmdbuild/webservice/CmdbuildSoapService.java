@@ -75,7 +75,9 @@ public interface CmdbuildSoapService {
 	 *************************************************/
 	Integer getMaxAclNumber();
 
-	Integer getMaxPolicyId();
+	Integer getMaxPolicyId(Integer tenantsId);
+	
+	Integer getMaxRouterId(Integer tenantsId);
 
 	Integer findMaxVlanId(Integer nicId, Integer subnetId);
 

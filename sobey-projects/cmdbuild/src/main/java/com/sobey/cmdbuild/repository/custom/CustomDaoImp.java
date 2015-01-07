@@ -20,8 +20,16 @@ public class CustomDaoImp implements CustomDao {
 	}
 
 	@Override
-	public Integer selectMaxPolicyId() {
-		String sqlString = "SELECT MAX(policy_id) from vpn where \"Status\"= 'A' ";
+	public Integer selectMaxPolicyId(Integer tenantsId) {
+		String sqlString = "SELECT MAX(policy_id) from firewall_policy where \"Status\"= 'A' and tenants = "
+				+ tenantsId;
+		return (Integer) em.createNativeQuery(sqlString).getSingleResult();
+	}
+
+	@Override
+	public Integer selectMaxRouterId(Integer tenantsId) {
+		String sqlString = "SELECT MAX(router_id) from config_router_static where \"Status\"= 'A' and tenants = "
+				+ tenantsId;
 		return (Integer) em.createNativeQuery(sqlString).getSingleResult();
 	}
 
@@ -42,4 +50,5 @@ public class CustomDaoImp implements CustomDao {
 				+ subnetId;
 		return (Integer) em.createNativeQuery(sqlString).getSingleResult();
 	}
+
 }
