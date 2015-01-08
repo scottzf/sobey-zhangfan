@@ -47,6 +47,11 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	}
 
 	@Override
+	public WSResult cloneNetworkDeviceByInstance(CloneVMParameter cloneVMParameter) {
+		return vmService.cloneNetworkDevice(cloneVMParameter);
+	}
+
+	@Override
 	public WSResult destroyVMByInstance(DestroyVMParameter destroyVMParameter) {
 		return vmService.destroyVM(destroyVMParameter);
 	}

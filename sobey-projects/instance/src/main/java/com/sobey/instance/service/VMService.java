@@ -262,6 +262,82 @@ public class VMService extends VMWareService {
 	}
 
 	/**
+	 * 克隆Firewall或netscarler等网络设备.
+	 * 
+	 * 根据vCenter中的网络设备模板进行克隆,不需要进行CustomizationSpec的配置
+	 * 
+	 * @param parameter
+	 *            {@link CloneVMParameter}
+	 * @return
+	 */
+	public WSResult cloneNetworkDevice(CloneVMParameter parameter) {
+
+		WSResult result = new WSResult();
+
+		ServiceInstance si;
+
+		try {
+			si = getServiceInstance(parameter.getDatacenter());
+		} catch (RemoteException | MalformedURLException e) {
+			logger.info("cloneVM::远程连接失败或错误的URL");
+			result.setError(WSResult.SYSTEM_ERROR, ServiceInstance_Init_Error);
+			return result;
+		}
+
+		// 获得模板对象
+		VirtualMachine vm = null;
+
+		try {
+
+			vm = getVirtualMachine(si, parameter.getVmTemplateName());
+
+			if (vm == null) {
+				result.setError(WSResult.SYSTEM_ERROR, "主机规格不存在,请联系系统管理员.");
+				return result;
+			}
+		} catch (RemoteException e) {
+
+			try {
+				logout(si);
+			} catch (RemoteException | MalformedURLException ex) {
+				logger.info("cloneVM::远程连接失败或错误的URL");
+				result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+				return result;
+			}
+		}
+
+		// 虚拟机克隆方案创建
+		VirtualMachineCloneSpec cloneSpec = new VirtualMachineCloneSpec();
+
+		ManagedObjectReference pool = new ManagedObjectReference();
+		pool.set_value(parameter.getResourcePool());
+		pool.setType("ResourcePool");
+
+		VirtualMachineRelocateSpec relocateSpec = new VirtualMachineRelocateSpec();
+		relocateSpec.setPool(pool);
+		cloneSpec.setLocation(relocateSpec);
+		cloneSpec.setPowerOn(true);
+		cloneSpec.setTemplate(false);
+
+		try {
+
+			Task task = vm.cloneVM_Task((Folder) vm.getParent(), parameter.getVmName(), cloneSpec);
+
+			if (task.waitForTask() != Task.SUCCESS) {
+				logger.info("cloneNetworkDevice:: Network Device cannot be cloned");
+				result.setError(WSResult.SYSTEM_ERROR, "网络设备创建失败,请联系系统管理员.");
+				return result;
+			}
+
+		} catch (RemoteException | InterruptedException e) {
+			result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+			return result;
+		}
+
+		return result;
+	}
+
+	/**
 	 * 销毁虚拟机
 	 * 
 	 * @param parameter

@@ -39,6 +39,15 @@ public interface InstanceSoapService {
 	WSResult cloneVMByInstance(@WebParam(name = "cloneVMParameter") CloneVMParameter cloneVMParameter);
 
 	/**
+	 * Clone网络设备
+	 * 
+	 * @param cloneVMParameter
+	 *            {@link CloneVMParameter}
+	 * @return
+	 */
+	WSResult cloneNetworkDeviceByInstance(@WebParam(name = "cloneVMParameter") CloneVMParameter cloneVMParameter);
+
+	/**
 	 * 销毁虚拟机
 	 * 
 	 * @param destroyVMParameter

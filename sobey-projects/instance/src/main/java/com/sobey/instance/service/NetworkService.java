@@ -18,6 +18,7 @@ import com.vmware.vim25.VirtualDevice;
 import com.vmware.vim25.VirtualDeviceBackingInfo;
 import com.vmware.vim25.VirtualDeviceConfigSpec;
 import com.vmware.vim25.VirtualDeviceConfigSpecOperation;
+import com.vmware.vim25.VirtualDeviceConnectInfo;
 import com.vmware.vim25.VirtualEthernetCard;
 import com.vmware.vim25.VirtualEthernetCardNetworkBackingInfo;
 import com.vmware.vim25.VirtualMachineConfigInfo;
@@ -91,6 +92,15 @@ public class NetworkService extends VMWareService {
 					nicBaking.setDeviceName(parameter.getPortGroupName());
 					nic.setBacking(nicBaking);
 					nicSpec.setDevice(nic);
+
+					// 开启网卡连接
+					VirtualDeviceConnectInfo connectable = new VirtualDeviceConnectInfo();
+					connectable.startConnected = true;
+					connectable.allowGuestControl = true;
+					connectable.connected = true;
+					connectable.status = "untried";
+
+					nic.setConnectable(connectable);
 				}
 
 			}
