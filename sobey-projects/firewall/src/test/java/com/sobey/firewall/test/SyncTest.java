@@ -141,47 +141,4 @@ public class SyncTest implements PbulicProperties {
 		System.out.println(sb.toString());
 	}
 
-	@Test
-	public void TEST() {
-
-		// // 子网通信
-		//
-		// StringBuilder sb = new StringBuilder();
-		//
-		// RouterParameter routerParameter = TestData.randomRouterParameter();
-		//
-		// ArrayList<SubnetParameter> list = routerParameter.getSubnetParameters();
-		//
-		// sb.append("config firewall policy").append(ENTER_SIGN);
-		//
-		// for (int i = 0; i < list.size(); i++) {
-		//
-		// SubnetParameter subnet = list.get(i);
-		//
-		// // new 一个新的list出来,将传递进来的list填充进去,并将循环中的自身对象remove出去,这样就达到源对应多个目标的目的.
-		// ArrayList<SubnetParameter> parameters = new ArrayList<SubnetParameter>();
-		// parameters.addAll(list);
-		// parameters.remove(subnet);
-		//
-		// for (SubnetParameter subnetParameter : parameters) {
-		//
-		// sb.append("edit ").append(subnet.getPolicyId()).append(ENTER_SIGN);
-		//
-		// sb.append("set srcintf ").append("\"").append(subnet.getPortName()).append("\"").append(ENTER_SIGN);
-		// sb.append("set srcaddr ").append("\"").append(subnet.getSegment()).append("\"").append(ENTER_SIGN);
-		//
-		// sb.append("set dstintf ").append("\"").append(subnetParameter.getPortName()).append("\"")
-		// .append(ENTER_SIGN);
-		// sb.append("set dstaddr ").append("\"").append(subnetParameter.getSegment()).append("\"")
-		// .append(ENTER_SIGN);
-		// sb.append("set schedule ").append("\"").append("always").append("\"").append(ENTER_SIGN);
-		// sb.append("set service ").append("\"").append("ALL").append("\"").append(ENTER_SIGN);
-		// sb.append("next").append(ENTER_SIGN);
-		// }
-		//
-		// }
-		//
-		// System.out.println(sb.toString());
-	}
-
 }

@@ -706,13 +706,13 @@ public class FirewallService {
 		return sb.toString();
 	}
 
-	public String ConfigSystemInterfaceScrip(ArrayList<ConfigSystemInterfaceParameter> configSystemInterfaceParameters) {
+	public String configSystemInterfaceScrip(ArrayList<ConfigSystemInterfaceParameter> configSystemInterfaceParameters) {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("config system interface").append(DEFAULT_SYMBOL);
 
 		for (ConfigSystemInterfaceParameter parameter : configSystemInterfaceParameters) {
-			sb.append("edit ").append("\"").append(parameter.getInterfaceName()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("edit ").append(parameter.getInterfaceName()).append(DEFAULT_SYMBOL);
 			sb.append("set ip ").append(parameter.getGateway()).append(" ").append(parameter.getSubnetMask())
 					.append(DEFAULT_SYMBOL);
 			sb.append("set allowaccess ping https ssh telnet http").append(DEFAULT_SYMBOL);
@@ -723,7 +723,7 @@ public class FirewallService {
 		return sb.toString();
 	}
 
-	public String ConfigFirewallAddressScrip(ArrayList<ConfigFirewallAddressParameter> configFirewallAddressParameters) {
+	public String configFirewallAddressScrip(ArrayList<ConfigFirewallAddressParameter> configFirewallAddressParameters) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -738,7 +738,7 @@ public class FirewallService {
 		return sb.toString();
 	}
 
-	public String ConfigFirewallPolicyScrip(ArrayList<ConfigFirewallPolicyParameter> configFirewallPolicyParameters) {
+	public String configFirewallPolicyScrip(ArrayList<ConfigFirewallPolicyParameter> configFirewallPolicyParameters) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -762,7 +762,7 @@ public class FirewallService {
 		return sb.toString();
 	}
 
-	public String ConfigRouterStaticScrip(ArrayList<ConfigRouterStaticParameter> configRouterStaticParameters) {
+	public String configRouterStaticScrip(ArrayList<ConfigRouterStaticParameter> configRouterStaticParameters) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -772,6 +772,31 @@ public class FirewallService {
 			sb.append("set device ").append(parameter.getInterfaceName()).append(DEFAULT_SYMBOL);
 			sb.append("set gateway ").append(parameter.getIspGateway()).append(DEFAULT_SYMBOL);
 		}
+
+		return sb.toString();
+	}
+
+	public String RegisteredScrip() {
+		return "exec update-now";
+	}
+
+	public String modifyConfigSystemInterfaceScrip(
+			ArrayList<ConfigSystemInterfaceParameter> configSystemInterfaceParameters) {
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("config system interface").append(DEFAULT_SYMBOL);
+
+		for (ConfigSystemInterfaceParameter parameter : configSystemInterfaceParameters) {
+
+			sb.append("config system interface").append(DEFAULT_SYMBOL);
+			sb.append("edit ").append(parameter.getInterfaceName()).append(DEFAULT_SYMBOL);
+			sb.append("set ip ").append(parameter.getGateway()).append(" ").append(parameter.getSubnetMask())
+					.append(DEFAULT_SYMBOL);
+			sb.append("end").append(DEFAULT_SYMBOL);
+		}
+
+		sb.append("exe backup config flash").append(DEFAULT_SYMBOL);
 
 		return sb.toString();
 	}

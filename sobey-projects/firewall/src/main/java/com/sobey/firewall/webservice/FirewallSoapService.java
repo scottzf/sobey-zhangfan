@@ -77,6 +77,12 @@ public interface FirewallSoapService {
 	WSResult ConfigSystemInterfaceListByFirewall(
 			@WebParam(name = "configSystemInterfaceParameters") ConfigSystemInterfaceParameters configSystemInterfaceParameters);
 
+	WSResult ModifyConfigSystemInterfaceByFirewall(
+			@WebParam(name = "configSystemInterfaceParameter") ConfigSystemInterfaceParameter configSystemInterfaceParameter);
+
+	WSResult ModifyConfigSystemInterfaceListByFirewall(
+			@WebParam(name = "configSystemInterfaceParameters") ConfigSystemInterfaceParameters configSystemInterfaceParameters);
+
 	WSResult ConfigFirewallAddressParameterByFirewall(
 			@WebParam(name = "configFirewallAddressParameter") ConfigFirewallAddressParameter configFirewallAddressParameter);
 
@@ -94,5 +100,7 @@ public interface FirewallSoapService {
 
 	WSResult ConfigRouterStaticParameterListByFirewall(
 			@WebParam(name = "configRouterStaticParameters") ConfigRouterStaticParameters configRouterStaticParameters);
+
+	WSResult RegisteredByFirewall();
 
 }
