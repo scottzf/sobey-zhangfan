@@ -64,7 +64,7 @@ public class CommonService {
 
 	@Autowired
 	public ConfigFirewallAddressService configFirewallAddressService;
-	
+
 	@Autowired
 	public ConfigFirewallPolicyService configFirewallPolicyService;
 
@@ -199,18 +199,17 @@ public class CommonService {
 
 	@Autowired
 	public SwitchPortService switchPortService;
-	
+
 	@Autowired
 	public TagService tagService;
-	
+
 	@Autowired
 	public TenantsService tenantsService;
-	
+
 	@Autowired
 	public VlanService vlanService;
-	
+
 	@Autowired
 	public VpnService vpnService;
-	
-	
+
 }

@@ -143,6 +143,11 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
+	public Integer getMaxPolicyIdBySubnet(Integer tenantsId) {
+		return comm.customService.selectMaxPolicyIdBySubnet(tenantsId);
+	}
+
+	@Override
 	public Integer getMaxRouterId(Integer tenantsId) {
 		return comm.customService.selectMaxRouterId(tenantsId);
 	}
@@ -2119,6 +2124,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
 			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setRouterDTO(findRouter(dto.getRouter()).getDto());
 
 			// LookUp
 			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
@@ -2155,6 +2161,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
 			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
 			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			dto.setRouterDTO(findRouter(dto.getRouter()).getDto());
 
 			// LookUp
 			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
@@ -8116,6 +8123,11 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			RouterDTO dto = BeanMapper.map(router, RouterDTO.class);
 
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setSubnetDTO(findSubnet(dto.getSubnet()).getDto());
+			dto.setEcsDTO(findEcs(dto.getEcs()).getDto());
+
 			result.setDto(dto);
 
 			return result;
@@ -8502,6 +8514,10 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			SubnetDTO dto = BeanMapper.map(subnet, SubnetDTO.class);
 
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setRouterDTO(findRouter(dto.getRouter()).getDto());
+
 			result.setDto(dto);
 
 			return result;
@@ -8527,6 +8543,10 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Validate.notNull(subnet, ERROR.OBJECT_NULL);
 
 			SubnetDTO dto = BeanMapper.map(subnet, SubnetDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setRouterDTO(findRouter(dto.getRouter()).getDto());
 
 			result.setDto(dto);
 
@@ -8698,6 +8718,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			// Reference
 			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
 			dto.setSubnetDTO(findSubnet(dto.getSubnet()).getDto());
+			dto.setFirewallServiceDTO(findFirewallService(dto.getFirewallService()).getDto());
 
 			result.setDto(dto);
 
@@ -8729,6 +8750,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			// Reference
 			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
 			dto.setSubnetDTO(findSubnet(dto.getSubnet()).getDto());
+			dto.setFirewallServiceDTO(findFirewallService(dto.getFirewallService()).getDto());
 
 			result.setDto(dto);
 
@@ -8906,6 +8928,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			// Reference
 			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setFirewallServiceDTO(findFirewallService(dto.getFirewallService()).getDto());
 
 			// LookUp
 			dto.setPolicyTypeText(findLookUp(dto.getPolicyType()).getDto().getDescription());
@@ -8939,6 +8962,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			// Reference
 			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setFirewallServiceDTO(findFirewallService(dto.getFirewallService()).getDto());
 
 			// LookUp
 			dto.setPolicyTypeText(findLookUp(dto.getPolicyType()).getDto().getDescription());
@@ -9117,7 +9141,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			// Reference
 			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
-			dto.setEipDTO(findEip(dto.getEip()).getDto());
+			dto.setFirewallServiceDTO(findFirewallService(dto.getFirewallService()).getDto());
 
 			// LookUp
 			dto.setIspText(findLookUp(dto.getIsp()).getDto().getDescription());
@@ -9151,7 +9175,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			// Reference
 			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
-			dto.setEipDTO(findEip(dto.getEip()).getDto());
+			dto.setFirewallServiceDTO(findFirewallService(dto.getFirewallService()).getDto());
 
 			// LookUp
 			dto.setIspText(findLookUp(dto.getIsp()).getDto().getDescription());
@@ -9328,7 +9352,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			// Reference
 			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
-			dto.setEipDTO(findEip(dto.getEip()).getDto());
+			dto.setFirewallServiceDTO(findFirewallService(dto.getFirewallService()).getDto());
 
 			result.setDto(dto);
 
@@ -9359,7 +9383,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			// Reference
 			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
-			dto.setEipDTO(findEip(dto.getEip()).getDto());
+			dto.setFirewallServiceDTO(findFirewallService(dto.getFirewallService()).getDto());
 
 			result.setDto(dto);
 
