@@ -257,6 +257,31 @@ public class LookUpConstants {
 		}
 	}
 
+	public enum ECSType {
+
+		instance("instance", 34),
+
+		netscarler("netscarler", 34),
+
+		firewall("firewall", 71);
+
+		private String name;
+		private Integer value;
+
+		private ECSType(String name, Integer value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public Integer getValue() {
+			return value;
+		}
+	}
+
 	/**
 	 * 描述LookUp中IPAddressStatus的Description和Id.
 	 * 
@@ -354,7 +379,9 @@ public class LookUpConstants {
 
 		InternetPool("InternetPool", 28),
 
-		VIPPool("VIPPool", 67);
+		VIPPool("VIPPool", 67),
+
+		ManagerPool("ManagerPool", 67);
 
 		private String name;
 		private Integer value;
