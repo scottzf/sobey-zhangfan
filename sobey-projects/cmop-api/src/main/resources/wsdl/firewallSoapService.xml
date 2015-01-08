@@ -55,6 +55,18 @@
 
   <xs:element name="EIPPolicyParameter" type="tns:EIPPolicyParameter"/>
 
+  <xs:element name="ModifyConfigSystemInterfaceByFirewall" type="tns:ModifyConfigSystemInterfaceByFirewall"/>
+
+  <xs:element name="ModifyConfigSystemInterfaceByFirewallResponse" type="tns:ModifyConfigSystemInterfaceByFirewallResponse"/>
+
+  <xs:element name="ModifyConfigSystemInterfaceListByFirewall" type="tns:ModifyConfigSystemInterfaceListByFirewall"/>
+
+  <xs:element name="ModifyConfigSystemInterfaceListByFirewallResponse" type="tns:ModifyConfigSystemInterfaceListByFirewallResponse"/>
+
+  <xs:element name="RegisteredByFirewall" type="tns:RegisteredByFirewall"/>
+
+  <xs:element name="RegisteredByFirewallResponse" type="tns:RegisteredByFirewallResponse"/>
+
   <xs:element name="VPNUserParameter" type="tns:VPNUserParameter"/>
 
   <xs:element name="changeVPNUserAccesssAddressByFirewall" type="tns:changeVPNUserAccesssAddressByFirewall"/>
@@ -170,18 +182,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="ConfigRouterStaticParameterByFirewall">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="configRouterStaticParameter" type="tns:ConfigRouterStaticParameter"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="ConfigRouterStaticParameterByFirewallResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="ConfigSystemInterfaceListByFirewall">
     <xs:sequence>
       <xs:element minOccurs="0" name="configSystemInterfaceParameters" type="tns:ConfigSystemInterfaceParameters"/>
@@ -203,6 +203,40 @@
   </xs:complexType>
 
   <xs:complexType name="ConfigSystemInterfaceListByFirewallResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ModifyConfigSystemInterfaceListByFirewall">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="configSystemInterfaceParameters" type="tns:ConfigSystemInterfaceParameters"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ModifyConfigSystemInterfaceListByFirewallResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ConfigRouterStaticParameterByFirewall">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="configRouterStaticParameter" type="tns:ConfigRouterStaticParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ConfigRouterStaticParameterByFirewallResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RegisteredByFirewall">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="RegisteredByFirewallResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
     </xs:sequence>
@@ -232,6 +266,18 @@
   </xs:complexType>
 
   <xs:complexType name="ConfigFirewallPolicyParameterListByFirewallResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ModifyConfigSystemInterfaceByFirewall">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="configSystemInterfaceParameter" type="tns:ConfigSystemInterfaceParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ModifyConfigSystemInterfaceByFirewallResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
     </xs:sequence>
@@ -381,12 +427,28 @@
     <wsdl:part element="tns:ConfigSystemInterfaceListByFirewall" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="RegisteredByFirewallResponse">
+    <wsdl:part element="tns:RegisteredByFirewallResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ModifyConfigSystemInterfaceListByFirewallResponse">
+    <wsdl:part element="tns:ModifyConfigSystemInterfaceListByFirewallResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="ConfigFirewallPolicyParameterListByFirewallResponse">
     <wsdl:part element="tns:ConfigFirewallPolicyParameterListByFirewallResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="ModifyConfigSystemInterfaceByFirewallResponse">
+    <wsdl:part element="tns:ModifyConfigSystemInterfaceByFirewallResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="ConfigRouterStaticParameterListByFirewall">
     <wsdl:part element="tns:ConfigRouterStaticParameterListByFirewall" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteEIPByFirewall">
+    <wsdl:part element="tns:deleteEIPByFirewall" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="ConfigRouterStaticParameterListByFirewallResponse">
@@ -397,8 +459,8 @@
     <wsdl:part element="tns:ConfigFirewallAddressParameterListByFirewallResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="deleteEIPByFirewall">
-    <wsdl:part element="tns:deleteEIPByFirewall" name="parameters">
+  <wsdl:message name="ModifyConfigSystemInterfaceListByFirewall">
+    <wsdl:part element="tns:ModifyConfigSystemInterfaceListByFirewall" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteVPNUserByFirewallResponse">
@@ -409,12 +471,16 @@
     <wsdl:part element="tns:ConfigFirewallPolicyParameterListByFirewall" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="ConfigSystemInterfaceByFirewallResponse">
+    <wsdl:part element="tns:ConfigSystemInterfaceByFirewallResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="createEIPByFirewallResponse">
     <wsdl:part element="tns:createEIPByFirewallResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="ConfigSystemInterfaceByFirewallResponse">
-    <wsdl:part element="tns:ConfigSystemInterfaceByFirewallResponse" name="parameters">
+  <wsdl:message name="ModifyConfigSystemInterfaceByFirewall">
+    <wsdl:part element="tns:ModifyConfigSystemInterfaceByFirewall" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="ConfigSystemInterfaceByFirewall">
@@ -423,6 +489,10 @@
   </wsdl:message>
   <wsdl:message name="ConfigRouterStaticParameterByFirewall">
     <wsdl:part element="tns:ConfigRouterStaticParameterByFirewall" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="RegisteredByFirewall">
+    <wsdl:part element="tns:RegisteredByFirewall" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="ConfigSystemInterfaceListByFirewallResponse">
@@ -460,22 +530,40 @@
       <wsdl:output message="tns:deleteVPNUserByFirewallResponse" name="deleteVPNUserByFirewallResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="ConfigRouterStaticParameterByFirewall">
-      <wsdl:input message="tns:ConfigRouterStaticParameterByFirewall" name="ConfigRouterStaticParameterByFirewall">
-    </wsdl:input>
-      <wsdl:output message="tns:ConfigRouterStaticParameterByFirewallResponse" name="ConfigRouterStaticParameterByFirewallResponse">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="ConfigSystemInterfaceListByFirewall">
       <wsdl:input message="tns:ConfigSystemInterfaceListByFirewall" name="ConfigSystemInterfaceListByFirewall">
     </wsdl:input>
       <wsdl:output message="tns:ConfigSystemInterfaceListByFirewallResponse" name="ConfigSystemInterfaceListByFirewallResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="ModifyConfigSystemInterfaceListByFirewall">
+      <wsdl:input message="tns:ModifyConfigSystemInterfaceListByFirewall" name="ModifyConfigSystemInterfaceListByFirewall">
+    </wsdl:input>
+      <wsdl:output message="tns:ModifyConfigSystemInterfaceListByFirewallResponse" name="ModifyConfigSystemInterfaceListByFirewallResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfigRouterStaticParameterByFirewall">
+      <wsdl:input message="tns:ConfigRouterStaticParameterByFirewall" name="ConfigRouterStaticParameterByFirewall">
+    </wsdl:input>
+      <wsdl:output message="tns:ConfigRouterStaticParameterByFirewallResponse" name="ConfigRouterStaticParameterByFirewallResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RegisteredByFirewall">
+      <wsdl:input message="tns:RegisteredByFirewall" name="RegisteredByFirewall">
+    </wsdl:input>
+      <wsdl:output message="tns:RegisteredByFirewallResponse" name="RegisteredByFirewallResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="ConfigFirewallPolicyParameterListByFirewall">
       <wsdl:input message="tns:ConfigFirewallPolicyParameterListByFirewall" name="ConfigFirewallPolicyParameterListByFirewall">
     </wsdl:input>
       <wsdl:output message="tns:ConfigFirewallPolicyParameterListByFirewallResponse" name="ConfigFirewallPolicyParameterListByFirewallResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ModifyConfigSystemInterfaceByFirewall">
+      <wsdl:input message="tns:ModifyConfigSystemInterfaceByFirewall" name="ModifyConfigSystemInterfaceByFirewall">
+    </wsdl:input>
+      <wsdl:output message="tns:ModifyConfigSystemInterfaceByFirewallResponse" name="ModifyConfigSystemInterfaceByFirewallResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="ConfigFirewallPolicyParameterByFirewall">
@@ -541,6 +629,33 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="deleteVPNUserByFirewall">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteVPNUserByFirewall">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteVPNUserByFirewallResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfigSystemInterfaceListByFirewall">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="ConfigSystemInterfaceListByFirewall">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ConfigSystemInterfaceListByFirewallResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ModifyConfigSystemInterfaceListByFirewall">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="ModifyConfigSystemInterfaceListByFirewall">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ModifyConfigSystemInterfaceListByFirewallResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="ConfigRouterStaticParameterByFirewall">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="ConfigRouterStaticParameterByFirewall">
@@ -550,12 +665,12 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="deleteVPNUserByFirewall">
+    <wsdl:operation name="RegisteredByFirewall">
       <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="deleteVPNUserByFirewall">
+      <wsdl:input name="RegisteredByFirewall">
         <soap:body use="literal"/>
       </wsdl:input>
-      <wsdl:output name="deleteVPNUserByFirewallResponse">
+      <wsdl:output name="RegisteredByFirewallResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -568,12 +683,12 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="ConfigSystemInterfaceListByFirewall">
+    <wsdl:operation name="ModifyConfigSystemInterfaceByFirewall">
       <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="ConfigSystemInterfaceListByFirewall">
+      <wsdl:input name="ModifyConfigSystemInterfaceByFirewall">
         <soap:body use="literal"/>
       </wsdl:input>
-      <wsdl:output name="ConfigSystemInterfaceListByFirewallResponse">
+      <wsdl:output name="ModifyConfigSystemInterfaceByFirewallResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>

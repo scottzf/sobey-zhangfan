@@ -29,6 +29,10 @@
 
   <xs:element name="bindingPortGroupInstanceResponse" type="tns:bindingPortGroupInstanceResponse"/>
 
+  <xs:element name="cloneNetworkDeviceByInstance" type="tns:cloneNetworkDeviceByInstance"/>
+
+  <xs:element name="cloneNetworkDeviceByInstanceResponse" type="tns:cloneNetworkDeviceByInstanceResponse"/>
+
   <xs:element name="cloneVMByInstance" type="tns:cloneVMByInstance"/>
 
   <xs:element name="cloneVMByInstanceResponse" type="tns:cloneVMByInstanceResponse"/>
@@ -366,6 +370,18 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="cloneNetworkDeviceByInstance">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="cloneVMParameter" type="tns:CloneVMParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="cloneNetworkDeviceByInstanceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="createPortGroupInstance">
     <xs:sequence>
       <xs:element minOccurs="0" name="createPortGroupParameter" type="tns:CreatePortGroupParameter"/>
@@ -446,6 +462,10 @@
     <wsdl:part element="tns:createStandardSwitchByInstance" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="cloneNetworkDeviceByInstanceResponse">
+    <wsdl:part element="tns:cloneNetworkDeviceByInstanceResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="reconfigVMByInstance">
     <wsdl:part element="tns:reconfigVMByInstance" name="parameters">
     </wsdl:part>
@@ -492,6 +512,10 @@
   </wsdl:message>
   <wsdl:message name="findHostInfoDTO">
     <wsdl:part element="tns:findHostInfoDTO" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="cloneNetworkDeviceByInstance">
+    <wsdl:part element="tns:cloneNetworkDeviceByInstance" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="InstanceSoapService">
@@ -565,6 +589,12 @@
       <wsdl:input message="tns:findVMInfoDTO" name="findVMInfoDTO">
     </wsdl:input>
       <wsdl:output message="tns:findVMInfoDTOResponse" name="findVMInfoDTOResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="cloneNetworkDeviceByInstance">
+      <wsdl:input message="tns:cloneNetworkDeviceByInstance" name="cloneNetworkDeviceByInstance">
+    </wsdl:input>
+      <wsdl:output message="tns:cloneNetworkDeviceByInstanceResponse" name="cloneNetworkDeviceByInstanceResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="createPortGroupInstance">
@@ -681,6 +711,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="powerVMByInstanceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="cloneNetworkDeviceByInstance">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="cloneNetworkDeviceByInstance">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="cloneNetworkDeviceByInstanceResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
