@@ -23,6 +23,13 @@ public class ConfigFirewallPolicyDTO extends BasicDTO {
 	private String dstintf;
 
 	/**
+	 * 所属FirewallService
+	 */
+	private Integer firewallService;
+
+	private FirewallServiceDTO firewallServiceDTO;
+
+	/**
 	 * 防火墙策略ID,唯一递增
 	 */
 	private Integer policyId;
@@ -59,6 +66,14 @@ public class ConfigFirewallPolicyDTO extends BasicDTO {
 		return dstintf;
 	}
 
+	public Integer getFirewallService() {
+		return firewallService;
+	}
+
+	public FirewallServiceDTO getFirewallServiceDTO() {
+		return firewallServiceDTO;
+	}
+
 	public Integer getPolicyId() {
 		return policyId;
 	}
@@ -93,6 +108,14 @@ public class ConfigFirewallPolicyDTO extends BasicDTO {
 
 	public void setDstintf(String dstintf) {
 		this.dstintf = dstintf;
+	}
+
+	public void setFirewallService(Integer firewallService) {
+		this.firewallService = firewallService;
+	}
+
+	public void setFirewallServiceDTO(FirewallServiceDTO firewallServiceDTO) {
+		this.firewallServiceDTO = firewallServiceDTO;
 	}
 
 	public void setPolicyId(Integer policyId) {

@@ -22,6 +22,11 @@ public class ConfigFirewallAddress extends BasicEntity {
 			0);
 
 	/**
+	 * 所属FirewallService
+	 */
+	private Integer firewallService;
+
+	/**
 	 * 防火墙策略ID,唯一递增
 	 */
 	private Integer policyId;
@@ -44,6 +49,11 @@ public class ConfigFirewallAddress extends BasicEntity {
 		return configFirewallAddressHistories;
 	}
 
+	@Column(name = "firewall_service")
+	public Integer getFirewallService() {
+		return firewallService;
+	}
+
 	@Column(name = "policy_id")
 	public Integer getPolicyId() {
 		return policyId;
@@ -61,6 +71,10 @@ public class ConfigFirewallAddress extends BasicEntity {
 
 	public void setConfigFirewallAddressHistories(Set<ConfigFirewallAddressHistory> configFirewallAddressHistories) {
 		this.configFirewallAddressHistories = configFirewallAddressHistories;
+	}
+
+	public void setFirewallService(Integer firewallService) {
+		this.firewallService = firewallService;
 	}
 
 	public void setPolicyId(Integer policyId) {

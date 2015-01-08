@@ -16,6 +16,9 @@ public class SubnetDTO extends BasicDTO {
 	private Integer idc;
 	private IdcDTO idcDTO;
 	private String netMask;
+	private Integer portId;
+	private Integer router;
+	private RouterDTO routerDTO;
 	private String segment;
 	private Integer tenants;
 	private TenantsDTO tenantsDTO;
@@ -34,6 +37,18 @@ public class SubnetDTO extends BasicDTO {
 
 	public String getNetMask() {
 		return netMask;
+	}
+
+	public Integer getPortId() {
+		return portId;
+	}
+
+	public Integer getRouter() {
+		return router;
+	}
+
+	public RouterDTO getRouterDTO() {
+		return routerDTO;
 	}
 
 	public String getSegment() {
@@ -62,6 +77,18 @@ public class SubnetDTO extends BasicDTO {
 
 	public void setNetMask(String netMask) {
 		this.netMask = netMask;
+	}
+
+	public void setPortId(Integer portId) {
+		this.portId = portId;
+	}
+
+	public void setRouter(Integer router) {
+		this.router = router;
+	}
+
+	public void setRouterDTO(RouterDTO routerDTO) {
+		this.routerDTO = routerDTO;
 	}
 
 	public void setSegment(String segment) {

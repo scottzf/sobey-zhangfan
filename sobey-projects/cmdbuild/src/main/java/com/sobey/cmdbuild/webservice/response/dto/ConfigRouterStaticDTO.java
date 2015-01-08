@@ -13,11 +13,12 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 public class ConfigRouterStaticDTO extends BasicDTO {
 
 	/**
-	 * 所属公网IP
+	 * 所属FirewallService
 	 */
-	private Integer eip;
+	private Integer firewallService;
 
-	private EipDTO eipDTO;
+	private FirewallServiceDTO firewallServiceDTO;
+
 	/**
 	 * 所属ISP
 	 */
@@ -44,12 +45,13 @@ public class ConfigRouterStaticDTO extends BasicDTO {
 
 	private TenantsDTO tenantsDTO;
 
-	public Integer getEip() {
-		return eip;
+ 
+	public Integer getFirewallService() {
+		return firewallService;
 	}
 
-	public EipDTO getEipDTO() {
-		return eipDTO;
+	public FirewallServiceDTO getFirewallServiceDTO() {
+		return firewallServiceDTO;
 	}
 
 	public Integer getIsp() {
@@ -80,13 +82,15 @@ public class ConfigRouterStaticDTO extends BasicDTO {
 		return tenantsDTO;
 	}
 
-	public void setEip(Integer eip) {
-		this.eip = eip;
+	public void setFirewallService(Integer firewallService) {
+		this.firewallService = firewallService;
 	}
 
-	public void setEipDTO(EipDTO eipDTO) {
-		this.eipDTO = eipDTO;
+	public void setFirewallServiceDTO(FirewallServiceDTO firewallServiceDTO) {
+		this.firewallServiceDTO = firewallServiceDTO;
 	}
+
+ 
 
 	public void setIsp(Integer isp) {
 		this.isp = isp;

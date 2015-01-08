@@ -17,10 +17,11 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 public class ConfigRouterStaticHistory extends BasicEntity {
 
 	private ConfigRouterStatic configRouterStatic;
+
 	/**
-	 * 所属公网IP
+	 * 所属FirewallService
 	 */
-	private Integer eip;
+	private Integer firewallService;
 
 	/**
 	 * 所属ISP
@@ -56,9 +57,9 @@ public class ConfigRouterStaticHistory extends BasicEntity {
 		return configRouterStatic;
 	}
 
-	@Column(name = "eip")
-	public Integer getEip() {
-		return eip;
+	@Column(name = "firewall_service")
+	public Integer getFirewallService() {
+		return firewallService;
 	}
 
 	@Column(name = "isp")
@@ -90,8 +91,8 @@ public class ConfigRouterStaticHistory extends BasicEntity {
 		this.configRouterStatic = configRouterStatic;
 	}
 
-	public void setEip(Integer eip) {
-		this.eip = eip;
+	public void setFirewallService(Integer firewallService) {
+		this.firewallService = firewallService;
 	}
 
 	public void setIsp(Integer isp) {

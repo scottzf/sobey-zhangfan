@@ -13,6 +13,13 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 public class ConfigFirewallAddressDTO extends BasicDTO {
 
 	/**
+	 * 所属FirewallService
+	 */
+	private Integer firewallService;
+
+	private FirewallServiceDTO firewallServiceDTO;
+
+	/**
 	 * 防火墙策略ID,唯一递增
 	 */
 	private Integer policyId;
@@ -30,6 +37,14 @@ public class ConfigFirewallAddressDTO extends BasicDTO {
 	private Integer tenants;
 
 	private TenantsDTO tenantsDTO;
+
+	public Integer getFirewallService() {
+		return firewallService;
+	}
+
+	public FirewallServiceDTO getFirewallServiceDTO() {
+		return firewallServiceDTO;
+	}
 
 	public Integer getPolicyId() {
 		return policyId;
@@ -49,6 +64,14 @@ public class ConfigFirewallAddressDTO extends BasicDTO {
 
 	public TenantsDTO getTenantsDTO() {
 		return tenantsDTO;
+	}
+
+	public void setFirewallService(Integer firewallService) {
+		this.firewallService = firewallService;
+	}
+
+	public void setFirewallServiceDTO(FirewallServiceDTO firewallServiceDTO) {
+		this.firewallServiceDTO = firewallServiceDTO;
 	}
 
 	public void setPolicyId(Integer policyId) {

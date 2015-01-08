@@ -21,9 +21,9 @@ public class ConfigRouterStatic extends BasicEntity {
 	private Set<ConfigRouterStaticHistory> configRouterStaticHistories = new HashSet<ConfigRouterStaticHistory>(0);
 
 	/**
-	 * 所属公网IP
+	 * 所属FirewallService
 	 */
-	private Integer eip;
+	private Integer firewallService;
 
 	/**
 	 * 所属ISP
@@ -58,9 +58,9 @@ public class ConfigRouterStatic extends BasicEntity {
 		return configRouterStaticHistories;
 	}
 
-	@Column(name = "eip")
-	public Integer getEip() {
-		return eip;
+	@Column(name = "firewall_service")
+	public Integer getFirewallService() {
+		return firewallService;
 	}
 
 	@Column(name = "isp")
@@ -92,8 +92,8 @@ public class ConfigRouterStatic extends BasicEntity {
 		this.configRouterStaticHistories = configRouterStaticHistories;
 	}
 
-	public void setEip(Integer eip) {
-		this.eip = eip;
+	public void setFirewallService(Integer firewallService) {
+		this.firewallService = firewallService;
 	}
 
 	public void setIsp(Integer isp) {

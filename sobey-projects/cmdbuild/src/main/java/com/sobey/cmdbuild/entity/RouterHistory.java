@@ -1,5 +1,6 @@
 package com.sobey.cmdbuild.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -15,9 +16,15 @@ import com.sobey.cmdbuild.entity.basic.ServiceHistoryBasic;
 @Table(name = "router_history", schema = "public")
 public class RouterHistory extends ServiceHistoryBasic {
 
+	private Integer ecs;
 	private Router router;
 
 	public RouterHistory() {
+	}
+
+	@Column(name = "ecs")
+	public Integer getEcs() {
+		return ecs;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -26,8 +33,14 @@ public class RouterHistory extends ServiceHistoryBasic {
 		return router;
 	}
 
+	public void setEcs(Integer ecs) {
+		this.ecs = ecs;
+	}
+
 	public void setRouter(Router router) {
 		this.router = router;
 	}
+	
+	
 
 }

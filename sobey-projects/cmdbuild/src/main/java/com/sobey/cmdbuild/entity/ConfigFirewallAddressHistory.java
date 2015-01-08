@@ -17,6 +17,12 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 public class ConfigFirewallAddressHistory extends BasicEntity {
 
 	private ConfigFirewallAddress configFirewallAddress;
+
+	/**
+	 * 所属FirewallService
+	 */
+	private Integer firewallService;
+
 	/**
 	 * 防火墙策略ID,唯一递增
 	 */
@@ -41,6 +47,11 @@ public class ConfigFirewallAddressHistory extends BasicEntity {
 		return configFirewallAddress;
 	}
 
+	@Column(name = "firewall_service")
+	public Integer getFirewallService() {
+		return firewallService;
+	}
+
 	@Column(name = "policy_id")
 	public Integer getPolicyId() {
 		return policyId;
@@ -58,6 +69,10 @@ public class ConfigFirewallAddressHistory extends BasicEntity {
 
 	public void setConfigFirewallAddress(ConfigFirewallAddress configFirewallAddress) {
 		this.configFirewallAddress = configFirewallAddress;
+	}
+
+	public void setFirewallService(Integer firewallService) {
+		this.firewallService = firewallService;
 	}
 
 	public void setPolicyId(Integer policyId) {

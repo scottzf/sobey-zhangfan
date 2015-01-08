@@ -13,11 +13,11 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 public class ConfigSystemInterfaceDTO extends BasicDTO {
 
 	/**
-	 * 所属EIP
+	 * 所属FirewallService
 	 */
-	private Integer eip;
+	private Integer firewallService;
 
-	private EipDTO eipDTO;
+	private FirewallServiceDTO firewallServiceDTO;
 
 	/**
 	 * 防火墙策略ID,唯一递增
@@ -38,14 +38,6 @@ public class ConfigSystemInterfaceDTO extends BasicDTO {
 
 	private TenantsDTO tenantsDTO;
 
-	public Integer getEip() {
-		return eip;
-	}
-
-	public EipDTO getEipDTO() {
-		return eipDTO;
-	}
-
 	public Integer getPolicyId() {
 		return policyId;
 	}
@@ -62,20 +54,28 @@ public class ConfigSystemInterfaceDTO extends BasicDTO {
 		return tenantsDTO;
 	}
 
-	public void setEip(Integer eip) {
-		this.eip = eip;
-	}
-
-	public void setEipDTO(EipDTO eipDTO) {
-		this.eipDTO = eipDTO;
-	}
-
 	public void setPolicyId(Integer policyId) {
 		this.policyId = policyId;
 	}
 
 	public void setPortId(Integer portId) {
 		this.portId = portId;
+	}
+
+	public Integer getFirewallService() {
+		return firewallService;
+	}
+
+	public void setFirewallService(Integer firewallService) {
+		this.firewallService = firewallService;
+	}
+
+	public FirewallServiceDTO getFirewallServiceDTO() {
+		return firewallServiceDTO;
+	}
+
+	public void setFirewallServiceDTO(FirewallServiceDTO firewallServiceDTO) {
+		this.firewallServiceDTO = firewallServiceDTO;
 	}
 
 	public void setTenants(Integer tenants) {

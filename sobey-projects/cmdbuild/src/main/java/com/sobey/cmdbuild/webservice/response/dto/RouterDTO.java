@@ -12,6 +12,25 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.ServiceBasicDTO;
 @XmlType(name = "RouterDTO", namespace = WsConstants.NS)
 public class RouterDTO extends ServiceBasicDTO {
 
+	private Integer ecs;
+	private EcsDTO ecsDTO;
+
+	public Integer getEcs() {
+		return ecs;
+	}
+
+	public EcsDTO getEcsDTO() {
+		return ecsDTO;
+	}
+
+	public void setEcs(Integer ecs) {
+		this.ecs = ecs;
+	}
+
+	public void setEcsDTO(EcsDTO ecsDTO) {
+		this.ecsDTO = ecsDTO;
+	}
+
 	/**
 	 * 重新实现toString()函数方便在日志中打印DTO信息.
 	 */

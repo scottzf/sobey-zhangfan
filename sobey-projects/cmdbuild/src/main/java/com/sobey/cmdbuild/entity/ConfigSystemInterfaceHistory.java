@@ -17,10 +17,11 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 public class ConfigSystemInterfaceHistory extends BasicEntity {
 
 	private ConfigSystemInterface configSystemInterface;
+
 	/**
-	 * 所属EIP
+	 * 所属FirewallService
 	 */
-	private Integer eip;
+	private Integer firewallService;
 
 	/**
 	 * 防火墙策略ID,唯一递增
@@ -48,9 +49,9 @@ public class ConfigSystemInterfaceHistory extends BasicEntity {
 		return configSystemInterface;
 	}
 
-	@Column(name = "eip")
-	public Integer getEip() {
-		return eip;
+	@Column(name = "firewall_service")
+	public Integer getFirewallService() {
+		return firewallService;
 	}
 
 	@Column(name = "policy_id")
@@ -72,8 +73,8 @@ public class ConfigSystemInterfaceHistory extends BasicEntity {
 		this.configSystemInterface = configSystemInterface;
 	}
 
-	public void setEip(Integer eip) {
-		this.eip = eip;
+	public void setFirewallService(Integer firewallService) {
+		this.firewallService = firewallService;
 	}
 
 	public void setPolicyId(Integer policyId) {

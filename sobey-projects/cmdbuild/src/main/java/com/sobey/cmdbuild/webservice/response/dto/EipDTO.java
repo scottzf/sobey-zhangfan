@@ -20,69 +20,97 @@ public class EipDTO extends ServiceBasicDTO {
 	private IpaddressDTO ipaddressDTO;
 	private Integer isp;
 	private String ispText;
+	private Integer portId;
+	private Integer router;
+	private RouterDTO routerDTO;
 
+	
 	public Integer getBandwidth() {
 		return bandwidth;
-	}
-
-	public void setBandwidth(Integer bandwidth) {
-		this.bandwidth = bandwidth;
 	}
 
 	public String getBandwidthText() {
 		return bandwidthText;
 	}
 
-	public void setBandwidthText(String bandwidthText) {
-		this.bandwidthText = bandwidthText;
-	}
-
 	public Integer getEipStatus() {
 		return eipStatus;
-	}
-
-	public void setEipStatus(Integer eipStatus) {
-		this.eipStatus = eipStatus;
 	}
 
 	public String getEipStatusText() {
 		return eipStatusText;
 	}
 
-	public void setEipStatusText(String eipStatusText) {
-		this.eipStatusText = eipStatusText;
-	}
-
 	public Integer getIpaddress() {
 		return ipaddress;
-	}
-
-	public void setIpaddress(Integer ipaddress) {
-		this.ipaddress = ipaddress;
 	}
 
 	public IpaddressDTO getIpaddressDTO() {
 		return ipaddressDTO;
 	}
 
-	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
-		this.ipaddressDTO = ipaddressDTO;
-	}
-
 	public Integer getIsp() {
 		return isp;
-	}
-
-	public void setIsp(Integer isp) {
-		this.isp = isp;
 	}
 
 	public String getIspText() {
 		return ispText;
 	}
 
+	public Integer getPortId() {
+		return portId;
+	}
+
+	public Integer getRouter() {
+		return router;
+	}
+
+	public RouterDTO getRouterDTO() {
+		return routerDTO;
+	}
+
+	public void setBandwidth(Integer bandwidth) {
+		this.bandwidth = bandwidth;
+	}
+
+	public void setBandwidthText(String bandwidthText) {
+		this.bandwidthText = bandwidthText;
+	}
+
+	public void setEipStatus(Integer eipStatus) {
+		this.eipStatus = eipStatus;
+	}
+
+	public void setEipStatusText(String eipStatusText) {
+		this.eipStatusText = eipStatusText;
+	}
+
+	public void setIpaddress(Integer ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
+	}
+
+	public void setIsp(Integer isp) {
+		this.isp = isp;
+	}
+
 	public void setIspText(String ispText) {
 		this.ispText = ispText;
+	}
+
+	public void setPortId(Integer portId) {
+		this.portId = portId;
+	}
+
+	public void setRouter(Integer router) {
+		this.router = router;
+	}
+
+	public void setRouterDTO(RouterDTO routerDTO) {
+		this.routerDTO = routerDTO;
 	}
 
 	/**
