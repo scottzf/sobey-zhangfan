@@ -51,4 +51,10 @@ public class CustomDaoImp implements CustomDao {
 		return (Integer) em.createNativeQuery(sqlString).getSingleResult();
 	}
 
+	@Override
+	public Integer selectMaxPolicyIdBySubnet(Integer tenantsId) {
+		String sqlString = "SELECT MAX(policy_id) from subnet where \"Status\"= 'A' and tenants = " + tenantsId;
+		return (Integer) em.createNativeQuery(sqlString).getSingleResult();
+	}
+
 }
