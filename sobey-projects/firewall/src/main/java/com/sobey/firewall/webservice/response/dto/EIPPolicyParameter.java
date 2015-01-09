@@ -42,20 +42,20 @@ public class EIPPolicyParameter {
 		return protocolText;
 	}
 
-	public void setProtocolText(String protocolText) {
-		this.protocolText = protocolText;
-	}
-
 	public Integer getSourcePort() {
 		return sourcePort;
 	}
 
-	public void setSourcePort(Integer sourcePort) {
-		this.sourcePort = sourcePort;
-	}
-
 	public Integer getTargetPort() {
 		return targetPort;
+	}
+
+	public void setProtocolText(String protocolText) {
+		this.protocolText = protocolText;
+	}
+
+	public void setSourcePort(Integer sourcePort) {
+		this.sourcePort = sourcePort;
 	}
 
 	public void setTargetPort(Integer targetPort) {

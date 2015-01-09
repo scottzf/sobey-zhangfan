@@ -4,6 +4,7 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import com.sobey.firewall.constans.WsConstants;
+import com.sobey.firewall.webservice.response.dto.AuthenticateFirewallParameter;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameter;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameters;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallPolicyParameter;
@@ -101,6 +102,6 @@ public interface FirewallSoapService {
 	WSResult ConfigRouterStaticParameterListByFirewall(
 			@WebParam(name = "configRouterStaticParameters") ConfigRouterStaticParameters configRouterStaticParameters);
 
-	WSResult RegisteredByFirewall();
-
+	WSResult RegisteredByFirewall(
+			@WebParam(name = "authenticateFirewallParameter") AuthenticateFirewallParameter authenticateFirewallParameter);
 }

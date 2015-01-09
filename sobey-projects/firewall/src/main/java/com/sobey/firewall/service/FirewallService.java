@@ -211,9 +211,28 @@ public class FirewallService {
 	 * end
 	 * 
 	 * config firewall  vipgrp
-	 * edit "CNC_All_Services"
+	 * edit "CTC_ALL_Server"
 	 * set interface "wan1"
 	 * set member  "119.6.200.219-tcp-8080" "119.6.200.219-tcp-80"   
+	 * end
+	 * 
+	 * config firewall policy    电信 和联通各做一次.
+	 * edit 20
+	 *         
+	 * set srcintf "port3" //公网IP接口
+	 *         
+	 * set dstintf "inbound"   //子网的接口
+	 *         
+	 * set srcaddr "all"
+	 *         
+	 * set dstaddr "CTC_ALL_Server"
+	 *         
+	 * set action accept
+	 *         
+	 * set schedule "always"
+	 *        
+	 *  set service "ALL"
+	 * next
 	 * end
 	 * </pre>
 	 * 

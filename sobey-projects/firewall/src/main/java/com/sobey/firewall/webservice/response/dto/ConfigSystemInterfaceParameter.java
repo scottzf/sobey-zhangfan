@@ -12,42 +12,81 @@ import com.sobey.firewall.constans.WsConstants;
 public class ConfigSystemInterfaceParameter {
 
 	/**
+	 * 网关
+	 */
+	private String gateway;
+
+	/**
 	 * 接口名
 	 */
 	private String interfaceName;
 
 	/**
-	 * 网关
+	 * 防火墙(路由)登录密码
 	 */
-	private String gateway;
+	private String password;
 
 	/**
 	 * 子网掩码
 	 */
 	private String subnetMask;
 
-	public String getInterfaceName() {
-		return interfaceName;
-	}
+	/**
+	 * 防火墙(路由)IP地址
+	 */
+	private String url;
 
-	public void setInterfaceName(String interfaceName) {
-		this.interfaceName = interfaceName;
-	}
+	/**
+	 * 防火墙(路由)登录名
+	 */
+	private String userName;
 
 	public String getGateway() {
 		return gateway;
 	}
 
-	public void setGateway(String gateway) {
-		this.gateway = gateway;
+	public String getInterfaceName() {
+		return interfaceName;
+	}
+
+	public String getPassword() {
+		return password;
 	}
 
 	public String getSubnetMask() {
 		return subnetMask;
 	}
 
+	public String getUrl() {
+		return url;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setGateway(String gateway) {
+		this.gateway = gateway;
+	}
+
+	public void setInterfaceName(String interfaceName) {
+		this.interfaceName = interfaceName;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public void setSubnetMask(String subnetMask) {
 		this.subnetMask = subnetMask;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	/**

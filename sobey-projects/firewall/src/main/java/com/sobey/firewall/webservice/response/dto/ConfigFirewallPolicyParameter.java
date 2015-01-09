@@ -22,6 +22,11 @@ public class ConfigFirewallPolicyParameter {
 	private String dstintf;
 
 	/**
+	 * 防火墙(路由)登录密码
+	 */
+	private String password;
+
+	/**
 	 * 防火墙策略ID,唯一递增
 	 */
 	private Integer policyId;
@@ -41,12 +46,26 @@ public class ConfigFirewallPolicyParameter {
 	 */
 	private String srcintf;
 
+	/**
+	 * 防火墙(路由)IP地址
+	 */
+	private String url;
+
+	/**
+	 * 防火墙(路由)登录名
+	 */
+	private String userName;
+
 	public String getDstaddr() {
 		return dstaddr;
 	}
 
 	public String getDstintf() {
 		return dstintf;
+	}
+
+	public String getPassword() {
+		return password;
 	}
 
 	public Integer getPolicyId() {
@@ -65,12 +84,24 @@ public class ConfigFirewallPolicyParameter {
 		return srcintf;
 	}
 
+	public String getUrl() {
+		return url;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
 	public void setDstaddr(String dstaddr) {
 		this.dstaddr = dstaddr;
 	}
 
 	public void setDstintf(String dstintf) {
 		this.dstintf = dstintf;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public void setPolicyId(Integer policyId) {
@@ -87,6 +118,14 @@ public class ConfigFirewallPolicyParameter {
 
 	public void setSrcintf(String srcintf) {
 		this.srcintf = srcintf;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	/**

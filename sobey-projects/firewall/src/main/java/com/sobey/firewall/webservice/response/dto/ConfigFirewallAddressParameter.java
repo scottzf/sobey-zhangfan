@@ -17,6 +17,11 @@ public class ConfigFirewallAddressParameter {
 	private String gateway;
 
 	/**
+	 * 防火墙(路由)登录密码
+	 */
+	private String password;
+
+	/**
 	 * 网段
 	 */
 	private String segment;
@@ -26,8 +31,22 @@ public class ConfigFirewallAddressParameter {
 	 */
 	private String subnetMask;
 
+	/**
+	 * 防火墙(路由)IP地址
+	 */
+	private String url;
+
+	/**
+	 * 防火墙(路由)登录名
+	 */
+	private String userName;
+
 	public String getGateway() {
 		return gateway;
+	}
+
+	public String getPassword() {
+		return password;
 	}
 
 	public String getSegment() {
@@ -38,8 +57,20 @@ public class ConfigFirewallAddressParameter {
 		return subnetMask;
 	}
 
+	public String getUrl() {
+		return url;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
 	public void setGateway(String gateway) {
 		this.gateway = gateway;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public void setSegment(String segment) {
@@ -48,6 +79,14 @@ public class ConfigFirewallAddressParameter {
 
 	public void setSubnetMask(String subnetMask) {
 		this.subnetMask = subnetMask;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	/**

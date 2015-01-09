@@ -15,13 +15,52 @@ public class ConfigFirewallPolicyParameters {
 
 	private ArrayList<ConfigFirewallPolicyParameter> configFirewallPolicyParameters;
 
+	/**
+	 * 防火墙(路由)登录密码
+	 */
+	private String password;
+
+	/**
+	 * 防火墙(路由)IP地址
+	 */
+	private String url;
+
+	/**
+	 * 防火墙(路由)登录名
+	 */
+	private String userName;
+
 	public ArrayList<ConfigFirewallPolicyParameter> getConfigFirewallPolicyParameters() {
 		return configFirewallPolicyParameters;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public String getUserName() {
+		return userName;
 	}
 
 	public void setConfigFirewallPolicyParameters(
 			ArrayList<ConfigFirewallPolicyParameter> configFirewallPolicyParameters) {
 		this.configFirewallPolicyParameters = configFirewallPolicyParameters;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	/**

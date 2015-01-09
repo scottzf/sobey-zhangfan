@@ -1,7 +1,5 @@
 package com.sobey.firewall.webservice.response.dto;
 
-import java.util.ArrayList;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -9,11 +7,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.firewall.constans.WsConstants;
 
-@XmlRootElement(name = "ConfigFirewallAddressParameters")
-@XmlType(name = "ConfigFirewallAddressParameters", namespace = WsConstants.NS)
-public class ConfigFirewallAddressParameters {
-
-	private ArrayList<ConfigFirewallAddressParameter> configFirewallAddressParameters;
+@XmlRootElement(name = "AuthenticateFirewallParameter")
+@XmlType(name = "AuthenticateFirewallParameter", namespace = WsConstants.NS)
+public class AuthenticateFirewallParameter {
 
 	/**
 	 * 防火墙(路由)登录密码
@@ -30,10 +26,6 @@ public class ConfigFirewallAddressParameters {
 	 */
 	private String userName;
 
-	public ArrayList<ConfigFirewallAddressParameter> getConfigFirewallAddressParameters() {
-		return configFirewallAddressParameters;
-	}
-
 	public String getPassword() {
 		return password;
 	}
@@ -44,11 +36,6 @@ public class ConfigFirewallAddressParameters {
 
 	public String getUserName() {
 		return userName;
-	}
-
-	public void setConfigFirewallAddressParameters(
-			ArrayList<ConfigFirewallAddressParameter> configFirewallAddressParameters) {
-		this.configFirewallAddressParameters = configFirewallAddressParameters;
 	}
 
 	public void setPassword(String password) {
@@ -70,5 +57,4 @@ public class ConfigFirewallAddressParameters {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
-
 }

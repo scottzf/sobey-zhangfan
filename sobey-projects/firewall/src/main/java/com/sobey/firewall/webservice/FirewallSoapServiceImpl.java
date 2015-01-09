@@ -18,6 +18,7 @@ import com.sobey.core.utils.TelnetUtil;
 import com.sobey.firewall.constans.MethodEnum;
 import com.sobey.firewall.constans.WsConstants;
 import com.sobey.firewall.service.FirewallService;
+import com.sobey.firewall.webservice.response.dto.AuthenticateFirewallParameter;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameter;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameters;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallPolicyParameter;
@@ -32,10 +33,6 @@ import com.sobey.firewall.webservice.response.result.WSResult;
 
 @WebService(serviceName = "FirewallSoapService", endpointInterface = "com.sobey.firewall.webservice.FirewallSoapService", targetNamespace = WsConstants.NS)
 public class FirewallSoapServiceImpl implements FirewallSoapService {
-
-	private static final String password = null;
-	private static final String url = null;
-	private static final String username = null;
 
 	private static Logger logger = LoggerFactory.getLogger(FirewallSoapServiceImpl.class);
 
@@ -210,7 +207,9 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 				.getConfigSystemInterfaceParameters());
 
 		try {
-			SSHUtil.executeCommand(url, username, password, command);
+			SSHUtil.executeCommand(configSystemInterfaceParameters.getUrl(),
+					configSystemInterfaceParameters.getUserName(), configSystemInterfaceParameters.getPassword(),
+					command);
 		} catch (IOException e) {
 			logger.info("ConfigSystemInterfaceListByFirewall::" + e.getMessage());
 			result.setError(WSResult.SYSTEM_ERROR, "IOException,请联系系统管理员");
@@ -242,7 +241,9 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 				.getConfigSystemInterfaceParameters());
 
 		try {
-			SSHUtil.executeCommand(url, username, password, command);
+			SSHUtil.executeCommand(configSystemInterfaceParameters.getUrl(),
+					configSystemInterfaceParameters.getUserName(), configSystemInterfaceParameters.getPassword(),
+					command);
 		} catch (IOException e) {
 			logger.info("ConfigFirewallPolicyParameterListByFirewall::" + e.getMessage());
 			result.setError(WSResult.SYSTEM_ERROR, "IOException,请联系系统管理员");
@@ -275,7 +276,9 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 				.getConfigFirewallAddressParameters());
 
 		try {
-			SSHUtil.executeCommand(url, username, password, command);
+			SSHUtil.executeCommand(configFirewallAddressParameters.getUrl(),
+					configFirewallAddressParameters.getUserName(), configFirewallAddressParameters.getPassword(),
+					command);
 		} catch (IOException e) {
 			logger.info("ConfigFirewallAddressParameterListByFirewall::" + e.getMessage());
 			result.setError(WSResult.SYSTEM_ERROR, "IOException,请联系系统管理员");
@@ -306,7 +309,8 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 				.getConfigFirewallPolicyParameters());
 
 		try {
-			SSHUtil.executeCommand(url, username, password, command);
+			SSHUtil.executeCommand(configFirewallPolicyParameters.getUrl(),
+					configFirewallPolicyParameters.getUserName(), configFirewallPolicyParameters.getPassword(), command);
 		} catch (IOException e) {
 			logger.info("ConfigFirewallPolicyParameterListByFirewall::" + e.getMessage());
 			result.setError(WSResult.SYSTEM_ERROR, "IOException,请联系系统管理员");
@@ -336,7 +340,8 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 				.configRouterStaticScrip(configRouterStaticParameters.getConfigRouterStaticParameters());
 
 		try {
-			SSHUtil.executeCommand(url, username, password, command);
+			SSHUtil.executeCommand(configRouterStaticParameters.getUrl(), configRouterStaticParameters.getUserName(),
+					configRouterStaticParameters.getPassword(), command);
 		} catch (IOException e) {
 			logger.info("ConfigRouterStaticParameterListByFirewall::" + e.getMessage());
 			result.setError(WSResult.SYSTEM_ERROR, "IOException,请联系系统管理员");
@@ -346,12 +351,13 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 	}
 
 	@Override
-	public WSResult RegisteredByFirewall() {
+	public WSResult RegisteredByFirewall(AuthenticateFirewallParameter authenticateFirewallParameter) {
 
 		WSResult result = new WSResult();
 
 		try {
-			SSHUtil.executeCommand(url, username, password, service.RegisteredScrip());
+			SSHUtil.executeCommand(authenticateFirewallParameter.getUrl(), authenticateFirewallParameter.getUserName(),
+					authenticateFirewallParameter.getPassword(), service.RegisteredScrip());
 		} catch (IOException e) {
 			logger.info("RegisteredByFirewall::" + e.getMessage());
 			result.setError(WSResult.SYSTEM_ERROR, "IOException,请联系系统管理员");

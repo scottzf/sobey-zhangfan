@@ -22,9 +22,24 @@ public class ConfigRouterStaticParameter {
 	private String ispGateway;
 
 	/**
+	 * 防火墙(路由)登录密码
+	 */
+	private String password;
+
+	/**
 	 * 路由Id ,递增唯一
 	 */
 	private Integer routerId;
+
+	/**
+	 * 防火墙(路由)IP地址
+	 */
+	private String url;
+
+	/**
+	 * 防火墙(路由)登录名
+	 */
+	private String userName;
 
 	public String getInterfaceName() {
 		return interfaceName;
@@ -34,8 +49,20 @@ public class ConfigRouterStaticParameter {
 		return ispGateway;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
 	public Integer getRouterId() {
 		return routerId;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public String getUserName() {
+		return userName;
 	}
 
 	public void setInterfaceName(String interfaceName) {
@@ -46,8 +73,20 @@ public class ConfigRouterStaticParameter {
 		this.ispGateway = ispGateway;
 	}
 
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public void setRouterId(Integer routerId) {
 		this.routerId = routerId;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	/**
