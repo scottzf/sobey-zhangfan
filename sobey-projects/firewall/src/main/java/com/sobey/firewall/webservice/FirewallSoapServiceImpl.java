@@ -23,6 +23,8 @@ import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameter
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameters;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallPolicyParameter;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallPolicyParameters;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallServiceCategoryParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallServiceCategoryParameters;
 import com.sobey.firewall.webservice.response.dto.ConfigRouterStaticParameter;
 import com.sobey.firewall.webservice.response.dto.ConfigRouterStaticParameters;
 import com.sobey.firewall.webservice.response.dto.ConfigSystemInterfaceParameter;
@@ -362,6 +364,39 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 			logger.info("RegisteredByFirewall::" + e.getMessage());
 			result.setError(WSResult.SYSTEM_ERROR, "IOException,请联系系统管理员");
 		}
+		return result;
+	}
+
+	@Override
+	public WSResult ConfigFirewallServiceCategoryParameterByFirewall(
+			ConfigFirewallServiceCategoryParameter configFirewallServiceCategoryParameter) {
+
+		ArrayList<ConfigFirewallServiceCategoryParameter> arrayList = new ArrayList<ConfigFirewallServiceCategoryParameter>();
+		arrayList.add(configFirewallServiceCategoryParameter);
+
+		ConfigFirewallServiceCategoryParameters parameters = new ConfigFirewallServiceCategoryParameters();
+		parameters.setConfigFirewallServiceCategoryParameters(arrayList);
+
+		return ConfigFirewallServiceCategoryParameterListByFirewall(parameters);
+	}
+
+	@Override
+	public WSResult ConfigFirewallServiceCategoryParameterListByFirewall(
+			ConfigFirewallServiceCategoryParameters configFirewallServiceCategoryParameters) {
+		WSResult result = new WSResult();
+
+		String command = service.ConfigFirewallServiceCategoryScrip(configFirewallServiceCategoryParameters
+				.getConfigFirewallServiceCategoryParameters());
+
+		try {
+			SSHUtil.executeCommand(configFirewallServiceCategoryParameters.getUrl(),
+					configFirewallServiceCategoryParameters.getUserName(),
+					configFirewallServiceCategoryParameters.getPassword(), command);
+		} catch (IOException e) {
+			logger.info("ConfigFirewallServiceCategoryParameterListByFirewall::" + e.getMessage());
+			result.setError(WSResult.SYSTEM_ERROR, "IOException,请联系系统管理员");
+		}
+
 		return result;
 	}
 

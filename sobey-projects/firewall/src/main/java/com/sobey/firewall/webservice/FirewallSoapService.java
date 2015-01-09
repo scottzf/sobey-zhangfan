@@ -9,6 +9,8 @@ import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameter
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameters;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallPolicyParameter;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallPolicyParameters;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallServiceCategoryParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallServiceCategoryParameters;
 import com.sobey.firewall.webservice.response.dto.ConfigRouterStaticParameter;
 import com.sobey.firewall.webservice.response.dto.ConfigRouterStaticParameters;
 import com.sobey.firewall.webservice.response.dto.ConfigSystemInterfaceParameter;
@@ -101,6 +103,12 @@ public interface FirewallSoapService {
 
 	WSResult ConfigRouterStaticParameterListByFirewall(
 			@WebParam(name = "configRouterStaticParameters") ConfigRouterStaticParameters configRouterStaticParameters);
+
+	WSResult ConfigFirewallServiceCategoryParameterByFirewall(
+			@WebParam(name = "configFirewallServiceCategoryParameter") ConfigFirewallServiceCategoryParameter configFirewallServiceCategoryParameter);
+
+	WSResult ConfigFirewallServiceCategoryParameterListByFirewall(
+			@WebParam(name = "configFirewallServiceCategoryParameters") ConfigFirewallServiceCategoryParameters configFirewallServiceCategoryParameters);
 
 	WSResult RegisteredByFirewall(
 			@WebParam(name = "authenticateFirewallParameter") AuthenticateFirewallParameter authenticateFirewallParameter);

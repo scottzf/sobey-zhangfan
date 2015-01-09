@@ -29,6 +29,18 @@
 
   <xs:element name="ConfigFirewallPolicyParameters" type="tns:ConfigFirewallPolicyParameters"/>
 
+  <xs:element name="ConfigFirewallServiceCategoryParameter" type="tns:ConfigFirewallServiceCategoryParameter"/>
+
+  <xs:element name="ConfigFirewallServiceCategoryParameterByFirewall" type="tns:ConfigFirewallServiceCategoryParameterByFirewall"/>
+
+  <xs:element name="ConfigFirewallServiceCategoryParameterByFirewallResponse" type="tns:ConfigFirewallServiceCategoryParameterByFirewallResponse"/>
+
+  <xs:element name="ConfigFirewallServiceCategoryParameterListByFirewall" type="tns:ConfigFirewallServiceCategoryParameterListByFirewall"/>
+
+  <xs:element name="ConfigFirewallServiceCategoryParameterListByFirewallResponse" type="tns:ConfigFirewallServiceCategoryParameterListByFirewallResponse"/>
+
+  <xs:element name="ConfigFirewallServiceCategoryParameters" type="tns:ConfigFirewallServiceCategoryParameters"/>
+
   <xs:element name="ConfigRouterStaticParameter" type="tns:ConfigRouterStaticParameter"/>
 
   <xs:element name="ConfigRouterStaticParameterByFirewall" type="tns:ConfigRouterStaticParameterByFirewall"/>
@@ -314,6 +326,35 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="ConfigFirewallServiceCategoryParameterByFirewall">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="configFirewallServiceCategoryParameter" type="tns:ConfigFirewallServiceCategoryParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ConfigFirewallServiceCategoryParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="action" type="xs:string"/>
+      <xs:element minOccurs="0" name="categoryName" type="xs:string"/>
+      <xs:element minOccurs="0" name="dstaddr" type="xs:string"/>
+      <xs:element minOccurs="0" name="dstintf" type="xs:string"/>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
+      <xs:element minOccurs="0" name="policyId" type="xs:int"/>
+      <xs:element minOccurs="0" name="portrange" type="xs:string"/>
+      <xs:element minOccurs="0" name="protocol" type="xs:string"/>
+      <xs:element minOccurs="0" name="srcaddr" type="xs:string"/>
+      <xs:element minOccurs="0" name="srcintf" type="xs:string"/>
+      <xs:element minOccurs="0" name="url" type="xs:string"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ConfigFirewallServiceCategoryParameterByFirewallResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="ConfigFirewallPolicyParameterByFirewall">
     <xs:sequence>
       <xs:element minOccurs="0" name="configFirewallPolicyParameter" type="tns:ConfigFirewallPolicyParameter"/>
@@ -382,6 +423,27 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="ConfigFirewallServiceCategoryParameterListByFirewall">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="configFirewallServiceCategoryParameters" type="tns:ConfigFirewallServiceCategoryParameters"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ConfigFirewallServiceCategoryParameters">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="configFirewallServiceCategoryParameters" nillable="true" type="tns:ConfigFirewallServiceCategoryParameter"/>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
+      <xs:element minOccurs="0" name="url" type="xs:string"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ConfigFirewallServiceCategoryParameterListByFirewallResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="deleteEIPByFirewall">
     <xs:sequence>
       <xs:element minOccurs="0" name="eipParameter" type="tns:EIPParameter"/>
@@ -420,6 +482,10 @@
 
 </xs:schema>
   </wsdl:types>
+  <wsdl:message name="ConfigFirewallServiceCategoryParameterListByFirewallResponse">
+    <wsdl:part element="tns:ConfigFirewallServiceCategoryParameterListByFirewallResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="createVPNUserByFirewall">
     <wsdl:part element="tns:createVPNUserByFirewall" name="parameters">
     </wsdl:part>
@@ -432,6 +498,10 @@
     <wsdl:part element="tns:changeVPNUserAccesssAddressByFirewall" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="ConfigFirewallServiceCategoryParameterListByFirewall">
+    <wsdl:part element="tns:ConfigFirewallServiceCategoryParameterListByFirewall" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="ConfigFirewallAddressParameterListByFirewall">
     <wsdl:part element="tns:ConfigFirewallAddressParameterListByFirewall" name="parameters">
     </wsdl:part>
@@ -442,6 +512,10 @@
   </wsdl:message>
   <wsdl:message name="changeVPNUserAccesssAddressByFirewallResponse">
     <wsdl:part element="tns:changeVPNUserAccesssAddressByFirewallResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ConfigFirewallServiceCategoryParameterByFirewallResponse">
+    <wsdl:part element="tns:ConfigFirewallServiceCategoryParameterByFirewallResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="ConfigFirewallPolicyParameterByFirewallResponse">
@@ -466,6 +540,10 @@
   </wsdl:message>
   <wsdl:message name="RegisteredByFirewallResponse">
     <wsdl:part element="tns:RegisteredByFirewallResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ConfigFirewallServiceCategoryParameterByFirewall">
+    <wsdl:part element="tns:ConfigFirewallServiceCategoryParameterByFirewall" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="ModifyConfigSystemInterfaceListByFirewallResponse">
@@ -603,6 +681,12 @@
       <wsdl:output message="tns:ModifyConfigSystemInterfaceByFirewallResponse" name="ModifyConfigSystemInterfaceByFirewallResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="ConfigFirewallServiceCategoryParameterByFirewall">
+      <wsdl:input message="tns:ConfigFirewallServiceCategoryParameterByFirewall" name="ConfigFirewallServiceCategoryParameterByFirewall">
+    </wsdl:input>
+      <wsdl:output message="tns:ConfigFirewallServiceCategoryParameterByFirewallResponse" name="ConfigFirewallServiceCategoryParameterByFirewallResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="ConfigFirewallPolicyParameterByFirewall">
       <wsdl:input message="tns:ConfigFirewallPolicyParameterByFirewall" name="ConfigFirewallPolicyParameterByFirewall">
     </wsdl:input>
@@ -625,6 +709,12 @@
       <wsdl:input message="tns:changeVPNUserAccesssAddressByFirewall" name="changeVPNUserAccesssAddressByFirewall">
     </wsdl:input>
       <wsdl:output message="tns:changeVPNUserAccesssAddressByFirewallResponse" name="changeVPNUserAccesssAddressByFirewallResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfigFirewallServiceCategoryParameterListByFirewall">
+      <wsdl:input message="tns:ConfigFirewallServiceCategoryParameterListByFirewall" name="ConfigFirewallServiceCategoryParameterListByFirewall">
+    </wsdl:input>
+      <wsdl:output message="tns:ConfigFirewallServiceCategoryParameterListByFirewallResponse" name="ConfigFirewallServiceCategoryParameterListByFirewallResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="deleteEIPByFirewall">
@@ -747,6 +837,15 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="ConfigFirewallServiceCategoryParameterByFirewall">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="ConfigFirewallServiceCategoryParameterByFirewall">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ConfigFirewallServiceCategoryParameterByFirewallResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="createVPNUserByFirewall">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="createVPNUserByFirewall">
@@ -762,6 +861,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="changeVPNUserAccesssAddressByFirewallResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConfigFirewallServiceCategoryParameterListByFirewall">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="ConfigFirewallServiceCategoryParameterListByFirewall">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ConfigFirewallServiceCategoryParameterListByFirewallResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>

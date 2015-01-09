@@ -11,6 +11,7 @@ import com.sobey.core.utils.Collections3;
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameter;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallPolicyParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallServiceCategoryParameter;
 import com.sobey.firewall.webservice.response.dto.ConfigRouterStaticParameter;
 import com.sobey.firewall.webservice.response.dto.ConfigSystemInterfaceParameter;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
@@ -790,6 +791,37 @@ public class FirewallService {
 			sb.append("edit ").append(parameter.getRouterId()).append(DEFAULT_SYMBOL);
 			sb.append("set device ").append(parameter.getInterfaceName()).append(DEFAULT_SYMBOL);
 			sb.append("set gateway ").append(parameter.getIspGateway()).append(DEFAULT_SYMBOL);
+		}
+
+		return sb.toString();
+	}
+
+	public String ConfigFirewallServiceCategoryScrip(
+			ArrayList<ConfigFirewallServiceCategoryParameter> configFirewallServiceCategoryParameters) {
+
+		StringBuilder sb = new StringBuilder();
+
+		for (ConfigFirewallServiceCategoryParameter parameter : configFirewallServiceCategoryParameters) {
+
+			sb.append("config firewall service category").append(DEFAULT_SYMBOL);
+			sb.append("edit ").append("\"").append(parameter.getCategoryName()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set ").append(parameter.getProtocol()).append("-portrange ").append(parameter.getPortrange())
+					.append(":0").append(DEFAULT_SYMBOL);
+
+			sb.append("edit ").append(parameter.getPolicyId()).append(DEFAULT_SYMBOL);
+			sb.append("set srcintf ").append("\"").append(parameter.getSrcintf()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set dstintf ").append("\"").append(parameter.getDstintf()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set srcaddr ").append("\"").append(parameter.getSrcaddr()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set dstaddr ").append("\"").append(parameter.getDstaddr()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set action accept").append(DEFAULT_SYMBOL);
+			sb.append("set schedule ").append("\"").append("always").append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set service ").append("\"").append(parameter.getCategoryName()).append("\"")
+					.append(DEFAULT_SYMBOL);
+			if (parameter.getAction().equals("deny")) {
+				sb.append("set logtraffic all").append(DEFAULT_SYMBOL);
+			}
+			sb.append(DEFAULT_SYMBOL);
+
 		}
 
 		return sb.toString();
