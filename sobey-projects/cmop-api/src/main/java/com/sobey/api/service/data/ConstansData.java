@@ -6,6 +6,9 @@ public class ConstansData {
 
 	public static final Integer idcId = 1;
 
+	public static final String firewall_username = "admin";
+	public static final String firewall_password = "mcloud@sobey.com";
+
 	public static SubnetDTO defaultSubnetDTO(Integer tenantsId) {
 
 		String gateway = null;
@@ -21,7 +24,6 @@ public class ConstansData {
 		subnetDTO.setDescription("默认子网");
 
 		return subnetDTO;
-
 	}
 
 }
