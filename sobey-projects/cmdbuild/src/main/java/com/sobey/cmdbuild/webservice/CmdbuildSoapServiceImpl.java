@@ -17,6 +17,7 @@ import com.sobey.cmdbuild.constants.LookUpConstants;
 import com.sobey.cmdbuild.constants.WsConstants;
 import com.sobey.cmdbuild.entity.ConfigFirewallAddress;
 import com.sobey.cmdbuild.entity.ConfigFirewallPolicy;
+import com.sobey.cmdbuild.entity.ConfigFirewallServiceCategory;
 import com.sobey.cmdbuild.entity.ConfigRouterStatic;
 import com.sobey.cmdbuild.entity.ConfigSystemInterface;
 import com.sobey.cmdbuild.entity.DeviceSpec;
@@ -65,6 +66,7 @@ import com.sobey.cmdbuild.entity.Vlan;
 import com.sobey.cmdbuild.entity.Vpn;
 import com.sobey.cmdbuild.webservice.response.dto.ConfigFirewallAddressDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ConfigFirewallPolicyDTO;
+import com.sobey.cmdbuild.webservice.response.dto.ConfigFirewallServiceCategoryDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ConfigRouterStaticDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ConfigSystemInterfaceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DeviceSpecDTO;
@@ -9537,6 +9539,222 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			return comm.configSystemInterfaceService.getConfigSystemInterfaceDTOPagination(searchParams.getParamsMap(),
 					pageNumber, pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<ConfigFirewallServiceCategoryDTO> findconfigFirewallServiceCategory(Integer id) {
+
+		DTOResult<ConfigFirewallServiceCategoryDTO> result = new DTOResult<ConfigFirewallServiceCategoryDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			ConfigFirewallServiceCategory configFirewallServiceCategory = comm.configFirewallServiceCategoryService
+					.findConfigFirewallServiceCategory(id);
+
+			Validate.notNull(configFirewallServiceCategory, ERROR.OBJECT_NULL);
+
+			ConfigFirewallServiceCategoryDTO dto = BeanMapper.map(configFirewallServiceCategory,
+					ConfigFirewallServiceCategoryDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setFirewallServiceDTO(findFirewallService(dto.getFirewallService()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<ConfigFirewallServiceCategoryDTO> findconfigFirewallServiceCategoryByParams(
+			SearchParams searchParams) {
+
+		DTOResult<ConfigFirewallServiceCategoryDTO> result = new DTOResult<ConfigFirewallServiceCategoryDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			ConfigFirewallServiceCategory configFirewallServiceCategory = comm.configFirewallServiceCategoryService
+					.findConfigFirewallServiceCategory(searchParams.getParamsMap());
+
+			Validate.notNull(configFirewallServiceCategory, ERROR.OBJECT_NULL);
+
+			ConfigFirewallServiceCategoryDTO dto = BeanMapper.map(configFirewallServiceCategory,
+					ConfigFirewallServiceCategoryDTO.class);
+
+			// Reference
+			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			dto.setFirewallServiceDTO(findFirewallService(dto.getFirewallService()).getDto());
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult createconfigFirewallServiceCategory(
+			ConfigFirewallServiceCategoryDTO configFirewallServiceCategoryDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(configFirewallServiceCategoryDTO, ERROR.INPUT_NULL);
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", configFirewallServiceCategoryDTO.getDescription());
+			paramsMap.put("EQ_tenants", configFirewallServiceCategoryDTO.getTenants());
+
+			Validate.isTrue(
+					comm.configFirewallServiceCategoryService.findConfigFirewallServiceCategory(paramsMap) == null,
+					ERROR.OBJECT_DUPLICATE);
+
+			ConfigFirewallServiceCategory configFirewallServiceCategory = BeanMapper.map(
+					configFirewallServiceCategoryDTO, ConfigFirewallServiceCategory.class);
+			configFirewallServiceCategory.setCode("CFSC" + Identities.randomBase62(8));
+			configFirewallServiceCategory.setUser(DEFAULT_USER);
+			configFirewallServiceCategory.setId(0);
+
+			BeanValidators.validateWithException(validator, configFirewallServiceCategory);
+
+			comm.configFirewallServiceCategoryService.saveOrUpdate(configFirewallServiceCategory);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult updateconfigFirewallServiceCategory(Integer id,
+			ConfigFirewallServiceCategoryDTO configFirewallServiceCategoryDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(configFirewallServiceCategoryDTO, ERROR.INPUT_NULL);
+
+			ConfigFirewallServiceCategory configFirewallServiceCategory = comm.configFirewallServiceCategoryService
+					.findConfigFirewallServiceCategory(id);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+
+			paramsMap.put("EQ_description", configFirewallServiceCategoryDTO.getDescription());
+			paramsMap.put("EQ_tenants", configFirewallServiceCategoryDTO.getTenants());
+
+			// 验证description是否唯一.如果不为null,则弹出错误.
+			Validate.isTrue(
+					comm.configFirewallServiceCategoryService.findConfigFirewallServiceCategory(paramsMap) == null
+							|| configFirewallServiceCategory.getDescription().equals(
+									configFirewallServiceCategoryDTO.getDescription()), ERROR.OBJECT_DUPLICATE);
+
+			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
+			BeanMapper.copy(BeanMapper.map(configFirewallServiceCategoryDTO, ConfigFirewallServiceCategory.class),
+					configFirewallServiceCategoryDTO);
+
+			configFirewallServiceCategory.setUser(DEFAULT_USER);
+			configFirewallServiceCategory.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			configFirewallServiceCategory.setIdClass(TableNameUtil.getTableName(ConfigFirewallServiceCategory.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, configFirewallServiceCategory);
+
+			comm.configFirewallServiceCategoryService.saveOrUpdate(configFirewallServiceCategory);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteconfigFirewallServiceCategory(Integer id) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			ConfigFirewallServiceCategory configFirewallServiceCategory = comm.configFirewallServiceCategoryService
+					.findConfigFirewallServiceCategory(id);
+
+			Validate.notNull(configFirewallServiceCategory, ERROR.OBJECT_NULL);
+
+			configFirewallServiceCategory.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.configFirewallServiceCategoryService.saveOrUpdate(configFirewallServiceCategory);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOListResult<ConfigFirewallServiceCategoryDTO> getconfigFirewallServiceCategoryList(
+			SearchParams searchParams) {
+
+		DTOListResult<ConfigFirewallServiceCategoryDTO> result = new DTOListResult<ConfigFirewallServiceCategoryDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.configFirewallServiceCategoryService
+					.getConfigFirewallServiceCategoryList(searchParams.getParamsMap()),
+					ConfigFirewallServiceCategoryDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<ConfigFirewallServiceCategoryDTO> getconfigFirewallServiceCategoryPagination(
+			SearchParams searchParams, Integer pageNumber, Integer pageSize) {
+		PaginationResult<ConfigFirewallServiceCategoryDTO> result = new PaginationResult<ConfigFirewallServiceCategoryDTO>();
+
+		try {
+
+			return comm.configFirewallServiceCategoryService.getConfigFirewallServiceCategoryDTOPagination(
+					searchParams.getParamsMap(), pageNumber, pageSize);
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);

@@ -8,6 +8,7 @@ import javax.jws.WebService;
 import com.sobey.cmdbuild.constants.WsConstants;
 import com.sobey.cmdbuild.webservice.response.dto.ConfigFirewallAddressDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ConfigFirewallPolicyDTO;
+import com.sobey.cmdbuild.webservice.response.dto.ConfigFirewallServiceCategoryDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ConfigRouterStaticDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ConfigSystemInterfaceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.DeviceSpecDTO;
@@ -1044,6 +1045,31 @@ public interface CmdbuildSoapService {
 			@WebParam(name = "searchParams") SearchParams searchParams);
 
 	PaginationResult<ConfigSystemInterfaceDTO> getConfigSystemInterfacePagination(
+			@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// == configFirewallServiceCategory =//
+	// ==============================//
+
+	DTOResult<ConfigFirewallServiceCategoryDTO> findconfigFirewallServiceCategory(@WebParam(name = "id") Integer id);
+
+	DTOResult<ConfigFirewallServiceCategoryDTO> findconfigFirewallServiceCategoryByParams(
+			@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createconfigFirewallServiceCategory(
+			@WebParam(name = "configFirewallServiceCategoryDTO") ConfigFirewallServiceCategoryDTO configFirewallServiceCategoryDTO);
+
+	IdResult updateconfigFirewallServiceCategory(
+			@WebParam(name = "id") Integer id,
+			@WebParam(name = "configFirewallServiceCategoryDTO") ConfigFirewallServiceCategoryDTO configFirewallServiceCategoryDTO);
+
+	IdResult deleteconfigFirewallServiceCategory(@WebParam(name = "id") Integer id);
+
+	DTOListResult<ConfigFirewallServiceCategoryDTO> getconfigFirewallServiceCategoryList(
+			@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<ConfigFirewallServiceCategoryDTO> getconfigFirewallServiceCategoryPagination(
 			@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 

@@ -26,6 +26,7 @@ import com.sobey.cmdbuild.service.iaas.MapTagServiceService;
 import com.sobey.cmdbuild.service.iaas.RouterService;
 import com.sobey.cmdbuild.service.iaas.ServiceService;
 import com.sobey.cmdbuild.service.iaas.VpnService;
+import com.sobey.cmdbuild.service.infrastructure.ConfigFirewallServiceCategoryService;
 import com.sobey.cmdbuild.service.infrastructure.CustomService;
 import com.sobey.cmdbuild.service.infrastructure.FirewallPortService;
 import com.sobey.cmdbuild.service.infrastructure.FirewallService;
@@ -67,6 +68,9 @@ public class CommonService {
 
 	@Autowired
 	public ConfigFirewallPolicyService configFirewallPolicyService;
+
+	@Autowired
+	public ConfigFirewallServiceCategoryService configFirewallServiceCategoryService;
 
 	@Autowired
 	public ConfigRouterStaticService configRouterStaticService;
