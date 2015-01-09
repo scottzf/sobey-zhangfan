@@ -2096,6 +2096,8 @@
           <xs:element minOccurs="0" name="firewallServiceDTO" type="tns:FirewallServiceDTO"/>
           <xs:element minOccurs="0" name="policyId" type="xs:int"/>
           <xs:element minOccurs="0" name="portId" type="xs:int"/>
+          <xs:element minOccurs="0" name="subnet" type="xs:int"/>
+          <xs:element minOccurs="0" name="subnetDTO" type="tns:SubnetDTO"/>
           <xs:element minOccurs="0" name="tenants" type="xs:int"/>
           <xs:element minOccurs="0" name="tenantsDTO" type="tns:TenantsDTO"/>
         </xs:sequence>

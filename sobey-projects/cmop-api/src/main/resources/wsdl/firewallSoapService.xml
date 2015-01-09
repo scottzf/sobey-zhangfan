@@ -3,6 +3,8 @@
   <wsdl:types>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://firewall.generate.sobey.com" elementFormDefault="unqualified" targetNamespace="http://firewall.generate.sobey.com" version="1.0">
 
+  <xs:element name="AuthenticateFirewallParameter" type="tns:AuthenticateFirewallParameter"/>
+
   <xs:element name="ConfigFirewallAddressParameter" type="tns:ConfigFirewallAddressParameter"/>
 
   <xs:element name="ConfigFirewallAddressParameterByFirewall" type="tns:ConfigFirewallAddressParameterByFirewall"/>
@@ -138,6 +140,9 @@
   <xs:complexType name="ConfigRouterStaticParameters">
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="configRouterStaticParameters" nillable="true" type="tns:ConfigRouterStaticParameter"/>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
+      <xs:element minOccurs="0" name="url" type="xs:string"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -145,7 +150,10 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="interfaceName" type="xs:string"/>
       <xs:element minOccurs="0" name="ispGateway" type="xs:string"/>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
       <xs:element minOccurs="0" name="routerId" type="xs:int"/>
+      <xs:element minOccurs="0" name="url" type="xs:string"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -191,6 +199,10 @@
   <xs:complexType name="ConfigSystemInterfaceParameters">
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="configSystemInterfaceParameters" nillable="true" type="tns:ConfigSystemInterfaceParameter"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="parameters" nillable="true" type="tns:ConfigSystemInterfaceParameter"/>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
+      <xs:element minOccurs="0" name="url" type="xs:string"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -198,7 +210,10 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="gateway" type="xs:string"/>
       <xs:element minOccurs="0" name="interfaceName" type="xs:string"/>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
       <xs:element minOccurs="0" name="subnetMask" type="xs:string"/>
+      <xs:element minOccurs="0" name="url" type="xs:string"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -233,7 +248,17 @@
   </xs:complexType>
 
   <xs:complexType name="RegisteredByFirewall">
-    <xs:sequence/>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="authenticateFirewallParameter" type="tns:AuthenticateFirewallParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="AuthenticateFirewallParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
+      <xs:element minOccurs="0" name="url" type="xs:string"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="RegisteredByFirewallResponse">
@@ -251,6 +276,9 @@
   <xs:complexType name="ConfigFirewallPolicyParameters">
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="configFirewallPolicyParameters" nillable="true" type="tns:ConfigFirewallPolicyParameter"/>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
+      <xs:element minOccurs="0" name="url" type="xs:string"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -258,10 +286,13 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="dstaddr" type="xs:string"/>
       <xs:element minOccurs="0" name="dstintf" type="xs:string"/>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
       <xs:element minOccurs="0" name="policyId" type="xs:int"/>
       <xs:element minOccurs="0" name="policyType" type="xs:string"/>
       <xs:element minOccurs="0" name="srcaddr" type="xs:string"/>
       <xs:element minOccurs="0" name="srcintf" type="xs:string"/>
+      <xs:element minOccurs="0" name="url" type="xs:string"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -304,14 +335,20 @@
   <xs:complexType name="ConfigFirewallAddressParameters">
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="configFirewallAddressParameters" nillable="true" type="tns:ConfigFirewallAddressParameter"/>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
+      <xs:element minOccurs="0" name="url" type="xs:string"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="ConfigFirewallAddressParameter">
     <xs:sequence>
       <xs:element minOccurs="0" name="gateway" type="xs:string"/>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
       <xs:element minOccurs="0" name="segment" type="xs:string"/>
       <xs:element minOccurs="0" name="subnetMask" type="xs:string"/>
+      <xs:element minOccurs="0" name="url" type="xs:string"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
