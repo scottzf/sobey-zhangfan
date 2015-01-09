@@ -10,7 +10,9 @@ public class Router {
 	
 	private String localIp;   //内网IP
 	
-	private String eIp;   //公网IP（***** 目前设计为具有路由功能的防火墙  所以添加eIp）
+	private String eIp;   //公网IP
+	
+	private String controlIp;   //操纵路由器的管理IP
 
 	public String getRouterName() {
 		return routerName;
@@ -50,6 +52,14 @@ public class Router {
 
 	public void seteIp(String eIp) {
 		this.eIp = eIp;
+	}
+
+	public String getControlIp() {
+		return controlIp;
+	}
+
+	public void setControlIp(String controlIp) {
+		this.controlIp = controlIp;
 	}
 	
 }

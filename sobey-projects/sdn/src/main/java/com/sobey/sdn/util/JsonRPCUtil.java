@@ -71,9 +71,9 @@ public class JsonRPCUtil {
 		CloseableHttpClient client = HttpClients.createDefault();
 		
 		//JSON-RPC (over HTTP)请求URL
-		//String url = "http://"+switchIp+":80/command-api";
+		String url = "http://"+switchIp+":80/command-api";
 		
-		HttpPost httpPost = new HttpPost(switchIp);
+		HttpPost httpPost = new HttpPost(url);
 		httpPost.addHeader("Content-Type", "application/json");
 		httpPost.setEntity(new StringEntity(jsonObject.toString(), "UTF-8"));
 
