@@ -32,11 +32,26 @@ public class ConfigSystemInterfaceDTO extends BasicDTO {
 	private Integer portId;
 
 	/**
+	 * 所属Subnet
+	 */
+	private Integer subnet;
+
+	private SubnetDTO subnetDTO;
+
+	/**
 	 * 所属Tenants
 	 */
 	private Integer tenants;
 
 	private TenantsDTO tenantsDTO;
+
+	public Integer getFirewallService() {
+		return firewallService;
+	}
+
+	public FirewallServiceDTO getFirewallServiceDTO() {
+		return firewallServiceDTO;
+	}
 
 	public Integer getPolicyId() {
 		return policyId;
@@ -44,6 +59,14 @@ public class ConfigSystemInterfaceDTO extends BasicDTO {
 
 	public Integer getPortId() {
 		return portId;
+	}
+
+	public Integer getSubnet() {
+		return subnet;
+	}
+
+	public SubnetDTO getSubnetDTO() {
+		return subnetDTO;
 	}
 
 	public Integer getTenants() {
@@ -54,6 +77,14 @@ public class ConfigSystemInterfaceDTO extends BasicDTO {
 		return tenantsDTO;
 	}
 
+	public void setFirewallService(Integer firewallService) {
+		this.firewallService = firewallService;
+	}
+
+	public void setFirewallServiceDTO(FirewallServiceDTO firewallServiceDTO) {
+		this.firewallServiceDTO = firewallServiceDTO;
+	}
+
 	public void setPolicyId(Integer policyId) {
 		this.policyId = policyId;
 	}
@@ -62,20 +93,12 @@ public class ConfigSystemInterfaceDTO extends BasicDTO {
 		this.portId = portId;
 	}
 
-	public Integer getFirewallService() {
-		return firewallService;
+	public void setSubnet(Integer subnet) {
+		this.subnet = subnet;
 	}
 
-	public void setFirewallService(Integer firewallService) {
-		this.firewallService = firewallService;
-	}
-
-	public FirewallServiceDTO getFirewallServiceDTO() {
-		return firewallServiceDTO;
-	}
-
-	public void setFirewallServiceDTO(FirewallServiceDTO firewallServiceDTO) {
-		this.firewallServiceDTO = firewallServiceDTO;
+	public void setSubnetDTO(SubnetDTO subnetDTO) {
+		this.subnetDTO = subnetDTO;
 	}
 
 	public void setTenants(Integer tenants) {

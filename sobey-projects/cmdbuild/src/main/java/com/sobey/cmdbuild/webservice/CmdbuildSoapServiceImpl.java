@@ -9353,6 +9353,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			// Reference
 			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
 			dto.setFirewallServiceDTO(findFirewallService(dto.getFirewallService()).getDto());
+			dto.setSubnetDTO(findSubnet(dto.getSubnet()).getDto());
 
 			result.setDto(dto);
 
@@ -9384,6 +9385,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			// Reference
 			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
 			dto.setFirewallServiceDTO(findFirewallService(dto.getFirewallService()).getDto());
+			dto.setSubnetDTO(findSubnet(dto.getSubnet()).getDto());
 
 			result.setDto(dto);
 

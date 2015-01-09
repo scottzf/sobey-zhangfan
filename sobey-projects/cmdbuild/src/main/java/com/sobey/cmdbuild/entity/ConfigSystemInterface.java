@@ -39,6 +39,11 @@ public class ConfigSystemInterface extends BasicEntity {
 	private Integer portId;
 
 	/**
+	 * 所属Subnet
+	 */
+	private Integer subnet;
+
+	/**
 	 * 所属Tenants
 	 */
 	private Integer tenants;
@@ -66,6 +71,11 @@ public class ConfigSystemInterface extends BasicEntity {
 		return portId;
 	}
 
+	@Column(name = "subnet")
+	public Integer getSubnet() {
+		return subnet;
+	}
+
 	@Column(name = "tenants")
 	public Integer getTenants() {
 		return tenants;
@@ -85,6 +95,10 @@ public class ConfigSystemInterface extends BasicEntity {
 
 	public void setPortId(Integer portId) {
 		this.portId = portId;
+	}
+
+	public void setSubnet(Integer subnet) {
+		this.subnet = subnet;
 	}
 
 	public void setTenants(Integer tenants) {

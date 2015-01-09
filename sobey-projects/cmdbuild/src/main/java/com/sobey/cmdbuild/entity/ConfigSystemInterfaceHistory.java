@@ -34,6 +34,11 @@ public class ConfigSystemInterfaceHistory extends BasicEntity {
 	 * 接口名的组成格式为 "port"+"id" ,其中id 为 1-10 中一个.
 	 */
 	private Integer portId;
+	
+	/**
+	 * 所属Subnet
+	 */
+	private Integer subnet;
 
 	/**
 	 * 所属Tenants
@@ -53,7 +58,8 @@ public class ConfigSystemInterfaceHistory extends BasicEntity {
 	public Integer getFirewallService() {
 		return firewallService;
 	}
-
+	
+	
 	@Column(name = "policy_id")
 	public Integer getPolicyId() {
 		return policyId;
@@ -62,6 +68,11 @@ public class ConfigSystemInterfaceHistory extends BasicEntity {
 	@Column(name = "port_id")
 	public Integer getPortId() {
 		return portId;
+	}
+
+	@Column(name = "subnet")
+	public Integer getSubnet() {
+		return subnet;
 	}
 
 	@Column(name = "tenants")
@@ -83,6 +94,10 @@ public class ConfigSystemInterfaceHistory extends BasicEntity {
 
 	public void setPortId(Integer portId) {
 		this.portId = portId;
+	}
+
+	public void setSubnet(Integer subnet) {
+		this.subnet = subnet;
 	}
 
 	public void setTenants(Integer tenants) {
