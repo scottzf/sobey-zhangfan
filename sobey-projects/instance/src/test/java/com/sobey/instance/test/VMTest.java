@@ -46,13 +46,13 @@ public class VMTest {
 	@Autowired
 	private VMService service;
 
-	// private static final String url = "https://172.20.0.19/sdk";
-	// private static final String user = "administrator@vsphere.local";
-	// private static final String password = "Newmed!@s0bey";
-
-	private static final String url = "https://172.16.2.252/sdk";
+	private static final String url = "https://10.2.7.250/sdk";
 	private static final String user = "administrator@vsphere.local";
-	private static final String password = "vmware";
+	private static final String password = "Newmed!@s0bey";
+
+	// private static final String url = "https://172.16.2.252/sdk";
+	// private static final String user = "administrator@vsphere.local";
+	// private static final String password = "vmware";
 
 	@Test
 	public void getVMHostRelationship() throws RemoteException, MalformedURLException {
@@ -208,7 +208,7 @@ public class VMTest {
 
 		// 主机
 		HostSystem host = (HostSystem) new InventoryNavigator(si.getRootFolder()).searchManagedEntity("HostSystem",
-				"172.16.2.31");
+				"10.2.5.21");
 
 		ComputeResource computeResource = (ComputeResource) host.getParent();
 
