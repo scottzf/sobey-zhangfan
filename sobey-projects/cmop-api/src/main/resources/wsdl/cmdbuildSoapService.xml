@@ -1149,10 +1149,6 @@
 
   <xs:element name="getMaxPolicyId" type="tns:getMaxPolicyId"/>
 
-  <xs:element name="getMaxPolicyIdBySubnet" type="tns:getMaxPolicyIdBySubnet"/>
-
-  <xs:element name="getMaxPolicyIdBySubnetResponse" type="tns:getMaxPolicyIdBySubnetResponse"/>
-
   <xs:element name="getMaxPolicyIdResponse" type="tns:getMaxPolicyIdResponse"/>
 
   <xs:element name="getMaxRouterId" type="tns:getMaxRouterId"/>
@@ -1554,6 +1550,8 @@
           <xs:element minOccurs="0" name="ecsTypeText" type="xs:string"/>
           <xs:element minOccurs="0" name="ipaddress" type="xs:int"/>
           <xs:element minOccurs="0" name="ipaddressDTO" type="tns:IpaddressDTO"/>
+          <xs:element minOccurs="0" name="isDesktop" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="isGpu" type="xs:boolean"/>
           <xs:element minOccurs="0" name="macAddress" type="xs:string"/>
           <xs:element minOccurs="0" name="memorySize" type="xs:string"/>
           <xs:element minOccurs="0" name="osName" type="xs:string"/>
@@ -1694,6 +1692,7 @@
         <xs:sequence>
           <xs:element minOccurs="0" name="cpuHz" type="xs:string"/>
           <xs:element minOccurs="0" name="cpuNumber" type="xs:string"/>
+          <xs:element minOccurs="0" name="hostgroup" type="xs:string"/>
           <xs:element minOccurs="0" name="memorySize" type="xs:string"/>
           <xs:element minOccurs="0" name="model" type="xs:string"/>
           <xs:element minOccurs="0" name="resgroup" type="xs:string"/>
@@ -4350,18 +4349,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="getMaxPolicyIdBySubnet">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="arg0" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="getMaxPolicyIdBySubnetResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="updateFirewallService">
     <xs:sequence>
       <xs:element minOccurs="0" name="id" type="xs:int"/>
@@ -6750,10 +6737,6 @@
     <wsdl:part element="tns:getLoadBalancerPaginationResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getMaxPolicyIdBySubnetResponse">
-    <wsdl:part element="tns:getMaxPolicyIdBySubnetResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getEipPolicyPaginationResponse">
     <wsdl:part element="tns:getEipPolicyPaginationResponse" name="parameters">
     </wsdl:part>
@@ -6906,12 +6889,12 @@
     <wsdl:part element="tns:updateEipPolicyResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="createFirewall">
-    <wsdl:part element="tns:createFirewall" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="findServiceByParamsResponse">
     <wsdl:part element="tns:findServiceByParamsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createFirewall">
+    <wsdl:part element="tns:createFirewall" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findLogByParamsResponse">
@@ -7486,12 +7469,12 @@
     <wsdl:part element="tns:createSwitchPortResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="createFirewallResponse">
-    <wsdl:part element="tns:createFirewallResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="createServerPortResponse">
     <wsdl:part element="tns:createServerPortResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createFirewallResponse">
+    <wsdl:part element="tns:createFirewallResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getStoragePortListResponse">
@@ -8140,10 +8123,6 @@
   </wsdl:message>
   <wsdl:message name="findTenants">
     <wsdl:part element="tns:findTenants" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="getMaxPolicyIdBySubnet">
-    <wsdl:part element="tns:getMaxPolicyIdBySubnet" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getDnsPagination">
@@ -10347,12 +10326,6 @@
       <wsdl:input message="tns:getServiceList" name="getServiceList">
     </wsdl:input>
       <wsdl:output message="tns:getServiceListResponse" name="getServiceListResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getMaxPolicyIdBySubnet">
-      <wsdl:input message="tns:getMaxPolicyIdBySubnet" name="getMaxPolicyIdBySubnet">
-    </wsdl:input>
-      <wsdl:output message="tns:getMaxPolicyIdBySubnetResponse" name="getMaxPolicyIdBySubnetResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateFirewallService">
@@ -12896,15 +12869,6 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getServiceListResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getMaxPolicyIdBySubnet">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="getMaxPolicyIdBySubnet">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="getMaxPolicyIdBySubnetResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>

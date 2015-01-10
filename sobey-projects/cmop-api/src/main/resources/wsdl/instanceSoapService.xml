@@ -120,6 +120,7 @@
       <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
       <xs:element minOccurs="0" name="description" type="xs:string"/>
       <xs:element minOccurs="0" name="gateway" type="xs:string"/>
+      <xs:element minOccurs="0" name="hostId" type="xs:string"/>
       <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
       <xs:element minOccurs="0" name="resourcePool" type="xs:string"/>
       <xs:element minOccurs="0" name="subNetMask" type="xs:string"/>
@@ -213,6 +214,7 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="cpuHz" type="xs:string"/>
       <xs:element minOccurs="0" name="cpuNumber" type="xs:string"/>
+      <xs:element minOccurs="0" name="hostId" type="xs:string"/>
       <xs:element minOccurs="0" name="hostName" type="xs:string"/>
       <xs:element minOccurs="0" name="memoryMB" type="xs:string"/>
       <xs:element minOccurs="0" name="model" type="xs:string"/>
