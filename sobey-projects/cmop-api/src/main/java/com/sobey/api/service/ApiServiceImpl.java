@@ -450,6 +450,7 @@ public class ApiServiceImpl implements ApiService {
 		cloneVMParameter.setGateway(subnetDTO.getGateway());
 		cloneVMParameter.setIpaddress(ipaddressDTO.getDescription());
 		cloneVMParameter.setResourcePool(serverDTO.getResgroup());
+		cloneVMParameter.setHostId(serverDTO.getHostgroup());
 		cloneVMParameter.setSubNetMask(subnetDTO.getNetMask());
 		cloneVMParameter.setVmName(vmName);
 		cloneVMParameter.setVmTemplateName(ecsSpecDTO.getImageName());
