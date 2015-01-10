@@ -20,7 +20,7 @@ public class Server extends DeviceBasic {
 
 	private String cpuHz;
 	private String cpuNumber;
-	private String hsotgroup;
+	private String hostgroup;
 	private String memorySize;
 	private String model;
 	private String resgroup;
@@ -40,9 +40,9 @@ public class Server extends DeviceBasic {
 		return cpuNumber;
 	}
 
-	@Column(name = "hsotgroup", length = 100)
-	public String getHsotgroup() {
-		return hsotgroup;
+	@Column(name = "hostgroup", length = 100)
+	public String getHostgroup() {
+		return hostgroup;
 	}
 
 	@Column(name = "memory_size", length = 100)
@@ -78,8 +78,8 @@ public class Server extends DeviceBasic {
 		this.cpuNumber = cpuNumber;
 	}
 
-	public void setHsotgroup(String hsotgroup) {
-		this.hsotgroup = hsotgroup;
+	public void setHostgroup(String hostgroup) {
+		this.hostgroup = hostgroup;
 	}
 
 	public void setMemorySize(String memorySize) {

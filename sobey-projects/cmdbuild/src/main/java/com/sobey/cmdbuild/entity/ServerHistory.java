@@ -18,7 +18,7 @@ public class ServerHistory extends DeviceHistoryBasic {
 
 	private String cpuHz;
 	private String cpuNumber;
-	private String hsotgroup;
+	private String hostgroup;
 	private String memorySize;
 	private String model;
 	private String resgroup;
@@ -38,9 +38,9 @@ public class ServerHistory extends DeviceHistoryBasic {
 		return cpuNumber;
 	}
 
-	@Column(name = "hsotgroup", length = 100)
-	public String getHsotgroup() {
-		return hsotgroup;
+	@Column(name = "hostgroup", length = 100)
+	public String getHostgroup() {
+		return hostgroup;
 	}
 
 	@Column(name = "memory_size", length = 100)
@@ -75,6 +75,10 @@ public class ServerHistory extends DeviceHistoryBasic {
 
 	public void setCpuNumber(String cpuNumber) {
 		this.cpuNumber = cpuNumber;
+	}
+
+	public void setHostgroup(String hostgroup) {
+		this.hostgroup = hostgroup;
 	}
 
 	public void setHsotgroup(String hsotgroup) {
