@@ -9,6 +9,10 @@ public class Router {
 	private String tenantId;   //租户ID
 	
 	private String localIp;   //内网IP
+	
+	private String eIp;   //公网IP
+	
+	private String controlIp;   //操纵路由器的管理IP
 
 	public String getRouterName() {
 		return routerName;
@@ -40,6 +44,22 @@ public class Router {
 
 	public void setLocalIp(String localIp) {
 		this.localIp = localIp;
+	}
+
+	public String geteIp() {
+		return eIp;
+	}
+
+	public void seteIp(String eIp) {
+		this.eIp = eIp;
+	}
+
+	public String getControlIp() {
+		return controlIp;
+	}
+
+	public void setControlIp(String controlIp) {
+		this.controlIp = controlIp;
 	}
 	
 }

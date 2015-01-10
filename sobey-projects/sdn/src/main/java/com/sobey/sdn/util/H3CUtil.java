@@ -18,13 +18,13 @@ public class H3CUtil {
 	 * @param cmd
 	 * @return
 	 */
-	public static String getCommandResponse(String ip, String username, String password) throws Exception {
-		String cmd = "dis arp | begin " + ip;
+	public static String getCommandResponse(String ip) throws Exception {
+		String cmd = "dis arp | include " + ip;
 		// 连接
 		Connection connection = new Connection(SDNPropertiesUtil.getProperty("G4_SW1_CORE_IP"), 22);
 		connection.connect();
 		// 登陆
-		Boolean mark = connection.authenticateWithPassword(username, password);
+		Boolean mark = connection.authenticateWithPassword(SDNPropertiesUtil.getProperty("G4_SW1_CORE_USERNAME"), SDNPropertiesUtil.getProperty("G4_SW1_CORE_PASSWORD"));
 		StringBuffer sb = new StringBuffer();
 		if (mark == true) {
 			// 执行
@@ -35,15 +35,20 @@ public class H3CUtil {
 			BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
 			while (true) {
 				String line = br.readLine();
-				if (line.contains(ip)) {
-					String macAndPort = StringUtils.substringAfter(line, ip).trim();
-					String mac = macAndPort.substring(0, 14);
-					sb.append(mac).append("&");
-					StringUtils.getCommonPrefix("BAGG");
-					int x = macAndPort.indexOf("BAGG");
-					String port = macAndPort.substring(x, x + 5);
-					sb.append(port);
+				if(line == null){
 					break;
+				}
+				if(line.contains(ip)){
+					int firstSpace = line.indexOf(" ");   //截取IP字符  精确匹配
+					String ipStr = line.substring(0,firstSpace);
+					if (ip.equals(ipStr)) {
+						String macAndPort = StringUtils.substringAfter(line, ip).trim();
+						StringUtils.getCommonPrefix("BAGG");
+						int x = macAndPort.indexOf("BAGG");
+						String port = macAndPort.substring(x, x + 5);
+						sb.append(port);
+						break;
+					}
 				}
 			}
 			br.close();

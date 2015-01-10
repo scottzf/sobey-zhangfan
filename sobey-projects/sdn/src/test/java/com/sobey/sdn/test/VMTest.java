@@ -60,6 +60,7 @@ import com.vmware.vim25.VirtualMachineConfigSpec;
 import com.vmware.vim25.VirtualMachineRelocateSpec;
 import com.vmware.vim25.VirtualVmxnet3;
 import com.vmware.vim25.VmwareDistributedVirtualSwitchVlanIdSpec;
+import com.vmware.vim25.mo.ComputeResource;
 import com.vmware.vim25.mo.CustomizationSpecManager;
 import com.vmware.vim25.mo.Datastore;
 import com.vmware.vim25.mo.DistributedVirtualPortgroup;
@@ -82,6 +83,23 @@ public class VMTest {
 	private SDNServiceImpl sdnService;
 
 	@Test
+	public void getResourcePoolByHost() throws Exception {
+		ServiceInstance si = VcenterUtil.getServiceInstance();
+
+		// 主机
+		HostSystem host = (HostSystem) new InventoryNavigator(si.getRootFolder()).searchManagedEntity("HostSystem","10.2.5.25");
+
+		ComputeResource computeResource = (ComputeResource) host.getParent();
+
+		System.out.println(host.getName());
+		System.out.println("============ ResourcePool：" + computeResource.getResourcePool().getMOR().getVal());
+//		System.out.println("============ 制造商：" + host.getHardware().getSystemInfo().getVendor());
+//		System.out.println("============ 型号：" + host.getHardware().getSystemInfo().getModel());
+//		System.out.println("============ 内存大小：" + host.getHardware().getMemorySize());
+//		System.out.println("============ CPU数量：" + host.getHardware().getCpuInfo().getNumCpuCores());
+
+	}
+	@Test
 	public void getResourcePoolInfo() throws Exception {
 
 		ServiceInstance si = VcenterUtil.getServiceInstance();
@@ -98,9 +116,9 @@ public class VMTest {
 			System.out.println(data.getName());
 		}*/
 		
-		System.out.println("\n============ 存储 ============");
+//		System.out.println("\n============ 存储 ============");
 		System.out.println("\n============ Hosts ============");
-		ManagedEntity[] hosts = new InventoryNavigator(rootFolder).searchManagedEntities("Network");
+		ManagedEntity[] hosts = new InventoryNavigator(rootFolder).searchManagedEntities("HostSystem");
 		
 		for (ManagedEntity managedEntity : hosts) {
 			System.out.println(managedEntity.getName());
@@ -119,25 +137,25 @@ public class VMTest {
 //			System.out.println("--------------------------------------");
 //		}
 //		System.out.println("\n============ Hosts ============");
-//		// VirtualMachine vm = (VirtualMachine) new
-//		// InventoryNavigator(si.getRootFolder()).searchManagedEntity("VirtualMachine", "Windows 2008 R2 Mod");
-//		// System.err.println("fuck   "+vm.getDatastores()[0].getName());
-//		// System.err.println("fuck   "+vm.getDatastores().length);
+		// VirtualMachine vm = (VirtualMachine) new
+		// InventoryNavigator(si.getRootFolder()).searchManagedEntity("VirtualMachine", "Windows 2008 R2 Mod");
+		// System.err.println("fuck   "+vm.getDatastores()[0].getName());
+		// System.err.println("fuck   "+vm.getDatastores().length);
 //		ManagedEntity[] vms = new InventoryNavigator(si.getRootFolder()).searchManagedEntities("VirtualMachine");
 //		for (int i = 0; i < vms.length; i++) {
 //			VirtualMachine vm = (VirtualMachine) vms[i];
 //			System.err.println(vm.getName() + "-----------" + vm.getResourcePool());
 //		}
 //		// System.out.println("模板"+vm.getParent().toString());
-//		System.out.println("\n============ ResourcePools ============");
-//		ManagedEntity[] resourcePools = new InventoryNavigator(rootFolder).searchManagedEntities("ResourcePool");
-//		for (int i = 0; i < resourcePools.length; i++) {
-//			System.err.println("resourcePools[" + i + "]=" + resourcePools[i].getName());
-//			System.out.println(resourcePools[i].getMOR().getType());
-//			System.out.println(resourcePools[i].getMOR().get_value());
-//			System.out.println("--------------------------------------");
-//
-//		}
+		System.out.println("\n============ ResourcePools ============");
+		ManagedEntity[] resourcePools = new InventoryNavigator(rootFolder).searchManagedEntities("ResourcePool");
+		for (int i = 0; i < resourcePools.length; i++) {
+			//System.err.println("resourcePools[" + i + "]=" + resourcePools[i].getName());
+			System.out.println(resourcePools[i].getMOR().getType());
+			System.out.println(resourcePools[i].getMOR().get_value());
+			System.out.println("--------------------------------------");
+
+		}
 	}
 
 	@Test

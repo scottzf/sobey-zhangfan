@@ -4,13 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,57 +21,30 @@ import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
 
 import com.sobey.sdn.bean.ECS;
+import com.sobey.sdn.bean.Firewall;
 import com.sobey.sdn.bean.Router;
 import com.sobey.sdn.bean.Subnet;
+import com.sobey.sdn.constans.SDNConstants;
+import com.sobey.sdn.service.FirewallService;
+import com.sobey.sdn.service.HostRelationMap;
 import com.sobey.sdn.service.impl.SDNServiceImpl;
 import com.sobey.sdn.util.H3CUtil;
 import com.sobey.sdn.util.JsonRPCUtil;
 import com.sobey.sdn.util.SDNPropertiesUtil;
 import com.sobey.sdn.util.VcenterUtil;
-import com.vmware.vim25.CustomizationAdapterMapping;
-import com.vmware.vim25.CustomizationFixedIp;
-import com.vmware.vim25.CustomizationFixedName;
-import com.vmware.vim25.CustomizationGlobalIPSettings;
-import com.vmware.vim25.CustomizationGuiUnattended;
-import com.vmware.vim25.CustomizationIPSettings;
-import com.vmware.vim25.CustomizationIdentification;
-import com.vmware.vim25.CustomizationLicenseDataMode;
-import com.vmware.vim25.CustomizationLicenseFilePrintData;
-import com.vmware.vim25.CustomizationLinuxOptions;
-import com.vmware.vim25.CustomizationLinuxPrep;
-import com.vmware.vim25.CustomizationPassword;
-import com.vmware.vim25.CustomizationSpec;
-import com.vmware.vim25.CustomizationSpecInfo;
-import com.vmware.vim25.CustomizationSpecItem;
-import com.vmware.vim25.CustomizationSysprep;
-import com.vmware.vim25.CustomizationSysprepRebootOption;
-import com.vmware.vim25.CustomizationUserData;
-import com.vmware.vim25.CustomizationWinOptions;
-import com.vmware.vim25.HostNetworkPolicy;
-import com.vmware.vim25.HostPortGroupSpec;
-import com.vmware.vim25.HostVirtualSwitch;
-import com.vmware.vim25.InvalidProperty;
-import com.vmware.vim25.ManagedObjectReference;
+import com.vmware.vim25.HostPortGroupConfig;
 import com.vmware.vim25.PhysicalNic;
-import com.vmware.vim25.RuntimeFault;
 import com.vmware.vim25.VirtualDevice;
-import com.vmware.vim25.VirtualDeviceBackingInfo;
-import com.vmware.vim25.VirtualDeviceConfigSpec;
-import com.vmware.vim25.VirtualDeviceConfigSpecOperation;
 import com.vmware.vim25.VirtualEthernetCard;
-import com.vmware.vim25.VirtualEthernetCardNetworkBackingInfo;
-import com.vmware.vim25.VirtualMachineCloneSpec;
+import com.vmware.vim25.VirtualHardware;
 import com.vmware.vim25.VirtualMachineConfigInfo;
-import com.vmware.vim25.VirtualMachineConfigSpec;
-import com.vmware.vim25.VirtualMachineRelocateSpec;
-import com.vmware.vim25.mo.CustomizationSpecManager;
+import com.vmware.vim25.mo.ComputeResource;
 import com.vmware.vim25.mo.Folder;
 import com.vmware.vim25.mo.HostNetworkSystem;
 import com.vmware.vim25.mo.HostSystem;
 import com.vmware.vim25.mo.InventoryNavigator;
 import com.vmware.vim25.mo.ManagedEntity;
 import com.vmware.vim25.mo.ServiceInstance;
-import com.vmware.vim25.mo.Task;
 import com.vmware.vim25.mo.VirtualMachine;
 
 @ContextConfiguration({ "classpath:applicationContext.xml" })
@@ -84,161 +56,124 @@ public class SDNTest extends TestCase {
 
 	@Test
 	public void createECS() throws Exception {
+		
+		String vmName = "192.168.230.9";
 
-		// 临时需要
+		ECS ecs = new ECS();
+		ecs.setTemplateName("Windows 2008 R2 Mod"); // 模板
+		ecs.setTemplateOS("Windows"); // 操作系统
+		ecs.setLocalIp(vmName); // 内网ip
+
+		Subnet subnet = new Subnet();
+		subnet.setSubnetMask("255.255.255.0"); // 子网掩码
+		subnet.setGateway("192.168.230.1"); // 网关
+
+		int vlanId = 300;
+
+		String tenantId = "zhangfanTest";
+
+		String hostIp = "10.2.5.23";
+
+
+		sdnService.createECS(ecs, vlanId, hostIp, tenantId, vmName, subnet);
+	}
+	
+	@Test
+	public void createRouter() throws Exception {
+
+		 Router router = new Router();
+		
+		 router.setHostIp("10.2.5.25"); // 主机IP
+		 router.setRouterName("zhangfanTest-vRouter"); // 路由名称
+		 String ip_update = "10.2.253.53"; // 端口10更新ip
+		
+		 sdnService.createRouter(router, ip_update);
+
+	}
+	
+	@Test
+	public void bindingRouter() throws Exception {
+
+		Router router = new Router();
+		router.setRouterName("zhangfanTest-vRouter");
+		router.setControlIp("10.2.253.16");
+
+		Subnet subnet1 = new Subnet();
+		subnet1.setSubnetName("subnet1");
+		subnet1.setSegment("192.168.200.0");
+		subnet1.setGateway("192.168.200.1");
+		subnet1.setSubnetMask("255.255.255.0");
+		subnet1.setPortGroupName("zhangfanTest_TN 200");
+		
+		Subnet subnet2 = new Subnet();
+		subnet2.setSubnetName("subnet2");
+		subnet2.setSegment("192.168.230.0");
+		subnet2.setGateway("192.168.230.1");
+		subnet2.setSubnetMask("255.255.255.0");
+		subnet2.setPortGroupName("zhangfanTest_TN 300");
+		
+		List<Subnet> subnets = new ArrayList<Subnet>();
+		subnets.add(subnet1);
+		subnets.add(subnet2);
+
+		sdnService.bindingRouter(router, subnets);
+
+	}
+	@Test
+	public void bindingFirewall() throws Exception {
+
+		Router router = new Router();
+		router.setRouterName("zhangfanTest-vRouter");
+		router.setControlIp("10.2.253.16");
+
+		String ip_ISP = "221.237.156.153"; // 连接电信端口的ip地址
+
+		Firewall firewall = new Firewall();
+		firewall.seteSubnetMask("255.255.255.0");
+		firewall.setGateway("221.237.156.1");
+		
+		sdnService.bindingFirewall(router, firewall, ip_ISP);
+	}
+
+	@Test
+	public void getRouterInfo() throws Exception {
+
 		ServiceInstance si = VcenterUtil.getServiceInstance();
 
-		// ECS ecs = new ECS();
-		// ecs.setLocalIp("192.168.15.17"); // ip
-		// ecs.setTemplateName("Win2008"); // 模板
-		// ecs.setTemplateOS("Windows"); // 操作系统
-		// ecs.setEcsId("zhangfanTest003"); // 云主机ID
-		//
-		// Subnet subnet = new Subnet();
-		// subnet.setSubnetMask("255.255.255.0"); // 子网掩码
-		// subnet.setGateway("192.168.15.1"); // 网关
-		//
-		// sdnService.createECS(ecs, subnet);
+		VirtualMachine vm = (VirtualMachine) new InventoryNavigator(si.getRootFolder()).searchManagedEntity(
+				"VirtualMachine", "vRouter_5001"); // 5001-01
 
-		// 获得虚拟机所在主机
-		String hostIp = "172.16.2.31";
+		VirtualMachineConfigInfo virtualMachineConfigInfo = vm.getConfig();
+		VirtualHardware virtualHardware = virtualMachineConfigInfo.getHardware();
+		VirtualDevice[] virtualDevices = virtualHardware.getDevice();
+
+		for (int i = 0; i < virtualDevices.length; i++) {
+			System.out.println(virtualDevices[i].getDeviceInfo().getLabel());
+			if (virtualDevices[i] instanceof VirtualEthernetCard) {
+
+				VirtualEthernetCard card = (VirtualEthernetCard) virtualDevices[i];
+				System.out.println("\n============ mac地址：" + card.getMacAddress());
+				System.out.println("-------------------------------");
+			}
+		}
+
+	}
+
+	@Test
+	public void getHostNetwork() throws Exception {
+		
+		ServiceInstance si = VcenterUtil.getServiceInstance();
+		// 找到对应ip的主机
 		HostSystem host = (HostSystem) new InventoryNavigator(si.getRootFolder()).searchManagedEntity("HostSystem",
-				hostIp);
-		// 按一定规则生成vlanId 很重要
-		int vlanId = 150;
+				"10.2.5.25");
 
-		String tenementId = "sobeyTest";
-		String vlan = "";
-		// 创建本地VLAN
-		createLocalVlanByPortGroupName(host, tenementId, vlanId);
-		/**
-		 * 在主机对应置顶交换机上创建VLAN
-		 */
-		// 配置VLAN
-		String[] vlan_Config_cmds = generateVlanConfigString(vlanId); // 配置面向服务器的接口的命令
-
-		JsonRPCUtil.executeJsonRPCRequest(SDNPropertiesUtil.getProperty("TOR-A_SWITCH_URL"), vlan_Config_cmds); // 交换机ip地址暂时空着
-
-		// 在置顶交换机之间建NVGRE隧道ID
-		String tunnelId = "" + vlanId;
-		String[] nvgre_cmds = generateNvgreConfigString(vlanId); // 配置NVGRE的命令
-		JsonRPCUtil.executeJsonRPCRequest(SDNPropertiesUtil.getProperty("TOR-A_SWITCH_URL"), nvgre_cmds); // 交换机ip地址暂时空着
-
-		// 生成交换机执行命令
-		String swInterface = "eth-0-26";
-		String[] interfaceConfig_cmds = generateInterfaceConfigString(swInterface, vlanId); // 配置面向服务器的接口的命令
-
-		// Apache HTTP client以POST方式执行CLI命令
-		JsonRPCUtil.executeJsonRPCRequest(SDNPropertiesUtil.getProperty("TOR-A_SWITCH_URL"), interfaceConfig_cmds); // 交换机ip地址暂时空着
-
-		/**
-		 * 将租户虚拟机添加到VLAN中
-		 */
-		// 虚拟机连接本地VLAN
-		connectVMToLocalVlan(si, "sobeyTest001", "sobeyTest_SDN " + vlanId);
-
-	}
-
-	@Test
-	public void testCmds() throws Exception {
-		String str1 = "configure terminal"; // 进入配置模式
-		String str2 = "VLAN database"; // 进入VLAN模式
-		String str3 = "VLAN " + 55; // 创建面向服务器的VLAN
-		String str4 = "VLAN 4094"; // 创建上行VLAN
-		String str5 = "exit"; // 退出VLAN模式
-		String[] vlan_Config_cmds = { str1, str2, str3, str4, str5 };
-
-		JsonRPCUtil.executeJsonRPCRequest("http://10.2.2.9:80/command-api", vlan_Config_cmds);
-
-		String str11 = "configure terminal"; // 进入配置模式
-		String str12 = "eth-0-26"; // 进入接口模式
-		String str13 = "no shutdown"; // 打开接口
-		String str14 = "switchport mode trunk"; // 设置面向服务器的接口为trunk模式
-		String str15 = "switchport trunk allowed vlan add " + 55; // 允许vlanId标记的VLAN报文通过
-		String[] interfaceConfig_cmds = { str11, str12, str13, str14, str15 };
-
-		JsonRPCUtil.executeJsonRPCRequest("http://10.2.2.9:80/command-api", interfaceConfig_cmds);
-
-		String str21 = "configure terminal"; // 进入配置模式
-		String str22 = "nvgre"; // 进入NVGRE模式
-		String str23 = "source 172.31.255.1"; // 设置NVGRE报文的外层IP源地址
-		String str24 = "vlan " + 55 + " tunnel-id " + 55; // 将id为vlanId的VLAN映射到tunnel ID中
-		String str25 = "vlan " + 55 + " peer 172.31.255.2"; // 在id为vlanId的vlanId中创建到TOR B的隧道
-		String[] nvgre_cmds = { str21, str22, str23, str24, str25 };
-
-		JsonRPCUtil.executeJsonRPCRequest("http://10.2.2.9:80/command-api", nvgre_cmds);
-	}
-
-	@Test
-	public void test() {
-
-		JSONObject cmdsObject = new JSONObject();
-
-		String[] arr = { "show run", "config t", "vlan database", "vlan 1-8", "interface eth-0-1",
-				"switchport mode trunk", "switchport trunk allowed vlan add 2", "shutdown", "end",
-				"show interface switchport" };
-
-		cmdsObject.put("cmds", arr);
-
-		/*
-		 * cmdsObject.put("show run", ""); cmdsObject.put("config t", ""); cmdsObject.put("vlan database", "");
-		 * cmdsObject.put("vlan 1-8", ""); cmdsObject.put("interface eth-0-1", "");
-		 * cmdsObject.put("switchport mode trunk", ""); cmdsObject.put("switchport trunk allowed vlan add 2", "");
-		 * cmdsObject.put("shutdown", ""); cmdsObject.put("end", ""); cmdsObject.put("show interface switchport", "");
-		 */
-
-		List<JSONObject> paramsObjects = new ArrayList<JSONObject>();
-
-		JSONObject paramsObject = new JSONObject();
-		paramsObject.put("format", "text");
-		paramsObject.put("version", "1");
-		paramsObject.put("cmds", arr);
-
-		paramsObjects.add(paramsObject);
-
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("params", paramsObjects);
-		// 固定格式
-		jsonObject.put("jsonrpc", "2.0"); // JSON RPC协议版本号
-		jsonObject.put("id", "70853aff-af77-420e-8f3c-fa9430733a19"); // JSON RPC协议中的UID
-		jsonObject.put("method", "executeCmds"); // 运行交换机CLI命令的方法
-
-		System.out.println(jsonObject.toString());
-	}
-
-	@Test
-	public void test2() {
-		JSONObject jsonObj = new JSONObject();
-
-		jsonObj.put("id", 0);
-		jsonObj.put("auth", "");
-		jsonObj.put("jsonrpc", "2.0");
-		jsonObj.put("method", "item.get");
-		jsonObj.put("params",
-				(new JSONObject().put("search", (new JSONObject()).put("key_", "key_")).put("hostids", "hostids").put(
-						"output", "extend")));
-
-		List<JSONObject> arr = new ArrayList<JSONObject>();
-		JSONObject obj = new JSONObject();
-		JSONObject obj1 = new JSONObject();
-		List<JSONObject> arr2 = new ArrayList<JSONObject>();
-		JSONObject obj2 = new JSONObject();
-		arr2.add(obj2);
-		obj.put("hostId1", "hostId1");
-		obj.put("hostId2", "hostId2");
-		obj.put("hostId3", "hostId3");
-		obj2.put("hello", "hello");
-		obj.put("obj2", arr2);
-		obj1.put("vvvv1", "vvvv1");
-		arr.add(obj);
-		arr.add(obj1);
-		// String[] arr = new String[1];
-		// arr[0] = "hostId";
-
-		jsonObj.put("method", "host.delete");
-		jsonObj.put("params", arr);
-
-		System.out.println(jsonObj.toString());
+		// 获得主机网络系统
+		HostNetworkSystem hns = host.getHostNetworkSystem();
+		HostPortGroupConfig[] pgs = hns.getNetworkConfig().getPortgroup();
+		for (int i = 0; i < pgs.length; i++) {
+			System.out.println(pgs[i].getSpec().getName());
+		}
+		//hns.getNetworkInfo()
 	}
 
 	@Test
@@ -271,18 +206,8 @@ public class SDNTest extends TestCase {
 	 */
 	@Test
 	public void getCentecSwitchInfo() throws Exception {
-		// show mac address-table | begin e839.3513.4048
-		// TelnetUtil.execCommand("10.2.2.9", "", "", "show run", FILE_PATH);
-		// com.sobey.sdn.util.TelnetUtil.testGet("10.2.2.9", 23);
-
-		// TelnetClient telnet = new TelnetClient();
-		// telnet.connect("10.2.2.9", 23);
-		// InputStream in = telnet.getInputStream();
-		// PrintStream out = new PrintStream(telnet.getOutputStream());
-		// out.print("++++++++++++++++++++++++++++++++++++++++++");
-
-		String[] cmds = { "show run" };
-		// System.out.println(JsonRPCUtil.executeJsonRPCRequest("", cmds));
+		String swInterface = JsonRPCUtil.getSwitchPortByMac("BAGG8", "0050.5683.03c4"); // 获得主机与交换机哪个接口相连
+		System.out.println(swInterface);
 	}
 
 	@Test
@@ -324,14 +249,6 @@ public class SDNTest extends TestCase {
 
 	@Test
 	public void test6() throws Exception {
-		/*
-		 * String response = JsonRPCUtil.executeJsonRPCRequest("", new String[] {
-		 * "show mac address-table | begin e839.3513.410c" });
-		 * 
-		 * // System.out.println(response); int a = response.indexOf("e839.3513.410c"); String result =
-		 * response.substring(a); int b = response.indexOf("\\n"); String str = result.substring(0, b).replaceAll(" ",
-		 * ""); int c = str.indexOf("dynamic"); String str1 = str.substring(c + 7, c + 14); System.out.println(str1);
-		 */
 
 	}
 
@@ -383,7 +300,68 @@ public class SDNTest extends TestCase {
 
 	@Test
 	public void getCoreSW() throws Exception {
-		System.out.println(H3CUtil.getCommandResponse("172.16.3.13", "zhangfan", "gwgxhULJerjVkvCeJcxA"));
+		System.out.println(H3CUtil.getCommandResponse("10.2.5.25"));
+	}
+
+	@Test
+	public void testFireString() throws Exception {
+
+		// FirewallService.createAddressPool("10.2.252.6", "addressPoolName1", "172.16.6.0", "255.255.255.0");
+		// FirewallService.createAddressPool("10.2.252.6", "addressPoolName2", "172.16.7.0", "255.255.255.0");
+
+		FirewallService.configurationNetworksStrategy("10.2.252.6", 180, "port6", "port7", "addressPoolName1",
+				"addressPoolName2");
+	}
+
+	@Test
+	public void getVmMac() throws Exception {
+		ServiceInstance si = VcenterUtil.getServiceInstance();
+
+		VirtualMachine vm = (VirtualMachine) new InventoryNavigator(si.getRootFolder()).searchManagedEntity(
+				"VirtualMachine", "demo_Test2");
+		String mac = vm.getGuest().getNet()[0].getMacAddress();
+		String[] macs = mac.split(":");
+		String mac1 = macs[0] + macs[1] + "." + macs[2] + macs[3] + "." + macs[4] + macs[5];
+		System.out.println(mac1);
+	}
+
+	@Test
+	public void getMacByVM() throws Exception {
+
+		ServiceInstance si = VcenterUtil.getServiceInstance();
+
+		VirtualMachine vm = (VirtualMachine) new InventoryNavigator(si.getRootFolder()).searchManagedEntity(
+				"VirtualMachine", "zhangfanTest_vm_201");
+		VirtualMachineConfigInfo myVMInfo = vm.getConfig();
+		VirtualHardware vmHardware = myVMInfo.getHardware();
+		VirtualDevice[] vmDevices = vmHardware.getDevice();
+		for (int i = 0; i < vmDevices.length; i++) {
+			if (vmDevices[i] instanceof VirtualEthernetCard) {
+				VirtualEthernetCard card = (VirtualEthernetCard) vmDevices[i];
+				System.out.println("\n============ mac地址：" + card.getMacAddress());
+			}
+		}
+		System.out.println(vm.getGuest().getNet().length);
+		String mac = vm.getGuest().getNet()[0].getMacAddress();
+		System.out.println(mac);
+	}
+
+	private void createPolicyInSwitch(int vlanId, String swUrl, String swInterface) throws IOException {
+
+		// 配置VLAN
+		String[] vlan_Config_cmds = generateVlanConfigString(vlanId); // 配置面向服务器的接口的命令
+
+		JsonRPCUtil.executeJsonRPCRequest(swUrl, vlan_Config_cmds); // 执行
+		// 生成交换机执行命令
+		String[] interfaceConfig_cmds = generateInterfaceConfigString(swInterface, vlanId); // 配置面向服务器的接口的命令
+
+		// Apache HTTP client以POST方式执行CLI命令
+		JsonRPCUtil.executeJsonRPCRequest(swUrl, interfaceConfig_cmds); // 执行
+
+		// 在置顶交换机之间建NVGRE隧道ID
+		String[] nvgre_cmds = generateNvgreConfigString(swUrl, vlanId); // 配置NVGRE的命令
+		JsonRPCUtil.executeJsonRPCRequest(swUrl, nvgre_cmds); // 执行
+
 	}
 
 	private String[] generateVlanConfigString(int vlanId) {
@@ -392,23 +370,30 @@ public class SDNTest extends TestCase {
 		String str3 = "VLAN " + vlanId; // 创建面向服务器的VLAN
 		String str4 = "VLAN 4094"; // 创建上行VLAN
 		String str5 = "exit"; // 退出VLAN模式
-		String[] cmds = { str1, str2, str3, str4, str5 };
+		String str6 = "copy running-config startup-config"; // 保存配置信息
+		String[] cmds = { str1, str2, str3, str4, str5, str6 };
 		return cmds;
 	}
 
-	private String[] generateNvgreConfigString(int vlanId) {
+	private String[] generateNvgreConfigString(String swUrl, int vlanId) {
 		String str1 = "configure terminal"; // 进入配置模式
 		String str2 = "nvgre"; // 进入NVGRE模式
-		String str3 = "source 172.31.255.1"; // 设置NVGRE报文的外层IP源地址
+		String sourceIp = "10.2.255.2"; // 置顶交换机源IP
+		String peerIp = "10.2.255.1"; // 置顶交换机peer IP
+		if ("10.2.2.8".equals(swUrl)) {
+			sourceIp = "10.2.255.1";
+			peerIp = "10.2.255.2";
+		}
+		String str3 = "source " + sourceIp; // 设置NVGRE报文的外层IP源地址
 		String str4 = "vlan " + vlanId + " tunnel-id " + vlanId; // 将id为vlanId的VLAN映射到tunnel ID中
-		String str5 = "vlan " + vlanId + " peer 172.31.255.2"; // 在id为vlanId的vlanId中创建到TOR B的隧道
+		String str5 = "vlan " + vlanId + " peer " + peerIp; // 在id为vlanId的vlanId中创建到TOR B的隧道
 		String[] cmds = { str1, str2, str3, str4, str5 };
 		return cmds;
 	}
 
 	private String[] generateInterfaceConfigString(String swInterface, int vlanId) {
 		String str1 = "configure terminal"; // 进入配置模式
-		String str2 = "interface "+swInterface; // 进入接口模式
+		String str2 = "interface " + swInterface; // 进入接口模式
 		String str3 = "no shutdown"; // 打开接口
 		String str4 = "switchport mode trunk"; // 设置面向服务器的接口为trunk模式
 		String str5 = "switchport trunk allowed vlan add " + vlanId; // 允许vlanId标记的VLAN报文通过
@@ -416,171 +401,103 @@ public class SDNTest extends TestCase {
 		return cmds;
 	}
 
-	private void connectVMToLocalVlan(ServiceInstance si, String ecsName, String vlan) throws Exception {
+	private String generateupdatePort10IpConfigScript(String ip_update) {
+		// 修改端口10的ip
+		// config system interface
+		// edit port10
+		// set ip <ip netmask>
+		// end
+		// exe backup config flash
+		StringBuilder sb = new StringBuilder();
 
-		VirtualMachine vm = (VirtualMachine) new InventoryNavigator(si.getRootFolder()).searchManagedEntity(
-				"VirtualMachine", ecsName);
-		VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
+		sb.append("config system interface").append(SDNConstants.ENTER_SIGN);
+		sb.append("edit port10").append(SDNConstants.ENTER_SIGN);
+		sb.append("set ip ").append(ip_update).append(" ").append(SDNConstants.PORT10_SUBNETMASK)
+				.append(SDNConstants.ENTER_SIGN);
+		sb.append("end").append(SDNConstants.ENTER_SIGN);
+		sb.append("exe backup config flash").append(SDNConstants.ENTER_SIGN);
 
-		VirtualDeviceConfigSpec nicSpec = new VirtualDeviceConfigSpec();
-		nicSpec.setOperation(VirtualDeviceConfigSpecOperation.edit);
-
-		VirtualMachineConfigInfo vmConfigInfo = vm.getConfig();
-		VirtualDevice[] vds = vmConfigInfo.getHardware().getDevice();
-
-		for (int i = 0; i < vds.length; i++) {
-
-			if (vds[i] instanceof VirtualEthernetCard) {
-
-				VirtualEthernetCard nic = (VirtualEthernetCard) vds[i];
-				VirtualDeviceBackingInfo properties = nic.getBacking();
-				VirtualEthernetCardNetworkBackingInfo nicBaking = (VirtualEthernetCardNetworkBackingInfo) properties;
-				nicBaking.setDeviceName(vlan);// 指定要绑定的设配器(标准交换机端口)
-				nic.setBacking(nicBaking);
-				nicSpec.setDevice(nic);
-			}
-		}
-
-		VirtualDeviceConfigSpec[] nicSpecArray = { nicSpec };
-		vmConfigSpec.setDeviceChange(nicSpecArray);
-
-		Task vmTask = vm.reconfigVM_Task(vmConfigSpec);
-
-		vmTask.waitForTask();
-	}
-
-	/**
-	 * 创建对应名称的本地VLAN
-	 * 
-	 * @param portGroupName
-	 * @throws RemoteException
-	 * @throws RuntimeFault
-	 * @throws InvalidProperty
-	 */
-	private void createLocalVlanByPortGroupName(HostSystem host, String tenementId, int vlanId) throws InvalidProperty,
-			RuntimeFault, RemoteException {
-
-		// 获得虚拟机所在主机对应标准交换机
-		HostNetworkSystem hns = host.getHostNetworkSystem();
-		HostVirtualSwitch[] nets = hns.getNetworkInfo().getVswitch();
-		HostVirtualSwitch vSwitch = nets[0];
-		String switchName = vSwitch.getName();
-
-		// 按规则生成租户对应的本地VLAN
-		String vlanName = tenementId + "_SDN " + vlanId;
-
-		// add a port group
-		HostPortGroupSpec hpgs = new HostPortGroupSpec();
-		hpgs.setName(vlanName);
-		hpgs.setVlanId(vlanId); // not associated with a VLAN 建议用12--4093之间的VLAN id id在后期增加生成规律
-		hpgs.setVswitchName(switchName);
-		hpgs.setPolicy(new HostNetworkPolicy());
-		hns.addPortGroup(hpgs);
-
+		return sb.toString();
 	}
 
 	@Test
-	public void createRouter() throws Exception {
-		// 临时需要
+	public void getLocationByVm() throws Exception {
+
+		ECS ecs = new ECS();
+		ecs.setTemplateName("Windows 2008 R2 Mod"); // 模板
+		ecs.setTemplateOS("Windows"); // 操作系统
+		ecs.setLocalIp("192.168.15.21"); // 内网ip
+
+		ecs.setSubnetMask("255.255.255.0"); // 子网掩码
+		ecs.setGateway("192.168.15.0"); // 网关
+		ecs.setEcsName("zhangfanTest_demo_vm_101");
+
+		ecs.setHostIp("10.2.5.27");
+
+		//sdnService.cloneVM(ecs);
+
+		// ServiceInstance si = VcenterUtil.getServiceInstance();
+		//
+		// VirtualMachine vm = (VirtualMachine) new InventoryNavigator(si.getRootFolder()).searchManagedEntity(
+		// "VirtualMachine", "VM_TTTTTTTTT");
+		//
+		// System.out.println(vm.getConfig().getLocationId());
+		// System.out.println(vm.getResourcePool().getConfig().getDynamicType());
+		//
+		//
+		// VirtualMachineRelocateSpec relocSpec = new VirtualMachineRelocateSpec();
+		//
+		// HostSystem host = (HostSystem) new InventoryNavigator(si.getRootFolder()).searchManagedEntity("HostSystem",
+		// "10.2.5.25");
+		//
+		// System.out.println(host.getMOR().get_value());
+		//
+		// relocSpec.setHost(host.getMOR());
+
+	}
+	@Test
+	public void getPoolValueByHostIp() throws Exception {
+
 		ServiceInstance si = VcenterUtil.getServiceInstance();
 
-		// 获得vRouter模板
-		VirtualMachine vRouter = (VirtualMachine) new InventoryNavigator(si.getRootFolder()).searchManagedEntity(
-				"VirtualMachine", "vRoute_MOD");
+		// 主机
+		ManagedEntity[] hosts = new InventoryNavigator(si.getRootFolder()).searchManagedEntities("HostSystem");
+		for (int i = 0; i < hosts.length; i++) {
+			HostSystem host = (HostSystem) hosts[i];
+			ComputeResource computeResource = (ComputeResource) host.getParent();
+			String poolValue = computeResource.getResourcePool().getMOR().getVal();
+			System.out.println(host.getName());
+			System.out.println(poolValue);
+			System.out.println("--------------------------------------");
+		}
+	}
 
-		// 虚拟机克隆方案创建
-		VirtualMachineCloneSpec cloneSpec = new VirtualMachineCloneSpec();
+	@Test
+	public void testSsh() throws Exception {
+		// 连接
+		Connection connection = new Connection(SDNPropertiesUtil.getProperty("G4_SW1_CORE_IP"), 22);
+		connection.connect();
 
-		// CustomizationSpec数据对象类型包含需要自定义虚拟机部署时或将其迁移到新的主机的信息。
-		CustomizationSpec cspec = new CustomizationSpec();
-		CustomizationSpecInfo info = new CustomizationSpecInfo();
-		CustomizationSpecItem specItem = new CustomizationSpecItem();
-
-		CustomizationAdapterMapping adaptorMap = new CustomizationAdapterMapping();
-		CustomizationIPSettings adapter = new CustomizationIPSettings();
-		CustomizationFixedIp fixedIp = new CustomizationFixedIp();// 指定使用固定ip
-		CustomizationGlobalIPSettings gIP = new CustomizationGlobalIPSettings();
-
-		info.setDescription("Linux");
-		info.setName("Sobey");
-		info.setType("Linux");// 设置克隆机器的操作系统类型
-
-		specItem.setInfo(info);
-		specItem.setSpec(cspec);
-
-		// dns列表
-		String dnsList[] = new String[] { "8.8.8.8" };
-		String ipAddress = "172.16.35.2"; // 自定义的内网IP
-		String subNetMask = "255.255.255.0";
-
-		adapter.setDnsServerList(dnsList);
-		adapter.setGateway(new String[] { "172.16.35.1" });
-		adapter.setIp(fixedIp);
-		adapter.setSubnetMask(subNetMask);
-
-		fixedIp.setIpAddress(ipAddress);
-		adaptorMap.setAdapter(adapter);
-
-		// 不能使用MAC设置
-		String dnsSuffixList[] = new String[] { "sobey.com", "sobey.cn" };
-		gIP.setDnsSuffixList(dnsSuffixList);
-		gIP.setDnsServerList(dnsList);
-
-		CustomizationFixedName computerName = new CustomizationFixedName();
-		computerName.setName("cmop");// 无法确认VM用户名是否能为中文,目前暂定为所有都是cmop
-
-		CustomizationAdapterMapping[] nicSettingMap = new CustomizationAdapterMapping[] { adaptorMap };
-
-		CustomizationSpecManager specManager = si.getCustomizationSpecManager();
-
-		CustomizationLinuxOptions linuxOptions = new CustomizationLinuxOptions();
-		CustomizationLinuxPrep cLinuxPrep = new CustomizationLinuxPrep();
-		cLinuxPrep.setDomain("sobey.com");
-		cLinuxPrep.setHostName(computerName);
-		cLinuxPrep.setHwClockUTC(true);
-		cLinuxPrep.setTimeZone("Asia/Shanghai");
-
-		cspec.setOptions(linuxOptions);
-		cspec.setIdentity(cLinuxPrep);
-		cspec.setGlobalIPSettings(gIP);
-		cspec.setNicSettingMap(nicSettingMap);
-		cspec.setEncryptionKey(specManager.getEncryptionKey());
-
-		// 设置ResourcePool
-		/**
-		 * TODO 重要:宿主机暂时写死,宿主机的Value可以在VMTest中的PrintInventory方法查出来.
-		 * 
-		 * 后期应该做到CMDBuild查询宿主机的负载能力,找出负载最低的宿主机, 并根据名称查出ManagedObjectReference对象的value.
-		 */
-		ManagedObjectReference pool = new ManagedObjectReference();
-		pool.set_value("resgroup-8");
-		pool.setType("ResourcePool");
-		pool.setVal("resgroup-8");
-
-		VirtualMachineRelocateSpec relocateSpec = new VirtualMachineRelocateSpec();
-		relocateSpec.setPool(pool);
-		cloneSpec.setLocation(relocateSpec);
-		cloneSpec.setPowerOn(true);
-		cloneSpec.setTemplate(false);
-		cloneSpec.setCustomization(cspec);
-
-		// vRouter.checkCustomizationSpec(specItem.getSpec());
-
-		vRouter.cloneVM_Task((Folder) vRouter.getParent(), "vRouter_zhangfanTest1", cloneSpec);
-
+		// 登陆
+		Boolean mark = connection.authenticateWithPassword(SDNConstants.FIREWALL_USERNAME,
+				SDNConstants.FIREWALL_PASSWORD);
+		if (mark) {
+			// 执行
+			Session session = connection.openSession();
+			session.execCommand(SDNConstants.VROUTER_REGISTER_CMD);
+		}
 	}
 	@Test
-	public void testFireString(){
-		StringBuilder sb = new StringBuilder();
+	public void testgetMapString() throws Exception {
+		String whichSWAndSwInterface = HostRelationMap.relationMap.get("10.2.5.25");
+		System.out.println(whichSWAndSwInterface);
+		String whichSW = StringUtils.substringBefore(whichSWAndSwInterface, " ");
+		String swInterface = StringUtils.substringAfter(whichSWAndSwInterface, " ");
 		
-		sb.append("config firewall address").append(" ").append(188).append("\r");
-		sb.append("edit ").append("\"").append("192.168.21.0").append("/24").append("\"")
-				.append("\r");
-		sb.append("set subnet ").append("192.168.21.26").append(" 255.255.255.255").append("\r");
-		sb.append("next").append("\r");
-		sb.append("end").append("\r");
-		sb.append("\r");
+		System.err.println(SDNPropertiesUtil.getProperty("TOR-A_SWITCH_IP"));
 		
-		System.out.println(sb.toString());
+		System.out.println("========"+whichSW);
+		System.out.println(swInterface);
+		
 	}
 }
