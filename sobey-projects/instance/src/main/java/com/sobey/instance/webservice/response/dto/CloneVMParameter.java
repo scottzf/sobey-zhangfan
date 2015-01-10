@@ -33,6 +33,11 @@ public class CloneVMParameter {
 	private String gateway;
 
 	/**
+	 * 宿主机在vCenter中的Id
+	 */
+	private String hostId;
+
+	/**
 	 * VM IP
 	 */
 	private String ipaddress;
@@ -74,6 +79,10 @@ public class CloneVMParameter {
 		return gateway;
 	}
 
+	public String getHostId() {
+		return hostId;
+	}
+
 	public String getIpaddress() {
 		return ipaddress;
 	}
@@ -108,6 +117,10 @@ public class CloneVMParameter {
 
 	public void setGateway(String gateway) {
 		this.gateway = gateway;
+	}
+
+	public void setHostId(String hostId) {
+		this.hostId = hostId;
 	}
 
 	public void setIpaddress(String ipaddress) {
