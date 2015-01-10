@@ -109,7 +109,7 @@ public interface ApiService {
 	 * 
 	 * @return
 	 */
-	public WSResult bindingFirewallService(RouterDTO routerDTO, FirewallServiceDTO firewallServiceDTO);
+	public WSResult bindingFirewallService(RouterDTO routerDTO, List<FirewallServiceDTO> firewallServiceDTOs);
 
 	public WSResult unbindingFirewallService();
 

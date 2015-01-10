@@ -46,6 +46,8 @@ import com.sobey.generate.firewall.ConfigFirewallAddressParameter;
 import com.sobey.generate.firewall.ConfigFirewallAddressParameters;
 import com.sobey.generate.firewall.ConfigFirewallPolicyParameter;
 import com.sobey.generate.firewall.ConfigFirewallPolicyParameters;
+import com.sobey.generate.firewall.ConfigFirewallServiceCategoryParameter;
+import com.sobey.generate.firewall.ConfigFirewallServiceCategoryParameters;
 import com.sobey.generate.firewall.ConfigSystemInterfaceParameter;
 import com.sobey.generate.firewall.ConfigSystemInterfaceParameters;
 import com.sobey.generate.firewall.FirewallSoapService;
@@ -1073,9 +1075,166 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public WSResult bindingFirewallService(RouterDTO routerDTO, FirewallServiceDTO firewallServiceDTO) {
-		// TODO Auto-generated method stub
-		return null;
+	public WSResult bindingFirewallService(RouterDTO routerDTO, List<FirewallServiceDTO> firewallServiceDTOs) {
+
+		WSResult wsResult = new WSResult();
+
+		/**
+		 * 
+		 * Step.1 将防火墙策略写入vRouter中
+		 * 
+		 * Step.2 将防火墙策略和vRouter关联关系更新至CMDB中
+		 * 
+		 */
+
+		// Step.1 将防火墙策略写入vRouter中
+		// 查询出防火墙策略(FirewallService 对应的 ConfigFirewallServiceCategory)
+		// 将ConfigFirewallServiceCategory进行封装,远程执行.
+
+		for (FirewallServiceDTO firewallServiceDTO : firewallServiceDTOs) {
+
+			// 防火墙下的具体策略.
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("EQ_firewallService", firewallServiceDTO.getId());
+			List<Object> list = cmdbuildSoapService
+					.getconfigFirewallServiceCategoryList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList().getDto();
+
+			List<ConfigFirewallServiceCategoryDTO> categoryDTOs = new ArrayList<ConfigFirewallServiceCategoryDTO>();
+
+			for (Object object : list) {
+				ConfigFirewallServiceCategoryDTO categoryDTO = (ConfigFirewallServiceCategoryDTO) object;
+				categoryDTOs.add(categoryDTO);
+			}
+
+			ConfigFirewallServiceCategoryParameters categoryParameters = wrapperConfigFirewallServiceCategoryParameter(
+					categoryDTOs, routerDTO);
+			firewallSoapService.configFirewallServiceCategoryParameterListByFirewall(categoryParameters);
+
+		}
+
+		return wsResult;
+	}
+
+	/**
+	 * 将ConfigFirewallServiceCategoryDTO 封装成 ConfigFirewallServiceCategoryParameters
+	 * 
+	 * @return
+	 */
+	private ConfigFirewallServiceCategoryParameters wrapperConfigFirewallServiceCategoryParameter(
+			List<ConfigFirewallServiceCategoryDTO> categoryDTOs, RouterDTO routerDTO) {
+
+		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(routerDTO.getEcs()).getDto();
+		// Router IP地址
+		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
+
+		String categoryName = "";
+
+		// Router下所有的Subnet
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_router", routerDTO.getId());
+		List<Object> subnetObjects = cmdbuildSoapService.getSubnetList(CMDBuildUtil.wrapperSearchParams(map))
+				.getDtoList().getDto();
+
+		ArrayList<ConfigFirewallServiceCategoryParameter> arrayList = new ArrayList<ConfigFirewallServiceCategoryParameter>();
+
+		for (ConfigFirewallServiceCategoryDTO dto : categoryDTOs) {
+
+			for (Object object : subnetObjects) {
+
+				SubnetDTO subnetDTO = (SubnetDTO) object;
+
+				ConfigFirewallServiceCategoryParameter CTCParameter = new ConfigFirewallServiceCategoryParameter();
+				ConfigFirewallServiceCategoryParameter CNCParameter = new ConfigFirewallServiceCategoryParameter();
+
+				if (StringUtils.equalsIgnoreCase("上行", dto.getDirection())) {
+
+					// 上行规则(从云资源访问外部)
+
+					CTCParameter.setUrl(ipaddressDTO.getDescription());
+					CTCParameter.setUserName(ConstansData.firewall_username);
+					CTCParameter.setPassword(ConstansData.firewall_password);
+					CTCParameter.setAction(dto.getAction());// allow & deny
+					CTCParameter.setCategoryName(categoryName);
+					CTCParameter.setPortrange(dto.getStartPort() + "-" + dto.getEndPort());
+					CTCParameter.setPolicyId(cmdbuildSoapService.getMaxPolicyIdBySubnet(routerDTO.getTenants()));
+					CTCParameter.setSrcintf(getInterfaceNameBySubnet(subnetDTO));
+					CTCParameter.setDstintf("port1");
+					CTCParameter.setSrcaddr(subnetDTO.getSegment());
+					CTCParameter.setDstaddr("221.237.156.161");// 电信
+
+					CNCParameter.setUrl(ipaddressDTO.getDescription());
+					CNCParameter.setUserName(ConstansData.firewall_username);
+					CNCParameter.setPassword(ConstansData.firewall_password);
+					CNCParameter.setAction(dto.getAction());// allow & deny
+					CNCParameter.setCategoryName(categoryName);
+					CNCParameter.setPortrange(dto.getStartPort() + "-" + dto.getEndPort());
+					CNCParameter.setPolicyId(cmdbuildSoapService.getMaxPolicyIdBySubnet(routerDTO.getTenants()));
+					CNCParameter.setSrcintf(getInterfaceNameBySubnet(subnetDTO));
+					CNCParameter.setDstintf("port2");
+					CNCParameter.setSrcaddr(subnetDTO.getSegment());
+					CNCParameter.setDstaddr("119.6.200.207");// 联通
+
+				} else {
+
+					// 下行规则(从外部访问云资源)
+
+					CTCParameter.setUrl(ipaddressDTO.getDescription());
+					CTCParameter.setUserName(ConstansData.firewall_username);
+					CTCParameter.setPassword(ConstansData.firewall_password);
+					CTCParameter.setAction(dto.getAction());// allow & deny
+					CTCParameter.setCategoryName(categoryName);
+					CTCParameter.setPortrange(dto.getStartPort() + "-" + dto.getEndPort());
+					CTCParameter.setPolicyId(cmdbuildSoapService.getMaxPolicyIdBySubnet(routerDTO.getTenants()));
+
+					CTCParameter.setSrcintf("port1");
+					CTCParameter.setDstintf(getInterfaceNameBySubnet(subnetDTO));
+					CTCParameter.setSrcaddr("221.237.156.161");
+					CTCParameter.setDstaddr(subnetDTO.getSegment());// 电信
+
+					CNCParameter.setUrl(ipaddressDTO.getDescription());
+					CNCParameter.setUserName(ConstansData.firewall_username);
+					CNCParameter.setPassword(ConstansData.firewall_password);
+					CNCParameter.setAction(dto.getAction());// allow & deny
+					CNCParameter.setCategoryName(categoryName);
+					CNCParameter.setPortrange(dto.getStartPort() + "-" + dto.getEndPort());
+					CNCParameter.setPolicyId(cmdbuildSoapService.getMaxPolicyIdBySubnet(routerDTO.getTenants()));
+					CNCParameter.setSrcintf("port2");
+					CNCParameter.setDstintf(getInterfaceNameBySubnet(subnetDTO));
+					CNCParameter.setSrcaddr("119.6.200.207");
+					CNCParameter.setDstaddr(subnetDTO.getSegment());// 联通
+				}
+
+				arrayList.add(CNCParameter);
+				arrayList.add(CTCParameter);
+			}
+		}
+
+		ConfigFirewallServiceCategoryParameters categoryParameters = new ConfigFirewallServiceCategoryParameters();
+
+		categoryParameters.getConfigFirewallServiceCategoryParameters().addAll(arrayList);
+
+		return categoryParameters;
+
+	}
+
+	/**
+	 * 获得IP或网段对应的接口名称(防火墙 -> 网络 -> 接口)
+	 * 
+	 * @param subnetDTO
+	 *            子网
+	 * @return
+	 */
+	private String getInterfaceNameBySubnet(SubnetDTO subnetDTO) {
+
+		HashMap<String, Object> interfaceMap = new HashMap<String, Object>();
+		interfaceMap.put("EQ_subnet", subnetDTO.getId());
+		List<Object> interfaceObjects = cmdbuildSoapService
+				.getConfigSystemInterfaceList(CMDBuildUtil.wrapperSearchParams(interfaceMap)).getDtoList().getDto();
+
+		// Subnet对应的interface对象. eg port1,port2
+		ConfigSystemInterfaceDTO interfaceDTO = (ConfigSystemInterfaceDTO) interfaceObjects.get(0);
+
+		return interfaceDTO.getDescription();
 	}
 
 	@Override

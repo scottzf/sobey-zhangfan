@@ -817,7 +817,7 @@ public class FirewallService {
 			sb.append("set schedule ").append("\"").append("always").append("\"").append(DEFAULT_SYMBOL);
 			sb.append("set service ").append("\"").append(parameter.getCategoryName()).append("\"")
 					.append(DEFAULT_SYMBOL);
-			if (parameter.getAction().equals("deny")) {
+			if (StringUtils.equalsIgnoreCase("deny", parameter.getAction())) {
 				sb.append("set logtraffic all").append(DEFAULT_SYMBOL);
 			}
 			sb.append(DEFAULT_SYMBOL);
