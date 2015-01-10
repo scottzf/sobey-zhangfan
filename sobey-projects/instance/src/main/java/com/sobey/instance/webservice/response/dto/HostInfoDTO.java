@@ -22,6 +22,11 @@ public class HostInfoDTO {
 	private String cpuNumber;
 
 	/**
+	 * 宿主机的ID
+	 */
+	private String hostId;
+
+	/**
 	 * 宿主机名称
 	 */
 	private String hostName;
@@ -54,6 +59,10 @@ public class HostInfoDTO {
 		return cpuNumber;
 	}
 
+	public String getHostId() {
+		return hostId;
+	}
+
 	public String getHostName() {
 		return hostName;
 	}
@@ -80,6 +89,10 @@ public class HostInfoDTO {
 
 	public void setCpuNumber(String cpuNumber) {
 		this.cpuNumber = cpuNumber;
+	}
+
+	public void setHostId(String hostId) {
+		this.hostId = hostId;
 	}
 
 	public void setHostName(String hostName) {

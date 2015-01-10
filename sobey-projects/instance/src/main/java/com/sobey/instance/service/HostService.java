@@ -147,6 +147,7 @@ public class HostService extends VMWareService {
 		hostInfoDTO.setHostName(host.getName());
 		hostInfoDTO.setResourcePool(computeResource.getResourcePool().getMOR().getVal());
 		hostInfoDTO.setVendor(host.getHardware().getSystemInfo().getVendor());
+		hostInfoDTO.setHostId(host.getMOR().getVal());
 
 		return hostInfoDTO;
 	}
