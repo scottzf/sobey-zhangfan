@@ -39,16 +39,6 @@ public class CustomService {
 	 */
 	public Integer selectMaxPolicyId(Integer tenantsId) {
 		Integer policyId = customDao.selectMaxPolicyId(tenantsId);
-		return (int) MathsUtil.add(policyId == null ? 1 : policyId, 1);
-	}
-
-	/**
-	 * 获得Tenants所有Subnet中PolicyId的最大值,并加上1.
-	 * 
-	 * @return
-	 */
-	public Integer selectMaxPolicyIdBySubnet(Integer tenantsId) {
-		Integer policyId = customDao.selectMaxPolicyIdBySubnet(tenantsId);
 		return (int) MathsUtil.add(policyId == null ? 3 : policyId, 1);
 	}
 

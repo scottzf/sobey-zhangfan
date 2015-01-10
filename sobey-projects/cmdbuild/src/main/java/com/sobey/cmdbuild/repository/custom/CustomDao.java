@@ -8,9 +8,6 @@ public interface CustomDao {
 
 	public Integer selectMaxPolicyId(Integer tenantsId);
 
-	public Integer selectMaxPolicyIdBySubnet(Integer tenantsId);
-
-
 	public Integer selectMaxRouterId(Integer tenantsId);
 
 	public List<Object[]> getTagRelation(Integer serviceId);

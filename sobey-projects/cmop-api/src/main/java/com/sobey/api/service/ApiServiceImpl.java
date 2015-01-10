@@ -150,7 +150,7 @@ public class ApiServiceImpl implements ApiService {
 		// Step.1 将Subnet保存至CMDB中
 
 		// 获得为每个子网分配一个从3开始递增的portId.portId主要和 防火墙-> 网络-> 接口中的名称对应,公网IP 1-2,子网为3-9.
-		int portId = cmdbuildSoapService.getMaxPolicyIdBySubnet(subnetDTO.getTenants());
+		int portId = cmdbuildSoapService.getMaxPolicyId(subnetDTO.getTenants());
 		subnetDTO.setPortId(portId);
 
 		cmdbuildSoapService.createSubnet(subnetDTO);
@@ -1156,7 +1156,7 @@ public class ApiServiceImpl implements ApiService {
 					CTCParameter.setAction(dto.getAction());// allow & deny
 					CTCParameter.setCategoryName(categoryName);
 					CTCParameter.setPortrange(dto.getStartPort() + "-" + dto.getEndPort());
-					CTCParameter.setPolicyId(cmdbuildSoapService.getMaxPolicyIdBySubnet(routerDTO.getTenants()));
+					CTCParameter.setPolicyId(cmdbuildSoapService.getMaxPolicyId(routerDTO.getTenants()));
 					CTCParameter.setSrcintf(getInterfaceNameBySubnet(subnetDTO));
 					CTCParameter.setDstintf("port1");
 					CTCParameter.setSrcaddr(subnetDTO.getSegment());
@@ -1168,7 +1168,7 @@ public class ApiServiceImpl implements ApiService {
 					CNCParameter.setAction(dto.getAction());// allow & deny
 					CNCParameter.setCategoryName(categoryName);
 					CNCParameter.setPortrange(dto.getStartPort() + "-" + dto.getEndPort());
-					CNCParameter.setPolicyId(cmdbuildSoapService.getMaxPolicyIdBySubnet(routerDTO.getTenants()));
+					CNCParameter.setPolicyId(cmdbuildSoapService.getMaxPolicyId(routerDTO.getTenants()));
 					CNCParameter.setSrcintf(getInterfaceNameBySubnet(subnetDTO));
 					CNCParameter.setDstintf("port2");
 					CNCParameter.setSrcaddr(subnetDTO.getSegment());
@@ -1184,7 +1184,7 @@ public class ApiServiceImpl implements ApiService {
 					CTCParameter.setAction(dto.getAction());// allow & deny
 					CTCParameter.setCategoryName(categoryName);
 					CTCParameter.setPortrange(dto.getStartPort() + "-" + dto.getEndPort());
-					CTCParameter.setPolicyId(cmdbuildSoapService.getMaxPolicyIdBySubnet(routerDTO.getTenants()));
+					CTCParameter.setPolicyId(cmdbuildSoapService.getMaxPolicyId(routerDTO.getTenants()));
 
 					CTCParameter.setSrcintf("port1");
 					CTCParameter.setDstintf(getInterfaceNameBySubnet(subnetDTO));
@@ -1197,7 +1197,7 @@ public class ApiServiceImpl implements ApiService {
 					CNCParameter.setAction(dto.getAction());// allow & deny
 					CNCParameter.setCategoryName(categoryName);
 					CNCParameter.setPortrange(dto.getStartPort() + "-" + dto.getEndPort());
-					CNCParameter.setPolicyId(cmdbuildSoapService.getMaxPolicyIdBySubnet(routerDTO.getTenants()));
+					CNCParameter.setPolicyId(cmdbuildSoapService.getMaxPolicyId(routerDTO.getTenants()));
 					CNCParameter.setSrcintf("port2");
 					CNCParameter.setDstintf(getInterfaceNameBySubnet(subnetDTO));
 					CNCParameter.setSrcaddr("119.6.200.207");
