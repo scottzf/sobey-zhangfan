@@ -45,6 +45,7 @@ import com.sobey.cmdbuild.entity.MapEcsElb;
 import com.sobey.cmdbuild.entity.MapEcsEs3;
 import com.sobey.cmdbuild.entity.MapEipDns;
 import com.sobey.cmdbuild.entity.MapEipElb;
+import com.sobey.cmdbuild.entity.MapRouterFirewallService;
 import com.sobey.cmdbuild.entity.MapTagService;
 import com.sobey.cmdbuild.entity.Memory;
 import com.sobey.cmdbuild.entity.Nic;
@@ -94,6 +95,7 @@ import com.sobey.cmdbuild.webservice.response.dto.MapEcsElbDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapEcsEs3DTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapEipDnsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapEipElbDTO;
+import com.sobey.cmdbuild.webservice.response.dto.MapRouterFirewallServiceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapTagServiceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MemoryDTO;
 import com.sobey.cmdbuild.webservice.response.dto.NicDTO;
@@ -4445,6 +4447,156 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			return comm.mapTagServiceService.getMapTagServiceDTOPagination(searchParams.getParamsMap(), pageNumber,
 					pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<MapRouterFirewallServiceDTO> findMapRouterFirewallService(Integer id) {
+
+		DTOResult<MapRouterFirewallServiceDTO> result = new DTOResult<MapRouterFirewallServiceDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			MapRouterFirewallService map = comm.mapRouterFirewallServiceService.findMapRouterFirewallService(id);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			MapRouterFirewallServiceDTO dto = BeanMapper.map(map, MapRouterFirewallServiceDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<MapRouterFirewallServiceDTO> findMapRouterFirewallServiceByParams(SearchParams searchParams) {
+
+		DTOResult<MapRouterFirewallServiceDTO> result = new DTOResult<MapRouterFirewallServiceDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			MapRouterFirewallService map = comm.mapRouterFirewallServiceService
+					.findMapRouterFirewallService(searchParams.getParamsMap());
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			MapRouterFirewallServiceDTO dto = BeanMapper.map(map, MapRouterFirewallServiceDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult createMapRouterFirewallService(Integer routerId, Integer firewallServiceId) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			MapRouterFirewallService map = new MapRouterFirewallService();
+
+			map.setId(0);
+			map.setIdObj1(routerId);
+			map.setIdObj2(firewallServiceId);
+			map.setIdClass1(TableNameUtil.getTableName(Router.class));
+			map.setIdClass2(TableNameUtil.getTableName(FirewallService.class));
+			map.setUser(DEFAULT_USER);
+
+			comm.mapRouterFirewallServiceService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+
+	}
+
+	@Override
+	public IdResult deleteMapRouterFirewallService(Integer routerId, Integer firewallServiceId) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(routerId, ERROR.INPUT_NULL);
+			Validate.notNull(firewallServiceId, ERROR.INPUT_NULL);
+
+			Map<String, Object> paramsMap = Maps.newHashMap();
+			paramsMap.put("EQ_idObj1", routerId);
+			paramsMap.put("EQ_idObj2", firewallServiceId);
+
+			MapRouterFirewallService map = comm.mapRouterFirewallServiceService.findMapRouterFirewallService(paramsMap);
+
+			Validate.notNull(map, ERROR.OBJECT_NULL);
+
+			map.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.mapRouterFirewallServiceService.saveOrUpdate(map);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOListResult<MapRouterFirewallServiceDTO> getMapRouterFirewallServiceList(SearchParams searchParams) {
+
+		DTOListResult<MapRouterFirewallServiceDTO> result = new DTOListResult<MapRouterFirewallServiceDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(
+					comm.mapRouterFirewallServiceService.getMapRouterFirewallServiceList(searchParams.getParamsMap()),
+					MapRouterFirewallServiceDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<MapRouterFirewallServiceDTO> getMapRouterFirewallServicePagination(
+			SearchParams searchParams, Integer pageNumber, Integer pageSize) {
+
+		PaginationResult<MapRouterFirewallServiceDTO> result = new PaginationResult<MapRouterFirewallServiceDTO>();
+
+		try {
+
+			return comm.mapRouterFirewallServiceService.getMapRouterFirewallServiceDTOPagination(
+					searchParams.getParamsMap(), pageNumber, pageSize);
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);

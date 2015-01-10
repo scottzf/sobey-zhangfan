@@ -36,6 +36,7 @@ import com.sobey.cmdbuild.webservice.response.dto.MapEcsElbDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapEcsEs3DTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapEipDnsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapEipElbDTO;
+import com.sobey.cmdbuild.webservice.response.dto.MapRouterFirewallServiceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapTagServiceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MemoryDTO;
 import com.sobey.cmdbuild.webservice.response.dto.NicDTO;
@@ -563,6 +564,28 @@ public interface CmdbuildSoapService {
 	DTOListResult<MapTagServiceDTO> getMapTagServiceList(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	PaginationResult<MapTagServiceDTO> getMapTagServicePagination(
+			@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// ======= MapRouterFirewallService ========//
+	// ==============================//
+
+	DTOResult<MapRouterFirewallServiceDTO> findMapRouterFirewallService(@WebParam(name = "id") Integer id);
+
+	DTOResult<MapRouterFirewallServiceDTO> findMapRouterFirewallServiceByParams(
+			@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createMapRouterFirewallService(@WebParam(name = "routerId") Integer routerId,
+			@WebParam(name = "firewallServiceId") Integer firewallServiceId);
+
+	IdResult deleteMapRouterFirewallService(@WebParam(name = "routerId") Integer routerId,
+			@WebParam(name = "firewallServiceId") Integer firewallServiceId);
+
+	DTOListResult<MapRouterFirewallServiceDTO> getMapRouterFirewallServiceList(
+			@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<MapRouterFirewallServiceDTO> getMapRouterFirewallServicePagination(
 			@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
