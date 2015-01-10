@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.sobey.sdn.bean.ECS;
@@ -16,10 +17,10 @@ import com.sobey.sdn.parameterObject.SubnetParameter;
 import com.sobey.sdn.service.CentecSwitchService;
 import com.sobey.sdn.service.FirewallScriptService;
 import com.sobey.sdn.service.FirewallService;
+import com.sobey.sdn.service.HostRelationMap;
 import com.sobey.sdn.service.SDNService;
 import com.sobey.sdn.util.JsonRPCUtil;
 import com.sobey.sdn.util.SDNPropertiesUtil;
-import com.sobey.sdn.util.SshUtil;
 import com.sobey.sdn.util.VcenterUtil;
 import com.vmware.vim25.CustomizationAdapterMapping;
 import com.vmware.vim25.CustomizationFixedIp;
@@ -40,6 +41,8 @@ import com.vmware.vim25.CustomizationSysprep;
 import com.vmware.vim25.CustomizationSysprepRebootOption;
 import com.vmware.vim25.CustomizationUserData;
 import com.vmware.vim25.CustomizationWinOptions;
+import com.vmware.vim25.DVPortgroupConfigInfo;
+import com.vmware.vim25.DistributedVirtualSwitchPortConnection;
 import com.vmware.vim25.HostNetworkPolicy;
 import com.vmware.vim25.HostPortGroupConfig;
 import com.vmware.vim25.HostPortGroupSpec;
@@ -52,18 +55,23 @@ import com.vmware.vim25.VirtualDeviceConfigSpec;
 import com.vmware.vim25.VirtualDeviceConfigSpecOperation;
 import com.vmware.vim25.VirtualDeviceConnectInfo;
 import com.vmware.vim25.VirtualEthernetCard;
+import com.vmware.vim25.VirtualEthernetCardDistributedVirtualPortBackingInfo;
 import com.vmware.vim25.VirtualEthernetCardNetworkBackingInfo;
 import com.vmware.vim25.VirtualHardware;
 import com.vmware.vim25.VirtualMachineCloneSpec;
 import com.vmware.vim25.VirtualMachineConfigInfo;
 import com.vmware.vim25.VirtualMachineConfigSpec;
 import com.vmware.vim25.VirtualMachineRelocateSpec;
+import com.vmware.vim25.VirtualVmxnet3;
 import com.vmware.vim25.mo.ComputeResource;
 import com.vmware.vim25.mo.CustomizationSpecManager;
+import com.vmware.vim25.mo.DistributedVirtualPortgroup;
+import com.vmware.vim25.mo.DistributedVirtualSwitch;
 import com.vmware.vim25.mo.Folder;
 import com.vmware.vim25.mo.HostNetworkSystem;
 import com.vmware.vim25.mo.HostSystem;
 import com.vmware.vim25.mo.InventoryNavigator;
+import com.vmware.vim25.mo.ManagedEntity;
 import com.vmware.vim25.mo.ServiceInstance;
 import com.vmware.vim25.mo.Task;
 import com.vmware.vim25.mo.VirtualMachine;
@@ -78,7 +86,7 @@ public class SDNServiceImpl implements SDNService {
 			String portGroupName = tenantId + "_TN " + vlanId;
 
 			// 判断端口是否存在
-			Boolean mark = checkNetworkIsExist(portGroupName,hostIp);
+			Boolean mark = checkNetworkIsExist(portGroupName, hostIp);
 			if (!mark) {
 				createPortGroup(hostIp, portGroupName, vlanId); // 创建端口组
 			}
@@ -98,17 +106,21 @@ public class SDNServiceImpl implements SDNService {
 			// 标准网络交换机绑定VM
 			bindingvSwitch(vmName, portGroupName);
 
-			String swUrl = "";
-			String swInterface = "";
-			if ("10.2.5.25".equals(hostIp)) {
-				swUrl = SDNPropertiesUtil.getProperty("TOR-A_SWITCH_IP");
-				swInterface = "eth-0-10";
-			}
-			if ("10.2.5.23".equals(hostIp)) {
-				swUrl = SDNPropertiesUtil.getProperty("TOR-B_SWITCH_IP");
-				swInterface = "eth-0-5";
-			}
+			/**
+			 * 暂时从固定资源列表中获得交换机接口
+			 */
+			String whichSWAndSwInterface = HostRelationMap.relationMap.get(hostIp);
+			String whichSW = StringUtils.substringBefore(whichSWAndSwInterface, " ");
+			String swInterface = StringUtils.substringAfter(whichSWAndSwInterface, " ");
 
+			String swIp = getSwIpByMark(whichSW);
+
+			// 在盛科交换机上创建策略
+			createPolicyInSwitch(vlanId, swIp, swInterface);
+
+			/**
+			 * 后期用命令在核心交换机上获得交换机接口 *********代码保留，勿删**********
+			 */
 			// 根据主机IP,在核心交换机获得与该主机相连的交换机相关信息
 			// String whichSW = H3CUtil.getCommandResponse(hostIp); // 获得核心交换机上对应的接口
 			// String vm_mac = getMacByVM(vmName); // 获得虚拟机的Mac地址
@@ -117,12 +129,19 @@ public class SDNServiceImpl implements SDNService {
 			// String swUrl = JsonRPCUtil.getSwitchIPByInterfaceStr(whichSW); // 根据对应接口获得对应置顶交换机URL
 			// String swInterface = JsonRPCUtil.getSwitchPortByMac(whichSW, mac); // 获得主机与交换机哪个接口相连
 
-			// 在盛科交换机上创建策略
-			createPolicyInSwitch(vlanId, swUrl, swInterface);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "操作异常，操作失败！";
+		}
+		return null;
+	}
+
+	private String getSwIpByMark(String whichSW) {
+		if ("TOR-A".equals(whichSW)) {
+			return SDNPropertiesUtil.getProperty("TOR-A_SWITCH_IP");
+		}
+		if ("TOR-B".equals(whichSW)) {
+			return SDNPropertiesUtil.getProperty("TOR-B_SWITCH_IP");
 		}
 		return null;
 	}
@@ -224,7 +243,7 @@ public class SDNServiceImpl implements SDNService {
 		}
 	}
 
-	public String cloneVM(ECS ecs) throws Exception {
+	private String cloneVM(ECS ecs) throws Exception {
 
 		// 由云主机获得创建虚拟机所需参数
 		String vmTemplateName = ecs.getTemplateName(); // 模板名称
@@ -356,7 +375,8 @@ public class SDNServiceImpl implements SDNService {
 		 * 
 		 * 后期应该做到CMDBuild查询宿主机的负载能力,找出负载最低的宿主机, 并根据名称查出ManagedObjectReference对象的value.
 		 */
-		HostSystem host = (HostSystem) new InventoryNavigator(si.getRootFolder()).searchManagedEntity("HostSystem",hostIp);
+		HostSystem host = (HostSystem) new InventoryNavigator(si.getRootFolder()).searchManagedEntity("HostSystem",
+				hostIp);
 
 		ManagedObjectReference pool = new ManagedObjectReference();
 		String poolValue = getPoolValueByHostIp(hostIp);
@@ -494,19 +514,19 @@ public class SDNServiceImpl implements SDNService {
 		Folder rootFolder = si.getRootFolder();
 
 		// 找到对应ip的主机
-		HostSystem host = (HostSystem) new InventoryNavigator(rootFolder).searchManagedEntity("HostSystem",hostIp);
+		HostSystem host = (HostSystem) new InventoryNavigator(rootFolder).searchManagedEntity("HostSystem", hostIp);
 
 		// 获得主机网络系统
 		HostNetworkSystem hns = host.getHostNetworkSystem();
-		
+
 		List<String> list = new ArrayList<String>();
-		
+
 		// 获得端口组
 		HostPortGroupConfig[] pgs = hns.getNetworkConfig().getPortgroup();
 		for (int i = 0; i < pgs.length; i++) {
 			list.add(pgs[i].getSpec().getName());
 		}
-		
+
 		// 判断端口组是否存在于网络列表中
 		if (list.contains(portGroupName)) {
 			return true;
@@ -544,8 +564,9 @@ public class SDNServiceImpl implements SDNService {
 		 * 后期应该做到CMDBuild查询宿主机的负载能力,找出负载最低的宿主机, 并根据名称查出ManagedObjectReference对象的value.
 		 */
 		String poolValue = getPoolValueByHostIp(hostIp);
-		HostSystem host = (HostSystem) new InventoryNavigator(si.getRootFolder()).searchManagedEntity("HostSystem",hostIp);
-		
+		HostSystem host = (HostSystem) new InventoryNavigator(si.getRootFolder()).searchManagedEntity("HostSystem",
+				hostIp);
+
 		ManagedObjectReference pool = new ManagedObjectReference();
 		pool.set_value(poolValue);
 		pool.setType("ResourcePool");
@@ -596,7 +617,7 @@ public class SDNServiceImpl implements SDNService {
 
 	@Override
 	public String bindingRouter(Router router, List<Subnet> subnets) throws Exception {
-		
+
 		/**
 		 * 获得操作vRouter的属性
 		 */
@@ -606,37 +627,58 @@ public class SDNServiceImpl implements SDNService {
 		/**
 		 * 将vRouter的网络适配器添加到需要绑定的子网的vlan中
 		 */
-		VirtualEthernetCard nic1 = new VirtualEthernetCard(); // 未使用的网卡 参数
-		VirtualEthernetCard nic2 = new VirtualEthernetCard(); // 未使用的网卡 参数
-		
+		ServiceInstance si = VcenterUtil.getServiceInstance();
+		// 获得租户对应的vRouter
+		VirtualMachine vRouter = (VirtualMachine) new InventoryNavigator(si.getRootFolder()).searchManagedEntity(
+				"VirtualMachine", routerName);
+		// 获得vRouter的网络适配器
+		VirtualDevice[] virtualDevices = vRouter.getConfig().getHardware().getDevice();
+		List<VirtualEthernetCard> virtualEthernetCards = new ArrayList<VirtualEthernetCard>();
+		for (int i = 0; i < virtualDevices.length; i++) {
+			if (virtualDevices[i] instanceof VirtualEthernetCard) {
+				VirtualEthernetCard card = (VirtualEthernetCard) virtualDevices[i];
+				virtualEthernetCards.add(card);
+			}
+		}
 		Subnet subnet1 = subnets.get(0);
-		Subnet subnet2 = subnets.get(0);
-		
+		Subnet subnet2 = subnets.get(1);
+
 		String portGroupName1 = subnet1.getPortGroupName(); // 子网所使用的端口组 参数
 		String portGroupName2 = subnet2.getPortGroupName(); // 子网所使用的端口组 参数
-		
-		String result1 = addVRouterNicToPortGroup(routerName, nic1, portGroupName1);
-		String result2 = addVRouterNicToPortGroup(routerName, nic2, portGroupName2);
-		
-//		for (Subnet subnet : subnets) {
-//			VirtualEthernetCard nic = new VirtualEthernetCard(); // 未使用的网卡 参数
-//			String portGroupName = subnet.getPortGroupName(); // 子网所使用的端口组 参数
-//			String result = addVRouterNicToPortGroup(routerName, nic, portGroupName);
-//			if (result != null) {
-//				return result;
-//			}
-//		}
-		
+
+		String result1 = addVRouterNicToPortGroup(routerName, portGroupName1, 1);
+		if (result1 != null) {
+			return result1;
+		}
+		String result2 = addVRouterNicToPortGroup(routerName, portGroupName2, 2);
+		if (result2 != null) {
+			return result2;
+		}
+		// for (Subnet subnet : subnets) {
+		// VirtualEthernetCard nic = new VirtualEthernetCard(); // 未使用的网卡 参数
+		// String portGroupName = subnet.getPortGroupName(); // 子网所使用的端口组 参数
+		// String result = addVRouterNicToPortGroup(routerName, nic, portGroupName);
+		// if (result != null) {
+		// return result;
+		// }
+		// }
+
 		// 创建地址段
-		FirewallService.createAddressPool(vRouterIp, subnet1.getSubnetName(), subnet1.getSegment(), subnet1.getSubnetMask());
-		FirewallService.createAddressPool(vRouterIp, subnet2.getSubnetName(), subnet2.getSegment(), subnet2.getSubnetMask());
+		FirewallService.createAddressPool(vRouterIp, subnet1.getSubnetName(), subnet1.getSegment(),
+				subnet1.getSubnetMask());
+		FirewallService.createAddressPool(vRouterIp, subnet2.getSubnetName(), subnet2.getSegment(),
+				subnet2.getSubnetMask());
+
+		// 配置接口地址
+		FirewallService.configurationPortIp(vRouterIp, "port1", "192.168.200.1", "255.255.255.0");
+		FirewallService.configurationPortIp(vRouterIp, "port2", "192.168.230.1", "255.255.255.0");
 
 		// 配置子网间的策略 重要：目前暂时实现两个子网的算法
-		
+
 		int strategyNo = 105;
-		
-		FirewallService.configurationNetworksStrategy(vRouterIp, strategyNo, "port1", "port2", subnet1.getSubnetName(), subnet2.getSubnetName());
-		FirewallService.configurationNetworksStrategy(vRouterIp, strategyNo+1, "port2", "port1", subnet2.getSubnetName(), subnet1.getSubnetName());
+
+		FirewallService.configurationNetworksStrategy(vRouterIp, strategyNo, "port1", "port2", subnet1.getSubnetName(),
+				subnet2.getSubnetName());
 
 		return null;
 	}
@@ -650,8 +692,7 @@ public class SDNServiceImpl implements SDNService {
 	 * @return
 	 * @throws Exception
 	 */
-	private String addVRouterNicToPortGroup(String routerName, VirtualEthernetCard nic, String portGroupName)
-			throws Exception {
+	private String addVRouterNicToPortGroup(String routerName, String portGroupName, int index) throws Exception {
 
 		ServiceInstance si = VcenterUtil.getServiceInstance();
 
@@ -669,6 +710,9 @@ public class SDNServiceImpl implements SDNService {
 			}
 		}
 
+		// 获得指定的端口
+		VirtualEthernetCard nic = virtualEthernetCards.get(index - 1);
+
 		// 将vRouter的网络适配器添加到需要绑定的子网的vlan中
 
 		VirtualDeviceConfigSpec nicSpec = new VirtualDeviceConfigSpec();
@@ -679,6 +723,14 @@ public class SDNServiceImpl implements SDNService {
 		nicBaking.setDeviceName(portGroupName);// 指定要绑定的设配器(标准交换机端口)
 		nic.setBacking(nicBaking);
 		nicSpec.setDevice(nic);
+
+		VirtualDeviceConnectInfo connectable = new VirtualDeviceConnectInfo();
+		connectable.startConnected = true;
+		connectable.allowGuestControl = true;
+		connectable.connected = true;
+		connectable.status = "untried";
+
+		nic.setConnectable(connectable);
 
 		VirtualDeviceConfigSpec[] nicSpecArray = { nicSpec };
 
@@ -697,22 +749,150 @@ public class SDNServiceImpl implements SDNService {
 
 	}
 
-	@Override
-	public void createFirewall(Firewall firewall) throws Exception {
-
-		String routerName = firewall.getRouterName(); // 路由器名称 参数
+	private String addVRouterNicToDVSPortGroup(String routerName, String portGroupName, int index) throws Exception {
 
 		ServiceInstance si = VcenterUtil.getServiceInstance();
+		Folder rootFolder = si.getRootFolder();
 
 		// 获得租户对应的vRouter
 		VirtualMachine vRouter = (VirtualMachine) new InventoryNavigator(si.getRootFolder()).searchManagedEntity(
 				"VirtualMachine", routerName);
 
-		// 获得vRouter的管理IP 供远程调用
-		String vRouter_ip = firewall.getControlIp(); // 参数
+		// 获得vRouter的所有网络适配器
+		VirtualDevice[] virtualDevices = vRouter.getConfig().getHardware().getDevice();
+		List<VirtualEthernetCard> virtualEthernetCards = new ArrayList<VirtualEthernetCard>();
+		for (int i = 0; i < virtualDevices.length; i++) {
+			if (virtualDevices[i] instanceof VirtualEthernetCard) {
+				VirtualEthernetCard card = (VirtualEthernetCard) virtualDevices[i];
+				virtualEthernetCards.add(card);
+			}
+		}
 
-		// 获取脚本所需变量参数
+		// 获得指定的端口网络适配器
+		VirtualEthernetCard nic = virtualEthernetCards.get(index - 1);
 
+		// 获得所有分布式虚拟交换机
+		ManagedEntity[] entity = new InventoryNavigator(rootFolder).searchManagedEntities("DistributedVirtualSwitch");
+
+		String key = "";
+		String uuid = "";
+		boolean found = false;
+
+		for (ManagedEntity me : entity) {
+
+			if (me instanceof DistributedVirtualSwitch) {
+
+				DistributedVirtualSwitch tmpDvs = (DistributedVirtualSwitch) me;
+				DistributedVirtualPortgroup[] vpgs = tmpDvs.getPortgroup();
+
+				for (DistributedVirtualPortgroup vpg : vpgs) {
+
+					if (portGroupName.equals(vpg.getName())) {
+						key = vpg.getConfig().getKey();
+						uuid = tmpDvs.getConfig().getUuid();
+						;
+						found = true;
+						break;
+					}
+				}
+
+				if (found) {
+					break;
+				}
+			}
+		}
+
+		// 设置分布式交换机端口组属性
+		VirtualEthernetCard newNic = new VirtualVmxnet3();
+		newNic.setKey(nic.getKey());
+		newNic.setDeviceInfo(nic.getDeviceInfo());
+
+		newNic.getDeviceInfo().setLabel(nic.getDeviceInfo().getLabel());
+
+		VirtualEthernetCardDistributedVirtualPortBackingInfo backing9 = new VirtualEthernetCardDistributedVirtualPortBackingInfo();
+
+		DistributedVirtualSwitchPortConnection port10 = new DistributedVirtualSwitchPortConnection();
+		port10.setSwitchUuid(uuid);
+		port10.setPortgroupKey(key);
+		backing9.setPort(port10);
+
+		newNic.setBacking(backing9);
+		newNic.setAddressType("assigned");
+		newNic.setMacAddress(nic.getMacAddress());
+		newNic.setControllerKey(nic.getControllerKey());
+		newNic.setUnitNumber(nic.getUnitNumber());
+
+		VirtualDeviceConnectInfo connectable11 = new VirtualDeviceConnectInfo();
+		connectable11.startConnected = true;
+		connectable11.allowGuestControl = true;
+		connectable11.connected = true;
+		connectable11.status = "untried";
+
+		newNic.setConnectable(connectable11);
+
+		// 将vRouter的网络适配器添加到需要绑定的子网的vlan中
+		VirtualDeviceConfigSpec nicSpec = new VirtualDeviceConfigSpec();
+		nicSpec.setOperation(VirtualDeviceConfigSpecOperation.edit);
+
+		nicSpec.setDevice(newNic);
+
+		VirtualDeviceConfigSpec[] nicSpecArray = { nicSpec };
+
+		// 生成虚拟机配置规则
+		VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
+		vmConfigSpec.setDeviceChange(nicSpecArray);
+
+		Task vmTask = vRouter.reconfigVM_Task(vmConfigSpec);
+
+		String result = vmTask.waitForTask();
+		if (result == Task.SUCCESS) {
+			return null;
+		} else {
+			return "绑定路由器失败！";
+		}
+	}
+
+	@Override
+	public void createFirewall(Firewall firewall) throws Exception {
+
+		/**
+		 * 创建防火墙只是创建一些进出规则，将创建规则的脚本所需变量参数以及防火墙自身的属性存放起来
+		 */
+
+		// 防火墙自身属性参数
+		String firewallName = ""; // 参数 防火墙名词
+		String description = ""; // 参数 描述
+
+		// 防火墙规则变量参数
+		/**
+		 * 规则1 允许电信的流量进入某子网所连端口（电信默认连端口8）
+		 * 
+		 * 所需参数 ： strategyNo（策略号） targetSubnet_port(子网所连端口) targetSubnet_addressPool（子网地址池名称）
+		 */
+		// 子网上公网 ( EIP相关 ) 5
+		// config firewall policy
+		// edit 6 （策略号）
+		// set srcintf "port8"
+		// set dstintf "port1" (子网所连端口)
+		// set srcaddr "all"
+		// set dstaddr "subnet1" （子网地址池名称）
+		// set action accept
+		// set schedule "always"
+		// set service "ALL"
+		// set nat enable
+		// next
+		// end
+		int strategyNo = 100; // 参数 策略号
+		String targetSubnet_port = ""; // 参数 子网所连端口
+		String targetSubnet_addressPool = ""; // 参数 子网地址池名称
+		String forward_internetStrategyConfigScript = FirewallScriptService.generateInternetStrategyConfigScript(
+				strategyNo, SDNConstants.CTC_DEFAULT_PORT, targetSubnet_port, "all", targetSubnet_addressPool);
+		/**
+		 * 规则2 允许某子网所连端口流量进入电信所连端口（电信默认连端口8）
+		 */
+		String reverse_internetStrategyConfigScript = FirewallScriptService.generateInternetStrategyConfigScript(
+				strategyNo + 1, targetSubnet_port, SDNConstants.CTC_DEFAULT_PORT, targetSubnet_addressPool, "all");
+		
 		// 配置接口IP地址脚本(网关)（EIP相关 ） 1
 		// config system interface
 		// edit "port3"
@@ -756,29 +936,14 @@ public class SDNServiceImpl implements SDNService {
 		// set schedule "always"
 		// set service "ALL"
 		// next
-		String strategyNo = "";
-		String sourceSubnet_port = ""; // 端口号 参数
-		String targetSubnet_port = ""; // 端口号 参数
-		String sourceSubnet_segment = ""; // 源子网网段 参数
-		String targetSubnet_segment = ""; // 目标子网网段 参数
+		// String strategyNo = "";
+		// String sourceSubnet_port = ""; // 端口号 参数
+		// String targetSubnet_port = ""; // 端口号 参数
+		// String sourceSubnet_segment = ""; // 源子网网段 参数
+		// String targetSubnet_segment = ""; // 目标子网网段 参数
 
 		// String subnetStrategyConfigScript = FirewallScriptService.generateSubnetStrategyConfigScript(strategyNo,
 		// sourceSubnet_port, targetSubnet_port, sourceSubnet_segment, targetSubnet_segment);
-
-		// 子网上公网 ( EIP相关 ) 5
-		// config firewall policy
-		// edit 6 （策略号）
-		// set srcintf "port3"
-		// set dstintf "port5"
-		// set srcaddr "172.16.0.0/16"
-		// set dstaddr "all"
-		// set action accept
-		// set schedule "always"
-		// set service "ALL"
-		// set nat enable
-		// next
-		// String internetStrategyConfigScript = generateinternetStrategyConfigScript();
-
 	}
 
 	@Override
@@ -787,63 +952,35 @@ public class SDNServiceImpl implements SDNService {
 		// 获取脚本所需变量参数
 		// 获得vRouter的管理IP 供远程调用
 		String vRouter_ip = router.getControlIp(); // 参数
-		String ctc_ip = firewall.geteIp(); // 参数
 		String ctc_subnetMask = firewall.geteSubnetMask(); // 参数
-		String gateway = firewall.geteSubnetMask(); // 参数
-		int routeNo = 10;
-		String addressPoolName = "zhangfanTest"; // 地址池名称
-		String networkSegment = "172.16.2.0";
-		String subnetMask1 = "255.255.255.0";
+		String gateway = firewall.getGateway(); // 参数
+		String routerName = router.getRouterName();
+		int routeNo = 307;
+		// String addressPoolName = "zhangfanTest"; // 地址池名称
+
+		/**
+		 * 将端口8连接到电信VLAN(ISP_CTC_VLAN1000）中
+		 */
+		addVRouterNicToDVSPortGroup(routerName, SDNConstants.CTC_DEFAULT_PORTGROUPNAME, SDNConstants.CTC_DEFAULT_PORTNO);
 
 		/**
 		 * 配置连接电信的端口（默认端口8）IP地址
 		 */
-		FirewallService.configurationPortIp(vRouter_ip, "port8", ctc_ip, ctc_subnetMask);
+		FirewallService.configurationPortIp(vRouter_ip, SDNConstants.CTC_DEFAULT_PORT, ip_ISP, ctc_subnetMask);
 
 		/**
 		 * 配置连接电信的端口（默认端口8）的网关
 		 */
-		FirewallService.configurationPortGateway(vRouter_ip, "port8", routeNo, gateway);
+		FirewallService.configurationPortGateway(vRouter_ip, SDNConstants.CTC_DEFAULT_PORT, routeNo, gateway);
 
 		/**
-		 * 创建地址段
+		 * 配置需要访问互联网的子网与电信网络之间的策略
 		 */
-		FirewallService.createAddressPool(vRouter_ip, addressPoolName, networkSegment, subnetMask1);
-
-		/**
-		 * 配置网络之间的策略
-		 */
-		// FirewallService.configurationNetworksStrategy(vRouter_ip, strategyNo, sourcePort, targetPort,
-		// sourceAddressPool, targetAddressPool);
-
-		int strategyNo1 = 11; // 策略号
-		String port_subnet1 = ""; // 子网端口号 参数
-		String targetSubnet_port = ""; // 目标端口号 参数
-		String sourceSubnet_segment = ""; // 源子网网段 参数
-		String internetStrategyConfigScript = FirewallScriptService.generateInternetStrategyConfigScript(strategyNo1,
-				port_subnet1, targetSubnet_port, sourceSubnet_segment);
-
-		SshUtil.executeCommand(vRouter_ip, SDNConstants.FIREWALL_USERNAME, SDNConstants.FIREWALL_PASSWORD,
-				internetStrategyConfigScript);
-
-		String routerName = router.getRouterName(); // 路由器名称 参数
-
-		ServiceInstance si = VcenterUtil.getServiceInstance();
-
-		// 获得租户对应的vRouter
-		VirtualMachine vRouter = (VirtualMachine) new InventoryNavigator(si.getRootFolder()).searchManagedEntity(
-				"VirtualMachine", routerName);
-
-		String strategyNo = "10"; // 策略号
-		String port_subnet = ""; // 端口号 参数
-		String segment_subnet = ""; // 源子网网段 参数
-		String segment_ISP = ""; // 目标子网网段 参数
-
-		// String subnetStrategyConfigScript = FirewallScriptService.generateSubnetStrategyConfigScript(strategyNo,
-		// port_subnet, port_ISP, segment_subnet, segment_ISP);
-
-		// SshUtil.executeCommand(vRouter_ip, SDNConstants.FIREWALL_USERNAME, SDNConstants.FIREWALL_PASSWORD,
-		// subnetStrategyConfigScript);
+		int strategyNo = 206;
+		String subnetPort = "";
+		String subnetAddressPoolName = "";
+		FirewallService.configurationInternetStrategy(vRouter_ip, strategyNo, subnetPort,
+				SDNConstants.CTC_DEFAULT_PORT, subnetAddressPoolName, "all");
 
 	}
 }

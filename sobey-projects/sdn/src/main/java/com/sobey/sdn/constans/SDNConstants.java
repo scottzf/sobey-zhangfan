@@ -16,4 +16,10 @@ public class SDNConstants {
 	
 	public static final String VROUTER_REGISTER_CMD = "exec update-now";   //vRouter注册命令
 	
+	public static final String CTC_DEFAULT_PORT = "port8";   //电信默认连接端口
+	
+	public static final String CTC_DEFAULT_PORTGROUPNAME = "ISP_CTC_VLAN1000";   //电信默认连接端口组
+	
+	public static final int CTC_DEFAULT_PORTNO = 8;   //电信默认连接端口序号
+	
 }

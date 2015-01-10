@@ -9,6 +9,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import com.sobey.sdn.bean.Router;
 import com.sobey.sdn.bean.Subnet;
 import com.sobey.sdn.constans.SDNConstants;
 import com.sobey.sdn.service.FirewallService;
+import com.sobey.sdn.service.HostRelationMap;
 import com.sobey.sdn.service.impl.SDNServiceImpl;
 import com.sobey.sdn.util.H3CUtil;
 import com.sobey.sdn.util.JsonRPCUtil;
@@ -54,17 +56,17 @@ public class SDNTest extends TestCase {
 
 	@Test
 	public void createECS() throws Exception {
-
-		// 测试通过 目前需要手动修改两个地方（1.clone后手动修改虚拟机默认网络为标准网络）
+		
+		String vmName = "192.168.230.9";
 
 		ECS ecs = new ECS();
-		ecs.setTemplateName("Windows 7  64  40G MOD"); // 模板
+		ecs.setTemplateName("Windows 2008 R2 Mod"); // 模板
 		ecs.setTemplateOS("Windows"); // 操作系统
-		ecs.setLocalIp("192.168.231.5"); // 内网ip
+		ecs.setLocalIp(vmName); // 内网ip
 
 		Subnet subnet = new Subnet();
 		subnet.setSubnetMask("255.255.255.0"); // 子网掩码
-		subnet.setGateway("192.168.231.0"); // 网关
+		subnet.setGateway("192.168.230.1"); // 网关
 
 		int vlanId = 300;
 
@@ -72,7 +74,6 @@ public class SDNTest extends TestCase {
 
 		String hostIp = "10.2.5.23";
 
-		String vmName = "zhangfanTest_vm_401";
 
 		sdnService.createECS(ecs, vlanId, hostIp, tenantId, vmName, subnet);
 	}
@@ -84,7 +85,7 @@ public class SDNTest extends TestCase {
 		
 		 router.setHostIp("10.2.5.25"); // 主机IP
 		 router.setRouterName("zhangfanTest-vRouter"); // 路由名称
-		 String ip_update = "10.2.253.2"; // 端口10更新ip
+		 String ip_update = "10.2.253.53"; // 端口10更新ip
 		
 		 sdnService.createRouter(router, ip_update);
 
@@ -95,17 +96,19 @@ public class SDNTest extends TestCase {
 
 		Router router = new Router();
 		router.setRouterName("zhangfanTest-vRouter");
-		router.setControlIp("10.2.253.2");
+		router.setControlIp("10.2.253.16");
 
 		Subnet subnet1 = new Subnet();
+		subnet1.setSubnetName("subnet1");
 		subnet1.setSegment("192.168.200.0");
-		subnet1.setGateway("192.168.200.0");
+		subnet1.setGateway("192.168.200.1");
 		subnet1.setSubnetMask("255.255.255.0");
 		subnet1.setPortGroupName("zhangfanTest_TN 200");
 		
 		Subnet subnet2 = new Subnet();
+		subnet2.setSubnetName("subnet2");
 		subnet2.setSegment("192.168.230.0");
-		subnet2.setGateway("192.168.230.0");
+		subnet2.setGateway("192.168.230.1");
 		subnet2.setSubnetMask("255.255.255.0");
 		subnet2.setPortGroupName("zhangfanTest_TN 300");
 		
@@ -120,13 +123,15 @@ public class SDNTest extends TestCase {
 	public void bindingFirewall() throws Exception {
 
 		Router router = new Router();
-		router.setRouterName("vRouter-zhangfanTest-001");
-		router.setControlIp("10.2.252.6");
+		router.setRouterName("zhangfanTest-vRouter");
+		router.setControlIp("10.2.253.16");
 
 		String ip_ISP = "221.237.156.153"; // 连接电信端口的ip地址
 
 		Firewall firewall = new Firewall();
-
+		firewall.seteSubnetMask("255.255.255.0");
+		firewall.setGateway("221.237.156.1");
+		
 		sdnService.bindingFirewall(router, firewall, ip_ISP);
 	}
 
@@ -429,7 +434,7 @@ public class SDNTest extends TestCase {
 
 		ecs.setHostIp("10.2.5.27");
 
-		sdnService.cloneVM(ecs);
+		//sdnService.cloneVM(ecs);
 
 		// ServiceInstance si = VcenterUtil.getServiceInstance();
 		//
@@ -483,7 +488,16 @@ public class SDNTest extends TestCase {
 		}
 	}
 	@Test
-	public void testRouterScript() throws Exception {
-
+	public void testgetMapString() throws Exception {
+		String whichSWAndSwInterface = HostRelationMap.relationMap.get("10.2.5.25");
+		System.out.println(whichSWAndSwInterface);
+		String whichSW = StringUtils.substringBefore(whichSWAndSwInterface, " ");
+		String swInterface = StringUtils.substringAfter(whichSWAndSwInterface, " ");
+		
+		System.err.println(SDNPropertiesUtil.getProperty("TOR-A_SWITCH_IP"));
+		
+		System.out.println("========"+whichSW);
+		System.out.println(swInterface);
+		
 	}
 }

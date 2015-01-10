@@ -132,4 +132,35 @@ public class FirewallService {
 				reverse_networksStrategyConfigScript);
 
 	}
+
+	/**
+	 * 配置内网与以太网之间的策略(双向配置)
+	 * 
+	 * @param vRouterIp
+	 * @param strategyNo
+	 * @param sourcePort
+	 * @param targetPort
+	 * @param sourceAddressPool
+	 * @param targetAddressPool
+	 */
+	public static void configurationInternetStrategy(String vRouterIp, int strategyNo, String sourcePort,
+			String targetPort, String sourceAddressPool, String targetSubnet_segment) {
+
+		// 生成正向脚本
+		String forward_internetStrategyConfigScript = FirewallScriptService.generateInternetStrategyConfigScript(
+				strategyNo, sourcePort, targetPort, sourceAddressPool, "all");
+
+		// 执行正向脚本
+		SshUtil.executeCommand(vRouterIp, SDNConstants.FIREWALL_USERNAME, SDNConstants.FIREWALL_PASSWORD,
+				forward_internetStrategyConfigScript);
+
+		// 生成反向脚本
+		String reverse_internetStrategyConfigScript = FirewallScriptService.generateInternetStrategyConfigScript(
+				strategyNo+1, targetPort, sourcePort, "all", sourceAddressPool);
+
+		// 执行反向脚本
+		SshUtil.executeCommand(vRouterIp, SDNConstants.FIREWALL_USERNAME, SDNConstants.FIREWALL_PASSWORD,
+				reverse_internetStrategyConfigScript);
+
+	}
 }
