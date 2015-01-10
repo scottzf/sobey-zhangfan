@@ -81,10 +81,6 @@ public class ServerHistory extends DeviceHistoryBasic {
 		this.hostgroup = hostgroup;
 	}
 
-	public void setHsotgroup(String hsotgroup) {
-		this.hsotgroup = hsotgroup;
-	}
-
 	public void setMemorySize(String memorySize) {
 		this.memorySize = memorySize;
 	}
