@@ -17,6 +17,7 @@ public class SubnetDTO extends BasicDTO {
 	private IdcDTO idcDTO;
 	private String netMask;
 	private Integer portId;
+	private Integer portIndex;
 	private Integer router;
 	private RouterDTO routerDTO;
 	private String segment;
@@ -41,6 +42,10 @@ public class SubnetDTO extends BasicDTO {
 
 	public Integer getPortId() {
 		return portId;
+	}
+
+	public Integer getPortIndex() {
+		return portIndex;
 	}
 
 	public Integer getRouter() {
@@ -81,6 +86,10 @@ public class SubnetDTO extends BasicDTO {
 
 	public void setPortId(Integer portId) {
 		this.portId = portId;
+	}
+
+	public void setPortIndex(Integer portIndex) {
+		this.portIndex = portIndex;
 	}
 
 	public void setRouter(Integer router) {

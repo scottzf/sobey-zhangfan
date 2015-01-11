@@ -739,10 +739,6 @@
 
   <xs:element name="findMapTagServiceResponse" type="tns:findMapTagServiceResponse"/>
 
-  <xs:element name="findMaxVlanId" type="tns:findMaxVlanId"/>
-
-  <xs:element name="findMaxVlanIdResponse" type="tns:findMaxVlanIdResponse"/>
-
   <xs:element name="findMemory" type="tns:findMemory"/>
 
   <xs:element name="findMemoryByParams" type="tns:findMemoryByParams"/>
@@ -1151,9 +1147,17 @@
 
   <xs:element name="getMaxPolicyIdResponse" type="tns:getMaxPolicyIdResponse"/>
 
+  <xs:element name="getMaxPortIndex" type="tns:getMaxPortIndex"/>
+
+  <xs:element name="getMaxPortIndexResponse" type="tns:getMaxPortIndexResponse"/>
+
   <xs:element name="getMaxRouterId" type="tns:getMaxRouterId"/>
 
   <xs:element name="getMaxRouterIdResponse" type="tns:getMaxRouterIdResponse"/>
+
+  <xs:element name="getMaxVlanId" type="tns:getMaxVlanId"/>
+
+  <xs:element name="getMaxVlanIdResponse" type="tns:getMaxVlanIdResponse"/>
 
   <xs:element name="getMemoryList" type="tns:getMemoryList"/>
 
@@ -1649,6 +1653,7 @@
           <xs:element minOccurs="0" name="idcDTO" type="tns:IdcDTO"/>
           <xs:element minOccurs="0" name="netMask" type="xs:string"/>
           <xs:element minOccurs="0" name="portId" type="xs:int"/>
+          <xs:element minOccurs="0" name="portIndex" type="xs:int"/>
           <xs:element minOccurs="0" name="router" type="xs:int"/>
           <xs:element minOccurs="0" name="routerDTO" type="tns:RouterDTO"/>
           <xs:element minOccurs="0" name="segment" type="xs:string"/>
@@ -3297,19 +3302,6 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="findMaxVlanId">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="arg0" type="xs:int"/>
-      <xs:element minOccurs="0" name="arg1" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="findMaxVlanIdResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="updateEcs">
     <xs:sequence>
       <xs:element minOccurs="0" name="id" type="xs:int"/>
@@ -4450,6 +4442,19 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="getMaxVlanId">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:int"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getMaxVlanIdResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="deleteLoadBalancer">
     <xs:sequence>
       <xs:element minOccurs="0" name="id" type="xs:int"/>
@@ -4507,6 +4512,18 @@
   <xs:complexType name="getSwitchPortListResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:DTOListResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getMaxPortIndex">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getMaxPortIndexResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:int"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -6892,12 +6909,12 @@
     <wsdl:part element="tns:updateEipPolicyResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="findServiceByParamsResponse">
-    <wsdl:part element="tns:findServiceByParamsResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="createFirewall">
     <wsdl:part element="tns:createFirewall" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findServiceByParamsResponse">
+    <wsdl:part element="tns:findServiceByParamsResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findLogByParamsResponse">
@@ -7372,6 +7389,10 @@
     <wsdl:part element="tns:getVpnPagination" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getMaxPortIndex">
+    <wsdl:part element="tns:getMaxPortIndex" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="findServerPortResponse">
     <wsdl:part element="tns:findServerPortResponse" name="parameters">
     </wsdl:part>
@@ -7464,6 +7485,10 @@
     <wsdl:part element="tns:deleteLoadBalancerPortResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getMaxVlanIdResponse">
+    <wsdl:part element="tns:getMaxVlanIdResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="deleteconfigFirewallServiceCategoryResponse">
     <wsdl:part element="tns:deleteconfigFirewallServiceCategoryResponse" name="parameters">
     </wsdl:part>
@@ -7472,12 +7497,12 @@
     <wsdl:part element="tns:createSwitchPortResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="createServerPortResponse">
-    <wsdl:part element="tns:createServerPortResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="createFirewallResponse">
     <wsdl:part element="tns:createFirewallResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createServerPortResponse">
+    <wsdl:part element="tns:createServerPortResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getStoragePortListResponse">
@@ -7516,8 +7541,8 @@
     <wsdl:part element="tns:deleteElbResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="findMaxVlanIdResponse">
-    <wsdl:part element="tns:findMaxVlanIdResponse" name="parameters">
+  <wsdl:message name="getMaxVlanId">
+    <wsdl:part element="tns:getMaxVlanId" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createMapEcsEip">
@@ -8204,10 +8229,6 @@
     <wsdl:part element="tns:getEcsPaginationResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="findMaxVlanId">
-    <wsdl:part element="tns:findMaxVlanId" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="deleteElbPolicy">
     <wsdl:part element="tns:deleteElbPolicy" name="parameters">
     </wsdl:part>
@@ -8690,6 +8711,10 @@
   </wsdl:message>
   <wsdl:message name="getSubnetListResponse">
     <wsdl:part element="tns:getSubnetListResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getMaxPortIndexResponse">
+    <wsdl:part element="tns:getMaxPortIndexResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getSwitchesListResponse">
@@ -9851,12 +9876,6 @@
       <wsdl:output message="tns:findHardDiskResponse" name="findHardDiskResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="findMaxVlanId">
-      <wsdl:input message="tns:findMaxVlanId" name="findMaxVlanId">
-    </wsdl:input>
-      <wsdl:output message="tns:findMaxVlanIdResponse" name="findMaxVlanIdResponse">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="updateEcs">
       <wsdl:input message="tns:updateEcs" name="updateEcs">
     </wsdl:input>
@@ -10373,6 +10392,12 @@
       <wsdl:output message="tns:createRackResponse" name="createRackResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getMaxVlanId">
+      <wsdl:input message="tns:getMaxVlanId" name="getMaxVlanId">
+    </wsdl:input>
+      <wsdl:output message="tns:getMaxVlanIdResponse" name="getMaxVlanIdResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="deleteLoadBalancer">
       <wsdl:input message="tns:deleteLoadBalancer" name="deleteLoadBalancer">
     </wsdl:input>
@@ -10401,6 +10426,12 @@
       <wsdl:input message="tns:getSwitchPortList" name="getSwitchPortList">
     </wsdl:input>
       <wsdl:output message="tns:getSwitchPortListResponse" name="getSwitchPortListResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMaxPortIndex">
+      <wsdl:input message="tns:getMaxPortIndex" name="getMaxPortIndex">
+    </wsdl:input>
+      <wsdl:output message="tns:getMaxPortIndexResponse" name="getMaxPortIndexResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateVpn">
@@ -12137,15 +12168,6 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="findMaxVlanId">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="findMaxVlanId">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="findMaxVlanIdResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="findHardDisk">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="findHardDisk">
@@ -12938,6 +12960,15 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getMaxVlanId">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getMaxVlanId">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getMaxVlanIdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="deleteLoadBalancer">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="deleteLoadBalancer">
@@ -12971,6 +13002,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="findSwitchesByParamsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMaxPortIndex">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getMaxPortIndex">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getMaxPortIndexResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>

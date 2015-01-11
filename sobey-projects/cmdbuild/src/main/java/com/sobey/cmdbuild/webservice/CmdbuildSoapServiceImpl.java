@@ -152,9 +152,17 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
-	public Integer findMaxVlanId(Integer nicId, Integer subnetId) {
+	public Integer getMaxVlanId(Integer nicId, Integer subnetId) {
 		return comm.customService.selectMaxVlanId(nicId, subnetId);
 	}
+
+	
+	@Override
+	public Integer getMaxPortIndex(Integer tenantsId) {
+		return comm.customService.selectPortIndex(tenantsId);
+	}
+	
+	 
 
 	@Override
 	public DTOResult<LookUpDTO> findLookUp(@WebParam(name = "id") Integer id) {
@@ -9909,5 +9917,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			return handleGeneralError(result, e);
 		}
 	}
+
+
 
 }

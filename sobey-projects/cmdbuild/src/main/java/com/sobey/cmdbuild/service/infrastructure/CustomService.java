@@ -21,6 +21,30 @@ public class CustomService {
 	@Autowired
 	private CustomDao customDao;
 
+	public List<TagRelation> getTagRelation(Integer serviceId) {
+
+		List<TagRelation> relations = Lists.newArrayList();
+
+		List<Object[]> list = customDao.getTagRelation(serviceId);
+
+		for (Object[] obj : list) {
+
+			TagRelation tagRelation = new TagRelation();
+
+			tagRelation.setServiceCode(obj[0].toString());
+			tagRelation.setServiceName(obj[1].toString());
+			tagRelation.setTagName(obj[2].toString());
+			tagRelation.setTagTypeName(obj[3].toString());
+			if (obj[4] != null) {
+				tagRelation.setParentTagName(obj[4].toString());
+			}
+			relations.add(tagRelation);
+
+		}
+
+		return relations;
+	}
+
 	/**
 	 * 获得数据库中AclNumber的最大值,并加上1.
 	 * 
@@ -64,28 +88,9 @@ public class CustomService {
 		return (int) MathsUtil.add(vlanId == null ? 21 : vlanId, 1);
 	}
 
-	public List<TagRelation> getTagRelation(Integer serviceId) {
-
-		List<TagRelation> relations = Lists.newArrayList();
-
-		List<Object[]> list = customDao.getTagRelation(serviceId);
-
-		for (Object[] obj : list) {
-
-			TagRelation tagRelation = new TagRelation();
-
-			tagRelation.setServiceCode(obj[0].toString());
-			tagRelation.setServiceName(obj[1].toString());
-			tagRelation.setTagName(obj[2].toString());
-			tagRelation.setTagTypeName(obj[3].toString());
-			if (obj[4] != null) {
-				tagRelation.setParentTagName(obj[4].toString());
-			}
-			relations.add(tagRelation);
-
-		}
-
-		return relations;
+	public Integer selectPortIndex(Integer tenantsId) {
+		Integer portIndex = customDao.selectPortIndex(tenantsId);
+		return (int) MathsUtil.add(portIndex == null ? 1 : portIndex, 1);
 	}
 
 }

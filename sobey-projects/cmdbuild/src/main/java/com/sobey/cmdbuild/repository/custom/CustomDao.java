@@ -14,4 +14,6 @@ public interface CustomDao {
 
 	public Integer selectMaxVlanId(Integer nicId, Integer subnetId);
 
+	public Integer selectPortIndex(Integer tenantsId);
+
 }

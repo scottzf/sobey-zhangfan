@@ -81,7 +81,9 @@ public interface CmdbuildSoapService {
 
 	Integer getMaxRouterId(Integer tenantsId);
 
-	Integer findMaxVlanId(Integer nicId, Integer subnetId);
+	Integer getMaxVlanId(Integer nicId, Integer subnetId);
+
+	Integer getMaxPortIndex(Integer tenantsId);
 
 	// ==============================//
 	// =========== LookUp ===========//
