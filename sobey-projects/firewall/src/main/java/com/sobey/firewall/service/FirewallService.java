@@ -831,24 +831,15 @@ public class FirewallService {
 		return "exec update-now";
 	}
 
-	public String modifyConfigSystemInterfaceScrip(
-			ArrayList<ConfigSystemInterfaceParameter> configSystemInterfaceParameters) {
+	public String modifyConfigSystemInterfaceScrip(ConfigSystemInterfaceParameter parameter) {
 
 		StringBuilder sb = new StringBuilder();
-
 		sb.append("config system interface").append(DEFAULT_SYMBOL);
-
-		for (ConfigSystemInterfaceParameter parameter : configSystemInterfaceParameters) {
-
-			sb.append("config system interface").append(DEFAULT_SYMBOL);
-			sb.append("edit ").append(parameter.getInterfaceName()).append(DEFAULT_SYMBOL);
-			sb.append("set ip ").append(parameter.getGateway()).append(" ").append(parameter.getSubnetMask())
-					.append(DEFAULT_SYMBOL);
-			sb.append("end").append(DEFAULT_SYMBOL);
-		}
-
+		sb.append("edit ").append(parameter.getInterfaceName()).append(DEFAULT_SYMBOL);
+		sb.append("set ip ").append(parameter.getGateway()).append(" ").append(parameter.getSubnetMask())
+				.append(DEFAULT_SYMBOL);
+		sb.append("end").append(DEFAULT_SYMBOL);
 		sb.append("exe backup config flash").append(DEFAULT_SYMBOL);
-
 		return sb.toString();
 	}
 
