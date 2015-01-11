@@ -8,7 +8,7 @@ import com.sobey.generate.cmdbuild.TenantsDTO;
 
 public class TestData {
 
-	private static final Integer tenantsId = 118;
+	private static final Integer tenantsId = 184;
 
 	public static TenantsDTO randomTenantsDTO() {
 		TenantsDTO dto = new TenantsDTO();
@@ -21,9 +21,9 @@ public class TestData {
 
 	public static SubnetDTO randomSubnetDTO() {
 
-		String gateway = "192.168.230.254";
+		String gateway = "192.168.200.254";
 		String netmask = "255.255.255.0";
-		String segment = "192.168.230.0";
+		String segment = "192.168.200.0/24";
 
 		SubnetDTO dto = new SubnetDTO();
 
@@ -32,33 +32,33 @@ public class TestData {
 		dto.setNetMask(netmask);
 		dto.setTenants(tenantsId);
 		dto.setSegment(segment);
-		dto.setDescription("230子网");
+		dto.setDescription("200子网");
 		return dto;
 	}
 
 	public static EcsDTO randomEcsDTO() {
 		EcsDTO dto = new EcsDTO();
-		dto.setDescription("云生产专用ECS");
-		dto.setServer(3976);
-		dto.setSubnet(1403);
+		dto.setDescription("测试专用主机B");
+		dto.setServer(122);
+		dto.setSubnet(1463);// 185:默认子网 1463 : 200子网
 		dto.setEcsType(109); // 109 instance 110 firewall
 		dto.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
 		dto.setIdc(ConstansData.idcId);
 		dto.setTenants(tenantsId);
-		dto.setEcsSpec(4071);
+		dto.setEcsSpec(118);// centos
 		return dto;
 	}
 
 	public static EcsDTO randomRouterDTO() {
 		EcsDTO dto = new EcsDTO();
-		dto.setDescription("vRouter2");
-		dto.setServer(3976);
-		dto.setSubnet(1403);
+		dto.setDescription("刘凯的vRouter");
+		dto.setServer(122);
+		dto.setSubnet(185);
 		dto.setEcsType(110); // 109 instance 110 firewall
 		dto.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
 		dto.setIdc(ConstansData.idcId);
 		dto.setTenants(tenantsId);
-		dto.setEcsSpec(4077);
+		dto.setEcsSpec(120);
 		return dto;
 	}
 

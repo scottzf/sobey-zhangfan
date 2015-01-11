@@ -4,7 +4,7 @@ import com.sobey.generate.cmdbuild.SubnetDTO;
 
 public class ConstansData {
 
-	public static final Integer idcId = 115;
+	public static final Integer idcId = 116;
 
 	public static final String firewall_username = "admin";
 	public static final String firewall_password = "mcloud@sobey.com";
@@ -15,7 +15,7 @@ public class ConstansData {
 
 		String gateway = "192.168.100.254";
 		String netmask = "255.255.255.0";
-		String segment = "192.168.100.0";
+		String segment = "192.168.100.0/24";
 
 		SubnetDTO subnetDTO = new SubnetDTO();
 		subnetDTO.setIdc(idcId);

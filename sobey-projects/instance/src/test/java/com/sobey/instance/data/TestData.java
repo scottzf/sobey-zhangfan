@@ -17,12 +17,13 @@ public class TestData {
 
 		CloneVMParameter parameter = new CloneVMParameter();
 
-		parameter.setDescription("这个一个API测试程序");
-		parameter.setGateway("172.16.10.0");
-		parameter.setIpaddress("172.16.10.15");
+		parameter.setDescription("CMOP");
+		parameter.setGateway("10.2.12.254");
+		parameter.setIpaddress("10.2.12.92");
 		parameter.setSubNetMask("255.255.255.0");
-		parameter.setVmName("liukai");
-		parameter.setResourcePool("resgroup-42");
+		parameter.setVmName("10.2.12.92");
+		parameter.setResourcePool("resgroup-133");
+		parameter.setHostId("host-236");
 		parameter.setDatacenter(DataCenterEnum.成都核心数据中心.toString());
 
 		// Linux
@@ -30,7 +31,7 @@ public class TestData {
 		// parameter.setVmTemplateOS("Linux");
 
 		// Windows
-		parameter.setVmTemplateName("Win2008");
+		parameter.setVmTemplateName("Windows 2008 R2 Mod");
 		parameter.setVmTemplateOS("Windows");
 		return parameter;
 	}
