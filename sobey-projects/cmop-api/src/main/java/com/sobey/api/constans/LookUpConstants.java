@@ -381,7 +381,7 @@ public class LookUpConstants {
 
 		VIPPool("VIPPool", 67),
 
-		ManagerPool("ManagerPool", 67);
+		ManagerPool("ManagerPool", 4078);
 
 		private String name;
 		private Integer value;
