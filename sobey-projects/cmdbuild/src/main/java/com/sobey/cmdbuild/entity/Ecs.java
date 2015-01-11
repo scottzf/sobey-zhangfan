@@ -32,7 +32,6 @@ public class Ecs extends ServiceBasic {
 	private String macAddress;
 	private String memorySize;
 	private String osName;
-
 	private Integer server;
 
 	public Ecs() {

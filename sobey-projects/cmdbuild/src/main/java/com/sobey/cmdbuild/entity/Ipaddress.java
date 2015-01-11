@@ -20,6 +20,7 @@ public class Ipaddress extends BasicEntity {
 
 	private String gateway;
 	private Integer idc;
+	private Set<IpaddressHistory> ipaddressHistories = new HashSet<IpaddressHistory>(0);
 	private Integer ipaddressPool;
 	private Integer ipaddressStatus;
 	private Integer isp;
@@ -27,7 +28,6 @@ public class Ipaddress extends BasicEntity {
 	private String remark;
 	private String segment;
 	private Integer subnet;
-	private Set<IpaddressHistory> ipaddressHistories = new HashSet<IpaddressHistory>(0);
 
 	public Ipaddress() {
 	}

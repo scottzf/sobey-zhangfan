@@ -14,6 +14,8 @@ public class RouterDTO extends ServiceBasicDTO {
 
 	private Integer ecs;
 	private EcsDTO ecsDTO;
+	private Integer ipaddress;
+	private IpaddressDTO ipaddressDTO;
 
 	public Integer getEcs() {
 		return ecs;
@@ -23,12 +25,28 @@ public class RouterDTO extends ServiceBasicDTO {
 		return ecsDTO;
 	}
 
+	public Integer getIpaddress() {
+		return ipaddress;
+	}
+
+	public IpaddressDTO getIpaddressDTO() {
+		return ipaddressDTO;
+	}
+
 	public void setEcs(Integer ecs) {
 		this.ecs = ecs;
 	}
 
 	public void setEcsDTO(EcsDTO ecsDTO) {
 		this.ecsDTO = ecsDTO;
+	}
+
+	public void setIpaddress(Integer ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
+		this.ipaddressDTO = ipaddressDTO;
 	}
 
 	/**

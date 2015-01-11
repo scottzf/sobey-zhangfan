@@ -15,29 +15,38 @@ public class NicDTO extends ComponentBasicDTO {
 	private Integer nicRate;
 	private String nicRateText;
 	private Integer portNumber;
+	private String virtualSwitchName;
 
 	public Integer getNicRate() {
 		return nicRate;
-	}
-
-	public void setNicRate(Integer nicRate) {
-		this.nicRate = nicRate;
 	}
 
 	public String getNicRateText() {
 		return nicRateText;
 	}
 
-	public void setNicRateText(String nicRateText) {
-		this.nicRateText = nicRateText;
-	}
-
 	public Integer getPortNumber() {
 		return portNumber;
 	}
 
+	public String getVirtualSwitchName() {
+		return virtualSwitchName;
+	}
+
+	public void setNicRate(Integer nicRate) {
+		this.nicRate = nicRate;
+	}
+
+	public void setNicRateText(String nicRateText) {
+		this.nicRateText = nicRateText;
+	}
+
 	public void setPortNumber(Integer portNumber) {
 		this.portNumber = portNumber;
+	}
+
+	public void setVirtualSwitchName(String virtualSwitchName) {
+		this.virtualSwitchName = virtualSwitchName;
 	}
 
 	/**

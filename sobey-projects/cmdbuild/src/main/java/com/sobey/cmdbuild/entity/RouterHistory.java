@@ -17,6 +17,7 @@ import com.sobey.cmdbuild.entity.basic.ServiceHistoryBasic;
 public class RouterHistory extends ServiceHistoryBasic {
 
 	private Integer ecs;
+	private Integer ipaddress;
 	private Router router;
 
 	public RouterHistory() {
@@ -25,6 +26,11 @@ public class RouterHistory extends ServiceHistoryBasic {
 	@Column(name = "ecs")
 	public Integer getEcs() {
 		return ecs;
+	}
+
+	@Column(name = "ipaddress")
+	public Integer getIpaddress() {
+		return ipaddress;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -37,10 +43,12 @@ public class RouterHistory extends ServiceHistoryBasic {
 		this.ecs = ecs;
 	}
 
+	public void setIpaddress(Integer ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
 	public void setRouter(Router router) {
 		this.router = router;
 	}
-	
-	
 
 }
