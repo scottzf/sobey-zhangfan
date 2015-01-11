@@ -61,7 +61,7 @@ public class CustomService {
 	 */
 	public Integer selectMaxVlanId(Integer nicId, Integer subnetId) {
 		Integer vlanId = customDao.selectMaxVlanId(nicId, subnetId);
-		return (int) MathsUtil.add(vlanId == null ? 4 : vlanId, 1);
+		return (int) MathsUtil.add(vlanId == null ? 21 : vlanId, 1);
 	}
 
 	public List<TagRelation> getTagRelation(Integer serviceId) {
