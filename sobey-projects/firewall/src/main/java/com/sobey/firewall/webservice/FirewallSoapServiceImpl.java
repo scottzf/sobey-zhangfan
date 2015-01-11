@@ -223,36 +223,19 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 	@Override
 	public WSResult ModifyConfigSystemInterfaceByFirewall(ConfigSystemInterfaceParameter configSystemInterfaceParameter) {
 
-		ArrayList<ConfigSystemInterfaceParameter> arrayList = new ArrayList<ConfigSystemInterfaceParameter>();
-		arrayList.add(configSystemInterfaceParameter);
-
-		ConfigSystemInterfaceParameters parameters = new ConfigSystemInterfaceParameters();
-		parameters.setConfigSystemInterfaceParameters(arrayList);
-
-		return ModifyConfigSystemInterfaceListByFirewall(parameters);
-
-	}
-
-	@Override
-	public WSResult ModifyConfigSystemInterfaceListByFirewall(
-			ConfigSystemInterfaceParameters configSystemInterfaceParameters) {
-
 		WSResult result = new WSResult();
 
-		String command = service.modifyConfigSystemInterfaceScrip(configSystemInterfaceParameters
-				.getConfigSystemInterfaceParameters());
+		String command = service.modifyConfigSystemInterfaceScrip(configSystemInterfaceParameter);
 
 		try {
-			SSHUtil.executeCommand(configSystemInterfaceParameters.getUrl(),
-					configSystemInterfaceParameters.getUserName(), configSystemInterfaceParameters.getPassword(),
-					command);
+			SSHUtil.executeCommand(configSystemInterfaceParameter.getUrl(),
+					configSystemInterfaceParameter.getUserName(), configSystemInterfaceParameter.getPassword(), command);
 		} catch (IOException e) {
-			logger.info("ConfigFirewallPolicyParameterListByFirewall::" + e.getMessage());
+			logger.info("ModifyConfigSystemInterfaceByFirewall::" + e.getMessage());
 			result.setError(WSResult.SYSTEM_ERROR, "IOException,请联系系统管理员");
 		}
 
 		return result;
-
 	}
 
 	@Override
