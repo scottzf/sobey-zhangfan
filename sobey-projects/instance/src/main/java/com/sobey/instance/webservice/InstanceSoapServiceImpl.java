@@ -10,6 +10,7 @@ import com.sobey.instance.service.DiskService;
 import com.sobey.instance.service.HostService;
 import com.sobey.instance.service.NetworkService;
 import com.sobey.instance.service.VMService;
+import com.sobey.instance.webservice.response.dto.BindingNetworkDevicePortGroupParameter;
 import com.sobey.instance.webservice.response.dto.BindingPortGroupParameter;
 import com.sobey.instance.webservice.response.dto.CloneVMParameter;
 import com.sobey.instance.webservice.response.dto.CreatePortGroupParameter;
@@ -89,6 +90,12 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	@Override
 	public WSResult bindingPortGroupInstance(BindingPortGroupParameter bindingPortGroupParameter) {
 		return networkService.bindingPortGroup(bindingPortGroupParameter);
+	}
+
+	@Override
+	public WSResult bindingNetworkDevicePortGroupInstance(
+			BindingNetworkDevicePortGroupParameter bindingNetworkDevicePortGroupParameter) {
+		return networkService.bindingNetworkDevicePortGroup(bindingNetworkDevicePortGroupParameter);
 	}
 
 	@Override

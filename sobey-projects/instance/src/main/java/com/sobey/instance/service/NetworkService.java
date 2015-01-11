@@ -2,11 +2,14 @@ package com.sobey.instance.service;
 
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.sobey.instance.webservice.response.dto.BindingNetworkDevicePortGroupParameter;
 import com.sobey.instance.webservice.response.dto.BindingPortGroupParameter;
 import com.sobey.instance.webservice.response.dto.CreatePortGroupParameter;
 import com.sobey.instance.webservice.response.dto.CreateStandardSwitchParameter;
@@ -119,6 +122,102 @@ public class NetworkService extends VMWareService {
 			if (task.waitForTask() != Task.SUCCESS) {
 				logger.info("bindingPortGroup:: port group binding fail");
 				result.setError(WSResult.SYSTEM_ERROR, "端口组绑定失败,请联系系统管理员.");
+				return result;
+			}
+
+		} catch (RemoteException | InterruptedException e) {
+
+			try {
+				logout(si);
+			} catch (RemoteException | MalformedURLException ex) {
+				logger.info("bindingPortGroup::远程连接失败或错误的URL");
+				result.setError(WSResult.SYSTEM_ERROR, "远程连接失败,请联系系统管理员.");
+				return result;
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * 为网络绑定一个基于标准交换机的虚拟端口组.<br>
+	 * 
+	 * 注:网络设备如vRouter默认会有10个网络适配器.其中8分配为电信,9为联通,10为默认配置给vRouter的管理端口组.
+	 * 
+	 * 即绑定子网只能选择1-7号的网络适配器,暂时只能绑定7个子网.
+	 * 
+	 * @param parameter
+	 *            {@link BindingNetworkDevicePortGroupParameter}
+	 * @return
+	 */
+	public WSResult bindingNetworkDevicePortGroup(BindingNetworkDevicePortGroupParameter parameter) {
+
+		WSResult result = new WSResult();
+
+		ServiceInstance si;
+
+		try {
+			si = getServiceInstance(parameter.getDatacenter());
+		} catch (RemoteException | MalformedURLException e) {
+			logger.info("bindingPortGroup::远程连接失败或错误的URL");
+			result.setError(WSResult.SYSTEM_ERROR, "ServiceInstance初始化失败,请联系系统管理员.");
+			return result;
+		}
+
+		// 获得VM对象
+		VirtualMachine vm = null;
+
+		try {
+
+			vm = getVirtualMachine(si, parameter.getVmName());
+
+			if (vm == null) {
+				result.setError(WSResult.SYSTEM_ERROR, "网络设备不存在.");
+				return result;
+			}
+
+			VirtualDeviceConfigSpec nicSpec = new VirtualDeviceConfigSpec();
+			nicSpec.setOperation(VirtualDeviceConfigSpecOperation.edit);
+
+			VirtualMachineConfigInfo vmConfigInfo = vm.getConfig();
+			VirtualDevice[] virtualDevices = vmConfigInfo.getHardware().getDevice();
+
+			List<VirtualEthernetCard> virtualEthernetCards = new ArrayList<VirtualEthernetCard>();
+
+			for (int i = 0; i < virtualDevices.length; i++) {
+				if (virtualDevices[i] instanceof VirtualEthernetCard) {
+					VirtualEthernetCard card = (VirtualEthernetCard) virtualDevices[i];
+					virtualEthernetCards.add(card);
+				}
+			}
+
+			// 获得指定的端口.vRouter默认有10个网络适配器,其中8分配为电信,9为移动,10为默认配置给vRouter的管理端口组.
+			// 即绑定子网只能选择1-7号的网络适配器,暂时只能绑定7个子网.
+			VirtualEthernetCard nic = virtualEthernetCards.get(parameter.getPortIndex() - 1);
+
+			// 将vRouter的网络适配器和需要绑定的Subnet Vlan进行关联.
+			VirtualDeviceBackingInfo properties = nic.getBacking();
+			VirtualEthernetCardNetworkBackingInfo nicBaking = (VirtualEthernetCardNetworkBackingInfo) properties;
+			nicBaking.setDeviceName(parameter.getPortGroupName());// 指定要绑定的设配器(标准交换机端口)
+			nic.setBacking(nicBaking);
+			nicSpec.setDevice(nic);
+			VirtualDeviceConnectInfo connectable = new VirtualDeviceConnectInfo();
+			connectable.startConnected = true;
+			connectable.allowGuestControl = true;
+			connectable.connected = true;
+			connectable.status = "untried";
+			nic.setConnectable(connectable);
+
+			VirtualDeviceConfigSpec[] nicSpecArray = { nicSpec };
+
+			VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
+			vmConfigSpec.setDeviceChange(nicSpecArray);
+
+			Task task = vm.reconfigVM_Task(vmConfigSpec);
+
+			if (task.waitForTask() != Task.SUCCESS) {
+				logger.info("bindingPortGroup:: port group binding fail");
+				result.setError(WSResult.SYSTEM_ERROR, "网络设备端口组绑定失败,请联系系统管理员.");
 				return result;
 			}
 

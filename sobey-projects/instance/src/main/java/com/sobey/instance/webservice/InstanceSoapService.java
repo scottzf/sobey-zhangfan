@@ -4,6 +4,7 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import com.sobey.instance.constans.WsConstants;
+import com.sobey.instance.webservice.response.dto.BindingNetworkDevicePortGroupParameter;
 import com.sobey.instance.webservice.response.dto.BindingPortGroupParameter;
 import com.sobey.instance.webservice.response.dto.CloneVMParameter;
 import com.sobey.instance.webservice.response.dto.CreatePortGroupParameter;
@@ -123,6 +124,16 @@ public interface InstanceSoapService {
 	 */
 	WSResult bindingPortGroupInstance(
 			@WebParam(name = "bindingPortGroupParameter") BindingPortGroupParameter bindingPortGroupParameter);
+
+	/**
+	 * 为网络设备绑定端口组
+	 * 
+	 * @param bindingNetworkDevicePortGroupParameter
+	 *            {@link BindingNetworkDevicePortGroupParameter}
+	 * @return
+	 */
+	WSResult bindingNetworkDevicePortGroupInstance(
+			@WebParam(name = "bindingNetworkDevicePortGroupParameter") BindingNetworkDevicePortGroupParameter bindingNetworkDevicePortGroupParameter);
 
 	// =============== Disk ===============//
 
