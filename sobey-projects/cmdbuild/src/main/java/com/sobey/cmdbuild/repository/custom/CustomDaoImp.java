@@ -46,8 +46,9 @@ public class CustomDaoImp implements CustomDao {
 
 	@Override
 	public Integer selectMaxVlanId(Integer nicId, Integer subnetId) {
-		String sqlString = "SELECT MAX(vlan_id) from vlan where \"Status\"= 'A' and nic = " + nicId + " and subnet="
-				+ subnetId;
+		String sqlString = "SELECT MAX(vlan_id) from vlan where \"Status\"= 'A' and nic = " + nicId;
+		// String sqlString = "SELECT MAX(vlan_id) from vlan where \"Status\"= 'A' and nic = " + nicId + " and subnet="
+		// + subnetId;
 		return (Integer) em.createNativeQuery(sqlString).getSingleResult();
 	}
 
