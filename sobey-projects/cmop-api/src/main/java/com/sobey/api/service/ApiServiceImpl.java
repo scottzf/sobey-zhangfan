@@ -53,6 +53,7 @@ import com.sobey.generate.firewall.ConfigSystemInterfaceParameters;
 import com.sobey.generate.firewall.FirewallSoapService;
 import com.sobey.generate.instance.BindingPortGroupParameter;
 import com.sobey.generate.instance.CloneVMParameter;
+import com.sobey.generate.instance.CreatePortGroupParameter;
 import com.sobey.generate.instance.DestroyVMParameter;
 import com.sobey.generate.instance.InstanceSoapService;
 import com.sobey.generate.instance.PowerVMParameter;
@@ -300,9 +301,11 @@ public class ApiServiceImpl implements ApiService {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_idc", ConstansData.idcId);
 		map.put("EQ_ipaddressStatus", LookUpConstants.IPAddressStatus.未使用.getValue());
-		map.put("EQ_ipaddressStatus", LookUpConstants.IPAddressPool.ManagerPool.getValue());
+		map.put("EQ_ipaddressPool", LookUpConstants.IPAddressPool.ManagerPool.getValue());
+
 		List<Object> list = cmdbuildSoapService.getIpaddressList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
 				.getDto();
+
 		return (IpaddressDTO) list.get(0);
 	}
 
@@ -389,7 +392,17 @@ public class ApiServiceImpl implements ApiService {
 				insertVlanDTO.setSubnet(subnetDTO.getId());
 				insertVlanDTO.setSegment(subnetDTO.getSegment());
 				insertVlanDTO.setGateway(subnetDTO.getGateway());
+				insertVlanDTO.setVlanId(vlanId);
 				cmdbuildSoapService.createVlan(insertVlanDTO);
+
+				// 在Host的网卡上创建端口组.
+				CreatePortGroupParameter createPortGroupParameter = new CreatePortGroupParameter();
+				createPortGroupParameter.setDatacenter(datacenter);
+				createPortGroupParameter.setHostName(serverDTO.getDescription());
+				createPortGroupParameter.setPortGroupName(vlanName);
+				createPortGroupParameter.setVirtualSwitchName(nicDTO.getVirtualSwitchName());
+				createPortGroupParameter.setVlanId(vlanId);
+				instanceSoapService.createPortGroupInstance(createPortGroupParameter);
 
 				HashMap<String, Object> queryVlanMap = new HashMap<String, Object>();
 				queryVlanMap.put("EQ_nic", nicDTO.getId());
@@ -427,6 +440,8 @@ public class ApiServiceImpl implements ApiService {
 		 * Step.4 绑定端口组
 		 * 
 		 * Step.5 保存至CMDB
+		 * 
+		 * Step.6 修改分配给VM的IP状态.
 		 * 
 		 */
 
@@ -478,6 +493,9 @@ public class ApiServiceImpl implements ApiService {
 		ecsDTO.setEcsType(LookUpConstants.ECSType.instance.getValue());
 
 		cmdbuildSoapService.createEcs(ecsDTO);
+
+		// Step.6 修改分配给VM的IP状态.
+		cmdbuildSoapService.allocateIpaddress(ipaddressDTO.getId());
 
 		result.setMessage("ECS创建成功");
 		return result;
@@ -783,20 +801,23 @@ public class ApiServiceImpl implements ApiService {
 		 * Step.5 保存Ecs至CMDB
 		 * 
 		 * Step.6 保存Router至CMDB
+		 * 
+		 * Step.7 修改分配给Router的IP状态.
 		 */
 
 		WSResult result = new WSResult();
 
-		SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(ecsDTO.getSubnet()).getDto();
-		// EcsSpec应该有router的规格(大中小),同理netscarler也应该有(最大连接数 5K,20k,40K,100K)
-		EcsSpecDTO ecsSpecDTO = (EcsSpecDTO) cmdbuildSoapService.findEcsSpec(ecsDTO.getEcsSpec()).getDto();
-		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(subnetDTO.getTenants()).getDto();
-		IdcDTO idcDTO = (IdcDTO) cmdbuildSoapService.findIdc(subnetDTO.getIdc()).getDto();
 		// 从管理网段IP中获得的未使用的IP.
 		IpaddressDTO managerIpaddressDTO = findAvailableManagerIPAddressDTO();
 
-		// Step.1 获得Server
+		// EcsSpec应该有router的规格(大中小),同理netscarler也应该有(最大连接数 5K,20k,40K,100K)
+		EcsSpecDTO ecsSpecDTO = (EcsSpecDTO) cmdbuildSoapService.findEcsSpec(ecsDTO.getEcsSpec()).getDto();
 
+		SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(ecsDTO.getSubnet()).getDto();
+		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(subnetDTO.getTenants()).getDto();
+		IdcDTO idcDTO = (IdcDTO) cmdbuildSoapService.findIdc(subnetDTO.getIdc()).getDto();
+
+		// Step.1 获得Server
 		ServerDTO serverDTO = findSuitableServerDTO(idcDTO);// 将ECS创建在负载最轻的Server上
 		IpaddressDTO ipaddressDTO = findAvailableIPAddressDTO(subnetDTO); // 从子网中选择一个IP.
 
@@ -813,23 +834,21 @@ public class ApiServiceImpl implements ApiService {
 		cloneVMParameter.setVmName(vmName);
 		cloneVMParameter.setVmTemplateName(ecsSpecDTO.getImageName());
 		cloneVMParameter.setVmTemplateOS(ecsSpecDTO.getOsTypeText());
+		cloneVMParameter.setHostId(serverDTO.getHostgroup());
 
-		instanceSoapService.cloneVMByInstance(cloneVMParameter);
+		instanceSoapService.cloneNetworkDeviceByInstance(cloneVMParameter);
 
 		// Step.3 注册更新vRouter防火墙
 		AuthenticateFirewallParameter authenticateFirewallParameter = new AuthenticateFirewallParameter();
-		authenticateFirewallParameter.setUrl(managerIpaddressDTO.getDescription());
+		authenticateFirewallParameter.setUrl(ConstansData.vRouter_default_ipaddress);
 		authenticateFirewallParameter.setUserName(ConstansData.firewall_username);
 		authenticateFirewallParameter.setPassword(ConstansData.firewall_password);
 		firewallSoapService.registeredByFirewall(authenticateFirewallParameter);
 
 		// Step.4 修改vRouter端口
-
-		// 修改防火墙中 网络 -> 接口 中的配置信息.
-		modifyFirewallConfigSystemInterface(managerIpaddressDTO);
+		modifyFirewallConfigSystemInterface(managerIpaddressDTO);// 修改防火墙中 系统管理 -> 网络 -> 接口 中的配置信息.
 
 		// Step.5 保存Ecs至CMDB
-
 		ecsDTO.setServer(serverDTO.getId());
 		ecsDTO.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
 		ecsDTO.setIpaddress(ipaddressDTO.getId());
@@ -838,7 +857,6 @@ public class ApiServiceImpl implements ApiService {
 		cmdbuildSoapService.createEcs(ecsDTO);
 
 		// Step.6 保存Router至CMDB
-
 		HashMap<String, Object> ecsMap = new HashMap<String, Object>();
 		ecsMap.put("EQ_ipaddress", ipaddressDTO.getId());
 		EcsDTO queryEcsDTO = (EcsDTO) cmdbuildSoapService.findEcsByParams(CMDBuildUtil.wrapperSearchParams(ecsMap))
@@ -850,8 +868,13 @@ public class ApiServiceImpl implements ApiService {
 		routerDTO.setIdc(idcDTO.getId());
 		routerDTO.setSubnet(subnetDTO.getId());
 		routerDTO.setTenants(tenantsDTO.getId());
+		routerDTO.setIpaddress(managerIpaddressDTO.getId());
 
 		cmdbuildSoapService.createRouter(routerDTO);
+
+		// Step.7 修改分配给Router的IP状态.
+		cmdbuildSoapService.allocateIpaddress(ipaddressDTO.getId());
+		cmdbuildSoapService.allocateIpaddress(managerIpaddressDTO.getId());
 
 		result.setMessage("Router创建成功");
 		return result;
@@ -860,7 +883,7 @@ public class ApiServiceImpl implements ApiService {
 	/**
 	 * 修改防火墙中 网络 -> 接口 中的配置信息.<br>
 	 * 
-	 * 创建防火墙后,需要将防火墙port10的接口修改成可访问的管理网段,通过这样的修改能实现远程执行防火墙.
+	 * 创建防火墙后,需要将防火墙port10的接口替换成未使用的管理网段,通过这样的修改能实现远程执行防火墙.
 	 * 
 	 * @param manangerSegment
 	 * @return
@@ -871,7 +894,7 @@ public class ApiServiceImpl implements ApiService {
 
 		ConfigSystemInterfaceParameter configSystemInterfaceParameter = new ConfigSystemInterfaceParameter();
 		configSystemInterfaceParameter.setGateway(ipaddressDTO.getDescription());
-		configSystemInterfaceParameter.setUrl(ipaddressDTO.getDescription());
+		configSystemInterfaceParameter.setUrl(ConstansData.vRouter_default_ipaddress);
 		configSystemInterfaceParameter.setUserName(ConstansData.firewall_username);
 		configSystemInterfaceParameter.setPassword(ConstansData.firewall_password);
 		configSystemInterfaceParameter.setSubnetMask("255.255.254.0");
