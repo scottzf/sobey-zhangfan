@@ -35,6 +35,29 @@ public class TestData {
 		return parameter;
 	}
 
+	public static CloneVMParameter randomCloneNetworkDeviceParameter() {
+
+		CloneVMParameter parameter = new CloneVMParameter();
+
+		parameter.setDescription("这个一个API测试程序");
+		parameter.setGateway("192.168.200.254");
+		parameter.setIpaddress("192.168.200.246");
+		parameter.setSubNetMask("255.255.255.0");
+		parameter.setVmName("router_test");
+		parameter.setResourcePool("resgroup-133");
+		parameter.setHostId("host-236");
+		parameter.setDatacenter(DataCenterEnum.成都核心数据中心.toString());
+
+		// Linux
+		// parameter.setVmTemplateName("CnetOS6.5");
+		// parameter.setVmTemplateOS("Linux");
+
+		// Windows
+		parameter.setVmTemplateName("vRouter_MOD");
+		parameter.setVmTemplateOS("Linux");
+		return parameter;
+	}
+
 	public static DestroyVMParameter randomDestroyVMParameter() {
 
 		DestroyVMParameter parameter = new DestroyVMParameter();

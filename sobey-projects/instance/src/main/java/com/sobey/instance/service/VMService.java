@@ -318,8 +318,13 @@ public class VMService extends VMWareService {
 		pool.set_value(parameter.getResourcePool());
 		pool.setType("ResourcePool");
 
+		ManagedObjectReference host = new ManagedObjectReference();
+		host.set_value(parameter.getHostId());
+		host.setType("HostSystem");
+
 		VirtualMachineRelocateSpec relocateSpec = new VirtualMachineRelocateSpec();
 		relocateSpec.setPool(pool);
+		relocateSpec.setHost(host);
 		cloneSpec.setLocation(relocateSpec);
 		cloneSpec.setPowerOn(true);
 		cloneSpec.setTemplate(false);

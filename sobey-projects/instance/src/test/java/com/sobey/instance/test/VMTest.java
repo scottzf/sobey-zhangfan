@@ -159,7 +159,7 @@ public class VMTest {
 		Folder rootFolder = si.getRootFolder();
 
 		VirtualMachine myVM = (VirtualMachine) new InventoryNavigator(rootFolder).searchManagedEntity("VirtualMachine",
-				"6001-01");
+				"Windows 2008 R2 Mod");
 
 		/**
 		 * VM是否关机只和status有关系,
@@ -237,6 +237,12 @@ public class VMTest {
 	public void cloneVM() {
 		CloneVMParameter parameter = TestData.randomCloneVMParameter();
 		service.cloneVM(parameter);
+	}
+
+	@Test
+	public void cloneNetworkDevice() {
+		CloneVMParameter parameter = TestData.randomCloneNetworkDeviceParameter();
+		service.cloneNetworkDevice(parameter);
 	}
 
 	@Test

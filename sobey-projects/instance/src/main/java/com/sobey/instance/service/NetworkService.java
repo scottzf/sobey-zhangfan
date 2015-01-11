@@ -86,12 +86,6 @@ public class NetworkService extends VMWareService {
 
 				// 此处默认一个虚拟机只有一张网卡.
 				if (virtualDevice instanceof VirtualEthernetCard) {
-					VirtualEthernetCard nic = (VirtualEthernetCard) virtualDevice;
-					VirtualDeviceBackingInfo properties = nic.getBacking();
-					VirtualEthernetCardNetworkBackingInfo nicBaking = (VirtualEthernetCardNetworkBackingInfo) properties;
-					nicBaking.setDeviceName(parameter.getPortGroupName());
-					nic.setBacking(nicBaking);
-					nicSpec.setDevice(nic);
 
 					// 开启网卡连接
 					VirtualDeviceConnectInfo connectable = new VirtualDeviceConnectInfo();
@@ -100,7 +94,17 @@ public class NetworkService extends VMWareService {
 					connectable.connected = true;
 					connectable.status = "untried";
 
+					VirtualEthernetCard nic = (VirtualEthernetCard) virtualDevice;
 					nic.setConnectable(connectable);
+
+					VirtualDeviceBackingInfo properties = nic.getBacking();
+					VirtualEthernetCardNetworkBackingInfo nicBaking = (VirtualEthernetCardNetworkBackingInfo) properties;
+					nicBaking.setDeviceName(parameter.getPortGroupName());
+
+					nic.setBacking(nicBaking);
+
+					nicSpec.setDevice(nic);
+
 				}
 
 			}
