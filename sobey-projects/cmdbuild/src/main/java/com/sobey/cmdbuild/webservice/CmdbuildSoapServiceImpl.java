@@ -1645,17 +1645,17 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			EcsDTO dto = BeanMapper.map(ecs, EcsDTO.class);
 
-			// Reference
-			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
-			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
-			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
-			dto.setEcsSpecDTO(findEcsSpec(dto.getEcsSpec()).getDto());
-			dto.setServerDTO(findServer(dto.getServer()).getDto());
-
-			// LookUp
-			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
-			dto.setEcsStatusText(findLookUp(dto.getEcsStatus()).getDto().getDescription());
-			dto.setEcsTypeText(findLookUp(dto.getEcsType()).getDto().getDescription());
+			// // Reference
+			// dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			// dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			// dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			// dto.setEcsSpecDTO(findEcsSpec(dto.getEcsSpec()).getDto());
+			// dto.setServerDTO(findServer(dto.getServer()).getDto());
+			//
+			// // LookUp
+			// dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
+			// dto.setEcsStatusText(findLookUp(dto.getEcsStatus()).getDto().getDescription());
+			// dto.setEcsTypeText(findLookUp(dto.getEcsType()).getDto().getDescription());
 
 			result.setDto(dto);
 
@@ -1684,16 +1684,16 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			EcsDTO dto = BeanMapper.map(ecs, EcsDTO.class);
 
 			// Reference
-			dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
-			dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
-			dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
-			dto.setEcsSpecDTO(findEcsSpec(dto.getEcsSpec()).getDto());
-			dto.setServerDTO(findServer(dto.getServer()).getDto());
+			// dto.setTenantsDTO(findTenants(dto.getTenants()).getDto());
+			// dto.setIdcDTO(findIdc(dto.getIdc()).getDto());
+			// dto.setIpaddressDTO(findIpaddress(dto.getIpaddress()).getDto());
+			// dto.setEcsSpecDTO(findEcsSpec(dto.getEcsSpec()).getDto());
+			// dto.setServerDTO(findServer(dto.getServer()).getDto());
 
 			// LookUp
-			dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
-			dto.setEcsStatusText(findLookUp(dto.getEcsStatus()).getDto().getDescription());
-			dto.setEcsTypeText(findLookUp(dto.getEcsType()).getDto().getDescription());
+			// dto.setAgentTypeText(findLookUp(dto.getAgentType()).getDto().getDescription());
+			// dto.setEcsStatusText(findLookUp(dto.getEcsStatus()).getDto().getDescription());
+			// dto.setEcsTypeText(findLookUp(dto.getEcsType()).getDto().getDescription());
 
 			result.setDto(dto);
 
@@ -1716,11 +1716,11 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(ecsDTO, ERROR.INPUT_NULL);
 
-			// 验证description是否唯一.如果不为null,则弹出错误.
+			// 验证ipaddress是否唯一.如果不为null,则弹出错误.
 
 			Map<String, Object> paramsMap = Maps.newHashMap();
 
-			paramsMap.put("EQ_description", ecsDTO.getDescription());
+			paramsMap.put("EQ_ipaddress", ecsDTO.getIpaddress());
 			paramsMap.put("EQ_tenants", ecsDTO.getTenants());
 
 			Validate.isTrue(comm.ecsService.findEcs(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
@@ -1758,9 +1758,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(ecs, ERROR.INPUT_NULL);
 
-			// 验证description是否唯一.如果不为null,则弹出错误.
+			// 验证ipaddress是否唯一.如果不为null,则弹出错误.
 			Map<String, Object> paramsMap = Maps.newHashMap();
-			paramsMap.put("EQ_description", ecsDTO.getDescription());
+			paramsMap.put("EQ_ipaddress", ecsDTO.getIpaddress());
 			paramsMap.put("EQ_tenants", ecsDTO.getTenants());
 
 			Validate.isTrue(
