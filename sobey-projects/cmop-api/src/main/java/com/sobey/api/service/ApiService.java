@@ -57,7 +57,7 @@ public interface ApiService {
 
 	// ==================== ELB ====================//
 
-	public WSResult createELB(ElbDTO elbDTO, List<ElbPolicyDTO> elbPolicyDTOs, Integer[] ecsIds);
+	public WSResult createELB(ElbDTO elbDTO, List<ElbPolicyDTO> elbPolicyDTOs, String ecsIds);
 
 	public WSResult deleteELB(Integer elbId);
 
@@ -67,7 +67,7 @@ public interface ApiService {
 
 	// ==================== DNS ====================//
 
-	public WSResult createDNS(DnsDTO dnsDTO, List<DnsPolicyDTO> dnsPolicyDTOs, Integer[] eipIds);
+	public WSResult createDNS(DnsDTO dnsDTO, List<DnsPolicyDTO> dnsPolicyDTOs, String[] eipIdsArray);
 
 	public WSResult deleteDNS(Integer dnsId);
 
@@ -112,6 +112,5 @@ public interface ApiService {
 	public WSResult bindingFirewallService(RouterDTO routerDTO, List<FirewallServiceDTO> firewallServiceDTOs);
 
 	public WSResult unbindingFirewallService();
-	
-	
+
 }
