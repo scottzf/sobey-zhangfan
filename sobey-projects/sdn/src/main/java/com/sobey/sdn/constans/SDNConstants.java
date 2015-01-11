@@ -22,4 +22,6 @@ public class SDNConstants {
 	
 	public static final int CTC_DEFAULT_PORTNO = 8;   //电信默认连接端口序号
 	
+	public static final String CTC_DEFAULT_IP= "221.237.156.153";   //电信默认连接端口序号
+	
 }

@@ -4,11 +4,12 @@ import java.util.List;
 
 import javax.jws.WebService;
 
-import com.sobey.sdn.bean.ECS;
 import com.sobey.sdn.bean.Firewall;
 import com.sobey.sdn.bean.Router;
 import com.sobey.sdn.bean.Subnet;
 import com.sobey.sdn.constans.WsConstants;
+import com.sobey.sdn.test.testParameter.CreateECSParameter;
+import com.sobey.sdn.test.testParameter.CreateRouterParameter;
 
 /**
  * SDN对外暴露的唯一的webservice接口.
@@ -38,8 +39,7 @@ public interface SDNSoapService {
 	 * @param subnet
 	 * @throws Exception
 	 */
-	public void createECS(ECS ecs, int vlanId, String hostIp, String tenantId, String vmName, Subnet subnet)
-			throws Exception;
+	public void createECS(CreateECSParameter createECSParameter) throws Exception;
 
 	/**
 	 * 创建租户路由器
@@ -47,7 +47,7 @@ public interface SDNSoapService {
 	 * @param router
 	 * @throws Exception
 	 */
-	public void createRouter(Router router, String ip_update) throws Exception;
+	public void createRouter(CreateRouterParameter createRouterParameter) throws Exception;
 
 	/**
 	 * 绑定子网和路由器

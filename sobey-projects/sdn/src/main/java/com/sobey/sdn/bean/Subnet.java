@@ -19,6 +19,8 @@ public class Subnet {
 	private String routerName;  //所连路由器名称
 	
 	private String portGroupName;  //子网所跑的端口组
+	
+	private int portNo; //子网所连端口序号
 
 	public String getSubnetId() {
 		return subnetId;
@@ -90,6 +92,14 @@ public class Subnet {
 
 	public void setPortGroupName(String portGroupName) {
 		this.portGroupName = portGroupName;
+	}
+
+	public int getPortNo() {
+		return portNo;
+	}
+
+	public void setPortNo(int portNo) {
+		this.portNo = portNo;
 	}
 
 }

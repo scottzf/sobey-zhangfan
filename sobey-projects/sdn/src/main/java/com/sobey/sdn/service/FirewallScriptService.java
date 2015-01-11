@@ -11,7 +11,7 @@ public class FirewallScriptService {
 	 * @param subnetMask
 	 * @return
 	 */
-	public static String generatePortIpConfigScript(String port, String ip, String subnetMask) {
+	public static String generatePortIpConfigScript(int portNo, String ip, String subnetMask) {
 
 		// 配置接口IP地址脚本(网关)（EIP相关 ） 1
 		// config system interface
@@ -24,7 +24,7 @@ public class FirewallScriptService {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("config system interface").append(SDNConstants.ENTER_SIGN);
-		sb.append("edit ").append(port).append(SDNConstants.ENTER_SIGN);
+		sb.append("edit ").append("port").append(portNo).append(SDNConstants.ENTER_SIGN);
 		sb.append("set ip ").append(ip).append(" ").append(subnetMask).append(SDNConstants.ENTER_SIGN);
 		sb.append("set allowaccess ping https ssh telnet").append(SDNConstants.ENTER_SIGN);
 		sb.append("set type physical").append(SDNConstants.ENTER_SIGN);

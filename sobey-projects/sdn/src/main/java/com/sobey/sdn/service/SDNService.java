@@ -1,12 +1,13 @@
 package com.sobey.sdn.service;
 
-import java.util.List;
-
-import com.sobey.sdn.bean.ECS;
 import com.sobey.sdn.bean.Firewall;
 import com.sobey.sdn.bean.Router;
 import com.sobey.sdn.bean.Subnet;
 import com.sobey.sdn.parameterObject.SubnetParameter;
+import com.sobey.sdn.test.testParameter.BindingFirewallParameter;
+import com.sobey.sdn.test.testParameter.BindingRouterParameter;
+import com.sobey.sdn.test.testParameter.CreateECSParameter;
+import com.sobey.sdn.test.testParameter.CreateRouterParameter;
 
 /**
  * SDN Agent 业务层接口
@@ -26,7 +27,7 @@ public interface SDNService {
      * @param subnet
      * @return
      */
-	public String createECS(ECS ecs, int vlanId, String hostIp, String tenantId, String vmName, Subnet subnet);
+	public String createECS(CreateECSParameter createECSParameter);
 
 	/**
 	 * 创建子网
@@ -57,7 +58,7 @@ public interface SDNService {
 	 * @param router
 	 * @return
 	 */
-	public String createRouter(Router router,String ip_update) throws Exception;
+	public String createRouter(CreateRouterParameter createRouterParameter) throws Exception;
 
 	/**
 	 * 删除路由器
@@ -74,7 +75,7 @@ public interface SDNService {
 	 * @param subnets
 	 * @throws Exception
 	 */
-	public String bindingRouter(Router router, List<Subnet> subnets) throws Exception;
+	public String bindingRouter(BindingRouterParameter bindingRouterParameter) throws Exception;
 
 	/**
 	 * 创建防火墙
@@ -91,7 +92,7 @@ public interface SDNService {
 	 * @param firewall
 	 * @throws Exception
 	 */
-	public void bindingFirewall(Router router, Firewall firewall,String ip_ISP) throws Exception;
+	public void bindingFirewall(BindingFirewallParameter parameter) throws Exception;
 	
 	//public void createLoadBalancer(Firewall firewall) throws Exception;
 
