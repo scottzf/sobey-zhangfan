@@ -1665,6 +1665,8 @@
         <xs:sequence>
           <xs:element minOccurs="0" name="ecs" type="xs:int"/>
           <xs:element minOccurs="0" name="ecsDTO" type="tns:EcsDTO"/>
+          <xs:element minOccurs="0" name="ipaddress" type="xs:int"/>
+          <xs:element minOccurs="0" name="ipaddressDTO" type="tns:IpaddressDTO"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -2689,6 +2691,7 @@
           <xs:element minOccurs="0" name="nicRate" type="xs:int"/>
           <xs:element minOccurs="0" name="nicRateText" type="xs:string"/>
           <xs:element minOccurs="0" name="portNumber" type="xs:int"/>
+          <xs:element minOccurs="0" name="virtualSwitchName" type="xs:string"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
