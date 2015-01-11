@@ -48,15 +48,15 @@ public class FirewallService {
 	 * 配置端口IP地址
 	 * 
 	 * @param vRouterIp
-	 * @param port
+	 * @param portNo
 	 * @param portIp
 	 * @param subnetMask
 	 */
-	public static void configurationPortIp(String vRouterIp, String port, String portIp, String subnetMask) {
+	public static void configurationPortIp(String vRouterIp, int portNo, String portIp, String subnetMask) {
 
 		// 生成脚本
 		String interfaceAddressConfigScript = FirewallScriptService
-				.generatePortIpConfigScript(port, portIp, subnetMask);
+				.generatePortIpConfigScript(portNo, portIp, subnetMask);
 
 		// 执行脚本
 		SshUtil.executeCommand(vRouterIp, SDNConstants.FIREWALL_USERNAME, SDNConstants.FIREWALL_PASSWORD,
