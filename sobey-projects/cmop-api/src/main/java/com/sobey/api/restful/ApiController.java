@@ -76,8 +76,9 @@ public class ApiController {
 	@RequestMapping(value = "/createRouter/", method = RequestMethod.POST)
 	public WSResult createRouter(@RequestParam(value = "routerName") String routerName,
 			@RequestParam(value = "remark") String remark, @RequestParam(value = "routerSpec") String routerSpec,
-			@RequestParam(value = "idc") String idc, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.createRouter(routerName, remark, routerSpec, idc, accessKey);
+			@RequestParam(value = "subnetCode") String subnetCode, @RequestParam(value = "idc") String idc,
+			@RequestParam(value = "accessKey") String accessKey) {
+		return servie.createRouter(routerName, subnetCode, remark, routerSpec, idc, accessKey);
 	}
 
 	/********** ECS ***********/
@@ -89,8 +90,9 @@ public class ApiController {
 	@RequestMapping(value = "/createECS/", method = RequestMethod.POST)
 	public WSResult createECS(@RequestParam(value = "ecsName") String ecsName,
 			@RequestParam(value = "remark") String remark, @RequestParam(value = "ecsSpec") String ecsSpec,
-			@RequestParam(value = "idc") String idc, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.createECS(ecsName, remark, ecsSpec, idc, accessKey);
+			@RequestParam(value = "subnetCode") String subnetCode, @RequestParam(value = "idc") String idc,
+			@RequestParam(value = "accessKey") String accessKey) {
+		return servie.createECS(ecsName, subnetCode, remark, ecsSpec, idc, accessKey);
 	}
 
 	@RequestMapping(value = "/destroyECS/", method = RequestMethod.POST)

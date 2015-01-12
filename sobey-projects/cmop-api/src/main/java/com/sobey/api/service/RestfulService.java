@@ -33,7 +33,8 @@ public interface RestfulService {
 	/******** ECS ********/
 	public DTOResult<EcsEntity> findECS(String code, String accessKey);
 
-	public WSResult createECS(String ecsName, String remark, String ecsSpec, String idc, String accessKey);
+	public WSResult createECS(String ecsName, String subnetCode, String remark, String ecsSpec, String idc,
+			String accessKey);
 
 	public WSResult destroyECS(String code, String accessKey);
 
@@ -42,6 +43,7 @@ public interface RestfulService {
 	public WSResult reconfigECS(String code, String ecsSpec, String accessKey);
 
 	/******** ES3 ********/
+
 	public DTOResult<Es3Entity> findES3(String code, String accessKey);
 
 	public WSResult createES3(String es3Name, Double es3Size, String es3Type, String idc, String ecsCode,
@@ -66,7 +68,8 @@ public interface RestfulService {
 	/******** Router ********/
 	public DTOResult<RouterEntity> findRouter(String code, String accessKey);
 
-	public WSResult createRouter(String routerName, String remark, String ecsSpec, String idc, String accessKey);
+	public WSResult createRouter(String routerName, String subnetCode, String remark, String ecsSpec, String idc,
+			String accessKey);
 
 	/******** FirewallService ********/
 	public DTOResult<FirewallServiceEntity> findFirewallService(String code, String accessKey);

@@ -263,9 +263,11 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult createECS(String ecsName, String remark, String ecsSpec, String idc, String accessKey) {
+	public WSResult createECS(String ecsName, String subnetCode, String remark, String ecsSpec, String idc,
+			String accessKey) {
 
 		WSResult result = new WSResult();
+
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
 		if (tenantsDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
@@ -284,6 +286,8 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
+		SubnetDTO subnetDTO = findSubnetDTO(tenantsDTO.getId(), subnetCode);
+
 		EcsDTO ecsDTO = new EcsDTO();
 		ecsDTO.setAgentType(LookUpConstants.AgentType.VMware.getValue());
 		ecsDTO.setDescription(ecsName);
@@ -291,6 +295,7 @@ public class RestfulServiceImpl implements RestfulService {
 		ecsDTO.setIdc(idcDTO.getId());
 		ecsDTO.setRemark(remark);
 		ecsDTO.setTenants(tenantsDTO.getId());
+		ecsDTO.setSubnet(subnetDTO.getId());
 		apiService.createECS(ecsDTO);
 
 		result.setMessage(apiService.createECS(ecsDTO).getMessage());
@@ -406,8 +411,10 @@ public class RestfulServiceImpl implements RestfulService {
 
 		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), ecsCode);
 
+		SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(ecsDTO.getSubnet()).getDto();
+
 		Es3DTO es3DTO = new Es3DTO();
-		es3DTO.setAgentType(LookUpConstants.AgentType.NetApp.getValue());
+		es3DTO.setAgentType(LookUpConstants.AgentType.VMware.getValue());
 		es3DTO.setDescription(es3Name);
 		es3DTO.setTotalSize(es3Size.toString());
 		es3DTO.setEs3Type(lookUpDTO.getId());
@@ -415,6 +422,7 @@ public class RestfulServiceImpl implements RestfulService {
 		es3DTO.setVolumeName(es3Name);
 		es3DTO.setTenants(tenantsDTO.getId());
 		es3DTO.setRemark(remark);
+		es3DTO.setSubnet(subnetDTO.getId());
 		return apiService.createES3(es3DTO, ecsDTO.getId());
 	}
 
@@ -682,7 +690,8 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult createRouter(String routerName, String remark, String routerSpec, String idc, String accessKey) {
+	public WSResult createRouter(String routerName, String subnetCode, String remark, String routerSpec, String idc,
+			String accessKey) {
 
 		WSResult result = new WSResult();
 
@@ -704,6 +713,8 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
+		SubnetDTO subnetDTO = findSubnetDTO(tenantsDTO.getId(), subnetCode);
+
 		EcsDTO ecsDTO = new EcsDTO();
 		ecsDTO.setAgentType(LookUpConstants.AgentType.Fortigate.getValue());
 		ecsDTO.setDescription(routerName);
@@ -711,6 +722,7 @@ public class RestfulServiceImpl implements RestfulService {
 		ecsDTO.setIdc(idcDTO.getId());
 		ecsDTO.setRemark(remark);
 		ecsDTO.setTenants(tenantsDTO.getId());
+		ecsDTO.setSubnet(subnetDTO.getId());
 
 		return apiService.createECS(ecsDTO);
 	}
