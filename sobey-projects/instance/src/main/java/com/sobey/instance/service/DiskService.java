@@ -58,6 +58,12 @@ public class DiskService extends VMWareService {
 	private static final String SCSI_Controller_Name = "SCSI Controller 0";
 
 	/**
+	 * 默认存储分配存储器: vsanDatastore
+	 * 
+	 */
+	private static final String Default_Datastore = "vsanDatastore";
+
+	/**
 	 * 对新增的存储进行设置
 	 * 
 	 * @param vm
@@ -100,7 +106,8 @@ public class DiskService extends VMWareService {
 
 		int unitNumber = j;
 
-		String dsName = getFreeDatastoreName(vm, diskSize);
+		// String dsName = getFreeDatastoreName(vm, diskSize);
+		String dsName = Default_Datastore;
 
 		if (dsName == null) {
 			return null;
