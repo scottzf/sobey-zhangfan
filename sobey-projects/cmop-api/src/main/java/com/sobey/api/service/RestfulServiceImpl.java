@@ -291,7 +291,10 @@ public class RestfulServiceImpl implements RestfulService {
 		ecsDTO.setIdc(idcDTO.getId());
 		ecsDTO.setRemark(remark);
 		ecsDTO.setTenants(tenantsDTO.getId());
-		return apiService.createECS(ecsDTO);
+		apiService.createECS(ecsDTO);
+
+		result.setMessage(apiService.createECS(ecsDTO).getMessage());
+		return result;
 	}
 
 	@Override
