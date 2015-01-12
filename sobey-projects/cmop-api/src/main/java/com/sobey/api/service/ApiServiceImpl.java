@@ -278,16 +278,16 @@ public class ApiServiceImpl implements ApiService {
 	/**
 	 * 生成vCenter中端口组的名称.<br>
 	 *
-	 * 端口组名称设置为 "租户标识符-VlanId",同一个Server中端口组名称和vlanId是唯一的.
+	 * 端口组名称设置为 "租户标识符-Server名称-VlanId",同一个Server中端口组名称和vlanId是唯一的.
 	 * 
-	 * eg: Tenants-vMTpvWGq-100
+	 * eg: Tenants-vMTpvWGq-10.2.2.5-100
 	 * 
 	 * @param tenantsDTO
 	 * @param ipaddressDTO
 	 * @return
 	 */
-	private String generatVlanName(TenantsDTO tenantsDTO, Integer vlanId) {
-		return tenantsDTO.getCode() + "-" + vlanId;
+	private String generatVlanName(TenantsDTO tenantsDTO, ServerDTO serverDTO, Integer vlanId) {
+		return tenantsDTO.getCode() + "-" + serverDTO.getDescription() + "-" + vlanId;
 	}
 
 	/**
@@ -413,9 +413,10 @@ public class ApiServiceImpl implements ApiService {
 
 				TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(subnetDTO.getTenants()).getDto();
 
-				String vlanName = generatVlanName(tenantsDTO, vlanId);
+				String vlanName = generatVlanName(tenantsDTO, serverDTO, vlanId);
 
 				VlanDTO insertVlanDTO = new VlanDTO();
+
 				insertVlanDTO.setDescription(vlanName);
 				insertVlanDTO.setIdc(subnetDTO.getIdc());
 				insertVlanDTO.setNetMask(subnetDTO.getNetMask());
@@ -425,7 +426,6 @@ public class ApiServiceImpl implements ApiService {
 				insertVlanDTO.setSegment(subnetDTO.getSegment());
 				insertVlanDTO.setGateway(subnetDTO.getGateway());
 				insertVlanDTO.setVlanId(vlanId);
-				insertVlanDTO.setTenants(tunnelId);
 				cmdbuildSoapService.createVlan(insertVlanDTO);
 
 				// 在Host的网卡上创建端口组.
@@ -438,6 +438,7 @@ public class ApiServiceImpl implements ApiService {
 				instanceSoapService.createPortGroupByInstance(createPortGroupParameter);
 
 				HashMap<String, Object> queryVlanMap = new HashMap<String, Object>();
+
 				queryVlanMap.put("EQ_nic", nicDTO.getId());
 				queryVlanMap.put("EQ_subnet", subnetDTO.getId());
 				queryVlanMap.put("EQ_description", vlanName);
@@ -1667,6 +1668,9 @@ public class ApiServiceImpl implements ApiService {
 
 		WSResult result = new WSResult();
 
+		// 先同步文件夹下的VM信息
+		syncFolder();
+
 		HashMap<String, Object> idcMap = new HashMap<String, Object>();
 		idcMap.put("EQ_description", DataCenterEnum.成都核心数据中心.toString());
 		IdcDTO idcDTO = (IdcDTO) cmdbuildSoapService.findIdcByParams(CMDBuildUtil.wrapperSearchParams(idcMap)).getDto();
@@ -1684,7 +1688,19 @@ public class ApiServiceImpl implements ApiService {
 			instanceSoapService.createFolderOnParentByInstance(DataCenterEnum.成都核心数据中心.toString(),
 					ecsSpecDTO.getDescription(), "Produced");
 
-			for (int i = 0; i < ecsSpecDTO.getProducedNumber(); i++) {
+			// 先统计Produced下有多少VM
+			HashMap<String, Object> producedMap = new HashMap<String, Object>();
+			producedMap.put("EQ_ecsSpec", ecsSpecDTO.getId());
+			List<Object> produceds = cmdbuildSoapService.getProducedList(CMDBuildUtil.wrapperSearchParams(producedMap))
+					.getDtoList().getDto();
+
+			// 将每个image预定的创建数量减去vcenter已有的数量得到需要创建的VM数量
+			int subResults = ecsSpecDTO.getProducedNumber().intValue() - produceds.size();
+
+			// 如果vcenter里的Produced数量大于规格中预定的数量,则不创建.
+			int createNumber = subResults < 0 ? 0 : subResults;
+
+			for (int i = 0; i < createNumber; i++) {
 
 				ProducedDTO producedDTO = new ProducedDTO();
 				producedDTO.setEcsSpec(ecsSpecDTO.getId());
@@ -1698,8 +1714,6 @@ public class ApiServiceImpl implements ApiService {
 						ecsSpecDTO.getDescription());
 			}
 		}
-
-		syncFolder();
 
 		return result;
 	}

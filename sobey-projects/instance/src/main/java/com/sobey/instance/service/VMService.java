@@ -582,7 +582,7 @@ public class VMService extends VMWareService {
 		try {
 			si = getServiceInstance(parameter.getDatacenter());
 		} catch (RemoteException | MalformedURLException e) {
-			logger.info("reconfigVM::远程连接失败或错误的URL");
+			logger.info("customizeVM::远程连接失败或错误的URL");
 			result.setError(WSResult.SYSTEM_ERROR, ServiceInstance_Init_Error);
 			return result;
 		}
@@ -603,7 +603,7 @@ public class VMService extends VMWareService {
 			try {
 				logout(si);
 			} catch (RemoteException | MalformedURLException ex) {
-				logger.info("reconfigVM::远程连接失败或错误的URL");
+				logger.info("customizeVM::远程连接失败或错误的URL");
 				result.setError(WSResult.SYSTEM_ERROR, "主机不存在.");
 				return result;
 			}
@@ -701,7 +701,7 @@ public class VMService extends VMWareService {
 			Task task = vm.customizeVM_Task(customspec);
 
 			if (task.waitForTask() != Task.SUCCESS) {
-				logger.info("reconfigVM:: VM cannot be reconfig");
+				logger.info("customizeVM:: VM cannot be reconfig");
 				result.setError(WSResult.SYSTEM_ERROR, "主机IP定义失败,请联系系统管理员.");
 				return result;
 			}
@@ -790,7 +790,7 @@ public class VMService extends VMWareService {
 		try {
 			si = getServiceInstance(parameter.getDatacenter());
 		} catch (RemoteException | MalformedURLException e) {
-			logger.info("cloneVM::远程连接失败或错误的URL");
+			logger.info("renameVM::远程连接失败或错误的URL");
 			result.setError(WSResult.SYSTEM_ERROR, ServiceInstance_Init_Error);
 			return result;
 		}
@@ -811,7 +811,7 @@ public class VMService extends VMWareService {
 			try {
 				logout(si);
 			} catch (RemoteException | MalformedURLException ex) {
-				logger.info("cloneVM::远程连接失败或错误的URL");
+				logger.info("renameVM::远程连接失败或错误的URL");
 				result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
 				return result;
 			}
@@ -822,7 +822,7 @@ public class VMService extends VMWareService {
 			Task task = vm.rename_Task(parameter.getVmName());
 
 			if (task.waitForTask() != Task.SUCCESS) {
-				logger.info("cloneNetworkDevice:: Network Device cannot be cloned");
+				logger.info("renameVM:: Network Device cannot be cloned");
 				result.setError(WSResult.SYSTEM_ERROR, "网络设备创建失败,请联系系统管理员.");
 				return result;
 			}
@@ -893,7 +893,7 @@ public class VMService extends VMWareService {
 		try {
 			si = getServiceInstance(datacenter);
 		} catch (RemoteException | MalformedURLException e) {
-			logger.info("moveVM::远程连接失败或错误的URL");
+			logger.info("getVMInfoDTOInFolder::远程连接失败或错误的URL");
 			result.setError(WSResult.SYSTEM_ERROR, ServiceInstance_Init_Error);
 			return result;
 		}
@@ -915,7 +915,7 @@ public class VMService extends VMWareService {
 			try {
 				logout(si);
 			} catch (RemoteException | MalformedURLException ex) {
-				logger.info("queryVMInFolder::远程连接失败或错误的URL");
+				logger.info("getVMInfoDTOInFolder::远程连接失败或错误的URL");
 				result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
 				return result;
 			}
@@ -940,7 +940,7 @@ public class VMService extends VMWareService {
 			try {
 				logout(si);
 			} catch (RemoteException | MalformedURLException ex) {
-				logger.info("queryVMInFolder::远程连接失败或错误的URL");
+				logger.info("getVMInfoDTOInFolder::远程连接失败或错误的URL");
 				result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
 				return result;
 			}

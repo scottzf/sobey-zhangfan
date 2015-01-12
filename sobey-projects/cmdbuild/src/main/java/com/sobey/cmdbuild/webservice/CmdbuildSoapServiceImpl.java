@@ -6321,8 +6321,6 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.notNull(vlanDTO, ERROR.INPUT_NULL);
 
-			// 验证description是否唯一.如果不为null,则弹出错误.
-
 			// 将DTO对象转换至Entity对象
 			String code = generateCode("Vlan");
 			Vlan vlan = BeanMapper.map(vlanDTO, Vlan.class);

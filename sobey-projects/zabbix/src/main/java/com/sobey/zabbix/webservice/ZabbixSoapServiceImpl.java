@@ -17,7 +17,6 @@ public class ZabbixSoapServiceImpl implements ZabbixSoapService {
 
 	@Override
 	public ZItemDTO getZItem(String name, String itemkey) {
-
 		return service.getItem(name, itemkey);
 	}
 

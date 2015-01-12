@@ -22,7 +22,7 @@ public enum ItemEnum {
 
 	内存可用大小("vm.memory.size[available]"),
 
-	内存总大小("vm.memory.size[total]"),
+	内存总大小("vmware.vm.memory.size[{$URL},{HOST.HOST}]"),
 
 	读性能("check_readk"),
 
