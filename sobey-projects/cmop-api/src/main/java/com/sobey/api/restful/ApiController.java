@@ -67,7 +67,6 @@ public class ApiController {
 	}
 
 	/********** Router ***********/
-
 	@RequestMapping(value = "/RouterResult/{code}/{accessKey}", method = RequestMethod.GET)
 	public DTOResult<RouterEntity> RouterResult(@PathVariable("code") String code,
 			@PathVariable("accessKey") String accessKey) {
@@ -76,9 +75,9 @@ public class ApiController {
 
 	@RequestMapping(value = "/createRouter/", method = RequestMethod.POST)
 	public WSResult createRouter(@RequestParam(value = "routerName") String routerName,
-			@RequestParam(value = "remark") String remark, @RequestParam(value = "ecsSpec") String ecsSpec,
+			@RequestParam(value = "remark") String remark, @RequestParam(value = "routerSpec") String routerSpec,
 			@RequestParam(value = "idc") String idc, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.createRouter(routerName, remark, ecsSpec, idc, accessKey);
+		return servie.createRouter(routerName, remark, routerSpec, idc, accessKey);
 	}
 
 	/********** ECS ***********/
@@ -122,9 +121,9 @@ public class ApiController {
 	@RequestMapping(value = "/createES3/", method = RequestMethod.POST)
 	public WSResult createES3(@RequestParam(value = "es3Name") String es3Name,
 			@RequestParam(value = "es3Size") Double es3Size, @RequestParam(value = "es3Type") String es3Type,
-			@RequestParam(value = "idc") String idc, @RequestParam(value = "ecsId") Integer ecsId,
+			@RequestParam(value = "idc") String idc, @RequestParam(value = "ecsCode") String ecsCode,
 			@RequestParam(value = "remark") String remark, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.createES3(es3Name, es3Size, es3Type, idc, ecsId, remark, accessKey);
+		return servie.createES3(es3Name, es3Size, es3Type, idc, ecsCode, remark, accessKey);
 	}
 
 	@RequestMapping(value = "/deleteES3/", method = RequestMethod.POST)

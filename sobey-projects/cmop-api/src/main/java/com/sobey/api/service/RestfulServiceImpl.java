@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.sobey.api.constans.LookUpConstants;
 import com.sobey.api.entity.DnsEntity;
@@ -47,6 +48,7 @@ import com.sobey.generate.storage.StorageSoapService;
 import com.sobey.generate.switches.SwitchesSoapService;
 import com.sobey.generate.zabbix.ZabbixSoapService;
 
+@Service
 public class RestfulServiceImpl implements RestfulService {
 
 	@Autowired
@@ -154,7 +156,7 @@ public class RestfulServiceImpl implements RestfulService {
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
 
 		if (tenantsDTO == null) {
-			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			result.setError(WSResult.PARAMETER_ERROR, "租户不存在.");
 			return result;
 		}
 
@@ -376,8 +378,8 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult createES3(String es3Name, Double es3Size, String es3Type, String idc, Integer ecsId, String remark,
-			String accessKey) {
+	public WSResult createES3(String es3Name, Double es3Size, String es3Type, String idc, String ecsCode,
+			String remark, String accessKey) {
 
 		WSResult result = new WSResult();
 
@@ -399,6 +401,8 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
+		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), ecsCode);
+
 		Es3DTO es3DTO = new Es3DTO();
 		es3DTO.setAgentType(LookUpConstants.AgentType.NetApp.getValue());
 		es3DTO.setDescription(es3Name);
@@ -408,7 +412,7 @@ public class RestfulServiceImpl implements RestfulService {
 		es3DTO.setVolumeName(es3Name);
 		es3DTO.setTenants(tenantsDTO.getId());
 		es3DTO.setRemark(remark);
-		return apiService.createES3(es3DTO, ecsId);
+		return apiService.createES3(es3DTO, ecsDTO.getId());
 	}
 
 	@Override
@@ -675,7 +679,7 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult createRouter(String routerName, String remark, String ecsSpec, String idc, String accessKey) {
+	public WSResult createRouter(String routerName, String remark, String routerSpec, String idc, String accessKey) {
 
 		WSResult result = new WSResult();
 
@@ -685,7 +689,7 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		EcsSpecDTO ecsSpecDTO = findEcsSpecDTO(ecsSpec);
+		EcsSpecDTO ecsSpecDTO = findEcsSpecDTO(routerSpec);
 		if (ecsSpecDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "规格不存在.");
 			return result;

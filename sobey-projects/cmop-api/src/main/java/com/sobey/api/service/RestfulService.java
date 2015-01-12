@@ -13,7 +13,6 @@ import com.sobey.api.entity.TenantsEntity;
 import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
 import com.sobey.generate.cmdbuild.ConfigFirewallServiceCategoryDTO;
-import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
 
 public interface RestfulService {
@@ -45,8 +44,8 @@ public interface RestfulService {
 	/******** ES3 ********/
 	public DTOResult<Es3Entity> findES3(String code, String accessKey);
 
-	public WSResult createES3(String es3Name, Double es3Size, String es3Type, String idc, Integer ecsId, String remark,
-			String accessKey);
+	public WSResult createES3(String es3Name, Double es3Size, String es3Type, String idc, String ecsCode,
+			String remark, String accessKey);
 
 	public WSResult deleteES3(String code, String accessKey);
 
