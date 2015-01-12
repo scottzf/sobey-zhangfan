@@ -156,13 +156,10 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 		return comm.customService.selectMaxVlanId(nicId, subnetId);
 	}
 
-	
 	@Override
 	public Integer getMaxPortIndex(Integer tenantsId) {
 		return comm.customService.selectPortIndex(tenantsId);
 	}
-	
-	 
 
 	@Override
 	public DTOResult<LookUpDTO> findLookUp(@WebParam(name = "id") Integer id) {
@@ -1735,7 +1732,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			// 将DTO对象转换至Entity对象s
 			Ecs ecs = BeanMapper.map(ecsDTO, Ecs.class);
-			ecs.setCode("ECS-" + Identities.randomBase62(8));
+
+			String code = "ECS-" + Identities.randomBase62(8);
+			ecs.setCode(code);
 			ecs.setUser(DEFAULT_USER);
 			ecs.setId(0);
 
@@ -1743,6 +1742,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			comm.ecsService.saveOrUpdate(ecs);
 
+			result.setMessage(code);
 			return result;
 
 		} catch (IllegalArgumentException e) {
@@ -9917,7 +9917,5 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			return handleGeneralError(result, e);
 		}
 	}
-
-
 
 }

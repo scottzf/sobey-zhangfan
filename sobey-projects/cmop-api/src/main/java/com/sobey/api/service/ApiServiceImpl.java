@@ -31,6 +31,7 @@ import com.sobey.generate.cmdbuild.ElbDTO;
 import com.sobey.generate.cmdbuild.ElbPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
+import com.sobey.generate.cmdbuild.IdResult;
 import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.IpaddressDTO;
 import com.sobey.generate.cmdbuild.MapEcsEs3DTO;
@@ -495,12 +496,12 @@ public class ApiServiceImpl implements ApiService {
 		ecsDTO.setIpaddress(ipaddressDTO.getId());
 		ecsDTO.setEcsType(LookUpConstants.ECSType.instance.getValue());
 
-		cmdbuildSoapService.createEcs(ecsDTO);
+		IdResult idResult = cmdbuildSoapService.createEcs(ecsDTO);
 
 		// Step.6 修改分配给VM的IP状态.
 		cmdbuildSoapService.allocateIpaddress(ipaddressDTO.getId());
 
-		result.setMessage("ECS创建成功");
+		result.setMessage(idResult.getMessage());
 		return result;
 	}
 
