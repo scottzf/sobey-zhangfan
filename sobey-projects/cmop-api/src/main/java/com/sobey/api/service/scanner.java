@@ -42,6 +42,7 @@ public class scanner {
 
 	public void createProduced() {
 
+		System.out.println("开始schedulerProduced!");
 		service.schedulerProduced();
 		System.out.println("schedulerProduced完成!");
 	}
