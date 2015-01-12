@@ -11,19 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sobey.api.entity.DnsEntity;
 import com.sobey.api.entity.EcsEntity;
-import com.sobey.api.entity.EipEntity;
 import com.sobey.api.entity.ElbEntity;
 import com.sobey.api.entity.Es3Entity;
-import com.sobey.api.entity.EsgEntity;
 import com.sobey.api.entity.RouterEntity;
 import com.sobey.api.entity.SubnetEntity;
-import com.sobey.api.entity.TagEntity;
 import com.sobey.api.entity.TenantsEntity;
 import com.sobey.api.service.RestfulService;
 import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
-import com.sobey.generate.zabbix.ZHistoryItemDTO;
-import com.sobey.generate.zabbix.ZItemDTO;
 
 @RestController
 public class ApiController {
@@ -48,9 +43,10 @@ public class ApiController {
 	}
 
 	@RequestMapping(value = "/createTenants/", method = RequestMethod.POST)
-	public WSResult createTenants(@RequestParam(value = "company") String company,
+	public WSResult createTenants(@RequestParam(value = "company", required = false) String company,
 			@RequestParam(value = "name") String name, @RequestParam(value = "email") String email,
-			@RequestParam(value = "password") String password, @RequestParam(value = "phone") String phone) {
+			@RequestParam(value = "password") String password,
+			@RequestParam(value = "phone", required = false) String phone) {
 		return servie.createTenants(company, name, email, password, phone);
 	}
 
