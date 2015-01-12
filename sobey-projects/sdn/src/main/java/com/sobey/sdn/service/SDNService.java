@@ -1,5 +1,6 @@
 package com.sobey.sdn.service;
 
+import com.sobey.sdn.bean.CreateEipParameter;
 import com.sobey.sdn.bean.Firewall;
 import com.sobey.sdn.bean.Router;
 import com.sobey.sdn.bean.Subnet;
@@ -93,6 +94,8 @@ public interface SDNService {
 	 * @throws Exception
 	 */
 	public void bindingFirewall(BindingFirewallParameter parameter) throws Exception;
+	
+	public void createEip(CreateEipParameter createEipParameter) throws Exception;
 	
 	//public void createLoadBalancer(Firewall firewall) throws Exception;
 

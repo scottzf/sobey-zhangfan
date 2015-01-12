@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import com.sobey.sdn.bean.CreateEipParameter;
 import com.sobey.sdn.bean.ECS;
 import com.sobey.sdn.bean.Firewall;
 import com.sobey.sdn.bean.Router;
@@ -93,9 +94,11 @@ public class SDNServiceImpl implements SDNService {
 			String gateway = createECSParameter.getGateway(); // 网关
 			String subnetMask = createECSParameter.getSubNetMask(); // 掩码
 			String localIp = createECSParameter.getLocalIp(); // 内网IP
+			String templateName = createECSParameter.getTemplateName(); // 模板
+			String templateOS = createECSParameter.getTemplateOS(); // 操作系统
 
 			// 按规则生成租户对应的本地VLAN
-			String portGroupName = tenantId + "_TN " + vlanId;
+			String portGroupName = tenantId + "_vlan "+vlanId;
 
 			// 判断端口是否存在
 			Boolean mark = checkNetworkIsExist(portGroupName, hostIp);
@@ -105,6 +108,8 @@ public class SDNServiceImpl implements SDNService {
 
 			// 设置云主机相关属性
 			ECS ecs = new ECS();
+			ecs.setTemplateName(templateName);  //模板
+			ecs.setTemplateOS(templateOS);   //操作系统
 			ecs.setEcsName(vmName); // 设置虚拟机名称
 			ecs.setHostIp(hostIp); // 设置虚拟机所在宿主机IP
 			ecs.setGateway(gateway); // 网关
@@ -398,10 +403,8 @@ public class SDNServiceImpl implements SDNService {
 		 */
 		HostSystem host = (HostSystem) new InventoryNavigator(si.getRootFolder()).searchManagedEntity("HostSystem",
 				hostIp);
-		System.err.println("主机IP ： " + hostIp);
 		ManagedObjectReference pool = new ManagedObjectReference();
 		String poolValue = getPoolValueByHostIp(hostIp);
-		System.err.println("resgroup资源池id ： " + poolValue);
 		pool.set_value(poolValue);
 		pool.setType("ResourcePool");
 		pool.setVal(poolValue);
@@ -984,10 +987,20 @@ public class SDNServiceImpl implements SDNService {
 		FirewallService.configurationPortGateway(vRouter_ip, SDNConstants.CTC_DEFAULT_PORT, routeNo, gateway);
 
 		/**
+		 *  手动执行防火墙更新文件
+		 */
+		
+		/**
 		 * 配置需要访问互联网的子网与电信网络之间的策略
 		 */
 		FirewallService.configurationInternetStrategy(vRouter_ip, strategyNo, subnetPort,
 				SDNConstants.CTC_DEFAULT_PORT, subnetAddressPoolName, "all");
 
+	}
+
+	@Override
+	public void createEip(CreateEipParameter createEipParameter) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 }

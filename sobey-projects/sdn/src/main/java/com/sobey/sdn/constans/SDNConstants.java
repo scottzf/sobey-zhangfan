@@ -24,4 +24,6 @@ public class SDNConstants {
 	
 	public static final String CTC_DEFAULT_IP= "221.237.156.153";   //电信默认连接端口序号
 	
+	public static final String CTC_MAPPING_GROUP_NAME= "CTC_ALL_Server";   //电信默认eip映射组名
+	
 }

@@ -33,7 +33,7 @@ public class SDNTest extends TestCase {
 	@Test
 	public void createRouter() throws Exception {
 
-		CreateRouterParameter createRouterParameter = new CreateRouterParameter();
+		CreateRouterParameter createRouterParameter = TestData.randomCreateRouterParameter();
 
 		sdnService.createRouter(createRouterParameter);
 

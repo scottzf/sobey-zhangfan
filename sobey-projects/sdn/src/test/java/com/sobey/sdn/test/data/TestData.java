@@ -32,26 +32,26 @@ public class TestData {
 
 		BindingRouterParameter parameter = new BindingRouterParameter();
 
-		parameter.setRouterName("zhangfanTest-vRouter112");
-		parameter.setControlIp("10.2.253.86");
+		parameter.setRouterName("zhangfanTest-vRouter555");
+		parameter.setControlIp("10.2.253.80");
 		parameter.setStrategyNo(176);
 
 		List<Subnet> subnets = new ArrayList<Subnet>();
 
 		Subnet subnet1 = new Subnet();
 		subnet1.setSubnetName("subnet1");
-		subnet1.setSegment("192.168.200.0");
-		subnet1.setGateway("192.168.200.1");
+		subnet1.setSegment("192.168.100.0");
+		subnet1.setGateway("192.168.100.1");
 		subnet1.setSubnetMask("255.255.255.0");
-		subnet1.setPortGroupName("zhangfanTest_TN 200");
+		subnet1.setPortGroupName("Tenants-FmRsraMU-22");
 		subnet1.setPortNo(1);
 
 		Subnet subnet2 = new Subnet();
 		subnet2.setSubnetName("subnet2");
-		subnet2.setSegment("192.168.230.0");
-		subnet2.setGateway("192.168.230.1");
+		subnet2.setSegment("192.168.200.0");
+		subnet2.setGateway("192.168.200.1");
 		subnet2.setSubnetMask("255.255.255.0");
-		subnet2.setPortGroupName("zhangfanTest_TN 300");
+		subnet2.setPortGroupName("Tenants-FmRsraMU-23");
 		subnet2.setPortNo(2);
 
 		subnets.add(subnet1);
@@ -64,15 +64,15 @@ public class TestData {
 
 		CreateECSParameter parameter = new CreateECSParameter();
 
-		parameter.setGateway("192.168.170.1"); // 网关
+		parameter.setGateway("172.16.3.1"); // 网关
 		parameter.setHostIp("10.2.5.23");
-		parameter.setLocalIp("192.168.170.6");// 内网ip
+		parameter.setLocalIp("172.16.3.5");// 内网ip
 		parameter.setSubNetMask("255.255.255.0");// 子网掩码
-		parameter.setTemplateName("Windows 2008 R2 Mod"); // 模板
+		parameter.setTemplateName("Windows 7  64  40G MOD"); // 模板
 		parameter.setTemplateOS("Windows");// 操作系统
-		parameter.setVlanId(700);
-		parameter.setTenantId("zhangfanTest");
-		parameter.setVmName("192.168.170.6");
+		parameter.setVlanId(23);
+		parameter.setTenantId("TN");
+		parameter.setVmName("zf_172.16.3.5");
 
 		return parameter;
 	}
@@ -82,8 +82,8 @@ public class TestData {
 		CreateRouterParameter parameter = new CreateRouterParameter();
 
 		parameter.setHostIp("10.2.5.25"); // 主机IP
-		parameter.setRouterName("zhangfanTest-vRouter112"); // 路由名称
-		parameter.setControlIp("10.2.253.86"); // 端口10更新ip
+		parameter.setRouterName("zhangfan-vRouter_new"); // 路由名称
+		parameter.setControlIp("10.2.253.90"); // 端口10更新ip
 
 		return parameter;
 	}
