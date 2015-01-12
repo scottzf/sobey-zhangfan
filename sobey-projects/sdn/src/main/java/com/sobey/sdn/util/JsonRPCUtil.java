@@ -71,9 +71,9 @@ public class JsonRPCUtil {
 		CloseableHttpClient client = HttpClients.createDefault();
 		
 		//JSON-RPC (over HTTP)请求URL
-		//String url = "http://"+switchIp+":80/command-api";
+		String url = "http://"+switchIp+":80/command-api";
 		
-		HttpPost httpPost = new HttpPost(switchIp);
+		HttpPost httpPost = new HttpPost(url);
 		httpPost.addHeader("Content-Type", "application/json");
 		httpPost.setEntity(new StringEntity(jsonObject.toString(), "UTF-8"));
 
@@ -94,7 +94,7 @@ public class JsonRPCUtil {
 	 * @param whSwitch
 	 * @return
 	 */
-	private static String getSwitchIPByInterfaceStr(String whSwitch) {
+	public static String getSwitchIPByInterfaceStr(String whSwitch) {
 
 		if (RPCConstants.PORT_SWITCH_TOR_A.equals(whSwitch)) {
 			return SDNPropertiesUtil.getProperty("TOR-A_SWITCH_URL");

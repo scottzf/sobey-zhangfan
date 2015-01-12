@@ -12,11 +12,15 @@ public class Subnet {
 	
 	private String subnetMask;  //子网掩码
 	
-	private int portNo;  //子网端口号
+	private String port;  //子网端口号
 	
 	private String tenementId;  //租户ID
 	
 	private String routerName;  //所连路由器名称
+	
+	private String portGroupName;  //子网所跑的端口组
+	
+	private int portNo; //子网所连端口序号
 
 	public String getSubnetId() {
 		return subnetId;
@@ -66,12 +70,12 @@ public class Subnet {
 		this.tenementId = tenementId;
 	}
 
-	public int getPortNo() {
-		return portNo;
+	public String getPort() {
+		return port;
 	}
 
-	public void setPortNo(int portNo) {
-		this.portNo = portNo;
+	public void setPort(String port) {
+		this.port = port;
 	}
 
 	public String getRouterName() {
@@ -81,5 +85,21 @@ public class Subnet {
 	public void setRouterName(String routerName) {
 		this.routerName = routerName;
 	}
-	
+
+	public String getPortGroupName() {
+		return portGroupName;
+	}
+
+	public void setPortGroupName(String portGroupName) {
+		this.portGroupName = portGroupName;
+	}
+
+	public int getPortNo() {
+		return portNo;
+	}
+
+	public void setPortNo(int portNo) {
+		this.portNo = portNo;
+	}
+
 }
