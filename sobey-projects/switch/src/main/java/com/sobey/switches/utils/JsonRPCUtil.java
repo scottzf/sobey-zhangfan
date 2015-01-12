@@ -71,7 +71,7 @@ public class JsonRPCUtil {
 
 		CloseableHttpClient client = HttpClients.createDefault();
 
-		HttpPost httpPost = new HttpPost(url);
+		HttpPost httpPost = new HttpPost(generateSwitchAPIRequestURL(url));
 		httpPost.addHeader("Content-Type", "application/json");
 		httpPost.setEntity(new StringEntity(jsonObject.toString(), "UTF-8"));
 
@@ -84,6 +84,15 @@ public class JsonRPCUtil {
 		String responseStr = br.readLine().toString();
 
 		return responseStr;
+	}
+
+	/**
+	 * 生成盛科API访问URL
+	 * 
+	 * @return
+	 */
+	private static String generateSwitchAPIRequestURL(String ip) {
+		return "http://" + ip + ":80/command-api";
 	}
 
 	/**
