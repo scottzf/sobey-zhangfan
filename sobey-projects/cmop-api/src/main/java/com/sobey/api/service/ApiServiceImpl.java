@@ -42,7 +42,6 @@ import com.sobey.generate.cmdbuild.SubnetDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.cmdbuild.VlanDTO;
 import com.sobey.generate.dns.DnsSoapService;
-import com.sobey.generate.firewall.AuthenticateFirewallParameter;
 import com.sobey.generate.firewall.ConfigFirewallAddressParameter;
 import com.sobey.generate.firewall.ConfigFirewallAddressParameters;
 import com.sobey.generate.firewall.ConfigFirewallPolicyParameter;
@@ -63,6 +62,7 @@ import com.sobey.generate.instance.ReconfigVMParameter;
 import com.sobey.generate.instance.VMDiskParameter;
 import com.sobey.generate.loadbalancer.LoadbalancerSoapService;
 import com.sobey.generate.storage.StorageSoapService;
+import com.sobey.generate.switches.SwitchPolicyParameter;
 import com.sobey.generate.switches.SwitchesSoapService;
 import com.sobey.generate.zabbix.ZabbixSoapService;
 
@@ -152,7 +152,7 @@ public class ApiServiceImpl implements ApiService {
 
 		// Step.1 将Subnet保存至CMDB中
 
-		// 获得为每个子网分配一个从3开始递增的portId.portId主要和 防火墙-> 网络-> 接口中的名称对应,公网IP 8-9,子网为1-7
+		// 获得为每个子网分配一个从1开始递增的portId.portId主要和 防火墙-> 网络-> 接口中的名称对应,公网IP 8-9,子网为1-7
 		int portId = cmdbuildSoapService.getMaxPolicyId(subnetDTO.getTenants());
 		subnetDTO.setPortId(portId);
 		subnetDTO.setPortIndex(cmdbuildSoapService.getMaxPortIndex(subnetDTO.getTenants()));
@@ -443,9 +443,11 @@ public class ApiServiceImpl implements ApiService {
 		 * 
 		 * Step.4 绑定端口组
 		 * 
-		 * Step.5 保存至CMDB
+		 * Step.5 在盛科交换机上创建策略
 		 * 
-		 * Step.6 修改分配给VM的IP状态.
+		 * Step.6 保存至CMDB
+		 * 
+		 * Step.7 修改分配给VM的IP状态.
 		 * 
 		 */
 
@@ -457,6 +459,7 @@ public class ApiServiceImpl implements ApiService {
 		// Step.1 获得Server
 
 		ServerDTO serverDTO = findSuitableServerDTO(idcDTO);// 将ECS创建在负载最轻的Server上
+		IpaddressDTO serverIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(serverDTO.getIpaddress()).getDto();
 
 		IpaddressDTO ipaddressDTO = findAvailableIPAddressDTO(subnetDTO); // 从子网中选择一个IP.
 
@@ -489,7 +492,16 @@ public class ApiServiceImpl implements ApiService {
 
 		instanceSoapService.bindingPortGroupInstance(bindingPortGroupParameter);
 
-		// Step.5 保存至CMDB
+		// Step.5 在盛科交换机上创建策略,为不同子网的通讯做配置,重要
+
+		System.out.println(vlanDTO.getVlanId());
+		SwitchPolicyParameter switchPolicyParameter = new SwitchPolicyParameter();
+		switchPolicyParameter.setHostIp(serverIP.getDescription());
+		switchPolicyParameter.setVlanId(vlanDTO.getVlanId());
+
+		switchesSoapService.createPolicyInSwitch(switchPolicyParameter);
+
+		// Step.6 保存至CMDB
 
 		ecsDTO.setServer(serverDTO.getId());
 		ecsDTO.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
@@ -498,7 +510,7 @@ public class ApiServiceImpl implements ApiService {
 
 		IdResult idResult = cmdbuildSoapService.createEcs(ecsDTO);
 
-		// Step.6 修改分配给VM的IP状态.
+		// Step.7 修改分配给VM的IP状态.
 		cmdbuildSoapService.allocateIpaddress(ipaddressDTO.getId());
 
 		result.setMessage(idResult.getMessage());
@@ -781,12 +793,13 @@ public class ApiServiceImpl implements ApiService {
 
 		instanceSoapService.cloneNetworkDeviceByInstance(cloneVMParameter);
 
+		// 可略过
 		// Step.3 注册更新vRouter防火墙
-		AuthenticateFirewallParameter authenticateFirewallParameter = new AuthenticateFirewallParameter();
-		authenticateFirewallParameter.setUrl(ConstansData.vRouter_default_ipaddress);
-		authenticateFirewallParameter.setUserName(ConstansData.firewall_username);
-		authenticateFirewallParameter.setPassword(ConstansData.firewall_password);
-		firewallSoapService.registeredByFirewall(authenticateFirewallParameter);
+		// AuthenticateFirewallParameter authenticateFirewallParameter = new AuthenticateFirewallParameter();
+		// authenticateFirewallParameter.setUrl(ConstansData.vRouter_default_ipaddress);
+		// authenticateFirewallParameter.setUserName(ConstansData.firewall_username);
+		// authenticateFirewallParameter.setPassword(ConstansData.firewall_password);
+		// firewallSoapService.registeredByFirewall(authenticateFirewallParameter);
 
 		// Step.4 修改vRouter端口
 		modifyFirewallConfigSystemInterface(managerIpaddressDTO);// 修改防火墙中 系统管理 -> 网络 -> 接口 中的配置信息.
