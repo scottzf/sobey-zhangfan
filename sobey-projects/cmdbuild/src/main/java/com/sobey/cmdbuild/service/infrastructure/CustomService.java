@@ -73,7 +73,7 @@ public class CustomService {
 	 */
 	public Integer selectMaxRouterId(Integer tenantsId) {
 		Integer routerId = customDao.selectMaxRouterId(tenantsId);
-		return (int) MathsUtil.add(routerId == null ? 1 : routerId, 1);
+		return (int) MathsUtil.add(routerId == null ? 0 : routerId, 1);
 	}
 
 	/**
@@ -85,12 +85,12 @@ public class CustomService {
 	 */
 	public Integer selectMaxVlanId(Integer nicId, Integer subnetId) {
 		Integer vlanId = customDao.selectMaxVlanId(nicId, subnetId);
-		return (int) MathsUtil.add(vlanId == null ? 21 : vlanId, 1);
+		return (int) MathsUtil.add(vlanId == null ? 30 : vlanId, 1);
 	}
 
 	public Integer selectPortIndex(Integer tenantsId) {
 		Integer portIndex = customDao.selectPortIndex(tenantsId);
-		return (int) MathsUtil.add(portIndex == null ? 1 : portIndex, 1);
+		return (int) MathsUtil.add(portIndex == null ? 0 : portIndex, 1);
 	}
 
 }
