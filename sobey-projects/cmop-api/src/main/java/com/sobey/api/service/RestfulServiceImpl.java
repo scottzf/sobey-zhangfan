@@ -178,7 +178,12 @@ public class RestfulServiceImpl implements RestfulService {
 		tenantsDTO.setPassword(password);
 		tenantsDTO.setPhone(phone);
 
-		return apiService.createTenants(tenantsDTO);
+		WSResult result = new WSResult();
+
+		result.setMessage(apiService.createTenants(tenantsDTO).getMessage());
+
+		return result;
+
 	}
 
 	@Override
@@ -232,7 +237,10 @@ public class RestfulServiceImpl implements RestfulService {
 		subnetDTO.setSegment(segment);
 		subnetDTO.setDescription(subnetName);
 
-		return apiService.createSubnet(subnetDTO);
+		result.setMessage(apiService.createSubnet(subnetDTO).getMessage());
+
+		return result;
+
 	}
 
 	@Override
@@ -724,7 +732,9 @@ public class RestfulServiceImpl implements RestfulService {
 		ecsDTO.setTenants(tenantsDTO.getId());
 		ecsDTO.setSubnet(subnetDTO.getId());
 
-		return apiService.createECS(ecsDTO);
+		result.setMessage(apiService.createECS(ecsDTO).getMessage());
+
+		return result;
 	}
 
 	@Override

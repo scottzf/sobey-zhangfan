@@ -1975,8 +1975,9 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.isTrue(comm.es3Service.findEs3(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
+			String code = "ES3-" + Identities.randomBase62(8);
 			Es3 es3 = BeanMapper.map(es3DTO, Es3.class);
-			es3.setCode("ES3-" + Identities.randomBase62(8));
+			es3.setCode(code);
 			es3.setUser(DEFAULT_USER);
 			es3.setId(0);
 
@@ -1984,6 +1985,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			comm.es3Service.saveOrUpdate(es3);
 
+			result.setMessage(code);
 			return result;
 
 		} catch (IllegalArgumentException e) {
@@ -6500,12 +6502,12 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			// Reference
 			dto.setSubnetDTO(findSubnet(dto.getSubnet()).getDto());
 
-//			// LookUp
-//			if (dto.getIsp() != null) {
-//				dto.setIspText(findLookUp(dto.getIsp()).getDto().getDescription());
-//			}
-//			dto.setIpAddressPoolText(findLookUp(dto.getIpAddressPool()).getDto().getDescription());
-//			dto.setIpAddressStatusText(findLookUp(dto.getIpAddressStatus()).getDto().getDescription());
+			// // LookUp
+			// if (dto.getIsp() != null) {
+			// dto.setIspText(findLookUp(dto.getIsp()).getDto().getDescription());
+			// }
+			// dto.setIpAddressPoolText(findLookUp(dto.getIpAddressPool()).getDto().getDescription());
+			// dto.setIpAddressStatusText(findLookUp(dto.getIpAddressStatus()).getDto().getDescription());
 
 			result.setDto(dto);
 
@@ -6533,15 +6535,15 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			IpaddressDTO dto = BeanMapper.map(ipaddress, IpaddressDTO.class);
 
-//			// Reference
-//			dto.setSubnetDTO(findSubnet(dto.getSubnet()).getDto());
-//
-//			// LookUp
-//			if (dto.getIsp() != null) {
-//				dto.setIspText(findLookUp(dto.getIsp()).getDto().getDescription());
-//			}
-//			dto.setIpAddressPoolText(findLookUp(dto.getIpAddressPool()).getDto().getDescription());
-//			dto.setIpAddressStatusText(findLookUp(dto.getIpAddressStatus()).getDto().getDescription());
+			// // Reference
+			// dto.setSubnetDTO(findSubnet(dto.getSubnet()).getDto());
+			//
+			// // LookUp
+			// if (dto.getIsp() != null) {
+			// dto.setIspText(findLookUp(dto.getIsp()).getDto().getDescription());
+			// }
+			// dto.setIpAddressPoolText(findLookUp(dto.getIpAddressPool()).getDto().getDescription());
+			// dto.setIpAddressStatusText(findLookUp(dto.getIpAddressStatus()).getDto().getDescription());
 
 			result.setDto(dto);
 
@@ -8339,15 +8341,17 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.isTrue(comm.routerService.findRouter(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
+			String code = "Router-" + Identities.randomBase62(8);
+
 			Router router = BeanMapper.map(routerDTO, Router.class);
-			router.setCode("Router-" + Identities.randomBase62(8));
+			router.setCode(code);
 			router.setUser(DEFAULT_USER);
 			router.setId(0);
 
 			BeanValidators.validateWithException(validator, router);
 
 			comm.routerService.saveOrUpdate(router);
-
+			result.setMessage(code);
 			return result;
 
 		} catch (IllegalArgumentException e) {
@@ -8531,8 +8535,10 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.isTrue(comm.firewallServiceService.findFirewallService(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
+			String code = "FirewallService-" + Identities.randomBase62(8);
+
 			FirewallService firewallService = BeanMapper.map(firewallServiceDTO, FirewallService.class);
-			firewallService.setCode("FirewallService-" + Identities.randomBase62(8));
+			firewallService.setCode(code);
 			firewallService.setUser(DEFAULT_USER);
 			firewallService.setId(0);
 
@@ -8540,6 +8546,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			comm.firewallServiceService.saveOrUpdate(firewallService);
 
+			result.setMessage(code);
 			return result;
 
 		} catch (IllegalArgumentException e) {
@@ -8733,8 +8740,10 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.isTrue(comm.subnetService.findSubnet(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
+			String code = "Subnet-" + Identities.randomBase62(8);
+
 			Subnet subnet = BeanMapper.map(subnetDTO, Subnet.class);
-			subnet.setCode("Subnet-" + Identities.randomBase62(8));
+			subnet.setCode(code);
 			subnet.setUser(DEFAULT_USER);
 			subnet.setId(0);
 
@@ -8742,6 +8751,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			comm.subnetService.saveOrUpdate(subnet);
 
+			result.setMessage(code);
 			return result;
 
 		} catch (IllegalArgumentException e) {
