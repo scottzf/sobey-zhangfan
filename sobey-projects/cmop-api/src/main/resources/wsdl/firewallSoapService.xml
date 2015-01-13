@@ -368,7 +368,6 @@
 
   <xs:complexType name="ConfigFirewallAddressParameter">
     <xs:sequence>
-      <xs:element minOccurs="0" name="gateway" type="xs:string"/>
       <xs:element minOccurs="0" name="password" type="xs:string"/>
       <xs:element minOccurs="0" name="segment" type="xs:string"/>
       <xs:element minOccurs="0" name="subnetMask" type="xs:string"/>
