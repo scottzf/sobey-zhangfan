@@ -730,24 +730,63 @@ public class FirewallService {
 		return sb.toString();
 	}
 
+	/**
+	 * <pre>
+	 * config system interface
+	 * edit port1
+	 * set ip 192.168.100.1 255.255.255.0
+	 * set allowaccess ping https ssh telnet
+	 * set type physical
+	 * set snmp-index 8
+	 * end
+	 * config system interface
+	 * edit port2
+	 * set ip 192.168.200.1 255.255.255.0
+	 * set allowaccess ping https ssh telnet
+	 * set type physical
+	 * set snmp-index 8
+	 * end
+	 * </pre>
+	 * 
+	 * @param configSystemInterfaceParameters
+	 * @return
+	 */
 	public String configSystemInterfaceScrip(ConfigSystemInterfaceParameters configSystemInterfaceParameters) {
 
 		StringBuilder sb = new StringBuilder();
 
 		for (ConfigSystemInterfaceParameter parameter : configSystemInterfaceParameters
 				.getConfigSystemInterfaceParameters()) {
+
 			sb.append("config system interface").append(DEFAULT_SYMBOL);
 			sb.append("edit ").append(parameter.getInterfaceName()).append(DEFAULT_SYMBOL);
 			sb.append("set ip ").append(parameter.getGateway()).append(" ").append(parameter.getSubnetMask())
-					.append(DEFAULT_SYMBOL);
-			sb.append("set allowaccess ping https ssh telnet http").append(DEFAULT_SYMBOL);
+					.append(DEFAULT_SYMBOL); // parameter.getGateway() 此处必须以1结尾,表示这个IP起始,配合后面子网掩码
+			sb.append("set allowaccess ping https ssh telnet").append(DEFAULT_SYMBOL);
 			sb.append("set type physical").append(DEFAULT_SYMBOL);
 			sb.append("set snmp-index 8").append(DEFAULT_SYMBOL);
+			sb.append("end").append(DEFAULT_SYMBOL);
 		}
 
 		return sb.toString();
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * config firewall address
+	 * edit "192.168.100.0"
+	 * set subnet 192.168.100.0 255.255.255.0
+	 * next
+	 * config firewall address
+	 * edit "192.168.200.0"
+	 * set subnet 192.168.200.0 255.255.255.0
+	 * next
+	 * </pre>
+	 * 
+	 * @param configFirewallAddressParameters
+	 * @return
+	 */
 	public String configFirewallAddressScrip(ConfigFirewallAddressParameters configFirewallAddressParameters) {
 
 		StringBuilder sb = new StringBuilder();
@@ -756,7 +795,7 @@ public class FirewallService {
 				.getConfigFirewallAddressParameters()) {
 			sb.append("config firewall address").append(DEFAULT_SYMBOL);
 			sb.append("edit ").append("\"").append(parameter.getSegment()).append("\"").append(DEFAULT_SYMBOL);
-			sb.append("set subnet ").append(parameter.getGateway()).append(" ").append(parameter.getSubnetMask())
+			sb.append("set subnet ").append(parameter.getSegment()).append(" ").append(parameter.getSubnetMask())
 					.append(DEFAULT_SYMBOL);
 			sb.append("next").append(DEFAULT_SYMBOL);
 		}
