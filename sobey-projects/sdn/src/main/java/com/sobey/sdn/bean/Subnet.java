@@ -21,6 +21,8 @@ public class Subnet {
 	private String portGroupName;  //子网所跑的端口组
 	
 	private int portNo; //子网所连端口序号
+	
+	private int vlanId; //子网所关联的vlanID
 
 	public String getSubnetId() {
 		return subnetId;
@@ -100,6 +102,14 @@ public class Subnet {
 
 	public void setPortNo(int portNo) {
 		this.portNo = portNo;
+	}
+
+	public int getVlanId() {
+		return vlanId;
+	}
+
+	public void setVlanId(int vlanId) {
+		this.vlanId = vlanId;
 	}
 
 }
