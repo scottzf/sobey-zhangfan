@@ -8,7 +8,7 @@ import com.sobey.generate.cmdbuild.TenantsDTO;
 
 public class TestData {
 
-	private static final Integer tenantsId = 184;
+	private static final Integer tenantsId = 185;
 
 	public static TenantsDTO randomTenantsDTO() {
 		TenantsDTO dto = new TenantsDTO();
@@ -39,8 +39,8 @@ public class TestData {
 	public static EcsDTO randomEcsDTO() {
 		EcsDTO dto = new EcsDTO();
 		dto.setDescription("测试专用主机B");
-		dto.setServer(122);
-		dto.setSubnet(1463);// 185:默认子网 1463 : 200子网
+		dto.setServer(126);
+		dto.setSubnet(1466);// 186:默认子网 1466 : 200子网
 		dto.setEcsType(109); // 109 instance 110 firewall
 		dto.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
 		dto.setIdc(ConstansData.idcId);
@@ -53,7 +53,7 @@ public class TestData {
 		EcsDTO dto = new EcsDTO();
 		dto.setDescription("刘凯的vRouter");
 		dto.setServer(122);
-		dto.setSubnet(185);
+		dto.setSubnet(186);
 		dto.setEcsType(110); // 109 instance 110 firewall
 		dto.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
 		dto.setIdc(ConstansData.idcId);

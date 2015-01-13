@@ -6500,12 +6500,12 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			// Reference
 			dto.setSubnetDTO(findSubnet(dto.getSubnet()).getDto());
 
-			// LookUp
-			if (dto.getIsp() != null) {
-				dto.setIspText(findLookUp(dto.getIsp()).getDto().getDescription());
-			}
-			dto.setIpAddressPoolText(findLookUp(dto.getIpAddressPool()).getDto().getDescription());
-			dto.setIpAddressStatusText(findLookUp(dto.getIpAddressStatus()).getDto().getDescription());
+//			// LookUp
+//			if (dto.getIsp() != null) {
+//				dto.setIspText(findLookUp(dto.getIsp()).getDto().getDescription());
+//			}
+//			dto.setIpAddressPoolText(findLookUp(dto.getIpAddressPool()).getDto().getDescription());
+//			dto.setIpAddressStatusText(findLookUp(dto.getIpAddressStatus()).getDto().getDescription());
 
 			result.setDto(dto);
 
@@ -6533,15 +6533,15 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			IpaddressDTO dto = BeanMapper.map(ipaddress, IpaddressDTO.class);
 
-			// Reference
-			dto.setSubnetDTO(findSubnet(dto.getSubnet()).getDto());
-
-			// LookUp
-			if (dto.getIsp() != null) {
-				dto.setIspText(findLookUp(dto.getIsp()).getDto().getDescription());
-			}
-			dto.setIpAddressPoolText(findLookUp(dto.getIpAddressPool()).getDto().getDescription());
-			dto.setIpAddressStatusText(findLookUp(dto.getIpAddressStatus()).getDto().getDescription());
+//			// Reference
+//			dto.setSubnetDTO(findSubnet(dto.getSubnet()).getDto());
+//
+//			// LookUp
+//			if (dto.getIsp() != null) {
+//				dto.setIspText(findLookUp(dto.getIsp()).getDto().getDescription());
+//			}
+//			dto.setIpAddressPoolText(findLookUp(dto.getIpAddressPool()).getDto().getDescription());
+//			dto.setIpAddressStatusText(findLookUp(dto.getIpAddressStatus()).getDto().getDescription());
 
 			result.setDto(dto);
 

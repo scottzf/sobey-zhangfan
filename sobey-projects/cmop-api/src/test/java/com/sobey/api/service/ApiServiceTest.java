@@ -57,12 +57,12 @@ public class ApiServiceTest extends TestCase {
 	@Test
 	public void bindingRouter() {
 
-		Integer routerId = 2834;
+		Integer routerId = 2833;
 
 		RouterDTO routerDTO = (RouterDTO) cmdbuildSoapService.findRouter(routerId).getDto();
 
-		SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(185).getDto();
-		SubnetDTO subnetDTO2 = (SubnetDTO) cmdbuildSoapService.findSubnet(1463).getDto();
+		SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(186).getDto();
+		SubnetDTO subnetDTO2 = (SubnetDTO) cmdbuildSoapService.findSubnet(1466).getDto();
 
 		List<SubnetDTO> subnetDTOs = new ArrayList<SubnetDTO>();
 		subnetDTOs.add(subnetDTO);

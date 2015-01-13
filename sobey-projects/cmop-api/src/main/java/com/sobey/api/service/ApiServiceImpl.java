@@ -42,6 +42,7 @@ import com.sobey.generate.cmdbuild.SubnetDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.cmdbuild.VlanDTO;
 import com.sobey.generate.dns.DnsSoapService;
+import com.sobey.generate.firewall.AuthenticateFirewallParameter;
 import com.sobey.generate.firewall.ConfigFirewallAddressParameter;
 import com.sobey.generate.firewall.ConfigFirewallAddressParameters;
 import com.sobey.generate.firewall.ConfigFirewallPolicyParameter;
@@ -459,7 +460,12 @@ public class ApiServiceImpl implements ApiService {
 		// Step.1 获得Server
 
 		ServerDTO serverDTO = findSuitableServerDTO(idcDTO);// 将ECS创建在负载最轻的Server上
-		IpaddressDTO serverIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(serverDTO.getIpaddress()).getDto();
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_description", serverDTO.getDescription());
+
+		IpaddressDTO serverIP = (IpaddressDTO) cmdbuildSoapService.findIpaddressByParams(
+				CMDBuildUtil.wrapperSearchParams(map)).getDto();
 
 		IpaddressDTO ipaddressDTO = findAvailableIPAddressDTO(subnetDTO); // 从子网中选择一个IP.
 
@@ -793,13 +799,12 @@ public class ApiServiceImpl implements ApiService {
 
 		instanceSoapService.cloneNetworkDeviceByInstance(cloneVMParameter);
 
-		// 可略过
 		// Step.3 注册更新vRouter防火墙
-		// AuthenticateFirewallParameter authenticateFirewallParameter = new AuthenticateFirewallParameter();
-		// authenticateFirewallParameter.setUrl(ConstansData.vRouter_default_ipaddress);
-		// authenticateFirewallParameter.setUserName(ConstansData.firewall_username);
-		// authenticateFirewallParameter.setPassword(ConstansData.firewall_password);
-		// firewallSoapService.registeredByFirewall(authenticateFirewallParameter);
+		AuthenticateFirewallParameter authenticateFirewallParameter = new AuthenticateFirewallParameter();
+		authenticateFirewallParameter.setUrl(ConstansData.vRouter_default_ipaddress);
+		authenticateFirewallParameter.setUserName(ConstansData.firewall_username);
+		authenticateFirewallParameter.setPassword(ConstansData.firewall_password);
+		firewallSoapService.registeredByFirewall(authenticateFirewallParameter);
 
 		// Step.4 修改vRouter端口
 		modifyFirewallConfigSystemInterface(managerIpaddressDTO);// 修改防火墙中 系统管理 -> 网络 -> 接口 中的配置信息.
@@ -903,6 +908,24 @@ public class ApiServiceImpl implements ApiService {
 
 		String url = managerDTO.getDescription();
 
+		// Step.1 将Subnet所属的vlan绑定到VM中的vRouter上.
+		for (SubnetDTO subnetDTO : subnetDTOs) {
+
+			// 获得网络适配器Id
+			VlanDTO vlanDTO = findSuitableVlanDTO(serverDTO, subnetDTO);
+
+			BindingNetworkDevicePortGroupParameter bindingNetworkDevicePortGroupParameter = new BindingNetworkDevicePortGroupParameter();
+
+			bindingNetworkDevicePortGroupParameter.setDatacenter(datacenter);
+			bindingNetworkDevicePortGroupParameter.setPortGroupName(vlanDTO.getDescription());
+			bindingNetworkDevicePortGroupParameter.setVmName(generateVMName(tenantsDTO, ipaddressDTO));
+			bindingNetworkDevicePortGroupParameter.setPortIndex(subnetDTO.getPortIndex());
+
+			instanceSoapService.bindingNetworkDevicePortGroupInstance(bindingNetworkDevicePortGroupParameter);
+		}
+
+		// *****************************上面代码正常
+
 		// Config System Interface
 		ConfigSystemInterfaceParameters interfaceParameters = new ConfigSystemInterfaceParameters();
 		interfaceParameters.setUrl(url);
@@ -929,38 +952,6 @@ public class ApiServiceImpl implements ApiService {
 
 		for (SubnetDTO subnetDTO : subnetDTOs) {
 
-			// Step.1 将Subnet所属的vlan绑定到VM中的vRouter上.
-			VlanDTO vlanDTO = findSuitableVlanDTO(serverDTO, subnetDTO);
-
-			BindingNetworkDevicePortGroupParameter bindingNetworkDevicePortGroupParameter = new BindingNetworkDevicePortGroupParameter();
-
-			bindingNetworkDevicePortGroupParameter.setDatacenter(datacenter);
-			bindingNetworkDevicePortGroupParameter.setPortGroupName(vlanDTO.getDescription());
-			bindingNetworkDevicePortGroupParameter.setVmName(generateVMName(tenantsDTO, ipaddressDTO));
-			bindingNetworkDevicePortGroupParameter.setPortIndex(subnetDTO.getPortIndex());
-
-			instanceSoapService.bindingNetworkDevicePortGroupInstance(bindingNetworkDevicePortGroupParameter);
-
-			// Step.2 在vRouter上执行脚本(配置接口 config System Interface,每个Subnet都有一个.)
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("EQ_subnet", subnetDTO.getId());
-
-			ConfigSystemInterfaceDTO configSystemInterfaceDTO = (ConfigSystemInterfaceDTO) cmdbuildSoapService
-					.findConfigSystemInterfaceByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
-
-			ConfigSystemInterfaceParameter configSystemInterfaceParameter = new ConfigSystemInterfaceParameter();
-			configSystemInterfaceParameter.setGateway(subnetDTO.getSegment() + "/24");
-			configSystemInterfaceParameter.setInterfaceName(configSystemInterfaceDTO.getDescription());
-			configSystemInterfaceParameter.setSubnetMask(subnetDTO.getNetMask());
-
-			interfaceArrayList.add(configSystemInterfaceParameter);
-		}
-
-		interfaceParameters.getConfigSystemInterfaceParameters().addAll(interfaceArrayList);
-		firewallSoapService.configSystemInterfaceListByFirewall(interfaceParameters);
-
-		for (SubnetDTO subnetDTO : subnetDTOs) {
-
 			// Step.2 在vRouter上执行脚本(配置地址段 config firewall address)
 
 			ConfigFirewallAddressParameter configFirewallAddressParameter = new ConfigFirewallAddressParameter();
@@ -968,6 +959,20 @@ public class ApiServiceImpl implements ApiService {
 			configFirewallAddressParameter.setSegment(subnetDTO.getSegment());
 			configFirewallAddressParameter.setSubnetMask(subnetDTO.getNetMask());
 			addressArrayList.add(configFirewallAddressParameter);
+
+			// Step.3 在vRouter上执行脚本(配置接口 config System Interface,每个Subnet都有一个.)
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("EQ_subnet", subnetDTO.getId());
+
+			ConfigSystemInterfaceDTO configSystemInterfaceDTO = (ConfigSystemInterfaceDTO) cmdbuildSoapService
+					.findConfigSystemInterfaceByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
+
+			ConfigSystemInterfaceParameter configSystemInterfaceParameter = new ConfigSystemInterfaceParameter();
+			configSystemInterfaceParameter.setGateway(subnetDTO.getSegment());
+			configSystemInterfaceParameter.setInterfaceName(configSystemInterfaceDTO.getDescription());
+			configSystemInterfaceParameter.setSubnetMask(subnetDTO.getNetMask());
+
+			interfaceArrayList.add(configSystemInterfaceParameter);
 
 			// Step.3 在vRouter上执行脚本(配置子网策略 config firewall policy)
 
@@ -982,9 +987,6 @@ public class ApiServiceImpl implements ApiService {
 				configFirewallPolicyParameter.setPolicyId(cmdbuildSoapService.getMaxPolicyId(tenantsDTO.getId()));
 				configFirewallPolicyParameter.setPolicyType("Subnet");
 
-				System.out.println(subnetDTO.getPortId());
-				System.out.println(dto.getPortId());
-
 				configFirewallPolicyParameter.setSrcintf("port" + subnetDTO.getPortId());
 				configFirewallPolicyParameter.setDstintf("port" + dto.getPortId());
 				configFirewallPolicyParameter.setSrcaddr(subnetDTO.getSegment());
@@ -993,13 +995,19 @@ public class ApiServiceImpl implements ApiService {
 			}
 
 			// Step.4 Router和Subnet的关联关系保存至CMDB
-			subnetDTO.setRouter(routerDTO.getId());
-			cmdbuildSoapService.updateSubnet(subnetDTO.getId(), subnetDTO);
+			// TODO 两者关联关系疑似要报错.mark.
+			// subnetDTO.setRouter(routerDTO.getId());
+			// cmdbuildSoapService.updateSubnet(subnetDTO.getId(), subnetDTO);
 
 		}
 
+		
+		//下面脚本要一个一个排查
 		addressParameters.getConfigFirewallAddressParameters().addAll(addressArrayList);
 		firewallSoapService.configFirewallAddressParameterListByFirewall(addressParameters);
+
+		interfaceParameters.getConfigSystemInterfaceParameters().addAll(interfaceArrayList);
+		firewallSoapService.configSystemInterfaceListByFirewall(interfaceParameters);
 
 		policyParameters.getConfigFirewallPolicyParameters().addAll(policyArrayList);
 		firewallSoapService.configFirewallPolicyParameterListByFirewall(policyParameters);
