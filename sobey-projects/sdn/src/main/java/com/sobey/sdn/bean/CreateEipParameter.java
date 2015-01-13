@@ -20,9 +20,9 @@ public class CreateEipParameter {
 	
 	private String privateIP;  //内网IP
 	
-	private int internetPort;  //公网所连路由器的端口序号
+	private int internetPortNO;  //公网所连路由器的端口序号
 	
-	private int subnetPort;   //子网所连路由器的端口序号
+	private int subnetPortNo;   //子网所连路由器的端口序号
 
 	private int strategyNo;   //公网端口与子网端口配置策略时的策略号  （每条策略号不能重复）
 
@@ -76,20 +76,20 @@ public class CreateEipParameter {
 		this.privateIP = privateIP;
 	}
 
-	public int getInternetPort() {
-		return internetPort;
+	public int getInternetPortNO() {
+		return internetPortNO;
 	}
 
-	public void setInternetPort(int internetPort) {
-		this.internetPort = internetPort;
+	public void setInternetPortNO(int internetPortNO) {
+		this.internetPortNO = internetPortNO;
 	}
 
-	public int getSubnetPort() {
-		return subnetPort;
+	public int getSubnetPortNo() {
+		return subnetPortNo;
 	}
 
-	public void setSubnetPort(int subnetPort) {
-		this.subnetPort = subnetPort;
+	public void setSubnetPortNo(int subnetPortNo) {
+		this.subnetPortNo = subnetPortNo;
 	}
 
 	public int getStrategyNo() {

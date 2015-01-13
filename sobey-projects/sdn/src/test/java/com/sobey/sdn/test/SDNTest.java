@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.sobey.sdn.bean.CreateEipParameter;
 import com.sobey.sdn.service.impl.SDNServiceImpl;
 import com.sobey.sdn.test.data.TestData;
 import com.sobey.sdn.test.testParameter.BindingFirewallParameter;
@@ -54,6 +55,15 @@ public class SDNTest extends TestCase {
 		BindingFirewallParameter parameter = TestData.randomBindingFirewallParameter();
 
 		sdnService.bindingFirewall(parameter);
+	}
+	
+	@Test
+	public void createEip() throws Exception {
+		
+		CreateEipParameter parameter = TestData.randomCreateEipParameter();
+		
+		sdnService.createEip(parameter);
+		
 	}
 
 }

@@ -170,20 +170,20 @@ public class FirewallService {
 		// 生成映射EIP与内网ip对应关系脚本
 		String eIpMappingToLocalIpConfigScript = FirewallScriptService.generateEIpMappingToLocalIpConfigScript(
 				eipParameter.getVip(), eipParameter.getProtocol(), eipParameter.getProtocolPort(),
-				eipParameter.getInternetPort(), eipParameter.getPrivateIP());
+				eipParameter.getInternetPortNO(), eipParameter.getPrivateIP());
 		// 执行
 		SshUtil.executeCommand(eipParameter.getvRouterIp(), SDNConstants.FIREWALL_USERNAME,
 				SDNConstants.FIREWALL_PASSWORD, eIpMappingToLocalIpConfigScript);
 
 		String addEipMappingToGroupConfigScript = FirewallScriptService.generateAddEipMappingToGroupConfigScript(
-				eipParameter.getVipGroupName(), eipParameter.getInternetPort(), eipParameter.getAllPolicies());
+				eipParameter.getVipGroupName(), eipParameter.getInternetPortNO(), eipParameter.getAllPolicies());
 
 		// 执行
 		SshUtil.executeCommand(eipParameter.getvRouterIp(), SDNConstants.FIREWALL_USERNAME,
 				SDNConstants.FIREWALL_PASSWORD, addEipMappingToGroupConfigScript);
 
 		String createEipStrategyConfigScript = FirewallScriptService.generateCreateEipStrategyConfigScript(
-				eipParameter.getStrategyNo(), eipParameter.getInternetPort(), eipParameter.getSubnetPort(),
+				eipParameter.getStrategyNo(), eipParameter.getInternetPortNO(), eipParameter.getSubnetPortNo(),
 				eipParameter.getVipGroupName());
 
 		// 执行

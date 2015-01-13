@@ -12,9 +12,11 @@ public class SDNConstants {
 	
 	public static final String PORT10_SUBNETMASK = "255.255.254.0";   //修改vRouter端口10的网段掩码
 	
-	public static final String VROUTER_PORT10_MODEL_IP = "10.2.253.253";   //修改vRouter端口10的网段掩码
+	public static final String VROUTER_PORT10_MODEL_IP = "10.2.253.251";   //修改vRouter端口10的网段掩码
 	
 	public static final String VROUTER_REGISTER_CMD = "exec update-now";   //vRouter注册命令
+	
+	public static final String VROUTER_TEMPLATE = "vRouter_MOD_5.2.1";   //vRouter模板
 	
 	public static final String CTC_DEFAULT_PORT = "port8";   //电信默认连接端口
 	

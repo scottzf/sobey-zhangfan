@@ -95,7 +95,15 @@ public interface SDNService {
 	 */
 	public void bindingFirewall(BindingFirewallParameter parameter) throws Exception;
 	
+	/**
+	 * 创建EIP
+	 * 
+	 * @param createEipParameter
+	 * @throws Exception
+	 */
 	public void createEip(CreateEipParameter createEipParameter) throws Exception;
+	
+	//public String createVPNUser(VPNUserParameter parameter) throws Exception;
 	
 	//public void createLoadBalancer(Firewall firewall) throws Exception;
 

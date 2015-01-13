@@ -303,8 +303,8 @@ public class FirewallScriptService {
 		// EIP策略创建
 		// config firewall policy
 		// edit 20
-		// set srcintf "port8" 
-		// set dstintf "port2" 
+		// set srcintf "port8"
+		// set dstintf "port2"
 		// set srcaddr "all"
 		// set dstaddr "CTC_ALL_Server"
 		// set action accept
@@ -317,13 +317,64 @@ public class FirewallScriptService {
 
 		sb.append("config firewall policy").append(SDNConstants.ENTER_SIGN);
 		sb.append("edit ").append(strategyNo).append(SDNConstants.ENTER_SIGN);
-		sb.append("set srcintf ").append("\"").append("port").append(ePortNo).append("\"").append(SDNConstants.ENTER_SIGN);
-		sb.append("set dstintf ").append("\"").append("port").append(subnetPortNo).append("\"").append(SDNConstants.ENTER_SIGN);
+		sb.append("set srcintf ").append("\"").append("port").append(ePortNo).append("\"")
+				.append(SDNConstants.ENTER_SIGN);
+		sb.append("set dstintf ").append("\"").append("port").append(subnetPortNo).append("\"")
+				.append(SDNConstants.ENTER_SIGN);
 		sb.append("set srcaddr ").append("\"").append("all").append("\"").append(SDNConstants.ENTER_SIGN);
 		sb.append("set dstaddr ").append("\"").append(dstaddr).append("\"").append(SDNConstants.ENTER_SIGN);
 		sb.append("set action accept").append(SDNConstants.ENTER_SIGN);
 		sb.append("set schedule ").append("\"").append("always").append("\"").append(SDNConstants.ENTER_SIGN);
 		sb.append("set service ").append("\"").append("ALL").append("\"").append(SDNConstants.ENTER_SIGN);
+		sb.append("next").append(SDNConstants.ENTER_SIGN);
+		sb.append("end").append(SDNConstants.ENTER_SIGN);
+
+		return sb.toString();
+	}
+
+	/**
+	 * 配置VPN用户账号和密码
+	 * 
+	 * @param vpnUserName
+	 * @param vpnPassword
+	 * @return
+	 */
+	public static String generateVpnUserConfigScript(String vpnUserName, String vpnPassword) {
+
+		// 配置VPN用户账号和密码
+		// config user local
+		// edit "liukai"
+		// set type password
+		// set passwd liukai@sobey
+		// next
+		// end
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("config user local").append(SDNConstants.ENTER_SIGN);
+		sb.append("edit ").append("\"").append(vpnUserName).append("\"").append(SDNConstants.ENTER_SIGN);
+		sb.append("set type password").append(SDNConstants.ENTER_SIGN);
+		sb.append("set passwd ").append(vpnPassword).append(SDNConstants.ENTER_SIGN);
+		sb.append("next").append(SDNConstants.ENTER_SIGN);
+		sb.append("end").append(SDNConstants.ENTER_SIGN);
+
+		return sb.toString();
+	}
+
+	public static String generateVpnUserConfigScript(String vpnGroupName, List<String> userNames) {
+		
+		// 配置VPN用户组
+		// config user group
+		// edit "hujun1_gr"
+		// set member "hujun1" "zhangfan" "kai"
+		// next
+		// end
+		
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("config user group").append(SDNConstants.ENTER_SIGN);
+		sb.append("edit ").append("\"").append(vpnGroupName).append("\"").append(SDNConstants.ENTER_SIGN);
+		sb.append("set member ").append(generateFormatString(userNames)).append(SDNConstants.ENTER_SIGN);
 		sb.append("next").append(SDNConstants.ENTER_SIGN);
 		sb.append("end").append(SDNConstants.ENTER_SIGN);
 
