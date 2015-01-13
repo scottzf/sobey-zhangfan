@@ -1,5 +1,8 @@
 package com.sobey.sdn.service;
 
+import java.util.List;
+
+import com.sobey.core.utils.Collections3;
 import com.sobey.sdn.constans.SDNConstants;
 
 public class FirewallScriptService {
@@ -21,6 +24,7 @@ public class FirewallScriptService {
 		// set type physical
 		// set snmp-index 8
 		// end
+
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("config system interface").append(SDNConstants.ENTER_SIGN);
@@ -41,12 +45,14 @@ public class FirewallScriptService {
 	 * @return
 	 */
 	public static String generateupdatePort10IpConfigScript(String ip_update) {
+
 		// 修改端口10的ip
 		// config system interface
 		// edit port10
 		// set ip <ip netmask>
 		// end
 		// exe backup config flash
+
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("config system interface").append(SDNConstants.ENTER_SIGN);
@@ -97,11 +103,13 @@ public class FirewallScriptService {
 	 */
 	public static String generateAddressFieldConfigScript(String addressPoolName, String networkSegment,
 			String subnetMask) {
+
 		// 创建地址段 3
 		// config firewall address
 		// edit "172.16.2.0/24"
 		// set subnet 172.16.2.0 255.255.255.0
 		// next
+		// end
 
 		StringBuilder sb = new StringBuilder();
 
@@ -124,7 +132,8 @@ public class FirewallScriptService {
 	 * @return
 	 */
 	public static String generateInternetStrategyConfigScript(int strategyNo, String sourceSubnet_port,
-			String targetSubnet_port, String sourceSubnet_segment,String targetSubnet_segment) {
+			String targetSubnet_port, String sourceSubnet_segment, String targetSubnet_segment) {
+
 		// 子网上公网 ( EIP相关 ) 5
 		// config firewall policy
 		// edit 6 （策略号）
@@ -138,6 +147,7 @@ public class FirewallScriptService {
 		// set nat enable
 		// next
 		// end
+
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("config firewall policy").append(SDNConstants.ENTER_SIGN);
@@ -146,7 +156,8 @@ public class FirewallScriptService {
 		sb.append("set dstintf ").append("\"").append(targetSubnet_port).append("\"").append(SDNConstants.ENTER_SIGN);
 		sb.append("set srcaddr ").append("\"").append(sourceSubnet_segment).append("\"")
 				.append(SDNConstants.ENTER_SIGN);
-		sb.append("set dstaddr ").append("\"").append(targetSubnet_segment).append("\"").append(SDNConstants.ENTER_SIGN);
+		sb.append("set dstaddr ").append("\"").append(targetSubnet_segment).append("\"")
+				.append(SDNConstants.ENTER_SIGN);
 		sb.append("set action accept").append(SDNConstants.ENTER_SIGN);
 		sb.append("set schedule ").append("\"").append("always").append("\"").append(SDNConstants.ENTER_SIGN);
 		sb.append("set service ").append("\"").append("ALL").append("\"").append(SDNConstants.ENTER_SIGN);
@@ -169,6 +180,7 @@ public class FirewallScriptService {
 	 */
 	public static String generateNetworksStrategyConfigScript(int strategyNo, String sourceSubnet_port,
 			String targetSubnet_port, String sourceSubnet_segment, String targetSubnet_segment) {
+
 		// 配置子网间的策略 4
 		// config firewall policy
 		// edit 6
@@ -181,6 +193,7 @@ public class FirewallScriptService {
 		// set service "ALL"
 		// next
 		// end
+
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("config firewall policy").append(SDNConstants.ENTER_SIGN);
@@ -200,4 +213,201 @@ public class FirewallScriptService {
 		return sb.toString();
 	}
 
+	/**
+	 * 映射EIP与内网ip对应关系
+	 * 
+	 * @param vip
+	 * @param protocol
+	 * @param protocolPortNo
+	 * @param portNo
+	 * @param localIp
+	 * @return
+	 */
+	public static String generateEIpMappingToLocalIpConfigScript(String vip, String protocol, int protocolPort,
+			int portNo, String localIp) {
+
+		// EIP与内网ip对应关系
+		// config firewall vip
+		// edit "119.6.200.219-tcp-8080"
+		// set extip 119.6.200.219
+		// set extintf "port8"
+		// set portforward enable
+		// set mappedip 172.28.25.105
+		// set protocol udp /tcp
+		// set extport 8080 变量 端口
+		// set mappedport 8080 变量 端口
+		// next
+		// end
+
+		StringBuilder sb = new StringBuilder();
+
+		String vipName = generateVIPMappingName(vip, protocol, protocolPort);
+
+		sb.append("config firewall vip").append(SDNConstants.ENTER_SIGN);
+		sb.append("edit ").append("\"").append(vipName).append("\"").append(SDNConstants.ENTER_SIGN);
+		sb.append("set extip ").append(vip).append(SDNConstants.ENTER_SIGN);
+		sb.append("set extintf ").append("\"").append("port").append(portNo).append("\"")
+				.append(SDNConstants.ENTER_SIGN);
+		sb.append("set portforward enable").append(SDNConstants.ENTER_SIGN);
+		sb.append("set mappedip ").append(localIp).append(SDNConstants.ENTER_SIGN);
+		sb.append("set protocol ").append(protocol).append(SDNConstants.ENTER_SIGN);
+		sb.append("set extport ").append(protocolPort).append(SDNConstants.ENTER_SIGN);
+		sb.append("set mappedport ").append(protocolPort).append(SDNConstants.ENTER_SIGN);
+		sb.append("next").append(SDNConstants.ENTER_SIGN);
+		sb.append("end").append(SDNConstants.ENTER_SIGN);
+
+		return sb.toString();
+	}
+
+	/**
+	 * 将映射关系加入VIP组里
+	 * 
+	 * @param vipGroupName
+	 * @param protNo
+	 * @param members
+	 * @return
+	 */
+	public static String generateAddEipMappingToGroupConfigScript(String vipGroupName, int protNo, List<String> members) {
+
+		// 将映射关系加入VIP组成
+		// config firewall vipgrp
+		// edit "CTC_ALL_Server"
+		// set interface "port8"
+		// set member "119.6.200.219-tcp-8080" "119.6.200.219-tcp-80"
+		// end
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("config firewall vipgrp").append(SDNConstants.ENTER_SIGN);
+		sb.append("edit ").append("\"").append(vipGroupName).append("\"").append(SDNConstants.ENTER_SIGN);
+		sb.append("set interface ").append("\"").append("port").append(protNo).append("\"")
+				.append(SDNConstants.ENTER_SIGN);
+		sb.append("set member ").append(generateFormatString(members)).append(SDNConstants.ENTER_SIGN);
+		sb.append("end").append(SDNConstants.ENTER_SIGN);
+
+		return sb.toString();
+	}
+
+	/**
+	 * EIP策略创建
+	 * 
+	 * @param strategyNo
+	 * @param ePortNo
+	 * @param subnetPortNo
+	 * @param dstaddr
+	 * @return
+	 */
+	public static String generateCreateEipStrategyConfigScript(int strategyNo, int ePortNo, int subnetPortNo,
+			String dstaddr) {
+
+		// EIP策略创建
+		// config firewall policy
+		// edit 20
+		// set srcintf "port8"
+		// set dstintf "port2"
+		// set srcaddr "all"
+		// set dstaddr "CTC_ALL_Server"
+		// set action accept
+		// set schedule "always"
+		// set service "ALL"
+		// next
+		// end
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("config firewall policy").append(SDNConstants.ENTER_SIGN);
+		sb.append("edit ").append(strategyNo).append(SDNConstants.ENTER_SIGN);
+		sb.append("set srcintf ").append("\"").append("port").append(ePortNo).append("\"")
+				.append(SDNConstants.ENTER_SIGN);
+		sb.append("set dstintf ").append("\"").append("port").append(subnetPortNo).append("\"")
+				.append(SDNConstants.ENTER_SIGN);
+		sb.append("set srcaddr ").append("\"").append("all").append("\"").append(SDNConstants.ENTER_SIGN);
+		sb.append("set dstaddr ").append("\"").append(dstaddr).append("\"").append(SDNConstants.ENTER_SIGN);
+		sb.append("set action accept").append(SDNConstants.ENTER_SIGN);
+		sb.append("set schedule ").append("\"").append("always").append("\"").append(SDNConstants.ENTER_SIGN);
+		sb.append("set service ").append("\"").append("ALL").append("\"").append(SDNConstants.ENTER_SIGN);
+		sb.append("next").append(SDNConstants.ENTER_SIGN);
+		sb.append("end").append(SDNConstants.ENTER_SIGN);
+
+		return sb.toString();
+	}
+
+	/**
+	 * 配置VPN用户账号和密码
+	 * 
+	 * @param vpnUserName
+	 * @param vpnPassword
+	 * @return
+	 */
+	public static String generateVpnUserConfigScript(String vpnUserName, String vpnPassword) {
+
+		// 配置VPN用户账号和密码
+		// config user local
+		// edit "liukai"
+		// set type password
+		// set passwd liukai@sobey
+		// next
+		// end
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("config user local").append(SDNConstants.ENTER_SIGN);
+		sb.append("edit ").append("\"").append(vpnUserName).append("\"").append(SDNConstants.ENTER_SIGN);
+		sb.append("set type password").append(SDNConstants.ENTER_SIGN);
+		sb.append("set passwd ").append(vpnPassword).append(SDNConstants.ENTER_SIGN);
+		sb.append("next").append(SDNConstants.ENTER_SIGN);
+		sb.append("end").append(SDNConstants.ENTER_SIGN);
+
+		return sb.toString();
+	}
+
+	public static String generateVpnUserConfigScript(String vpnGroupName, List<String> userNames) {
+		
+		// 配置VPN用户组
+		// config user group
+		// edit "hujun1_gr"
+		// set member "hujun1" "zhangfan" "kai"
+		// next
+		// end
+		
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("config user group").append(SDNConstants.ENTER_SIGN);
+		sb.append("edit ").append("\"").append(vpnGroupName).append("\"").append(SDNConstants.ENTER_SIGN);
+		sb.append("set member ").append(generateFormatString(userNames)).append(SDNConstants.ENTER_SIGN);
+		sb.append("next").append(SDNConstants.ENTER_SIGN);
+		sb.append("end").append(SDNConstants.ENTER_SIGN);
+
+		return sb.toString();
+	}
+
+	/**
+	 * 生成VIP映射名称.<br>
+	 * 生成规则: internetIP-protocolText-targetPort<br>
+	 * Example:<b> 119.6.200.219-tcp-8080 </b>
+	 * 
+	 * @param internetIP
+	 *            外网IP
+	 * @param protocolText
+	 *            协议
+	 * @param targetPort
+	 *            目标端口
+	 * @return
+	 */
+	private static String generateVIPMappingName(String vip, String protocol, int protocolPortNo) {
+		return vip + "-" + protocol + "-" + protocolPortNo;
+	}
+
+	/**
+	 * 对集合里的字符串进行组合,生成指定格式的字符串.<br>
+	 * 
+	 * Example:<b> "119.6.200.219-tcp-8080" "119.6.200.219-tcp-80" </b>
+	 * 
+	 * @param list
+	 *            字符串集合
+	 * @return
+	 */
+	private static String generateFormatString(List<String> list) {
+		return Collections3.convertToString(list, "\"", "\" ");
+	}
 }

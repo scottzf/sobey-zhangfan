@@ -1,9 +1,12 @@
 package com.sobey.sdn.service;
 
+import org.apache.commons.lang3.StringUtils;
+
+import com.sobey.sdn.util.JsonRPCUtil;
 import com.sobey.sdn.util.SDNPropertiesUtil;
 
 public class CentecSwitchService {
-	
+
 	/**
 	 * 生成配置VLAN的命令脚本
 	 * 
@@ -20,7 +23,7 @@ public class CentecSwitchService {
 		String[] cmds = { str1, str2, str3, str4, str5, str6 };
 		return cmds;
 	}
-	
+
 	/**
 	 * 生成配置面向服务器的接口命令脚本
 	 * 
@@ -60,5 +63,29 @@ public class CentecSwitchService {
 		String[] cmds = { str1, str2, str3, str4, str5 };
 		return cmds;
 	}
-	
+
+	public static void makeVlanAccessInterface(String vRouterHostIp, int vlanId) throws Exception {
+		/**
+		 * 暂时从固定资源列表中获得交换机接口
+		 */
+		String whichSWAndSwInterface = HostRelationMap.relationMap.get(vRouterHostIp);
+		String whichSW = StringUtils.substringBefore(whichSWAndSwInterface, " "); // 取空格前字符串
+		String swInterface = StringUtils.substringAfter(whichSWAndSwInterface, " "); // 取空格后字符串
+
+		String swIp = getSwIpByMark(whichSW);
+
+		String[] interfaceConfig_cmds = generateInterfaceConfigString(swInterface, vlanId);
+
+		JsonRPCUtil.executeJsonRPCRequest(swIp, interfaceConfig_cmds); // 执行
+	}
+
+	private static String getSwIpByMark(String whichSW) {
+		if ("TOR-A".equals(whichSW)) {
+			return SDNPropertiesUtil.getProperty("TOR-A_SWITCH_IP");
+		}
+		if ("TOR-B".equals(whichSW)) {
+			return SDNPropertiesUtil.getProperty("TOR-B_SWITCH_IP");
+		}
+		return null;
+	}
 }

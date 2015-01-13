@@ -1,5 +1,6 @@
 package com.sobey.sdn.service;
 
+import com.sobey.sdn.bean.CreateEipParameter;
 import com.sobey.sdn.constans.SDNConstants;
 import com.sobey.sdn.util.SshUtil;
 
@@ -55,8 +56,8 @@ public class FirewallService {
 	public static void configurationPortIp(String vRouterIp, int portNo, String portIp, String subnetMask) {
 
 		// 生成脚本
-		String interfaceAddressConfigScript = FirewallScriptService
-				.generatePortIpConfigScript(portNo, portIp, subnetMask);
+		String interfaceAddressConfigScript = FirewallScriptService.generatePortIpConfigScript(portNo, portIp,
+				subnetMask);
 
 		// 执行脚本
 		SshUtil.executeCommand(vRouterIp, SDNConstants.FIREWALL_USERNAME, SDNConstants.FIREWALL_PASSWORD,
@@ -156,11 +157,38 @@ public class FirewallService {
 
 		// 生成反向脚本
 		String reverse_internetStrategyConfigScript = FirewallScriptService.generateInternetStrategyConfigScript(
-				strategyNo+1, targetPort, sourcePort, "all", sourceAddressPool);
+				strategyNo + 1, targetPort, sourcePort, "all", sourceAddressPool);
 
 		// 执行反向脚本
 		SshUtil.executeCommand(vRouterIp, SDNConstants.FIREWALL_USERNAME, SDNConstants.FIREWALL_PASSWORD,
 				reverse_internetStrategyConfigScript);
+
+	}
+
+	public static void createEIp(CreateEipParameter eipParameter) {
+
+		// 生成映射EIP与内网ip对应关系脚本
+		String eIpMappingToLocalIpConfigScript = FirewallScriptService.generateEIpMappingToLocalIpConfigScript(
+				eipParameter.getVip(), eipParameter.getProtocol(), eipParameter.getProtocolPort(),
+				eipParameter.getInternetPortNO(), eipParameter.getPrivateIP());
+		// 执行
+		SshUtil.executeCommand(eipParameter.getvRouterIp(), SDNConstants.FIREWALL_USERNAME,
+				SDNConstants.FIREWALL_PASSWORD, eIpMappingToLocalIpConfigScript);
+
+		String addEipMappingToGroupConfigScript = FirewallScriptService.generateAddEipMappingToGroupConfigScript(
+				eipParameter.getVipGroupName(), eipParameter.getInternetPortNO(), eipParameter.getAllPolicies());
+
+		// 执行
+		SshUtil.executeCommand(eipParameter.getvRouterIp(), SDNConstants.FIREWALL_USERNAME,
+				SDNConstants.FIREWALL_PASSWORD, addEipMappingToGroupConfigScript);
+
+		String createEipStrategyConfigScript = FirewallScriptService.generateCreateEipStrategyConfigScript(
+				eipParameter.getStrategyNo(), eipParameter.getInternetPortNO(), eipParameter.getSubnetPortNo(),
+				eipParameter.getVipGroupName());
+
+		// 执行
+		SshUtil.executeCommand(eipParameter.getvRouterIp(), SDNConstants.FIREWALL_USERNAME,
+				SDNConstants.FIREWALL_PASSWORD, createEipStrategyConfigScript);
 
 	}
 }

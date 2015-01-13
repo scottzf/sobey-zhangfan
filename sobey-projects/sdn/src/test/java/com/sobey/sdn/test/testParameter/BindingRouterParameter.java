@@ -6,13 +6,23 @@ import com.sobey.sdn.bean.Subnet;
 
 public class BindingRouterParameter {
 
-	private String routerName; //
+	private String vRouterHostIp;  //vRouter所在宿主机IP
+	
+	private String routerName; //vRouter名称
 
-	private String controlIp; //
+	private String controlIp; //管理vRouter的IP
 
-	private int strategyNo; //
+	private int strategyNo; //策略号
 
 	private List<Subnet> subnets;
+
+	public String getvRouterHostIp() {
+		return vRouterHostIp;
+	}
+
+	public void setvRouterHostIp(String vRouterHostIp) {
+		this.vRouterHostIp = vRouterHostIp;
+	}
 
 	public String getRouterName() {
 		return routerName;
