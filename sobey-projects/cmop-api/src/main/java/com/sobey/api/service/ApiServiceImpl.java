@@ -28,8 +28,6 @@ import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EcsSpecDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
-import com.sobey.generate.cmdbuild.ElbDTO;
-import com.sobey.generate.cmdbuild.ElbPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
 import com.sobey.generate.cmdbuild.IdResult;

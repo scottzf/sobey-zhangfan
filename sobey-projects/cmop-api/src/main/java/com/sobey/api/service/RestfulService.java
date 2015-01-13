@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.sobey.api.entity.DnsEntity;
 import com.sobey.api.entity.EcsEntity;
-import com.sobey.api.entity.ElbEntity;
 import com.sobey.api.entity.Es3Entity;
 import com.sobey.api.entity.FirewallServiceEntity;
 import com.sobey.api.entity.RouterEntity;
@@ -50,13 +49,6 @@ public interface RestfulService {
 			String remark, String accessKey);
 
 	public WSResult deleteES3(String code, String accessKey);
-
-	/******** ELB ********/
-	public DTOResult<ElbEntity> findELB(String code, String accessKey);
-
-	public WSResult createELB(String ecsIds, String protocols, String accessKey);
-
-	public WSResult deleteELB(String code, String accessKey);
 
 	/******** DNS ********/
 	public DTOResult<DnsEntity> findDNS(String code, String accessKey);

@@ -12,7 +12,6 @@ import com.sobey.api.constans.LookUpConstants;
 import com.sobey.api.entity.DnsEntity;
 import com.sobey.api.entity.EcsEntity;
 import com.sobey.api.entity.EipEntity;
-import com.sobey.api.entity.ElbEntity;
 import com.sobey.api.entity.Es3Entity;
 import com.sobey.api.entity.FirewallServiceEntity;
 import com.sobey.api.entity.RouterEntity;
@@ -28,14 +27,11 @@ import com.sobey.generate.cmdbuild.DnsPolicyDTO;
 import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EcsSpecDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
-import com.sobey.generate.cmdbuild.ElbDTO;
-import com.sobey.generate.cmdbuild.ElbPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
 import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.IpaddressDTO;
 import com.sobey.generate.cmdbuild.LookUpDTO;
-import com.sobey.generate.cmdbuild.MapEcsElbDTO;
 import com.sobey.generate.cmdbuild.MapEipDnsDTO;
 import com.sobey.generate.cmdbuild.RouterDTO;
 import com.sobey.generate.cmdbuild.SubnetDTO;
@@ -94,20 +90,6 @@ public class RestfulServiceImpl implements RestfulService {
 		map.put("EQ_tenants", tenantsId);
 		map.put("EQ_code", code);
 		return (Es3DTO) cmdbuildSoapService.findEs3ByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
-	}
-
-	private EipDTO findEipDTO(Integer tenantsId, String code) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_tenants", tenantsId);
-		map.put("EQ_code", code);
-		return (EipDTO) cmdbuildSoapService.findEipByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
-	}
-
-	private ElbDTO findElbDTO(Integer tenantsId, String code) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_tenants", tenantsId);
-		map.put("EQ_code", code);
-		return (ElbDTO) cmdbuildSoapService.findElbByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
 	}
 
 	private DnsDTO findDnsDTO(Integer tenantsId, String code) {
@@ -451,110 +433,6 @@ public class RestfulServiceImpl implements RestfulService {
 		result.setMessage("删除成功.");
 
 		return apiService.deleteES3(es3DTO.getId());
-	}
-
-	@Override
-	public DTOResult<ElbEntity> findELB(String code, String accessKey) {
-		DTOResult<ElbEntity> result = new DTOResult<ElbEntity>();
-		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
-		if (tenantsDTO == null) {
-			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
-			return result;
-		}
-		ElbDTO elbDTO = findElbDTO(tenantsDTO.getId(), code);
-		if (elbDTO == null) {
-			result.setError(WSResult.PARAMETER_ERROR, "ELB不存在.");
-			return result;
-		}
-		List<EcsEntity> ecsEntities = new ArrayList<EcsEntity>();
-		// 查询出ELB负载的ECS信息
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_idObj2", elbDTO.getId());
-		List<Object> list = cmdbuildSoapService.getMapEcsElbList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
-				.getDto();
-		for (Object object : list) {
-			MapEcsElbDTO mapEcsElbDTO = (MapEcsElbDTO) object;
-			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(Integer.valueOf(mapEcsElbDTO.getIdObj1())).getDto();
-
-			IdcDTO idcDTO = (IdcDTO) cmdbuildSoapService.findIdc(ecsDTO.getIdc()).getDto();
-			IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress())
-					.getDto();
-			EcsSpecDTO ecsSpecDTO = (EcsSpecDTO) cmdbuildSoapService.findEcsSpec(ecsDTO.getEcsSpec()).getDto();
-			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(ecsDTO.getEcsStatus()).getDto();
-
-			EcsEntity entity = new EcsEntity(ecsDTO.getCpuNumber(), ecsDTO.getDescription(), idcDTO.getDescription(),
-					ecsDTO.getCode(), ipaddressDTO.getDescription(), ecsDTO.isIsDesktop(), ecsDTO.isIsGpu(),
-					ecsDTO.getMemorySize(), ecsDTO.getRemark(), ecsSpecDTO.getDescription(), lookUpDTO.getDescription());
-			ecsEntities.add(entity);
-		}
-		ElbEntity entity = new ElbEntity(elbDTO.getCode(), code, ecsEntities);
-		result.setDto(entity);
-		return result;
-	}
-
-	@Override
-	public WSResult createELB(String ecsIds, String protocols, String accessKey) {
-
-		String[] ecsIdsArray = StringUtils.split(ecsIds, ",");
-		String[] protocolsArray = StringUtils.split(protocols, ",");
-
-		WSResult result = new WSResult();
-		if (protocolsArray.length != ecsIdsArray.length) {
-			result.setError(WSResult.PARAMETER_ERROR, "参数错误.");
-			return result;
-		}
-
-		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
-		if (tenantsDTO == null) {
-			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
-			return result;
-		}
-
-		List<ElbPolicyDTO> elbPolicyDTOs = new ArrayList<ElbPolicyDTO>();
-
-		for (int i = 0; i < protocolsArray.length; i++) {
-
-			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(Integer.valueOf(ecsIdsArray[i])).getDto();
-
-			if (ecsDTO == null) {
-				result.setError(WSResult.PARAMETER_ERROR, "ECS不存在.");
-				return result;
-			}
-			LookUpDTO lookUpDTO = findLookUpDTO(protocolsArray[i], "ELBProtocol");
-			if (lookUpDTO == null) {
-				result.setError(WSResult.PARAMETER_ERROR, "协议不存在.");
-				return result;
-			}
-			ElbPolicyDTO policyDTO = new ElbPolicyDTO();
-			policyDTO.setElbProtocol(lookUpDTO.getId());
-			policyDTO.setSourcePort(getPortFromProtocol(lookUpDTO.getDescription()));
-			policyDTO.setTargetPort(getPortFromProtocol(lookUpDTO.getDescription()));
-			policyDTO.setIpaddress(ecsDTO.getId().toString());
-			elbPolicyDTOs.add(policyDTO);
-		}
-		ElbDTO elbDTO = new ElbDTO();
-		elbDTO.setAgentType(LookUpConstants.AgentType.Netscaler.getValue());
-		elbDTO.setTenants(tenantsDTO.getId());
-		return apiService.createELB(elbDTO, elbPolicyDTOs, ecsIds);
-	}
-
-	@Override
-	public WSResult deleteELB(String code, String accessKey) {
-
-		WSResult result = new WSResult();
-		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
-		if (tenantsDTO == null) {
-			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
-			return result;
-		}
-		ElbDTO elbDTO = findElbDTO(tenantsDTO.getId(), code);
-		if (elbDTO == null) {
-			result.setError(WSResult.PARAMETER_ERROR, "ELB不存在.");
-			return result;
-		}
-		apiService.deleteELB(elbDTO.getId());
-		result.setMessage("删除成功.");
-		return result;
 	}
 
 	@Override

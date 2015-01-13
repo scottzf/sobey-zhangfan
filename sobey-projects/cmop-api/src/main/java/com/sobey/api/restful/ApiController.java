@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sobey.api.entity.DnsEntity;
 import com.sobey.api.entity.EcsEntity;
-import com.sobey.api.entity.ElbEntity;
 import com.sobey.api.entity.Es3Entity;
 import com.sobey.api.entity.RouterEntity;
 import com.sobey.api.entity.SubnetEntity;
@@ -132,24 +131,6 @@ public class ApiController {
 	public WSResult deleteES3(@RequestParam(value = "code") String code,
 			@RequestParam(value = "accessKey") String accessKey) {
 		return servie.deleteES3(code, accessKey);
-	}
-
-	/********** ELB ***********/
-	@RequestMapping(value = "/ELBResult/{code}/{accessKey}", method = RequestMethod.GET)
-	public DTOResult<ElbEntity> ELBResult(@PathVariable("code") String code, @PathVariable("accessKey") String accessKey) {
-		return servie.findELB(URLEscape(code), accessKey);
-	}
-
-	@RequestMapping(value = "/createELB/", method = RequestMethod.POST)
-	public WSResult createELB(@RequestParam(value = "ecsIds") String ecsIds,
-			@RequestParam(value = "protocols") String protocols, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.createELB(ecsIds, protocols, accessKey);
-	}
-
-	@RequestMapping(value = "/deleteELB/", method = RequestMethod.POST)
-	public WSResult deleteELB(@RequestParam(value = "code") String code,
-			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.deleteELB(code, accessKey);
 	}
 
 	/********** DNS ***********/
