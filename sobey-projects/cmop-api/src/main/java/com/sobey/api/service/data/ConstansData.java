@@ -9,7 +9,7 @@ public class ConstansData {
 	public static final String firewall_username = "admin";
 	public static final String firewall_password = "mcloud@sobey.com";
 
-	public static final String vRouter_default_ipaddress = "10.2.253.253";
+	public static final String vRouter_default_ipaddress = "10.2.253.251";
 
 	public static SubnetDTO defaultSubnetDTO(Integer tenantsId) {
 
