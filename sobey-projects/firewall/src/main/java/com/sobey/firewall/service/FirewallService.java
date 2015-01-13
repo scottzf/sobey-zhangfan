@@ -10,10 +10,14 @@ import com.google.common.collect.Lists;
 import com.sobey.core.utils.Collections3;
 import com.sobey.core.utils.PropertiesLoader;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameters;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallPolicyParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallPolicyParameters;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallServiceCategoryParameter;
 import com.sobey.firewall.webservice.response.dto.ConfigRouterStaticParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigRouterStaticParameters;
 import com.sobey.firewall.webservice.response.dto.ConfigSystemInterfaceParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigSystemInterfaceParameters;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
 import com.sobey.firewall.webservice.response.dto.EIPPolicyParameter;
 import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
@@ -726,12 +730,13 @@ public class FirewallService {
 		return sb.toString();
 	}
 
-	public String configSystemInterfaceScrip(ArrayList<ConfigSystemInterfaceParameter> configSystemInterfaceParameters) {
+	public String configSystemInterfaceScrip(ConfigSystemInterfaceParameters configSystemInterfaceParameters) {
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("config system interface").append(DEFAULT_SYMBOL);
 
-		for (ConfigSystemInterfaceParameter parameter : configSystemInterfaceParameters) {
+		for (ConfigSystemInterfaceParameter parameter : configSystemInterfaceParameters
+				.getConfigSystemInterfaceParameters()) {
+			sb.append("config system interface").append(DEFAULT_SYMBOL);
 			sb.append("edit ").append(parameter.getInterfaceName()).append(DEFAULT_SYMBOL);
 			sb.append("set ip ").append(parameter.getGateway()).append(" ").append(parameter.getSubnetMask())
 					.append(DEFAULT_SYMBOL);
@@ -743,11 +748,12 @@ public class FirewallService {
 		return sb.toString();
 	}
 
-	public String configFirewallAddressScrip(ArrayList<ConfigFirewallAddressParameter> configFirewallAddressParameters) {
+	public String configFirewallAddressScrip(ConfigFirewallAddressParameters configFirewallAddressParameters) {
 
 		StringBuilder sb = new StringBuilder();
 
-		for (ConfigFirewallAddressParameter parameter : configFirewallAddressParameters) {
+		for (ConfigFirewallAddressParameter parameter : configFirewallAddressParameters
+				.getConfigFirewallAddressParameters()) {
 			sb.append("config firewall address").append(DEFAULT_SYMBOL);
 			sb.append("edit ").append("\"").append(parameter.getSegment()).append("\"").append(DEFAULT_SYMBOL);
 			sb.append("set subnet ").append(parameter.getGateway()).append(" ").append(parameter.getSubnetMask())
@@ -758,13 +764,13 @@ public class FirewallService {
 		return sb.toString();
 	}
 
-	public String configFirewallPolicyScrip(ArrayList<ConfigFirewallPolicyParameter> configFirewallPolicyParameters) {
+	public String configFirewallPolicyScrip(ConfigFirewallPolicyParameters configFirewallPolicyParameters) {
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("config firewall policy").append(DEFAULT_SYMBOL);
-
-		for (ConfigFirewallPolicyParameter parameter : configFirewallPolicyParameters) {
+		for (ConfigFirewallPolicyParameter parameter : configFirewallPolicyParameters
+				.getConfigFirewallPolicyParameters()) {
+			sb.append("config firewall policy").append(DEFAULT_SYMBOL);
 			sb.append("edit ").append(parameter.getPolicyId()).append(DEFAULT_SYMBOL);
 			sb.append("set srcintf ").append("\"").append(parameter.getSrcintf()).append("\"").append(DEFAULT_SYMBOL);
 			sb.append("set srcaddr ").append("\"").append(parameter.getSrcaddr()).append("\"").append(DEFAULT_SYMBOL);
@@ -782,15 +788,16 @@ public class FirewallService {
 		return sb.toString();
 	}
 
-	public String configRouterStaticScrip(ArrayList<ConfigRouterStaticParameter> configRouterStaticParameters) {
+	public String configRouterStaticScrip(ConfigRouterStaticParameters configRouterStaticParameters) {
 
 		StringBuilder sb = new StringBuilder();
 
-		for (ConfigRouterStaticParameter parameter : configRouterStaticParameters) {
+		for (ConfigRouterStaticParameter parameter : configRouterStaticParameters.getConfigRouterStaticParameters()) {
 			sb.append("config router static").append(DEFAULT_SYMBOL);
 			sb.append("edit ").append(parameter.getRouterId()).append(DEFAULT_SYMBOL);
 			sb.append("set device ").append(parameter.getInterfaceName()).append(DEFAULT_SYMBOL);
 			sb.append("set gateway ").append(parameter.getIspGateway()).append(DEFAULT_SYMBOL);
+			sb.append("end").append(DEFAULT_SYMBOL);
 		}
 
 		return sb.toString();

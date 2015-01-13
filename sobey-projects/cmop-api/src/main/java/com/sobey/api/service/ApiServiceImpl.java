@@ -827,7 +827,7 @@ public class ApiServiceImpl implements ApiService {
 		routerDTO.setDescription(ecsDTO.getDescription());
 		routerDTO.setEcs(queryEcsDTO.getId());
 		routerDTO.setIdc(idcDTO.getId());
-		routerDTO.setSubnet(subnetDTO.getId());
+		// routerDTO.setSubnet(subnetDTO.getId());
 		routerDTO.setTenants(tenantsDTO.getId());
 		routerDTO.setIpaddress(managerIpaddressDTO.getId());
 
@@ -995,14 +995,13 @@ public class ApiServiceImpl implements ApiService {
 			}
 
 			// Step.4 Router和Subnet的关联关系保存至CMDB
-			// TODO 两者关联关系疑似要报错.mark.
+			// TODO 两者关联关系要报错.mark.
 			// subnetDTO.setRouter(routerDTO.getId());
 			// cmdbuildSoapService.updateSubnet(subnetDTO.getId(), subnetDTO);
 
 		}
 
-		
-		//下面脚本要一个一个排查
+		// 下面脚本要一个一个排查
 		addressParameters.getConfigFirewallAddressParameters().addAll(addressArrayList);
 		firewallSoapService.configFirewallAddressParameterListByFirewall(addressParameters);
 

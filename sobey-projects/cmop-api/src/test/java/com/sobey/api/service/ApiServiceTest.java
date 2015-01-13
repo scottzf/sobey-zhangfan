@@ -57,7 +57,7 @@ public class ApiServiceTest extends TestCase {
 	@Test
 	public void bindingRouter() {
 
-		Integer routerId = 2833;
+		Integer routerId = 2845;
 
 		RouterDTO routerDTO = (RouterDTO) cmdbuildSoapService.findRouter(routerId).getDto();
 

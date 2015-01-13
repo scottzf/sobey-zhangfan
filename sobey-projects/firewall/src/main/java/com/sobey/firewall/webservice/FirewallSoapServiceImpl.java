@@ -205,8 +205,7 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 
 		WSResult result = new WSResult();
 
-		String command = service.configSystemInterfaceScrip(configSystemInterfaceParameters
-				.getConfigSystemInterfaceParameters());
+		String command = service.configSystemInterfaceScrip(configSystemInterfaceParameters);
 
 		try {
 			SSHUtil.executeCommand(configSystemInterfaceParameters.getUrl(),
@@ -226,6 +225,8 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 		WSResult result = new WSResult();
 
 		String command = service.modifyConfigSystemInterfaceScrip(configSystemInterfaceParameter);
+
+		System.out.println(command);
 
 		try {
 			SSHUtil.executeCommand(configSystemInterfaceParameter.getUrl(),
@@ -257,8 +258,9 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 
 		WSResult result = new WSResult();
 
-		String command = service.configFirewallAddressScrip(configFirewallAddressParameters
-				.getConfigFirewallAddressParameters());
+		String command = service.configFirewallAddressScrip(configFirewallAddressParameters);
+
+		System.out.println(command);
 
 		try {
 			SSHUtil.executeCommand(configFirewallAddressParameters.getUrl(),
@@ -290,8 +292,9 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 
 		WSResult result = new WSResult();
 
-		String command = service.configFirewallPolicyScrip(configFirewallPolicyParameters
-				.getConfigFirewallPolicyParameters());
+		String command = service.configFirewallPolicyScrip(configFirewallPolicyParameters);
+
+		System.out.println(command);
 
 		try {
 			SSHUtil.executeCommand(configFirewallPolicyParameters.getUrl(),
@@ -321,8 +324,7 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 
 		WSResult result = new WSResult();
 
-		String command = service
-				.configRouterStaticScrip(configRouterStaticParameters.getConfigRouterStaticParameters());
+		String command = service.configRouterStaticScrip(configRouterStaticParameters);
 
 		try {
 			SSHUtil.executeCommand(configRouterStaticParameters.getUrl(), configRouterStaticParameters.getUserName(),
