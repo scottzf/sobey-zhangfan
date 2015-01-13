@@ -84,8 +84,7 @@ public class TestData {
 
 	public static ConfigFirewallAddressParameter randomConfigFirewallAddressParameter() {
 		ConfigFirewallAddressParameter parameter = new ConfigFirewallAddressParameter();
-		parameter.setGateway("173.20.10.254");
-		parameter.setSegment("173.20.10.0/24");
+		parameter.setSegment("173.20.10.0");
 		parameter.setSubnetMask("255.255.255.0");
 		return parameter;
 	}

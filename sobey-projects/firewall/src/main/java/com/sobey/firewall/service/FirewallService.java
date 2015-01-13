@@ -738,7 +738,7 @@ public class FirewallService {
 	 * set allowaccess ping https ssh telnet
 	 * set type physical
 	 * set snmp-index 8
-	 * end
+	 * end                 
 	 * config system interface
 	 * edit port2
 	 * set ip 192.168.200.1 255.255.255.0
@@ -815,6 +815,7 @@ public class FirewallService {
 			sb.append("set srcaddr ").append("\"").append(parameter.getSrcaddr()).append("\"").append(DEFAULT_SYMBOL);
 			sb.append("set dstintf ").append("\"").append(parameter.getDstintf()).append("\"").append(DEFAULT_SYMBOL);
 			sb.append("set dstaddr ").append("\"").append(parameter.getDstaddr()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set action accept").append(DEFAULT_SYMBOL);
 			sb.append("set schedule ").append("\"").append("always").append("\"").append(DEFAULT_SYMBOL);
 			sb.append("set service ").append("\"").append("ALL").append("\"").append(DEFAULT_SYMBOL);
 
@@ -822,6 +823,7 @@ public class FirewallService {
 				sb.append("set nat enable").append(DEFAULT_SYMBOL);
 			}
 			sb.append("next").append(DEFAULT_SYMBOL);
+			sb.append("end").append(DEFAULT_SYMBOL);
 		}
 
 		return sb.toString();

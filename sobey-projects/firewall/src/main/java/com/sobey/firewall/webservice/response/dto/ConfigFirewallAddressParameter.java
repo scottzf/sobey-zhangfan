@@ -12,11 +12,6 @@ import com.sobey.firewall.constans.WsConstants;
 public class ConfigFirewallAddressParameter {
 
 	/**
-	 * 网关
-	 */
-	private String gateway;
-
-	/**
 	 * 防火墙(路由)登录密码
 	 */
 	private String password;
@@ -41,10 +36,6 @@ public class ConfigFirewallAddressParameter {
 	 */
 	private String userName;
 
-	public String getGateway() {
-		return gateway;
-	}
-
 	public String getPassword() {
 		return password;
 	}
@@ -63,10 +54,6 @@ public class ConfigFirewallAddressParameter {
 
 	public String getUserName() {
 		return userName;
-	}
-
-	public void setGateway(String gateway) {
-		this.gateway = gateway;
 	}
 
 	public void setPassword(String password) {
