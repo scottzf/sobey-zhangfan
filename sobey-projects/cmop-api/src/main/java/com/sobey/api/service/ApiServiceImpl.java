@@ -242,12 +242,6 @@ public class ApiServiceImpl implements ApiService {
 		return ipaddressDTOs;
 	}
 
-	@Override
-	public WSResult deleteSubnet(Integer subnetId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	/**
 	 * 生成vCenter中VM的名称.<br>
 	 *
@@ -871,12 +865,6 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public WSResult deleteRouter() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public WSResult bindingRouter(List<SubnetDTO> subnetDTOs, RouterDTO routerDTO) {
 
 		/**
@@ -1052,12 +1040,6 @@ public class ApiServiceImpl implements ApiService {
 
 	}
 
-	@Override
-	public WSResult unbindingRouter() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	/**
 	 * 配置静态路由<br>
 	 * 
@@ -1114,12 +1096,6 @@ public class ApiServiceImpl implements ApiService {
 		}
 
 		return result;
-	}
-
-	@Override
-	public WSResult deleteFirewallService() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -1286,24 +1262,6 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public WSResult unbindingFirewallService() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public WSResult createELB(ElbDTO elbDTO, List<ElbPolicyDTO> elbPolicyDTOs, String ecsIds) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public WSResult createDNS(DnsDTO dnsDTO, List<DnsPolicyDTO> dnsPolicyDTOs, String[] eipIdsArray) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public WSResult applyEIP(EipDTO eipDTO, List<EipPolicyDTO> eipPolicyDTOs) {
 		// TODO Auto-generated method stub
 		return null;
@@ -1328,19 +1286,7 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public WSResult deleteELB(Integer elbId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public WSResult bindingELB() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public WSResult unbindingELB() {
+	public WSResult createDNS(DnsDTO dnsDTO, List<DnsPolicyDTO> dnsPolicyDTOs, String[] eipIdsArray) {
 		// TODO Auto-generated method stub
 		return null;
 	}
