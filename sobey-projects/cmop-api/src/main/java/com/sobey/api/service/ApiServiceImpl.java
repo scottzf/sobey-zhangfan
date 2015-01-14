@@ -20,7 +20,6 @@ import com.sobey.generate.cmdbuild.CmdbuildSoapService;
 import com.sobey.generate.cmdbuild.ConfigFirewallAddressDTO;
 import com.sobey.generate.cmdbuild.ConfigFirewallPolicyDTO;
 import com.sobey.generate.cmdbuild.ConfigFirewallServiceCategoryDTO;
-import com.sobey.generate.cmdbuild.ConfigRouterStaticDTO;
 import com.sobey.generate.cmdbuild.ConfigSystemInterfaceDTO;
 import com.sobey.generate.cmdbuild.DnsDTO;
 import com.sobey.generate.cmdbuild.DnsPolicyDTO;
@@ -28,13 +27,12 @@ import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EcsSpecDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
-import com.sobey.generate.cmdbuild.ElbDTO;
-import com.sobey.generate.cmdbuild.ElbPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
 import com.sobey.generate.cmdbuild.IdResult;
 import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.IpaddressDTO;
+import com.sobey.generate.cmdbuild.LookUpDTO;
 import com.sobey.generate.cmdbuild.MapEcsEs3DTO;
 import com.sobey.generate.cmdbuild.NicDTO;
 import com.sobey.generate.cmdbuild.RouterDTO;
@@ -42,31 +40,27 @@ import com.sobey.generate.cmdbuild.ServerDTO;
 import com.sobey.generate.cmdbuild.SubnetDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.cmdbuild.VlanDTO;
-import com.sobey.generate.dns.DnsSoapService;
+import com.sobey.generate.dns.DNSParameter;
+import com.sobey.generate.dns.DNSPolicyParameter;
+import com.sobey.generate.dns.DNSPublicIPParameter;
 import com.sobey.generate.firewall.AuthenticateFirewallParameter;
 import com.sobey.generate.firewall.ConfigFirewallAddressParameter;
 import com.sobey.generate.firewall.ConfigFirewallAddressParameters;
 import com.sobey.generate.firewall.ConfigFirewallPolicyParameter;
 import com.sobey.generate.firewall.ConfigFirewallPolicyParameters;
-import com.sobey.generate.firewall.ConfigFirewallServiceCategoryParameter;
-import com.sobey.generate.firewall.ConfigFirewallServiceCategoryParameters;
 import com.sobey.generate.firewall.ConfigSystemInterfaceParameter;
 import com.sobey.generate.firewall.ConfigSystemInterfaceParameters;
-import com.sobey.generate.firewall.FirewallSoapService;
+import com.sobey.generate.firewall.EIPParameter;
+import com.sobey.generate.firewall.EIPPolicyParameter;
 import com.sobey.generate.instance.BindingNetworkDevicePortGroupParameter;
 import com.sobey.generate.instance.BindingPortGroupParameter;
 import com.sobey.generate.instance.CloneVMParameter;
 import com.sobey.generate.instance.CreatePortGroupParameter;
 import com.sobey.generate.instance.DestroyVMParameter;
-import com.sobey.generate.instance.InstanceSoapService;
 import com.sobey.generate.instance.PowerVMParameter;
 import com.sobey.generate.instance.ReconfigVMParameter;
 import com.sobey.generate.instance.VMDiskParameter;
-import com.sobey.generate.loadbalancer.LoadbalancerSoapService;
-import com.sobey.generate.storage.StorageSoapService;
 import com.sobey.generate.switches.SwitchPolicyParameter;
-import com.sobey.generate.switches.SwitchesSoapService;
-import com.sobey.generate.zabbix.ZabbixSoapService;
 
 @Service
 public class ApiServiceImpl implements ApiService {
@@ -74,26 +68,26 @@ public class ApiServiceImpl implements ApiService {
 	@Autowired
 	private CmdbuildSoapService cmdbuildSoapService;
 
-	@Autowired
-	private FirewallSoapService firewallSoapService;
-
-	@Autowired
-	private SwitchesSoapService switchesSoapService;
-
-	@Autowired
-	private InstanceSoapService instanceSoapService;
-
-	@Autowired
-	private StorageSoapService storageSoapService;
-
-	@Autowired
-	private LoadbalancerSoapService loadbalancerSoapService;
-
-	@Autowired
-	private DnsSoapService dnsSoapService;
-
-	@Autowired
-	private ZabbixSoapService zabbixSoapService;
+	// @Autowired
+	// private FirewallSoapService firewallSoapService;
+	//
+	// @Autowired
+	// private SwitchesSoapService switchesSoapService;
+	//
+	// @Autowired
+	// private InstanceSoapService instanceSoapService;
+	//
+	// @Autowired
+	// private StorageSoapService storageSoapService;
+	//
+	// @Autowired
+	// private LoadbalancerSoapService loadbalancerSoapService;
+	//
+	// @Autowired
+	// private DnsSoapService dnsSoapService;
+	//
+	// @Autowired
+	// private ZabbixSoapService zabbixSoapService;
 
 	/**
 	 * 默认的数据中心.
@@ -116,7 +110,7 @@ public class ApiServiceImpl implements ApiService {
 
 		// 密钥生成:基于Base62编码的SecureRandom随机生成bytes.
 		tenantsDTO.setAccessKey(Encodes.encodeBase64(Identities.randomBase62(16).getBytes()));
-		cmdbuildSoapService.createTenants(tenantsDTO);
+		IdResult idResult = cmdbuildSoapService.createTenants(tenantsDTO);
 
 		// 获得创建的Tenants对象
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -132,6 +126,8 @@ public class ApiServiceImpl implements ApiService {
 		if (!WSResult.SUCESS.equals(result.getCode())) {
 			return result;
 		}
+
+		result.setMessage(idResult.getMessage());
 
 		return result;
 	}
@@ -159,7 +155,7 @@ public class ApiServiceImpl implements ApiService {
 		subnetDTO.setPortId(portId);
 		subnetDTO.setPortIndex(cmdbuildSoapService.getMaxPortIndex(subnetDTO.getTenants()));
 
-		cmdbuildSoapService.createSubnet(subnetDTO);
+		IdResult idResult = cmdbuildSoapService.createSubnet(subnetDTO);
 
 		// Step.2 由Subnet生成Ipaddress,保存至CMDB中
 
@@ -196,6 +192,8 @@ public class ApiServiceImpl implements ApiService {
 		configSystemInterfaceDTO.setPortId(portId);
 		configSystemInterfaceDTO.setSubnet(querySubnetDTO.getId());
 		cmdbuildSoapService.createConfigSystemInterface(configSystemInterfaceDTO);
+
+		result.setMessage(idResult.getMessage());
 
 		return result;
 	}
@@ -240,12 +238,6 @@ public class ApiServiceImpl implements ApiService {
 		}
 
 		return ipaddressDTOs;
-	}
-
-	@Override
-	public WSResult deleteSubnet(Integer subnetId) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	/**
@@ -408,7 +400,7 @@ public class ApiServiceImpl implements ApiService {
 				createPortGroupParameter.setPortGroupName(vlanName);
 				createPortGroupParameter.setVirtualSwitchName(nicDTO.getVirtualSwitchName());
 				createPortGroupParameter.setVlanId(vlanId);
-				instanceSoapService.createPortGroupInstance(createPortGroupParameter);
+				// instanceSoapService.createPortGroupInstance(createPortGroupParameter);
 
 				HashMap<String, Object> queryVlanMap = new HashMap<String, Object>();
 				queryVlanMap.put("EQ_nic", nicDTO.getId());
@@ -485,7 +477,7 @@ public class ApiServiceImpl implements ApiService {
 		cloneVMParameter.setVmTemplateName(ecsSpecDTO.getImageName());
 		cloneVMParameter.setVmTemplateOS(ecsSpecDTO.getOsTypeText());
 
-		instanceSoapService.cloneVMByInstance(cloneVMParameter);
+		// instanceSoapService.cloneVMByInstance(cloneVMParameter);
 
 		// Step.3 获得端口组Vlan
 		VlanDTO vlanDTO = findSuitableVlanDTO(serverDTO, subnetDTO);
@@ -497,16 +489,15 @@ public class ApiServiceImpl implements ApiService {
 		bindingPortGroupParameter.setPortGroupName(vlanDTO.getDescription());
 		bindingPortGroupParameter.setVmName(vmName);
 
-		instanceSoapService.bindingPortGroupInstance(bindingPortGroupParameter);
+		// instanceSoapService.bindingPortGroupInstance(bindingPortGroupParameter);
 
 		// Step.5 在盛科交换机上创建策略,为不同子网的通讯做配置,重要
 
-		System.out.println(vlanDTO.getVlanId());
 		SwitchPolicyParameter switchPolicyParameter = new SwitchPolicyParameter();
 		switchPolicyParameter.setHostIp(serverIP.getDescription());
 		switchPolicyParameter.setVlanId(vlanDTO.getVlanId());
 
-		switchesSoapService.createPolicyInSwitch(switchPolicyParameter);
+		// switchesSoapService.createPolicyInSwitch(switchPolicyParameter);
 
 		// Step.6 保存至CMDB
 
@@ -515,12 +506,13 @@ public class ApiServiceImpl implements ApiService {
 		ecsDTO.setIpaddress(ipaddressDTO.getId());
 		ecsDTO.setEcsType(LookUpConstants.ECSType.instance.getValue());
 
-		IdResult idResult = cmdbuildSoapService.createEcs(ecsDTO);
-
 		// Step.7 修改分配给VM的IP状态.
 		cmdbuildSoapService.allocateIpaddress(ipaddressDTO.getId());
 
+		IdResult idResult = cmdbuildSoapService.createEcs(ecsDTO);
+
 		result.setMessage(idResult.getMessage());
+
 		return result;
 	}
 
@@ -557,7 +549,7 @@ public class ApiServiceImpl implements ApiService {
 		DestroyVMParameter destroyVMParameter = new DestroyVMParameter();
 		destroyVMParameter.setDatacenter(idcDTO.getDescription());
 		destroyVMParameter.setVmName(generateVMName(tenantsDTO, ipaddressDTO));
-		instanceSoapService.destroyVMByInstance(destroyVMParameter);
+		// instanceSoapService.destroyVMByInstance(destroyVMParameter);
 
 		// Step.4 初始化虚拟机的IP状态
 		cmdbuildSoapService.initIpaddress(ecsDTO.getIpaddress());
@@ -577,7 +569,7 @@ public class ApiServiceImpl implements ApiService {
 	 * @param ecsDTO
 	 */
 	private void deleteHost(EcsDTO ecsDTO) {
-		zabbixSoapService.deleleHost(ecsDTO.getDescription());
+		// zabbixSoapService.deleleHost(ecsDTO.getDescription());
 	}
 
 	@Override
@@ -606,12 +598,12 @@ public class ApiServiceImpl implements ApiService {
 		powerVMParameter.setPowerOperation(powerOperation);
 		powerVMParameter.setDatacenter(idcDTO.getDescription());
 
-		com.sobey.generate.instance.WSResult wsResult = instanceSoapService.powerVMByInstance(powerVMParameter);
-
-		if (!WSResult.SUCESS.equals(wsResult.getCode())) {
-			result.setError(wsResult.getCode(), wsResult.getMessage());
-			return result;
-		}
+		// com.sobey.generate.instance.WSResult wsResult = instanceSoapService.powerVMByInstance(powerVMParameter);
+		//
+		// if (!WSResult.SUCESS.equals(wsResult.getCode())) {
+		// result.setError(wsResult.getCode(), wsResult.getMessage());
+		// return result;
+		// }
 
 		// Step.3 修改ECS的运行状态
 		if (PowerOperationEnum.poweroff.toString().equals(powerOperation)) {
@@ -659,12 +651,13 @@ public class ApiServiceImpl implements ApiService {
 		reconfigVMParameter.setMemoryMB(ecsSpecDTO.getMemory().longValue());
 		reconfigVMParameter.setVmName(generateVMName(tenantsDTO, ipaddressDTO));
 
-		com.sobey.generate.instance.WSResult wsResult = instanceSoapService.reconfigVMByInstance(reconfigVMParameter);
+		// com.sobey.generate.instance.WSResult wsResult =
+		// instanceSoapService.reconfigVMByInstance(reconfigVMParameter);
 
-		if (!WSResult.SUCESS.equals(wsResult.getCode())) {
-			result.setError(wsResult.getCode(), wsResult.getMessage());
-			return result;
-		}
+		// if (!WSResult.SUCESS.equals(wsResult.getCode())) {
+		// result.setError(wsResult.getCode(), wsResult.getMessage());
+		// return result;
+		// }
 
 		// Step.4 更新CMDBuild ECS规格
 		ecsDTO.setEcsSpec(ecsSpecId);
@@ -700,10 +693,10 @@ public class ApiServiceImpl implements ApiService {
 		vmDiskParameter.setDiskName(es3DTO.getDescription());
 		vmDiskParameter.setVmName(ecsDTO.getDescription());
 
-		instanceSoapService.createVMDiskByInstance(vmDiskParameter);
+		// instanceSoapService.createVMDiskByInstance(vmDiskParameter);
 
 		// Step.3 写入CMDBuild
-		cmdbuildSoapService.createEs3(es3DTO);
+		IdResult idResult = cmdbuildSoapService.createEs3(es3DTO);
 
 		// ECS和ES3的关联关系
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -712,6 +705,10 @@ public class ApiServiceImpl implements ApiService {
 		Es3DTO queryEs3DTO = (Es3DTO) cmdbuildSoapService.findEs3ByParams(CMDBuildUtil.wrapperSearchParams(map))
 				.getDto();
 		cmdbuildSoapService.createMapEcsEs3(ecsId, queryEs3DTO.getId());
+
+		cmdbuildSoapService.createEcs(ecsDTO);
+
+		result.setMessage(idResult.getMessage());
 
 		return result;
 	}
@@ -741,7 +738,7 @@ public class ApiServiceImpl implements ApiService {
 			vmDiskParameter.setDiskName(es3DTO.getDescription());
 			vmDiskParameter.setVmName(ecsDTO.getDescription());
 
-			instanceSoapService.deleteVMDiskByInstance(vmDiskParameter);
+			// instanceSoapService.deleteVMDiskByInstance(vmDiskParameter);
 		}
 
 		return result;
@@ -799,14 +796,14 @@ public class ApiServiceImpl implements ApiService {
 		cloneVMParameter.setVmTemplateOS(ecsSpecDTO.getOsTypeText());
 		cloneVMParameter.setHostId(serverDTO.getHostgroup());
 
-		instanceSoapService.cloneNetworkDeviceByInstance(cloneVMParameter);
+		// instanceSoapService.cloneNetworkDeviceByInstance(cloneVMParameter);
 
 		// Step.3 注册更新vRouter防火墙
 		AuthenticateFirewallParameter authenticateFirewallParameter = new AuthenticateFirewallParameter();
 		authenticateFirewallParameter.setUrl(ConstansData.vRouter_default_ipaddress);
 		authenticateFirewallParameter.setUserName(ConstansData.firewall_username);
 		authenticateFirewallParameter.setPassword(ConstansData.firewall_password);
-		firewallSoapService.registeredByFirewall(authenticateFirewallParameter);
+		// firewallSoapService.registeredByFirewall(authenticateFirewallParameter);
 
 		// Step.4 修改vRouter端口
 		modifyFirewallConfigSystemInterface(managerIpaddressDTO);// 修改防火墙中 系统管理 -> 网络 -> 接口 中的配置信息.
@@ -833,13 +830,13 @@ public class ApiServiceImpl implements ApiService {
 		routerDTO.setTenants(tenantsDTO.getId());
 		routerDTO.setIpaddress(managerIpaddressDTO.getId());
 
-		cmdbuildSoapService.createRouter(routerDTO);
+		IdResult idResult = cmdbuildSoapService.createRouter(routerDTO);
 
 		// Step.7 修改分配给Router的IP状态.
 		cmdbuildSoapService.allocateIpaddress(ipaddressDTO.getId());
 		cmdbuildSoapService.allocateIpaddress(managerIpaddressDTO.getId());
 
-		result.setMessage("Router创建成功");
+		result.setMessage(idResult.getMessage());
 		return result;
 	}
 
@@ -865,15 +862,9 @@ public class ApiServiceImpl implements ApiService {
 		// TODO "port10" 为防火墙->网络->接口名,写死.后续视情况决定是否抽象成常量.
 		configSystemInterfaceParameter.setInterfaceName("port10");
 
-		firewallSoapService.modifyConfigSystemInterfaceByFirewall(configSystemInterfaceParameter);
+		// firewallSoapService.modifyConfigSystemInterfaceByFirewall(configSystemInterfaceParameter);
 
 		return result;
-	}
-
-	@Override
-	public WSResult deleteRouter() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -923,7 +914,7 @@ public class ApiServiceImpl implements ApiService {
 			bindingNetworkDevicePortGroupParameter.setVmName(generateVMName(tenantsDTO, ipaddressDTO));
 			bindingNetworkDevicePortGroupParameter.setPortIndex(subnetDTO.getPortIndex());
 
-			instanceSoapService.bindingNetworkDevicePortGroupInstance(bindingNetworkDevicePortGroupParameter);
+			// instanceSoapService.bindingNetworkDevicePortGroupInstance(bindingNetworkDevicePortGroupParameter);
 		}
 
 		// Config System Interface
@@ -1015,13 +1006,13 @@ public class ApiServiceImpl implements ApiService {
 		}
 
 		addressParameters.getConfigFirewallAddressParameters().addAll(addressArrayList);
-		firewallSoapService.configFirewallAddressParameterListByFirewall(addressParameters);
+		// firewallSoapService.configFirewallAddressParameterListByFirewall(addressParameters);
 
 		interfaceParameters.getConfigSystemInterfaceParameters().addAll(interfaceArrayList);
-		firewallSoapService.configSystemInterfaceListByFirewall(interfaceParameters);
+		// firewallSoapService.configSystemInterfaceListByFirewall(interfaceParameters);
 
 		policyParameters.getConfigFirewallPolicyParameters().addAll(policyArrayList);
-		firewallSoapService.configFirewallPolicyParameterListByFirewall(policyParameters);
+		// firewallSoapService.configFirewallPolicyParameterListByFirewall(policyParameters);
 
 		return result;
 	}
@@ -1053,31 +1044,6 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public WSResult unbindingRouter() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
-	 * 配置静态路由<br>
-	 * 
-	 * TODO 静态路由中很多参数是由运维人员指定,数量不一定.前期暂时写死,后期静态路由需有个单独的表,方便对静态路由表进行维护.
-	 * 
-	 * @param firewallServiceDTO
-	 */
-	private void createConfigRouterStatic(FirewallServiceDTO firewallServiceDTO) {
-
-		ConfigRouterStaticDTO configRouterStaticDTO = new ConfigRouterStaticDTO();
-
-		configRouterStaticDTO.setFirewallService(firewallServiceDTO.getId());
-		configRouterStaticDTO.setTenants(firewallServiceDTO.getTenants());
-		configRouterStaticDTO.setRouterId(cmdbuildSoapService.getMaxRouterId(firewallServiceDTO.getTenants()));
-		configRouterStaticDTO.setIsp(LookUpConstants.ISP.中国电信.getValue());
-		configRouterStaticDTO.setSegment("221.237.156.1");
-		cmdbuildSoapService.createConfigRouterStatic(configRouterStaticDTO);
-	}
-
-	@Override
 	public WSResult createFirewallService(FirewallServiceDTO firewallServiceDTO,
 			List<ConfigFirewallServiceCategoryDTO> categoryDTOs) {
 
@@ -1099,256 +1065,325 @@ public class ApiServiceImpl implements ApiService {
 		firewallServiceDTO = new FirewallServiceDTO();
 		firewallServiceDTO.setIdc(ConstansData.idcId);
 		firewallServiceDTO.setAgentType(LookUpConstants.AgentType.Fortigate.getValue());
-		cmdbuildSoapService.createFirewallService(firewallServiceDTO);
+		IdResult idResult = cmdbuildSoapService.createFirewallService(firewallServiceDTO);
 
+		// 获得防火墙对象
 		HashMap<String, Object> firewallServiceMap = new HashMap<String, Object>();
 		firewallServiceMap.put("EQ_tenants", firewallServiceDTO.getTenants());
 		firewallServiceMap.put("EQ_description", firewallServiceDTO.getDescription());
-
 		FirewallServiceDTO queryFirewallServiceDTO = (FirewallServiceDTO) cmdbuildSoapService
 				.findFirewallServiceByParams(CMDBuildUtil.wrapperSearchParams(firewallServiceMap)).getDto();
 
+		// 保存防火墙对象至CMDB中
 		for (ConfigFirewallServiceCategoryDTO configFirewallServiceCategoryDTO : categoryDTOs) {
 			configFirewallServiceCategoryDTO.setFirewallService(queryFirewallServiceDTO.getId());
 			cmdbuildSoapService.createconfigFirewallServiceCategory(configFirewallServiceCategoryDTO);
 		}
 
+		result.setMessage(idResult.getMessage());
 		return result;
 	}
 
 	@Override
-	public WSResult deleteFirewallService() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public WSResult bindingFirewallService(RouterDTO routerDTO, List<FirewallServiceDTO> firewallServiceDTOs) {
+	public WSResult bindingFirewallService(RouterDTO routerDTO, FirewallServiceDTO firewallServiceDTO) {
 
 		WSResult wsResult = new WSResult();
 
-		/**
-		 * 
-		 * Step.1 将防火墙策略写入vRouter中
-		 * 
-		 * Step.2 将防火墙策略和vRouter关联关系更新至CMDB中
-		 * 
-		 */
-
-		// Step.1 将防火墙策略写入vRouter中
-		// 查询出防火墙策略(FirewallService 对应的 ConfigFirewallServiceCategory)
-		// 将ConfigFirewallServiceCategory进行封装,远程执行.
-
-		for (FirewallServiceDTO firewallServiceDTO : firewallServiceDTOs) {
-
-			// 防火墙下的具体策略.
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("EQ_firewallService", firewallServiceDTO.getId());
-			List<Object> list = cmdbuildSoapService
-					.getconfigFirewallServiceCategoryList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList().getDto();
-
-			List<ConfigFirewallServiceCategoryDTO> categoryDTOs = new ArrayList<ConfigFirewallServiceCategoryDTO>();
-
-			for (Object object : list) {
-				ConfigFirewallServiceCategoryDTO categoryDTO = (ConfigFirewallServiceCategoryDTO) object;
-				categoryDTOs.add(categoryDTO);
-			}
-
-			ConfigFirewallServiceCategoryParameters categoryParameters = wrapperConfigFirewallServiceCategoryParameter(
-					categoryDTOs, routerDTO);
-			firewallSoapService.configFirewallServiceCategoryParameterListByFirewall(categoryParameters);
-
-		}
+		routerDTO.setFirewallService(firewallServiceDTO.getId());
 
 		return wsResult;
 	}
 
-	/**
-	 * 将ConfigFirewallServiceCategoryDTO 封装成 ConfigFirewallServiceCategoryParameters
-	 * 
-	 * @return
-	 */
-	private ConfigFirewallServiceCategoryParameters wrapperConfigFirewallServiceCategoryParameter(
-			List<ConfigFirewallServiceCategoryDTO> categoryDTOs, RouterDTO routerDTO) {
-
-		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(routerDTO.getEcs()).getDto();
-		// Router IP地址
-		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
-
-		String categoryName = "";
-
-		// Router下所有的Subnet
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_router", routerDTO.getId());
-		List<Object> subnetObjects = cmdbuildSoapService.getSubnetList(CMDBuildUtil.wrapperSearchParams(map))
-				.getDtoList().getDto();
-
-		ArrayList<ConfigFirewallServiceCategoryParameter> arrayList = new ArrayList<ConfigFirewallServiceCategoryParameter>();
-
-		for (ConfigFirewallServiceCategoryDTO dto : categoryDTOs) {
-
-			for (Object object : subnetObjects) {
-
-				SubnetDTO subnetDTO = (SubnetDTO) object;
-
-				ConfigFirewallServiceCategoryParameter CTCParameter = new ConfigFirewallServiceCategoryParameter();
-				ConfigFirewallServiceCategoryParameter CNCParameter = new ConfigFirewallServiceCategoryParameter();
-
-				if (StringUtils.equalsIgnoreCase("上行", dto.getDirection())) {
-
-					// 上行规则(从云资源访问外部)
-
-					CTCParameter.setUrl(ipaddressDTO.getDescription());
-					CTCParameter.setUserName(ConstansData.firewall_username);
-					CTCParameter.setPassword(ConstansData.firewall_password);
-					CTCParameter.setAction(dto.getAction());// allow & deny
-					CTCParameter.setCategoryName(categoryName);
-					CTCParameter.setPortrange(dto.getStartPort() + "-" + dto.getEndPort());
-					CTCParameter.setPolicyId(cmdbuildSoapService.getMaxPolicyId(routerDTO.getTenants()));
-					CTCParameter.setSrcintf(getInterfaceNameBySubnet(subnetDTO));
-					CTCParameter.setDstintf("port1");
-					CTCParameter.setSrcaddr(subnetDTO.getSegment());
-					CTCParameter.setDstaddr("221.237.156.161");// 电信
-
-					CNCParameter.setUrl(ipaddressDTO.getDescription());
-					CNCParameter.setUserName(ConstansData.firewall_username);
-					CNCParameter.setPassword(ConstansData.firewall_password);
-					CNCParameter.setAction(dto.getAction());// allow & deny
-					CNCParameter.setCategoryName(categoryName);
-					CNCParameter.setPortrange(dto.getStartPort() + "-" + dto.getEndPort());
-					CNCParameter.setPolicyId(cmdbuildSoapService.getMaxPolicyId(routerDTO.getTenants()));
-					CNCParameter.setSrcintf(getInterfaceNameBySubnet(subnetDTO));
-					CNCParameter.setDstintf("port2");
-					CNCParameter.setSrcaddr(subnetDTO.getSegment());
-					CNCParameter.setDstaddr("119.6.200.207");// 联通
-
-				} else {
-
-					// 下行规则(从外部访问云资源)
-
-					CTCParameter.setUrl(ipaddressDTO.getDescription());
-					CTCParameter.setUserName(ConstansData.firewall_username);
-					CTCParameter.setPassword(ConstansData.firewall_password);
-					CTCParameter.setAction(dto.getAction());// allow & deny
-					CTCParameter.setCategoryName(categoryName);
-					CTCParameter.setPortrange(dto.getStartPort() + "-" + dto.getEndPort());
-					CTCParameter.setPolicyId(cmdbuildSoapService.getMaxPolicyId(routerDTO.getTenants()));
-
-					CTCParameter.setSrcintf("port1");
-					CTCParameter.setDstintf(getInterfaceNameBySubnet(subnetDTO));
-					CTCParameter.setSrcaddr("221.237.156.161");
-					CTCParameter.setDstaddr(subnetDTO.getSegment());// 电信
-
-					CNCParameter.setUrl(ipaddressDTO.getDescription());
-					CNCParameter.setUserName(ConstansData.firewall_username);
-					CNCParameter.setPassword(ConstansData.firewall_password);
-					CNCParameter.setAction(dto.getAction());// allow & deny
-					CNCParameter.setCategoryName(categoryName);
-					CNCParameter.setPortrange(dto.getStartPort() + "-" + dto.getEndPort());
-					CNCParameter.setPolicyId(cmdbuildSoapService.getMaxPolicyId(routerDTO.getTenants()));
-					CNCParameter.setSrcintf("port2");
-					CNCParameter.setDstintf(getInterfaceNameBySubnet(subnetDTO));
-					CNCParameter.setSrcaddr("119.6.200.207");
-					CNCParameter.setDstaddr(subnetDTO.getSegment());// 联通
-				}
-
-				arrayList.add(CNCParameter);
-				arrayList.add(CTCParameter);
-			}
-		}
-
-		ConfigFirewallServiceCategoryParameters categoryParameters = new ConfigFirewallServiceCategoryParameters();
-
-		categoryParameters.getConfigFirewallServiceCategoryParameters().addAll(arrayList);
-
-		return categoryParameters;
-
-	}
-
-	/**
-	 * 获得IP或网段对应的接口名称(防火墙 -> 网络 -> 接口)
-	 * 
-	 * @param subnetDTO
-	 *            子网
-	 * @return
-	 */
-	private String getInterfaceNameBySubnet(SubnetDTO subnetDTO) {
-
-		HashMap<String, Object> interfaceMap = new HashMap<String, Object>();
-		interfaceMap.put("EQ_subnet", subnetDTO.getId());
-		List<Object> interfaceObjects = cmdbuildSoapService
-				.getConfigSystemInterfaceList(CMDBuildUtil.wrapperSearchParams(interfaceMap)).getDtoList().getDto();
-
-		// Subnet对应的interface对象. eg port1,port2
-		ConfigSystemInterfaceDTO interfaceDTO = (ConfigSystemInterfaceDTO) interfaceObjects.get(0);
-
-		return interfaceDTO.getDescription();
-	}
-
-	@Override
-	public WSResult unbindingFirewallService() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public WSResult createELB(ElbDTO elbDTO, List<ElbPolicyDTO> elbPolicyDTOs, String ecsIds) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public WSResult createDNS(DnsDTO dnsDTO, List<DnsPolicyDTO> dnsPolicyDTOs, String[] eipIdsArray) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Override
 	public WSResult applyEIP(EipDTO eipDTO, List<EipPolicyDTO> eipPolicyDTOs) {
-		// TODO Auto-generated method stub
-		return null;
+
+		WSResult result = new WSResult();
+
+		// Step.1 获得未使用的公网IP.
+
+		IpaddressDTO ipaddressDTO = getPublicIpaddress(eipDTO.getIsp());
+
+		if (ipaddressDTO == null) {
+			result.setError(WSResult.SYSTEM_ERROR, "公网IP资源不足,请联系管理员.");
+			return result;
+		}
+
+		// Step.2 将EIP信息写入CMDBuild
+		eipDTO.setIdc(ipaddressDTO.getIdc());
+		eipDTO.setIpaddress(ipaddressDTO.getId());
+		eipDTO.setDescription(ipaddressDTO.getDescription());
+		eipDTO.setEipStatus(LookUpConstants.EIPStatus.已使用.getValue());
+		IdResult idResult = cmdbuildSoapService.createEip(eipDTO);
+
+		// 获得防火墙对象
+		HashMap<String, Object> ipMap = new HashMap<String, Object>();
+		ipMap.put("EQ_tenants", eipDTO.getTenants());
+		ipMap.put("EQ_ipaddress", eipDTO.getIpaddress());
+		EipDTO queryEipDTO = (EipDTO) cmdbuildSoapService.findEipByParams(CMDBuildUtil.wrapperSearchParams(ipMap))
+				.getDto();
+
+		// Step.3 将EIP端口信息写入CMDBuild
+
+		for (EipPolicyDTO policyDTO : eipPolicyDTOs) {
+			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(policyDTO.getEipProtocol()).getDto();
+			policyDTO.setDescription(lookUpDTO.getDescription() + "-" + policyDTO.getSourcePort() + "-"
+					+ policyDTO.getTargetPort());
+			policyDTO.setEip(queryEipDTO.getId());
+			policyDTO.setEipProtocol(policyDTO.getEipProtocol());
+			policyDTO.setSourcePort(policyDTO.getSourcePort());
+			policyDTO.setTargetPort(policyDTO.getTargetPort());
+			cmdbuildSoapService.createEipPolicy(policyDTO);
+		}
+
+		// Step.4 更改EIP的状态
+		cmdbuildSoapService.allocateIpaddress(ipaddressDTO.getId());
+
+		result.setMessage(idResult.getMessage());
+		return result;
+	}
+
+	/**
+	 * 获得未使用的公网IP
+	 *
+	 * @param ispId
+	 * @return
+	 */
+	private IpaddressDTO getPublicIpaddress(Integer ispId) {
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_ipaddressStatus", LookUpConstants.IPAddressStatus.未使用.getValue());
+		map.put("EQ_ipaddressPool", LookUpConstants.IPAddressPool.InternetPool.getValue());
+		map.put("EQ_isp", ispId);
+		return (IpaddressDTO) cmdbuildSoapService.findIpaddressByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
 	}
 
 	@Override
 	public WSResult recoverEIP(Integer eipId) {
-		// TODO Auto-generated method stub
-		return null;
+
+		WSResult result = new WSResult();
+
+		/**
+		 * Step.1 获得EIP.
+		 *
+		 * Step.2 初始化公网IP
+		 *
+		 * Step.3 查询EIP下所有policy并删除
+		 *
+		 * Step.4 删除EIP
+		 *
+		 * Step.5 写入日志
+		 */
+		// Step.1 获得EIP.
+		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(eipId).getDto();
+		// Step.2 初始化公网IP
+		cmdbuildSoapService.initIpaddress(eipDTO.getIpaddress());
+		// Step.3 查询EIP下所有policy并删除
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_eip", eipId);
+		List<Object> list = cmdbuildSoapService.getEipPolicyList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+				.getDto();
+
+		for (Object obj : list) {
+			EipPolicyDTO policyDTO = (EipPolicyDTO) obj;
+			cmdbuildSoapService.deleteEipPolicy(policyDTO.getId());
+		}
+		// Step.4 删除EIP
+		cmdbuildSoapService.deleteEip(eipId);
+
+		return result;
 	}
 
 	@Override
 	public WSResult bindingEIP(Integer eipId, Integer serviceId) {
-		// TODO Auto-generated method stub
-		return null;
+
+		WSResult result = new WSResult();
+		// Step.1 获得EIP、ECS、ELB的信息
+		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(eipId).getDto();
+
+		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(serviceId).getDto();
+
+		// Step.2 与其他资源(ECS & ELB)建立关联关系
+		// 因为可能绑定ELB或ECS,无法区分.但是ECS和ELB同属一个service,id是不可能重复的,所以先通过ID查询,判断对象是否为null,如果不为null说明绑定的是该服务对象.
+		cmdbuildSoapService.createMapEcsEip(serviceId, eipId);
+
+		// Step.3 firwall创建虚拟IP
+
+		EIPParameter eipParameter = wrapperEIPParameter(eipDTO);
+		eipParameter.setPrivateIP(ecsDTO.getIpaddressDTO().getDescription());
+		// if (!WSResult.SUCESS.equals(firewallSoapService.createEIPByFirewall(eipParameter).getCode())) {
+		// // 删除关联关系
+		// cmdbuildSoapService.deleteMapEcsEip(serviceId, eipId);
+		// result.setError(WSResult.SYSTEM_ERROR, "EIP关联失败,请联系管理员.");
+		// return result;
+		// }
+		result.setMessage("EIP关联成功");
+		return result;
+
+	}
+
+	/**
+	 * EipDTO -> EIPParameter
+	 *
+	 * @param eipDTO
+	 * @return
+	 */
+	private EIPParameter wrapperEIPParameter(EipDTO eipDTO) {
+		LookUpDTO isp = (LookUpDTO) cmdbuildSoapService.findLookUp(eipDTO.getIsp()).getDto();
+		// 获得租户下所有的EIP.
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_tenants", eipDTO.getTenants());
+		List<Object> eipList = cmdbuildSoapService.getEipList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+				.getDto();
+
+		List<String> allPolicies = new ArrayList<String>();
+		for (Object obj : eipList) {
+			EipDTO dto = (EipDTO) obj;
+			IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(dto.getIpaddress()).getDto();
+			allPolicies.add(ipaddressDTO.getDescription());
+		}
+
+		// 获得EIP的策略
+		List<EIPPolicyParameter> policyParameters = new ArrayList<EIPPolicyParameter>();
+
+		HashMap<String, Object> policyMap = new HashMap<String, Object>();
+		policyMap.put("EQ_eip", eipDTO.getId());
+		List<Object> eipPolicies = cmdbuildSoapService.getEipPolicyList(CMDBuildUtil.wrapperSearchParams(policyMap))
+				.getDtoList().getDto();
+
+		for (Object obj : eipPolicies) {
+			EipPolicyDTO dto = (EipPolicyDTO) obj;
+			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(dto.getEipProtocol()).getDto();
+			EIPPolicyParameter policyParameter = new EIPPolicyParameter();
+			policyParameter.setProtocolText(lookUpDTO.getDescription());
+			policyParameter.setSourcePort(dto.getSourcePort());
+			policyParameter.setTargetPort(dto.getTargetPort());
+			policyParameters.add(policyParameter);
+		}
+		EIPParameter eipParameter = new EIPParameter();
+		eipParameter.setInternetIP(eipDTO.getIpaddressDTO().getDescription());
+		eipParameter.setIsp(isp.getId());
+		eipParameter.getPolicies().addAll(policyParameters);
+		eipParameter.getAllPolicies().addAll(allPolicies);
+		return eipParameter;
 	}
 
 	@Override
 	public WSResult unbindingEIP(Integer eipId, Integer serviceId) {
-		// TODO Auto-generated method stub
-		return null;
+
+		WSResult result = new WSResult();
+
+		// Step.1 获得EIP、ECS、ELB信息
+		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(eipId).getDto();
+		// Step.2 删除和其他资源(ECS & ELB)的关联关系
+		cmdbuildSoapService.deleteMapEcsEip(serviceId, eipId);
+		// Step.3 firwall删除虚拟IP
+		EIPParameter eipParameter = wrapperEIPParameter(eipDTO);
+		// firewallSoapService.deleteEIPByFirewall(eipParameter);
+		return result;
 	}
 
 	@Override
-	public WSResult deleteELB(Integer elbId) {
-		// TODO Auto-generated method stub
-		return null;
+	public WSResult createDNS(DnsDTO dnsDTO, List<DnsPolicyDTO> dnsPolicyDTOs, List<EipDTO> eipDTOs) {
+
+		WSResult result = new WSResult();
+
+		// Step.1 将DNS信息写入CMDBuild
+		dnsDTO.setDomainType(LookUpConstants.DomainType.GSLB.getValue());
+		IdResult idResult = cmdbuildSoapService.createDns(dnsDTO);
+		// Step.2 将DNS策略信息写入CMDBuild
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_description", dnsDTO.getDescription());
+		map.put("EQ_tenants", dnsDTO.getTenants());
+
+		DnsDTO queryDnsDTO = (DnsDTO) cmdbuildSoapService.findDnsByParams(CMDBuildUtil.wrapperSearchParams(map))
+				.getDto();
+
+		for (DnsPolicyDTO policyDTO : dnsPolicyDTOs) {
+			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(policyDTO.getDnsProtocol()).getDto();
+			EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(Integer.valueOf(policyDTO.getIpaddress())).getDto();
+			IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(eipDTO.getIpaddress())
+					.getDto();
+			DnsPolicyDTO dnsPolicyDTO = new DnsPolicyDTO();
+			dnsPolicyDTO.setDescription(lookUpDTO.getDescription() + "-" + policyDTO.getPort());
+			dnsPolicyDTO.setPort(policyDTO.getPort());
+			dnsPolicyDTO.setDns(queryDnsDTO.getId());
+			dnsPolicyDTO.setIpaddress(ipaddressDTO.getDescription());
+			dnsPolicyDTO.setDnsProtocol(policyDTO.getDnsProtocol());
+			cmdbuildSoapService.createDnsPolicy(dnsPolicyDTO);
+		}
+		// Step.3 创建关联关系
+
+		for (EipDTO eipDTO : eipDTOs) {
+			cmdbuildSoapService.createMapEipDns(eipDTO.getId(), queryDnsDTO.getId());
+		}
+
+		// Step.4 调用DNS 接口创建DNS对象
+		// dnsSoapService.createDNSByDNS(wrapperDNSParameter(queryDnsDTO));
+
+		result.setMessage(idResult.getMessage());
+		return result;
 	}
 
-	@Override
-	public WSResult bindingELB() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	private DNSParameter wrapperDNSParameter(DnsDTO dnsDTO) {
 
-	@Override
-	public WSResult unbindingELB() {
-		// TODO Auto-generated method stub
-		return null;
+		List<DNSPublicIPParameter> publicIPParameters = new ArrayList<DNSPublicIPParameter>();
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_dns", dnsDTO.getId());
+
+		List<Object> list = cmdbuildSoapService.getDnsList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList().getDto();
+
+		for (Object obj : list) {
+
+			List<DNSPolicyParameter> policyParameters = new ArrayList<DNSPolicyParameter>();
+
+			DnsPolicyDTO policyDTO = (DnsPolicyDTO) obj;
+
+			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(policyDTO.getDnsProtocol()).getDto();
+
+			DNSPolicyParameter policyParameter = new DNSPolicyParameter();
+			policyParameter.setProtocolText(lookUpDTO.getDescription());
+			policyParameter.setPort(Integer.valueOf(policyDTO.getPort()));
+			policyParameters.add(policyParameter);
+			DNSPublicIPParameter publicIPParameter = new DNSPublicIPParameter();
+			publicIPParameter.setIpaddress(policyDTO.getIpaddress());
+			publicIPParameter.getPolicyParameters().addAll(policyParameters);
+			publicIPParameters.add(publicIPParameter);
+		}
+		DNSParameter parameter = new DNSParameter();
+		parameter.setDomianName(dnsDTO.getDomainName());
+		parameter.setDomianType(dnsDTO.getDomainTypeText());
+		parameter.getPublicIPs().addAll(publicIPParameters);
+		return parameter;
 	}
 
 	@Override
 	public WSResult deleteDNS(Integer dnsId) {
-		// TODO Auto-generated method stub
-		return null;
+		WSResult result = new WSResult();
+
+		// Step.1 获得dns.
+		DnsDTO dnsDTO = (DnsDTO) cmdbuildSoapService.findDns(dnsId).getDto();
+		// Step.2 调用dns接口删除dns
+		// dnsSoapService.deleteDNSByDNS(wrapperDNSParameter(dnsDTO));
+		// Step.3 查询dns下所有policy并删除
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_dns", dnsId);
+
+		List<Object> list = cmdbuildSoapService.getDnsPolicyList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+				.getDto();
+
+		for (Object obj : list) {
+			DnsPolicyDTO policyDTO = (DnsPolicyDTO) obj;
+			cmdbuildSoapService.deleteDnsPolicy(policyDTO.getId());
+		}
+		// Step.4 删除dns
+		cmdbuildSoapService.deleteDns(dnsId);
+
+		return result;
 	}
 
 }

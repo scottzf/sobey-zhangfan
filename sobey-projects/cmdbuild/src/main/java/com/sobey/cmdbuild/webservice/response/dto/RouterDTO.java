@@ -14,6 +14,7 @@ public class RouterDTO extends ServiceBasicDTO {
 
 	private Integer ecs;
 	private EcsDTO ecsDTO;
+	private Integer firewallService;
 	private Integer ipaddress;
 	private IpaddressDTO ipaddressDTO;
 
@@ -23,6 +24,10 @@ public class RouterDTO extends ServiceBasicDTO {
 
 	public EcsDTO getEcsDTO() {
 		return ecsDTO;
+	}
+
+	public Integer getFirewallService() {
+		return firewallService;
 	}
 
 	public Integer getIpaddress() {
@@ -39,6 +44,10 @@ public class RouterDTO extends ServiceBasicDTO {
 
 	public void setEcsDTO(EcsDTO ecsDTO) {
 		this.ecsDTO = ecsDTO;
+	}
+
+	public void setFirewallService(Integer firewallService) {
+		this.firewallService = firewallService;
 	}
 
 	public void setIpaddress(Integer ipaddress) {

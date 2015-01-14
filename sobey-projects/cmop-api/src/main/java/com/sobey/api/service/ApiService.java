@@ -9,8 +9,6 @@ import com.sobey.generate.cmdbuild.DnsPolicyDTO;
 import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
-import com.sobey.generate.cmdbuild.ElbDTO;
-import com.sobey.generate.cmdbuild.ElbPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
 import com.sobey.generate.cmdbuild.RouterDTO;
@@ -26,8 +24,6 @@ public interface ApiService {
 	// ==================== Subnet ====================//
 
 	public WSResult createSubnet(SubnetDTO subnetDTO);
-
-	public WSResult deleteSubnet(Integer subnetId);
 
 	// ==================== ECS ====================//
 
@@ -45,6 +41,19 @@ public interface ApiService {
 
 	public WSResult deleteES3(Integer es3Id);
 
+	// ==================== Router ====================//
+
+	public WSResult createRouter(EcsDTO ecsDTO);
+
+	public WSResult bindingRouter(List<SubnetDTO> subnetDTOs, RouterDTO routerDTO);
+
+	// ==================== Firewall Service ====================//
+
+	public WSResult createFirewallService(FirewallServiceDTO firewallServiceDTO,
+			List<ConfigFirewallServiceCategoryDTO> categoryDTOs);
+
+	public WSResult bindingFirewallService(RouterDTO routerDTO, FirewallServiceDTO firewallServiceDTO);
+
 	// ==================== EIP ====================//
 
 	public WSResult applyEIP(EipDTO eipDTO, List<EipPolicyDTO> eipPolicyDTOs);
@@ -55,62 +64,10 @@ public interface ApiService {
 
 	public WSResult unbindingEIP(Integer eipId, Integer serviceId);
 
-	// ==================== ELB ====================//
-
-	public WSResult createELB(ElbDTO elbDTO, List<ElbPolicyDTO> elbPolicyDTOs, String ecsIds);
-
-	public WSResult deleteELB(Integer elbId);
-
-	public WSResult bindingELB();
-
-	public WSResult unbindingELB();
-
 	// ==================== DNS ====================//
 
-	public WSResult createDNS(DnsDTO dnsDTO, List<DnsPolicyDTO> dnsPolicyDTOs, String[] eipIdsArray);
+	public WSResult createDNS(DnsDTO dnsDTO, List<DnsPolicyDTO> dnsPolicyDTOs, List<EipDTO> eipDTOs);
 
 	public WSResult deleteDNS(Integer dnsId);
-
-	// ==================== Router ====================//
-
-	public WSResult createRouter(EcsDTO ecsDTO);
-
-	public WSResult deleteRouter();
-
-	/**
-	 * Subnet绑定Router
-	 * 
-	 * @param subnetDTOs
-	 * @param routerDTO
-	 * @return
-	 */
-	public WSResult bindingRouter(List<SubnetDTO> subnetDTOs, RouterDTO routerDTO);
-
-	public WSResult unbindingRouter();
-
-	// ==================== Firewall Service ====================//
-
-	/**
-	 * 创建防火墙策略.
-	 * 
-	 * 路由绑定该防火墙策略时,将自动应用防火墙里的策略.
-	 * 
-	 * @param firewallServiceDTO
-	 * @param categoryDTOs
-	 * @return
-	 */
-	public WSResult createFirewallService(FirewallServiceDTO firewallServiceDTO,
-			List<ConfigFirewallServiceCategoryDTO> categoryDTOs);
-
-	public WSResult deleteFirewallService();
-
-	/**
-	 * 路由和防火墙策略绑定
-	 * 
-	 * @return
-	 */
-	public WSResult bindingFirewallService(RouterDTO routerDTO, List<FirewallServiceDTO> firewallServiceDTOs);
-
-	public WSResult unbindingFirewallService();
 
 }

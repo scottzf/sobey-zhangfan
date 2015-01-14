@@ -2207,14 +2207,15 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Validate.isTrue(comm.eipService.findEip(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
 			Eip eip = BeanMapper.map(eipDTO, Eip.class);
-			eip.setCode("EIP-" + Identities.randomBase62(8));
+			String code = "EIP-" + Identities.randomBase62(8);
+			eip.setCode(code);
 			eip.setUser(DEFAULT_USER);
 			eip.setId(0);
 
 			BeanValidators.validateWithException(validator, eip);
 
 			comm.eipService.saveOrUpdate(eip);
-
+			result.setMessage(code);
 			return result;
 
 		} catch (IllegalArgumentException e) {
@@ -2441,14 +2442,15 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Validate.isTrue(comm.elbService.findElb(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
 			Elb elb = BeanMapper.map(elbDTO, Elb.class);
-			elb.setCode("ELB-" + Identities.randomBase62(8));
+			String code = "ELB-" + Identities.randomBase62(8);
+			elb.setCode(code);
 			elb.setUser(DEFAULT_USER);
 			elb.setId(0);
 
 			BeanValidators.validateWithException(validator, elb);
 
 			comm.elbService.saveOrUpdate(elb);
-
+			result.setMessage(code);
 			return result;
 
 		} catch (IllegalArgumentException e) {
@@ -2665,13 +2667,16 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Validate.isTrue(comm.dnsService.findDns(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
 			Dns dns = BeanMapper.map(dnsDTO, Dns.class);
-			dns.setCode("DNS-" + Identities.randomBase62(8));
+			String code = "DNS-" + Identities.randomBase62(8);
+			dns.setCode(code);
 			dns.setUser(DEFAULT_USER);
 			dns.setId(0);
 
 			BeanValidators.validateWithException(validator, dns);
 
 			comm.dnsService.saveOrUpdate(dns);
+
+			result.setMessage(code);
 
 			return result;
 
@@ -2874,15 +2879,20 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.isTrue(comm.vpnService.findVpn(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
+			
+			String code = "VPN-" + Identities.randomBase62(8);
+			
 			Vpn vpn = BeanMapper.map(vpnDTO, Vpn.class);
-			vpn.setCode("VPN-" + Identities.randomBase62(8));
+			vpn.setCode(code);
 			vpn.setUser(DEFAULT_USER);
 			vpn.setId(0);
 
 			BeanValidators.validateWithException(validator, vpn);
 
 			comm.vpnService.saveOrUpdate(vpn);
-
+			
+			
+			result.setMessage(code);
 			return result;
 
 		} catch (IllegalArgumentException e) {

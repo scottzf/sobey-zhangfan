@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import com.sobey.sdn.bean.CreateEipParameter;
 import com.sobey.sdn.bean.ECS;
 import com.sobey.sdn.bean.Firewall;
 import com.sobey.sdn.bean.Router;
@@ -93,18 +94,24 @@ public class SDNServiceImpl implements SDNService {
 			String gateway = createECSParameter.getGateway(); // 网关
 			String subnetMask = createECSParameter.getSubNetMask(); // 掩码
 			String localIp = createECSParameter.getLocalIp(); // 内网IP
+			String templateName = createECSParameter.getTemplateName(); // 模板
+			String templateOS = createECSParameter.getTemplateOS(); // 操作系统
 
 			// 按规则生成租户对应的本地VLAN
-			String portGroupName = tenantId + "_TN " + vlanId;
+			String portGroupName = tenantId + "_vlan" + vlanId;
 
-			// 判断端口是否存在
-			Boolean mark = checkNetworkIsExist(portGroupName, hostIp);
-			if (!mark) {
-				createPortGroup(hostIp, portGroupName, vlanId); // 创建端口组
+			for (String host : HostRelationMap.hostList) {
+				// 判断端口是否存在
+				Boolean mark = checkNetworkIsExist(portGroupName, host);
+				if (!mark) {
+					createPortGroup(host, portGroupName, vlanId); // 创建端口组
+				}
 			}
 
 			// 设置云主机相关属性
 			ECS ecs = new ECS();
+			ecs.setTemplateName(templateName); // 模板
+			ecs.setTemplateOS(templateOS); // 操作系统
 			ecs.setEcsName(vmName); // 设置虚拟机名称
 			ecs.setHostIp(hostIp); // 设置虚拟机所在宿主机IP
 			ecs.setGateway(gateway); // 网关
@@ -398,10 +405,8 @@ public class SDNServiceImpl implements SDNService {
 		 */
 		HostSystem host = (HostSystem) new InventoryNavigator(si.getRootFolder()).searchManagedEntity("HostSystem",
 				hostIp);
-		System.err.println("主机IP ： " + hostIp);
 		ManagedObjectReference pool = new ManagedObjectReference();
 		String poolValue = getPoolValueByHostIp(hostIp);
-		System.err.println("resgroup资源池id ： " + poolValue);
 		pool.set_value(poolValue);
 		pool.setType("ResourcePool");
 		pool.setVal(poolValue);
@@ -508,14 +513,6 @@ public class SDNServiceImpl implements SDNService {
 		}
 
 		/**
-		 * 注册更新防火墙
-		 */
-		String register_result = FirewallService.registerFirewall();
-		if (register_result != null) {
-			return register_result;
-		}
-
-		/**
 		 * 修改vRouter管理IP
 		 */
 		String update_result = FirewallService.updateFirewallManageIp(ip_update);
@@ -574,7 +571,7 @@ public class SDNServiceImpl implements SDNService {
 
 		// 获得vRouter模板
 		VirtualMachine vRouter = (VirtualMachine) new InventoryNavigator(si.getRootFolder()).searchManagedEntity(
-				"VirtualMachine", SDNPropertiesUtil.getProperty("VROUTER_TEMPLATE"));
+				"VirtualMachine", SDNConstants.VROUTER_TEMPLATE);
 
 		// 虚拟机克隆方案创建
 		VirtualMachineCloneSpec cloneSpec = new VirtualMachineCloneSpec();
@@ -644,6 +641,7 @@ public class SDNServiceImpl implements SDNService {
 		 * 获得操作vRouter的属性
 		 */
 		String vRouterIp = bindingRouterParameter.getControlIp(); // vRouter管理IP
+		String vRouterHostIp = bindingRouterParameter.getvRouterHostIp(); // vRouter所在宿主机IP
 		String routerName = bindingRouterParameter.getRouterName(); // vRouter名称 参数
 		int strategyNo = bindingRouterParameter.getStrategyNo(); // 策略号
 
@@ -671,8 +669,12 @@ public class SDNServiceImpl implements SDNService {
 			int portNo = subnet.getPortNo(); // 子网所连的端口序号 参数
 			String gateway = subnet.getGateway(); // 子网网关
 			String subnetMask = subnet.getSubnetMask(); // 子网掩码
+			int vlanId = subnet.getVlanId(); // 子网关联vlanId
 
 			addVRouterNicToPortGroup(routerName, portGroupName, portNo);
+			
+			//向盛科交换机创建接口允许vlan通过的命令
+			CentecSwitchService.makeVlanAccessInterface(vRouterHostIp, vlanId);
 
 			// 创建地址段
 			FirewallService.createAddressPool(vRouterIp, subnet.getSubnetName(), subnet.getSegment(),
@@ -984,10 +986,20 @@ public class SDNServiceImpl implements SDNService {
 		FirewallService.configurationPortGateway(vRouter_ip, SDNConstants.CTC_DEFAULT_PORT, routeNo, gateway);
 
 		/**
+		 * 手动执行防火墙更新文件
+		 */
+
+		/**
 		 * 配置需要访问互联网的子网与电信网络之间的策略
 		 */
 		FirewallService.configurationInternetStrategy(vRouter_ip, strategyNo, subnetPort,
 				SDNConstants.CTC_DEFAULT_PORT, subnetAddressPoolName, "all");
+
+	}
+
+	@Override
+	public void createEip(CreateEipParameter createEipParameter) throws Exception {
+		FirewallService.createEIp(createEipParameter);
 
 	}
 }

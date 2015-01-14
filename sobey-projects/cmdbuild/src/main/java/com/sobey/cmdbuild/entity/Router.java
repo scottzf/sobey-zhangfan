@@ -16,6 +16,7 @@ import com.sobey.cmdbuild.entity.basic.ServiceBasic;
 public class Router extends ServiceBasic {
 
 	private Integer ecs;
+	private Integer firewallService;
 	private Integer ipaddress;
 	private Set<RouterHistory> routerHistories = new HashSet<RouterHistory>(0);
 
@@ -25,6 +26,11 @@ public class Router extends ServiceBasic {
 	@Column(name = "ecs")
 	public Integer getEcs() {
 		return ecs;
+	}
+
+	@Column(name = "firewall_service")
+	public Integer getFirewallService() {
+		return firewallService;
 	}
 
 	@Column(name = "ipaddress")
@@ -39,6 +45,10 @@ public class Router extends ServiceBasic {
 
 	public void setEcs(Integer ecs) {
 		this.ecs = ecs;
+	}
+
+	public void setFirewallService(Integer firewallService) {
+		this.firewallService = firewallService;
 	}
 
 	public void setIpaddress(Integer ipaddress) {
