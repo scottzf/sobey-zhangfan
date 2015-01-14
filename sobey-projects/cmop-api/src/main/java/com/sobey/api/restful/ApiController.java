@@ -82,6 +82,12 @@ public class ApiController {
 		return servie.createRouter(routerName, subnetCode, remark, routerSpec, idc, accessKey);
 	}
 
+	@RequestMapping(value = "/bindingRouter/", method = RequestMethod.POST)
+	public WSResult bindingRouter(@RequestParam(value = "routerCode") String routerCode,
+			@RequestParam(value = "subnetCodes") String subnetCodes, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.bindingRouter(routerCode, subnetCodes, accessKey);
+	}
+
 	/********** ECS ***********/
 	@RequestMapping(value = "/ECSResult/{code}/{accessKey}", method = RequestMethod.GET)
 	public DTOResult<EcsEntity> ECSResult(@PathVariable("code") String code, @PathVariable("accessKey") String accessKey) {
@@ -162,9 +168,8 @@ public class ApiController {
 		return servie.findFirewallService(code, accessKey);
 	}
 
-	@RequestMapping(value = "/createFirewallServiceResult/", method = RequestMethod.POST)
-	public WSResult createFirewallServiceResult(
-			@RequestParam(value = "firewallServiceName") String firewallServiceName,
+	@RequestMapping(value = "/createFirewallService/", method = RequestMethod.POST)
+	public WSResult createFirewallService(@RequestParam(value = "firewallServiceName") String firewallServiceName,
 			@RequestParam(value = "directions") String directions,
 			@RequestParam(value = "rulesNames") String rulesNames, @RequestParam(value = "protocols") String protocols,
 			@RequestParam(value = "actions") String actions, @RequestParam(value = "startPorts") String startPorts,
@@ -172,6 +177,13 @@ public class ApiController {
 			@RequestParam(value = "idc") String idc, @RequestParam(value = "accessKey") String accessKey) {
 		return servie.createFirewallService(firewallServiceName, directions, rulesNames, protocols, actions,
 				startPorts, endPorts, ipaddresses, idc, accessKey);
+	}
+
+	@RequestMapping(value = "/bindingFirewallService/", method = RequestMethod.POST)
+	public WSResult bindingFirewallService(@RequestParam(value = "routerCode") String routerCode,
+			@RequestParam(value = "firewallServiceCode") String firewallServiceCode,
+			@RequestParam(value = "accessKey") String accessKey) {
+		return servie.bindingFirewallService(routerCode, firewallServiceCode, accessKey);
 	}
 
 	/********** EIP ***********/

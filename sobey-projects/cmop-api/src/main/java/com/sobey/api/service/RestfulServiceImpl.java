@@ -500,7 +500,7 @@ public class RestfulServiceImpl implements RestfulService {
 	@Override
 	public WSResult createDNS(String domainName, String eipCodes, String protocols, String idc, String remark,
 			String accessKey) {
-		
+
 		System.out.println("*********API1***************");
 
 		WSResult result = new WSResult();
@@ -930,6 +930,65 @@ public class RestfulServiceImpl implements RestfulService {
 		}
 		apiService.unbindingEIP(eipDTO, serviceDTO);
 		return result;
+	}
+
+	@Override
+	public WSResult bindingFirewallService(String routerCode, String firewallServiceCode, String accessKey) {
+
+		WSResult result = new WSResult();
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		RouterDTO routerDTO = findRouterDTO(tenantsDTO.getId(), routerCode);
+		if (routerDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "路由器不存在.");
+			return result;
+		}
+
+		FirewallServiceDTO firewallServiceDTO = findFirewallServiceDTO(tenantsDTO.getId(), firewallServiceCode);
+		if (firewallServiceDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "防火墙不存在.");
+			return result;
+		}
+		return apiService.bindingFirewallService(routerDTO, firewallServiceDTO);
+
+	}
+
+	@Override
+	public WSResult bindingRouter(String routerCode, String subnetCodes, String accessKey) {
+
+		String[] subnetCodesArray = StringUtils.split(subnetCodes, ",");
+
+		WSResult result = new WSResult();
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		RouterDTO routerDTO = findRouterDTO(tenantsDTO.getId(), routerCode);
+		if (routerDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "路由器不存在.");
+			return result;
+		}
+
+		List<SubnetDTO> subnetDTOs = new ArrayList<SubnetDTO>();
+
+		for (String subnetCode : subnetCodesArray) {
+
+			SubnetDTO subnetDTO = findSubnetDTO(tenantsDTO.getId(), subnetCode);
+			if (subnetDTO == null) {
+				result.setError(WSResult.PARAMETER_ERROR, "Subnet不存在.");
+				return result;
+			}
+			subnetDTOs.add(subnetDTO);
+		}
+
+		return apiService.bindingRouter(subnetDTOs, routerDTO);
+
 	}
 
 }

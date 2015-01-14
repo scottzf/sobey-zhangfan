@@ -61,6 +61,8 @@ public interface RestfulService {
 	public WSResult createRouter(String routerName, String subnetCode, String remark, String ecsSpec, String idc,
 			String accessKey);
 
+	public WSResult bindingRouter(String routerCode, String subnetCodes, String accessKey);
+
 	/******** FirewallService ********/
 	public DTOResult<FirewallServiceEntity> findFirewallService(String code, String accessKey);
 
@@ -68,7 +70,9 @@ public interface RestfulService {
 			String protocols, String actions, String startPorts, String endPorts, String ipaddresses, String idc,
 			String accessKey);
 
-	/******** FirewallService ********/
+	WSResult bindingFirewallService(String routerCode, String firewallServiceCode, String accessKey);
+
+	/******** EIP ********/
 	public DTOResult<EipEntity> findEIP(String eipCode, String accessKey);
 
 	public WSResult allocateEIP(String isp, String protocols, String sourcePorts, String targetPorts, String bandwidth,
