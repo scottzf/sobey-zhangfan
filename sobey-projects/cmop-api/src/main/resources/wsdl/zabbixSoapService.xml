@@ -148,7 +148,7 @@
   </wsdl:binding>
   <wsdl:service name="ZabbixSoapService">
     <wsdl:port binding="tns:ZabbixSoapServiceSoapBinding" name="ZabbixSoapServiceImplPort">
-      <soap:address location="http://10.2.12.92:8087/zabbix/cxf/soap/zabbixSoapService"/>
+      <soap:address location="http://localhost:8087/zabbix/cxf/soap/zabbixSoapService"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

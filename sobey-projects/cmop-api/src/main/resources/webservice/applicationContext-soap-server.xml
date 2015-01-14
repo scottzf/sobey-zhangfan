@@ -15,26 +15,26 @@
 	<!-- WebService Client inject -->
 
 	<jaxws:client id="cmdbuildSoapService" serviceClass="com.sobey.generate.cmdbuild.CmdbuildSoapService"
-		address="http://10.2.12.90:8080/cmdbuild/cxf/soap/cmdbuildSoapService?wsdl" />
+		address="http://localhost:8080/cmdbuild/cxf/soap/cmdbuildSoapService?wsdl" />
 
 	<jaxws:client id="instanceSoapService" serviceClass="com.sobey.generate.instance.InstanceSoapService"
-		address="http://10.2.12.92:8081/instance/cxf/soap/instanceSoapService?wsdl" />
+		address="http://localhost:8081/instance/cxf/soap/instanceSoapService?wsdl" />
 
 	<jaxws:client id="switchesSoapService" serviceClass="com.sobey.generate.switches.SwitchesSoapService"
-		address="http://10.2.12.92:8082/switch/cxf/soap/switchesSoapService?wsdl" />
+		address="http://localhost:8082/switch/cxf/soap/switchesSoapService?wsdl" />
 
 	<jaxws:client id="firewallSoapService" serviceClass="com.sobey.generate.firewall.FirewallSoapService"
-		address="http://10.2.12.92:8083/firewall/cxf/soap/firewallSoapService?wsdl" />
+		address="http://localhost:8083/firewall/cxf/soap/firewallSoapService?wsdl" />
 
 	<jaxws:client id="storageSoapService" serviceClass="com.sobey.generate.storage.StorageSoapService"
-		address="http://10.2.12.91:8084/storage/cxf/soap/storageSoapService?wsdl" />
+		address="http://localhost:8084/storage/cxf/soap/storageSoapService?wsdl" />
 
-	<jaxws:client id="dnsSoapService" serviceClass="com.sobey.generate.dns.DnsSoapService" address="http://10.2.12.90:8085/dns/cxf/soap/dnsSoapService?wsdl" />
+	<jaxws:client id="dnsSoapService" serviceClass="com.sobey.generate.dns.DnsSoapService" address="http://localhost:8085/dns/cxf/soap/dnsSoapService?wsdl" />
 
 	<jaxws:client id="loadbalancerSoapService" serviceClass="com.sobey.generate.loadbalancer.LoadbalancerSoapService"
-		address="http://10.2.12.91:8086/loadbalancer/cxf/soap/loadbalancerSoapService?wsdl" />
+		address="http://localhost:8086/loadbalancer/cxf/soap/loadbalancerSoapService?wsdl" />
 
 	<jaxws:client id="zabbixSoapService" serviceClass="com.sobey.generate.zabbix.ZabbixSoapService"
-		address="http://10.2.12.90:8087/zabbix/cxf/soap/zabbixSoapService?wsdl" />
+		address="http://localhost:8087/zabbix/cxf/soap/zabbixSoapService?wsdl" />
 
 </beans>
