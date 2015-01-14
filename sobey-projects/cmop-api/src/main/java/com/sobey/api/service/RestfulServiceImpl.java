@@ -663,7 +663,7 @@ public class RestfulServiceImpl implements RestfulService {
 		ecsDTO.setTenants(tenantsDTO.getId());
 		ecsDTO.setSubnet(subnetDTO.getId());
 
-		result.setMessage(apiService.createECS(ecsDTO).getMessage());
+		result.setMessage(apiService.createRouter(ecsDTO).getMessage());
 
 		return result;
 	}
