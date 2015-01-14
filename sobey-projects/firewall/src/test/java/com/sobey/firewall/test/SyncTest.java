@@ -104,7 +104,7 @@ public class SyncTest implements PbulicProperties {
 		StringBuilder sb = new StringBuilder();
 		sb.append("config firewall address").append(ENTER_SIGN);
 		sb.append("edit ").append("\"").append(parameter.getSegment()).append("\"").append(ENTER_SIGN);
-		sb.append("set subnet ").append(parameter.getGateway()).append(" ").append(parameter.getSubnetMask())
+		sb.append("set subnet ").append(parameter.getSegment()).append(" ").append(parameter.getSubnetMask())
 				.append(ENTER_SIGN);
 		sb.append("next").append(ENTER_SIGN);
 		System.out.println(sb.toString());
@@ -154,12 +154,10 @@ public class SyncTest implements PbulicProperties {
 	public void configFirewallAddressScrip() {
 
 		ConfigFirewallAddressParameter configFirewallAddressParameter = new ConfigFirewallAddressParameter();
-		configFirewallAddressParameter.setGateway("192.168.100.254");
 		configFirewallAddressParameter.setSegment("192.168.100.0/24");
 		configFirewallAddressParameter.setSubnetMask("255.255.255.0");
 
 		ConfigFirewallAddressParameter configFirewallAddressParameterB = new ConfigFirewallAddressParameter();
-		configFirewallAddressParameterB.setGateway("192.168.200.254");
 		configFirewallAddressParameterB.setSegment("192.168.200.0/24");
 		configFirewallAddressParameterB.setSubnetMask("255.255.255.0");
 
