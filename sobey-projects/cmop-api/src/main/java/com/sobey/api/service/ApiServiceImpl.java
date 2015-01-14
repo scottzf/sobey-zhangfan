@@ -180,7 +180,7 @@ public class ApiServiceImpl implements ApiService {
 			cmdbuildSoapService.createIpaddress(ipaddressDTO);
 		}
 
-		// TODO 应该可以不用
+		// TODO 应该可以不用,待后续流程review时再做决定.
 		// Step.3 由Subnet生成ConfigFirewallAddress,保存至CMDB中
 
 		// ConfigFirewallAddressDTO configFirewallAddressDTO = new ConfigFirewallAddressDTO();
@@ -444,11 +444,9 @@ public class ApiServiceImpl implements ApiService {
 		 * 
 		 * Step.4 绑定端口组
 		 * 
-		 * Step.5 在盛科交换机上创建策略
+		 * Step.5 保存至CMDB
 		 * 
-		 * Step.6 保存至CMDB
-		 * 
-		 * Step.7 修改分配给VM的IP状态.
+		 * Step.6 修改分配给VM的IP状态.
 		 * 
 		 */
 
@@ -463,9 +461,6 @@ public class ApiServiceImpl implements ApiService {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_description", serverDTO.getDescription());
-
-		IpaddressDTO serverIP = (IpaddressDTO) cmdbuildSoapService.findIpaddressByParams(
-				CMDBuildUtil.wrapperSearchParams(map)).getDto();
 
 		IpaddressDTO ipaddressDTO = findAvailableIPAddressDTO(subnetDTO); // 从子网中选择一个IP.
 
@@ -498,22 +493,14 @@ public class ApiServiceImpl implements ApiService {
 
 		instanceSoapService.bindingPortGroupInstance(bindingPortGroupParameter);
 
-		// Step.5 在盛科交换机上创建策略,为不同子网的通讯做配置,重要
-
-		SwitchPolicyParameter switchPolicyParameter = new SwitchPolicyParameter();
-		switchPolicyParameter.setHostIp(serverIP.getDescription());
-		switchPolicyParameter.setVlanId(vlanDTO.getVlanId());
-
-		switchesSoapService.createPolicyInSwitch(switchPolicyParameter);
-
-		// Step.6 保存至CMDB
+		// Step.5 保存至CMDB
 
 		ecsDTO.setServer(serverDTO.getId());
 		ecsDTO.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
 		ecsDTO.setIpaddress(ipaddressDTO.getId());
 		ecsDTO.setEcsType(LookUpConstants.ECSType.instance.getValue());
 
-		// Step.7 修改分配给VM的IP状态.
+		// Step.6 修改分配给VM的IP状态.
 		cmdbuildSoapService.allocateIpaddress(ipaddressDTO.getId());
 
 		IdResult idResult = cmdbuildSoapService.createEcs(ecsDTO);
@@ -886,7 +873,7 @@ public class ApiServiceImpl implements ApiService {
 		 * 
 		 * Step.4 在vRouter上执行脚本(配置子网策略 config firewall policy)
 		 * 
-		 * Step.5 Router和Subnet的关联关系保存至CMDB
+		 * Step.5 在盛科交换机上创建策略,为不同子网的通讯做配置,重要
 		 * 
 		 */
 
@@ -901,11 +888,11 @@ public class ApiServiceImpl implements ApiService {
 
 		// vRouter 管理IP
 		IpaddressDTO managerDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(routerDTO.getIpaddress()).getDto();
+		String url = managerDTO.getDescription();
 
 		// Router所在的宿主机
 		ServerDTO serverDTO = (ServerDTO) cmdbuildSoapService.findServer(ecsDTO.getServer()).getDto();
-
-		String url = managerDTO.getDescription();
+		IpaddressDTO serverIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(routerDTO.getIpaddress()).getDto();
 
 		// Step.1 将Subnet所属的vlan绑定到VM中的vRouter上.
 		for (SubnetDTO subnetDTO : subnetDTOs) {
@@ -1008,6 +995,18 @@ public class ApiServiceImpl implements ApiService {
 			// TODO 两者关联关系要报错.mark.
 			// subnetDTO.setRouter(routerDTO.getId());
 			// cmdbuildSoapService.updateSubnet(subnetDTO.getId(), subnetDTO);
+
+			// 获得子网对应的VlanId
+			HashMap<String, Object> vlanMap = new HashMap<String, Object>();
+			vlanMap.put("EQ_subnet", subnetDTO.getId());
+			VlanDTO vlanDTO = (VlanDTO) cmdbuildSoapService.findVlanByParams(CMDBuildUtil.wrapperSearchParams(vlanMap))
+					.getDto();
+
+			// Step.5 在盛科交换机上创建策略,为不同子网的通讯做配置,重要
+			SwitchPolicyParameter switchPolicyParameter = new SwitchPolicyParameter();
+			switchPolicyParameter.setHostIp(serverIP.getDescription());
+			switchPolicyParameter.setVlanId(vlanDTO.getId());
+			switchesSoapService.createPolicyInSwitch(switchPolicyParameter);
 
 		}
 
