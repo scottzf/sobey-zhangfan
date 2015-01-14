@@ -180,16 +180,15 @@ public class ApiServiceImpl implements ApiService {
 			cmdbuildSoapService.createIpaddress(ipaddressDTO);
 		}
 
+		// TODO 应该可以不用
 		// Step.3 由Subnet生成ConfigFirewallAddress,保存至CMDB中
 
-		ConfigFirewallAddressDTO configFirewallAddressDTO = new ConfigFirewallAddressDTO();
-
-		configFirewallAddressDTO.setDescription(subnetDTO.getSegment());
-		configFirewallAddressDTO.setPolicyId(cmdbuildSoapService.getMaxPolicyId(subnetDTO.getTenants()));
-		configFirewallAddressDTO.setSubnet(querySubnetDTO.getId());
-		configFirewallAddressDTO.setTenants(subnetDTO.getTenants());
-
-		cmdbuildSoapService.createConfigFirewallAddress(configFirewallAddressDTO);
+		// ConfigFirewallAddressDTO configFirewallAddressDTO = new ConfigFirewallAddressDTO();
+		// configFirewallAddressDTO.setDescription(subnetDTO.getSegment());
+		// configFirewallAddressDTO.setPolicyId(cmdbuildSoapService.getMaxPolicyId(subnetDTO.getTenants()));
+		// configFirewallAddressDTO.setSubnet(querySubnetDTO.getId());
+		// configFirewallAddressDTO.setTenants(subnetDTO.getTenants());
+		// cmdbuildSoapService.createConfigFirewallAddress(configFirewallAddressDTO);
 
 		// Step.4 将Subnet和firewall中的接口组绑定,关系保存至CMDB中(暂时未将配置信息写入firewall)
 
