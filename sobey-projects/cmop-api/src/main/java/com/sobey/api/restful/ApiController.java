@@ -143,7 +143,7 @@ public class ApiController {
 	@RequestMapping(value = "/createDNS/", method = RequestMethod.POST)
 	public WSResult createDNS(@RequestParam(value = "domainName") String domainName,
 			@RequestParam(value = "eipCodes") String eipCodes, @RequestParam(value = "protocols") String protocols,
-			@RequestParam(value = "remark") String remark, @RequestParam(value = "idc") String idc,
+			@RequestParam(value = "remark", required = false) String remark, @RequestParam(value = "idc") String idc,
 			@RequestParam(value = "accessKey") String accessKey) {
 		return servie.createDNS(domainName, eipCodes, protocols, idc, remark, accessKey);
 	}
@@ -155,7 +155,7 @@ public class ApiController {
 	}
 
 	/******** FirewallService ********/
-	@RequestMapping(value = "/firewallServiceResult/{code}/{accessKey}", method = RequestMethod.GET)
+	@RequestMapping(value = "/FirewallServiceResult/{code}/{accessKey}", method = RequestMethod.GET)
 	public DTOResult<FirewallServiceEntity> firewallServiceResult(@PathVariable("code") String code,
 			@PathVariable("accessKey") String accessKey) {
 		return servie.findFirewallService(code, accessKey);
@@ -164,13 +164,13 @@ public class ApiController {
 	@RequestMapping(value = "/createFirewallServiceResult/", method = RequestMethod.POST)
 	public WSResult createFirewallServiceResult(
 			@RequestParam(value = "firewallServiceName") String firewallServiceName,
-			@RequestParam(value = "directions") String directions, @RequestParam(value = "rulesName") String rulesName,
-			@RequestParam(value = "protocols") String protocols, @RequestParam(value = "actions") String actions,
-			@RequestParam(value = "startPorts") String startPorts, @RequestParam(value = "endPorts") String endPorts,
-			@RequestParam(value = "ipaddresses") String ipaddresses, @RequestParam(value = "idc") String idc,
-			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.createFirewallService(firewallServiceName, directions, rulesName, protocols, actions, startPorts,
-				endPorts, ipaddresses, idc, accessKey);
+			@RequestParam(value = "directions") String directions,
+			@RequestParam(value = "rulesNames") String rulesNames, @RequestParam(value = "protocols") String protocols,
+			@RequestParam(value = "actions") String actions, @RequestParam(value = "startPorts") String startPorts,
+			@RequestParam(value = "endPorts") String endPorts, @RequestParam(value = "ipaddresses") String ipaddresses,
+			@RequestParam(value = "idc") String idc, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.createFirewallService(firewallServiceName, directions, rulesNames, protocols, actions,
+				startPorts, endPorts, ipaddresses, idc, accessKey);
 	}
 
 }
