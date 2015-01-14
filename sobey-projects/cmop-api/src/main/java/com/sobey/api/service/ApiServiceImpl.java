@@ -1208,7 +1208,7 @@ public class ApiServiceImpl implements ApiService {
 		// Step.3 firwall创建虚拟IP
 
 		EIPParameter eipParameter = wrapperEIPParameter(eipDTO);
-		eipParameter.setPrivateIP(ecsDTO.getIpaddressDTO().getDescription());
+//		eipParameter.setPrivateIP(ecsDTO.getIpaddressDTO().getDescription());
 		// if (!WSResult.SUCESS.equals(firewallSoapService.createEIPByFirewall(eipParameter).getCode())) {
 		// // 删除关联关系
 		// cmdbuildSoapService.deleteMapEcsEip(serviceDTO.getId(), eipDTO.getId());
