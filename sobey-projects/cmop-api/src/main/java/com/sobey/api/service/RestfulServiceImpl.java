@@ -138,8 +138,8 @@ public class RestfulServiceImpl implements RestfulService {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_tenants", tenantsId);
 		map.put("EQ_code", code);
-		return (FirewallServiceDTO) cmdbuildSoapService.findFirewallByParams(CMDBuildUtil.wrapperSearchParams(map))
-				.getDto();
+		return (FirewallServiceDTO) cmdbuildSoapService.findFirewallServiceByParams(
+				CMDBuildUtil.wrapperSearchParams(map)).getDto();
 	}
 
 	private EcsSpecDTO findEcsSpecDTO(String description) {
