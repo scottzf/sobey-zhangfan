@@ -2,6 +2,7 @@ package com.sobey.api.service;
 
 import com.sobey.api.entity.DnsEntity;
 import com.sobey.api.entity.EcsEntity;
+import com.sobey.api.entity.EipEntity;
 import com.sobey.api.entity.Es3Entity;
 import com.sobey.api.entity.FirewallServiceEntity;
 import com.sobey.api.entity.RouterEntity;
@@ -66,5 +67,17 @@ public interface RestfulService {
 	public WSResult createFirewallService(String firewallServiceName, String directions, String rulesNames,
 			String protocols, String actions, String startPorts, String endPorts, String ipaddresses, String idc,
 			String accessKey);
+
+	/******** FirewallService ********/
+	public DTOResult<EipEntity> findEIP(String eipCode, String accessKey);
+
+	public WSResult allocateEIP(String isp, String protocols, String sourcePorts, String targetPorts, String bandwidth,
+			String remark, String accessKey);
+
+	public WSResult recoverEIP(String eipCode, String accessKey);
+
+	public WSResult associateEIP(String eipCode, String serviceCode, String accessKey);
+
+	public WSResult dissociateEIP(String eipCode, String serviceCode, String accessKey);
 
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sobey.api.entity.DnsEntity;
 import com.sobey.api.entity.EcsEntity;
+import com.sobey.api.entity.EipEntity;
 import com.sobey.api.entity.Es3Entity;
 import com.sobey.api.entity.FirewallServiceEntity;
 import com.sobey.api.entity.RouterEntity;
@@ -171,6 +172,38 @@ public class ApiController {
 			@RequestParam(value = "idc") String idc, @RequestParam(value = "accessKey") String accessKey) {
 		return servie.createFirewallService(firewallServiceName, directions, rulesNames, protocols, actions,
 				startPorts, endPorts, ipaddresses, idc, accessKey);
+	}
+
+	/********** EIP ***********/
+	@RequestMapping(value = "/EIPResult/{code}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<EipEntity> EIPResult(@PathVariable("code") String code, @PathVariable("accessKey") String accessKey) {
+		return servie.findEIP(URLEscape(code), accessKey);
+	}
+
+	@RequestMapping(value = "/allocateEIP/", method = RequestMethod.POST)
+	public WSResult allocateEIP(@RequestParam(value = "isp") String isp, @RequestParam(value = "remark") String remark,
+			@RequestParam(value = "bandwidth") String bandwidth, @RequestParam(value = "protocols") String protocols,
+			@RequestParam(value = "sourcePorts") String sourcePorts,
+			@RequestParam(value = "targetPorts") String targetPorts, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.allocateEIP(isp, protocols, sourcePorts, targetPorts, bandwidth, remark, accessKey);
+	}
+
+	@RequestMapping(value = "/recoverEIP/", method = RequestMethod.POST)
+	public WSResult recoverEIP(@RequestParam(value = "code") String code,
+			@RequestParam(value = "accessKey") String accessKey) {
+		return servie.recoverEIP(code, accessKey);
+	}
+
+	@RequestMapping(value = "/associateEIP/", method = RequestMethod.POST)
+	public WSResult associateEIP(@RequestParam(value = "code") String code,
+			@RequestParam(value = "serviceCode") String serviceCode, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.associateEIP(code, serviceCode, accessKey);
+	}
+
+	@RequestMapping(value = "/dissociateEIP/", method = RequestMethod.POST)
+	public WSResult dissociateEIP(@RequestParam(value = "code") String code,
+			@RequestParam(value = "serviceCode") String serviceCode, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.dissociateEIP(code, serviceCode, accessKey);
 	}
 
 }

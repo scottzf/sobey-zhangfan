@@ -37,6 +37,7 @@ import com.sobey.generate.cmdbuild.MapEcsEs3DTO;
 import com.sobey.generate.cmdbuild.NicDTO;
 import com.sobey.generate.cmdbuild.RouterDTO;
 import com.sobey.generate.cmdbuild.ServerDTO;
+import com.sobey.generate.cmdbuild.ServiceDTO;
 import com.sobey.generate.cmdbuild.SubnetDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.cmdbuild.VlanDTO;
@@ -1195,17 +1196,16 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public WSResult bindingEIP(Integer eipId, Integer serviceId) {
+	public WSResult bindingEIP(EipDTO eipDTO, ServiceDTO serviceDTO) {
 
 		WSResult result = new WSResult();
 		// Step.1 获得EIP、ECS、ELB的信息
-		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(eipId).getDto();
 
-		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(serviceId).getDto();
+		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(serviceDTO.getId()).getDto();
 
 		// Step.2 与其他资源(ECS & ELB)建立关联关系
 		// 因为可能绑定ELB或ECS,无法区分.但是ECS和ELB同属一个service,id是不可能重复的,所以先通过ID查询,判断对象是否为null,如果不为null说明绑定的是该服务对象.
-		cmdbuildSoapService.createMapEcsEip(serviceId, eipId);
+		cmdbuildSoapService.createMapEcsEip(ecsDTO.getId(), eipDTO.getId());
 
 		// Step.3 firwall创建虚拟IP
 
@@ -1270,14 +1270,13 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public WSResult unbindingEIP(Integer eipId, Integer serviceId) {
+	public WSResult unbindingEIP(EipDTO eipDTO, ServiceDTO serviceDTO) {
 
 		WSResult result = new WSResult();
 
 		// Step.1 获得EIP、ECS、ELB信息
-		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(eipId).getDto();
 		// Step.2 删除和其他资源(ECS & ELB)的关联关系
-		cmdbuildSoapService.deleteMapEcsEip(serviceId, eipId);
+		cmdbuildSoapService.deleteMapEcsEip(serviceDTO.getId(), eipDTO.getId());
 		// Step.3 firwall删除虚拟IP
 		EIPParameter eipParameter = wrapperEIPParameter(eipDTO);
 		// firewallSoapService.deleteEIPByFirewall(eipParameter);

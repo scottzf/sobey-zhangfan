@@ -12,6 +12,7 @@ import com.sobey.generate.cmdbuild.EipPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
 import com.sobey.generate.cmdbuild.RouterDTO;
+import com.sobey.generate.cmdbuild.ServiceDTO;
 import com.sobey.generate.cmdbuild.SubnetDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 
@@ -60,9 +61,9 @@ public interface ApiService {
 
 	public WSResult recoverEIP(Integer eipId);
 
-	public WSResult bindingEIP(Integer eipId, Integer serviceId);
+	public WSResult bindingEIP(EipDTO eipDTO, ServiceDTO serviceDTO);
 
-	public WSResult unbindingEIP(Integer eipId, Integer serviceId);
+	public WSResult unbindingEIP(EipDTO eipDTO, ServiceDTO serviceDTO);
 
 	// ==================== DNS ====================//
 

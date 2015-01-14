@@ -12,6 +12,7 @@ import com.sobey.api.constans.LookUpConstants;
 import com.sobey.api.entity.DnsEntity;
 import com.sobey.api.entity.EcsEntity;
 import com.sobey.api.entity.EipEntity;
+import com.sobey.api.entity.ElbEntity;
 import com.sobey.api.entity.Es3Entity;
 import com.sobey.api.entity.FirewallPolicyEntity;
 import com.sobey.api.entity.FirewallServiceEntity;
@@ -28,13 +29,18 @@ import com.sobey.generate.cmdbuild.DnsPolicyDTO;
 import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EcsSpecDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
+import com.sobey.generate.cmdbuild.EipPolicyDTO;
+import com.sobey.generate.cmdbuild.ElbDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
 import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.IpaddressDTO;
 import com.sobey.generate.cmdbuild.LookUpDTO;
+import com.sobey.generate.cmdbuild.MapEcsEipDTO;
 import com.sobey.generate.cmdbuild.MapEipDnsDTO;
+import com.sobey.generate.cmdbuild.MapEipElbDTO;
 import com.sobey.generate.cmdbuild.RouterDTO;
+import com.sobey.generate.cmdbuild.ServiceDTO;
 import com.sobey.generate.cmdbuild.SubnetDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.dns.DnsSoapService;
@@ -119,6 +125,13 @@ public class RestfulServiceImpl implements RestfulService {
 		map.put("EQ_tenants", tenantsId);
 		map.put("EQ_code", code);
 		return (RouterDTO) cmdbuildSoapService.findRouterByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
+	}
+
+	private ServiceDTO findServiceDTO(Integer tenantsId, String code) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_tenants", tenantsId);
+		map.put("EQ_code", code);
+		return (ServiceDTO) cmdbuildSoapService.findServiceByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
 	}
 
 	private FirewallServiceDTO findFirewallServiceDTO(Integer tenantsId, String code) {
@@ -746,6 +759,169 @@ public class RestfulServiceImpl implements RestfulService {
 		}
 
 		result.setMessage(queryFirewallServiceDTO.getCode());
+		return result;
+	}
+
+	@Override
+	public DTOResult<EipEntity> findEIP(String eipCode, String accessKey) {
+
+		DTOResult<EipEntity> result = new DTOResult<EipEntity>();
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+		EipDTO eipDTO = findEipDTO(tenantsDTO.getId(), eipCode);
+		if (eipDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "EIP不存在.");
+			return result;
+		}
+		// 查询出EIP关联的ECS信息
+		List<EcsEntity> ecsEntities = new ArrayList<EcsEntity>();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_idObj2", eipDTO.getId());
+		List<Object> list = cmdbuildSoapService.getMapEcsEipList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+				.getDto();
+		for (Object object : list) {
+			MapEcsEipDTO mapEcsEipDTO = (MapEcsEipDTO) object;
+			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(Integer.valueOf(mapEcsEipDTO.getIdObj1())).getDto();
+
+			IdcDTO idcDTO = (IdcDTO) cmdbuildSoapService.findIdc(ecsDTO.getIdc()).getDto();
+			IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress())
+					.getDto();
+			EcsSpecDTO ecsSpecDTO = (EcsSpecDTO) cmdbuildSoapService.findEcsSpec(ecsDTO.getEcsSpec()).getDto();
+			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(ecsDTO.getEcsStatus()).getDto();
+
+			EcsEntity entity = new EcsEntity(ecsDTO.getCpuNumber(), ecsDTO.getDescription(), idcDTO.getDescription(),
+					ecsDTO.getCode(), ipaddressDTO.getDescription(), ecsDTO.isIsDesktop(), ecsDTO.isIsGpu(),
+					ecsDTO.getMemorySize(), ecsDTO.getRemark(), ecsSpecDTO.getDescription(), lookUpDTO.getDescription());
+			ecsEntities.add(entity);
+		}
+		// 查询出EIP关联的ELB信息
+		List<ElbEntity> elbEntities = new ArrayList<ElbEntity>();
+		HashMap<String, Object> elbMap = new HashMap<String, Object>();
+		elbMap.put("EQ_idObj1", eipDTO.getId());
+		List<Object> mapEipElblist = cmdbuildSoapService.getMapEipElbList(CMDBuildUtil.wrapperSearchParams(elbMap))
+				.getDtoList().getDto();
+		for (Object object : mapEipElblist) {
+			MapEipElbDTO mapEcsElbDTO = (MapEipElbDTO) object;
+			ElbDTO elbDTO = (ElbDTO) cmdbuildSoapService.findElb(Integer.valueOf(mapEcsElbDTO.getIdObj2())).getDto();
+			ElbEntity entity = new ElbEntity(elbDTO.getCode(), elbDTO.getDescription(), null);
+			elbEntities.add(entity);
+		}
+		EipEntity entity = new EipEntity(eipDTO.getCode(), eipDTO.getDescription(), eipDTO.getRemark(),
+				eipDTO.getBandwidthText(), eipDTO.getIspText(), ecsEntities, elbEntities);
+		result.setDto(entity);
+		return result;
+	}
+
+	@Override
+	public WSResult allocateEIP(String isp, String protocols, String sourcePorts, String targetPorts, String bandwidth,
+			String remark, String accessKey) {
+
+		String[] protocolsArray = StringUtils.split(protocols, ",");
+		String[] sourcePortsArray = StringUtils.split(sourcePorts, ",");
+		String[] targetPortsArray = StringUtils.split(targetPorts, ",");
+
+		WSResult result = new WSResult();
+		if (protocolsArray.length != sourcePortsArray.length || targetPortsArray.length != protocolsArray.length
+				|| sourcePortsArray.length != targetPortsArray.length) {
+			result.setError(WSResult.PARAMETER_ERROR, "参数错误.");
+			return result;
+		}
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+		LookUpDTO lookUpDTO = findLookUpDTO(isp, "ISP");
+		if (lookUpDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "ISP不存在.");
+			return result;
+		}
+		List<EipPolicyDTO> eipPolicyDTOs = new ArrayList<EipPolicyDTO>();
+		for (int i = 0; i < targetPortsArray.length; i++) {
+			LookUpDTO upDTO = findLookUpDTO(protocolsArray[i], "EIPProtocol");
+			if (upDTO == null) {
+				result.setError(WSResult.PARAMETER_ERROR, "协议不存在.");
+				return result;
+			}
+			EipPolicyDTO policyDTO = new EipPolicyDTO();
+			policyDTO.setEipProtocol(upDTO.getId());
+			policyDTO.setSourcePort(Integer.valueOf(sourcePortsArray[i]));
+			policyDTO.setTargetPort(Integer.valueOf(targetPortsArray[i]));
+			eipPolicyDTOs.add(policyDTO);
+		}
+		EipDTO eipDTO = new EipDTO();
+		eipDTO.setAgentType(LookUpConstants.AgentType.Fortigate.getValue());
+		eipDTO.setBandwidth(1);
+		eipDTO.setRemark(remark);
+		eipDTO.setTenants(tenantsDTO.getId());
+		eipDTO.setIsp(lookUpDTO.getId());
+		return apiService.applyEIP(eipDTO, eipPolicyDTOs);
+
+	}
+
+	@Override
+	public WSResult recoverEIP(String eipCode, String accessKey) {
+
+		WSResult result = new WSResult();
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+		EipDTO eipDTO = findEipDTO(tenantsDTO.getId(), eipCode);
+		if (eipDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "EIP不存在.");
+			return result;
+		}
+		apiService.recoverEIP(eipDTO.getId());
+		return result;
+	}
+
+	@Override
+	public WSResult associateEIP(String eipCode, String serviceCode, String accessKey) {
+
+		WSResult result = new WSResult();
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+		EipDTO eipDTO = findEipDTO(tenantsDTO.getId(), eipCode);
+		if (eipDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "EIP不存在.");
+			return result;
+		}
+		ServiceDTO serviceDTO = findServiceDTO(tenantsDTO.getId(), serviceCode);
+		if (serviceDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "服务资源不存在.");
+			return result;
+		}
+		return apiService.bindingEIP(eipDTO, serviceDTO);
+	}
+
+	@Override
+	public WSResult dissociateEIP(String eipCode, String serviceCode, String accessKey) {
+
+		WSResult result = new WSResult();
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+		EipDTO eipDTO = findEipDTO(tenantsDTO.getId(), eipCode);
+		if (eipDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "EIP不存在.");
+			return result;
+		}
+		ServiceDTO serviceDTO = findServiceDTO(tenantsDTO.getId(), serviceCode);
+		if (serviceDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "服务资源不存在.");
+			return result;
+		}
+		apiService.unbindingEIP(eipDTO, serviceDTO);
 		return result;
 	}
 
