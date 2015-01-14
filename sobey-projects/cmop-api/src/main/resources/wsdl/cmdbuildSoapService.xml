@@ -1670,6 +1670,7 @@
         <xs:sequence>
           <xs:element minOccurs="0" name="ecs" type="xs:int"/>
           <xs:element minOccurs="0" name="ecsDTO" type="tns:EcsDTO"/>
+          <xs:element minOccurs="0" name="firewallService" type="xs:int"/>
           <xs:element minOccurs="0" name="ipaddress" type="xs:int"/>
           <xs:element minOccurs="0" name="ipaddressDTO" type="tns:IpaddressDTO"/>
         </xs:sequence>
