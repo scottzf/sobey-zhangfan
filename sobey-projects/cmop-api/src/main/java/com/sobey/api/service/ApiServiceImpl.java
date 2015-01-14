@@ -1201,6 +1201,8 @@ public class ApiServiceImpl implements ApiService {
 
 		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(serviceDTO.getId()).getDto();
 
+		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
+
 		// Step.2 与其他资源(ECS & ELB)建立关联关系
 		// 因为可能绑定ELB或ECS,无法区分.但是ECS和ELB同属一个service,id是不可能重复的,所以先通过ID查询,判断对象是否为null,如果不为null说明绑定的是该服务对象.
 		cmdbuildSoapService.createMapEcsEip(ecsDTO.getId(), eipDTO.getId());
@@ -1208,7 +1210,7 @@ public class ApiServiceImpl implements ApiService {
 		// Step.3 firwall创建虚拟IP
 
 		EIPParameter eipParameter = wrapperEIPParameter(eipDTO);
-//		eipParameter.setPrivateIP(ecsDTO.getIpaddressDTO().getDescription());
+		eipParameter.setPrivateIP(ipaddressDTO.getDescription());
 		// if (!WSResult.SUCESS.equals(firewallSoapService.createEIPByFirewall(eipParameter).getCode())) {
 		// // 删除关联关系
 		// cmdbuildSoapService.deleteMapEcsEip(serviceDTO.getId(), eipDTO.getId());
