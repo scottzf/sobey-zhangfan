@@ -681,7 +681,9 @@ public class RestfulServiceImpl implements RestfulService {
 		List<FirewallPolicyEntity> policyEntities = new ArrayList<FirewallPolicyEntity>();
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
+
 		map.put("EQ_firewallService", firewallServiceDTO.getId());
+
 		List<Object> list = cmdbuildSoapService
 				.getconfigFirewallServiceCategoryList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList().getDto();
 
@@ -717,8 +719,6 @@ public class RestfulServiceImpl implements RestfulService {
 		String[] startPortsArray = StringUtils.split(startPorts, ",");
 		String[] endPortsArray = StringUtils.split(endPorts, ",");
 		String[] ipaddressesArray = StringUtils.split(ipaddresses, ",");
-		
-		System.out.println("***********API  1****************");
 
 		if (directionsArray.length != actionsArray.length) {
 			result.setError(WSResult.PARAMETER_ERROR, "参数错误.");
@@ -733,13 +733,12 @@ public class RestfulServiceImpl implements RestfulService {
 
 		FirewallServiceDTO firewallServiceDTO = new FirewallServiceDTO();
 		firewallServiceDTO.setDescription(firewallServiceName);
+		firewallServiceDTO.setTenants(tenantsDTO.getId());
 		cmdbuildSoapService.createFirewallService(firewallServiceDTO);
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_tenants", tenantsDTO.getId());
-		map.put("EQ_description", firewallServiceDTO.getDescription());
-		
-		System.out.println("***********API  2****************");
+		map.put("EQ_description", firewallServiceName);
 
 		FirewallServiceDTO queryFirewallServiceDTO = (FirewallServiceDTO) cmdbuildSoapService
 				.findFirewallServiceByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
@@ -747,7 +746,6 @@ public class RestfulServiceImpl implements RestfulService {
 		for (int i = 0; i < directionsArray.length; i++) {
 
 			ConfigFirewallServiceCategoryDTO categoryDTO = new ConfigFirewallServiceCategoryDTO();
-			
 			categoryDTO.setAction(actionsArray[i]);
 			categoryDTO.setAddress(ipaddressesArray[i]);
 			categoryDTO.setDescription(rulesNamesArray[i]);
@@ -757,14 +755,10 @@ public class RestfulServiceImpl implements RestfulService {
 			categoryDTO.setTenants(tenantsDTO.getId());
 			categoryDTO.setProtocol(protocolsArray[i]);
 			categoryDTO.setFirewallService(queryFirewallServiceDTO.getId());
-			
-			System.out.println("***********API  4****************");
 
 			cmdbuildSoapService.createconfigFirewallServiceCategory(categoryDTO);
 		}
 
-		
-		System.out.println("***********API  4****************");
 		result.setMessage(queryFirewallServiceDTO.getCode());
 		return result;
 	}
