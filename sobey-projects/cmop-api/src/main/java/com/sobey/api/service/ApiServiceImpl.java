@@ -1291,7 +1291,6 @@ public class ApiServiceImpl implements ApiService {
 		IdResult idResult = cmdbuildSoapService.createDns(dnsDTO);
 		// Step.2 将DNS策略信息写入CMDBuild
 
-		System.out.println("*********API4***************");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_description", dnsDTO.getDescription());
 		map.put("EQ_tenants", dnsDTO.getTenants());
@@ -1299,12 +1298,9 @@ public class ApiServiceImpl implements ApiService {
 		DnsDTO queryDnsDTO = (DnsDTO) cmdbuildSoapService.findDnsByParams(CMDBuildUtil.wrapperSearchParams(map))
 				.getDto();
 
-		
 		for (DnsPolicyDTO policyDTO : dnsPolicyDTOs) {
 			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(policyDTO.getDnsProtocol()).getDto();
-			
 			EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(Integer.valueOf(policyDTO.getIpaddress())).getDto();
-			
 			IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(eipDTO.getIpaddress())
 					.getDto();
 			DnsPolicyDTO dnsPolicyDTO = new DnsPolicyDTO();
@@ -1315,9 +1311,7 @@ public class ApiServiceImpl implements ApiService {
 			dnsPolicyDTO.setDnsProtocol(policyDTO.getDnsProtocol());
 			cmdbuildSoapService.createDnsPolicy(dnsPolicyDTO);
 		}
-		// Step.3 创建关联关系.
-		
-		System.out.println("*********API5***************");
+		// Step.3 创建关联关系
 
 		for (EipDTO eipDTO : eipDTOs) {
 			cmdbuildSoapService.createMapEipDns(eipDTO.getId(), queryDnsDTO.getId());
