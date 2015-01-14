@@ -13,6 +13,7 @@ import com.sobey.api.entity.DnsEntity;
 import com.sobey.api.entity.EcsEntity;
 import com.sobey.api.entity.EipEntity;
 import com.sobey.api.entity.Es3Entity;
+import com.sobey.api.entity.FirewallPolicyEntity;
 import com.sobey.api.entity.FirewallServiceEntity;
 import com.sobey.api.entity.RouterEntity;
 import com.sobey.api.entity.SubnetEntity;
@@ -85,6 +86,13 @@ public class RestfulServiceImpl implements RestfulService {
 		return (EcsDTO) cmdbuildSoapService.findEcsByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
 	}
 
+	private EipDTO findEipDTO(Integer tenantsId, String code) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_tenants", tenantsId);
+		map.put("EQ_code", code);
+		return (EipDTO) cmdbuildSoapService.findEipByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
+	}
+
 	private Es3DTO findEs3DTO(Integer tenantsId, String code) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_tenants", tenantsId);
@@ -111,6 +119,14 @@ public class RestfulServiceImpl implements RestfulService {
 		map.put("EQ_tenants", tenantsId);
 		map.put("EQ_code", code);
 		return (RouterDTO) cmdbuildSoapService.findRouterByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
+	}
+
+	private FirewallServiceDTO findFirewallServiceDTO(Integer tenantsId, String code) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_tenants", tenantsId);
+		map.put("EQ_code", code);
+		return (FirewallServiceDTO) cmdbuildSoapService.findFirewallByParams(CMDBuildUtil.wrapperSearchParams(map))
+				.getDto();
 	}
 
 	private EcsSpecDTO findEcsSpecDTO(String description) {
@@ -448,7 +464,9 @@ public class RestfulServiceImpl implements RestfulService {
 			result.setError(WSResult.PARAMETER_ERROR, "DNS不存在.");
 			return result;
 		}
+
 		List<EipEntity> eipEntities = new ArrayList<EipEntity>();
+
 		// 查询出DNS关联的EIP信息
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_idObj2", dnsDTO.getId());
@@ -467,33 +485,48 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult createDNS(String domainName, String eipIds, String protocols, String remark, String accessKey) {
+	public WSResult createDNS(String domainName, String eipCodes, String protocols, String idc, String remark,
+			String accessKey) {
 
-		String[] eipIdsArray = StringUtils.split(eipIds, ",");
-		String[] protocolsArray = StringUtils.split(protocols, ",");
 		WSResult result = new WSResult();
-		if (protocolsArray.length != eipIdsArray.length) {
+
+		String[] eipCodesArray = StringUtils.split(eipCodes, ",");
+		String[] protocolsArray = StringUtils.split(protocols, ",");
+
+		if (protocolsArray.length != eipCodesArray.length) {
 			result.setError(WSResult.PARAMETER_ERROR, "参数错误.");
 			return result;
 		}
+
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
 		if (tenantsDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
 			return result;
 		}
+
 		if (findDnsDTO(tenantsDTO.getId(), domainName) != null) {
 			result.setError(WSResult.PARAMETER_ERROR, "域名已存在.");
 			return result;
 		}
+
+		IdcDTO idcDTO = findIdcDTO(idc);
+		if (idcDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "IDC不存在.");
+			return result;
+		}
+
+		List<EipDTO> eipDTOs = new ArrayList<EipDTO>();
+
 		List<DnsPolicyDTO> dnsPolicyDTOs = new ArrayList<DnsPolicyDTO>();
 		for (int i = 0; i < protocolsArray.length; i++) {
 
-			EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(Integer.valueOf(eipIdsArray[i])).getDto();
+			EipDTO eipDTO = findEipDTO(tenantsDTO.getId(), eipCodesArray[i]);
 
 			if (eipDTO == null) {
 				result.setError(WSResult.PARAMETER_ERROR, "EIP不存在.");
 				return result;
 			}
+			eipDTOs.add(eipDTO);
 
 			IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(eipDTO.getIpaddress())
 					.getDto();
@@ -510,13 +543,16 @@ public class RestfulServiceImpl implements RestfulService {
 			policyDTO.setIpaddress(ipaddressDTO.getDescription());
 			dnsPolicyDTOs.add(policyDTO);
 		}
+
 		DnsDTO dnsDTO = new DnsDTO();
 		dnsDTO.setAgentType(LookUpConstants.AgentType.Netscaler.getValue());
 		dnsDTO.setTenants(tenantsDTO.getId());
 		dnsDTO.setDomainName(domainName);
 		dnsDTO.setDescription(domainName);
 		dnsDTO.setRemark(remark);
-		apiService.createDNS(dnsDTO, dnsPolicyDTOs, eipIdsArray);
+		dnsDTO.setIdc(idcDTO.getId());
+
+		result.setMessage(apiService.createDNS(dnsDTO, dnsPolicyDTOs, eipDTOs).getMessage());
 		return result;
 
 	}
@@ -571,7 +607,6 @@ public class RestfulServiceImpl implements RestfulService {
 		RouterEntity entity = new RouterEntity(routerDTO.getDescription(), subnetEntities);
 		result.setDto(entity);
 		return result;
-
 	}
 
 	@Override
@@ -616,14 +651,102 @@ public class RestfulServiceImpl implements RestfulService {
 
 	@Override
 	public DTOResult<FirewallServiceEntity> findFirewallService(String code, String accessKey) {
-		// TODO Auto-generated method stub
-		return null;
+
+		DTOResult<FirewallServiceEntity> result = new DTOResult<FirewallServiceEntity>();
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		FirewallServiceDTO firewallServiceDTO = findFirewallServiceDTO(tenantsDTO.getId(), code);
+		if (firewallServiceDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "防火墙不存在.");
+			return result;
+		}
+
+		List<FirewallPolicyEntity> policyEntities = new ArrayList<FirewallPolicyEntity>();
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+
+		map.put("EQ_firewallService", firewallServiceDTO.getId());
+
+		List<Object> list = cmdbuildSoapService
+				.getconfigFirewallServiceCategoryList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList().getDto();
+
+		for (Object object : list) {
+			ConfigFirewallServiceCategoryDTO categoryDTO = (ConfigFirewallServiceCategoryDTO) object;
+
+			FirewallPolicyEntity policyEntity = new FirewallPolicyEntity(categoryDTO.getAction(),
+					categoryDTO.getAddress(), categoryDTO.getDirection(), categoryDTO.getEndPort(),
+					categoryDTO.getFirewallService(), categoryDTO.getDescription(), categoryDTO.getProtocol(),
+					categoryDTO.getStartPort());
+			policyEntities.add(policyEntity);
+		}
+
+		FirewallServiceEntity entity = new FirewallServiceEntity(firewallServiceDTO.getDescription(), policyEntities);
+
+		result.setDto(entity);
+
+		return result;
+
 	}
 
 	@Override
-	public WSResult createFirewallService(FirewallServiceDTO firewallServiceDTO,
-			List<ConfigFirewallServiceCategoryDTO> categoryDTOs, String accessKey) {
-		// TODO Auto-generated method stub
-		return null;
+	public WSResult createFirewallService(String firewallServiceName, String directions, String rulesNames,
+			String protocols, String actions, String startPorts, String endPorts, String ipaddresses, String idc,
+			String accessKey) {
+
+		WSResult result = new WSResult();
+
+		String[] directionsArray = StringUtils.split(directions, ",");
+		String[] rulesNamesArray = StringUtils.split(rulesNames, ",");
+		String[] protocolsArray = StringUtils.split(protocols, ",");
+		String[] actionsArray = StringUtils.split(actions, ",");
+		String[] startPortsArray = StringUtils.split(startPorts, ",");
+		String[] endPortsArray = StringUtils.split(endPorts, ",");
+		String[] ipaddressesArray = StringUtils.split(ipaddresses, ",");
+
+		if (directionsArray.length != actionsArray.length) {
+			result.setError(WSResult.PARAMETER_ERROR, "参数错误.");
+			return result;
+		}
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		FirewallServiceDTO firewallServiceDTO = new FirewallServiceDTO();
+		firewallServiceDTO.setDescription(firewallServiceName);
+		cmdbuildSoapService.createFirewallService(firewallServiceDTO);
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_tenants", tenantsDTO.getId());
+		map.put("EQ_description", firewallServiceDTO.getDescription());
+
+		FirewallServiceDTO queryFirewallServiceDTO = (FirewallServiceDTO) cmdbuildSoapService
+				.findFirewallServiceByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
+
+		for (int i = 0; i < directionsArray.length; i++) {
+
+			ConfigFirewallServiceCategoryDTO categoryDTO = new ConfigFirewallServiceCategoryDTO();
+			categoryDTO.setAction(actionsArray[i]);
+			categoryDTO.setAddress(ipaddressesArray[i]);
+			categoryDTO.setDescription(rulesNamesArray[i]);
+			categoryDTO.setDirection(directionsArray[i]);
+			categoryDTO.setStartPort(Integer.valueOf(startPortsArray[i]));
+			categoryDTO.setEndPort(Integer.valueOf(endPortsArray[i]));
+			categoryDTO.setTenants(tenantsDTO.getId());
+			categoryDTO.setProtocol(protocolsArray[i]);
+			categoryDTO.setFirewallService(queryFirewallServiceDTO.getId());
+
+			cmdbuildSoapService.createconfigFirewallServiceCategory(categoryDTO);
+		}
+
+		result.setMessage(queryFirewallServiceDTO.getCode());
+		return result;
 	}
+
 }

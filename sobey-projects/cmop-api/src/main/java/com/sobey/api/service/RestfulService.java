@@ -1,7 +1,5 @@
 package com.sobey.api.service;
 
-import java.util.List;
-
 import com.sobey.api.entity.DnsEntity;
 import com.sobey.api.entity.EcsEntity;
 import com.sobey.api.entity.Es3Entity;
@@ -11,8 +9,6 @@ import com.sobey.api.entity.SubnetEntity;
 import com.sobey.api.entity.TenantsEntity;
 import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
-import com.sobey.generate.cmdbuild.ConfigFirewallServiceCategoryDTO;
-import com.sobey.generate.cmdbuild.FirewallServiceDTO;
 
 public interface RestfulService {
 
@@ -53,7 +49,8 @@ public interface RestfulService {
 	/******** DNS ********/
 	public DTOResult<DnsEntity> findDNS(String code, String accessKey);
 
-	public WSResult createDNS(String domainName, String eipIds, String protocols, String remark, String accessKey);
+	public WSResult createDNS(String domainName, String eipCodes, String protocols, String idc, String remark,
+			String accessKey);
 
 	public WSResult deleteDNS(String code, String accessKey);
 
@@ -66,7 +63,8 @@ public interface RestfulService {
 	/******** FirewallService ********/
 	public DTOResult<FirewallServiceEntity> findFirewallService(String code, String accessKey);
 
-	public WSResult createFirewallService(FirewallServiceDTO firewallServiceDTO,
-			List<ConfigFirewallServiceCategoryDTO> categoryDTOs, String accessKey);
+	public WSResult createFirewallService(String firewallServiceName, String directions, String rulesNames,
+			String protocols, String actions, String startPorts, String endPorts, String ipaddresses, String idc,
+			String accessKey);
 
 }

@@ -52,7 +52,7 @@ public interface ApiService {
 	public WSResult createFirewallService(FirewallServiceDTO firewallServiceDTO,
 			List<ConfigFirewallServiceCategoryDTO> categoryDTOs);
 
-	public WSResult bindingFirewallService(RouterDTO routerDTO, List<FirewallServiceDTO> firewallServiceDTOs);
+	public WSResult bindingFirewallService(RouterDTO routerDTO, FirewallServiceDTO firewallServiceDTO);
 
 	// ==================== EIP ====================//
 
@@ -66,7 +66,7 @@ public interface ApiService {
 
 	// ==================== DNS ====================//
 
-	public WSResult createDNS(DnsDTO dnsDTO, List<DnsPolicyDTO> dnsPolicyDTOs, String[] eipIdsArray);
+	public WSResult createDNS(DnsDTO dnsDTO, List<DnsPolicyDTO> dnsPolicyDTOs, List<EipDTO> eipDTOs);
 
 	public WSResult deleteDNS(Integer dnsId);
 

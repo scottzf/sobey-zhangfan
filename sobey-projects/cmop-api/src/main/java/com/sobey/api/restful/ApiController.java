@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sobey.api.entity.DnsEntity;
 import com.sobey.api.entity.EcsEntity;
 import com.sobey.api.entity.Es3Entity;
+import com.sobey.api.entity.FirewallServiceEntity;
 import com.sobey.api.entity.RouterEntity;
 import com.sobey.api.entity.SubnetEntity;
 import com.sobey.api.entity.TenantsEntity;
@@ -141,15 +142,35 @@ public class ApiController {
 
 	@RequestMapping(value = "/createDNS/", method = RequestMethod.POST)
 	public WSResult createDNS(@RequestParam(value = "domainName") String domainName,
-			@RequestParam(value = "eipNames") String eipNames, @RequestParam(value = "protocols") String protocols,
-			@RequestParam(value = "remark") String remark, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.createDNS(domainName, eipNames, protocols, remark, accessKey);
+			@RequestParam(value = "eipCodes") String eipCodes, @RequestParam(value = "protocols") String protocols,
+			@RequestParam(value = "remark") String remark, @RequestParam(value = "idc") String idc,
+			@RequestParam(value = "accessKey") String accessKey) {
+		return servie.createDNS(domainName, eipCodes, protocols, idc, remark, accessKey);
 	}
 
 	@RequestMapping(value = "/deleteDNS/", method = RequestMethod.POST)
 	public WSResult deleteDNS(@RequestParam(value = "code") String code,
 			@RequestParam(value = "accessKey") String accessKey) {
 		return servie.deleteDNS(code, accessKey);
+	}
+
+	/******** FirewallService ********/
+	@RequestMapping(value = "/firewallServiceResult/{code}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<FirewallServiceEntity> firewallServiceResult(@PathVariable("code") String code,
+			@PathVariable("accessKey") String accessKey) {
+		return servie.findFirewallService(code, accessKey);
+	}
+
+	@RequestMapping(value = "/createFirewallServiceResult/", method = RequestMethod.POST)
+	public WSResult createFirewallServiceResult(
+			@RequestParam(value = "firewallServiceName") String firewallServiceName,
+			@RequestParam(value = "directions") String directions, @RequestParam(value = "rulesName") String rulesName,
+			@RequestParam(value = "protocols") String protocols, @RequestParam(value = "actions") String actions,
+			@RequestParam(value = "startPorts") String startPorts, @RequestParam(value = "endPorts") String endPorts,
+			@RequestParam(value = "ipaddresses") String ipaddresses, @RequestParam(value = "idc") String idc,
+			@RequestParam(value = "accessKey") String accessKey) {
+		return servie.createFirewallService(firewallServiceName, directions, rulesName, protocols, actions, startPorts,
+				endPorts, ipaddresses, idc, accessKey);
 	}
 
 }

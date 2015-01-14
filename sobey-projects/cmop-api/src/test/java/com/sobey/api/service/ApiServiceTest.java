@@ -82,8 +82,8 @@ public class ApiServiceTest extends TestCase {
 	public void bindingFirewallService() {
 
 		RouterDTO routerDTO = new RouterDTO();
-		List<FirewallServiceDTO> firewallServiceDTOs = new ArrayList<FirewallServiceDTO>();
-		service.bindingFirewallService(routerDTO, firewallServiceDTOs);
+		FirewallServiceDTO firewallServiceDTO = new FirewallServiceDTO();
+		service.bindingFirewallService(routerDTO, firewallServiceDTO);
 	}
 
 }
