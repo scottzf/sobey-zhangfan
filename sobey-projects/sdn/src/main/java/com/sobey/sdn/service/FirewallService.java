@@ -1,6 +1,7 @@
 package com.sobey.sdn.service;
 
 import com.sobey.sdn.bean.CreateEipParameter;
+import com.sobey.sdn.bean.VPNParameter;
 import com.sobey.sdn.constans.SDNConstants;
 import com.sobey.sdn.util.SshUtil;
 
@@ -189,6 +190,35 @@ public class FirewallService {
 		// 执行
 		SshUtil.executeCommand(eipParameter.getvRouterIp(), SDNConstants.FIREWALL_USERNAME,
 				SDNConstants.FIREWALL_PASSWORD, createEipStrategyConfigScript);
+
+	}
+
+	public static void createVPN(VPNParameter vpnParameter) {
+
+		// 生成配置VPN用户账号和密码脚本
+		String vpnUserConfigScript = FirewallScriptService.generateVpnUserConfigScript(vpnParameter.getVpnUserName(),
+				vpnParameter.getVpnPassword());
+
+		// 执行
+		SshUtil.executeCommand(vpnParameter.getvRouterIp(), SDNConstants.FIREWALL_USERNAME,
+				SDNConstants.FIREWALL_PASSWORD, vpnUserConfigScript);
+
+		// 生成配置VPN用户组脚本
+		String vpnUserGroupConfigScript = FirewallScriptService.generateVpnUserGroupConfigScript(
+				vpnParameter.getVpnGroupName(), vpnParameter.getUserNames());
+
+		// 执行
+		SshUtil.executeCommand(vpnParameter.getvRouterIp(), SDNConstants.FIREWALL_USERNAME,
+				SDNConstants.FIREWALL_PASSWORD, vpnUserGroupConfigScript);
+
+		// 生成配置VPN策略脚本
+		String vpnStrategyConfigScript = FirewallScriptService.generateVpnStrategyConfigScript(
+				vpnParameter.getStrategyNo(), vpnParameter.getInternetPortNo(), vpnParameter.getSubnetPortNo(),
+				vpnParameter.getSubnetAddressPoolName(), vpnParameter.getVpnGroupNo(), vpnParameter.getVpnGroupName());
+
+		// 执行
+		SshUtil.executeCommand(vpnParameter.getvRouterIp(), SDNConstants.FIREWALL_USERNAME,
+				SDNConstants.FIREWALL_PASSWORD, vpnStrategyConfigScript);
 
 	}
 }

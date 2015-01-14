@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.sobey.sdn.bean.CreateEipParameter;
 import com.sobey.sdn.bean.Subnet;
+import com.sobey.sdn.bean.VPNParameter;
 import com.sobey.sdn.constans.SDNConstants;
 import com.sobey.sdn.test.testParameter.BindingFirewallParameter;
 import com.sobey.sdn.test.testParameter.BindingRouterParameter;
@@ -79,7 +80,7 @@ public class TestData {
 		subnets.add(subnet2);
 
 		parameter.setSubnets(subnets);
-		
+
 		return parameter;
 	}
 
@@ -118,6 +119,28 @@ public class TestData {
 		allPolicies.add(policy);
 		parameter.setAllPolicies(allPolicies);// 所有映射成员集合
 
+		return parameter;
+
+	}
+
+	public static VPNParameter randomVPNParameter() {
+		
+		VPNParameter parameter = new VPNParameter();
+		
+		List<String> userNames = new ArrayList<String>();
+		userNames.add("zhangfan");
+		
+		parameter.setvRouterIp(controlIp); // 操纵路由器的管理IP
+		parameter.setVpnUserName("zhangfan");   //VPN用户名
+		parameter.setVpnPassword("zhangfan@sobey.com");   //VPN密码
+		parameter.setVpnGroupName("subnet1_group"); //组名
+		parameter.setUserNames(userNames); // VPN组里用户成员集合
+		parameter.setStrategyNo(105);   //策略号
+		parameter.setSubnetAddressPoolName("subnet1");  //子网地址池名称
+		parameter.setVpnGroupNo(155);;  //VPN组号
+		parameter.setInternetPortNO(8); // 公网所连路由器的端口序号
+		parameter.setSubnetPortNo(1);// 子网所连路由器的端口序号
+		
 		return parameter;
 
 	}

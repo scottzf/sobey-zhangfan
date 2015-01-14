@@ -4,6 +4,7 @@ import com.sobey.sdn.bean.CreateEipParameter;
 import com.sobey.sdn.bean.Firewall;
 import com.sobey.sdn.bean.Router;
 import com.sobey.sdn.bean.Subnet;
+import com.sobey.sdn.bean.VPNParameter;
 import com.sobey.sdn.parameterObject.SubnetParameter;
 import com.sobey.sdn.test.testParameter.BindingFirewallParameter;
 import com.sobey.sdn.test.testParameter.BindingRouterParameter;
@@ -103,7 +104,13 @@ public interface SDNService {
 	 */
 	public void createEip(CreateEipParameter createEipParameter) throws Exception;
 	
-	//public String createVPNUser(VPNUserParameter parameter) throws Exception;
+	/**
+	 * 创建VPN用户
+	 * 
+	 * @param vpnParameter
+	 * @throws Exception
+	 */
+	public void createVPNUser(VPNParameter vpnParameter) throws Exception;
 	
 	//public void createLoadBalancer(Firewall firewall) throws Exception;
 

@@ -13,6 +13,7 @@ import com.sobey.sdn.bean.ECS;
 import com.sobey.sdn.bean.Firewall;
 import com.sobey.sdn.bean.Router;
 import com.sobey.sdn.bean.Subnet;
+import com.sobey.sdn.bean.VPNParameter;
 import com.sobey.sdn.constans.SDNConstants;
 import com.sobey.sdn.parameterObject.SubnetParameter;
 import com.sobey.sdn.service.CentecSwitchService;
@@ -1001,5 +1002,12 @@ public class SDNServiceImpl implements SDNService {
 	public void createEip(CreateEipParameter createEipParameter) throws Exception {
 		FirewallService.createEIp(createEipParameter);
 
+	}
+
+	@Override
+	public void createVPNUser(VPNParameter vpnParameter) throws Exception {
+		
+		FirewallService.createVPN(vpnParameter);
+		
 	}
 }
