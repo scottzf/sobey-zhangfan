@@ -8545,8 +8545,8 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Validate.isTrue(comm.firewallServiceService.findFirewallService(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
 
-			String code = "FirewallService-" + Identities.randomBase62(8);
 
+			String code = "FirewallService-" + Identities.randomBase62(8);
 			FirewallService firewallService = BeanMapper.map(firewallServiceDTO, FirewallService.class);
 			firewallService.setCode(code);
 			firewallService.setUser(DEFAULT_USER);
