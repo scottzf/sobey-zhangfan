@@ -1219,7 +1219,7 @@ public class ApiServiceImpl implements ApiService {
 		eipParameter.setPrivateIP(ecsDTO.getIpaddressDTO().getDescription());
 		if (!WSResult.SUCESS.equals(firewallSoapService.createEIPByFirewall(eipParameter).getCode())) {
 			// 删除关联关系
-			cmdbuildSoapService.deleteMapEcsEip(serviceId, eipId);
+			cmdbuildSoapService.deleteMapEcsEip(serviceDTO.getId(), eipDTO.getId());
 			result.setError(WSResult.SYSTEM_ERROR, "EIP关联失败,请联系管理员.");
 			return result;
 		}
