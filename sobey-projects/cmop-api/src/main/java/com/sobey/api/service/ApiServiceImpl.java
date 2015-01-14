@@ -1300,14 +1300,12 @@ public class ApiServiceImpl implements ApiService {
 
 		for (DnsPolicyDTO policyDTO : dnsPolicyDTOs) {
 			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(policyDTO.getDnsProtocol()).getDto();
-			EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(Integer.valueOf(policyDTO.getIpaddress())).getDto();
-			IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(eipDTO.getIpaddress())
-					.getDto();
+
 			DnsPolicyDTO dnsPolicyDTO = new DnsPolicyDTO();
 			dnsPolicyDTO.setDescription(lookUpDTO.getDescription() + "-" + policyDTO.getPort());
 			dnsPolicyDTO.setPort(policyDTO.getPort());
 			dnsPolicyDTO.setDns(queryDnsDTO.getId());
-			dnsPolicyDTO.setIpaddress(ipaddressDTO.getDescription());
+			dnsPolicyDTO.setIpaddress(policyDTO.getIpaddress());
 			dnsPolicyDTO.setDnsProtocol(policyDTO.getDnsProtocol());
 			cmdbuildSoapService.createDnsPolicy(dnsPolicyDTO);
 		}
