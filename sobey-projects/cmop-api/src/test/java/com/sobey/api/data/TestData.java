@@ -38,8 +38,8 @@ public class TestData {
 
 	public static EcsDTO randomEcsDTO() {
 		EcsDTO dto = new EcsDTO();
-		dto.setDescription("测试专用主机B");
-		dto.setServer(126);
+		dto.setDescription("测试专用主机C");
+		dto.setServer(122);
 		dto.setSubnet(1466);// 186:默认子网 1466 : 200子网
 		dto.setEcsType(109); // 109 instance 110 firewall
 		dto.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());

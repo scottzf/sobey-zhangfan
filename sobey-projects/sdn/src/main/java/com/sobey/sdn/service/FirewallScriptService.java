@@ -124,7 +124,7 @@ public class FirewallScriptService {
 	 * @return
 	 */
 	public static String generateInternetStrategyConfigScript(int strategyNo, String sourceSubnet_port,
-			String targetSubnet_port, String sourceSubnet_segment,String targetSubnet_segment) {
+			String targetSubnet_port, String sourceSubnet_segment, String targetSubnet_segment) {
 		// 子网上公网 ( EIP相关 ) 5
 		// config firewall policy
 		// edit 6 （策略号）
@@ -146,7 +146,8 @@ public class FirewallScriptService {
 		sb.append("set dstintf ").append("\"").append(targetSubnet_port).append("\"").append(SDNConstants.ENTER_SIGN);
 		sb.append("set srcaddr ").append("\"").append(sourceSubnet_segment).append("\"")
 				.append(SDNConstants.ENTER_SIGN);
-		sb.append("set dstaddr ").append("\"").append(targetSubnet_segment).append("\"").append(SDNConstants.ENTER_SIGN);
+		sb.append("set dstaddr ").append("\"").append(targetSubnet_segment).append("\"")
+				.append(SDNConstants.ENTER_SIGN);
 		sb.append("set action accept").append(SDNConstants.ENTER_SIGN);
 		sb.append("set schedule ").append("\"").append("always").append("\"").append(SDNConstants.ENTER_SIGN);
 		sb.append("set service ").append("\"").append("ALL").append("\"").append(SDNConstants.ENTER_SIGN);

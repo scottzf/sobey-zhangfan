@@ -18,6 +18,7 @@ import com.sobey.core.utils.Encodes;
 import com.sobey.core.utils.Identities;
 import com.sobey.generate.cmdbuild.CmdbuildSoapService;
 import com.sobey.generate.cmdbuild.ConfigFirewallAddressDTO;
+import com.sobey.generate.cmdbuild.ConfigFirewallPolicyDTO;
 import com.sobey.generate.cmdbuild.ConfigFirewallServiceCategoryDTO;
 import com.sobey.generate.cmdbuild.ConfigRouterStaticDTO;
 import com.sobey.generate.cmdbuild.ConfigSystemInterfaceDTO;
@@ -770,6 +771,7 @@ public class ApiServiceImpl implements ApiService {
 
 		// 从管理网段IP中获得的未使用的IP.
 		IpaddressDTO managerIpaddressDTO = findAvailableManagerIPAddressDTO();
+		System.out.println(managerIpaddressDTO.getDescription());
 
 		// EcsSpec应该有router的规格(大中小),同理netscarler也应该有(最大连接数 5K,20k,40K,100K)
 		EcsSpecDTO ecsSpecDTO = (EcsSpecDTO) cmdbuildSoapService.findEcsSpec(ecsDTO.getEcsSpec()).getDto();
@@ -827,7 +829,7 @@ public class ApiServiceImpl implements ApiService {
 		routerDTO.setDescription(ecsDTO.getDescription());
 		routerDTO.setEcs(queryEcsDTO.getId());
 		routerDTO.setIdc(idcDTO.getId());
-		routerDTO.setSubnet(subnetDTO.getId());
+		// routerDTO.setSubnet(subnetDTO.getId());
 		routerDTO.setTenants(tenantsDTO.getId());
 		routerDTO.setIpaddress(managerIpaddressDTO.getId());
 
@@ -924,10 +926,9 @@ public class ApiServiceImpl implements ApiService {
 			instanceSoapService.bindingNetworkDevicePortGroupInstance(bindingNetworkDevicePortGroupParameter);
 		}
 
-		// *****************************上面代码正常
-
 		// Config System Interface
 		ConfigSystemInterfaceParameters interfaceParameters = new ConfigSystemInterfaceParameters();
+		System.out.println(url);
 		interfaceParameters.setUrl(url);
 		interfaceParameters.setUserName(ConstansData.firewall_username);
 		interfaceParameters.setPassword(ConstansData.firewall_password);
@@ -955,9 +956,17 @@ public class ApiServiceImpl implements ApiService {
 			// Step.2 在vRouter上执行脚本(配置地址段 config firewall address)
 
 			ConfigFirewallAddressParameter configFirewallAddressParameter = new ConfigFirewallAddressParameter();
-			configFirewallAddressParameter.setGateway(subnetDTO.getGateway());
 			configFirewallAddressParameter.setSegment(subnetDTO.getSegment());
 			configFirewallAddressParameter.setSubnetMask(subnetDTO.getNetMask());
+
+			// 插入CMDB
+			ConfigFirewallAddressDTO addressDTO = new ConfigFirewallAddressDTO();
+			addressDTO.setSubnet(subnetDTO.getId());
+			addressDTO.setTenants(tenantsDTO.getId());
+			addressDTO.setPolicyId(cmdbuildSoapService.getMaxPolicyId(tenantsDTO.getId()));
+			addressDTO.setDescription(subnetDTO.getSegment());
+			cmdbuildSoapService.createConfigFirewallAddress(addressDTO);
+
 			addressArrayList.add(configFirewallAddressParameter);
 
 			// Step.3 在vRouter上执行脚本(配置接口 config System Interface,每个Subnet都有一个.)
@@ -968,7 +977,7 @@ public class ApiServiceImpl implements ApiService {
 					.findConfigSystemInterfaceByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
 
 			ConfigSystemInterfaceParameter configSystemInterfaceParameter = new ConfigSystemInterfaceParameter();
-			configSystemInterfaceParameter.setGateway(subnetDTO.getSegment());
+			configSystemInterfaceParameter.setGateway(subnetDTO.getGateway());
 			configSystemInterfaceParameter.setInterfaceName(configSystemInterfaceDTO.getDescription());
 			configSystemInterfaceParameter.setSubnetMask(subnetDTO.getNetMask());
 
@@ -983,6 +992,9 @@ public class ApiServiceImpl implements ApiService {
 
 			for (SubnetDTO dto : arrayList) {
 
+				// 将子网之间通讯的防火墙策略保存至CMDB
+				createPolicyDTO(tenantsDTO, subnetDTO, dto);
+
 				ConfigFirewallPolicyParameter configFirewallPolicyParameter = new ConfigFirewallPolicyParameter();
 				configFirewallPolicyParameter.setPolicyId(cmdbuildSoapService.getMaxPolicyId(tenantsDTO.getId()));
 				configFirewallPolicyParameter.setPolicyType("Subnet");
@@ -991,18 +1003,17 @@ public class ApiServiceImpl implements ApiService {
 				configFirewallPolicyParameter.setDstintf("port" + dto.getPortId());
 				configFirewallPolicyParameter.setSrcaddr(subnetDTO.getSegment());
 				configFirewallPolicyParameter.setDstaddr(dto.getSegment());
+
 				policyArrayList.add(configFirewallPolicyParameter);
 			}
 
 			// Step.4 Router和Subnet的关联关系保存至CMDB
-			// TODO 两者关联关系疑似要报错.mark.
+			// TODO 两者关联关系要报错.mark.
 			// subnetDTO.setRouter(routerDTO.getId());
 			// cmdbuildSoapService.updateSubnet(subnetDTO.getId(), subnetDTO);
 
 		}
 
-		
-		//下面脚本要一个一个排查
 		addressParameters.getConfigFirewallAddressParameters().addAll(addressArrayList);
 		firewallSoapService.configFirewallAddressParameterListByFirewall(addressParameters);
 
@@ -1013,6 +1024,32 @@ public class ApiServiceImpl implements ApiService {
 		firewallSoapService.configFirewallPolicyParameterListByFirewall(policyParameters);
 
 		return result;
+	}
+
+	/**
+	 * 将子网之间通讯的防火墙策略保存至CMDB
+	 * 
+	 * @param tenantsDTO
+	 * @param srcSubnetDTO
+	 *            源
+	 * @param dstSubnetDTO
+	 *            目标
+	 */
+	private void createPolicyDTO(TenantsDTO tenantsDTO, SubnetDTO srcSubnetDTO, SubnetDTO dstSubnetDTO) {
+
+		String srcintf = "port" + srcSubnetDTO.getPortId();
+		String dstintf = "port" + dstSubnetDTO.getPortId();
+
+		ConfigFirewallPolicyDTO configFirewallPolicyDTO = new ConfigFirewallPolicyDTO();
+		configFirewallPolicyDTO.setTenants(tenantsDTO.getId());
+		configFirewallPolicyDTO.setSrcintf(srcintf);
+		configFirewallPolicyDTO.setDstintf(dstintf);
+		configFirewallPolicyDTO.setSrcaddr(srcSubnetDTO.getSegment());
+		configFirewallPolicyDTO.setDstaddr(dstSubnetDTO.getSegment());
+		configFirewallPolicyDTO.setPolicyId(cmdbuildSoapService.getMaxPolicyId(tenantsDTO.getId()));
+		configFirewallPolicyDTO.setDescription(srcintf + "-" + dstintf);
+		cmdbuildSoapService.createConfigFirewallPolicy(configFirewallPolicyDTO);
+
 	}
 
 	@Override

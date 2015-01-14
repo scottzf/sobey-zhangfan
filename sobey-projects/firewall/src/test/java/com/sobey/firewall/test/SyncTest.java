@@ -1,17 +1,23 @@
 package com.sobey.firewall.test;
 
+import java.util.ArrayList;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.sobey.firewall.PbulicProperties;
 import com.sobey.firewall.data.TestData;
+import com.sobey.firewall.service.FirewallService;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameters;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallPolicyParameter;
 import com.sobey.firewall.webservice.response.dto.ConfigRouterStaticParameter;
 import com.sobey.firewall.webservice.response.dto.ConfigSystemInterfaceParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigSystemInterfaceParameters;
 
 @ContextConfiguration({ "classpath:applicationContext.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -104,6 +110,9 @@ public class SyncTest implements PbulicProperties {
 		System.out.println(sb.toString());
 	}
 
+	@Autowired
+	private FirewallService service;
+
 	/**
 	 * <pre>
 	 * config firewall policy
@@ -139,6 +148,60 @@ public class SyncTest implements PbulicProperties {
 		sb.append("next").append(ENTER_SIGN);
 
 		System.out.println(sb.toString());
+	}
+
+	@Test
+	public void configFirewallAddressScrip() {
+
+		ConfigFirewallAddressParameter configFirewallAddressParameter = new ConfigFirewallAddressParameter();
+		configFirewallAddressParameter.setGateway("192.168.100.254");
+		configFirewallAddressParameter.setSegment("192.168.100.0/24");
+		configFirewallAddressParameter.setSubnetMask("255.255.255.0");
+
+		ConfigFirewallAddressParameter configFirewallAddressParameterB = new ConfigFirewallAddressParameter();
+		configFirewallAddressParameterB.setGateway("192.168.200.254");
+		configFirewallAddressParameterB.setSegment("192.168.200.0/24");
+		configFirewallAddressParameterB.setSubnetMask("255.255.255.0");
+
+		ArrayList<ConfigFirewallAddressParameter> configFirewallAddressParameters = new ArrayList<ConfigFirewallAddressParameter>();
+		configFirewallAddressParameters.add(configFirewallAddressParameter);
+		configFirewallAddressParameters.add(configFirewallAddressParameterB);
+
+		ConfigFirewallAddressParameters firewallAddressParameters = new ConfigFirewallAddressParameters();
+		firewallAddressParameters.setUserName("admin");
+		firewallAddressParameters.setPassword("mcloud@sobey.com");
+		firewallAddressParameters.setUrl("http://10.2.253.62");
+		firewallAddressParameters.setConfigFirewallAddressParameters(configFirewallAddressParameters);
+
+		String command = service.configFirewallAddressScrip(firewallAddressParameters);
+		System.out.println(command);
+	}
+
+	@Test
+	public void configSystemInterfaceScrip() {
+
+		ConfigSystemInterfaceParameter configSystemInterfaceParameter = new ConfigSystemInterfaceParameter();
+		configSystemInterfaceParameter.setGateway("192.168.100.0/24");
+		configSystemInterfaceParameter.setInterfaceName("port1");
+		configSystemInterfaceParameter.setSubnetMask("255.255.255.0");
+
+		ConfigSystemInterfaceParameter configSystemInterfaceParameterB = new ConfigSystemInterfaceParameter();
+		configSystemInterfaceParameterB.setGateway("192.168.200.0/24");
+		configSystemInterfaceParameterB.setInterfaceName("port2");
+		configSystemInterfaceParameterB.setSubnetMask("255.255.255.0");
+
+		ArrayList<ConfigSystemInterfaceParameter> arrayList = new ArrayList<ConfigSystemInterfaceParameter>();
+		arrayList.add(configSystemInterfaceParameter);
+		arrayList.add(configSystemInterfaceParameterB);
+
+		ConfigSystemInterfaceParameters configSystemInterfaceParameters = new ConfigSystemInterfaceParameters();
+		configSystemInterfaceParameters.setUserName("admin");
+		configSystemInterfaceParameters.setPassword("mcloud@sobey.com");
+		configSystemInterfaceParameters.setUrl("http://10.2.253.62");
+		configSystemInterfaceParameters.setConfigSystemInterfaceParameters(arrayList);
+
+		String command = service.configSystemInterfaceScrip(configSystemInterfaceParameters);
+		System.out.println(command);
 	}
 
 }
