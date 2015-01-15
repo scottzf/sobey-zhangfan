@@ -57,22 +57,25 @@ public class ApiServiceTest extends TestCase {
 	@Test
 	public void bindingRouter() {
 
-		Integer routerId = 2845;
+		Integer routerId = 2777;
 
 		RouterDTO routerDTO = (RouterDTO) cmdbuildSoapService.findRouter(routerId).getDto();
 
-		SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(186).getDto();
-		SubnetDTO subnetDTO2 = (SubnetDTO) cmdbuildSoapService.findSubnet(1466).getDto();
+		SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(175).getDto();
+		SubnetDTO subnetDTO2 = (SubnetDTO) cmdbuildSoapService.findSubnet(1447).getDto();
+		SubnetDTO subnetDTO3 = (SubnetDTO) cmdbuildSoapService.findSubnet(2832).getDto();
 
 		List<SubnetDTO> subnetDTOs = new ArrayList<SubnetDTO>();
 		subnetDTOs.add(subnetDTO);
 		subnetDTOs.add(subnetDTO2);
+		subnetDTOs.add(subnetDTO3);
 
 		service.bindingRouter(subnetDTOs, routerDTO);
 	}
 
 	@Test
 	public void createFirewallService() {
+
 		FirewallServiceDTO firewallServiceDTO = new FirewallServiceDTO();
 		List<ConfigFirewallServiceCategoryDTO> categoryDTOs = new ArrayList<ConfigFirewallServiceCategoryDTO>();
 		service.createFirewallService(firewallServiceDTO, categoryDTOs);
@@ -80,8 +83,11 @@ public class ApiServiceTest extends TestCase {
 
 	@Test
 	public void bindingFirewallService() {
+		
+		Integer routerId = 2777;
 
-		RouterDTO routerDTO = new RouterDTO();
+		RouterDTO routerDTO = (RouterDTO) cmdbuildSoapService.findRouter(routerId).getDto();
+
 		FirewallServiceDTO firewallServiceDTO = new FirewallServiceDTO();
 		service.bindingFirewallService(routerDTO, firewallServiceDTO);
 	}
