@@ -845,9 +845,11 @@ public class FirewallService {
 		for (ConfigRouterStaticParameter parameter : configRouterStaticParameters.getConfigRouterStaticParameters()) {
 			sb.append("config router static").append(DEFAULT_SYMBOL);
 			sb.append("edit ").append(parameter.getRouterId()).append(DEFAULT_SYMBOL);
-			sb.append("set device ").append(parameter.getInterfaceName()).append(DEFAULT_SYMBOL);
+			sb.append("set device ").append("\"").append(parameter.getInterfaceName()).append("\"")
+					.append(DEFAULT_SYMBOL);
 			sb.append("set gateway ").append(parameter.getIspGateway()).append(DEFAULT_SYMBOL);
 			sb.append("end").append(DEFAULT_SYMBOL);
+
 		}
 
 		return sb.toString();

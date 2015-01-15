@@ -4,6 +4,7 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import com.sobey.instance.constans.WsConstants;
+import com.sobey.instance.webservice.response.dto.BindingDVSPortGroupParameter;
 import com.sobey.instance.webservice.response.dto.BindingNetworkDevicePortGroupParameter;
 import com.sobey.instance.webservice.response.dto.BindingPortGroupParameter;
 import com.sobey.instance.webservice.response.dto.CloneVMParameter;
@@ -112,7 +113,7 @@ public interface InstanceSoapService {
 	 *            {@link CreatePortGroupParameter}
 	 * @return
 	 */
-	WSResult createPortGroupInstance(
+	WSResult createPortGroupByInstance(
 			@WebParam(name = "createPortGroupParameter") CreatePortGroupParameter createPortGroupParameter);
 
 	/**
@@ -122,7 +123,7 @@ public interface InstanceSoapService {
 	 *            {@link BindingPortGroupParameter}
 	 * @return
 	 */
-	WSResult bindingPortGroupInstance(
+	WSResult bindingPortGroupByInstance(
 			@WebParam(name = "bindingPortGroupParameter") BindingPortGroupParameter bindingPortGroupParameter);
 
 	/**
@@ -132,8 +133,18 @@ public interface InstanceSoapService {
 	 *            {@link BindingNetworkDevicePortGroupParameter}
 	 * @return
 	 */
-	WSResult bindingNetworkDevicePortGroupInstance(
+	WSResult bindingNetworkDevicePortGroupByInstance(
 			@WebParam(name = "bindingNetworkDevicePortGroupParameter") BindingNetworkDevicePortGroupParameter bindingNetworkDevicePortGroupParameter);
+
+	/**
+	 * 为VM绑定分布式端口组
+	 * 
+	 * @param bindingDVSPortGroupParameter
+	 *            {@link BindingDVSPortGroupParameter}
+	 * @return
+	 */
+	WSResult bindingDVSPortGroupByInstance(
+			@WebParam(name = "bindingDVSPortGroupParameter") BindingDVSPortGroupParameter bindingDVSPortGroupParameter);
 
 	// =============== Disk ===============//
 

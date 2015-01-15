@@ -10,6 +10,7 @@ import com.sobey.instance.service.DiskService;
 import com.sobey.instance.service.HostService;
 import com.sobey.instance.service.NetworkService;
 import com.sobey.instance.service.VMService;
+import com.sobey.instance.webservice.response.dto.BindingDVSPortGroupParameter;
 import com.sobey.instance.webservice.response.dto.BindingNetworkDevicePortGroupParameter;
 import com.sobey.instance.webservice.response.dto.BindingPortGroupParameter;
 import com.sobey.instance.webservice.response.dto.CloneVMParameter;
@@ -83,17 +84,17 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	}
 
 	@Override
-	public WSResult createPortGroupInstance(CreatePortGroupParameter createPortGroupParameter) {
+	public WSResult createPortGroupByInstance(CreatePortGroupParameter createPortGroupParameter) {
 		return networkService.createPortGroup(createPortGroupParameter);
 	}
 
 	@Override
-	public WSResult bindingPortGroupInstance(BindingPortGroupParameter bindingPortGroupParameter) {
+	public WSResult bindingPortGroupByInstance(BindingPortGroupParameter bindingPortGroupParameter) {
 		return networkService.bindingPortGroup(bindingPortGroupParameter);
 	}
 
 	@Override
-	public WSResult bindingNetworkDevicePortGroupInstance(
+	public WSResult bindingNetworkDevicePortGroupByInstance(
 			BindingNetworkDevicePortGroupParameter bindingNetworkDevicePortGroupParameter) {
 		return networkService.bindingNetworkDevicePortGroup(bindingNetworkDevicePortGroupParameter);
 	}
@@ -116,6 +117,11 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	@Override
 	public DTOResult<HostInfoDTO> findHostInfoDTO(String hostName, String datacenter) {
 		return hostService.findHostInfoDTO(hostName, datacenter);
+	}
+
+	@Override
+	public WSResult bindingDVSPortGroupByInstance(BindingDVSPortGroupParameter bindingDVSPortGroupParameter) {
+		return networkService.bindingDVSPortGroup(bindingDVSPortGroupParameter);
 	}
 
 }
