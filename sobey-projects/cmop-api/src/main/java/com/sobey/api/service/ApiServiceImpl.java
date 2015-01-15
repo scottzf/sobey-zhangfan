@@ -1192,7 +1192,8 @@ public class ApiServiceImpl implements ApiService {
 		map.put("EQ_ipaddressStatus", LookUpConstants.IPAddressStatus.未使用.getValue());
 		map.put("EQ_ipaddressPool", LookUpConstants.IPAddressPool.InternetPool.getValue());
 		map.put("EQ_isp", ispId);
-		return (IpaddressDTO) cmdbuildSoapService.findIpaddressByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
+		return (IpaddressDTO) cmdbuildSoapService.getIpaddressList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+				.getDto().get(0);
 	}
 
 	@Override
