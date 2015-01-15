@@ -49,11 +49,13 @@ import com.sobey.generate.firewall.ConfigFirewallAddressParameters;
 import com.sobey.generate.firewall.ConfigFirewallPolicyParameter;
 import com.sobey.generate.firewall.ConfigFirewallPolicyParameters;
 import com.sobey.generate.firewall.ConfigRouterStaticParameter;
+import com.sobey.generate.firewall.ConfigRouterStaticParameters;
 import com.sobey.generate.firewall.ConfigSystemInterfaceParameter;
 import com.sobey.generate.firewall.ConfigSystemInterfaceParameters;
 import com.sobey.generate.firewall.EIPParameter;
 import com.sobey.generate.firewall.EIPPolicyParameter;
 import com.sobey.generate.firewall.FirewallSoapService;
+import com.sobey.generate.instance.BindingDVSPortGroupParameter;
 import com.sobey.generate.instance.BindingNetworkDevicePortGroupParameter;
 import com.sobey.generate.instance.BindingPortGroupParameter;
 import com.sobey.generate.instance.CloneVMParameter;
@@ -385,7 +387,7 @@ public class ApiServiceImpl implements ApiService {
 				createPortGroupParameter.setPortGroupName(vlanName);
 				createPortGroupParameter.setVirtualSwitchName(nicDTO.getVirtualSwitchName());
 				createPortGroupParameter.setVlanId(vlanId);
-				instanceSoapService.createPortGroupInstance(createPortGroupParameter);
+				instanceSoapService.createPortGroupByInstance(createPortGroupParameter);
 
 				HashMap<String, Object> queryVlanMap = new HashMap<String, Object>();
 				queryVlanMap.put("EQ_nic", nicDTO.getId());
@@ -469,7 +471,7 @@ public class ApiServiceImpl implements ApiService {
 		bindingPortGroupParameter.setPortGroupName(vlanDTO.getDescription());
 		bindingPortGroupParameter.setVmName(vmName);
 
-		instanceSoapService.bindingPortGroupInstance(bindingPortGroupParameter);
+		instanceSoapService.bindingPortGroupByInstance(bindingPortGroupParameter);
 
 		// Step.5 保存至CMDB
 
@@ -908,7 +910,7 @@ public class ApiServiceImpl implements ApiService {
 			bindingNetworkDevicePortGroupParameter.setVmName(generateVMName(tenantsDTO, ipaddressDTO));
 			bindingNetworkDevicePortGroupParameter.setPortIndex(subnetDTO.getPortIndex());
 
-			instanceSoapService.bindingNetworkDevicePortGroupInstance(bindingNetworkDevicePortGroupParameter);
+			instanceSoapService.bindingNetworkDevicePortGroupByInstance(bindingNetworkDevicePortGroupParameter);
 		}
 
 		// Step.2 在盛科交换机上创建策略,为不同子网的通讯做配置
@@ -1077,40 +1079,56 @@ public class ApiServiceImpl implements ApiService {
 		// vRouter 管理IP,管理网段的IP,用于管理vRouter设备,以写入信息.
 		IpaddressDTO managerDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(routerDTO.getIpaddress()).getDto();
 		String url = managerDTO.getDescription();
-
+		System.out.println(url);
 		// Step.1 将电信所属的vlan绑定到vRouter上.(即在vCenter中将Subnet对应的网络设配器绑定到vRouter)
-		BindingNetworkDevicePortGroupParameter bindingNetworkDevicePortGroupParameter = new BindingNetworkDevicePortGroupParameter();
+		BindingDVSPortGroupParameter bindingDVSPortGroupParameter = new BindingDVSPortGroupParameter();
 
-		bindingNetworkDevicePortGroupParameter.setDatacenter(datacenter);
-		bindingNetworkDevicePortGroupParameter.setPortGroupName(ConstansData.CTC_DEFAULT_PORTGROUPNAME);
-		bindingNetworkDevicePortGroupParameter.setVmName(generateVMName(tenantsDTO, ipaddressDTO));
-		bindingNetworkDevicePortGroupParameter.setPortIndex(ConstansData.CTC_DEFAULT_PORTNO);
+		bindingDVSPortGroupParameter.setDatacenter(datacenter);
+		bindingDVSPortGroupParameter.setPortGroupName(ConstansData.CTC_DEFAULT_PORTGROUPNAME);
+		bindingDVSPortGroupParameter.setVmName(generateVMName(tenantsDTO, ipaddressDTO));
+		bindingDVSPortGroupParameter.setPortIndex(ConstansData.CTC_DEFAULT_PORTNO);
 
-		instanceSoapService.bindingNetworkDevicePortGroupInstance(bindingNetworkDevicePortGroupParameter);
+		instanceSoapService.bindingDVSPortGroupByInstance(bindingDVSPortGroupParameter);
 
 		// Step.2 在vRouter上执行脚本(配置接口 config System Interface, 配置连接电信的端口（默认端口8）IP地址
+
+		ConfigSystemInterfaceParameters interfaceParameters = new ConfigSystemInterfaceParameters();
+		interfaceParameters.setUrl(url);
+		interfaceParameters.setUserName(ConstansData.firewall_username);
+		interfaceParameters.setPassword(ConstansData.firewall_password);
+
+		ArrayList<ConfigSystemInterfaceParameter> interfaceArrayList = new ArrayList<ConfigSystemInterfaceParameter>();
 
 		ConfigSystemInterfaceParameter configSystemInterfaceParameter = new ConfigSystemInterfaceParameter();
 		configSystemInterfaceParameter.setGateway("125.71.203.1");
 		configSystemInterfaceParameter.setInterfaceName(ConstansData.CTC_DEFAULT_PORT);
 		configSystemInterfaceParameter.setSubnetMask("255.255.255.0");
-		configSystemInterfaceParameter.setUrl(url);
-		configSystemInterfaceParameter.setUserName(ConstansData.firewall_username);
-		configSystemInterfaceParameter.setPassword(ConstansData.firewall_password);
+		interfaceArrayList.add(configSystemInterfaceParameter);
 
-		firewallSoapService.configSystemInterfaceByFirewall(configSystemInterfaceParameter);
+		interfaceParameters.getConfigSystemInterfaceParameters().addAll(interfaceArrayList);
+
+		firewallSoapService.configSystemInterfaceListByFirewall(interfaceParameters);
 
 		// Step.3 在vRouter上执行脚本(配置接口 config Router Static, 配置连接电信（默认端口8）的静态路由
 
+		ConfigRouterStaticParameters configRouterStaticParameters = new ConfigRouterStaticParameters();
+		configRouterStaticParameters.setUrl(url);
+		configRouterStaticParameters.setUserName(ConstansData.firewall_username);
+		configRouterStaticParameters.setPassword(ConstansData.firewall_password);
+
+		ArrayList<ConfigRouterStaticParameter> routerStaticArrayList = new ArrayList<ConfigRouterStaticParameter>();
+
 		ConfigRouterStaticParameter configRouterStaticParameter = new ConfigRouterStaticParameter();
 
-		configRouterStaticParameter.setUrl(url);
-		configRouterStaticParameter.setUserName(ConstansData.firewall_username);
-		configRouterStaticParameter.setPassword(ConstansData.firewall_password);
 		configRouterStaticParameter.setInterfaceName(ConstansData.CTC_DEFAULT_PORT);
 		configRouterStaticParameter.setIspGateway("125.71.203.1");
 		configRouterStaticParameter.setRouterId(0);
-		firewallSoapService.configRouterStaticParameterByFirewall(configRouterStaticParameter);
+
+		routerStaticArrayList.add(configRouterStaticParameter);
+
+		configRouterStaticParameters.getConfigRouterStaticParameters().addAll(routerStaticArrayList);
+
+		firewallSoapService.configRouterStaticParameterListByFirewall(configRouterStaticParameters);
 
 		/**
 		 * TODO 手动执行防火墙更新文件
@@ -1120,6 +1138,7 @@ public class ApiServiceImpl implements ApiService {
 		 * 配置需要访问互联网的子网与电信网络之间的策略
 		 */
 
+		// TDOO 需要将CMDBuild模型进行修改.
 		// 根据Router 查询出 Router下所有的Subnet,再遍历执行 config firwall policy
 
 		// FirewallService.configurationInternetStrategy(vRouter_ip, strategyNo, subnetPort,

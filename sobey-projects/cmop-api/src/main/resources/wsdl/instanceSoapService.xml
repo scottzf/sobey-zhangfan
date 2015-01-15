@@ -3,6 +3,8 @@
   <wsdl:types>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://instance.generate.sobey.com" elementFormDefault="unqualified" targetNamespace="http://instance.generate.sobey.com" version="1.0">
 
+  <xs:element name="BindingDVSPortGroupParameter" type="tns:BindingDVSPortGroupParameter"/>
+
   <xs:element name="BindingNetworkDevicePortGroupParameter" type="tns:BindingNetworkDevicePortGroupParameter"/>
 
   <xs:element name="BindingPortGroupParameter" type="tns:BindingPortGroupParameter"/>
@@ -27,13 +29,17 @@
 
   <xs:element name="VMInfoDTO" type="tns:VMInfoDTO"/>
 
-  <xs:element name="bindingNetworkDevicePortGroupInstance" type="tns:bindingNetworkDevicePortGroupInstance"/>
+  <xs:element name="bindingDVSPortGroupByInstance" type="tns:bindingDVSPortGroupByInstance"/>
 
-  <xs:element name="bindingNetworkDevicePortGroupInstanceResponse" type="tns:bindingNetworkDevicePortGroupInstanceResponse"/>
+  <xs:element name="bindingDVSPortGroupByInstanceResponse" type="tns:bindingDVSPortGroupByInstanceResponse"/>
 
-  <xs:element name="bindingPortGroupInstance" type="tns:bindingPortGroupInstance"/>
+  <xs:element name="bindingNetworkDevicePortGroupByInstance" type="tns:bindingNetworkDevicePortGroupByInstance"/>
 
-  <xs:element name="bindingPortGroupInstanceResponse" type="tns:bindingPortGroupInstanceResponse"/>
+  <xs:element name="bindingNetworkDevicePortGroupByInstanceResponse" type="tns:bindingNetworkDevicePortGroupByInstanceResponse"/>
+
+  <xs:element name="bindingPortGroupByInstance" type="tns:bindingPortGroupByInstance"/>
+
+  <xs:element name="bindingPortGroupByInstanceResponse" type="tns:bindingPortGroupByInstanceResponse"/>
 
   <xs:element name="cloneNetworkDeviceByInstance" type="tns:cloneNetworkDeviceByInstance"/>
 
@@ -43,9 +49,9 @@
 
   <xs:element name="cloneVMByInstanceResponse" type="tns:cloneVMByInstanceResponse"/>
 
-  <xs:element name="createPortGroupInstance" type="tns:createPortGroupInstance"/>
+  <xs:element name="createPortGroupByInstance" type="tns:createPortGroupByInstance"/>
 
-  <xs:element name="createPortGroupInstanceResponse" type="tns:createPortGroupInstanceResponse"/>
+  <xs:element name="createPortGroupByInstanceResponse" type="tns:createPortGroupByInstanceResponse"/>
 
   <xs:element name="createStandardSwitchByInstance" type="tns:createStandardSwitchByInstance"/>
 
@@ -229,27 +235,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="bindingNetworkDevicePortGroupInstance">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="bindingNetworkDevicePortGroupParameter" type="tns:BindingNetworkDevicePortGroupParameter"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="BindingNetworkDevicePortGroupParameter">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
-      <xs:element minOccurs="0" name="portGroupName" type="xs:string"/>
-      <xs:element minOccurs="0" name="portIndex" type="xs:int"/>
-      <xs:element minOccurs="0" name="vmName" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="bindingNetworkDevicePortGroupInstanceResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="getHostInfoDTO">
     <xs:sequence>
       <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
@@ -319,19 +304,7 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="deleteVMDiskByInstance">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="vmDiskParameter" type="tns:VMDiskParameter"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="deleteVMDiskByInstanceResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="bindingPortGroupInstance">
+  <xs:complexType name="bindingPortGroupByInstance">
     <xs:sequence>
       <xs:element minOccurs="0" name="bindingPortGroupParameter" type="tns:BindingPortGroupParameter"/>
     </xs:sequence>
@@ -345,7 +318,19 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="bindingPortGroupInstanceResponse">
+  <xs:complexType name="bindingPortGroupByInstanceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteVMDiskByInstance">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="vmDiskParameter" type="tns:VMDiskParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteVMDiskByInstanceResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
     </xs:sequence>
@@ -399,19 +384,7 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="cloneNetworkDeviceByInstance">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="cloneVMParameter" type="tns:CloneVMParameter"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="cloneNetworkDeviceByInstanceResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="createPortGroupInstance">
+  <xs:complexType name="createPortGroupByInstance">
     <xs:sequence>
       <xs:element minOccurs="0" name="createPortGroupParameter" type="tns:CreatePortGroupParameter"/>
     </xs:sequence>
@@ -427,7 +400,61 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="createPortGroupInstanceResponse">
+  <xs:complexType name="createPortGroupByInstanceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="bindingNetworkDevicePortGroupByInstance">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="bindingNetworkDevicePortGroupParameter" type="tns:BindingNetworkDevicePortGroupParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="BindingNetworkDevicePortGroupParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
+      <xs:element minOccurs="0" name="portGroupName" type="xs:string"/>
+      <xs:element minOccurs="0" name="portIndex" type="xs:int"/>
+      <xs:element minOccurs="0" name="vmName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="bindingNetworkDevicePortGroupByInstanceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="bindingDVSPortGroupByInstance">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="bindingDVSPortGroupParameter" type="tns:BindingDVSPortGroupParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="BindingDVSPortGroupParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
+      <xs:element minOccurs="0" name="portGroupName" type="xs:string"/>
+      <xs:element minOccurs="0" name="portIndex" type="xs:int"/>
+      <xs:element minOccurs="0" name="vmName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="bindingDVSPortGroupByInstanceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="cloneNetworkDeviceByInstance">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="cloneVMParameter" type="tns:CloneVMParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="cloneNetworkDeviceByInstanceResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
     </xs:sequence>
@@ -447,16 +474,12 @@
     <wsdl:part element="tns:reconfigVMByInstanceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="bindingNetworkDevicePortGroupInstanceResponse">
-    <wsdl:part element="tns:bindingNetworkDevicePortGroupInstanceResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="cloneVMByInstance">
     <wsdl:part element="tns:cloneVMByInstance" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="bindingPortGroupInstance">
-    <wsdl:part element="tns:bindingPortGroupInstance" name="parameters">
+  <wsdl:message name="bindingNetworkDevicePortGroupByInstance">
+    <wsdl:part element="tns:bindingNetworkDevicePortGroupByInstance" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="powerVMByInstanceResponse">
@@ -479,8 +502,16 @@
     <wsdl:part element="tns:deleteVMDiskByInstance" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="bindingDVSPortGroupByInstance">
+    <wsdl:part element="tns:bindingDVSPortGroupByInstance" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="findVMInfoDTO">
     <wsdl:part element="tns:findVMInfoDTO" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="bindingNetworkDevicePortGroupByInstanceResponse">
+    <wsdl:part element="tns:bindingNetworkDevicePortGroupByInstanceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="destroyVMByInstanceResponse">
@@ -489,6 +520,10 @@
   </wsdl:message>
   <wsdl:message name="getRelationByInstanceResponse">
     <wsdl:part element="tns:getRelationByInstanceResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createPortGroupByInstanceResponse">
+    <wsdl:part element="tns:createPortGroupByInstanceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createStandardSwitchByInstance">
@@ -503,36 +538,36 @@
     <wsdl:part element="tns:reconfigVMByInstance" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="createPortGroupInstance">
-    <wsdl:part element="tns:createPortGroupInstance" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="bindingNetworkDevicePortGroupInstance">
-    <wsdl:part element="tns:bindingNetworkDevicePortGroupInstance" name="parameters">
+  <wsdl:message name="bindingPortGroupByInstance">
+    <wsdl:part element="tns:bindingPortGroupByInstance" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findHostInfoDTOResponse">
     <wsdl:part element="tns:findHostInfoDTOResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="createPortGroupInstanceResponse">
-    <wsdl:part element="tns:createPortGroupInstanceResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="bindingPortGroupInstanceResponse">
-    <wsdl:part element="tns:bindingPortGroupInstanceResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="createStandardSwitchByInstanceResponse">
     <wsdl:part element="tns:createStandardSwitchByInstanceResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="bindingPortGroupByInstanceResponse">
+    <wsdl:part element="tns:bindingPortGroupByInstanceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createVMDiskByInstance">
     <wsdl:part element="tns:createVMDiskByInstance" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="bindingDVSPortGroupByInstanceResponse">
+    <wsdl:part element="tns:bindingDVSPortGroupByInstanceResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="createVMDiskByInstanceResponse">
     <wsdl:part element="tns:createVMDiskByInstanceResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createPortGroupByInstance">
+    <wsdl:part element="tns:createPortGroupByInstance" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getHostInfoDTOResponse">
@@ -586,12 +621,6 @@
       <wsdl:output message="tns:findHostInfoDTOResponse" name="findHostInfoDTOResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="bindingNetworkDevicePortGroupInstance">
-      <wsdl:input message="tns:bindingNetworkDevicePortGroupInstance" name="bindingNetworkDevicePortGroupInstance">
-    </wsdl:input>
-      <wsdl:output message="tns:bindingNetworkDevicePortGroupInstanceResponse" name="bindingNetworkDevicePortGroupInstanceResponse">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getHostInfoDTO">
       <wsdl:input message="tns:getHostInfoDTO" name="getHostInfoDTO">
     </wsdl:input>
@@ -610,16 +639,16 @@
       <wsdl:output message="tns:createStandardSwitchByInstanceResponse" name="createStandardSwitchByInstanceResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="bindingPortGroupByInstance">
+      <wsdl:input message="tns:bindingPortGroupByInstance" name="bindingPortGroupByInstance">
+    </wsdl:input>
+      <wsdl:output message="tns:bindingPortGroupByInstanceResponse" name="bindingPortGroupByInstanceResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="deleteVMDiskByInstance">
       <wsdl:input message="tns:deleteVMDiskByInstance" name="deleteVMDiskByInstance">
     </wsdl:input>
       <wsdl:output message="tns:deleteVMDiskByInstanceResponse" name="deleteVMDiskByInstanceResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="bindingPortGroupInstance">
-      <wsdl:input message="tns:bindingPortGroupInstance" name="bindingPortGroupInstance">
-    </wsdl:input>
-      <wsdl:output message="tns:bindingPortGroupInstanceResponse" name="bindingPortGroupInstanceResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="powerVMByInstance">
@@ -634,16 +663,28 @@
       <wsdl:output message="tns:findVMInfoDTOResponse" name="findVMInfoDTOResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="createPortGroupByInstance">
+      <wsdl:input message="tns:createPortGroupByInstance" name="createPortGroupByInstance">
+    </wsdl:input>
+      <wsdl:output message="tns:createPortGroupByInstanceResponse" name="createPortGroupByInstanceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="bindingNetworkDevicePortGroupByInstance">
+      <wsdl:input message="tns:bindingNetworkDevicePortGroupByInstance" name="bindingNetworkDevicePortGroupByInstance">
+    </wsdl:input>
+      <wsdl:output message="tns:bindingNetworkDevicePortGroupByInstanceResponse" name="bindingNetworkDevicePortGroupByInstanceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="bindingDVSPortGroupByInstance">
+      <wsdl:input message="tns:bindingDVSPortGroupByInstance" name="bindingDVSPortGroupByInstance">
+    </wsdl:input>
+      <wsdl:output message="tns:bindingDVSPortGroupByInstanceResponse" name="bindingDVSPortGroupByInstanceResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="cloneNetworkDeviceByInstance">
       <wsdl:input message="tns:cloneNetworkDeviceByInstance" name="cloneNetworkDeviceByInstance">
     </wsdl:input>
       <wsdl:output message="tns:cloneNetworkDeviceByInstanceResponse" name="cloneNetworkDeviceByInstanceResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="createPortGroupInstance">
-      <wsdl:input message="tns:createPortGroupInstance" name="createPortGroupInstance">
-    </wsdl:input>
-      <wsdl:output message="tns:createPortGroupInstanceResponse" name="createPortGroupInstanceResponse">
     </wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
@@ -694,15 +735,6 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="bindingNetworkDevicePortGroupInstance">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="bindingNetworkDevicePortGroupInstance">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="bindingNetworkDevicePortGroupInstanceResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getHostInfoDTO">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="getHostInfoDTO">
@@ -718,6 +750,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="reconfigVMByInstanceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="bindingPortGroupByInstance">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="bindingPortGroupByInstance">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="bindingPortGroupByInstanceResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -739,12 +780,30 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="bindingPortGroupInstance">
+    <wsdl:operation name="bindingDVSPortGroupByInstance">
       <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="bindingPortGroupInstance">
+      <wsdl:input name="bindingDVSPortGroupByInstance">
         <soap:body use="literal"/>
       </wsdl:input>
-      <wsdl:output name="bindingPortGroupInstanceResponse">
+      <wsdl:output name="bindingDVSPortGroupByInstanceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="bindingNetworkDevicePortGroupByInstance">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="bindingNetworkDevicePortGroupByInstance">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="bindingNetworkDevicePortGroupByInstanceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createPortGroupByInstance">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createPortGroupByInstance">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createPortGroupByInstanceResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -772,15 +831,6 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="cloneNetworkDeviceByInstanceResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="createPortGroupInstance">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="createPortGroupInstance">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="createPortGroupInstanceResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
