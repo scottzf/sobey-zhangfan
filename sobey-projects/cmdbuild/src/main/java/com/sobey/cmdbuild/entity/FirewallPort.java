@@ -29,13 +29,13 @@ public class FirewallPort extends PortBasic {
 		return firewall;
 	}
 
-	public void setFirewall(Integer firewall) {
-		this.firewall = firewall;
-	}
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "firewallPort")
 	public Set<FirewallPortHistory> getFirewallPortHistories() {
 		return firewallPortHistories;
+	}
+
+	public void setFirewall(Integer firewall) {
+		this.firewall = firewall;
 	}
 
 	public void setFirewallPortHistories(Set<FirewallPortHistory> firewallPortHistories) {

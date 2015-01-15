@@ -16,10 +16,15 @@ import com.sobey.cmdbuild.entity.basic.PortHistoryBasic;
 @Table(name = "load_balancer_port_history", schema = "public")
 public class LoadBalancerPortHistory extends PortHistoryBasic {
 
-	private LoadBalancerPort loadBalancerPort;
 	private Integer loadBalancer;
+	private LoadBalancerPort loadBalancerPort;
 
 	public LoadBalancerPortHistory() {
+	}
+
+	@Column(name = "\"loadBalancer\"")
+	public Integer getLoadBalancer() {
+		return loadBalancer;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -28,17 +33,12 @@ public class LoadBalancerPortHistory extends PortHistoryBasic {
 		return loadBalancerPort;
 	}
 
-	public void setLoadBalancerPort(LoadBalancerPort loadBalancerPort) {
-		this.loadBalancerPort = loadBalancerPort;
-	}
-
-	@Column(name = "\"loadBalancer\"")
-	public Integer getLoadBalancer() {
-		return loadBalancer;
-	}
-
 	public void setLoadBalancer(Integer loadBalancer) {
 		this.loadBalancer = loadBalancer;
+	}
+
+	public void setLoadBalancerPort(LoadBalancerPort loadBalancerPort) {
+		this.loadBalancerPort = loadBalancerPort;
 	}
 
 }

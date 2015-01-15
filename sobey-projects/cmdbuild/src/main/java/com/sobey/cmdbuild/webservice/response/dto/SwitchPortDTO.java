@@ -13,7 +13,6 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.PortBasicDTO;
 public class SwitchPortDTO extends PortBasicDTO {
 
 	private Integer switches;
-	private SwitchesDTO switchesDTO;
 
 	public Integer getSwitches() {
 		return switches;
@@ -21,14 +20,6 @@ public class SwitchPortDTO extends PortBasicDTO {
 
 	public void setSwitches(Integer switches) {
 		this.switches = switches;
-	}
-
-	public SwitchesDTO getSwitchesDTO() {
-		return switchesDTO;
-	}
-
-	public void setSwitchesDTO(SwitchesDTO switchesDTO) {
-		this.switchesDTO = switchesDTO;
 	}
 
 	/**

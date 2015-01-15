@@ -19,8 +19,8 @@ import com.sobey.cmdbuild.entity.basic.ComponentBasic;
 public class Memory extends ComponentBasic {
 
 	private Integer frequency;
-	private Integer size;
 	private Set<MemoryHistory> memoryHistories = new HashSet<MemoryHistory>(0);
+	private Integer size;
 
 	public Memory() {
 	}
@@ -30,8 +30,9 @@ public class Memory extends ComponentBasic {
 		return frequency;
 	}
 
-	public void setFrequency(Integer frequency) {
-		this.frequency = frequency;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "memory")
+	public Set<MemoryHistory> getMemoryHistories() {
+		return memoryHistories;
 	}
 
 	@Column(name = "size")
@@ -39,17 +40,16 @@ public class Memory extends ComponentBasic {
 		return size;
 	}
 
-	public void setSize(Integer size) {
-		this.size = size;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "memory")
-	public Set<MemoryHistory> getMemoryHistories() {
-		return memoryHistories;
+	public void setFrequency(Integer frequency) {
+		this.frequency = frequency;
 	}
 
 	public void setMemoryHistories(Set<MemoryHistory> memoryHistories) {
 		this.memoryHistories = memoryHistories;
+	}
+
+	public void setSize(Integer size) {
+		this.size = size;
 	}
 
 }

@@ -31,6 +31,7 @@ public class EcsHistory extends ServiceHistoryBasic {
 	private String memorySize;
 	private String osName;
 	private Integer server;
+	private Integer subnet;
 
 	public EcsHistory() {
 	}
@@ -111,6 +112,11 @@ public class EcsHistory extends ServiceHistoryBasic {
 		return server;
 	}
 
+	@Column(name = "subnet")
+	public Integer getSubnet() {
+		return subnet;
+	}
+
 	public void setAdapterName(String adapterName) {
 		this.adapterName = adapterName;
 	}
@@ -169,6 +175,10 @@ public class EcsHistory extends ServiceHistoryBasic {
 
 	public void setServer(Integer server) {
 		this.server = server;
+	}
+
+	public void setSubnet(Integer subnet) {
+		this.subnet = subnet;
 	}
 
 }

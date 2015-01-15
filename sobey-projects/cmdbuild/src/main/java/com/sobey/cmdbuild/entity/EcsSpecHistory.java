@@ -20,16 +20,27 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "ecs_spec_history", schema = "public")
 public class EcsSpecHistory extends BasicEntity {
 
+	private Integer cpuNumber;
+	private Integer diskSize;
 	private EcsSpec ecsSpec;
 	private Date endDate;
-	private Integer cpuNumber;
+	private Integer idc;
+	private String imageName;
 	private Integer memory;
 	private Integer osType;
-	private Integer diskSize;
-	private String imageName;
 	private String remark;
 
 	public EcsSpecHistory() {
+	}
+
+	@Column(name = "cpu_number")
+	public Integer getCpuNumber() {
+		return cpuNumber;
+	}
+
+	@Column(name = "disk_size")
+	public Integer getDiskSize() {
+		return diskSize;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -38,54 +49,15 @@ public class EcsSpecHistory extends BasicEntity {
 		return ecsSpec;
 	}
 
-	public void setEcsSpec(EcsSpec ecsSpec) {
-		this.ecsSpec = ecsSpec;
-	}
-
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "\"EndDate\"", nullable = false, length = 29)
 	public Date getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	@Column(name = "cpu_number")
-	public Integer getCpuNumber() {
-		return cpuNumber;
-	}
-
-	public void setCpuNumber(Integer cpuNumber) {
-		this.cpuNumber = cpuNumber;
-	}
-
-	@Column(name = "memory")
-	public Integer getMemory() {
-		return memory;
-	}
-
-	public void setMemory(Integer memory) {
-		this.memory = memory;
-	}
-
-	@Column(name = "os_type")
-	public Integer getOsType() {
-		return osType;
-	}
-
-	public void setOsType(Integer osType) {
-		this.osType = osType;
-	}
-
-	@Column(name = "disk_size")
-	public Integer getDiskSize() {
-		return diskSize;
-	}
-
-	public void setDiskSize(Integer diskSize) {
-		this.diskSize = diskSize;
+	@Column(name = "idc")
+	public Integer getIdc() {
+		return idc;
 	}
 
 	@Column(name = "image_name", length = 200)
@@ -93,13 +65,51 @@ public class EcsSpecHistory extends BasicEntity {
 		return imageName;
 	}
 
-	public void setImageName(String imageName) {
-		this.imageName = imageName;
+	@Column(name = "memory")
+	public Integer getMemory() {
+		return memory;
+	}
+
+	@Column(name = "os_type")
+	public Integer getOsType() {
+		return osType;
 	}
 
 	@Column(name = "remark", length = 200)
 	public String getRemark() {
 		return remark;
+	}
+
+	public void setCpuNumber(Integer cpuNumber) {
+		this.cpuNumber = cpuNumber;
+	}
+
+	public void setDiskSize(Integer diskSize) {
+		this.diskSize = diskSize;
+	}
+
+	public void setEcsSpec(EcsSpec ecsSpec) {
+		this.ecsSpec = ecsSpec;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public void setIdc(Integer idc) {
+		this.idc = idc;
+	}
+
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+
+	public void setMemory(Integer memory) {
+		this.memory = memory;
+	}
+
+	public void setOsType(Integer osType) {
+		this.osType = osType;
 	}
 
 	public void setRemark(String remark) {

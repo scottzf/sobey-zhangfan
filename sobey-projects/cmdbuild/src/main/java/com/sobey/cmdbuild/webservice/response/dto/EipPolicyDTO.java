@@ -14,7 +14,6 @@ public class EipPolicyDTO extends BasicDTO {
 
 	private Integer eip;
 	private Integer eipProtocol;
-	private String eipProtocolText;
 	private Integer sourcePort;
 	private Integer targetPort;
 
@@ -22,36 +21,28 @@ public class EipPolicyDTO extends BasicDTO {
 		return eip;
 	}
 
-	public void setEip(Integer eip) {
-		this.eip = eip;
-	}
-
 	public Integer getEipProtocol() {
 		return eipProtocol;
-	}
-
-	public void setEipProtocol(Integer eipProtocol) {
-		this.eipProtocol = eipProtocol;
-	}
-
-	public String getEipProtocolText() {
-		return eipProtocolText;
-	}
-
-	public void setEipProtocolText(String eipProtocolText) {
-		this.eipProtocolText = eipProtocolText;
 	}
 
 	public Integer getSourcePort() {
 		return sourcePort;
 	}
 
-	public void setSourcePort(Integer sourcePort) {
-		this.sourcePort = sourcePort;
-	}
-
 	public Integer getTargetPort() {
 		return targetPort;
+	}
+
+	public void setEip(Integer eip) {
+		this.eip = eip;
+	}
+
+	public void setEipProtocol(Integer eipProtocol) {
+		this.eipProtocol = eipProtocol;
+	}
+
+	public void setSourcePort(Integer sourcePort) {
+		this.sourcePort = sourcePort;
 	}
 
 	public void setTargetPort(Integer targetPort) {

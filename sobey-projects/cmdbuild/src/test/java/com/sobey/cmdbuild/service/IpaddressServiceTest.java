@@ -7,7 +7,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
-import com.sobey.cmdbuild.service.infrastructure.IpaddressService;
 import com.sobey.test.spring.SpringTransactionalTestCase;
 
 /**

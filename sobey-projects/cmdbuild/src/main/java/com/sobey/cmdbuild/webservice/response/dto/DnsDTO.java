@@ -15,38 +15,29 @@ public class DnsDTO extends ServiceBasicDTO {
 	private String cnameDomain;
 	private String domainName;
 	private Integer domainType;
-	private String domainTypeText;
 
 	public String getCnameDomain() {
 		return cnameDomain;
-	}
-
-	public void setCnameDomain(String cnameDomain) {
-		this.cnameDomain = cnameDomain;
 	}
 
 	public String getDomainName() {
 		return domainName;
 	}
 
-	public void setDomainName(String domainName) {
-		this.domainName = domainName;
-	}
-
 	public Integer getDomainType() {
 		return domainType;
 	}
 
+	public void setCnameDomain(String cnameDomain) {
+		this.cnameDomain = cnameDomain;
+	}
+
+	public void setDomainName(String domainName) {
+		this.domainName = domainName;
+	}
+
 	public void setDomainType(Integer domainType) {
 		this.domainType = domainType;
-	}
-
-	public String getDomainTypeText() {
-		return domainTypeText;
-	}
-
-	public void setDomainTypeText(String domainTypeText) {
-		this.domainTypeText = domainTypeText;
 	}
 
 	/**

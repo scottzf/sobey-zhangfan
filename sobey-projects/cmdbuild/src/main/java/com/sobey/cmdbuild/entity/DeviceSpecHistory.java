@@ -20,21 +20,37 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "device_spec_history", schema = "public")
 public class DeviceSpecHistory extends BasicEntity {
 
-	private DeviceSpec deviceSpec;
-	private Date endDate;
 	private Integer brand;
-	private Integer power;
-	private Integer maintenance;
-	private Integer height;
-	private Integer ramNumber;
-	private Integer cpuNumber;
-	private Integer nicNumber;
-	private Integer hdNumber;
-	private Integer deviceType;
 	private String cpuModel;
+	private Integer cpuNumber;
+	private DeviceSpec deviceSpec;
+	private Integer deviceType;
+	private Date endDate;
+	private Integer hdNumber;
+	private Integer height;
+	private Integer idc;
+	private Integer maintenance;
+	private Integer nicNumber;
+	private Integer power;
+	private Integer ramNumber;
 	private String remark;
 
 	public DeviceSpecHistory() {
+	}
+
+	@Column(name = "brand")
+	public Integer getBrand() {
+		return brand;
+	}
+
+	@Column(name = "cpu_model")
+	public String getCpuModel() {
+		return cpuModel;
+	}
+
+	@Column(name = "cpu_number")
+	public Integer getCpuNumber() {
+		return cpuNumber;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -43,8 +59,9 @@ public class DeviceSpecHistory extends BasicEntity {
 		return deviceSpec;
 	}
 
-	public void setDeviceSpec(DeviceSpec deviceSpec) {
-		this.deviceSpec = deviceSpec;
+	@Column(name = "device_type")
+	public Integer getDeviceType() {
+		return deviceType;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -53,35 +70,9 @@ public class DeviceSpecHistory extends BasicEntity {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	@Column(name = "brand")
-	public Integer getBrand() {
-		return brand;
-	}
-
-	public void setBrand(Integer brand) {
-		this.brand = brand;
-	}
-
-	@Column(name = "power")
-	public Integer getPower() {
-		return power;
-	}
-
-	public void setPower(Integer power) {
-		this.power = power;
-	}
-
-	@Column(name = "maintenance")
-	public Integer getMaintenance() {
-		return maintenance;
-	}
-
-	public void setMaintenance(Integer maintenance) {
-		this.maintenance = maintenance;
+	@Column(name = "hd_number")
+	public Integer getHdNumber() {
+		return hdNumber;
 	}
 
 	@Column(name = "height")
@@ -89,26 +80,14 @@ public class DeviceSpecHistory extends BasicEntity {
 		return height;
 	}
 
-	public void setHeight(Integer height) {
-		this.height = height;
+	@Column(name = "idc")
+	public Integer getIdc() {
+		return idc;
 	}
 
-	@Column(name = "ram_number")
-	public Integer getRamNumber() {
-		return ramNumber;
-	}
-
-	public void setRamNumber(Integer ramNumber) {
-		this.ramNumber = ramNumber;
-	}
-
-	@Column(name = "cpu_number")
-	public Integer getCpuNumber() {
-		return cpuNumber;
-	}
-
-	public void setCpuNumber(Integer cpuNumber) {
-		this.cpuNumber = cpuNumber;
+	@Column(name = "maintenance")
+	public Integer getMaintenance() {
+		return maintenance;
 	}
 
 	@Column(name = "nic_number")
@@ -116,40 +95,71 @@ public class DeviceSpecHistory extends BasicEntity {
 		return nicNumber;
 	}
 
-	public void setNicNumber(Integer nicNumber) {
-		this.nicNumber = nicNumber;
+	@Column(name = "power")
+	public Integer getPower() {
+		return power;
 	}
 
-	@Column(name = "hd_number")
-	public Integer getHdNumber() {
-		return hdNumber;
+	@Column(name = "ram_number")
+	public Integer getRamNumber() {
+		return ramNumber;
 	}
 
-	public void setHdNumber(Integer hdNumber) {
-		this.hdNumber = hdNumber;
+	@Column(name = "remark", length = 200)
+	public String getRemark() {
+		return remark;
 	}
 
-	@Column(name = "device_type")
-	public Integer getDeviceType() {
-		return deviceType;
-	}
-
-	public void setDeviceType(Integer deviceType) {
-		this.deviceType = deviceType;
-	}
-
-	@Column(name = "cpu_model")
-	public String getCpuModel() {
-		return cpuModel;
+	public void setBrand(Integer brand) {
+		this.brand = brand;
 	}
 
 	public void setCpuModel(String cpuModel) {
 		this.cpuModel = cpuModel;
 	}
 
-	@Column(name = "remark", length = 200)
-	public String getRemark() {
-		return remark;
+	public void setCpuNumber(Integer cpuNumber) {
+		this.cpuNumber = cpuNumber;
+	}
+
+	public void setDeviceSpec(DeviceSpec deviceSpec) {
+		this.deviceSpec = deviceSpec;
+	}
+
+	public void setDeviceType(Integer deviceType) {
+		this.deviceType = deviceType;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public void setHdNumber(Integer hdNumber) {
+		this.hdNumber = hdNumber;
+	}
+
+	public void setHeight(Integer height) {
+		this.height = height;
+	}
+
+	public void setIdc(Integer idc) {
+		this.idc = idc;
+	}
+
+	public void setMaintenance(Integer maintenance) {
+		this.maintenance = maintenance;
+	}
+
+	public void setNicNumber(Integer nicNumber) {
+		this.nicNumber = nicNumber;
+	}
+
+	public void setPower(Integer power) {
+		this.power = power;
+	}
+
+	public void setRamNumber(Integer ramNumber) {
+		this.ramNumber = ramNumber;
 	}
 
 	public void setRemark(String remark) {

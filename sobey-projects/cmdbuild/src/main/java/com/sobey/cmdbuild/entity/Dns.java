@@ -15,30 +15,12 @@ import com.sobey.cmdbuild.entity.basic.ServiceBasic;
 @Table(name = "dns", schema = "public")
 public class Dns extends ServiceBasic {
 
-	private Integer domainType;
-	private String domainName;
 	private String cnameDomain;
 	private Set<DnsHistory> dnsHistories = new HashSet<DnsHistory>(0);
+	private String domainName;
+	private Integer domainType;
 
 	public Dns() {
-	}
-
-	@Column(name = "domain_type")
-	public Integer getDomainType() {
-		return domainType;
-	}
-
-	public void setDomainType(Integer domainType) {
-		this.domainType = domainType;
-	}
-
-	@Column(name = "\"domainName\"", length = 100)
-	public String getDomainName() {
-		return domainName;
-	}
-
-	public void setDomainName(String domainName) {
-		this.domainName = domainName;
 	}
 
 	@Column(name = "\"cnameDomain\"", length = 100)
@@ -46,17 +28,35 @@ public class Dns extends ServiceBasic {
 		return cnameDomain;
 	}
 
-	public void setCnameDomain(String cnameDomain) {
-		this.cnameDomain = cnameDomain;
-	}
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "dns")
 	public Set<DnsHistory> getDnsHistories() {
 		return dnsHistories;
 	}
 
+	@Column(name = "\"domainName\"", length = 100)
+	public String getDomainName() {
+		return domainName;
+	}
+
+	@Column(name = "domain_type")
+	public Integer getDomainType() {
+		return domainType;
+	}
+
+	public void setCnameDomain(String cnameDomain) {
+		this.cnameDomain = cnameDomain;
+	}
+
 	public void setDnsHistories(Set<DnsHistory> dnsHistories) {
 		this.dnsHistories = dnsHistories;
+	}
+
+	public void setDomainName(String domainName) {
+		this.domainName = domainName;
+	}
+
+	public void setDomainType(Integer domainType) {
+		this.domainType = domainType;
 	}
 
 }

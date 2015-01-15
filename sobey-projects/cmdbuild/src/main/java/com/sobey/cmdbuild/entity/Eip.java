@@ -23,7 +23,6 @@ public class Eip extends ServiceBasic {
 	private Integer eipStatus;
 	private Integer ipaddress;
 	private Integer isp;
-	private Integer portId;
 	private Integer router;
 
 	public Eip() {
@@ -54,11 +53,6 @@ public class Eip extends ServiceBasic {
 		return isp;
 	}
 
-	@Column(name = "port_id")
-	public Integer getPortId() {
-		return portId;
-	}
-
 	@Column(name = "router")
 	public Integer getRouter() {
 		return router;
@@ -82,10 +76,6 @@ public class Eip extends ServiceBasic {
 
 	public void setIsp(Integer isp) {
 		this.isp = isp;
-	}
-
-	public void setPortId(Integer portId) {
-		this.portId = portId;
 	}
 
 	public void setRouter(Integer router) {

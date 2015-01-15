@@ -13,135 +13,99 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 public class DeviceSpecDTO extends BasicDTO {
 
 	private Integer brand;
-	private String brandText;
 	private String cpuModel;
 	private Integer cpuNumber;
 	private Integer deviceType;
-	private String deviceTypeText;
 	private Integer hdnumber;
 	private Integer height;
-	private String hightText;
+	private Integer idc;
 	private Integer maintenance;
-	private String maintenanceText;
 	private Integer nicNumber;
 	private Integer power;
-	private String powerText;
 	private Integer ramNumber;
 
 	public Integer getBrand() {
 		return brand;
 	}
 
-	public void setBrand(Integer brand) {
-		this.brand = brand;
-	}
-
-	public String getBrandText() {
-		return brandText;
-	}
-
-	public void setBrandText(String brandText) {
-		this.brandText = brandText;
-	}
-
 	public String getCpuModel() {
 		return cpuModel;
-	}
-
-	public void setCpuModel(String cpuModel) {
-		this.cpuModel = cpuModel;
 	}
 
 	public Integer getCpuNumber() {
 		return cpuNumber;
 	}
 
-	public void setCpuNumber(Integer cpuNumber) {
-		this.cpuNumber = cpuNumber;
-	}
-
 	public Integer getDeviceType() {
 		return deviceType;
-	}
-
-	public void setDeviceType(Integer deviceType) {
-		this.deviceType = deviceType;
-	}
-
-	public String getDeviceTypeText() {
-		return deviceTypeText;
-	}
-
-	public void setDeviceTypeText(String deviceTypeText) {
-		this.deviceTypeText = deviceTypeText;
 	}
 
 	public Integer getHdnumber() {
 		return hdnumber;
 	}
 
-	public void setHdnumber(Integer hdnumber) {
-		this.hdnumber = hdnumber;
-	}
-
 	public Integer getHeight() {
 		return height;
 	}
 
-	public void setHeight(Integer height) {
-		this.height = height;
-	}
-
-	public String getHightText() {
-		return hightText;
-	}
-
-	public void setHightText(String hightText) {
-		this.hightText = hightText;
+	public Integer getIdc() {
+		return idc;
 	}
 
 	public Integer getMaintenance() {
 		return maintenance;
 	}
 
-	public void setMaintenance(Integer maintenance) {
-		this.maintenance = maintenance;
-	}
-
-	public String getMaintenanceText() {
-		return maintenanceText;
-	}
-
-	public void setMaintenanceText(String maintenanceText) {
-		this.maintenanceText = maintenanceText;
-	}
-
 	public Integer getNicNumber() {
 		return nicNumber;
-	}
-
-	public void setNicNumber(Integer nicNumber) {
-		this.nicNumber = nicNumber;
 	}
 
 	public Integer getPower() {
 		return power;
 	}
 
-	public void setPower(Integer power) {
-		this.power = power;
-	}
-
-	public String getPowerText() {
-		return powerText;
-	}
-
-	public void setPowerText(String powerText) {
-		this.powerText = powerText;
-	}
-
 	public Integer getRamNumber() {
 		return ramNumber;
+	}
+
+	public void setBrand(Integer brand) {
+		this.brand = brand;
+	}
+
+	public void setCpuModel(String cpuModel) {
+		this.cpuModel = cpuModel;
+	}
+
+	public void setCpuNumber(Integer cpuNumber) {
+		this.cpuNumber = cpuNumber;
+	}
+
+	public void setDeviceType(Integer deviceType) {
+		this.deviceType = deviceType;
+	}
+
+	public void setHdnumber(Integer hdnumber) {
+		this.hdnumber = hdnumber;
+	}
+
+	public void setHeight(Integer height) {
+		this.height = height;
+	}
+
+	public void setIdc(Integer idc) {
+		this.idc = idc;
+	}
+
+	public void setMaintenance(Integer maintenance) {
+		this.maintenance = maintenance;
+	}
+
+	public void setNicNumber(Integer nicNumber) {
+		this.nicNumber = nicNumber;
+	}
+
+	public void setPower(Integer power) {
+		this.power = power;
 	}
 
 	public void setRamNumber(Integer ramNumber) {

@@ -29,13 +29,13 @@ public class ServerPort extends PortBasic {
 		return server;
 	}
 
-	public void setServer(Integer server) {
-		this.server = server;
-	}
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "serverPort")
 	public Set<ServerPortHistory> getServerPortHistories() {
 		return serverPortHistories;
+	}
+
+	public void setServer(Integer server) {
+		this.server = server;
 	}
 
 	public void setServerPortHistories(Set<ServerPortHistory> serverPortHistories) {

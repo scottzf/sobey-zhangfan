@@ -29,13 +29,13 @@ public class LoadBalancerPort extends PortBasic {
 		return loadBalancer;
 	}
 
-	public void setLoadBalancer(Integer loadBalancer) {
-		this.loadBalancer = loadBalancer;
-	}
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "loadBalancerPort")
 	public Set<LoadBalancerPortHistory> getLoadBalancerPortHistories() {
 		return loadBalancerPortHistories;
+	}
+
+	public void setLoadBalancer(Integer loadBalancer) {
+		this.loadBalancer = loadBalancer;
 	}
 
 	public void setLoadBalancerPortHistories(Set<LoadBalancerPortHistory> loadBalancerPortHistories) {

@@ -17,20 +17,16 @@ public class EcsDTO extends ServiceBasicDTO {
 	private String datastoreName;
 	private String diskSize;
 	private Integer ecsSpec;
-	private EcsSpecDTO ecsSpecDTO;
 	private Integer ecsStatus;
-	private String ecsStatusText;
 	private Integer ecsType;
-	private String ecsTypeText;
 	private Integer ipaddress;
-	private IpaddressDTO ipaddressDTO;
 	private Boolean isDesktop;
 	private Boolean isGpu;
 	private String macAddress;
 	private String memorySize;
 	private String osName;
 	private Integer server;
-	private ServerDTO ServerDTO;
+	private Integer subnet;
 
 	public String getAdapterName() {
 		return adapterName;
@@ -52,32 +48,16 @@ public class EcsDTO extends ServiceBasicDTO {
 		return ecsSpec;
 	}
 
-	public EcsSpecDTO getEcsSpecDTO() {
-		return ecsSpecDTO;
-	}
-
 	public Integer getEcsStatus() {
 		return ecsStatus;
-	}
-
-	public String getEcsStatusText() {
-		return ecsStatusText;
 	}
 
 	public Integer getEcsType() {
 		return ecsType;
 	}
 
-	public String getEcsTypeText() {
-		return ecsTypeText;
-	}
-
 	public Integer getIpaddress() {
 		return ipaddress;
-	}
-
-	public IpaddressDTO getIpaddressDTO() {
-		return ipaddressDTO;
 	}
 
 	public Boolean getIsDesktop() {
@@ -104,8 +84,8 @@ public class EcsDTO extends ServiceBasicDTO {
 		return server;
 	}
 
-	public ServerDTO getServerDTO() {
-		return ServerDTO;
+	public Integer getSubnet() {
+		return subnet;
 	}
 
 	public void setAdapterName(String adapterName) {
@@ -128,32 +108,16 @@ public class EcsDTO extends ServiceBasicDTO {
 		this.ecsSpec = ecsSpec;
 	}
 
-	public void setEcsSpecDTO(EcsSpecDTO ecsSpecDTO) {
-		this.ecsSpecDTO = ecsSpecDTO;
-	}
-
 	public void setEcsStatus(Integer ecsStatus) {
 		this.ecsStatus = ecsStatus;
-	}
-
-	public void setEcsStatusText(String ecsStatusText) {
-		this.ecsStatusText = ecsStatusText;
 	}
 
 	public void setEcsType(Integer ecsType) {
 		this.ecsType = ecsType;
 	}
 
-	public void setEcsTypeText(String ecsTypeText) {
-		this.ecsTypeText = ecsTypeText;
-	}
-
 	public void setIpaddress(Integer ipaddress) {
 		this.ipaddress = ipaddress;
-	}
-
-	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
-		this.ipaddressDTO = ipaddressDTO;
 	}
 
 	public void setIsDesktop(Boolean isDesktop) {
@@ -180,8 +144,8 @@ public class EcsDTO extends ServiceBasicDTO {
 		this.server = server;
 	}
 
-	public void setServerDTO(ServerDTO serverDTO) {
-		ServerDTO = serverDTO;
+	public void setSubnet(Integer subnet) {
+		this.subnet = subnet;
 	}
 
 	/**

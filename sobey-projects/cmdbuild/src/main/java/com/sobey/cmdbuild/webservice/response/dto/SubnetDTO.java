@@ -14,15 +14,12 @@ public class SubnetDTO extends BasicDTO {
 
 	private String gateway;
 	private Integer idc;
-	private IdcDTO idcDTO;
 	private String netMask;
-	private Integer portId;
 	private Integer portIndex;
+	private String remark;
 	private Integer router;
-	private RouterDTO routerDTO;
 	private String segment;
 	private Integer tenants;
-	private TenantsDTO tenantsDTO;
 
 	public String getGateway() {
 		return gateway;
@@ -32,28 +29,20 @@ public class SubnetDTO extends BasicDTO {
 		return idc;
 	}
 
-	public IdcDTO getIdcDTO() {
-		return idcDTO;
-	}
-
 	public String getNetMask() {
 		return netMask;
-	}
-
-	public Integer getPortId() {
-		return portId;
 	}
 
 	public Integer getPortIndex() {
 		return portIndex;
 	}
 
-	public Integer getRouter() {
-		return router;
+	public String getRemark() {
+		return remark;
 	}
 
-	public RouterDTO getRouterDTO() {
-		return routerDTO;
+	public Integer getRouter() {
+		return router;
 	}
 
 	public String getSegment() {
@@ -64,10 +53,6 @@ public class SubnetDTO extends BasicDTO {
 		return tenants;
 	}
 
-	public TenantsDTO getTenantsDTO() {
-		return tenantsDTO;
-	}
-
 	public void setGateway(String gateway) {
 		this.gateway = gateway;
 	}
@@ -76,28 +61,20 @@ public class SubnetDTO extends BasicDTO {
 		this.idc = idc;
 	}
 
-	public void setIdcDTO(IdcDTO idcDTO) {
-		this.idcDTO = idcDTO;
-	}
-
 	public void setNetMask(String netMask) {
 		this.netMask = netMask;
-	}
-
-	public void setPortId(Integer portId) {
-		this.portId = portId;
 	}
 
 	public void setPortIndex(Integer portIndex) {
 		this.portIndex = portIndex;
 	}
 
-	public void setRouter(Integer router) {
-		this.router = router;
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
-	public void setRouterDTO(RouterDTO routerDTO) {
-		this.routerDTO = routerDTO;
+	public void setRouter(Integer router) {
+		this.router = router;
 	}
 
 	public void setSegment(String segment) {
@@ -106,10 +83,6 @@ public class SubnetDTO extends BasicDTO {
 
 	public void setTenants(Integer tenants) {
 		this.tenants = tenants;
-	}
-
-	public void setTenantsDTO(TenantsDTO tenantsDTO) {
-		this.tenantsDTO = tenantsDTO;
 	}
 
 	/**

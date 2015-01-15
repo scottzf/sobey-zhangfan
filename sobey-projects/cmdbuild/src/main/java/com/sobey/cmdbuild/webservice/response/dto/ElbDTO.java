@@ -13,22 +13,22 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.ServiceBasicDTO;
 public class ElbDTO extends ServiceBasicDTO {
 
 	private Integer ipaddress;
-	private IpaddressDTO ipaddressDTO;
+	private Integer subnet;
 
 	public Integer getIpaddress() {
 		return ipaddress;
+	}
+
+	public Integer getSubnet() {
+		return subnet;
 	}
 
 	public void setIpaddress(Integer ipaddress) {
 		this.ipaddress = ipaddress;
 	}
 
-	public IpaddressDTO getIpaddressDTO() {
-		return ipaddressDTO;
-	}
-
-	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
-		this.ipaddressDTO = ipaddressDTO;
+	public void setSubnet(Integer subnet) {
+		this.subnet = subnet;
 	}
 
 	/**

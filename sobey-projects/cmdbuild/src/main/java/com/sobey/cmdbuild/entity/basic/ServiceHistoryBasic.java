@@ -11,7 +11,7 @@ import javax.persistence.TemporalType;
  * ServiceHistory 模块的基本Entity
  * 
  * <p>
- * ECS ES3 ELB EIP DNS ESG VPN
+ * ECS ES3 ELB EIP DNS VPN Firewall Router
  * </p>
  * 
  * @author Administrator
@@ -25,7 +25,6 @@ public class ServiceHistoryBasic extends BasicEntity {
 	protected Date endDate;
 	protected Integer idc;
 	protected String remark;
-	protected Integer subnet;
 	protected Integer tenants;
 
 	@Column(name = "agent_type")
@@ -55,11 +54,6 @@ public class ServiceHistoryBasic extends BasicEntity {
 		return remark;
 	}
 
-	@Column(name = "subnet")
-	public Integer getSubnet() {
-		return subnet;
-	}
-
 	@Column(name = "tenants")
 	public Integer getTenants() {
 		return tenants;
@@ -83,10 +77,6 @@ public class ServiceHistoryBasic extends BasicEntity {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
-	}
-
-	public void setSubnet(Integer subnet) {
-		this.subnet = subnet;
 	}
 
 	public void setTenants(Integer tenants) {

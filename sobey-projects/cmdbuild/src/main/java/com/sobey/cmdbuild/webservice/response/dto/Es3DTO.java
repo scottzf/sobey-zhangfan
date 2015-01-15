@@ -12,140 +12,140 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.ServiceBasicDTO;
 @XmlType(name = "Es3DTO", namespace = WsConstants.NS)
 public class Es3DTO extends ServiceBasicDTO {
 
-	private Integer es3Type;
-	private String es3TypeText;
-	private Integer storage;
-	private StorageDTO storageDTO;
-	private String volumeName;
+	private String aggreName;
+	private String availableSize;
+	private String currentFiles;
+	private String diskFilePath;
 	private String es3Status;
+	private Integer es3Type;
+	private String maximumFiles;
+	private String snapshotSize;
+	private Integer storage;
+	private Integer subnet;
 	private String thinProvisioned;
 	private String totalSize;
 	private String usedSize;
 	private String usedSizePre;
-	private String availableSize;
-	private String snapshotSize;
-	private String aggreName;
-	private String maximumFiles;
-	private String currentFiles;
+	private String volumeName;
 
-	public Integer getEs3Type() {
-		return es3Type;
-	}
-
-	public void setEs3Type(Integer es3Type) {
-		this.es3Type = es3Type;
-	}
-
-	public String getEs3TypeText() {
-		return es3TypeText;
-	}
-
-	public void setEs3TypeText(String es3TypeText) {
-		this.es3TypeText = es3TypeText;
-	}
-
-	public Integer getStorage() {
-		return storage;
-	}
-
-	public void setStorage(Integer storage) {
-		this.storage = storage;
-	}
-
-	public StorageDTO getStorageDTO() {
-		return storageDTO;
-	}
-
-	public void setStorageDTO(StorageDTO storageDTO) {
-		this.storageDTO = storageDTO;
-	}
-
-	public String getVolumeName() {
-		return volumeName;
-	}
-
-	public void setVolumeName(String volumeName) {
-		this.volumeName = volumeName;
-	}
-
-	public String getEs3Status() {
-		return es3Status;
-	}
-
-	public void setEs3Status(String es3Status) {
-		this.es3Status = es3Status;
-	}
-
-	public String getThinProvisioned() {
-		return thinProvisioned;
-	}
-
-	public void setThinProvisioned(String thinProvisioned) {
-		this.thinProvisioned = thinProvisioned;
-	}
-
-	public String getTotalSize() {
-		return totalSize;
-	}
-
-	public void setTotalSize(String totalSize) {
-		this.totalSize = totalSize;
-	}
-
-	public String getUsedSize() {
-		return usedSize;
-	}
-
-	public void setUsedSize(String usedSize) {
-		this.usedSize = usedSize;
-	}
-
-	public String getUsedSizePre() {
-		return usedSizePre;
-	}
-
-	public void setUsedSizePre(String usedSizePre) {
-		this.usedSizePre = usedSizePre;
+	public String getAggreName() {
+		return aggreName;
 	}
 
 	public String getAvailableSize() {
 		return availableSize;
 	}
 
-	public void setAvailableSize(String availableSize) {
-		this.availableSize = availableSize;
+	public String getCurrentFiles() {
+		return currentFiles;
 	}
 
-	public String getSnapshotSize() {
-		return snapshotSize;
+	public String getDiskFilePath() {
+		return diskFilePath;
 	}
 
-	public void setSnapshotSize(String snapshotSize) {
-		this.snapshotSize = snapshotSize;
+	public String getEs3Status() {
+		return es3Status;
 	}
 
-	public String getAggreName() {
-		return aggreName;
-	}
-
-	public void setAggreName(String aggreName) {
-		this.aggreName = aggreName;
+	public Integer getEs3Type() {
+		return es3Type;
 	}
 
 	public String getMaximumFiles() {
 		return maximumFiles;
 	}
 
-	public void setMaximumFiles(String maximumFiles) {
-		this.maximumFiles = maximumFiles;
+	public String getSnapshotSize() {
+		return snapshotSize;
 	}
 
-	public String getCurrentFiles() {
-		return currentFiles;
+	public Integer getStorage() {
+		return storage;
+	}
+
+	public Integer getSubnet() {
+		return subnet;
+	}
+
+	public String getThinProvisioned() {
+		return thinProvisioned;
+	}
+
+	public String getTotalSize() {
+		return totalSize;
+	}
+
+	public String getUsedSize() {
+		return usedSize;
+	}
+
+	public String getUsedSizePre() {
+		return usedSizePre;
+	}
+
+	public String getVolumeName() {
+		return volumeName;
+	}
+
+	public void setAggreName(String aggreName) {
+		this.aggreName = aggreName;
+	}
+
+	public void setAvailableSize(String availableSize) {
+		this.availableSize = availableSize;
 	}
 
 	public void setCurrentFiles(String currentFiles) {
 		this.currentFiles = currentFiles;
+	}
+
+	public void setDiskFilePath(String diskFilePath) {
+		this.diskFilePath = diskFilePath;
+	}
+
+	public void setEs3Status(String es3Status) {
+		this.es3Status = es3Status;
+	}
+
+	public void setEs3Type(Integer es3Type) {
+		this.es3Type = es3Type;
+	}
+
+	public void setMaximumFiles(String maximumFiles) {
+		this.maximumFiles = maximumFiles;
+	}
+
+	public void setSnapshotSize(String snapshotSize) {
+		this.snapshotSize = snapshotSize;
+	}
+
+	public void setStorage(Integer storage) {
+		this.storage = storage;
+	}
+
+	public void setSubnet(Integer subnet) {
+		this.subnet = subnet;
+	}
+
+	public void setThinProvisioned(String thinProvisioned) {
+		this.thinProvisioned = thinProvisioned;
+	}
+
+	public void setTotalSize(String totalSize) {
+		this.totalSize = totalSize;
+	}
+
+	public void setUsedSize(String usedSize) {
+		this.usedSize = usedSize;
+	}
+
+	public void setUsedSizePre(String usedSizePre) {
+		this.usedSizePre = usedSizePre;
+	}
+
+	public void setVolumeName(String volumeName) {
+		this.volumeName = volumeName;
 	}
 
 	/**

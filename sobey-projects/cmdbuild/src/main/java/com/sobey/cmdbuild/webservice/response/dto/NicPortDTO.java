@@ -13,7 +13,6 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.PortBasicDTO;
 public class NicPortDTO extends PortBasicDTO {
 
 	private Integer nic;
-	private NicDTO nicDTO;
 
 	public Integer getNic() {
 		return nic;
@@ -21,14 +20,6 @@ public class NicPortDTO extends PortBasicDTO {
 
 	public void setNic(Integer nic) {
 		this.nic = nic;
-	}
-
-	public NicDTO getNicDTO() {
-		return nicDTO;
-	}
-
-	public void setNicDTO(NicDTO nicDTO) {
-		this.nicDTO = nicDTO;
 	}
 
 	/**

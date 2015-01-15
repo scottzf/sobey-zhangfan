@@ -33,6 +33,7 @@ public class Ecs extends ServiceBasic {
 	private String memorySize;
 	private String osName;
 	private Integer server;
+	private Integer subnet;
 
 	public Ecs() {
 	}
@@ -112,6 +113,11 @@ public class Ecs extends ServiceBasic {
 		return server;
 	}
 
+	@Column(name = "subnet")
+	public Integer getSubnet() {
+		return subnet;
+	}
+
 	public void setAdapterName(String adapterName) {
 		this.adapterName = adapterName;
 	}
@@ -170,6 +176,10 @@ public class Ecs extends ServiceBasic {
 
 	public void setServer(Integer server) {
 		this.server = server;
+	}
+
+	public void setSubnet(Integer subnet) {
+		this.subnet = subnet;
 	}
 
 }

@@ -12,8 +12,16 @@ import java.util.Date;
 public abstract class BasicDTO {
 
 	protected Date beginDate;
-	protected String code; // cmdbuild中唯一的值,对用户隐藏,由系统自动生成.
-	protected String description; // 对用户显示的字段.
+
+	/**
+	 * cmdbuild中唯一的值,对用户隐藏,由系统自动生成.
+	 */
+	protected String code;
+
+	/**
+	 * 对用户显示的字段.
+	 */
+	protected String description;
 	protected Integer id;
 	protected String remark;
 

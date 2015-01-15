@@ -14,7 +14,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.constants.LookUpTypeEnum;
 import com.sobey.cmdbuild.entity.LookUp;
-import com.sobey.cmdbuild.service.organisation.LookUpService;
 import com.sobey.test.spring.SpringTransactionalTestCase;
 
 /**

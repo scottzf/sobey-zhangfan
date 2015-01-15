@@ -20,15 +20,20 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "elb_policy_history", schema = "public")
 public class ElbPolicyHistory extends BasicEntity {
 
-	private ElbPolicy elbPolicy;
-	private Date endDate;
 	private Integer elb;
+	private ElbPolicy elbPolicy;
 	private Integer elbProtocol;
+	private Date endDate;
 	private String ipaddress;
 	private Integer sourcePort;
 	private Integer targetPort;
 
 	public ElbPolicyHistory() {
+	}
+
+	@Column(name = "elb")
+	public Integer getElb() {
+		return elb;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -37,8 +42,9 @@ public class ElbPolicyHistory extends BasicEntity {
 		return elbPolicy;
 	}
 
-	public void setElbPolicy(ElbPolicy elbPolicy) {
-		this.elbPolicy = elbPolicy;
+	@Column(name = "elb_protocol")
+	public Integer getElbProtocol() {
+		return elbProtocol;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -47,35 +53,9 @@ public class ElbPolicyHistory extends BasicEntity {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	@Column(name = "elb")
-	public Integer getElb() {
-		return elb;
-	}
-
-	public void setElb(Integer elb) {
-		this.elb = elb;
-	}
-
-	@Column(name = "elb_protocol")
-	public Integer getElbProtocol() {
-		return elbProtocol;
-	}
-
-	public void setElbProtocol(Integer elbProtocol) {
-		this.elbProtocol = elbProtocol;
-	}
-
 	@Column(name = "ipaddress", length = 100)
 	public String getIpaddress() {
 		return ipaddress;
-	}
-
-	public void setIpaddress(String ipaddress) {
-		this.ipaddress = ipaddress;
 	}
 
 	@Column(name = "source_port")
@@ -83,13 +63,33 @@ public class ElbPolicyHistory extends BasicEntity {
 		return sourcePort;
 	}
 
-	public void setSourcePort(Integer sourcePort) {
-		this.sourcePort = sourcePort;
-	}
-
 	@Column(name = "target_port")
 	public Integer getTargetPort() {
 		return targetPort;
+	}
+
+	public void setElb(Integer elb) {
+		this.elb = elb;
+	}
+
+	public void setElbPolicy(ElbPolicy elbPolicy) {
+		this.elbPolicy = elbPolicy;
+	}
+
+	public void setElbProtocol(Integer elbProtocol) {
+		this.elbProtocol = elbProtocol;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public void setIpaddress(String ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public void setSourcePort(Integer sourcePort) {
+		this.sourcePort = sourcePort;
 	}
 
 	public void setTargetPort(Integer targetPort) {

@@ -18,6 +18,7 @@ public class ElbHistory extends ServiceHistoryBasic {
 
 	private Elb elb;
 	private Integer ipaddress;
+	private Integer subnet;
 
 	public ElbHistory() {
 	}
@@ -28,17 +29,26 @@ public class ElbHistory extends ServiceHistoryBasic {
 		return elb;
 	}
 
-	public void setElb(Elb elb) {
-		this.elb = elb;
-	}
-
 	@Column(name = "ipaddress")
 	public Integer getIpaddress() {
 		return ipaddress;
 	}
 
+	@Column(name = "subnet")
+	public Integer getSubnet() {
+		return subnet;
+	}
+
+	public void setElb(Elb elb) {
+		this.elb = elb;
+	}
+
 	public void setIpaddress(Integer ipaddress) {
 		this.ipaddress = ipaddress;
+	}
+
+	public void setSubnet(Integer subnet) {
+		this.subnet = subnet;
 	}
 
 }

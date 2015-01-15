@@ -13,16 +13,11 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.ComponentBasicDTO;
 public class NicDTO extends ComponentBasicDTO {
 
 	private Integer nicRate;
-	private String nicRateText;
 	private Integer portNumber;
 	private String virtualSwitchName;
 
 	public Integer getNicRate() {
 		return nicRate;
-	}
-
-	public String getNicRateText() {
-		return nicRateText;
 	}
 
 	public Integer getPortNumber() {
@@ -35,10 +30,6 @@ public class NicDTO extends ComponentBasicDTO {
 
 	public void setNicRate(Integer nicRate) {
 		this.nicRate = nicRate;
-	}
-
-	public void setNicRateText(String nicRateText) {
-		this.nicRateText = nicRateText;
 	}
 
 	public void setPortNumber(Integer portNumber) {

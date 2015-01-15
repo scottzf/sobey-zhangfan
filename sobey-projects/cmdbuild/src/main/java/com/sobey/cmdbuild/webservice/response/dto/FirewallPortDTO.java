@@ -13,7 +13,6 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.PortBasicDTO;
 public class FirewallPortDTO extends PortBasicDTO {
 
 	private Integer firewall;
-	private FirewallDTO firewallDTO;;
 
 	public Integer getFirewall() {
 		return firewall;
@@ -21,14 +20,6 @@ public class FirewallPortDTO extends PortBasicDTO {
 
 	public void setFirewall(Integer firewall) {
 		this.firewall = firewall;
-	}
-
-	public FirewallDTO getFirewallDTO() {
-		return firewallDTO;
-	}
-
-	public void setFirewallDTO(FirewallDTO firewallDTO) {
-		this.firewallDTO = firewallDTO;
 	}
 
 	/**

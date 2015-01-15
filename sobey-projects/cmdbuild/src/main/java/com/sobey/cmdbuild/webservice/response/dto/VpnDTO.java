@@ -13,22 +13,31 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.ServiceBasicDTO;
 public class VpnDTO extends ServiceBasicDTO {
 
 	private String password;
-	private Integer policyId;
+	private Integer tenants;
+	private String username;
 
 	public String getPassword() {
 		return password;
+	}
+
+	public Integer getTenants() {
+		return tenants;
+	}
+
+	public String getUsername() {
+		return username;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
-	public Integer getPolicyId() {
-		return policyId;
+	public void setTenants(Integer tenants) {
+		this.tenants = tenants;
 	}
 
-	public void setPolicyId(Integer policyId) {
-		this.policyId = policyId;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	/**

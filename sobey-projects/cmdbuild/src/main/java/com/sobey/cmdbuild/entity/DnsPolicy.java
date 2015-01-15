@@ -19,11 +19,11 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 public class DnsPolicy extends BasicEntity {
 
 	private Integer dns;
+	private Set<DnsPolicyHistory> dnsPolicyHistories = new HashSet<DnsPolicyHistory>(0);
 	private Integer dnsProtocol;
 	private String ipaddress;
-	private Integer port;
 
-	private Set<DnsPolicyHistory> dnsPolicyHistories = new HashSet<DnsPolicyHistory>(0);
+	private Integer port;
 
 	public DnsPolicy() {
 	}
@@ -33,8 +33,9 @@ public class DnsPolicy extends BasicEntity {
 		return dns;
 	}
 
-	public void setDns(Integer dns) {
-		this.dns = dns;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "dnsPolicy")
+	public Set<DnsPolicyHistory> getDnsPolicyHistories() {
+		return dnsPolicyHistories;
 	}
 
 	@Column(name = "dns_protocol")
@@ -42,17 +43,9 @@ public class DnsPolicy extends BasicEntity {
 		return dnsProtocol;
 	}
 
-	public void setDnsProtocol(Integer dnsProtocol) {
-		this.dnsProtocol = dnsProtocol;
-	}
-
 	@Column(name = "ipaddress", length = 100)
 	public String getIpaddress() {
 		return ipaddress;
-	}
-
-	public void setIpaddress(String ipaddress) {
-		this.ipaddress = ipaddress;
 	}
 
 	@Column(name = "port")
@@ -60,17 +53,24 @@ public class DnsPolicy extends BasicEntity {
 		return port;
 	}
 
-	public void setPort(Integer port) {
-		this.port = port;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "dnsPolicy")
-	public Set<DnsPolicyHistory> getDnsPolicyHistories() {
-		return dnsPolicyHistories;
+	public void setDns(Integer dns) {
+		this.dns = dns;
 	}
 
 	public void setDnsPolicyHistories(Set<DnsPolicyHistory> dnsPolicyHistories) {
 		this.dnsPolicyHistories = dnsPolicyHistories;
+	}
+
+	public void setDnsProtocol(Integer dnsProtocol) {
+		this.dnsProtocol = dnsProtocol;
+	}
+
+	public void setIpaddress(String ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public void setPort(Integer port) {
+		this.port = port;
 	}
 
 }

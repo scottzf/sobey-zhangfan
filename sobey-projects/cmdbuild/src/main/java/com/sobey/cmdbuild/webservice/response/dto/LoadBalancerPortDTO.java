@@ -13,7 +13,6 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.PortBasicDTO;
 public class LoadBalancerPortDTO extends PortBasicDTO {
 
 	private Integer loadBalancer;
-	private LoadBalancerDTO loadBalancerDTO;
 
 	public Integer getLoadBalancer() {
 		return loadBalancer;
@@ -21,14 +20,6 @@ public class LoadBalancerPortDTO extends PortBasicDTO {
 
 	public void setLoadBalancer(Integer loadBalancer) {
 		this.loadBalancer = loadBalancer;
-	}
-
-	public LoadBalancerDTO getLoadBalancerDTO() {
-		return loadBalancerDTO;
-	}
-
-	public void setLoadBalancerDTO(LoadBalancerDTO loadBalancerDTO) {
-		this.loadBalancerDTO = loadBalancerDTO;
 	}
 
 	/**

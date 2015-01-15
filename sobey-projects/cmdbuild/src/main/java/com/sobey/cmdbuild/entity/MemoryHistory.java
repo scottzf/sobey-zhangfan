@@ -16,11 +16,16 @@ import com.sobey.cmdbuild.entity.basic.ComponentHistoryBasic;
 @Table(name = "memory_history", schema = "public")
 public class MemoryHistory extends ComponentHistoryBasic {
 
-	private Memory memory;
 	private Integer frequency;
+	private Memory memory;
 	private Integer size;
 
 	public MemoryHistory() {
+	}
+
+	@Column(name = "frequency")
+	public Integer getFrequency() {
+		return frequency;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -29,22 +34,17 @@ public class MemoryHistory extends ComponentHistoryBasic {
 		return memory;
 	}
 
-	public void setMemory(Memory memory) {
-		this.memory = memory;
-	}
-
-	@Column(name = "frequency")
-	public Integer getFrequency() {
-		return frequency;
+	@Column(name = "size")
+	public Integer getSize() {
+		return size;
 	}
 
 	public void setFrequency(Integer frequency) {
 		this.frequency = frequency;
 	}
 
-	@Column(name = "size")
-	public Integer getSize() {
-		return size;
+	public void setMemory(Memory memory) {
+		this.memory = memory;
 	}
 
 	public void setSize(Integer size) {

@@ -24,7 +24,6 @@ public class SubnetHistory extends BasicEntity {
 	private String gateway;
 	private Integer idc;
 	private String netMask;
-	private Integer portId;
 	private Integer portIndex;
 	private String remark;
 	private Integer router;
@@ -54,11 +53,6 @@ public class SubnetHistory extends BasicEntity {
 	@Column(name = "net_mask", length = 100)
 	public String getNetMask() {
 		return netMask;
-	}
-
-	@Column(name = "port_id")
-	public Integer getPortId() {
-		return portId;
 	}
 
 	@Column(name = "port_index")
@@ -106,10 +100,6 @@ public class SubnetHistory extends BasicEntity {
 
 	public void setNetMask(String netMask) {
 		this.netMask = netMask;
-	}
-
-	public void setPortId(Integer portId) {
-		this.portId = portId;
 	}
 
 	public void setPortIndex(Integer portIndex) {

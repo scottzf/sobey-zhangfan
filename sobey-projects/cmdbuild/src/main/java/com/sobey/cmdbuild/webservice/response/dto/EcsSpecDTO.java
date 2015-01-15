@@ -14,57 +14,57 @@ public class EcsSpecDTO extends BasicDTO {
 
 	private Integer cpuNumber;
 	private Integer diskSize;
+	private Integer idc;
 	private String imageName;
 	private Integer memory;
 	private Integer osType;
-	private String osTypeText;
 
 	public Integer getCpuNumber() {
 		return cpuNumber;
-	}
-
-	public void setCpuNumber(Integer cpuNumber) {
-		this.cpuNumber = cpuNumber;
 	}
 
 	public Integer getDiskSize() {
 		return diskSize;
 	}
 
-	public void setDiskSize(Integer diskSize) {
-		this.diskSize = diskSize;
+	public Integer getIdc() {
+		return idc;
 	}
 
 	public String getImageName() {
 		return imageName;
 	}
 
-	public void setImageName(String imageName) {
-		this.imageName = imageName;
-	}
-
 	public Integer getMemory() {
 		return memory;
-	}
-
-	public void setMemory(Integer memory) {
-		this.memory = memory;
 	}
 
 	public Integer getOsType() {
 		return osType;
 	}
 
+	public void setCpuNumber(Integer cpuNumber) {
+		this.cpuNumber = cpuNumber;
+	}
+
+	public void setDiskSize(Integer diskSize) {
+		this.diskSize = diskSize;
+	}
+
+	public void setIdc(Integer idc) {
+		this.idc = idc;
+	}
+
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+
+	public void setMemory(Integer memory) {
+		this.memory = memory;
+	}
+
 	public void setOsType(Integer osType) {
 		this.osType = osType;
-	}
-
-	public String getOsTypeText() {
-		return osTypeText;
-	}
-
-	public void setOsTypeText(String osTypeText) {
-		this.osTypeText = osTypeText;
 	}
 
 	/**

@@ -13,76 +13,40 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 public class LogDTO extends BasicDTO {
 
 	private Integer operateType;
-	private String operateTypeText;
 	private Integer result;
-	private String resultText;
 	private Integer serviceType;
-	private String serviceTypeText;
 	private Integer tenants;
-	private TenantsDTO tenantsDTO;
 
 	public Integer getOperateType() {
 		return operateType;
-	}
-
-	public void setOperateType(Integer operateType) {
-		this.operateType = operateType;
-	}
-
-	public String getOperateTypeText() {
-		return operateTypeText;
-	}
-
-	public void setOperateTypeText(String operateTypeText) {
-		this.operateTypeText = operateTypeText;
 	}
 
 	public Integer getResult() {
 		return result;
 	}
 
-	public void setResult(Integer result) {
-		this.result = result;
-	}
-
-	public String getResultText() {
-		return resultText;
-	}
-
-	public void setResultText(String resultText) {
-		this.resultText = resultText;
-	}
-
 	public Integer getServiceType() {
 		return serviceType;
-	}
-
-	public void setServiceType(Integer serviceType) {
-		this.serviceType = serviceType;
-	}
-
-	public String getServiceTypeText() {
-		return serviceTypeText;
-	}
-
-	public void setServiceTypeText(String serviceTypeText) {
-		this.serviceTypeText = serviceTypeText;
 	}
 
 	public Integer getTenants() {
 		return tenants;
 	}
 
+	public void setOperateType(Integer operateType) {
+		this.operateType = operateType;
+	}
+
+	public void setResult(Integer result) {
+		this.result = result;
+	}
+
+	public void setServiceType(Integer serviceType) {
+		this.serviceType = serviceType;
+	}
+
 	public void setTenants(Integer tenants) {
 		this.tenants = tenants;
-	}
-
-	public TenantsDTO getTenantsDTO() {
-		return tenantsDTO;
-	}
-
-	public void setTenantsDTO(TenantsDTO tenantsDTO) {
-		this.tenantsDTO = tenantsDTO;
 	}
 
 	/**

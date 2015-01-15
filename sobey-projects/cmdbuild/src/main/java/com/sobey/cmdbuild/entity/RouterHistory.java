@@ -38,7 +38,7 @@ public class RouterHistory extends ServiceHistoryBasic {
 	public Integer getIpaddress() {
 		return ipaddress;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "\"CurrentId\"", nullable = false)
 	public Router getRouter() {

@@ -15,8 +15,6 @@ import com.sobey.cmdbuild.entity.EipPolicy;
 import com.sobey.cmdbuild.entity.Elb;
 import com.sobey.cmdbuild.entity.ElbPolicy;
 import com.sobey.cmdbuild.entity.Es3;
-import com.sobey.cmdbuild.entity.Esg;
-import com.sobey.cmdbuild.entity.EsgPolicy;
 import com.sobey.cmdbuild.entity.Firewall;
 import com.sobey.cmdbuild.entity.FirewallPort;
 import com.sobey.cmdbuild.entity.HardDisk;
@@ -254,34 +252,8 @@ public class TestData {
 		return es3;
 	}
 
-	public static Esg randomEsg() {
-
-		Esg esg = new Esg();
-
-		esg.setId(0);
-		esg.setDescription(RandomData.randomName("description"));
-		esg.setIdc(idcId);
-		esg.setRemark(RandomData.randomName("remark"));
-		esg.setTenants(tenantsId);
-		esg.setAgentType(agentTypeId);
-		esg.setIsDefault(true);
-		return esg;
-	}
-
-	public static EsgPolicy randomEsgPolicy() {
-
-		EsgPolicy policy = new EsgPolicy();
-
-		policy.setId(0);
-		policy.setDescription(RandomData.randomName("description"));
-		policy.setEsg(esgId);
-		policy.setSourceIp(RandomData.randomName("SourceIp"));
-		policy.setTargetIp(RandomData.randomName("TargetIp"));
-		policy.setPort(RandomData.randomInt());
-		policy.setPolicyType(98);
-
-		return policy;
-	}
+ 
+ 
 
 	public static Firewall randomFirewall() {
 		Firewall firewall = new Firewall();
@@ -729,12 +701,9 @@ public class TestData {
 		tenants.setDescription(RandomData.randomName("description"));
 		tenants.setPhone(RandomData.randomName("phone"));
 		tenants.setRemark(RandomData.randomName("remark"));
-		tenants.setPassword(RandomData.randomName("password"));
 		tenants.setEmail(RandomData.randomName("email"));
 		tenants.setAccessKey(RandomData.randomName("accessKey"));
 		tenants.setCompany(RandomData.randomName("company"));
-		tenants.setCreateInfo(RandomData.randomName("createInfo"));
-		tenants.setAclNumber(RandomData.randomInt());
 		return tenants;
 	}
 
@@ -766,7 +735,6 @@ public class TestData {
 		vpn.setTenants(tenantsId);
 		vpn.setAgentType(agentTypeId);
 		vpn.setPassword(RandomData.randomName("password"));
-		vpn.setPolicyId(RandomData.randomInt());
 
 		return vpn;
 	}

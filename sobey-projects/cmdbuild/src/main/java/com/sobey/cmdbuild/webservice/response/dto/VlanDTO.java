@@ -14,16 +14,12 @@ public class VlanDTO extends BasicDTO {
 
 	private String gateway;
 	private Integer idc;
-	private IdcDTO idcDTO;
 	private String netMask;
 	private Integer nic;
-	private NicDTO nicDTO;
 	private String remark;
 	private String segment;
 	private Integer subnet;
-	private SubnetDTO subnetDTO;
 	private Integer tenants;
-	private TenantsDTO tenantsDTO;
 	private Integer vlanId;
 
 	public String getGateway() {
@@ -34,20 +30,12 @@ public class VlanDTO extends BasicDTO {
 		return idc;
 	}
 
-	public IdcDTO getIdcDTO() {
-		return idcDTO;
-	}
-
 	public String getNetMask() {
 		return netMask;
 	}
 
 	public Integer getNic() {
 		return nic;
-	}
-
-	public NicDTO getNicDTO() {
-		return nicDTO;
 	}
 
 	public String getRemark() {
@@ -62,16 +50,8 @@ public class VlanDTO extends BasicDTO {
 		return subnet;
 	}
 
-	public SubnetDTO getSubnetDTO() {
-		return subnetDTO;
-	}
-
 	public Integer getTenants() {
 		return tenants;
-	}
-
-	public TenantsDTO getTenantsDTO() {
-		return tenantsDTO;
 	}
 
 	public Integer getVlanId() {
@@ -86,20 +66,12 @@ public class VlanDTO extends BasicDTO {
 		this.idc = idc;
 	}
 
-	public void setIdcDTO(IdcDTO idcDTO) {
-		this.idcDTO = idcDTO;
-	}
-
 	public void setNetMask(String netMask) {
 		this.netMask = netMask;
 	}
 
 	public void setNic(Integer nic) {
 		this.nic = nic;
-	}
-
-	public void setNicDTO(NicDTO nicDTO) {
-		this.nicDTO = nicDTO;
 	}
 
 	public void setRemark(String remark) {
@@ -114,16 +86,8 @@ public class VlanDTO extends BasicDTO {
 		this.subnet = subnet;
 	}
 
-	public void setSubnetDTO(SubnetDTO subnetDTO) {
-		this.subnetDTO = subnetDTO;
-	}
-
 	public void setTenants(Integer tenants) {
 		this.tenants = tenants;
-	}
-
-	public void setTenantsDTO(TenantsDTO tenantsDTO) {
-		this.tenantsDTO = tenantsDTO;
 	}
 
 	public void setVlanId(Integer vlanId) {

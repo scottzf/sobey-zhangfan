@@ -15,50 +15,14 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "log", schema = "public")
 public class Log extends BasicEntity {
 
-	private Integer tenants;
+	private Set<LogHistory> logHistories = new HashSet<LogHistory>(0);
 	private Integer operateType;
 	private Integer result;
 	private Integer serviceType;
 
-	private Set<LogHistory> logHistories = new HashSet<LogHistory>(0);
+	private Integer tenants;
 
 	public Log() {
-	}
-
-	@Column(name = "tenants")
-	public Integer getTenants() {
-		return tenants;
-	}
-
-	public void setTenants(Integer tenants) {
-		this.tenants = tenants;
-	}
-
-	@Column(name = "operate_type")
-	public Integer getOperateType() {
-		return operateType;
-	}
-
-	public void setOperateType(Integer operateType) {
-		this.operateType = operateType;
-	}
-
-	@Column(name = "result")
-	public Integer getResult() {
-		return result;
-	}
-
-	public void setResult(Integer result) {
-		this.result = result;
-	}
-
-	@Column(name = "service_type")
-	public Integer getServiceType() {
-		return serviceType;
-	}
-
-	public void setServiceType(Integer serviceType) {
-		this.serviceType = serviceType;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "log")
@@ -66,8 +30,44 @@ public class Log extends BasicEntity {
 		return logHistories;
 	}
 
+	@Column(name = "operate_type")
+	public Integer getOperateType() {
+		return operateType;
+	}
+
+	@Column(name = "result")
+	public Integer getResult() {
+		return result;
+	}
+
+	@Column(name = "service_type")
+	public Integer getServiceType() {
+		return serviceType;
+	}
+
+	@Column(name = "tenants")
+	public Integer getTenants() {
+		return tenants;
+	}
+
 	public void setLogHistories(Set<LogHistory> logHistories) {
 		this.logHistories = logHistories;
+	}
+
+	public void setOperateType(Integer operateType) {
+		this.operateType = operateType;
+	}
+
+	public void setResult(Integer result) {
+		this.result = result;
+	}
+
+	public void setServiceType(Integer serviceType) {
+		this.serviceType = serviceType;
+	}
+
+	public void setTenants(Integer tenants) {
+		this.tenants = tenants;
 	}
 
 }

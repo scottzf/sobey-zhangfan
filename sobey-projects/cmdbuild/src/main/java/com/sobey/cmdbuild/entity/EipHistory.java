@@ -21,7 +21,6 @@ public class EipHistory extends ServiceHistoryBasic {
 	private Integer eipStatus;
 	private Integer ipaddress;
 	private Integer isp;
-	private Integer portId;
 	private Integer router;
 
 	public EipHistory() {
@@ -53,11 +52,6 @@ public class EipHistory extends ServiceHistoryBasic {
 		return isp;
 	}
 
-	@Column(name = "port_id")
-	public Integer getPortId() {
-		return portId;
-	}
-
 	@Column(name = "router")
 	public Integer getRouter() {
 		return router;
@@ -81,10 +75,6 @@ public class EipHistory extends ServiceHistoryBasic {
 
 	public void setIsp(Integer isp) {
 		this.isp = isp;
-	}
-
-	public void setPortId(Integer portId) {
-		this.portId = portId;
 	}
 
 	public void setRouter(Integer router) {
