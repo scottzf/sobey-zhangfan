@@ -67,6 +67,87 @@ public class LookUpConstants {
 	}
 
 	/**
+	 * 防火墙动作
+	 * 
+	 * @author Administrator
+	 *
+	 */
+	public enum FirewallAction {
+
+		Allow("Allow", 99),
+
+		Deny("Deny", 100);
+
+		private String name;
+		private Integer value;
+
+		private FirewallAction(String name, Integer value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public Integer getValue() {
+			return value;
+		}
+	}
+
+	/**
+	 * 防火墙方向
+	 * 
+	 * @author Administrator
+	 *
+	 */
+	public enum FirewallDirection {
+
+		上行("上行", 112),
+
+		下行("下行", 113);
+
+		private String name;
+		private Integer value;
+
+		private FirewallDirection(String name, Integer value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public Integer getValue() {
+			return value;
+		}
+	}
+
+	public enum FirewallProtocol {
+
+		TCP("TCP", 115),
+
+		UDP("UDP", 116);
+
+		private String name;
+		private Integer value;
+
+		private FirewallProtocol(String name, Integer value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public Integer getValue() {
+			return value;
+		}
+	}
+
+	/**
 	 * 描述LookUp中ServiceType的Description和Id.
 	 * 
 	 * <pre>
