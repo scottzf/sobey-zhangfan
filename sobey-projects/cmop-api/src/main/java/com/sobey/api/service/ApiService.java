@@ -3,13 +3,13 @@ package com.sobey.api.service;
 import java.util.List;
 
 import com.sobey.api.webservice.response.result.WSResult;
-import com.sobey.generate.cmdbuild.ConfigFirewallServiceCategoryDTO;
 import com.sobey.generate.cmdbuild.DnsDTO;
 import com.sobey.generate.cmdbuild.DnsPolicyDTO;
 import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
+import com.sobey.generate.cmdbuild.FirewallPolicyDTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
 import com.sobey.generate.cmdbuild.RouterDTO;
 import com.sobey.generate.cmdbuild.ServiceDTO;
@@ -51,7 +51,7 @@ public interface ApiService {
 	// ==================== Firewall Service ====================//
 
 	public WSResult createFirewallService(FirewallServiceDTO firewallServiceDTO,
-			List<ConfigFirewallServiceCategoryDTO> categoryDTOs);
+			List<FirewallPolicyDTO> firewallPolicyDTOs);
 
 	public WSResult bindingFirewallService(RouterDTO routerDTO, FirewallServiceDTO firewallServiceDTO);
 

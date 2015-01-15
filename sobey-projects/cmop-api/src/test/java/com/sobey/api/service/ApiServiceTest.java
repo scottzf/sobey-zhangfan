@@ -13,8 +13,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.sobey.api.data.TestData;
 import com.sobey.generate.cmdbuild.CmdbuildSoapService;
-import com.sobey.generate.cmdbuild.ConfigFirewallServiceCategoryDTO;
 import com.sobey.generate.cmdbuild.EcsDTO;
+import com.sobey.generate.cmdbuild.FirewallPolicyDTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
 import com.sobey.generate.cmdbuild.RouterDTO;
 import com.sobey.generate.cmdbuild.SubnetDTO;
@@ -77,13 +77,13 @@ public class ApiServiceTest extends TestCase {
 	public void createFirewallService() {
 
 		FirewallServiceDTO firewallServiceDTO = new FirewallServiceDTO();
-		List<ConfigFirewallServiceCategoryDTO> categoryDTOs = new ArrayList<ConfigFirewallServiceCategoryDTO>();
-		service.createFirewallService(firewallServiceDTO, categoryDTOs);
+		List<FirewallPolicyDTO> firewallPolicyDTOs = new ArrayList<FirewallPolicyDTO>();
+		service.createFirewallService(firewallServiceDTO, firewallPolicyDTOs);
 	}
 
 	@Test
 	public void bindingFirewallService() {
-		
+
 		Integer routerId = 2777;
 
 		RouterDTO routerDTO = (RouterDTO) cmdbuildSoapService.findRouter(routerId).getDto();

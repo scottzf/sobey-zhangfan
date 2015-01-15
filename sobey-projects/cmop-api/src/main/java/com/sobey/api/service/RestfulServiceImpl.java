@@ -23,7 +23,6 @@ import com.sobey.api.utils.CMDBuildUtil;
 import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
 import com.sobey.generate.cmdbuild.CmdbuildSoapService;
-import com.sobey.generate.cmdbuild.ConfigFirewallServiceCategoryDTO;
 import com.sobey.generate.cmdbuild.DnsDTO;
 import com.sobey.generate.cmdbuild.DnsPolicyDTO;
 import com.sobey.generate.cmdbuild.EcsDTO;
@@ -32,6 +31,7 @@ import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
 import com.sobey.generate.cmdbuild.ElbDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
+import com.sobey.generate.cmdbuild.FirewallPolicyDTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
 import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.IpaddressDTO;
@@ -179,14 +179,13 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult createTenants(String company, String name, String email, String password, String phone) {
+	public WSResult createTenants(String company, String name, String email, String phone) {
 
 		TenantsDTO tenantsDTO = new TenantsDTO();
 
 		tenantsDTO.setCompany(company);
 		tenantsDTO.setDescription(email);
 		tenantsDTO.setEmail(email);
-		tenantsDTO.setPassword(password);
 		tenantsDTO.setPhone(phone);
 
 		WSResult result = new WSResult();
@@ -486,10 +485,16 @@ public class RestfulServiceImpl implements RestfulService {
 		List<Object> list = cmdbuildSoapService.getMapEipDnsList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
 				.getDto();
 		for (Object object : list) {
+
 			MapEipDnsDTO mapEipDnsDTO = (MapEipDnsDTO) object;
+
 			EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(Integer.valueOf(mapEipDnsDTO.getIdObj1())).getDto();
+			LookUpDTO banwidth = (LookUpDTO) cmdbuildSoapService.findLookUp(eipDTO.getBandwidth()).getDto();
+			LookUpDTO isp = (LookUpDTO) cmdbuildSoapService.findLookUp(eipDTO.getIsp()).getDto();
+
 			EipEntity entity = new EipEntity(eipDTO.getCode(), eipDTO.getDescription(), eipDTO.getRemark(),
-					eipDTO.getBandwidthText(), eipDTO.getIspText());
+					banwidth.getDescription(), isp.getDescription());
+
 			eipEntities.add(entity);
 		}
 		DnsEntity entity = new DnsEntity(dnsDTO.getCode(), code, dnsDTO.getRemark(), eipEntities);
@@ -690,16 +695,21 @@ public class RestfulServiceImpl implements RestfulService {
 
 		map.put("EQ_firewallService", firewallServiceDTO.getId());
 
-		List<Object> list = cmdbuildSoapService
-				.getconfigFirewallServiceCategoryList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList().getDto();
+		List<Object> list = cmdbuildSoapService.getFirewallPolicyList(CMDBuildUtil.wrapperSearchParams(map))
+				.getDtoList().getDto();
 
 		for (Object object : list) {
-			ConfigFirewallServiceCategoryDTO categoryDTO = (ConfigFirewallServiceCategoryDTO) object;
+			FirewallPolicyDTO firewallPolicyDTO = (FirewallPolicyDTO) object;
 
-			FirewallPolicyEntity policyEntity = new FirewallPolicyEntity(categoryDTO.getAction(),
-					categoryDTO.getAddress(), categoryDTO.getDirection(), categoryDTO.getEndPort(),
-					categoryDTO.getFirewallService(), categoryDTO.getDescription(), categoryDTO.getProtocol(),
-					categoryDTO.getStartPort());
+			LookUpDTO action = (LookUpDTO) cmdbuildSoapService.findLookUp(firewallPolicyDTO.getAction()).getDto();
+			LookUpDTO direction = (LookUpDTO) cmdbuildSoapService.findLookUp(firewallPolicyDTO.getDirection()).getDto();
+			LookUpDTO protocol = (LookUpDTO) cmdbuildSoapService.findLookUp(firewallPolicyDTO.getProtocol()).getDto();
+
+			FirewallPolicyEntity policyEntity = new FirewallPolicyEntity(action.getDescription(),
+					firewallPolicyDTO.getAddress(), direction.getDescription(), firewallPolicyDTO.getEndPort(),
+					firewallPolicyDTO.getFirewallService(), firewallPolicyDTO.getDescription(),
+					protocol.getDescription(), firewallPolicyDTO.getStartPort());
+
 			policyEntities.add(policyEntity);
 		}
 
@@ -751,18 +761,22 @@ public class RestfulServiceImpl implements RestfulService {
 
 		for (int i = 0; i < directionsArray.length; i++) {
 
-			ConfigFirewallServiceCategoryDTO categoryDTO = new ConfigFirewallServiceCategoryDTO();
-			categoryDTO.setAction(actionsArray[i]);
-			categoryDTO.setAddress(ipaddressesArray[i]);
-			categoryDTO.setDescription(rulesNamesArray[i]);
-			categoryDTO.setDirection(directionsArray[i]);
-			categoryDTO.setStartPort(Integer.valueOf(startPortsArray[i]));
-			categoryDTO.setEndPort(Integer.valueOf(endPortsArray[i]));
-			categoryDTO.setTenants(tenantsDTO.getId());
-			categoryDTO.setProtocol(protocolsArray[i]);
-			categoryDTO.setFirewallService(queryFirewallServiceDTO.getId());
+			FirewallPolicyDTO firewallPolicyDTO = new FirewallPolicyDTO();
 
-			cmdbuildSoapService.createconfigFirewallServiceCategory(categoryDTO);
+			LookUpDTO action = findLookUpDTO(actionsArray[i], "FirewallAction");
+			LookUpDTO direction = findLookUpDTO(directionsArray[i], "FirewallDirection");
+			LookUpDTO protocol = findLookUpDTO(protocolsArray[i], "FirewallProtocol");
+
+			firewallPolicyDTO.setAction(action.getId());
+			firewallPolicyDTO.setAddress(ipaddressesArray[i]);
+			firewallPolicyDTO.setDescription(rulesNamesArray[i]);
+			firewallPolicyDTO.setDirection(direction.getId());
+			firewallPolicyDTO.setStartPort(Integer.valueOf(startPortsArray[i]));
+			firewallPolicyDTO.setEndPort(Integer.valueOf(endPortsArray[i]));
+			firewallPolicyDTO.setProtocol(protocol.getId());
+			firewallPolicyDTO.setFirewallService(queryFirewallServiceDTO.getId());
+
+			cmdbuildSoapService.createFirewallPolicy(firewallPolicyDTO);
 		}
 
 		result.setMessage(queryFirewallServiceDTO.getCode());
@@ -773,22 +787,26 @@ public class RestfulServiceImpl implements RestfulService {
 	public DTOResult<EipEntity> findEIP(String eipCode, String accessKey) {
 
 		DTOResult<EipEntity> result = new DTOResult<EipEntity>();
+
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
 		if (tenantsDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
 			return result;
 		}
+
 		EipDTO eipDTO = findEipDTO(tenantsDTO.getId(), eipCode);
 		if (eipDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "EIP不存在.");
 			return result;
 		}
+
 		// 查询出EIP关联的ECS信息
 		List<EcsEntity> ecsEntities = new ArrayList<EcsEntity>();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_idObj2", eipDTO.getId());
 		List<Object> list = cmdbuildSoapService.getMapEcsEipList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
 				.getDto();
+
 		for (Object object : list) {
 			MapEcsEipDTO mapEcsEipDTO = (MapEcsEipDTO) object;
 			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(Integer.valueOf(mapEcsEipDTO.getIdObj1())).getDto();
@@ -804,20 +822,27 @@ public class RestfulServiceImpl implements RestfulService {
 					ecsDTO.getMemorySize(), ecsDTO.getRemark(), ecsSpecDTO.getDescription(), lookUpDTO.getDescription());
 			ecsEntities.add(entity);
 		}
+
 		// 查询出EIP关联的ELB信息
 		List<ElbEntity> elbEntities = new ArrayList<ElbEntity>();
 		HashMap<String, Object> elbMap = new HashMap<String, Object>();
 		elbMap.put("EQ_idObj1", eipDTO.getId());
 		List<Object> mapEipElblist = cmdbuildSoapService.getMapEipElbList(CMDBuildUtil.wrapperSearchParams(elbMap))
 				.getDtoList().getDto();
+
 		for (Object object : mapEipElblist) {
 			MapEipElbDTO mapEcsElbDTO = (MapEipElbDTO) object;
 			ElbDTO elbDTO = (ElbDTO) cmdbuildSoapService.findElb(Integer.valueOf(mapEcsElbDTO.getIdObj2())).getDto();
 			ElbEntity entity = new ElbEntity(elbDTO.getCode(), elbDTO.getDescription(), null);
 			elbEntities.add(entity);
 		}
+
+		LookUpDTO banwidth = (LookUpDTO) cmdbuildSoapService.findLookUp(eipDTO.getBandwidth()).getDto();
+		LookUpDTO isp = (LookUpDTO) cmdbuildSoapService.findLookUp(eipDTO.getIsp()).getDto();
+
 		EipEntity entity = new EipEntity(eipDTO.getCode(), eipDTO.getDescription(), eipDTO.getRemark(),
-				eipDTO.getBandwidthText(), eipDTO.getIspText(), ecsEntities, elbEntities);
+				banwidth.getDescription(), isp.getDescription());
+
 		result.setDto(entity);
 		return result;
 	}

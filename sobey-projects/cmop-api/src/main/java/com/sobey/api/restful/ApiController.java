@@ -46,9 +46,8 @@ public class ApiController {
 	@RequestMapping(value = "/createTenants/", method = RequestMethod.POST)
 	public WSResult createTenants(@RequestParam(value = "company", required = false) String company,
 			@RequestParam(value = "name") String name, @RequestParam(value = "email") String email,
-			@RequestParam(value = "password") String password,
-			@RequestParam(value = "phone", required = false) String phone) {
-		return servie.createTenants(company, name, email, password, phone);
+			@RequestParam(value = "phone") String phone) {
+		return servie.createTenants(company, name, email, phone);
 	}
 
 	/********** Subnet ***********/

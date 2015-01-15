@@ -17,7 +17,7 @@ public interface RestfulService {
 
 	public DTOResult<TenantsEntity> findTenants(String accessKey);
 
-	public WSResult createTenants(String company, String name, String email, String password, String phone);
+	public WSResult createTenants(String company, String name, String email, String phone);
 
 	/******** Subnet ********/
 
