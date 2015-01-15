@@ -751,8 +751,10 @@ public class ApiServiceImpl implements ApiService {
 		// EcsSpec应该有router的规格(大中小),同理netscarler也应该有(最大连接数 5K,20k,40K,100K)
 		EcsSpecDTO ecsSpecDTO = (EcsSpecDTO) cmdbuildSoapService.findEcsSpec(ecsDTO.getEcsSpec()).getDto();
 		LookUpDTO OsType = (LookUpDTO) cmdbuildSoapService.findLookUp(ecsSpecDTO.getOsType()).getDto();
-		SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(ecsDTO.getSubnet()).getDto();
-		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(subnetDTO.getTenants()).getDto();
+		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(ecsDTO.getTenants()).getDto();
+
+		// vRouter默认创建在租户的默认子网中
+		SubnetDTO subnetDTO = getDefaultSubnet(tenantsDTO);
 		IdcDTO idcDTO = (IdcDTO) cmdbuildSoapService.findIdc(subnetDTO.getIdc()).getDto();
 
 		// Step.1 获得Server
@@ -793,7 +795,7 @@ public class ApiServiceImpl implements ApiService {
 		ecsDTO.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
 		ecsDTO.setIpaddress(ipaddressDTO.getId());
 		ecsDTO.setEcsType(LookUpConstants.ECSType.firewall.getValue());
-		ecsDTO.setSubnet(getDefaultSubnet(tenantsDTO).getId());// vRouter默认创建在租户的默认子网中.
+		ecsDTO.setSubnet(subnetDTO.getId());// vRouter默认创建在租户的默认子网中.
 
 		cmdbuildSoapService.createEcs(ecsDTO);
 
