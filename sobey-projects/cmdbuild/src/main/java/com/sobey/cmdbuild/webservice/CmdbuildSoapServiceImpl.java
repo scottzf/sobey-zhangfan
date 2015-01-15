@@ -8035,7 +8035,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			subnet.setUser(DEFAULT_USER);
 			subnet.setStatus(CMDBuildConstants.STATUS_ACTIVE);
-			subnet.setIdClass(TableNameUtil.getTableName(SwitchPort.class));
+			subnet.setIdClass(TableNameUtil.getTableName(Subnet.class));
 
 			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
 			BeanValidators.validateWithException(validator, subnet);
