@@ -4,7 +4,7 @@ import com.sobey.generate.cmdbuild.SubnetDTO;
 
 public class ConstansData {
 
-	public static final Integer idcId = 116;
+	public static final Integer idcId = 118;
 
 	public static final String firewall_username = "admin";
 	public static final String firewall_password = "mcloud@sobey.com";

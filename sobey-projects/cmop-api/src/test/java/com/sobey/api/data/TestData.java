@@ -1,14 +1,19 @@
 package com.sobey.api.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.sobey.api.constans.LookUpConstants;
 import com.sobey.api.service.data.ConstansData;
 import com.sobey.generate.cmdbuild.EcsDTO;
+import com.sobey.generate.cmdbuild.FirewallPolicyDTO;
+import com.sobey.generate.cmdbuild.FirewallServiceDTO;
 import com.sobey.generate.cmdbuild.SubnetDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 
 public class TestData {
 
-	private static final Integer tenantsId = 174;
+	private static final Integer tenantsId = 145;
 
 	public static TenantsDTO randomTenantsDTO() {
 		TenantsDTO dto = new TenantsDTO();
@@ -38,28 +43,64 @@ public class TestData {
 
 	public static EcsDTO randomEcsDTO() {
 		EcsDTO dto = new EcsDTO();
-		dto.setDescription("测试专用主机A");
-		dto.setServer(151);
-		dto.setSubnet(1447);// 175:默认子网 1447 : 200子网
+		dto.setDescription("测试专用主机B");
+		dto.setServer(124);
+		dto.setSubnet(1428);// 146:默认子网 1428 : 200子网
 		dto.setEcsType(109); // 109 instance 110 firewall
 		dto.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
 		dto.setIdc(ConstansData.idcId);
 		dto.setTenants(tenantsId);
-		dto.setEcsSpec(118);// centos
+		dto.setEcsSpec(130);// centos
 		return dto;
 	}
 
 	public static EcsDTO randomRouterDTO() {
 		EcsDTO dto = new EcsDTO();
-		dto.setDescription("刘凯的vRouter2");
-		dto.setServer(151);
-		dto.setSubnet(175);
+		dto.setDescription("路由");
+		dto.setServer(124);
 		dto.setEcsType(110); // 109 instance 110 firewall
 		dto.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
 		dto.setIdc(ConstansData.idcId);
 		dto.setTenants(tenantsId);
-		dto.setEcsSpec(120);
+		dto.setEcsSpec(134);
 		return dto;
+	}
+
+	public static FirewallServiceDTO randomFirewallServiceDTO() {
+
+		FirewallServiceDTO firewallServiceDTO = new FirewallServiceDTO();
+		firewallServiceDTO.setTenants(tenantsId);
+		firewallServiceDTO.setIdc(ConstansData.idcId);
+		firewallServiceDTO.setDescription("自定义的防火墙2");
+		return firewallServiceDTO;
+	}
+
+	public static List<FirewallPolicyDTO> randomFirewallPolicyDTOs() {
+
+		List<FirewallPolicyDTO> firewallPolicyDTOs = new ArrayList<FirewallPolicyDTO>();
+
+		FirewallPolicyDTO firewallPolicyDTO = new FirewallPolicyDTO();
+		firewallPolicyDTO.setAction(99); // 99 Allow ; 100 Deny
+		firewallPolicyDTO.setAddress("192.168.2.1");
+		firewallPolicyDTO.setDescription("TCP");
+		firewallPolicyDTO.setDirection(113); // 113 下行 ; 112 上行
+		firewallPolicyDTO.setStartPort(80);
+		firewallPolicyDTO.setEndPort(80);
+		firewallPolicyDTO.setProtocol(115); // 115 TCP ; 116 UDP
+
+		FirewallPolicyDTO firewallPolicyDTO2 = new FirewallPolicyDTO();
+
+		firewallPolicyDTO2.setAction(100); // 99 Allow ; 100 Deny
+		firewallPolicyDTO2.setAddress("192.168.2.3");
+		firewallPolicyDTO2.setDescription("TCP");
+		firewallPolicyDTO2.setDirection(112); // 113 下行 ; 112 上行
+		firewallPolicyDTO2.setStartPort(80);
+		firewallPolicyDTO2.setEndPort(100);
+		firewallPolicyDTO2.setProtocol(116); // 115 TCP ; 116 UDP
+
+		firewallPolicyDTOs.add(firewallPolicyDTO);
+		firewallPolicyDTOs.add(firewallPolicyDTO2);
+		return firewallPolicyDTOs;
 	}
 
 }
