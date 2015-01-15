@@ -950,7 +950,7 @@ public class ApiServiceImpl implements ApiService {
 			SwitchPolicyParameter switchPolicyParameter = new SwitchPolicyParameter();
 			switchPolicyParameter.setHostIp(serverIP.getDescription());
 			switchPolicyParameter.setVlanId(vlanDTO.getVlanId());
-			// switchesSoapService.createPolicyInSwitch(switchPolicyParameter);
+			switchesSoapService.createPolicyInSwitch(switchPolicyParameter);
 		}
 
 		for (SubnetDTO subnetDTO : subnetDTOs) {
@@ -1121,7 +1121,7 @@ public class ApiServiceImpl implements ApiService {
 		firewallSoapService.configRouterStaticParameterListByFirewall(configRouterStaticParameters);
 
 		/**
-		 * TODO 手动执行防火墙更新文件
+		 * TODO 手动执行防火墙更新文件,演示流程如何将此处独立出来?
 		 */
 
 		// Step.3 配置需要访问互联网的子网与电信网络之间的策略,类似子网之间通讯
