@@ -8031,7 +8031,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 			Subnet subnet = comm.subnetService.findSubnet(id);
 
 			// 将DTO对象转换至Entity对象,并将Entity拷贝至根据ID查询得到的Entity对象中
-			BeanMapper.copy(BeanMapper.map(subnetDTO, Subnet.class), subnetDTO);
+			BeanMapper.copy(BeanMapper.map(subnetDTO, Subnet.class), subnet);
 
 			subnet.setUser(DEFAULT_USER);
 			subnet.setStatus(CMDBuildConstants.STATUS_ACTIVE);
