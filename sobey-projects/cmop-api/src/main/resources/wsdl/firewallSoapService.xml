@@ -73,6 +73,10 @@
 
   <xs:element name="ModifyConfigSystemInterfaceByFirewallResponse" type="tns:ModifyConfigSystemInterfaceByFirewallResponse"/>
 
+  <xs:element name="PurgeConfigFirewallPolicyByFirewall" type="tns:PurgeConfigFirewallPolicyByFirewall"/>
+
+  <xs:element name="PurgeConfigFirewallPolicyByFirewallResponse" type="tns:PurgeConfigFirewallPolicyByFirewallResponse"/>
+
   <xs:element name="RegisteredByFirewall" type="tns:RegisteredByFirewall"/>
 
   <xs:element name="RegisteredByFirewallResponse" type="tns:RegisteredByFirewallResponse"/>
@@ -198,6 +202,26 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="PurgeConfigFirewallPolicyByFirewall">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="authenticateFirewallParameter" type="tns:AuthenticateFirewallParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="AuthenticateFirewallParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
+      <xs:element minOccurs="0" name="url" type="xs:string"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="PurgeConfigFirewallPolicyByFirewallResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="ConfigSystemInterfaceListByFirewall">
     <xs:sequence>
       <xs:element minOccurs="0" name="configSystemInterfaceParameters" type="tns:ConfigSystemInterfaceParameters"/>
@@ -246,14 +270,6 @@
   <xs:complexType name="RegisteredByFirewall">
     <xs:sequence>
       <xs:element minOccurs="0" name="authenticateFirewallParameter" type="tns:AuthenticateFirewallParameter"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="AuthenticateFirewallParameter">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="password" type="xs:string"/>
-      <xs:element minOccurs="0" name="url" type="xs:string"/>
-      <xs:element minOccurs="0" name="userName" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -489,6 +505,10 @@
     <wsdl:part element="tns:ConfigFirewallAddressParameterListByFirewall" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="PurgeConfigFirewallPolicyByFirewall">
+    <wsdl:part element="tns:PurgeConfigFirewallPolicyByFirewall" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="ConfigFirewallAddressParameterByFirewall">
     <wsdl:part element="tns:ConfigFirewallAddressParameterByFirewall" name="parameters">
     </wsdl:part>
@@ -515,6 +535,10 @@
   </wsdl:message>
   <wsdl:message name="deleteEIPByFirewallResponse">
     <wsdl:part element="tns:deleteEIPByFirewallResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="PurgeConfigFirewallPolicyByFirewallResponse">
+    <wsdl:part element="tns:PurgeConfigFirewallPolicyByFirewallResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="ConfigSystemInterfaceListByFirewall">
@@ -577,12 +601,12 @@
     <wsdl:part element="tns:ConfigSystemInterfaceByFirewall" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="RegisteredByFirewall">
-    <wsdl:part element="tns:RegisteredByFirewall" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="ConfigRouterStaticParameterByFirewall">
     <wsdl:part element="tns:ConfigRouterStaticParameterByFirewall" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="RegisteredByFirewall">
+    <wsdl:part element="tns:RegisteredByFirewall" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="ConfigSystemInterfaceListByFirewallResponse">
@@ -618,6 +642,12 @@
       <wsdl:input message="tns:deleteVPNUserByFirewall" name="deleteVPNUserByFirewall">
     </wsdl:input>
       <wsdl:output message="tns:deleteVPNUserByFirewallResponse" name="deleteVPNUserByFirewallResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PurgeConfigFirewallPolicyByFirewall">
+      <wsdl:input message="tns:PurgeConfigFirewallPolicyByFirewall" name="PurgeConfigFirewallPolicyByFirewall">
+    </wsdl:input>
+      <wsdl:output message="tns:PurgeConfigFirewallPolicyByFirewallResponse" name="PurgeConfigFirewallPolicyByFirewallResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="ConfigSystemInterfaceListByFirewall">
@@ -722,6 +752,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="createEIPByFirewallResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PurgeConfigFirewallPolicyByFirewall">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="PurgeConfigFirewallPolicyByFirewall">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="PurgeConfigFirewallPolicyByFirewallResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>

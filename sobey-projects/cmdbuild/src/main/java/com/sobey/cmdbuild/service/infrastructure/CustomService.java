@@ -63,7 +63,7 @@ public class CustomService {
 	 */
 	public Integer selectMaxPolicyId(Integer tenantsId) {
 		Integer policyId = customDao.selectMaxPolicyId(tenantsId);
-		return (int) MathsUtil.add(policyId == null ? 2000 : policyId, 1);
+		return (int) MathsUtil.add(policyId == null ? 3 : policyId, 1);
 	}
 
 	/**
