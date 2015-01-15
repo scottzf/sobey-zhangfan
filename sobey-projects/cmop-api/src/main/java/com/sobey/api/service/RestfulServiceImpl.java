@@ -657,8 +657,6 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		SubnetDTO subnetDTO = findSubnetDTO(tenantsDTO.getId(), subnetCode);
-
 		EcsDTO ecsDTO = new EcsDTO();
 		ecsDTO.setAgentType(LookUpConstants.AgentType.Fortigate.getValue());
 		ecsDTO.setDescription(routerName);
@@ -666,7 +664,6 @@ public class RestfulServiceImpl implements RestfulService {
 		ecsDTO.setIdc(idcDTO.getId());
 		ecsDTO.setRemark(remark);
 		ecsDTO.setTenants(tenantsDTO.getId());
-		ecsDTO.setSubnet(subnetDTO.getId());
 
 		result.setMessage(apiService.createRouter(ecsDTO).getMessage());
 

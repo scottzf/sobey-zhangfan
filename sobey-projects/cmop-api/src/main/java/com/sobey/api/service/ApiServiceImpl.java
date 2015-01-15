@@ -102,6 +102,15 @@ public class ApiServiceImpl implements ApiService {
 	 */
 	private static final String datacenter = DataCenterEnum.成都核心数据中心.toString();
 
+	/**
+	 * 密钥生成:基于Base62编码的SecureRandom随机生成bytes.
+	 * 
+	 * @return
+	 */
+	private String generateAccessKey() {
+		return Encodes.encodeBase64(Identities.randomBase62(16).getBytes());
+	}
+
 	@Override
 	public WSResult createTenants(TenantsDTO tenantsDTO) {
 
@@ -116,14 +125,13 @@ public class ApiServiceImpl implements ApiService {
 
 		// Step.1 在CMDB中创建Tenants
 
-		// 密钥生成:基于Base62编码的SecureRandom随机生成bytes.
-		tenantsDTO.setAccessKey(Encodes.encodeBase64(Identities.randomBase62(16).getBytes()));
+		tenantsDTO.setAccessKey(generateAccessKey());
+
 		IdResult idResult = cmdbuildSoapService.createTenants(tenantsDTO);
 
 		// 获得创建的Tenants对象
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_description", tenantsDTO.getDescription());
-
 		TenantsDTO queryTenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenantsByParams(
 				CMDBuildUtil.wrapperSearchParams(map)).getDto();
 
@@ -158,10 +166,9 @@ public class ApiServiceImpl implements ApiService {
 
 		// Step.1 将Subnet保存至CMDB中
 
-		// 获得为每个子网分配一个从1开始递增的portId.portId主要和 防火墙-> 网络-> 接口中的名称对应,公网IP 8-9,子网为1-7
-
-		// subnetDTO.setPortId(portId);
+		// 获得为每个子网分配一个从1开始递增的portIndex.portIndex主要和 防火墙-> 网络-> 接口中的名称对应,公网IP 8-9,子网为1-7
 		subnetDTO.setPortIndex(cmdbuildSoapService.getMaxPortIndex(subnetDTO.getTenants()));
+
 		IdResult idResult = cmdbuildSoapService.createSubnet(subnetDTO);
 
 		// Step.2 由Subnet生成Ipaddress,保存至CMDB中
@@ -207,7 +214,7 @@ public class ApiServiceImpl implements ApiService {
 
 		String prefixIP = StringUtils.substringBeforeLast(subnetDTO.getSegment(), ".");
 
-		// IP从2-255 ,共254个IP
+		// IP从2-254 ,共253个IP
 		for (int i = 2; i < 255; i++) {
 			IpaddressDTO ipaddressDTO = new IpaddressDTO();
 			ipaddressDTO.setGateway(subnetDTO.getGateway());
@@ -257,7 +264,7 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	/**
-	 * 获得Subnet未使用的IPAddress.
+	 * 获得Subnet中未使用的IPAddress.
 	 * 
 	 * @param subnetDTO
 	 * @return
@@ -332,9 +339,9 @@ public class ApiServiceImpl implements ApiService {
 	/**
 	 * 获得Vlan(端口组)
 	 * 
-	 * 每台Host的物理网卡上,一个Subnet应该只能对应一个Vlan.<br>
+	 * 每台Host的物理网卡上,只能有一个Vlan.<br>
 	 * 
-	 * 如果Subnet在该Host物理网卡上没有Vlan,创建一个新的Vlan,并且Vlan的名称和Id应该唯一.
+	 * 如果Host物理网卡上没有Vlan,创建一个新的Vlan,并且Vlan的名称和Id应该唯一.
 	 * 
 	 * @param serverDTO
 	 * @return
@@ -361,7 +368,6 @@ public class ApiServiceImpl implements ApiService {
 				// 如果为null,表示subnet在该网卡上没有关联的端口组.创建一个新的Vlan.
 
 				Integer vlanId = cmdbuildSoapService.getMaxVlanId(nicDTO.getId());
-				System.out.println(vlanId);
 
 				TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(subnetDTO.getTenants()).getDto();
 
@@ -433,18 +439,18 @@ public class ApiServiceImpl implements ApiService {
 		EcsSpecDTO ecsSpecDTO = (EcsSpecDTO) cmdbuildSoapService.findEcsSpec(ecsDTO.getEcsSpec()).getDto();
 		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(subnetDTO.getTenants()).getDto();
 		IdcDTO idcDTO = (IdcDTO) cmdbuildSoapService.findIdc(subnetDTO.getIdc()).getDto();
-		LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(ecsSpecDTO.getOsType()).getDto();
+		LookUpDTO OsType = (LookUpDTO) cmdbuildSoapService.findLookUp(ecsSpecDTO.getOsType()).getDto();
 
 		// Step.1 获得Server
 
-		ServerDTO serverDTO = findSuitableServerDTO(idcDTO);// 将ECS创建在负载最轻的Server上
-
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_description", serverDTO.getDescription());
-
-		IpaddressDTO ipaddressDTO = findAvailableIPAddressDTO(subnetDTO); // 从子网中选择一个IP.
+		// 将ECS创建在负载最轻的Server上
+		ServerDTO serverDTO = findSuitableServerDTO(idcDTO);
 
 		// Step.2 创建ECS
+
+		// 从子网中选择一个IP.
+		IpaddressDTO ipaddressDTO = findAvailableIPAddressDTO(subnetDTO);
+
 		String vmName = generateVMName(tenantsDTO, ipaddressDTO);
 
 		CloneVMParameter cloneVMParameter = new CloneVMParameter();
@@ -457,7 +463,7 @@ public class ApiServiceImpl implements ApiService {
 		cloneVMParameter.setSubNetMask(subnetDTO.getNetMask());
 		cloneVMParameter.setVmName(vmName);
 		cloneVMParameter.setVmTemplateName(ecsSpecDTO.getImageName());
-		cloneVMParameter.setVmTemplateOS(lookUpDTO.getDescription());
+		cloneVMParameter.setVmTemplateOS(OsType.getDescription());
 
 		instanceSoapService.cloneVMByInstance(cloneVMParameter);
 
@@ -741,18 +747,18 @@ public class ApiServiceImpl implements ApiService {
 
 		// 从管理网段IP中获得的未使用的IP.
 		IpaddressDTO managerIpaddressDTO = findAvailableManagerIPAddressDTO();
-		System.out.println(managerIpaddressDTO.getDescription());
 
 		// EcsSpec应该有router的规格(大中小),同理netscarler也应该有(最大连接数 5K,20k,40K,100K)
 		EcsSpecDTO ecsSpecDTO = (EcsSpecDTO) cmdbuildSoapService.findEcsSpec(ecsDTO.getEcsSpec()).getDto();
-		LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(ecsSpecDTO.getOsType()).getDto();
-
+		LookUpDTO OsType = (LookUpDTO) cmdbuildSoapService.findLookUp(ecsSpecDTO.getOsType()).getDto();
 		SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(ecsDTO.getSubnet()).getDto();
 		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(subnetDTO.getTenants()).getDto();
 		IdcDTO idcDTO = (IdcDTO) cmdbuildSoapService.findIdc(subnetDTO.getIdc()).getDto();
 
 		// Step.1 获得Server
-		ServerDTO serverDTO = findSuitableServerDTO(idcDTO);// 将ECS创建在负载最轻的Server上
+		// 将ECS创建在负载最轻的Server上
+		ServerDTO serverDTO = findSuitableServerDTO(idcDTO);
+
 		IpaddressDTO ipaddressDTO = findAvailableIPAddressDTO(subnetDTO); // 从子网中选择一个IP.
 
 		// Step.2 创建vRouter
@@ -767,7 +773,7 @@ public class ApiServiceImpl implements ApiService {
 		cloneVMParameter.setSubNetMask(subnetDTO.getNetMask());
 		cloneVMParameter.setVmName(vmName);
 		cloneVMParameter.setVmTemplateName(ecsSpecDTO.getImageName());
-		cloneVMParameter.setVmTemplateOS(lookUpDTO.getDescription());
+		cloneVMParameter.setVmTemplateOS(OsType.getDescription());
 		cloneVMParameter.setHostId(serverDTO.getHostgroup());
 
 		instanceSoapService.cloneNetworkDeviceByInstance(cloneVMParameter);
@@ -787,6 +793,7 @@ public class ApiServiceImpl implements ApiService {
 		ecsDTO.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
 		ecsDTO.setIpaddress(ipaddressDTO.getId());
 		ecsDTO.setEcsType(LookUpConstants.ECSType.firewall.getValue());
+		ecsDTO.setSubnet(getDefaultSubnet(tenantsDTO).getId());// vRouter默认创建在租户的默认子网中.
 
 		cmdbuildSoapService.createEcs(ecsDTO);
 
@@ -800,7 +807,6 @@ public class ApiServiceImpl implements ApiService {
 		routerDTO.setDescription(ecsDTO.getDescription());
 		routerDTO.setEcs(queryEcsDTO.getId());
 		routerDTO.setIdc(idcDTO.getId());
-		// routerDTO.setSubnet(subnetDTO.getId());
 		routerDTO.setTenants(tenantsDTO.getId());
 		routerDTO.setIpaddress(managerIpaddressDTO.getId());
 
@@ -812,6 +818,21 @@ public class ApiServiceImpl implements ApiService {
 
 		result.setMessage(idResult.getMessage());
 		return result;
+	}
+
+	/**
+	 * 获得租户的默认子网.
+	 * 
+	 * @param tenantsDTO
+	 * @return
+	 */
+	private SubnetDTO getDefaultSubnet(TenantsDTO tenantsDTO) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_tenants", tenantsDTO.getId());
+		List<Object> list = cmdbuildSoapService.getSubnetList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+				.getDto();
+		// 因为默认的Subnet是最先创建的.所以取得的第一个对象应该就是租户默认Subnet.但是是结论不确定,待后续测试,另外子网中没有可用IP怎么办.
+		return (SubnetDTO) list.get(0);
 	}
 
 	/**
@@ -856,6 +877,8 @@ public class ApiServiceImpl implements ApiService {
 		 * 
 		 * Step.5 在vRouter上执行脚本(配置子网策略 config firewall policy)
 		 * 
+		 * Step.6 Router和Subnet的关联关系保存至CMDB
+		 * 
 		 */
 
 		WSResult result = new WSResult();
@@ -899,6 +922,7 @@ public class ApiServiceImpl implements ApiService {
 		ArrayList<ConfigFirewallPolicyParameter> policyArrayList = new ArrayList<ConfigFirewallPolicyParameter>();
 
 		// Step.1 将Subnet所属的vlan绑定到vRouter上.(即在vCenter中将Subnet对应的网络设配器绑定到vRouter)
+
 		for (SubnetDTO subnetDTO : subnetDTOs) {
 
 			// 获得网络适配器Id
@@ -972,11 +996,6 @@ public class ApiServiceImpl implements ApiService {
 
 		}
 
-		// Step.4 Router和Subnet的关联关系保存至CMDB
-		// TODO 两者关联关系要报错.mark.
-		// subnetDTO.setRouter(routerDTO.getId());
-		// cmdbuildSoapService.updateSubnet(subnetDTO.getId(), subnetDTO);
-
 		addressParameters.getConfigFirewallAddressParameters().addAll(addressArrayList);
 		firewallSoapService.configFirewallAddressParameterListByFirewall(addressParameters);
 
@@ -985,6 +1004,12 @@ public class ApiServiceImpl implements ApiService {
 
 		policyParameters.getConfigFirewallPolicyParameters().addAll(policyArrayList);
 		firewallSoapService.configFirewallPolicyParameterListByFirewall(policyParameters);
+
+		// Step.6 Router和Subnet的关联关系保存至CMDB
+		for (SubnetDTO subnetDTO : subnetDTOs) {
+			subnetDTO.setRouter(routerDTO.getId());
+			cmdbuildSoapService.updateSubnet(subnetDTO.getId(), subnetDTO);
+		}
 
 		return result;
 	}
@@ -996,27 +1021,20 @@ public class ApiServiceImpl implements ApiService {
 		/**
 		 * Step.1 创建FirewallService
 		 * 
-		 * Step.2 将防火墙具体策略ConfigFirewallServiceCategory和FirewallService关联
+		 * Step.2 将防火墙具体策略FirewallServicePolicy和FirewallService关联
 		 * 
 		 */
-
-		// 下行规则(从外部访问云资源)
-		// 协议,行为,起始端口,结束端口,目标IP
-
-		// 上行规则(从云资源访问外部)
-		// 协议,行为,起始端口,结束端口,目标IP
 
 		WSResult result = new WSResult();
 
 		firewallServiceDTO = new FirewallServiceDTO();
-		firewallServiceDTO.setIdc(ConstansData.idcId);
 		firewallServiceDTO.setAgentType(LookUpConstants.AgentType.Fortigate.getValue());
 		IdResult idResult = cmdbuildSoapService.createFirewallService(firewallServiceDTO);
+		System.out.println(idResult.getMessage());
 
 		// 获得防火墙对象
 		HashMap<String, Object> firewallServiceMap = new HashMap<String, Object>();
-		firewallServiceMap.put("EQ_tenants", firewallServiceDTO.getTenants());
-		firewallServiceMap.put("EQ_description", firewallServiceDTO.getDescription());
+		firewallServiceMap.put("EQ_code", idResult.getMessage());
 		FirewallServiceDTO queryFirewallServiceDTO = (FirewallServiceDTO) cmdbuildSoapService
 				.findFirewallServiceByParams(CMDBuildUtil.wrapperSearchParams(firewallServiceMap)).getDto();
 
@@ -1041,11 +1059,8 @@ public class ApiServiceImpl implements ApiService {
 		 * 
 		 * Step.3 在vRouter上执行脚本(配置接口 config Router Static, 配置连接电信（默认端口8）的静态路由
 		 * 
-		 * 
 		 */
 
-		// 将端口8连接到电信VLAN(ISP_CTC_VLAN1000）中
-		System.out.println(routerDTO);
 		// vRouter VM的IP,用于组成Router在vCenter中的VM名称.
 		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(routerDTO.getEcs()).getDto();
 		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
@@ -1054,7 +1069,7 @@ public class ApiServiceImpl implements ApiService {
 		// vRouter 管理IP,管理网段的IP,用于管理vRouter设备,以写入信息.
 		IpaddressDTO managerDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(routerDTO.getIpaddress()).getDto();
 		String url = managerDTO.getDescription();
-		System.out.println(url);
+
 		// Step.1 将电信所属的vlan绑定到vRouter上.(即在vCenter中将Subnet对应的网络设配器绑定到vRouter)
 		BindingDVSPortGroupParameter bindingDVSPortGroupParameter = new BindingDVSPortGroupParameter();
 
@@ -1100,28 +1115,72 @@ public class ApiServiceImpl implements ApiService {
 		configRouterStaticParameter.setRouterId(0);
 
 		routerStaticArrayList.add(configRouterStaticParameter);
-
 		configRouterStaticParameters.getConfigRouterStaticParameters().addAll(routerStaticArrayList);
 
+		// 此处未执行
 		firewallSoapService.configRouterStaticParameterListByFirewall(configRouterStaticParameters);
 
 		/**
 		 * TODO 手动执行防火墙更新文件
 		 */
 
-		/**
-		 * 配置需要访问互联网的子网与电信网络之间的策略
-		 */
+		// Step.3 配置需要访问互联网的子网与电信网络之间的策略,类似子网之间通讯
 
-		// TDOO 需要将CMDBuild模型进行修改.
 		// 根据Router 查询出 Router下所有的Subnet,再遍历执行 config firwall policy
 
-		// FirewallService.configurationInternetStrategy(vRouter_ip, strategyNo, subnetPort,
-		// SDNConstants.CTC_DEFAULT_PORT, subnetAddressPoolName, "all");
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_router", routerDTO.getId());
+		List<Object> subnets = cmdbuildSoapService.getSubnetList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+				.getDto();
+
+		ArrayList<ConfigFirewallPolicyParameter> policyArrayList = new ArrayList<ConfigFirewallPolicyParameter>();
+
+		// 正向 子网 - > 公网
+		for (Object object : subnets) {
+
+			SubnetDTO subnetDTO = (SubnetDTO) object;
+
+			ConfigFirewallPolicyParameter configFirewallPolicyParameter = new ConfigFirewallPolicyParameter();
+			configFirewallPolicyParameter.setPolicyId(0);
+			configFirewallPolicyParameter.setPolicyType("Internet");
+			configFirewallPolicyParameter.setSrcintf("port" + subnetDTO.getPortIndex());
+			configFirewallPolicyParameter.setDstintf(ConstansData.CTC_DEFAULT_PORT);
+			configFirewallPolicyParameter.setSrcaddr(subnetDTO.getSegment());
+			configFirewallPolicyParameter.setDstaddr("all");
+
+			policyArrayList.add(configFirewallPolicyParameter);
+		}
+
+		// 反向 公网 - > 子网网
+		for (Object object : subnets) {
+
+			SubnetDTO subnetDTO = (SubnetDTO) object;
+
+			ConfigFirewallPolicyParameter configFirewallPolicyParameter = new ConfigFirewallPolicyParameter();
+			configFirewallPolicyParameter.setPolicyId(0);
+			configFirewallPolicyParameter.setPolicyType("Internet");
+			configFirewallPolicyParameter.setSrcintf(ConstansData.CTC_DEFAULT_PORT);
+			configFirewallPolicyParameter.setDstintf("port" + subnetDTO.getPortIndex());
+			configFirewallPolicyParameter.setSrcaddr("all");
+			configFirewallPolicyParameter.setDstaddr(subnetDTO.getSegment());
+
+			policyArrayList.add(configFirewallPolicyParameter);
+		}
+
+		// Config Firewall Policy
+		ConfigFirewallPolicyParameters policyParameters = new ConfigFirewallPolicyParameters();
+		policyParameters.setUrl(url);
+		policyParameters.setUserName(ConstansData.firewall_username);
+		policyParameters.setPassword(ConstansData.firewall_password);
+		policyParameters.getConfigFirewallPolicyParameters().addAll(policyArrayList);
+
+		firewallSoapService.configFirewallPolicyParameterListByFirewall(policyParameters);
 
 		WSResult wsResult = new WSResult();
 
+		// Step.4 将CMDB中FirewallService和Router进行关联
 		routerDTO.setFirewallService(firewallServiceDTO.getId());
+		cmdbuildSoapService.updateRouter(routerDTO.getId(), routerDTO);
 
 		return wsResult;
 	}
