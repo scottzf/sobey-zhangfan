@@ -36,7 +36,7 @@
 		<guava.version>16.0.1</guava.version>
 		<joda-time.version>2.3</joda-time.version>
 		<dozer.version>5.4.0</dozer.version>
-		<httpclient.version>4.3.6</httpclient.version>
+		<httpclient.version>4.3.1</httpclient.version>
 		<freemarker.version>2.3.20</freemarker.version>
 		<javasimon.version>3.4.0</javasimon.version>
 		<aspectj.version>1.7.4</aspectj.version>
