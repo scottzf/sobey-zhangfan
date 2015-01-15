@@ -1,5 +1,6 @@
 package com.sobey.firewall.test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.commons.lang3.StringUtils;
@@ -9,9 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.sobey.core.utils.SSHUtil;
 import com.sobey.firewall.PbulicProperties;
 import com.sobey.firewall.data.TestData;
 import com.sobey.firewall.service.FirewallService;
+import com.sobey.firewall.webservice.response.dto.AuthenticateFirewallParameter;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameter;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameters;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallPolicyParameter;
@@ -200,6 +203,22 @@ public class SyncTest implements PbulicProperties {
 
 		String command = service.configSystemInterfaceScrip(configSystemInterfaceParameters);
 		System.out.println(command);
+	}
+
+	@Test
+	public void PurgeConfigFirewallPolicy() throws IOException {
+
+		AuthenticateFirewallParameter authenticateFirewallParameter = new AuthenticateFirewallParameter();
+
+		authenticateFirewallParameter.setUserName("admin");
+		authenticateFirewallParameter.setPassword("mcloud@sobey.com");
+		authenticateFirewallParameter.setUrl("10.2.253.60");
+
+		String command = service.PurgeConfigFirewallPolicyScrip(authenticateFirewallParameter);
+		System.out.println(command);
+
+		SSHUtil.executeCommand(authenticateFirewallParameter.getUrl(), authenticateFirewallParameter.getUserName(),
+				authenticateFirewallParameter.getPassword(), command);
 	}
 
 }

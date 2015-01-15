@@ -109,4 +109,8 @@ public interface FirewallSoapService {
 
 	WSResult RegisteredByFirewall(
 			@WebParam(name = "authenticateFirewallParameter") AuthenticateFirewallParameter authenticateFirewallParameter);
+
+	WSResult PurgeConfigFirewallPolicyByFirewall(
+			@WebParam(name = "authenticateFirewallParameter") AuthenticateFirewallParameter authenticateFirewallParameter);
+
 }

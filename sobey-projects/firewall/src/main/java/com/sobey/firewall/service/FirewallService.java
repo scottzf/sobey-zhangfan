@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.google.common.collect.Lists;
 import com.sobey.core.utils.Collections3;
 import com.sobey.core.utils.PropertiesLoader;
+import com.sobey.firewall.webservice.response.dto.AuthenticateFirewallParameter;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameter;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameters;
 import com.sobey.firewall.webservice.response.dto.ConfigFirewallPolicyParameter;
@@ -773,6 +774,8 @@ public class FirewallService {
 
 	/**
 	 * 
+	 * 配置防火墙地址
+	 * 
 	 * <pre>
 	 * config firewall address
 	 * edit "192.168.100.0"
@@ -803,6 +806,12 @@ public class FirewallService {
 		return sb.toString();
 	}
 
+	/**
+	 * 配置防火墙策略
+	 * 
+	 * @param configFirewallPolicyParameters
+	 * @return
+	 */
 	public String configFirewallPolicyScrip(ConfigFirewallPolicyParameters configFirewallPolicyParameters) {
 
 		StringBuilder sb = new StringBuilder();
@@ -888,6 +897,21 @@ public class FirewallService {
 				.append(DEFAULT_SYMBOL);
 		sb.append("end").append(DEFAULT_SYMBOL);
 		sb.append("exe backup config flash").append(DEFAULT_SYMBOL);
+		return sb.toString();
+	}
+
+	/**
+	 * 删除防火墙中所有的策略.
+	 * 
+	 * @param authenticateFirewallParameter
+	 * @return
+	 */
+	public String PurgeConfigFirewallPolicyScrip(AuthenticateFirewallParameter authenticateFirewallParameter) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("config firewall policy").append(DEFAULT_SYMBOL);
+		sb.append("purge").append(DEFAULT_SYMBOL);
+		sb.append("Y").append(DEFAULT_SYMBOL);
+		sb.append("end").append(DEFAULT_SYMBOL);
 		return sb.toString();
 	}
 
