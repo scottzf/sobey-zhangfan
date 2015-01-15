@@ -1029,10 +1029,8 @@ public class ApiServiceImpl implements ApiService {
 
 		WSResult result = new WSResult();
 
-		firewallServiceDTO = new FirewallServiceDTO();
 		firewallServiceDTO.setAgentType(LookUpConstants.AgentType.Fortigate.getValue());
 		IdResult idResult = cmdbuildSoapService.createFirewallService(firewallServiceDTO);
-		System.out.println(idResult.getMessage());
 
 		// 获得防火墙对象
 		HashMap<String, Object> firewallServiceMap = new HashMap<String, Object>();
