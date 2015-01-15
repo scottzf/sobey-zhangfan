@@ -47,8 +47,6 @@ import com.sobey.generate.firewall.ConfigFirewallAddressParameter;
 import com.sobey.generate.firewall.ConfigFirewallAddressParameters;
 import com.sobey.generate.firewall.ConfigFirewallPolicyParameter;
 import com.sobey.generate.firewall.ConfigFirewallPolicyParameters;
-import com.sobey.generate.firewall.ConfigRouterStaticParameter;
-import com.sobey.generate.firewall.ConfigRouterStaticParameters;
 import com.sobey.generate.firewall.ConfigSystemInterfaceParameter;
 import com.sobey.generate.firewall.ConfigSystemInterfaceParameters;
 import com.sobey.generate.firewall.EIPParameter;
@@ -921,8 +919,6 @@ public class ApiServiceImpl implements ApiService {
 		policyParameters.setUserName(ConstansData.firewall_username);
 		policyParameters.setPassword(ConstansData.firewall_password);
 
-		ArrayList<ConfigFirewallPolicyParameter> policyArrayList = new ArrayList<ConfigFirewallPolicyParameter>();
-
 		// Step.1 将Subnet所属的vlan绑定到vRouter上.(即在vCenter中将Subnet对应的网络设配器绑定到vRouter)
 
 		for (SubnetDTO subnetDTO : subnetDTOs) {
@@ -973,7 +969,39 @@ public class ApiServiceImpl implements ApiService {
 
 			interfaceArrayList.add(configSystemInterfaceParameter);
 
-			// Step.5 在vRouter上执行脚本(配置子网策略 config firewall policy)
+		}
+
+		addressParameters.getConfigFirewallAddressParameters().addAll(addressArrayList);
+		firewallSoapService.configFirewallAddressParameterListByFirewall(addressParameters);
+
+		interfaceParameters.getConfigSystemInterfaceParameters().addAll(interfaceArrayList);
+		firewallSoapService.configSystemInterfaceListByFirewall(interfaceParameters);
+
+		// Step.5 在vRouter上执行脚本(配置子网策略 config firewall policy)
+		policyParameters.getConfigFirewallPolicyParameters().addAll(wrapperSubnetInFirewallPolicy(subnetDTOs));
+		firewallSoapService.configFirewallPolicyParameterListByFirewall(policyParameters);
+
+		// Step.6 Router和Subnet的关联关系保存至CMDB
+		for (SubnetDTO subnetDTO : subnetDTOs) {
+			subnetDTO.setRouter(routerDTO.getId());
+			cmdbuildSoapService.updateSubnet(subnetDTO.getId(), subnetDTO);
+		}
+
+		return result;
+	}
+
+	/**
+	 * Subnet和路由绑定时,对Subnet之间firewall policy策略相关对象进行一次封装
+	 * 
+	 * 
+	 * @param subnetDTOs
+	 * @return
+	 */
+	private ArrayList<ConfigFirewallPolicyParameter> wrapperSubnetInFirewallPolicy(List<SubnetDTO> subnetDTOs) {
+
+		ArrayList<ConfigFirewallPolicyParameter> policyArrayList = new ArrayList<ConfigFirewallPolicyParameter>();
+
+		for (SubnetDTO subnetDTO : subnetDTOs) {
 
 			/*
 			 * new 一个新的list出来,将传递进来的list填充进去,并将循环中的自身对象remove出去,这样就达到源对应多个目标的目的.
@@ -998,22 +1026,7 @@ public class ApiServiceImpl implements ApiService {
 
 		}
 
-		addressParameters.getConfigFirewallAddressParameters().addAll(addressArrayList);
-		firewallSoapService.configFirewallAddressParameterListByFirewall(addressParameters);
-
-		interfaceParameters.getConfigSystemInterfaceParameters().addAll(interfaceArrayList);
-		firewallSoapService.configSystemInterfaceListByFirewall(interfaceParameters);
-
-		policyParameters.getConfigFirewallPolicyParameters().addAll(policyArrayList);
-		firewallSoapService.configFirewallPolicyParameterListByFirewall(policyParameters);
-
-		// Step.6 Router和Subnet的关联关系保存至CMDB
-		for (SubnetDTO subnetDTO : subnetDTOs) {
-			subnetDTO.setRouter(routerDTO.getId());
-			cmdbuildSoapService.updateSubnet(subnetDTO.getId(), subnetDTO);
-		}
-
-		return result;
+		return policyArrayList;
 	}
 
 	@Override
@@ -1101,24 +1114,7 @@ public class ApiServiceImpl implements ApiService {
 
 		// Step.3 在vRouter上执行脚本(配置接口 config Router Static, 配置连接电信（默认端口8）的静态路由
 
-		ConfigRouterStaticParameters configRouterStaticParameters = new ConfigRouterStaticParameters();
-		configRouterStaticParameters.setUrl(url);
-		configRouterStaticParameters.setUserName(ConstansData.firewall_username);
-		configRouterStaticParameters.setPassword(ConstansData.firewall_password);
-
-		ArrayList<ConfigRouterStaticParameter> routerStaticArrayList = new ArrayList<ConfigRouterStaticParameter>();
-
-		ConfigRouterStaticParameter configRouterStaticParameter = new ConfigRouterStaticParameter();
-
-		configRouterStaticParameter.setInterfaceName(ConstansData.CTC_DEFAULT_PORT);
-		configRouterStaticParameter.setIspGateway("125.71.203.1");
-		configRouterStaticParameter.setRouterId(0);
-
-		routerStaticArrayList.add(configRouterStaticParameter);
-		configRouterStaticParameters.getConfigRouterStaticParameters().addAll(routerStaticArrayList);
-
-		// 此处未执行
-		firewallSoapService.configRouterStaticParameterListByFirewall(configRouterStaticParameters);
+		// TODO 静态路由暂时写在vRouter模板中.
 
 		/**
 		 * TODO 手动执行防火墙更新文件,演示流程如何将此处独立出来?
@@ -1133,48 +1129,39 @@ public class ApiServiceImpl implements ApiService {
 		List<Object> subnets = cmdbuildSoapService.getSubnetList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
 				.getDto();
 
-		ArrayList<ConfigFirewallPolicyParameter> policyArrayList = new ArrayList<ConfigFirewallPolicyParameter>();
+		List<SubnetDTO> subnetDTOs = new ArrayList<SubnetDTO>();
 
-		// 正向 子网 - > 公网
 		for (Object object : subnets) {
-
 			SubnetDTO subnetDTO = (SubnetDTO) object;
-
-			ConfigFirewallPolicyParameter configFirewallPolicyParameter = new ConfigFirewallPolicyParameter();
-			configFirewallPolicyParameter.setPolicyId(0);
-			configFirewallPolicyParameter.setPolicyType("Internet");
-			configFirewallPolicyParameter.setSrcintf("port" + subnetDTO.getPortIndex());
-			configFirewallPolicyParameter.setDstintf(ConstansData.CTC_DEFAULT_PORT);
-			configFirewallPolicyParameter.setSrcaddr(subnetDTO.getSegment());
-			configFirewallPolicyParameter.setDstaddr("all");
-
-			policyArrayList.add(configFirewallPolicyParameter);
+			subnetDTOs.add(subnetDTO);
 		}
 
-		// 反向 公网 - > 子网网
-		for (Object object : subnets) {
+		// 先将防火墙里所有的策略清空
+		AuthenticateFirewallParameter authenticateFirewallParameter = new AuthenticateFirewallParameter();
+		authenticateFirewallParameter.setUrl(url);
+		authenticateFirewallParameter.setUserName(ConstansData.firewall_username);
+		authenticateFirewallParameter.setPassword(ConstansData.firewall_password);
+		firewallSoapService.purgeConfigFirewallPolicyByFirewall(authenticateFirewallParameter);
 
-			SubnetDTO subnetDTO = (SubnetDTO) object;
+		// 配置对外的防火墙策略
+		ConfigFirewallPolicyParameters firewallPolicyParameters = new ConfigFirewallPolicyParameters();
 
-			ConfigFirewallPolicyParameter configFirewallPolicyParameter = new ConfigFirewallPolicyParameter();
-			configFirewallPolicyParameter.setPolicyId(0);
-			configFirewallPolicyParameter.setPolicyType("Internet");
-			configFirewallPolicyParameter.setSrcintf(ConstansData.CTC_DEFAULT_PORT);
-			configFirewallPolicyParameter.setDstintf("port" + subnetDTO.getPortIndex());
-			configFirewallPolicyParameter.setSrcaddr("all");
-			configFirewallPolicyParameter.setDstaddr(subnetDTO.getSegment());
+		firewallPolicyParameters.setUrl(url);
+		firewallPolicyParameters.setUserName(ConstansData.firewall_username);
+		firewallPolicyParameters.setPassword(ConstansData.firewall_password);
+		firewallPolicyParameters.getConfigFirewallPolicyParameters().addAll(
+				wrapperFirewallPolicy(subnetDTOs, firewallServiceDTO));
 
-			policyArrayList.add(configFirewallPolicyParameter);
-		}
+		firewallSoapService.configFirewallPolicyParameterListByFirewall(firewallPolicyParameters);
 
-		// Config Firewall Policy
-		ConfigFirewallPolicyParameters policyParameters = new ConfigFirewallPolicyParameters();
-		policyParameters.setUrl(url);
-		policyParameters.setUserName(ConstansData.firewall_username);
-		policyParameters.setPassword(ConstansData.firewall_password);
-		policyParameters.getConfigFirewallPolicyParameters().addAll(policyArrayList);
+		// 配置子网之间的策略
+		ConfigFirewallPolicyParameters subnetPolicyParameters = new ConfigFirewallPolicyParameters();
+		subnetPolicyParameters.setUrl(url);
+		subnetPolicyParameters.setUserName(ConstansData.firewall_username);
+		subnetPolicyParameters.setPassword(ConstansData.firewall_password);
+		subnetPolicyParameters.getConfigFirewallPolicyParameters().addAll(wrapperSubnetInFirewallPolicy(subnetDTOs));
 
-		firewallSoapService.configFirewallPolicyParameterListByFirewall(policyParameters);
+		firewallSoapService.configFirewallPolicyParameterListByFirewall(subnetPolicyParameters);
 
 		WSResult wsResult = new WSResult();
 
@@ -1183,6 +1170,77 @@ public class ApiServiceImpl implements ApiService {
 		cmdbuildSoapService.updateRouter(routerDTO.getId(), routerDTO);
 
 		return wsResult;
+	}
+
+	/**
+	 * 对Router和FirewallService绑定功能相关的对象进行一次封装
+	 * 
+	 * @param subnetDTOs
+	 * @param firewallServiceDTO
+	 */
+	private ArrayList<ConfigFirewallPolicyParameter> wrapperFirewallPolicy(List<SubnetDTO> subnetDTOs,
+			FirewallServiceDTO firewallServiceDTO) {
+
+		ArrayList<ConfigFirewallPolicyParameter> policyArrayList = new ArrayList<ConfigFirewallPolicyParameter>();
+
+		List<FirewallPolicyDTO> firewallPolicyDTOs = new ArrayList<FirewallPolicyDTO>();
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_firewallService", firewallServiceDTO.getId());
+		List<Object> list = cmdbuildSoapService.getFirewallPolicyList(CMDBuildUtil.wrapperSearchParams(map))
+				.getDtoList().getDto();
+		for (Object object : list) {
+			FirewallPolicyDTO firewallPolicyDTO = (FirewallPolicyDTO) object;
+			firewallPolicyDTOs.add(firewallPolicyDTO);
+		}
+
+		for (SubnetDTO subnetDTO : subnetDTOs) {
+
+			for (FirewallPolicyDTO firewallPolicyDTO : firewallPolicyDTOs) {
+
+				ConfigFirewallPolicyParameter configFirewallPolicyParameter = new ConfigFirewallPolicyParameter();
+				configFirewallPolicyParameter.setPolicyId(0);
+				configFirewallPolicyParameter.setPolicyType("Internet");
+
+				// 上行
+				if (firewallPolicyDTO.getDirection().intValue() == LookUpConstants.FirewallDirection.上行.getValue()
+						.intValue()) {
+
+					// Allow
+					if (firewallPolicyDTO.getAction().intValue() == LookUpConstants.FirewallAction.Allow.getValue()
+							.intValue()) {
+						configFirewallPolicyParameter.setSrcintf("port" + subnetDTO.getPortIndex());
+						configFirewallPolicyParameter.setDstintf(ConstansData.CTC_DEFAULT_PORT);
+						configFirewallPolicyParameter.setSrcaddr(subnetDTO.getSegment());
+						configFirewallPolicyParameter.setDstaddr("all");
+					} else {
+						// Deny
+						// TODO Deny待后续完成.
+					}
+
+				} else {
+					// 下行
+
+					if (firewallPolicyDTO.getAction().intValue() == LookUpConstants.FirewallAction.Allow.getValue()
+							.intValue()) {
+
+						configFirewallPolicyParameter.setSrcintf(ConstansData.CTC_DEFAULT_PORT);
+						configFirewallPolicyParameter.setDstintf("port" + subnetDTO.getPortIndex());
+						configFirewallPolicyParameter.setSrcaddr("all");
+						configFirewallPolicyParameter.setDstaddr(subnetDTO.getSegment());
+					} else {
+						// Deny
+						// TODO Deny待后续完成.
+					}
+				}
+
+				policyArrayList.add(configFirewallPolicyParameter);
+
+			}
+
+		}
+		return policyArrayList;
+
 	}
 
 	@Override
