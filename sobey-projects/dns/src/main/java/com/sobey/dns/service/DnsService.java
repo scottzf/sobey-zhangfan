@@ -348,7 +348,6 @@ public class DnsService {
 					gsvc.set_port(policyParameter.getPort());
 					gsvc.set_sitename(generateSiteName(ipParameter));
 					gsvc.set_servicetype(policyParameter.getProtocolText());
-
 					gsvc.set_clttimeout(Integer.valueOf(DNS_CLTTIMEOUT));
 					gsvc.set_svrtimeout(Integer.valueOf(DNS_SVRTIMEOUT));
 					gsvc.set_downstateflush(DNS_DOWNSTATEFLUSH);
@@ -497,7 +496,11 @@ public class DnsService {
 	}
 
 	/**
-	 * 生成 siteName. <br>
+	 *
+	 * TODO 重要! 注意每个NS配置不一样.
+	 *
+	 * 生成 siteName.<br>
+	 * 
 	 * 
 	 * 保留外网IP前三位,用"xxx"替换结尾. <br>
 	 * 
@@ -512,7 +515,7 @@ public class DnsService {
 		// 获得最后一个"."的索引
 		int index = StringUtils.lastIndexOf(ipParameter.getIpaddress(), ".");
 
-		return StringUtils.substring(ipParameter.getIpaddress(), 0, index + 1) + "xxx";
+		return "xa_" + StringUtils.substring(ipParameter.getIpaddress(), 0, index + 1) + "x";
 	}
 
 	/**
