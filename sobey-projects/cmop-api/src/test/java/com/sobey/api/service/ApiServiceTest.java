@@ -17,6 +17,7 @@ import com.sobey.generate.cmdbuild.DnsDTO;
 import com.sobey.generate.cmdbuild.DnsPolicyDTO;
 import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
+import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.FirewallPolicyDTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
 import com.sobey.generate.cmdbuild.RouterDTO;
@@ -56,6 +57,13 @@ public class ApiServiceTest extends TestCase {
 	public void createRouter() {
 		EcsDTO ecsDTO = TestData.randomRouterDTO();
 		service.createRouter(ecsDTO);
+	}
+
+	@Test
+	public void createES3() {
+
+		Es3DTO es3DTO = TestData.randomEs3DTO();
+		service.createES3(es3DTO, 2752);
 	}
 
 	@Test

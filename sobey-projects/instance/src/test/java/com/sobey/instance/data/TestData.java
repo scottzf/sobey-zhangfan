@@ -113,9 +113,9 @@ public class TestData {
 	public static VMDiskParameter randomVMDiskParameter() {
 		VMDiskParameter parameter = new VMDiskParameter();
 		parameter.setDatacenter(DataCenterEnum.成都核心数据中心.toString());
-		parameter.setVmName("liukai");
+		parameter.setVmName("Tenants-jTWsg646-192.168.100.2");
 		parameter.setDiskName("testDB2");
-		parameter.setDiskGB("300");
+		parameter.setDiskGB("10");
 		return parameter;
 	}
 

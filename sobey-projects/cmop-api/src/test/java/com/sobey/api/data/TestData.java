@@ -5,9 +5,11 @@ import java.util.List;
 
 import com.sobey.api.constans.LookUpConstants;
 import com.sobey.api.service.data.ConstansData;
+import com.sobey.core.utils.Identities;
 import com.sobey.generate.cmdbuild.DnsDTO;
 import com.sobey.generate.cmdbuild.DnsPolicyDTO;
 import com.sobey.generate.cmdbuild.EcsDTO;
+import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.FirewallPolicyDTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
 import com.sobey.generate.cmdbuild.SubnetDTO;
@@ -122,5 +124,21 @@ public class TestData {
 		dnsPolicyDTO.setIpaddress("");
 		dnsPolicyDTOs.add(dnsPolicyDTO);
 		return dnsPolicyDTOs;
+	}
+
+	public static Es3DTO randomEs3DTO() {
+
+		Es3DTO es3DTO = new Es3DTO();
+		es3DTO.setAgentType(LookUpConstants.AgentType.VMware.getValue());
+		es3DTO.setDescription("测试的卷");
+		es3DTO.setTotalSize("100");
+		es3DTO.setEs3Type(44);
+		es3DTO.setIdc(ConstansData.idcId);
+		es3DTO.setVolumeName(Identities.randomBase62(8));
+		es3DTO.setTenants(tenantsId);
+		es3DTO.setRemark("无所谓");
+		es3DTO.setSubnet(146);
+
+		return es3DTO;
 	}
 }
