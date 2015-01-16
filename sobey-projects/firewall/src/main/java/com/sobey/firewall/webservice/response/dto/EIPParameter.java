@@ -32,6 +32,8 @@ public class EIPParameter {
 	 */
 	private ArrayList<String> allPolicies;
 
+	private String interfaceName;
+
 	/**
 	 * 公网IP
 	 */
@@ -67,8 +69,22 @@ public class EIPParameter {
 	 */
 	private String userName;
 
+	/**
+	 * vip Group Name
+	 */
+	private String vipGroupName;
+
+	/**
+	 * vip IntefaceName
+	 */
+	private String vipIntefaceName;
+
 	public ArrayList<String> getAllPolicies() {
 		return allPolicies;
+	}
+
+	public String getInterfaceName() {
+		return interfaceName;
 	}
 
 	public String getInternetIP() {
@@ -99,8 +115,20 @@ public class EIPParameter {
 		return userName;
 	}
 
+	public String getVipGroupName() {
+		return vipGroupName;
+	}
+
+	public String getVipIntefaceName() {
+		return vipIntefaceName;
+	}
+
 	public void setAllPolicies(ArrayList<String> allPolicies) {
 		this.allPolicies = allPolicies;
+	}
+
+	public void setInterfaceName(String interfaceName) {
+		this.interfaceName = interfaceName;
 	}
 
 	public void setInternetIP(String internetIP) {
@@ -129,6 +157,14 @@ public class EIPParameter {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public void setVipGroupName(String vipGroupName) {
+		this.vipGroupName = vipGroupName;
+	}
+
+	public void setVipIntefaceName(String vipIntefaceName) {
+		this.vipIntefaceName = vipIntefaceName;
 	}
 
 	/**

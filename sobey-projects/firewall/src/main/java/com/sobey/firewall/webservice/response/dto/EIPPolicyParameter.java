@@ -26,7 +26,7 @@ public class EIPPolicyParameter {
 	/**
 	 * 协议
 	 */
-	private String protocolText;
+	private String protocol;
 
 	/**
 	 * 源端口
@@ -38,8 +38,8 @@ public class EIPPolicyParameter {
 	 */
 	private Integer targetPort;
 
-	public String getProtocolText() {
-		return protocolText;
+	public String getProtocol() {
+		return protocol;
 	}
 
 	public Integer getSourcePort() {
@@ -50,8 +50,8 @@ public class EIPPolicyParameter {
 		return targetPort;
 	}
 
-	public void setProtocolText(String protocolText) {
-		this.protocolText = protocolText;
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
 	}
 
 	public void setSourcePort(Integer sourcePort) {
