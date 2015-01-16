@@ -76,9 +76,8 @@ public class ApiController {
 	@RequestMapping(value = "/createRouter/", method = RequestMethod.POST)
 	public WSResult createRouter(@RequestParam(value = "routerName") String routerName,
 			@RequestParam(value = "remark") String remark, @RequestParam(value = "routerSpec") String routerSpec,
-			@RequestParam(value = "subnetCode") String subnetCode, @RequestParam(value = "idc") String idc,
-			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.createRouter(routerName, subnetCode, remark, routerSpec, idc, accessKey);
+			@RequestParam(value = "idc") String idc, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.createRouter(routerName, remark, routerSpec, idc, accessKey);
 	}
 
 	@RequestMapping(value = "/bindingRouter/", method = RequestMethod.POST)

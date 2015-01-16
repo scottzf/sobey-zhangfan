@@ -662,13 +662,16 @@ public class ApiServiceImpl implements ApiService {
 		// Step.1 获得ECS信息
 		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
 		IdcDTO idcDTO = (IdcDTO) cmdbuildSoapService.findIdc(es3DTO.getIdc()).getDto();
+		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(ecsDTO.getTenants()).getDto();
+		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
+		String vmName = generateVMName(tenantsDTO, ipaddressDTO);
 
 		// Step.2 为ECS分配存储空间
 		VMDiskParameter vmDiskParameter = new VMDiskParameter();
 		vmDiskParameter.setDatacenter(idcDTO.getDescription());
 		vmDiskParameter.setDiskGB(es3DTO.getTotalSize());
-		vmDiskParameter.setDiskName(es3DTO.getDescription());
-		vmDiskParameter.setVmName(ecsDTO.getDescription());
+		vmDiskParameter.setDiskName(es3DTO.getVolumeName());
+		vmDiskParameter.setVmName(vmName);
 
 		instanceSoapService.createVMDiskByInstance(vmDiskParameter);
 

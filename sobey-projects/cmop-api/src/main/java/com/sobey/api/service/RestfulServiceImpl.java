@@ -634,8 +634,7 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult createRouter(String routerName, String subnetCode, String remark, String routerSpec, String idc,
-			String accessKey) {
+	public WSResult createRouter(String routerName, String remark, String routerSpec, String idc, String accessKey) {
 
 		WSResult result = new WSResult();
 
