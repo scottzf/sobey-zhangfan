@@ -1352,6 +1352,10 @@ public class ApiServiceImpl implements ApiService {
 
 		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(serviceDTO.getId()).getDto();
 
+		SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(ecsDTO.getSubnet()).getDto();
+		RouterDTO routerDTO = (RouterDTO) cmdbuildSoapService.findRouter(subnetDTO.getRouter()).getDto();
+		IpaddressDTO managerIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(routerDTO.getIpaddress()).getDto();
+
 		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
 
 		// Step.2 与其他资源(ECS & ELB)建立关联关系
@@ -1361,17 +1365,17 @@ public class ApiServiceImpl implements ApiService {
 		// Step.3 firwall创建虚拟IP
 
 		EIPParameter eipParameter = wrapperEIPParameter(eipDTO);
+		eipParameter.setUrl(managerIP.getDescription());
+		eipParameter.setUserName(ConstansData.firewall_username);
+		eipParameter.setPassword(ConstansData.firewall_password);
 		eipParameter.setPrivateIP(ipaddressDTO.getDescription());
-		if (!WSResult.SUCESS.equals(firewallSoapService.createEIPByFirewall(eipParameter).getCode())) {
-			// 删除关联关系
-			cmdbuildSoapService.deleteMapEcsEip(serviceDTO.getId(), eipDTO.getId());
-			result.setError(WSResult.SYSTEM_ERROR, "EIP关联失败,请联系管理员.");
-			return result;
-		}
+		eipParameter.setVipGroupName("CTC_ALL_Server"); // 默认的VIP Group
+		eipParameter.setVipIntefaceName("port8"); // 电信接口名
+		eipParameter.setInterfaceName(generateInterfaceName(subnetDTO.getPortIndex()));
+		firewallSoapService.createEIPByFirewall(eipParameter);
 
 		result.setMessage("EIP关联成功");
 		return result;
-
 	}
 
 	/**
@@ -1408,7 +1412,7 @@ public class ApiServiceImpl implements ApiService {
 			EipPolicyDTO dto = (EipPolicyDTO) obj;
 			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(dto.getEipProtocol()).getDto();
 			EIPPolicyParameter policyParameter = new EIPPolicyParameter();
-			policyParameter.setProtocolText(lookUpDTO.getDescription());
+			policyParameter.setProtocol(lookUpDTO.getDescription());
 			policyParameter.setSourcePort(dto.getSourcePort());
 			policyParameter.setTargetPort(dto.getTargetPort());
 			policyParameters.add(policyParameter);
@@ -1445,6 +1449,7 @@ public class ApiServiceImpl implements ApiService {
 
 		// Step.1 将DNS信息写入CMDBuild
 		dnsDTO.setDomainType(LookUpConstants.DomainType.GSLB.getValue());
+		dnsDTO.setAgentType(LookUpConstants.AgentType.Netscaler.getValue());
 		IdResult idResult = cmdbuildSoapService.createDns(dnsDTO);
 		// Step.2 将DNS策略信息写入CMDBuild
 
@@ -1473,7 +1478,7 @@ public class ApiServiceImpl implements ApiService {
 		}
 
 		// Step.4 调用DNS 接口创建DNS对象
-		// dnsSoapService.createDNSByDNS(wrapperDNSParameter(queryDnsDTO));
+		dnsSoapService.createDNSByDNS(wrapperDNSParameter(queryDnsDTO));
 
 		result.setMessage(idResult.getMessage());
 		return result;

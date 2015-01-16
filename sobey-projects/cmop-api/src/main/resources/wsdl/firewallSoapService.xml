@@ -112,6 +112,7 @@
   <xs:complexType name="EIPParameter">
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="allPolicies" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="interfaceName" type="xs:string"/>
       <xs:element minOccurs="0" name="internetIP" type="xs:string"/>
       <xs:element minOccurs="0" name="isp" type="xs:int"/>
       <xs:element minOccurs="0" name="password" type="xs:string"/>
@@ -119,12 +120,14 @@
       <xs:element minOccurs="0" name="privateIP" type="xs:string"/>
       <xs:element minOccurs="0" name="url" type="xs:string"/>
       <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="vipGroupName" type="xs:string"/>
+      <xs:element minOccurs="0" name="vipIntefaceName" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="EIPPolicyParameter">
     <xs:sequence>
-      <xs:element minOccurs="0" name="protocolText" type="xs:string"/>
+      <xs:element minOccurs="0" name="protocol" type="xs:string"/>
       <xs:element minOccurs="0" name="sourcePort" type="xs:int"/>
       <xs:element minOccurs="0" name="targetPort" type="xs:int"/>
     </xs:sequence>
