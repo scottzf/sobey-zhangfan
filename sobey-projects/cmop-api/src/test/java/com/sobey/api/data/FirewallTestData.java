@@ -25,12 +25,12 @@ public class FirewallTestData {
 		List<EIPPolicyParameter> policies = Lists.newArrayList();
 
 		EIPPolicyParameter policyParameter = new EIPPolicyParameter();
-		policyParameter.setProtocolText("udp");
+		policyParameter.setProtocol("udp");
 		policyParameter.setSourcePort(8080);
 		policyParameter.setTargetPort(8080);
 
 		EIPPolicyParameter policyParameter2 = new EIPPolicyParameter();
-		policyParameter2.setProtocolText("tcp");
+		policyParameter2.setProtocol("tcp");
 		policyParameter2.setSourcePort(80);
 		policyParameter2.setTargetPort(80);
 

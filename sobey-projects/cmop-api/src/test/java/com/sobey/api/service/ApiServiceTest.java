@@ -13,10 +13,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.sobey.api.data.TestData;
 import com.sobey.generate.cmdbuild.CmdbuildSoapService;
+import com.sobey.generate.cmdbuild.DnsDTO;
+import com.sobey.generate.cmdbuild.DnsPolicyDTO;
 import com.sobey.generate.cmdbuild.EcsDTO;
+import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.FirewallPolicyDTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
 import com.sobey.generate.cmdbuild.RouterDTO;
+import com.sobey.generate.cmdbuild.ServiceDTO;
 import com.sobey.generate.cmdbuild.SubnetDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 
@@ -92,5 +96,29 @@ public class ApiServiceTest extends TestCase {
 				.getDto();
 
 		service.bindingFirewallService(routerDTO, firewallServiceDTO);
+	}
+
+	@Test
+	public void bindingEIP() {
+
+		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(2850).getDto();
+		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(2729).getDto();
+
+		service.bindingEIP(eipDTO, serviceDTO);
+	}
+
+	@Test
+	public void bindingDNS() {
+
+		DnsDTO dnsDTO = TestData.randomDnsDTO();
+
+		List<DnsPolicyDTO> dnsPolicyDTOs = TestData.randomDnsPolicyDTOs();
+
+		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(2850).getDto();
+		List<EipDTO> eipDTOs = new ArrayList<EipDTO>();
+		eipDTOs.add(eipDTO);
+
+		service.createDNS(dnsDTO, dnsPolicyDTOs, eipDTOs);
+
 	}
 }

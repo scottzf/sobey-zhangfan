@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.sobey.api.constans.LookUpConstants;
 import com.sobey.api.service.data.ConstansData;
+import com.sobey.generate.cmdbuild.DnsDTO;
+import com.sobey.generate.cmdbuild.DnsPolicyDTO;
 import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.FirewallPolicyDTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
@@ -103,4 +105,22 @@ public class TestData {
 		return firewallPolicyDTOs;
 	}
 
+	public static DnsDTO randomDnsDTO() {
+		DnsDTO dnsDTO = new DnsDTO();
+		dnsDTO.setDomainName("www.sobey.com");
+		dnsDTO.setIdc(ConstansData.idcId);
+		dnsDTO.setTenants(tenantsId);
+		dnsDTO.setDescription("www.sobey.com");
+		return dnsDTO;
+	}
+
+	public static List<DnsPolicyDTO> randomDnsPolicyDTOs() {
+		List<DnsPolicyDTO> dnsPolicyDTOs = new ArrayList<DnsPolicyDTO>();
+		DnsPolicyDTO dnsPolicyDTO = new DnsPolicyDTO();
+		dnsPolicyDTO.setDnsProtocol(39); // 39 HTTP ; 59 HTTPS
+		dnsPolicyDTO.setPort("80");
+		dnsPolicyDTO.setIpaddress("");
+		dnsPolicyDTOs.add(dnsPolicyDTO);
+		return dnsPolicyDTOs;
+	}
 }
