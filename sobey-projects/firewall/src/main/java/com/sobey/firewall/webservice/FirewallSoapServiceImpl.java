@@ -57,26 +57,14 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 
 		WSResult result = new WSResult();
 
-		// TODO 用于测试环境临时加入的一条,需要看租户的防火墙默认IP是什么
-		ArrayList<String> allPolicies = Lists.newArrayList();
-		allPolicies.add("119.6.200.204");
-		eipParameter.setAllPolicies(allPolicies);
-
-		String command = service.createEip(eipParameter);
-
-		String filePath = getFilePath(eipParameter.getPrivateIP());
-
-		TelnetUtil.execCommand(eipParameter.getUrl(), eipParameter.getUserName(), eipParameter.getPassword(), command,
-				filePath);
+		String command = service.configFirewallVIPScrip(eipParameter);
 
 		try {
-
-			String resultStr = FileUtils.readFileToString(new File(filePath));
-
-			result = TerminalResultHandle.ResultHandle(resultStr, MethodEnum.createEip);
-
+			SSHUtil.executeCommand(eipParameter.getUrl(), eipParameter.getUserName(), eipParameter.getPassword(),
+					command);
 		} catch (IOException e) {
-			result.setDefaultError();
+			logger.info("createEIPByFirewall::" + e.getMessage());
+			result.setError(WSResult.SYSTEM_ERROR, "IOException,请联系系统管理员");
 		}
 
 		return result;
@@ -395,7 +383,6 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 		}
 
 		return result;
-
 	}
 
 }

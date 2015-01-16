@@ -16,8 +16,8 @@ public class TestData {
 	/**
 	 * 一次流程中不同功能测试所需的相同参数
 	 */
-	static String controlIp = "10.2.253.92";
-	static String routerName = "TEST_vRouter2015113";
+	static String controlIp = "10.2.253.60";
+	static String routerName = "Tenants-jTWsg646-192.168.100.3";
 
 	public static CreateECSParameter randomCreateECSParameter() {
 

@@ -47,11 +47,6 @@ public class FirewallService {
 	private static final String FIREWALL_EXTINTF = FIREWALL_LOADER.getProperty("FIREWALL_EXTINTF");
 
 	/**
-	 * portforward
-	 */
-	private static final String FIREWALL_PORTFORWARD = FIREWALL_LOADER.getProperty("FIREWALL_PORTFORWARD");
-
-	/**
 	 * 联通
 	 */
 	private static final String FIREWALL_CNC = FIREWALL_LOADER.getProperty("FIREWALL_CNC");
@@ -250,14 +245,14 @@ public class FirewallService {
 	 *            (用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public String createEip(EIPParameter parameter) {
+	public String configFirewallVIPScrip(EIPParameter parameter) {
 
 		StringBuilder sb = new StringBuilder();
 
 		// 生成端口的映射策略脚本. 一个端口对应一条脚本
 		for (EIPPolicyParameter policy : parameter.getPolicies()) {
 
-			String vipName = generateVIPMappingName(parameter.getInternetIP(), policy.getProtocolText(),
+			String vipName = generateVIPMappingName(parameter.getInternetIP(), policy.getProtocol(),
 					policy.getTargetPort());
 
 			parameter.getAllPolicies().add(vipName);
@@ -265,27 +260,36 @@ public class FirewallService {
 			sb.append("config firewall vip").append(DEFAULT_SYMBOL);
 			sb.append("edit ").append("\"").append(vipName).append("\"").append(DEFAULT_SYMBOL);
 			sb.append("set extip ").append(parameter.getInternetIP()).append(DEFAULT_SYMBOL);
-			sb.append("set extintf ").append("\"").append(FIREWALL_EXTINTF).append("\"").append(DEFAULT_SYMBOL);
-			sb.append("set portforward ").append(FIREWALL_PORTFORWARD).append(DEFAULT_SYMBOL);
+			sb.append("set extintf ").append("\"").append(parameter.getVipIntefaceName()).append("\"")
+					.append(DEFAULT_SYMBOL);
+			sb.append("set portforward enable").append(DEFAULT_SYMBOL);
 			sb.append("set mappedip ").append(parameter.getPrivateIP()).append(DEFAULT_SYMBOL);
-
-			// 当协议为udp时,增加协议的设置,为tcp时,不需要设置.
-			if ("udp".equalsIgnoreCase(policy.getProtocolText())) {
-				sb.append("set protocol udp").append(DEFAULT_SYMBOL);
-			}
+			sb.append("set protocol ").append(policy.getProtocol()).append(DEFAULT_SYMBOL);
 			sb.append("set extport ").append(policy.getSourcePort()).append(DEFAULT_SYMBOL);
 			sb.append("set mappedport ").append(policy.getTargetPort()).append(DEFAULT_SYMBOL);
 			sb.append("next").append(DEFAULT_SYMBOL);
 			sb.append("end").append(DEFAULT_SYMBOL);
-			sb.append(DEFAULT_SYMBOL);
 		}
 
 		sb.append("config firewall vipgrp").append(DEFAULT_SYMBOL);
-		sb.append("edit ").append("\"").append(getVipgrpByISP(parameter)).append("\"").append(DEFAULT_SYMBOL);
-		sb.append("set interface ").append("\"").append(FIREWALL_EXTINTF).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("edit ").append("\"").append(parameter.getVipGroupName()).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set interface ").append("\"").append(parameter.getVipIntefaceName()).append("\"")
+				.append(DEFAULT_SYMBOL);
 		sb.append("set member ").append(generateFormatString(parameter.getAllPolicies())).append(DEFAULT_SYMBOL);
 		sb.append("end").append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
+
+		sb.append("config firewall policy").append(DEFAULT_SYMBOL);
+		sb.append("edit 0").append(DEFAULT_SYMBOL);
+		sb.append("set srcintf ").append("\"").append(parameter.getVipIntefaceName()).append("\"")
+				.append(DEFAULT_SYMBOL);
+		sb.append("set srcaddr ").append("\"").append("all").append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set dstintf ").append("\"").append(parameter.getInterfaceName()).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set dstaddr ").append("\"").append(parameter.getVipGroupName()).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set action accept").append(DEFAULT_SYMBOL);
+		sb.append("set schedule ").append("\"").append("always").append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set service ").append("\"").append("ALL").append("\"").append(DEFAULT_SYMBOL);
+		sb.append("next").append(DEFAULT_SYMBOL);
+		sb.append("end").append(DEFAULT_SYMBOL);
 
 		return sb.toString();
 	}
@@ -336,8 +340,7 @@ public class FirewallService {
 
 		// 获得要删除EIP的映射策略名
 		for (EIPPolicyParameter policy : parameter.getPolicies()) {
-			policies.add(generateVIPMappingName(parameter.getInternetIP(), policy.getProtocolText(),
-					policy.getTargetPort()));
+			policies.add(generateVIPMappingName(parameter.getInternetIP(), policy.getProtocol(), policy.getTargetPort()));
 		}
 
 		// Step.2 从所有的映射策略中移除要删除的eip映射策略.

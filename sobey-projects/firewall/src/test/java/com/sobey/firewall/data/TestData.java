@@ -17,20 +17,21 @@ public class TestData {
 
 		ArrayList<String> allPolicies = Lists.newArrayList();
 
-		allPolicies.add("119.6.200.204");
-
 		EIPParameter parameter = new EIPParameter();
 		parameter.setAllPolicies(allPolicies);
-		parameter.setInternetIP("119.6.200.203");
+		parameter.setInternetIP("125.71.203.22");
 		parameter.setIsp(1);
-		parameter.setPrivateIP("10.10.2.51");
+		parameter.setPrivateIP("172.16.5.3");
+		parameter.setVipGroupName("CTC_ALL_Server");
+		parameter.setVipIntefaceName("port8");
+		parameter.setInterfaceName("port1");
 
 		ArrayList<EIPPolicyParameter> policies = Lists.newArrayList();
 
 		EIPPolicyParameter policyParameter = new EIPPolicyParameter();
-		policyParameter.setProtocolText("tcp");
-		policyParameter.setSourcePort(10);
-		policyParameter.setTargetPort(10);
+		policyParameter.setProtocol("tcp");
+		policyParameter.setSourcePort(80);
+		policyParameter.setTargetPort(80);
 
 		policies.add(policyParameter);
 

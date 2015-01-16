@@ -34,15 +34,9 @@ public class EipTest implements PbulicProperties {
 
 		EIPParameter parameter = TestData.randomEIPParameter();
 
-		String command = service.createEip(parameter);
+		String command = service.configFirewallVIPScrip(parameter);
 
 		System.out.println(command);
-
-		TelnetUtil.execCommand(FIREWALL_IP, FIREWALL_USERNAME, FIREWALL_PASSWORD, command, FILE_PATH);
-
-		String result = FileUtils.readFileToString(new File(FILE_PATH));
-
-		System.err.println(result);
 
 	}
 
