@@ -2419,7 +2419,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Map<String, Object> paramsMap = Maps.newHashMap();
 
-			paramsMap.put("EQ_description", dnsDTO.getDescription());
+			paramsMap.put("EQ_domainName", dnsDTO.getDomainName());
 			paramsMap.put("EQ_tenants", dnsDTO.getTenants());
 
 			Validate.isTrue(comm.dnsService.findDns(paramsMap) == null, ERROR.OBJECT_DUPLICATE);
@@ -2458,7 +2458,7 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Map<String, Object> paramsMap = Maps.newHashMap();
 
-			paramsMap.put("EQ_description", dnsDTO.getDescription());
+			paramsMap.put("EQ_domainName", dnsDTO.getDomainName());
 			paramsMap.put("EQ_tenants", dnsDTO.getTenants());
 
 			// 验证description是否唯一.如果不为null,则弹出错误.
