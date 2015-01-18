@@ -157,6 +157,8 @@ public class ApiServiceImpl implements ApiService {
 				.findFirewallServiceByParams(CMDBuildUtil.wrapperSearchParams(firewallServiceMap)).getDto();
 
 		// Step.4 在CMDBuild中为Tenants创建一个默认的vRouter,
+		
+		System.out.println("创建路由!!!!!!!!!!!");
 
 		createRouter(ConstansData.defaultRouter(queryTenantsDTO.getId()), queryFirewallServiceDTO);
 
@@ -766,6 +768,7 @@ public class ApiServiceImpl implements ApiService {
 		 * Step.7 修改分配给Router的IP状态.
 		 */
 
+		System.out.println("进入创建路由的方法");
 		WSResult result = new WSResult();
 
 		// 从管理网段IP中获得的未使用的IP.
@@ -803,9 +806,11 @@ public class ApiServiceImpl implements ApiService {
 
 		instanceSoapService.cloneNetworkDeviceByInstance(cloneVMParameter);
 
+		System.out.println("路由创建完毕,等待2分钟");
+		
 		// 暂停120s等待防火墙启动完毕
 		Threads.sleep(120 * 1000);
-		System.out.println("-------------------");
+		System.out.println("---------等待完毕----------");
 
 		// Step.3 注册更新vRouter防火墙
 		AuthenticateFirewallParameter authenticateFirewallParameter = new AuthenticateFirewallParameter();
