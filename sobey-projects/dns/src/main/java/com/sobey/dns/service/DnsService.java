@@ -3,7 +3,6 @@ package com.sobey.dns.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -513,9 +512,11 @@ public class DnsService {
 	private String generateSiteName(DNSPublicIPParameter ipParameter) {
 
 		// 获得最后一个"."的索引
-		int index = StringUtils.lastIndexOf(ipParameter.getIpaddress(), ".");
+		// int index = StringUtils.lastIndexOf(ipParameter.getIpaddress(), ".");
+		// return "xa_" + StringUtils.substring(ipParameter.getIpaddress(), 0, index + 1) + "x";
 
-		return "xa_" + StringUtils.substring(ipParameter.getIpaddress(), 0, index + 1) + "x";
+		return "xa_113.142.30.x";
+		// TODO 只需要写死,提前配置在ns中.Q:如果有多个怎么办?
 	}
 
 	/**
