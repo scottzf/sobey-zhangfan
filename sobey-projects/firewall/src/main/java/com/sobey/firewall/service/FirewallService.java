@@ -114,6 +114,7 @@ public class FirewallService {
 	 * @return
 	 */
 	private static String generateFormatString(List<String> list) {
+		list.remove("");
 		return Collections3.convertToString(list, "\"", "\" ");
 	}
 

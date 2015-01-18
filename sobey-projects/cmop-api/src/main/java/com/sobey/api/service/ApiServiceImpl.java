@@ -680,7 +680,7 @@ public class ApiServiceImpl implements ApiService {
 
 		// ECS和ES3的关联关系
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_description", es3DTO.getDescription());
+		map.put("EQ_code", idResult.getMessage());
 
 		Es3DTO queryEs3DTO = (Es3DTO) cmdbuildSoapService.findEs3ByParams(CMDBuildUtil.wrapperSearchParams(map))
 				.getDto();
@@ -1106,7 +1106,7 @@ public class ApiServiceImpl implements ApiService {
 		ArrayList<ConfigSystemInterfaceParameter> interfaceArrayList = new ArrayList<ConfigSystemInterfaceParameter>();
 
 		ConfigSystemInterfaceParameter configSystemInterfaceParameter = new ConfigSystemInterfaceParameter();
-		configSystemInterfaceParameter.setGateway("125.71.203.1");
+		configSystemInterfaceParameter.setGateway("125.71.203.23");
 		configSystemInterfaceParameter.setInterfaceName(ConstansData.CTC_DEFAULT_PORT);
 		configSystemInterfaceParameter.setSubnetMask("255.255.255.0");
 		interfaceArrayList.add(configSystemInterfaceParameter);
@@ -1375,6 +1375,7 @@ public class ApiServiceImpl implements ApiService {
 		eipParameter.setVipGroupName("CTC_ALL_Server"); // 默认的VIP Group
 		eipParameter.setVipIntefaceName("port8"); // 电信接口名
 		eipParameter.setInterfaceName(generateInterfaceName(subnetDTO.getPortIndex()));
+
 		firewallSoapService.createEIPByFirewall(eipParameter);
 
 		result.setMessage("EIP关联成功");
@@ -1389,10 +1390,11 @@ public class ApiServiceImpl implements ApiService {
 	 */
 	private EIPParameter wrapperEIPParameter(EipDTO eipDTO) {
 		LookUpDTO isp = (LookUpDTO) cmdbuildSoapService.findLookUp(eipDTO.getIsp()).getDto();
-		// 获得租户下所有的EIP.
 
+		// 获得租户下所有已绑定的EIP.
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_tenants", eipDTO.getTenants());
+		map.put("EQ_eipStatus", LookUpConstants.EIPStatus.已使用.getValue());
 		List<Object> eipList = cmdbuildSoapService.getEipList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
 				.getDto();
 
@@ -1401,6 +1403,10 @@ public class ApiServiceImpl implements ApiService {
 			EipDTO dto = (EipDTO) obj;
 			IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(dto.getIpaddress()).getDto();
 			allPolicies.add(ipaddressDTO.getDescription());
+		}
+
+		if (allPolicies.isEmpty()) {
+			allPolicies.add("");
 		}
 
 		// 获得EIP的策略
