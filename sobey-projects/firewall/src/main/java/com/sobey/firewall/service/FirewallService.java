@@ -769,7 +769,7 @@ public class FirewallService {
 					.append(DEFAULT_SYMBOL); // parameter.getGateway() 此处必须以1结尾,表示这个IP起始,配合后面子网掩码
 			sb.append("set allowaccess ping https ssh telnet").append(DEFAULT_SYMBOL);
 			sb.append("set type physical").append(DEFAULT_SYMBOL);
-			sb.append("set snmp-index 8").append(DEFAULT_SYMBOL);
+			// sb.append("set snmp-index 8").append(DEFAULT_SYMBOL);
 			sb.append("end").append(DEFAULT_SYMBOL);
 		}
 
@@ -901,7 +901,7 @@ public class FirewallService {
 		sb.append("edit ").append(parameter.getInterfaceName()).append(DEFAULT_SYMBOL);
 		sb.append("set ip ").append(parameter.getGateway()).append(" ").append(parameter.getSubnetMask())
 				.append(DEFAULT_SYMBOL);
-		//sb.append("next").append(DEFAULT_SYMBOL);
+		// sb.append("next").append(DEFAULT_SYMBOL);
 		sb.append("end").append(DEFAULT_SYMBOL);
 		sb.append("execute backup config flash").append(DEFAULT_SYMBOL);
 		return sb.toString();
