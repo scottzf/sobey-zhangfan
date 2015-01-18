@@ -1463,7 +1463,7 @@ public class ApiServiceImpl implements ApiService {
 		// Step.2 将DNS策略信息写入CMDBuild
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_description", dnsDTO.getDescription());
+		map.put("EQ_code", idResult.getMessage());
 		map.put("EQ_tenants", dnsDTO.getTenants());
 
 		DnsDTO queryDnsDTO = (DnsDTO) cmdbuildSoapService.findDnsByParams(CMDBuildUtil.wrapperSearchParams(map))
@@ -1500,7 +1500,8 @@ public class ApiServiceImpl implements ApiService {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_dns", dnsDTO.getId());
 
-		List<Object> list = cmdbuildSoapService.getDnsList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList().getDto();
+		List<Object> list = cmdbuildSoapService.getDnsPolicyList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+				.getDto();
 
 		for (Object obj : list) {
 
@@ -1525,6 +1526,12 @@ public class ApiServiceImpl implements ApiService {
 		parameter.setDomianName(dnsDTO.getDomainName());
 		parameter.setDomianType(lookUpDTO.getDescription());
 		parameter.getPublicIPs().addAll(publicIPParameters);
+
+		// TODO 临时参数,因为NS目前只有一台,以后每个租户有一个NS时,URL都不同
+		parameter.setUrl("172.28.24.16");
+		parameter.setUserName("user");
+		parameter.setPassword("user@s0bey");
+		parameter.setProtocol("http");
 		return parameter;
 	}
 
