@@ -137,20 +137,22 @@ public class ApiServiceImpl implements ApiService {
 
 		// 获得创建的Tenants对象
 		HashMap<String, Object> tenantsMap = new HashMap<String, Object>();
-		tenantsMap.put("EQ_code", idResult.getCode());
+		tenantsMap.put("EQ_code", idResult.getMessage());
 		TenantsDTO queryTenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenantsByParams(
 				CMDBuildUtil.wrapperSearchParams(tenantsMap)).getDto();
 
 		// Step.2 在CMDB中为Tenants分配一个默认的Subnet
 
-		result = createSubnet(ConstansData.defaultSubnetDTO(queryTenantsDTO.getId()));
+		createSubnet(ConstansData.defaultSubnetDTO(queryTenantsDTO.getId()));
 
 		// Step.3 在CMDB中为Tenants分配一个默认的Firewall Service
-		createFirewallService(ConstansData.defaultFirewallServiceDTO(queryTenantsDTO.getId()), null);
+		List<FirewallPolicyDTO> firewallPolicyDTOs = new ArrayList<FirewallPolicyDTO>();
+		WSResult firewallIdResult = createFirewallService(
+				ConstansData.defaultFirewallServiceDTO(queryTenantsDTO.getId()), firewallPolicyDTOs);
 
 		// 获得默认防火墙对象
 		HashMap<String, Object> firewallServiceMap = new HashMap<String, Object>();
-		firewallServiceMap.put("EQ_code", tenantsDTO.getDescription());
+		firewallServiceMap.put("EQ_code", firewallIdResult.getMessage());
 		FirewallServiceDTO queryFirewallServiceDTO = (FirewallServiceDTO) cmdbuildSoapService
 				.findFirewallServiceByParams(CMDBuildUtil.wrapperSearchParams(firewallServiceMap)).getDto();
 
@@ -814,8 +816,8 @@ public class ApiServiceImpl implements ApiService {
 		// Step.4 修改vRouter端口
 		modifyFirewallConfigSystemInterface(managerIpaddressDTO);// 修改防火墙中 系统管理 -> 网络 -> 接口 中的配置信息.
 
-		// 为vRouter增加静态路由
-		addConfigRouterStatic();
+		// 链接到电信
+		// ConnectionCTC(tenantsDTO, ipaddressDTO, managerIpaddressDTO.getDescription());
 
 		// Step.5 保存Ecs至CMDB
 		ecsDTO.setServer(serverDTO.getId());
@@ -851,9 +853,49 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	/**
+	 * 链接到电信
+	 * 
+	 * @param tenantsDTO
+	 * @param ipaddressDTO
+	 * @param url
+	 */
+	private void ConnectionCTC(TenantsDTO tenantsDTO, IpaddressDTO ipaddressDTO, String url) {
+
+		// Step.1 将电信所属的vlan绑定到vRouter上.(即在vCenter中将Subnet对应的网络设配器绑定到vRouter)
+		BindingDVSPortGroupParameter bindingDVSPortGroupParameter = new BindingDVSPortGroupParameter();
+
+		bindingDVSPortGroupParameter.setDatacenter(datacenter);
+		bindingDVSPortGroupParameter.setPortGroupName(ConstansData.CTC_DEFAULT_PORTGROUPNAME);
+		bindingDVSPortGroupParameter.setVmName(generateVMName(tenantsDTO, ipaddressDTO));
+		bindingDVSPortGroupParameter.setPortIndex(ConstansData.CTC_DEFAULT_PORTNO);
+
+		instanceSoapService.bindingDVSPortGroupByInstance(bindingDVSPortGroupParameter);
+
+		// Step.2 在vRouter上执行脚本(配置接口 config System Interface, 配置连接电信的端口（默认端口8）IP地址
+
+		ConfigSystemInterfaceParameters interfaceParameters = new ConfigSystemInterfaceParameters();
+		interfaceParameters.setUrl(url);
+		interfaceParameters.setUserName(ConstansData.firewall_username);
+		interfaceParameters.setPassword(ConstansData.firewall_password);
+
+		ArrayList<ConfigSystemInterfaceParameter> interfaceArrayList = new ArrayList<ConfigSystemInterfaceParameter>();
+
+		ConfigSystemInterfaceParameter configSystemInterfaceParameter = new ConfigSystemInterfaceParameter();
+		configSystemInterfaceParameter.setGateway("125.71.203.23");
+		configSystemInterfaceParameter.setInterfaceName(ConstansData.CTC_DEFAULT_PORT);
+		configSystemInterfaceParameter.setSubnetMask("255.255.255.0");
+		interfaceArrayList.add(configSystemInterfaceParameter);
+
+		interfaceParameters.getConfigSystemInterfaceParameters().addAll(interfaceArrayList);
+
+		firewallSoapService.configSystemInterfaceListByFirewall(interfaceParameters);
+
+	}
+
+	/**
 	 * 增加静态路由.
 	 */
-	private void addConfigRouterStatic() {
+	private void addConfigRouterStatic(String url) {
 
 		List<ConfigRouterStaticParameter> staticParameters = new ArrayList<ConfigRouterStaticParameter>();
 
@@ -861,6 +903,9 @@ public class ApiServiceImpl implements ApiService {
 		parameter.setInterfaceName("port8");
 		parameter.setRouterId(0);
 		parameter.setIspGateway("125.71.203.1");
+		parameter.setUrl(url);
+		parameter.setUserName(ConstansData.firewall_password);
+		parameter.setPassword(ConstansData.firewall_password);
 		staticParameters.add(parameter);
 		ConfigRouterStaticParameters configRouterStaticParameters = new ConfigRouterStaticParameters();
 		configRouterStaticParameters.getConfigRouterStaticParameters().addAll(staticParameters);
@@ -944,6 +989,9 @@ public class ApiServiceImpl implements ApiService {
 		// Router所在的宿主机
 		ServerDTO serverDTO = (ServerDTO) cmdbuildSoapService.findServer(ecsDTO.getServer()).getDto();
 		IpaddressDTO serverIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(serverDTO.getIpaddress()).getDto();
+
+		// 为vRouter增加静态路由
+		addConfigRouterStatic(url);
 
 		// Config System Interface
 		ConfigSystemInterfaceParameters interfaceParameters = new ConfigSystemInterfaceParameters();
