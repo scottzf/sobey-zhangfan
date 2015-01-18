@@ -59,13 +59,7 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 
 		String command = service.configFirewallVIPScrip(eipParameter);
 
-		try {
-			SSHUtil.executeCommand(eipParameter.getUrl(), eipParameter.getUserName(), eipParameter.getPassword(),
-					command);
-		} catch (IOException e) {
-			logger.info("createEIPByFirewall::" + e.getMessage());
-			result.setError(WSResult.SYSTEM_ERROR, "IOException,请联系系统管理员");
-		}
+		TelnetUtil.execCommand(eipParameter.getUrl(), eipParameter.getUserName(), eipParameter.getPassword(), command);
 
 		return result;
 	}
@@ -195,14 +189,8 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 
 		String command = service.configSystemInterfaceScrip(configSystemInterfaceParameters);
 
-		try {
-			SSHUtil.executeCommand(configSystemInterfaceParameters.getUrl(),
-					configSystemInterfaceParameters.getUserName(), configSystemInterfaceParameters.getPassword(),
-					command);
-		} catch (IOException e) {
-			logger.info("ConfigSystemInterfaceListByFirewall::" + e.getMessage());
-			result.setError(WSResult.SYSTEM_ERROR, "IOException,请联系系统管理员");
-		}
+		TelnetUtil.execCommand(configSystemInterfaceParameters.getUrl(), configSystemInterfaceParameters.getUserName(),
+				configSystemInterfaceParameters.getPassword(), command);
 
 		return result;
 	}
@@ -214,13 +202,8 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 
 		String command = service.modifyConfigSystemInterfaceScrip(configSystemInterfaceParameter);
 
-		try {
-			SSHUtil.executeCommand(configSystemInterfaceParameter.getUrl(),
-					configSystemInterfaceParameter.getUserName(), configSystemInterfaceParameter.getPassword(), command);
-		} catch (IOException e) {
-			logger.info("ModifyConfigSystemInterfaceByFirewall::" + e.getMessage());
-			result.setError(WSResult.SYSTEM_ERROR, "IOException,请联系系统管理员");
-		}
+		TelnetUtil.execCommand(configSystemInterfaceParameter.getUrl(), configSystemInterfaceParameter.getUserName(),
+				configSystemInterfaceParameter.getPassword(), command);
 
 		return result;
 	}
@@ -246,14 +229,8 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 
 		String command = service.configFirewallAddressScrip(configFirewallAddressParameters);
 
-		try {
-			SSHUtil.executeCommand(configFirewallAddressParameters.getUrl(),
-					configFirewallAddressParameters.getUserName(), configFirewallAddressParameters.getPassword(),
-					command);
-		} catch (IOException e) {
-			logger.info("ConfigFirewallAddressParameterListByFirewall::" + e.getMessage());
-			result.setError(WSResult.SYSTEM_ERROR, "IOException,请联系系统管理员");
-		}
+		TelnetUtil.execCommand(configFirewallAddressParameters.getUrl(), configFirewallAddressParameters.getUserName(),
+				configFirewallAddressParameters.getPassword(), command);
 
 		return result;
 	}
@@ -278,13 +255,8 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 
 		String command = service.configFirewallPolicyScrip(configFirewallPolicyParameters);
 
-		try {
-			SSHUtil.executeCommand(configFirewallPolicyParameters.getUrl(),
-					configFirewallPolicyParameters.getUserName(), configFirewallPolicyParameters.getPassword(), command);
-		} catch (IOException e) {
-			logger.info("ConfigFirewallPolicyParameterListByFirewall::" + e.getMessage());
-			result.setError(WSResult.SYSTEM_ERROR, "IOException,请联系系统管理员");
-		}
+		TelnetUtil.execCommand(configFirewallPolicyParameters.getUrl(), configFirewallPolicyParameters.getUserName(),
+				configFirewallPolicyParameters.getPassword(), command);
 
 		return result;
 	}
@@ -308,13 +280,8 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 
 		String command = service.configRouterStaticScrip(configRouterStaticParameters);
 
-		try {
-			SSHUtil.executeCommand(configRouterStaticParameters.getUrl(), configRouterStaticParameters.getUserName(),
-					configRouterStaticParameters.getPassword(), command);
-		} catch (IOException e) {
-			logger.info("ConfigRouterStaticParameterListByFirewall::" + e.getMessage());
-			result.setError(WSResult.SYSTEM_ERROR, "IOException,请联系系统管理员");
-		}
+		TelnetUtil.execCommand(configRouterStaticParameters.getUrl(), configRouterStaticParameters.getUserName(),
+				configRouterStaticParameters.getPassword(), command);
 
 		return result;
 	}
@@ -324,13 +291,9 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 
 		WSResult result = new WSResult();
 
-		try {
-			SSHUtil.executeCommand(authenticateFirewallParameter.getUrl(), authenticateFirewallParameter.getUserName(),
-					authenticateFirewallParameter.getPassword(), service.RegisteredScrip());
-		} catch (IOException e) {
-			logger.info("RegisteredByFirewall::" + e.getMessage());
-			result.setError(WSResult.SYSTEM_ERROR, "IOException,请联系系统管理员");
-		}
+		TelnetUtil.execCommand(authenticateFirewallParameter.getUrl(), authenticateFirewallParameter.getUserName(),
+				authenticateFirewallParameter.getPassword(), service.RegisteredScrip());
+
 		return result;
 	}
 
@@ -355,14 +318,9 @@ public class FirewallSoapServiceImpl implements FirewallSoapService {
 		String command = service.ConfigFirewallServiceCategoryScrip(configFirewallServiceCategoryParameters
 				.getConfigFirewallServiceCategoryParameters());
 
-		try {
-			SSHUtil.executeCommand(configFirewallServiceCategoryParameters.getUrl(),
-					configFirewallServiceCategoryParameters.getUserName(),
-					configFirewallServiceCategoryParameters.getPassword(), command);
-		} catch (IOException e) {
-			logger.info("ConfigFirewallServiceCategoryParameterListByFirewall::" + e.getMessage());
-			result.setError(WSResult.SYSTEM_ERROR, "IOException,请联系系统管理员");
-		}
+		TelnetUtil.execCommand(configFirewallServiceCategoryParameters.getUrl(),
+				configFirewallServiceCategoryParameters.getUserName(),
+				configFirewallServiceCategoryParameters.getPassword(), command);
 
 		return result;
 	}
