@@ -817,7 +817,7 @@ public class ApiServiceImpl implements ApiService {
 		authenticateFirewallParameter.setUrl(ConstansData.vRouter_default_ipaddress);
 		authenticateFirewallParameter.setUserName(ConstansData.firewall_username);
 		authenticateFirewallParameter.setPassword(ConstansData.firewall_password);
-		firewallSoapService.registeredByFirewall(authenticateFirewallParameter);
+//		firewallSoapService.registeredByFirewall(authenticateFirewallParameter);
 
 		System.out.println("-------------------:" + managerIpaddressDTO.getDescription());
 		// Step.4 修改vRouter端口
