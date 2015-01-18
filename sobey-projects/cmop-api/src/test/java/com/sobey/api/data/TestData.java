@@ -18,7 +18,7 @@ import com.sobey.generate.cmdbuild.TenantsDTO;
 
 public class TestData {
 
-	private static final Integer tenantsId = 191;
+	private static final Integer tenantsId = 164;
 
 	public static TenantsDTO randomTenantsDTO() {
 		TenantsDTO dto = new TenantsDTO();
@@ -48,9 +48,9 @@ public class TestData {
 
 	public static EcsDTO randomEcsDTO() {
 		EcsDTO dto = new EcsDTO();
-		dto.setDescription("测试专用主机B");
+		dto.setDescription("测试专用主机A");
 		dto.setServer(124);
-		dto.setSubnet(1462);// 192:默认子网 1462 : 200子网
+		dto.setSubnet(1466);// 165:默认子网 1466 : 200子网
 		dto.setEcsType(109); // 109 instance 110 firewall
 		dto.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
 		dto.setIdc(ConstansData.idcId);
@@ -76,7 +76,7 @@ public class TestData {
 		FirewallServiceDTO firewallServiceDTO = new FirewallServiceDTO();
 		firewallServiceDTO.setTenants(tenantsId);
 		firewallServiceDTO.setIdc(ConstansData.idcId);
-		firewallServiceDTO.setDescription("自定义的防火墙2");
+		firewallServiceDTO.setDescription("自定义的防火墙");
 		return firewallServiceDTO;
 	}
 
@@ -149,7 +149,7 @@ public class TestData {
 		eipDTO.setEipStatus(LookUpConstants.EIPStatus.未使用.getValue());
 		eipDTO.setTenants(tenantsId);
 		eipDTO.setIsp(29);
-		eipDTO.setIpaddress(147);
+		eipDTO.setIpaddress(149);
 		eipDTO.setIdc(ConstansData.idcId);
 		eipDTO.setDescription("125.71.203.22");
 		eipDTO.setAgentType(LookUpConstants.AgentType.Fortigate.getValue());

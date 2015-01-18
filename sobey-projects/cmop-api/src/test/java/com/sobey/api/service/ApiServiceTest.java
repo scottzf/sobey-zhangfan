@@ -78,12 +78,12 @@ public class ApiServiceTest extends TestCase {
 	@Test
 	public void bindingRouter() {
 
-		Integer routerId = 2805;
+		Integer routerId = 1453;
 
 		RouterDTO routerDTO = (RouterDTO) cmdbuildSoapService.findRouter(routerId).getDto();
 
-		SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(192).getDto();
-		SubnetDTO subnetDTO2 = (SubnetDTO) cmdbuildSoapService.findSubnet(1462).getDto();
+		SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(165).getDto();
+		SubnetDTO subnetDTO2 = (SubnetDTO) cmdbuildSoapService.findSubnet(1466).getDto();
 
 		List<SubnetDTO> subnetDTOs = new ArrayList<SubnetDTO>();
 		subnetDTOs.add(subnetDTO);
@@ -105,8 +105,8 @@ public class ApiServiceTest extends TestCase {
 	@Test
 	public void bindingFirewallService() {
 
-		Integer routerId = 2805;
-		Integer firewalserviceId = 2820;
+		Integer routerId = 1453;
+		Integer firewalserviceId = 2788;
 
 		RouterDTO routerDTO = (RouterDTO) cmdbuildSoapService.findRouter(routerId).getDto();
 
@@ -129,7 +129,7 @@ public class ApiServiceTest extends TestCase {
 				.getDto();
 
 		EipPolicyDTO policyDTO = new EipPolicyDTO();
-		policyDTO.setDescription("123");
+		policyDTO.setDescription("25.71.203.22");
 		policyDTO.setEip(queryEipDTO.getId());
 		policyDTO.setEipProtocol(38);
 		policyDTO.setSourcePort(80);
@@ -142,8 +142,11 @@ public class ApiServiceTest extends TestCase {
 	@Test
 	public void bindingEIP() {
 
-		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(2886).getDto();
-		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(2742).getDto();
+		Integer eipId = 2799;
+		Integer ecsId = 1440;
+		
+		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(eipId).getDto();
+		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(ecsId).getDto();
 
 		service.bindingEIP(eipDTO, serviceDTO);
 	}
@@ -155,7 +158,7 @@ public class ApiServiceTest extends TestCase {
 
 		List<DnsPolicyDTO> dnsPolicyDTOs = TestData.randomDnsPolicyDTOs();
 
-		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(2886).getDto();
+		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(2799).getDto();
 		List<EipDTO> eipDTOs = new ArrayList<EipDTO>();
 		eipDTOs.add(eipDTO);
 
