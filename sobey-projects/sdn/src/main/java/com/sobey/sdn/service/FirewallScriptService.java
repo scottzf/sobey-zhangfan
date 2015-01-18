@@ -60,7 +60,7 @@ public class FirewallScriptService {
 		sb.append("set ip ").append(ip_update).append(" ").append(SDNConstants.PORT10_SUBNETMASK)
 				.append(SDNConstants.ENTER_SIGN);
 		sb.append("end").append(SDNConstants.ENTER_SIGN);
-		sb.append("exe backup config flash").append(SDNConstants.ENTER_SIGN);
+		sb.append("execute backup config flash").append(SDNConstants.ENTER_SIGN);
 
 		return sb.toString();
 	}

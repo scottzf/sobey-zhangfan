@@ -901,8 +901,9 @@ public class FirewallService {
 		sb.append("edit ").append(parameter.getInterfaceName()).append(DEFAULT_SYMBOL);
 		sb.append("set ip ").append(parameter.getGateway()).append(" ").append(parameter.getSubnetMask())
 				.append(DEFAULT_SYMBOL);
+		//sb.append("next").append(DEFAULT_SYMBOL);
 		sb.append("end").append(DEFAULT_SYMBOL);
-		sb.append("exe backup config flash").append(DEFAULT_SYMBOL);
+		sb.append("execute backup config flash").append(DEFAULT_SYMBOL);
 		return sb.toString();
 	}
 
