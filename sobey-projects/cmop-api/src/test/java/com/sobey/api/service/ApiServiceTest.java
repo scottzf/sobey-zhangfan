@@ -130,7 +130,7 @@ public class ApiServiceTest extends TestCase {
 		policyDTO.setEipProtocol(38);
 		policyDTO.setSourcePort(80);
 		policyDTO.setTargetPort(80);
-		
+
 		cmdbuildSoapService.createEipPolicy(policyDTO);
 
 	}
@@ -151,7 +151,7 @@ public class ApiServiceTest extends TestCase {
 
 		List<DnsPolicyDTO> dnsPolicyDTOs = TestData.randomDnsPolicyDTOs();
 
-		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(2850).getDto();
+		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(2886).getDto();
 		List<EipDTO> eipDTOs = new ArrayList<EipDTO>();
 		eipDTOs.add(eipDTO);
 

@@ -1,6 +1,5 @@
 package com.sobey.api.data;
 
-import java.lang.invoke.MethodHandles.Lookup;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,7 +122,7 @@ public class TestData {
 		DnsPolicyDTO dnsPolicyDTO = new DnsPolicyDTO();
 		dnsPolicyDTO.setDnsProtocol(39); // 39 HTTP ; 59 HTTPS
 		dnsPolicyDTO.setPort("80");
-		dnsPolicyDTO.setIpaddress("");
+		dnsPolicyDTO.setIpaddress("125.71.203.22");//EIP的IP
 		dnsPolicyDTOs.add(dnsPolicyDTO);
 		return dnsPolicyDTOs;
 	}
@@ -139,14 +138,14 @@ public class TestData {
 		es3DTO.setVolumeName(Identities.randomBase62(8));
 		es3DTO.setTenants(tenantsId);
 		es3DTO.setRemark("无所谓");
-		es3DTO.setSubnet(146);
+		es3DTO.setSubnet(192);
 
 		return es3DTO;
 	}
 
 	public static EipDTO randomEipDTO() {
-		
-		EipDTO eipDTO =  new EipDTO();
+
+		EipDTO eipDTO = new EipDTO();
 		eipDTO.setEipStatus(LookUpConstants.EIPStatus.未使用.getValue());
 		eipDTO.setTenants(tenantsId);
 		eipDTO.setIsp(29);
@@ -155,7 +154,7 @@ public class TestData {
 		eipDTO.setDescription("125.71.203.22");
 		eipDTO.setAgentType(LookUpConstants.AgentType.Fortigate.getValue());
 		eipDTO.setBandwidth(1);
-		
+
 		return eipDTO;
 	}
 }
