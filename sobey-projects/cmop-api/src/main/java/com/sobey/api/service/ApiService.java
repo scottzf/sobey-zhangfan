@@ -44,7 +44,7 @@ public interface ApiService {
 
 	// ==================== Router ====================//
 
-	public WSResult createRouter(EcsDTO ecsDTO);
+	public WSResult createRouter(EcsDTO ecsDTO, FirewallServiceDTO firewallServiceDTO);
 
 	public WSResult bindingRouter(List<SubnetDTO> subnetDTOs, RouterDTO routerDTO);
 

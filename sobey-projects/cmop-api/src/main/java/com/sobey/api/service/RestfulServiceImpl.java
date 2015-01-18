@@ -634,7 +634,8 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult createRouter(String routerName, String remark, String routerSpec, String idc, String accessKey) {
+	public WSResult createRouter(String routerName, String remark, String routerSpec, String idc,
+			String firewallServiceCode, String accessKey) {
 
 		WSResult result = new WSResult();
 
@@ -656,6 +657,12 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
+		FirewallServiceDTO firewallServiceDTO = findFirewallServiceDTO(tenantsDTO.getId(), firewallServiceCode);
+		if (firewallServiceDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "防火墙不存在.");
+			return result;
+		}
+
 		EcsDTO ecsDTO = new EcsDTO();
 		ecsDTO.setAgentType(LookUpConstants.AgentType.Fortigate.getValue());
 		ecsDTO.setDescription(routerName);
@@ -664,7 +671,7 @@ public class RestfulServiceImpl implements RestfulService {
 		ecsDTO.setRemark(remark);
 		ecsDTO.setTenants(tenantsDTO.getId());
 
-		result.setMessage(apiService.createRouter(ecsDTO).getMessage());
+		result.setMessage(apiService.createRouter(ecsDTO, firewallServiceDTO).getMessage());
 
 		return result;
 	}

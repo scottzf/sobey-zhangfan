@@ -58,7 +58,8 @@ public interface RestfulService {
 	/******** Router ********/
 	public DTOResult<RouterEntity> findRouter(String code, String accessKey);
 
-	public WSResult createRouter(String routerName, String remark, String ecsSpec, String idc, String accessKey);
+	public WSResult createRouter(String routerName, String remark, String ecsSpec, String idc,
+			String firewallServiceCode, String accessKey);
 
 	public WSResult bindingRouter(String routerCode, String subnetCodes, String accessKey);
 

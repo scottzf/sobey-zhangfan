@@ -16,6 +16,7 @@ import com.sobey.api.utils.CMDBuildUtil;
 import com.sobey.api.webservice.response.result.WSResult;
 import com.sobey.core.utils.Encodes;
 import com.sobey.core.utils.Identities;
+import com.sobey.core.utils.Threads;
 import com.sobey.generate.cmdbuild.CmdbuildSoapService;
 import com.sobey.generate.cmdbuild.DnsDTO;
 import com.sobey.generate.cmdbuild.DnsPolicyDTO;
@@ -47,6 +48,8 @@ import com.sobey.generate.firewall.ConfigFirewallAddressParameter;
 import com.sobey.generate.firewall.ConfigFirewallAddressParameters;
 import com.sobey.generate.firewall.ConfigFirewallPolicyParameter;
 import com.sobey.generate.firewall.ConfigFirewallPolicyParameters;
+import com.sobey.generate.firewall.ConfigRouterStaticParameter;
+import com.sobey.generate.firewall.ConfigRouterStaticParameters;
 import com.sobey.generate.firewall.ConfigSystemInterfaceParameter;
 import com.sobey.generate.firewall.ConfigSystemInterfaceParameters;
 import com.sobey.generate.firewall.EIPParameter;
@@ -119,6 +122,11 @@ public class ApiServiceImpl implements ApiService {
 		 * 
 		 * Step.2 在CMDB中为Tenants分配一个默认的Subnet
 		 * 
+		 * Step.3 在CMDB中为Tenants分配一个默认的Firewall Service
+		 * 
+		 * Step.4 在CMDBuild中为Tenants创建一个默认的vRouter,
+		 * 
+		 * 
 		 */
 
 		// Step.1 在CMDB中创建Tenants
@@ -128,18 +136,27 @@ public class ApiServiceImpl implements ApiService {
 		IdResult idResult = cmdbuildSoapService.createTenants(tenantsDTO);
 
 		// 获得创建的Tenants对象
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_description", tenantsDTO.getDescription());
+		HashMap<String, Object> tenantsMap = new HashMap<String, Object>();
+		tenantsMap.put("EQ_code", idResult.getCode());
 		TenantsDTO queryTenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenantsByParams(
-				CMDBuildUtil.wrapperSearchParams(map)).getDto();
+				CMDBuildUtil.wrapperSearchParams(tenantsMap)).getDto();
 
 		// Step.2 在CMDB中为Tenants分配一个默认的Subnet
 
 		result = createSubnet(ConstansData.defaultSubnetDTO(queryTenantsDTO.getId()));
 
-		if (!WSResult.SUCESS.equals(result.getCode())) {
-			return result;
-		}
+		// Step.3 在CMDB中为Tenants分配一个默认的Firewall Service
+		createFirewallService(ConstansData.defaultFirewallServiceDTO(queryTenantsDTO.getId()), null);
+
+		// 获得默认防火墙对象
+		HashMap<String, Object> firewallServiceMap = new HashMap<String, Object>();
+		firewallServiceMap.put("EQ_code", tenantsDTO.getDescription());
+		FirewallServiceDTO queryFirewallServiceDTO = (FirewallServiceDTO) cmdbuildSoapService
+				.findFirewallServiceByParams(CMDBuildUtil.wrapperSearchParams(firewallServiceMap)).getDto();
+
+		// Step.4 在CMDBuild中为Tenants创建一个默认的vRouter,
+
+		createRouter(ConstansData.defaultRouter(queryTenantsDTO.getId()), queryFirewallServiceDTO);
 
 		result.setMessage(idResult.getMessage());
 
@@ -491,6 +508,9 @@ public class ApiServiceImpl implements ApiService {
 
 		result.setMessage(idResult.getMessage());
 
+		// 等待2分钟,让VM启动并分配IP
+		Threads.sleep(120 * 1000);
+
 		return result;
 	}
 
@@ -725,7 +745,7 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public WSResult createRouter(EcsDTO ecsDTO) {
+	public WSResult createRouter(EcsDTO ecsDTO, FirewallServiceDTO firewallServiceDTO) {
 
 		/**
 		 * 
@@ -781,6 +801,9 @@ public class ApiServiceImpl implements ApiService {
 
 		instanceSoapService.cloneNetworkDeviceByInstance(cloneVMParameter);
 
+		// 暂停60s等待防火墙启动完毕
+		Threads.sleep(60 * 1000);
+
 		// Step.3 注册更新vRouter防火墙
 		AuthenticateFirewallParameter authenticateFirewallParameter = new AuthenticateFirewallParameter();
 		authenticateFirewallParameter.setUrl(ConstansData.vRouter_default_ipaddress);
@@ -790,6 +813,9 @@ public class ApiServiceImpl implements ApiService {
 
 		// Step.4 修改vRouter端口
 		modifyFirewallConfigSystemInterface(managerIpaddressDTO);// 修改防火墙中 系统管理 -> 网络 -> 接口 中的配置信息.
+
+		// 为vRouter增加静态路由
+		addConfigRouterStatic();
 
 		// Step.5 保存Ecs至CMDB
 		ecsDTO.setServer(serverDTO.getId());
@@ -812,6 +838,7 @@ public class ApiServiceImpl implements ApiService {
 		routerDTO.setIdc(idcDTO.getId());
 		routerDTO.setTenants(tenantsDTO.getId());
 		routerDTO.setIpaddress(managerIpaddressDTO.getId());
+		routerDTO.setFirewallService(firewallServiceDTO.getId());
 
 		IdResult idResult = cmdbuildSoapService.createRouter(routerDTO);
 
@@ -821,6 +848,24 @@ public class ApiServiceImpl implements ApiService {
 
 		result.setMessage(idResult.getMessage());
 		return result;
+	}
+
+	/**
+	 * 增加静态路由.
+	 */
+	private void addConfigRouterStatic() {
+
+		List<ConfigRouterStaticParameter> staticParameters = new ArrayList<ConfigRouterStaticParameter>();
+
+		ConfigRouterStaticParameter parameter = new ConfigRouterStaticParameter();
+		parameter.setInterfaceName("port8");
+		parameter.setRouterId(0);
+		parameter.setIspGateway("125.71.203.1");
+		staticParameters.add(parameter);
+		ConfigRouterStaticParameters configRouterStaticParameters = new ConfigRouterStaticParameters();
+		configRouterStaticParameters.getConfigRouterStaticParameters().addAll(staticParameters);
+		firewallSoapService.configRouterStaticParameterListByFirewall(configRouterStaticParameters);
+
 	}
 
 	/**
@@ -1116,8 +1161,6 @@ public class ApiServiceImpl implements ApiService {
 		firewallSoapService.configSystemInterfaceListByFirewall(interfaceParameters);
 
 		// Step.3 在vRouter上执行脚本(配置接口 config Router Static, 配置连接电信（默认端口8）的静态路由
-
-		// TODO 静态路由暂时写在vRouter模板中.
 
 		/**
 		 * TODO 手动执行防火墙更新文件,演示流程如何将此处独立出来?

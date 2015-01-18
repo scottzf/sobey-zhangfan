@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.sobey.api.constans.LookUpConstants;
 import com.sobey.api.data.TestData;
 import com.sobey.api.utils.CMDBuildUtil;
 import com.sobey.generate.cmdbuild.CmdbuildSoapService;
@@ -61,7 +60,12 @@ public class ApiServiceTest extends TestCase {
 	@Test
 	public void createRouter() {
 		EcsDTO ecsDTO = TestData.randomRouterDTO();
-		service.createRouter(ecsDTO);
+
+		Integer fsId = 0;
+		FirewallServiceDTO firewallServiceDTO = (FirewallServiceDTO) cmdbuildSoapService.findFirewallService(fsId)
+				.getDto();
+
+		service.createRouter(ecsDTO, firewallServiceDTO);
 	}
 
 	@Test

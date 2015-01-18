@@ -1,5 +1,8 @@
 package com.sobey.api.service.data;
 
+import com.sobey.api.constans.LookUpConstants;
+import com.sobey.generate.cmdbuild.EcsDTO;
+import com.sobey.generate.cmdbuild.FirewallServiceDTO;
 import com.sobey.generate.cmdbuild.SubnetDTO;
 
 public class ConstansData {
@@ -38,9 +41,9 @@ public class ConstansData {
 
 	public static SubnetDTO defaultSubnetDTO(Integer tenantsId) {
 
-		String gateway = "192.168.100.1";
+		String gateway = "192.168.1.1";
 		String netmask = "255.255.255.0";
-		String segment = "192.168.100.0";
+		String segment = "192.168.1.0";
 
 		SubnetDTO subnetDTO = new SubnetDTO();
 		subnetDTO.setIdc(idcId);
@@ -51,6 +54,29 @@ public class ConstansData {
 		subnetDTO.setDescription("默认子网");
 
 		return subnetDTO;
+	}
+
+	public static FirewallServiceDTO defaultFirewallServiceDTO(Integer tenantsId) {
+
+		FirewallServiceDTO firewallServiceDTO = new FirewallServiceDTO();
+		firewallServiceDTO.setAgentType(LookUpConstants.AgentType.Fortigate.getValue());
+		firewallServiceDTO.setDescription("默认防火墙");
+		firewallServiceDTO.setIdc(ConstansData.idcId);
+		firewallServiceDTO.setTenants(tenantsId);
+		return firewallServiceDTO;
+	}
+
+	public static EcsDTO defaultRouter(Integer tenantsId) {
+
+		EcsDTO dto = new EcsDTO();
+		dto.setDescription("默认路由");
+		dto.setEcsType(110); // 109 instance 110 firewall
+		dto.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
+		dto.setIdc(ConstansData.idcId);
+		dto.setTenants(tenantsId);
+		dto.setEcsSpec(134);
+		return dto;
+
 	}
 
 }
