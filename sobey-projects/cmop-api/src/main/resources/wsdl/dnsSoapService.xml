@@ -207,7 +207,7 @@
   </wsdl:binding>
   <wsdl:service name="DnsSoapService">
     <wsdl:port binding="tns:DnsSoapServiceSoapBinding" name="DnsSoapServiceImplPort">
-      <soap:address location="http://localhost:8085/dns/cxf/soap/dnsSoapService"/>
+      <soap:address location="http://10.2.12.91:8085/dns/cxf/soap/dnsSoapService"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
