@@ -144,7 +144,7 @@ public class ApiServiceTest extends TestCase {
 
 		Integer eipId = 2799;
 		Integer ecsId = 1440;
-		
+
 		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(eipId).getDto();
 		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(ecsId).getDto();
 
