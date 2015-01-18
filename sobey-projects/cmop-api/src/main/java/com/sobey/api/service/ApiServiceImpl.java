@@ -803,8 +803,8 @@ public class ApiServiceImpl implements ApiService {
 
 		instanceSoapService.cloneNetworkDeviceByInstance(cloneVMParameter);
 
-		// 暂停60s等待防火墙启动完毕
-		Threads.sleep(60 * 1000);
+		// 暂停120s等待防火墙启动完毕
+		Threads.sleep(120 * 1000);
 
 		// Step.3 注册更新vRouter防火墙
 		AuthenticateFirewallParameter authenticateFirewallParameter = new AuthenticateFirewallParameter();
