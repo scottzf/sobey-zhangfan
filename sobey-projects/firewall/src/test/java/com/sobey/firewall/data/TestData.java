@@ -76,9 +76,9 @@ public class TestData {
 	public static ConfigRouterStaticParameter randomConfigRouterStaticParameter() {
 
 		ConfigRouterStaticParameter parameter = new ConfigRouterStaticParameter();
-		parameter.setInterfaceName("port1");
-		parameter.setRouterId(199);
-		parameter.setIspGateway("221.237.156.1");
+		parameter.setInterfaceName("port8");
+		parameter.setRouterId(5);
+		parameter.setIspGateway("125.71.203.1");
 
 		return parameter;
 	}
