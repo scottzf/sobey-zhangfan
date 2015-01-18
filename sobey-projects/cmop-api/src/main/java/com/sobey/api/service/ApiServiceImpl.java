@@ -805,6 +805,7 @@ public class ApiServiceImpl implements ApiService {
 
 		// 暂停120s等待防火墙启动完毕
 		Threads.sleep(120 * 1000);
+		System.out.println("-------------------");
 
 		// Step.3 注册更新vRouter防火墙
 		AuthenticateFirewallParameter authenticateFirewallParameter = new AuthenticateFirewallParameter();
@@ -813,11 +814,13 @@ public class ApiServiceImpl implements ApiService {
 		authenticateFirewallParameter.setPassword(ConstansData.firewall_password);
 		firewallSoapService.registeredByFirewall(authenticateFirewallParameter);
 
+		System.out.println("-------------------:" + managerIpaddressDTO.getDescription());
 		// Step.4 修改vRouter端口
 		modifyFirewallConfigSystemInterface(managerIpaddressDTO);// 修改防火墙中 系统管理 -> 网络 -> 接口 中的配置信息.
 
+		System.out.println("-----------Done--------");
 		// 链接到电信
-		// ConnectionCTC(tenantsDTO, ipaddressDTO, managerIpaddressDTO.getDescription());
+		ConnectionCTC(tenantsDTO, ipaddressDTO, managerIpaddressDTO.getDescription());
 
 		// Step.5 保存Ecs至CMDB
 		ecsDTO.setServer(serverDTO.getId());
