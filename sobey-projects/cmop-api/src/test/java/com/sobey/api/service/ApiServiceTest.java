@@ -1,6 +1,7 @@
 package com.sobey.api.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -11,15 +12,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.sobey.api.constans.LookUpConstants;
 import com.sobey.api.data.TestData;
+import com.sobey.api.utils.CMDBuildUtil;
 import com.sobey.generate.cmdbuild.CmdbuildSoapService;
 import com.sobey.generate.cmdbuild.DnsDTO;
 import com.sobey.generate.cmdbuild.DnsPolicyDTO;
 import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
+import com.sobey.generate.cmdbuild.EipPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.FirewallPolicyDTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
+import com.sobey.generate.cmdbuild.IdResult;
 import com.sobey.generate.cmdbuild.RouterDTO;
 import com.sobey.generate.cmdbuild.ServiceDTO;
 import com.sobey.generate.cmdbuild.SubnetDTO;
@@ -63,18 +68,18 @@ public class ApiServiceTest extends TestCase {
 	public void createES3() {
 
 		Es3DTO es3DTO = TestData.randomEs3DTO();
-		service.createES3(es3DTO, 2752);
+		service.createES3(es3DTO, 2742);
 	}
 
 	@Test
 	public void bindingRouter() {
 
-		Integer routerId = 2792;
+		Integer routerId = 2805;
 
 		RouterDTO routerDTO = (RouterDTO) cmdbuildSoapService.findRouter(routerId).getDto();
 
-		SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(146).getDto();
-		SubnetDTO subnetDTO2 = (SubnetDTO) cmdbuildSoapService.findSubnet(1428).getDto();
+		SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(192).getDto();
+		SubnetDTO subnetDTO2 = (SubnetDTO) cmdbuildSoapService.findSubnet(1462).getDto();
 
 		List<SubnetDTO> subnetDTOs = new ArrayList<SubnetDTO>();
 		subnetDTOs.add(subnetDTO);
@@ -96,21 +101,45 @@ public class ApiServiceTest extends TestCase {
 	@Test
 	public void bindingFirewallService() {
 
-		Integer routerId = 2792;
+		Integer routerId = 2805;
+		Integer firewalserviceId = 2820;
 
 		RouterDTO routerDTO = (RouterDTO) cmdbuildSoapService.findRouter(routerId).getDto();
 
-		FirewallServiceDTO firewallServiceDTO = (FirewallServiceDTO) cmdbuildSoapService.findFirewallService(2829)
-				.getDto();
+		FirewallServiceDTO firewallServiceDTO = (FirewallServiceDTO) cmdbuildSoapService.findFirewallService(
+				firewalserviceId).getDto();
 
 		service.bindingFirewallService(routerDTO, firewallServiceDTO);
 	}
 
 	@Test
+	public void createEIP() {
+
+		EipDTO eipDTO = TestData.randomEipDTO();
+
+		IdResult idResult = cmdbuildSoapService.createEip(eipDTO);
+
+		HashMap<String, Object> ipMap = new HashMap<String, Object>();
+		ipMap.put("EQ_code", idResult.getMessage());
+		EipDTO queryEipDTO = (EipDTO) cmdbuildSoapService.findEipByParams(CMDBuildUtil.wrapperSearchParams(ipMap))
+				.getDto();
+
+		EipPolicyDTO policyDTO = new EipPolicyDTO();
+		policyDTO.setDescription("123");
+		policyDTO.setEip(queryEipDTO.getId());
+		policyDTO.setEipProtocol(38);
+		policyDTO.setSourcePort(80);
+		policyDTO.setTargetPort(80);
+		
+		cmdbuildSoapService.createEipPolicy(policyDTO);
+
+	}
+
+	@Test
 	public void bindingEIP() {
 
-		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(2850).getDto();
-		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(2729).getDto();
+		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(2886).getDto();
+		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(2742).getDto();
 
 		service.bindingEIP(eipDTO, serviceDTO);
 	}

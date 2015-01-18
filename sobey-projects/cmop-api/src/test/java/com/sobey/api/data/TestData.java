@@ -1,5 +1,6 @@
 package com.sobey.api.data;
 
+import java.lang.invoke.MethodHandles.Lookup;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import com.sobey.core.utils.Identities;
 import com.sobey.generate.cmdbuild.DnsDTO;
 import com.sobey.generate.cmdbuild.DnsPolicyDTO;
 import com.sobey.generate.cmdbuild.EcsDTO;
+import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.FirewallPolicyDTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
@@ -17,7 +19,7 @@ import com.sobey.generate.cmdbuild.TenantsDTO;
 
 public class TestData {
 
-	private static final Integer tenantsId = 145;
+	private static final Integer tenantsId = 191;
 
 	public static TenantsDTO randomTenantsDTO() {
 		TenantsDTO dto = new TenantsDTO();
@@ -30,9 +32,9 @@ public class TestData {
 
 	public static SubnetDTO randomSubnetDTO() {
 
-		String gateway = "192.168.220.1";
+		String gateway = "192.168.200.1";
 		String netmask = "255.255.255.0";
-		String segment = "192.168.220.0";
+		String segment = "192.168.200.0";
 
 		SubnetDTO dto = new SubnetDTO();
 
@@ -41,7 +43,7 @@ public class TestData {
 		dto.setNetMask(netmask);
 		dto.setTenants(tenantsId);
 		dto.setSegment(segment);
-		dto.setDescription("220子网");
+		dto.setDescription("200子网");
 		return dto;
 	}
 
@@ -49,7 +51,7 @@ public class TestData {
 		EcsDTO dto = new EcsDTO();
 		dto.setDescription("测试专用主机B");
 		dto.setServer(124);
-		dto.setSubnet(1428);// 146:默认子网 1428 : 200子网
+		dto.setSubnet(1462);// 192:默认子网 1462 : 200子网
 		dto.setEcsType(109); // 109 instance 110 firewall
 		dto.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
 		dto.setIdc(ConstansData.idcId);
@@ -130,7 +132,7 @@ public class TestData {
 
 		Es3DTO es3DTO = new Es3DTO();
 		es3DTO.setAgentType(LookUpConstants.AgentType.VMware.getValue());
-		es3DTO.setDescription("测试的卷");
+		es3DTO.setDescription("测试的卷2");
 		es3DTO.setTotalSize("100");
 		es3DTO.setEs3Type(44);
 		es3DTO.setIdc(ConstansData.idcId);
@@ -140,5 +142,20 @@ public class TestData {
 		es3DTO.setSubnet(146);
 
 		return es3DTO;
+	}
+
+	public static EipDTO randomEipDTO() {
+		
+		EipDTO eipDTO =  new EipDTO();
+		eipDTO.setEipStatus(LookUpConstants.EIPStatus.未使用.getValue());
+		eipDTO.setTenants(tenantsId);
+		eipDTO.setIsp(29);
+		eipDTO.setIpaddress(147);
+		eipDTO.setIdc(ConstansData.idcId);
+		eipDTO.setDescription("125.71.203.22");
+		eipDTO.setAgentType(LookUpConstants.AgentType.Fortigate.getValue());
+		eipDTO.setBandwidth(1);
+		
+		return eipDTO;
 	}
 }

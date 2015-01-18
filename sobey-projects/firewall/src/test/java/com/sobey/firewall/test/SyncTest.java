@@ -69,9 +69,10 @@ public class SyncTest implements PbulicProperties {
 	 * set device port1
 	 * set gateway 221.237.156.1
 	 * </pre>
+	 * @throws IOException 
 	 */
 	@Test
-	public void configRouterStatic() {
+	public void configRouterStatic() throws IOException {
 
 		// 配置默认路由脚本(公网IP相关)
 		// 创建公网IP 单个IP vRouter创建公网IP
@@ -81,11 +82,14 @@ public class SyncTest implements PbulicProperties {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("config router static").append(ENTER_SIGN);
-		sb.append("edit ").append(parameter.getRouterId()).append(ENTER_SIGN);
+		sb.append("edit ").append(0).append(ENTER_SIGN);
 		sb.append("set device ").append(parameter.getInterfaceName()).append(ENTER_SIGN);
 		sb.append("set gateway ").append(parameter.getIspGateway()).append(ENTER_SIGN);
 
+		
 		System.out.println(sb.toString());
+		SSHUtil.executeCommand("10.2.253.60", "admin", "mcloud@sobey.com", sb.toString());
+		
 	}
 
 	/**
