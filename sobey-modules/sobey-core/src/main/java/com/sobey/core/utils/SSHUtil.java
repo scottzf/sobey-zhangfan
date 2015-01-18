@@ -1,9 +1,13 @@
 package com.sobey.core.utils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.Session;
+import ch.ethz.ssh2.StreamGobbler;
 
 /**
  * SSH链接Util类
@@ -47,8 +51,19 @@ public class SSHUtil {
 			// 执行
 			Session session = connection.openSession();
 			session.execCommand(cmd);
-		}
 
+			// 建立流连接输出控制台信息
+			InputStream stdout = new StreamGobbler(session.getStdout());
+			BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
+			while (true) {
+				String line = br.readLine();
+				System.out.println(line);
+				if (line == null) {
+					break;
+				}
+			}
+			br.close();
+		}
 		connection.close();
 	}
 
