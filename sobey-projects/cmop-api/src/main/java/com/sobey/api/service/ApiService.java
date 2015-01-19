@@ -71,4 +71,8 @@ public interface ApiService {
 
 	public WSResult deleteDNS(Integer dnsId);
 
+	// ==================== VMRC ====================//
+
+	public WSResult findVMRCDTO(EcsDTO ecsDTO);
+
 }

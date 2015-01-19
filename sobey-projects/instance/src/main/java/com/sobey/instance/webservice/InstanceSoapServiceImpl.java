@@ -9,6 +9,7 @@ import com.sobey.instance.constans.WsConstants;
 import com.sobey.instance.service.DiskService;
 import com.sobey.instance.service.HostService;
 import com.sobey.instance.service.NetworkService;
+import com.sobey.instance.service.VMRCService;
 import com.sobey.instance.service.VMService;
 import com.sobey.instance.webservice.response.dto.BindingDVSPortGroupParameter;
 import com.sobey.instance.webservice.response.dto.BindingNetworkDevicePortGroupParameter;
@@ -23,6 +24,7 @@ import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
 import com.sobey.instance.webservice.response.dto.VMDiskParameter;
 import com.sobey.instance.webservice.response.dto.VMInfoDTO;
+import com.sobey.instance.webservice.response.dto.VMRCDTO;
 import com.sobey.instance.webservice.response.result.DTOListResult;
 import com.sobey.instance.webservice.response.result.DTOResult;
 import com.sobey.instance.webservice.response.result.WSResult;
@@ -42,6 +44,9 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 
 	@Autowired
 	public HostService hostService;
+
+	@Autowired
+	public VMRCService vmrcService;
 
 	@Override
 	public WSResult cloneVMByInstance(CloneVMParameter cloneVMParameter) {
@@ -122,6 +127,11 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	@Override
 	public WSResult bindingDVSPortGroupByInstance(BindingDVSPortGroupParameter bindingDVSPortGroupParameter) {
 		return networkService.bindingDVSPortGroup(bindingDVSPortGroupParameter);
+	}
+
+	@Override
+	public DTOResult<VMRCDTO> findVMRCDTO(String vmName, String datacenter) {
+		return vmrcService.connectVMRC(vmName, datacenter);
 	}
 
 }

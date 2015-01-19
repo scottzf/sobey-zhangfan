@@ -216,6 +216,20 @@ public class FirewallScriptService {
 	/**
 	 * 映射EIP与内网ip对应关系
 	 * 
+	 * <pre>
+	 * config firewall vip
+	 * edit "119.6.200.219-tcp-8080"
+	 * set extip 119.6.200.219
+	 * set extintf "port8"
+	 * set portforward enable
+	 * set mappedip 172.28.25.105
+	 * set protocol udp /tcp
+	 * set extport 8080 变量 端口
+	 * set mappedport 8080 变量 端口
+	 * next
+	 * end
+	 * </pre>
+	 * 
 	 * @param vip
 	 * @param protocol
 	 * @param protocolPortNo
@@ -227,17 +241,6 @@ public class FirewallScriptService {
 			int portNo, String localIp) {
 
 		// EIP与内网ip对应关系
-		// config firewall vip
-		// edit "119.6.200.219-tcp-8080"
-		// set extip 119.6.200.219
-		// set extintf "port8"
-		// set portforward enable
-		// set mappedip 172.28.25.105
-		// set protocol udp /tcp
-		// set extport 8080 变量 端口
-		// set mappedport 8080 变量 端口
-		// next
-		// end
 
 		StringBuilder sb = new StringBuilder();
 
@@ -335,19 +338,20 @@ public class FirewallScriptService {
 	/**
 	 * 配置VPN用户账号和密码
 	 * 
+	 * <pre>
+	 * config user local
+	 * edit "liukai"
+	 * set type password
+	 * set passwd liukai@sobey
+	 * next
+	 * end
+	 * </pre>
+	 * 
 	 * @param vpnUserName
 	 * @param vpnPassword
 	 * @return
 	 */
 	public static String generateVpnUserConfigScript(String vpnUserName, String vpnPassword) {
-
-		// 配置VPN用户账号和密码
-		// config user local
-		// edit "liukai"
-		// set type password
-		// set passwd liukai@sobey
-		// next
-		// end
 
 		StringBuilder sb = new StringBuilder();
 
@@ -361,20 +365,90 @@ public class FirewallScriptService {
 		return sb.toString();
 	}
 
-	public static String generateVpnUserConfigScript(String vpnGroupName, List<String> userNames) {
-		
-		// 配置VPN用户组
-		// config user group
-		// edit "hujun1_gr"
-		// set member "hujun1" "zhangfan" "kai"
-		// next
-		// end
-		
+	/**
+	 * 配置VPN用户组
+	 * 
+	 * <pre>
+	 * config user group
+	 * edit "hujun1_gr"
+	 * set member "hujun1" "zhangfan" "kai"
+	 * next
+	 * end
+	 * </pre>
+	 * 
+	 * @param vpnGroupName
+	 * @param userNames
+	 * @return
+	 */
+	public static String generateVpnUserGroupConfigScript(String vpnGroupName, List<String> userNames) {
+
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("config user group").append(SDNConstants.ENTER_SIGN);
 		sb.append("edit ").append("\"").append(vpnGroupName).append("\"").append(SDNConstants.ENTER_SIGN);
 		sb.append("set member ").append(generateFormatString(userNames)).append(SDNConstants.ENTER_SIGN);
+		sb.append("next").append(SDNConstants.ENTER_SIGN);
+		sb.append("end").append(SDNConstants.ENTER_SIGN);
+
+		return sb.toString();
+	}
+
+	/**
+	 * 配置VPN策略
+	 * 
+	 * <pre>
+	 * config firewall policy
+	 * edit 6
+	 * set srcintf "port8"
+	 * set dstintf "port1"
+	 * set srcaddr "all"
+	 * set dstaddr "SubNet1"
+	 * set action ssl-vpn
+	 * set identity-based enable
+	 * config identity-based-policy
+	 * edit 1
+	 * set schedule "always"
+	 * set groups "hujun1_gr"
+	 * set service "ALL"
+	 * set sslvpn-portal "full-access"
+	 * next
+	 * end
+	 * next
+	 * end
+	 * </pre>
+	 * 
+	 * @param strategyNo
+	 * @param internetPortNo
+	 * @param subnetPortNo
+	 * @param subnetAddressPoolName
+	 * @param vpnGroupNo
+	 * @param vpnGroupName
+	 * @return
+	 */
+	public static String generateVpnStrategyConfigScript(int strategyNo, int internetPortNo, int subnetPortNo,
+			String subnetAddressPoolName, int vpnGroupNo, String vpnGroupName) {
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("config firewall policy").append(SDNConstants.ENTER_SIGN);
+		sb.append("edit ").append(strategyNo).append(SDNConstants.ENTER_SIGN);
+		sb.append("set srcintf ").append("\"").append("port").append(internetPortNo).append("\"")
+				.append(SDNConstants.ENTER_SIGN);
+		sb.append("set dstintf ").append("\"").append("port").append(subnetPortNo).append("\"")
+				.append(SDNConstants.ENTER_SIGN);
+		sb.append("set srcaddr ").append("\"").append("all").append("\"").append(SDNConstants.ENTER_SIGN);
+		sb.append("set dstaddr ").append("\"").append(subnetAddressPoolName).append("\"")
+				.append(SDNConstants.ENTER_SIGN);
+		sb.append("set action ssl-vpn").append(SDNConstants.ENTER_SIGN);
+		sb.append("set identity-based enable").append(SDNConstants.ENTER_SIGN);
+		sb.append("config identity-based-policy").append(SDNConstants.ENTER_SIGN);
+		sb.append("edit ").append(vpnGroupNo).append(SDNConstants.ENTER_SIGN);
+		sb.append("set schedule ").append("\"").append("always").append("\"").append(SDNConstants.ENTER_SIGN);
+		sb.append("set groups ").append("\"").append(vpnGroupName).append("\"").append(SDNConstants.ENTER_SIGN);
+		sb.append("set service ").append("\"").append("ALL").append("\"").append(SDNConstants.ENTER_SIGN);
+		sb.append("set sslvpn-portal ").append("\"").append("full-access").append("\"").append(SDNConstants.ENTER_SIGN);
+		sb.append("next").append(SDNConstants.ENTER_SIGN);
+		sb.append("end").append(SDNConstants.ENTER_SIGN);
 		sb.append("next").append(SDNConstants.ENTER_SIGN);
 		sb.append("end").append(SDNConstants.ENTER_SIGN);
 

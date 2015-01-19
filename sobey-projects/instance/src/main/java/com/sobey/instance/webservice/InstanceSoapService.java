@@ -17,6 +17,7 @@ import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
 import com.sobey.instance.webservice.response.dto.VMDiskParameter;
 import com.sobey.instance.webservice.response.dto.VMInfoDTO;
+import com.sobey.instance.webservice.response.dto.VMRCDTO;
 import com.sobey.instance.webservice.response.result.DTOListResult;
 import com.sobey.instance.webservice.response.result.DTOResult;
 import com.sobey.instance.webservice.response.result.WSResult;
@@ -187,6 +188,20 @@ public interface InstanceSoapService {
 	 * @return
 	 */
 	DTOResult<HostInfoDTO> findHostInfoDTO(@WebParam(name = "hostName") String hostName,
+			@WebParam(name = "datacenter") String datacenter);
+
+	// =============== VMRC ===============//
+
+	/**
+	 * 获得指定VM的VMRC信息
+	 * 
+	 * @param vmName
+	 *            VM名称
+	 * @param datacenter
+	 *            数据中心
+	 * @return
+	 */
+	DTOResult<VMRCDTO> findVMRCDTO(@WebParam(name = "vmName") String vmName,
 			@WebParam(name = "datacenter") String datacenter);
 
 }

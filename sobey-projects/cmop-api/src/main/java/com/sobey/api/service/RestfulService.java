@@ -10,6 +10,7 @@ import com.sobey.api.entity.SubnetEntity;
 import com.sobey.api.entity.TenantsEntity;
 import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
+import com.sobey.generate.instance.VMRCDTO;
 
 public interface RestfulService {
 
@@ -83,5 +84,8 @@ public interface RestfulService {
 	public WSResult associateEIP(String eipCode, String serviceCode, String accessKey);
 
 	public WSResult dissociateEIP(String eipCode, String serviceCode, String accessKey);
+
+	/******** VMRC ********/
+	public DTOResult<VMRCDTO> findVMRC(String code, String accessKey);
 
 }
