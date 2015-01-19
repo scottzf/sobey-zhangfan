@@ -17,10 +17,10 @@ import com.sobey.api.entity.FirewallServiceEntity;
 import com.sobey.api.entity.RouterEntity;
 import com.sobey.api.entity.SubnetEntity;
 import com.sobey.api.entity.TenantsEntity;
+import com.sobey.api.entity.VMRCEntity;
 import com.sobey.api.service.RestfulService;
 import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
-import com.sobey.generate.instance.VMRCDTO;
 
 @RestController
 public class ApiController {
@@ -219,9 +219,9 @@ public class ApiController {
 		return servie.dissociateEIP(code, serviceCode, accessKey);
 	}
 
-	@RequestMapping(value = "/VMRCResult/", method = RequestMethod.POST)
-	public DTOResult<VMRCDTO> VMRCResult(@RequestParam(value = "code") String code,
-			@RequestParam(value = "accessKey") String accessKey) {
+	@RequestMapping(value = "/VMRCResult/{code}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<VMRCEntity> VMRCResult(@PathVariable("code") String code,
+			@PathVariable("accessKey") String accessKey) {
 		return servie.findVMRC(code, accessKey);
 	}
 

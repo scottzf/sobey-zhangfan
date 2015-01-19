@@ -15,6 +15,7 @@ import com.sobey.generate.cmdbuild.RouterDTO;
 import com.sobey.generate.cmdbuild.ServiceDTO;
 import com.sobey.generate.cmdbuild.SubnetDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
+import com.sobey.generate.instance.VMRCDTO;
 
 public interface ApiService {
 
@@ -73,6 +74,6 @@ public interface ApiService {
 
 	// ==================== VMRC ====================//
 
-	public WSResult findVMRCDTO(EcsDTO ecsDTO);
+	public VMRCDTO findVMRCDTO(EcsDTO ecsDTO);
 
 }

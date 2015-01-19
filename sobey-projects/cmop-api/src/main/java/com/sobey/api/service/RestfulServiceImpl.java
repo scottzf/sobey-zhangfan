@@ -19,6 +19,7 @@ import com.sobey.api.entity.FirewallServiceEntity;
 import com.sobey.api.entity.RouterEntity;
 import com.sobey.api.entity.SubnetEntity;
 import com.sobey.api.entity.TenantsEntity;
+import com.sobey.api.entity.VMRCEntity;
 import com.sobey.api.utils.CMDBuildUtil;
 import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
@@ -1015,25 +1016,31 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public DTOResult<VMRCDTO> findVMRC(String code, String accessKey) {
+	public DTOResult<VMRCEntity> findVMRC(String code, String accessKey) {
 
-		DTOResult<VMRCDTO> dtoResult = new DTOResult<VMRCDTO>();
+		DTOResult<VMRCEntity> result = new DTOResult<VMRCEntity>();
 
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
 		if (tenantsDTO == null) {
-			dtoResult.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
-			return dtoResult;
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
 		}
 
 		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), code);
 		if (ecsDTO == null) {
-			dtoResult.setError(WSResult.PARAMETER_ERROR, "ECS不存在.");
-			return dtoResult;
+			result.setError(WSResult.PARAMETER_ERROR, "ECS不存在.");
+			return result;
 		}
 
-		apiService.findVMRCDTO(ecsDTO);
+		VMRCDTO vmrcdto = apiService.findVMRCDTO(ecsDTO);
 
-		return dtoResult;
+		VMRCEntity entity = new VMRCEntity(vmrcdto.isAllowSSLValidationErrors(), vmrcdto.getHostName(),
+				vmrcdto.getHostSSLThumbprint(), vmrcdto.getPassword(), vmrcdto.getUserName(), vmrcdto.getVmId());
+
+		result.setDto(entity);
+
+		return result;
+
 	}
 
 }
