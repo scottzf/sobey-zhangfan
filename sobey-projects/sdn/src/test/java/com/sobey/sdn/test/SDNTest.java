@@ -9,6 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.sobey.sdn.bean.CreateEipParameter;
+import com.sobey.sdn.bean.VPNParameter;
 import com.sobey.sdn.service.impl.SDNServiceImpl;
 import com.sobey.sdn.test.data.TestData;
 import com.sobey.sdn.test.testParameter.BindingFirewallParameter;
@@ -64,6 +65,14 @@ public class SDNTest extends TestCase {
 		
 		sdnService.createEip(parameter);
 		
+	}
+	
+	@Test
+	public void createVPNUser() throws Exception {
+		
+		VPNParameter parameter = TestData.randomVPNParameter();
+		
+		sdnService.createVPNUser(parameter);
 	}
 
 }

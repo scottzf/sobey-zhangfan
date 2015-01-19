@@ -4,6 +4,8 @@ import java.util.List;
 
 public class VPNParameter {
 
+	private String vRouterIp;  //vRouter的管理Ip
+	
 	private String vpnUserName;  //VPN用户名
 
 	private String vpnPassword;  //VPN密码
@@ -12,15 +14,27 @@ public class VPNParameter {
 	
 	private List<String> userNames;  //用户名集合
 	
-	private int strategyNo;  //防火墙中的策略ID,从2000起递增.
+	private int strategyNo;  //防火墙中的策略ID
 	
-	private int internetPortNO;  //公网所连路由器的端口序号
+	private int internetPortNo;  //公网所连路由器的端口序号
 		
     private int subnetPortNo;   //子网所连路由器的端口序号
     
     private String subnetAddressPoolName;   //子网对应地址池名称
     
     private int vpnGroupNo;   //用户组名编号
+
+	public String getvRouterIp() {
+		return vRouterIp;
+	}
+
+	public void setvRouterIp(String vRouterIp) {
+		this.vRouterIp = vRouterIp;
+	}
+
+	public void setInternetPortNo(int internetPortNo) {
+		this.internetPortNo = internetPortNo;
+	}
 
 	public String getVpnUserName() {
 		return vpnUserName;
@@ -62,12 +76,12 @@ public class VPNParameter {
 		this.strategyNo = strategyNo;
 	}
 
-	public int getInternetPortNO() {
-		return internetPortNO;
+	public int getInternetPortNo() {
+		return internetPortNo;
 	}
 
-	public void setInternetPortNO(int internetPortNO) {
-		this.internetPortNO = internetPortNO;
+	public void setInternetPortNO(int internetPortNo) {
+		this.internetPortNo = internetPortNo;
 	}
 
 	public int getSubnetPortNo() {
