@@ -769,7 +769,6 @@ public class FirewallService {
 					.append(DEFAULT_SYMBOL); // parameter.getGateway() 此处必须以1结尾,表示这个IP起始,配合后面子网掩码
 			sb.append("set allowaccess ping https ssh telnet").append(DEFAULT_SYMBOL);
 			sb.append("set type physical").append(DEFAULT_SYMBOL);
-			// sb.append("set snmp-index 8").append(DEFAULT_SYMBOL);
 			sb.append("end").append(DEFAULT_SYMBOL);
 		}
 
