@@ -8,6 +8,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.sobey.instance.data.TestData;
 import com.sobey.instance.service.DiskService;
+import com.sobey.instance.service.VMRCService;
+import com.sobey.instance.webservice.response.dto.VMRCDTO;
+import com.sobey.instance.webservice.response.result.DTOResult;
 
 @ContextConfiguration({ "classpath:applicationContext.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -15,6 +18,15 @@ public class VMDiskTest {
 
 	@Autowired
 	private DiskService service;
+
+	@Autowired
+	private VMRCService vmrcService;
+
+	@Test
+	public void VMRC() {
+		DTOResult<VMRCDTO> result = vmrcService.connectVMRC("Tenants-zOw0lt4c-192.168.1.3", "成都核心数据中心");
+		System.out.println(result.getDto());
+	}
 
 	@Test
 	public void createVMDisk() {

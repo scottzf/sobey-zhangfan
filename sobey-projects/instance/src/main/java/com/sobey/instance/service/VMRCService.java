@@ -94,6 +94,8 @@ public class VMRCService extends VMWareService {
 		String vmId = vm.getMOR().getVal();
 		vmrcDTO.setVmId(vmId);
 
+		dtoResult.setDto(vmrcDTO);
+
 		return dtoResult;
 	}
 
