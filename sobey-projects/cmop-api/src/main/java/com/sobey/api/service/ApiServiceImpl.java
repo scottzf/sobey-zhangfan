@@ -157,7 +157,7 @@ public class ApiServiceImpl implements ApiService {
 				.findFirewallServiceByParams(CMDBuildUtil.wrapperSearchParams(firewallServiceMap)).getDto();
 
 		// Step.4 在CMDBuild中为Tenants创建一个默认的vRouter,
-		
+
 		System.out.println("创建路由!!!!!!!!!!!");
 
 		createRouter(ConstansData.defaultRouter(queryTenantsDTO.getId()), queryFirewallServiceDTO);
@@ -513,7 +513,7 @@ public class ApiServiceImpl implements ApiService {
 		result.setMessage(idResult.getMessage());
 
 		// 等待2分钟,让VM启动并分配IP
-		Threads.sleep(120 * 1000);
+		// Threads.sleep(120 * 1000);
 
 		return result;
 	}
@@ -693,7 +693,7 @@ public class ApiServiceImpl implements ApiService {
 		// Step.2 为ECS分配存储空间
 		VMDiskParameter vmDiskParameter = new VMDiskParameter();
 		vmDiskParameter.setDatacenter(idcDTO.getDescription());
-		vmDiskParameter.setDiskGB(es3DTO.getTotalSize());
+		vmDiskParameter.setDiskGB(String.valueOf(Double.valueOf(es3DTO.getTotalSize()).intValue()));// 去掉小数点后面
 		vmDiskParameter.setDiskName(es3DTO.getVolumeName());
 		vmDiskParameter.setVmName(vmName);
 
@@ -709,8 +709,6 @@ public class ApiServiceImpl implements ApiService {
 		Es3DTO queryEs3DTO = (Es3DTO) cmdbuildSoapService.findEs3ByParams(CMDBuildUtil.wrapperSearchParams(map))
 				.getDto();
 		cmdbuildSoapService.createMapEcsEs3(ecsId, queryEs3DTO.getId());
-
-		cmdbuildSoapService.createEcs(ecsDTO);
 
 		result.setMessage(idResult.getMessage());
 
@@ -807,25 +805,19 @@ public class ApiServiceImpl implements ApiService {
 		instanceSoapService.cloneNetworkDeviceByInstance(cloneVMParameter);
 
 		System.out.println("路由创建完毕,等待2分钟");
-		
+
 		// 暂停120s等待防火墙启动完毕
-		Threads.sleep(120 * 1000);
+		Threads.sleep(60 * 1000);
 		System.out.println("---------等待完毕----------");
 
-		// Step.3 注册更新vRouter防火墙
-		AuthenticateFirewallParameter authenticateFirewallParameter = new AuthenticateFirewallParameter();
-		authenticateFirewallParameter.setUrl(ConstansData.vRouter_default_ipaddress);
-		authenticateFirewallParameter.setUserName(ConstansData.firewall_username);
-		authenticateFirewallParameter.setPassword(ConstansData.firewall_password);
-//		firewallSoapService.registeredByFirewall(authenticateFirewallParameter);
-
 		System.out.println("-------------------:" + managerIpaddressDTO.getDescription());
+
 		// Step.4 修改vRouter端口
 		modifyFirewallConfigSystemInterface(managerIpaddressDTO);// 修改防火墙中 系统管理 -> 网络 -> 接口 中的配置信息.
 
 		System.out.println("-----------Done--------");
 		// 链接到电信
-		ConnectionCTC(tenantsDTO, ipaddressDTO, managerIpaddressDTO.getDescription());
+		// ConnectionCTC(tenantsDTO, ipaddressDTO, managerIpaddressDTO.getDescription());
 
 		// Step.5 保存Ecs至CMDB
 		ecsDTO.setServer(serverDTO.getId());
