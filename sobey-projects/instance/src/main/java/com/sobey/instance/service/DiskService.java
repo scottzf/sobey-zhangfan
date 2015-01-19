@@ -55,7 +55,12 @@ public class DiskService extends VMWareService {
 	/**
 	 * SCSI Controller 名称 , 有时候可能是 全英文,如 "SCSI Controller 0" 需要提前检验.
 	 */
-	private static final String SCSI_Controller_Name = "SCSI 控制器 0";
+	private static final String SCSI_Controller_Name_CN = "SCSI 控制器 0";
+
+	/**
+	 * SCSI Controller 名称 , 有时候可能是 全英文,如 "SCSI Controller 0" 需要提前检验.
+	 */
+	private static final String SCSI_Controller_Name_EN = "SCSI Controller 0";
 
 	/**
 	 * 默认存储分配存储器: vsanDatastore
@@ -92,7 +97,8 @@ public class DiskService extends VMWareService {
 
 		for (int k = 0; k < vds.length; k++) {
 			// System.out.println(vds[k].getDeviceInfo().getLabel());
-			if (StringUtils.equalsIgnoreCase(SCSI_Controller_Name, vds[k].getDeviceInfo().getLabel())) {
+			if (StringUtils.equalsIgnoreCase(SCSI_Controller_Name_CN, vds[k].getDeviceInfo().getLabel())
+					|| StringUtils.equalsIgnoreCase(SCSI_Controller_Name_EN, vds[k].getDeviceInfo().getLabel())) {
 				key = vds[k].getKey();
 			}
 		}
