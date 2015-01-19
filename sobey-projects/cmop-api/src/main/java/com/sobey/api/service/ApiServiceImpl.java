@@ -151,15 +151,15 @@ public class ApiServiceImpl implements ApiService {
 		WSResult firewallIdResult = createFirewallService(
 				ConstansData.defaultFirewallServiceDTO(queryTenantsDTO.getId()), firewallPolicyDTOs);
 
-		// 获得默认防火墙对象
-		HashMap<String, Object> firewallServiceMap = new HashMap<String, Object>();
-		firewallServiceMap.put("EQ_code", firewallIdResult.getMessage());
-		FirewallServiceDTO queryFirewallServiceDTO = (FirewallServiceDTO) cmdbuildSoapService
-				.findFirewallServiceByParams(CMDBuildUtil.wrapperSearchParams(firewallServiceMap)).getDto();
-
-		// Step.4 在CMDBuild中为Tenants创建一个默认的vRouter,
-
-		createRouter(ConstansData.defaultRouter(queryTenantsDTO.getId()), queryFirewallServiceDTO);
+		// // 获得默认防火墙对象
+		// HashMap<String, Object> firewallServiceMap = new HashMap<String, Object>();
+		// firewallServiceMap.put("EQ_code", firewallIdResult.getMessage());
+		// FirewallServiceDTO queryFirewallServiceDTO = (FirewallServiceDTO) cmdbuildSoapService
+		// .findFirewallServiceByParams(CMDBuildUtil.wrapperSearchParams(firewallServiceMap)).getDto();
+		//
+		// // Step.4 在CMDBuild中为Tenants创建一个默认的vRouter,
+		//
+		// createRouter(ConstansData.defaultRouter(queryTenantsDTO.getId()), queryFirewallServiceDTO);
 
 		result.setMessage(idResult.getMessage());
 
