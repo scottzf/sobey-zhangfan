@@ -13,6 +13,8 @@ import com.sobey.sdn.bean.ECS;
 import com.sobey.sdn.bean.Firewall;
 import com.sobey.sdn.bean.Router;
 import com.sobey.sdn.bean.Subnet;
+import com.sobey.sdn.bean.VMRCParameter;
+import com.sobey.sdn.bean.VPNParameter;
 import com.sobey.sdn.constans.SDNConstants;
 import com.sobey.sdn.parameterObject.SubnetParameter;
 import com.sobey.sdn.service.CentecSwitchService;
@@ -672,8 +674,8 @@ public class SDNServiceImpl implements SDNService {
 			int vlanId = subnet.getVlanId(); // 子网关联vlanId
 
 			addVRouterNicToPortGroup(routerName, portGroupName, portNo);
-			
-			//向盛科交换机创建接口允许vlan通过的命令
+
+			// 向盛科交换机创建接口允许vlan通过的命令
 			CentecSwitchService.makeVlanAccessInterface(vRouterHostIp, vlanId);
 
 			// 创建地址段
@@ -1000,6 +1002,41 @@ public class SDNServiceImpl implements SDNService {
 	@Override
 	public void createEip(CreateEipParameter createEipParameter) throws Exception {
 		FirewallService.createEIp(createEipParameter);
+
+	}
+
+	@Override
+	public void createVPNUser(VPNParameter vpnParameter) throws Exception {
+
+		FirewallService.createVPN(vpnParameter);
+
+	}
+
+	@Override
+	public VMRCParameter connectVMRC(String vmName) throws Exception {
+
+		VMRCParameter vmrcParameter = new VMRCParameter();
+
+		// 目前固定参数
+		vmrcParameter.setHostName(SDNConstants.VCENTER_IP); // 登陆VCENTER的IP地址
+		vmrcParameter.setUserName(SDNConstants.VCENTER_USERNAME); // 登陆VCENTER的用户名
+		vmrcParameter.setPassword(SDNConstants.VCENTER_PASSWORD); // 登陆VCENTER的密码
+		vmrcParameter.setAllowSSLValidationErrors(true); // 是否允许SSL验证错误（默认为是）
+
+		ServiceInstance si = VcenterUtil.getServiceInstance();
+		Folder rootFolder = si.getRootFolder();
+
+		String sslThumbprintStr = si.getSessionManager().acquireCloneTicket();
+		
+		String hostSSLThumbprint = StringUtils.substringAfter(sslThumbprintStr, "tp-"); // 主机认证证书指纹
+		vmrcParameter.setHostSSLThumbprint(hostSSLThumbprint);
+
+		VirtualMachine vm = (VirtualMachine) new InventoryNavigator(rootFolder).searchManagedEntity("VirtualMachine",
+				vmName);
+		String vmId = vm.getMOR().getVal();
+		vmrcParameter.setVmId(vmId);
+		
+		return vmrcParameter;
 
 	}
 }
