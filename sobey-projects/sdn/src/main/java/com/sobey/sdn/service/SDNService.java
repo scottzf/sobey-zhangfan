@@ -4,6 +4,7 @@ import com.sobey.sdn.bean.CreateEipParameter;
 import com.sobey.sdn.bean.Firewall;
 import com.sobey.sdn.bean.Router;
 import com.sobey.sdn.bean.Subnet;
+import com.sobey.sdn.bean.VMRCParameter;
 import com.sobey.sdn.bean.VPNParameter;
 import com.sobey.sdn.parameterObject.SubnetParameter;
 import com.sobey.sdn.test.testParameter.BindingFirewallParameter;
@@ -111,6 +112,14 @@ public interface SDNService {
 	 * @throws Exception
 	 */
 	public void createVPNUser(VPNParameter vpnParameter) throws Exception;
+	
+	/**
+	 * 远程连接虚拟机控制台
+	 * 
+	 * @param vmName
+	 * @throws Exception
+	 */
+	public VMRCParameter connectVMRC(String vmName) throws Exception;
 	
 	//public void createLoadBalancer(Firewall firewall) throws Exception;
 
