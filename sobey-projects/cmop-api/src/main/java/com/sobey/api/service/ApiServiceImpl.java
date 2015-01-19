@@ -158,8 +158,6 @@ public class ApiServiceImpl implements ApiService {
 
 		// Step.4 在CMDBuild中为Tenants创建一个默认的vRouter,
 
-		System.out.println("创建路由!!!!!!!!!!!");
-
 		createRouter(ConstansData.defaultRouter(queryTenantsDTO.getId()), queryFirewallServiceDTO);
 
 		result.setMessage(idResult.getMessage());
@@ -766,7 +764,6 @@ public class ApiServiceImpl implements ApiService {
 		 * Step.7 修改分配给Router的IP状态.
 		 */
 
-		System.out.println("进入创建路由的方法");
 		WSResult result = new WSResult();
 
 		// 从管理网段IP中获得的未使用的IP.
@@ -804,20 +801,11 @@ public class ApiServiceImpl implements ApiService {
 
 		instanceSoapService.cloneNetworkDeviceByInstance(cloneVMParameter);
 
-		System.out.println("路由创建完毕,等待2分钟");
-
 		// 暂停120s等待防火墙启动完毕
 		Threads.sleep(60 * 1000);
-		System.out.println("---------等待完毕----------");
-
-		System.out.println("-------------------:" + managerIpaddressDTO.getDescription());
 
 		// Step.4 修改vRouter端口
 		modifyFirewallConfigSystemInterface(managerIpaddressDTO);// 修改防火墙中 系统管理 -> 网络 -> 接口 中的配置信息.
-
-		System.out.println("-----------Done--------");
-		// 链接到电信
-		// ConnectionCTC(tenantsDTO, ipaddressDTO, managerIpaddressDTO.getDescription());
 
 		// Step.5 保存Ecs至CMDB
 		ecsDTO.setServer(serverDTO.getId());
@@ -842,6 +830,8 @@ public class ApiServiceImpl implements ApiService {
 		routerDTO.setIpaddress(managerIpaddressDTO.getId());
 		routerDTO.setFirewallService(firewallServiceDTO.getId());
 
+		// TODO 应该将防火墙状态写入路由
+
 		IdResult idResult = cmdbuildSoapService.createRouter(routerDTO);
 
 		// Step.7 修改分配给Router的IP状态.
@@ -859,6 +849,7 @@ public class ApiServiceImpl implements ApiService {
 	 * @param ipaddressDTO
 	 * @param url
 	 */
+	@SuppressWarnings("unused")
 	private void ConnectionCTC(TenantsDTO tenantsDTO, IpaddressDTO ipaddressDTO, String url) {
 
 		// Step.1 将电信所属的vlan绑定到vRouter上.(即在vCenter中将Subnet对应的网络设配器绑定到vRouter)
@@ -895,10 +886,10 @@ public class ApiServiceImpl implements ApiService {
 	/**
 	 * 增加静态路由.
 	 */
+	@SuppressWarnings("unused")
 	private void addConfigRouterStatic(String url) {
 
 		List<ConfigRouterStaticParameter> staticParameters = new ArrayList<ConfigRouterStaticParameter>();
-
 		ConfigRouterStaticParameter parameter = new ConfigRouterStaticParameter();
 		parameter.setInterfaceName("port8");
 		parameter.setRouterId(0);
@@ -990,9 +981,6 @@ public class ApiServiceImpl implements ApiService {
 		ServerDTO serverDTO = (ServerDTO) cmdbuildSoapService.findServer(ecsDTO.getServer()).getDto();
 		IpaddressDTO serverIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(serverDTO.getIpaddress()).getDto();
 
-		// 为vRouter增加静态路由
-		addConfigRouterStatic(url);
-
 		// Config System Interface
 		ConfigSystemInterfaceParameters interfaceParameters = new ConfigSystemInterfaceParameters();
 		interfaceParameters.setUrl(url);
@@ -1070,8 +1058,11 @@ public class ApiServiceImpl implements ApiService {
 		addressParameters.getConfigFirewallAddressParameters().addAll(addressArrayList);
 		firewallSoapService.configFirewallAddressParameterListByFirewall(addressParameters);
 
+		Threads.sleep(1000);
+
 		interfaceParameters.getConfigSystemInterfaceParameters().addAll(interfaceArrayList);
 		firewallSoapService.configSystemInterfaceListByFirewall(interfaceParameters);
+		Threads.sleep(1000);
 
 		// Step.5 在vRouter上执行脚本(配置子网策略 config firewall policy)
 		policyParameters.getConfigFirewallPolicyParameters().addAll(wrapperSubnetInFirewallPolicy(subnetDTOs));
@@ -1208,12 +1199,6 @@ public class ApiServiceImpl implements ApiService {
 
 		firewallSoapService.configSystemInterfaceListByFirewall(interfaceParameters);
 
-		// Step.3 在vRouter上执行脚本(配置接口 config Router Static, 配置连接电信（默认端口8）的静态路由
-
-		/**
-		 * TODO 手动执行防火墙更新文件,演示流程如何将此处独立出来?
-		 */
-
 		// Step.3 配置需要访问互联网的子网与电信网络之间的策略,类似子网之间通讯
 
 		// 根据Router 查询出 Router下所有的Subnet,再遍历执行 config firwall policy
@@ -1229,6 +1214,8 @@ public class ApiServiceImpl implements ApiService {
 			SubnetDTO subnetDTO = (SubnetDTO) object;
 			subnetDTOs.add(subnetDTO);
 		}
+
+		Threads.sleep(1000);
 
 		// 先将防火墙里所有的策略清空
 		AuthenticateFirewallParameter authenticateFirewallParameter = new AuthenticateFirewallParameter();
@@ -1246,6 +1233,8 @@ public class ApiServiceImpl implements ApiService {
 		firewallPolicyParameters.getConfigFirewallPolicyParameters().addAll(
 				wrapperFirewallPolicy(subnetDTOs, firewallServiceDTO));
 
+		Threads.sleep(1000);
+
 		firewallSoapService.configFirewallPolicyParameterListByFirewall(firewallPolicyParameters);
 
 		// 配置子网之间的策略
@@ -1254,6 +1243,8 @@ public class ApiServiceImpl implements ApiService {
 		subnetPolicyParameters.setUserName(ConstansData.firewall_username);
 		subnetPolicyParameters.setPassword(ConstansData.firewall_password);
 		subnetPolicyParameters.getConfigFirewallPolicyParameters().addAll(wrapperSubnetInFirewallPolicy(subnetDTOs));
+
+		Threads.sleep(1000);
 
 		firewallSoapService.configFirewallPolicyParameterListByFirewall(subnetPolicyParameters);
 
@@ -1355,10 +1346,10 @@ public class ApiServiceImpl implements ApiService {
 		eipDTO.setIdc(ipaddressDTO.getIdc());
 		eipDTO.setIpaddress(ipaddressDTO.getId());
 		eipDTO.setDescription(ipaddressDTO.getDescription());
-		eipDTO.setEipStatus(LookUpConstants.EIPStatus.已使用.getValue());
+		eipDTO.setEipStatus(LookUpConstants.EIPStatus.未使用.getValue());
 		IdResult idResult = cmdbuildSoapService.createEip(eipDTO);
 
-		// 获得防火墙对象
+		// 获得eip对象
 		HashMap<String, Object> ipMap = new HashMap<String, Object>();
 		ipMap.put("EQ_tenants", eipDTO.getTenants());
 		ipMap.put("EQ_ipaddress", eipDTO.getIpaddress());

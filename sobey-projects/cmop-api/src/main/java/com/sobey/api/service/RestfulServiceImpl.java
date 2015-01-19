@@ -506,8 +506,6 @@ public class RestfulServiceImpl implements RestfulService {
 	public WSResult createDNS(String domainName, String eipCodes, String protocols, String idc, String remark,
 			String accessKey) {
 
-		System.out.println("*********API1***************");
-
 		WSResult result = new WSResult();
 
 		String[] eipCodesArray = StringUtils.split(eipCodes, ",");
@@ -536,8 +534,6 @@ public class RestfulServiceImpl implements RestfulService {
 		}
 
 		List<EipDTO> eipDTOs = new ArrayList<EipDTO>();
-
-		System.out.println("*********API2***************");
 
 		List<DnsPolicyDTO> dnsPolicyDTOs = new ArrayList<DnsPolicyDTO>();
 		for (int i = 0; i < protocolsArray.length; i++) {
@@ -573,8 +569,6 @@ public class RestfulServiceImpl implements RestfulService {
 		dnsDTO.setDescription(domainName);
 		dnsDTO.setRemark(remark);
 		dnsDTO.setIdc(idcDTO.getId());
-
-		System.out.println("*********API3***************");
 
 		result.setMessage(apiService.createDNS(dnsDTO, dnsPolicyDTOs, eipDTOs).getMessage());
 		return result;
