@@ -29,6 +29,8 @@
 
   <xs:element name="VMInfoDTO" type="tns:VMInfoDTO"/>
 
+  <xs:element name="VMRCDTO" type="tns:VMRCDTO"/>
+
   <xs:element name="bindingDVSPortGroupByInstance" type="tns:bindingDVSPortGroupByInstance"/>
 
   <xs:element name="bindingDVSPortGroupByInstanceResponse" type="tns:bindingDVSPortGroupByInstanceResponse"/>
@@ -76,6 +78,10 @@
   <xs:element name="findVMInfoDTO" type="tns:findVMInfoDTO"/>
 
   <xs:element name="findVMInfoDTOResponse" type="tns:findVMInfoDTOResponse"/>
+
+  <xs:element name="findVMRCDTO" type="tns:findVMRCDTO"/>
+
+  <xs:element name="findVMRCDTOResponse" type="tns:findVMRCDTOResponse"/>
 
   <xs:element name="getHostInfoDTO" type="tns:getHostInfoDTO"/>
 
@@ -148,6 +154,40 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="findVMRCDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="vmName" type="xs:string"/>
+      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findVMRCDTOResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DTOResult">
+    <xs:complexContent>
+      <xs:extension base="tns:WSResult">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="dto" type="xs:anyType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="VMRCDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="allowSSLValidationErrors" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="hostName" type="xs:string"/>
+      <xs:element minOccurs="0" name="hostSSLThumbprint" type="xs:string"/>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="vmId" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="destroyVMByInstance">
     <xs:sequence>
       <xs:element minOccurs="0" name="destroyVMParameter" type="tns:DestroyVMParameter"/>
@@ -210,16 +250,6 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
     </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="DTOResult">
-    <xs:complexContent>
-      <xs:extension base="tns:WSResult">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="dto" type="xs:anyType"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="HostInfoDTO">
@@ -534,6 +564,10 @@
     <wsdl:part element="tns:cloneNetworkDeviceByInstanceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="findVMRCDTOResponse">
+    <wsdl:part element="tns:findVMRCDTOResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="reconfigVMByInstance">
     <wsdl:part element="tns:reconfigVMByInstance" name="parameters">
     </wsdl:part>
@@ -544,6 +578,10 @@
   </wsdl:message>
   <wsdl:message name="findHostInfoDTOResponse">
     <wsdl:part element="tns:findHostInfoDTOResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findVMRCDTO">
+    <wsdl:part element="tns:findVMRCDTO" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createStandardSwitchByInstanceResponse">
@@ -601,6 +639,12 @@
       <wsdl:input message="tns:cloneVMByInstance" name="cloneVMByInstance">
     </wsdl:input>
       <wsdl:output message="tns:cloneVMByInstanceResponse" name="cloneVMByInstanceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findVMRCDTO">
+      <wsdl:input message="tns:findVMRCDTO" name="findVMRCDTO">
+    </wsdl:input>
+      <wsdl:output message="tns:findVMRCDTOResponse" name="findVMRCDTOResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="destroyVMByInstance">
@@ -714,6 +758,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="destroyVMByInstanceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findVMRCDTO">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findVMRCDTO">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findVMRCDTOResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>

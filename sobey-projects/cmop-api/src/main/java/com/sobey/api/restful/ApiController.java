@@ -20,6 +20,7 @@ import com.sobey.api.entity.TenantsEntity;
 import com.sobey.api.service.RestfulService;
 import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
+import com.sobey.generate.instance.VMRCDTO;
 
 @RestController
 public class ApiController {
@@ -216,6 +217,12 @@ public class ApiController {
 	public WSResult dissociateEIP(@RequestParam(value = "code") String code,
 			@RequestParam(value = "serviceCode") String serviceCode, @RequestParam(value = "accessKey") String accessKey) {
 		return servie.dissociateEIP(code, serviceCode, accessKey);
+	}
+
+	@RequestMapping(value = "/VMRCResult/", method = RequestMethod.POST)
+	public DTOResult<VMRCDTO> VMRCResult(@RequestParam(value = "code") String code,
+			@RequestParam(value = "accessKey") String accessKey) {
+		return servie.findVMRC(code, accessKey);
 	}
 
 }

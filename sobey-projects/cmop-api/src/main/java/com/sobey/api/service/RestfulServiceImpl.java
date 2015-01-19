@@ -46,6 +46,7 @@ import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.dns.DnsSoapService;
 import com.sobey.generate.firewall.FirewallSoapService;
 import com.sobey.generate.instance.InstanceSoapService;
+import com.sobey.generate.instance.VMRCDTO;
 import com.sobey.generate.loadbalancer.LoadbalancerSoapService;
 import com.sobey.generate.storage.StorageSoapService;
 import com.sobey.generate.switches.SwitchesSoapService;
@@ -1011,6 +1012,28 @@ public class RestfulServiceImpl implements RestfulService {
 
 		return apiService.bindingRouter(subnetDTOs, routerDTO);
 
+	}
+
+	@Override
+	public DTOResult<VMRCDTO> findVMRC(String code, String accessKey) {
+
+		DTOResult<VMRCDTO> dtoResult = new DTOResult<VMRCDTO>();
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			dtoResult.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return dtoResult;
+		}
+
+		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), code);
+		if (ecsDTO == null) {
+			dtoResult.setError(WSResult.PARAMETER_ERROR, "ECS不存在.");
+			return dtoResult;
+		}
+
+		apiService.findVMRCDTO(ecsDTO);
+
+		return dtoResult;
 	}
 
 }

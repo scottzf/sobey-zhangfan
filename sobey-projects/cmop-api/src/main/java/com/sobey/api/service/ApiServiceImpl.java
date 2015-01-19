@@ -1643,4 +1643,20 @@ public class ApiServiceImpl implements ApiService {
 		return result;
 	}
 
+	@Override
+	public WSResult findVMRCDTO(EcsDTO ecsDTO) {
+
+		WSResult result = new WSResult();
+
+		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(ecsDTO.getTenants()).getDto();
+		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
+		String vmName = generateVMName(tenantsDTO, ipaddressDTO);
+
+		com.sobey.generate.instance.DTOResult dtoResult = instanceSoapService.findVMRCDTO(vmName, datacenter);
+
+		result.setCode(dtoResult.getCode());
+		result.setMessage(dtoResult.getMessage());
+		return result;
+	}
+
 }
