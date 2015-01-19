@@ -65,6 +65,7 @@ import com.sobey.generate.instance.InstanceSoapService;
 import com.sobey.generate.instance.PowerVMParameter;
 import com.sobey.generate.instance.ReconfigVMParameter;
 import com.sobey.generate.instance.VMDiskParameter;
+import com.sobey.generate.instance.VMRCDTO;
 import com.sobey.generate.loadbalancer.LoadbalancerSoapService;
 import com.sobey.generate.storage.StorageSoapService;
 import com.sobey.generate.switches.SwitchPolicyParameter;
@@ -1058,11 +1059,11 @@ public class ApiServiceImpl implements ApiService {
 		addressParameters.getConfigFirewallAddressParameters().addAll(addressArrayList);
 		firewallSoapService.configFirewallAddressParameterListByFirewall(addressParameters);
 
-		Threads.sleep(1000);
+		Threads.sleep(2000);
 
 		interfaceParameters.getConfigSystemInterfaceParameters().addAll(interfaceArrayList);
 		firewallSoapService.configSystemInterfaceListByFirewall(interfaceParameters);
-		Threads.sleep(1000);
+		Threads.sleep(2000);
 
 		// Step.5 在vRouter上执行脚本(配置子网策略 config firewall policy)
 		policyParameters.getConfigFirewallPolicyParameters().addAll(wrapperSubnetInFirewallPolicy(subnetDTOs));
@@ -1644,19 +1645,15 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public WSResult findVMRCDTO(EcsDTO ecsDTO) {
-
-		WSResult result = new WSResult();
+	public VMRCDTO findVMRCDTO(EcsDTO ecsDTO) {
 
 		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(ecsDTO.getTenants()).getDto();
 		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
 		String vmName = generateVMName(tenantsDTO, ipaddressDTO);
 
-		com.sobey.generate.instance.DTOResult dtoResult = instanceSoapService.findVMRCDTO(vmName, datacenter);
+		VMRCDTO vmrcdto = (VMRCDTO) instanceSoapService.findVMRCDTO(vmName, datacenter).getDto();
 
-		result.setCode(dtoResult.getCode());
-		result.setMessage(dtoResult.getMessage());
-		return result;
+		return vmrcdto;
 	}
 
 }
