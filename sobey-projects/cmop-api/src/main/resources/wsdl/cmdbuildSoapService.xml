@@ -13101,7 +13101,7 @@
   </wsdl:binding>
   <wsdl:service name="CmdbuildSoapService">
     <wsdl:port binding="tns:CmdbuildSoapServiceSoapBinding" name="CmdbuildSoapServiceImplPort">
-      <soap:address location="http://localhost:8080/cmdbuild/cxf/soap/cmdbuildSoapService"/>
+      <soap:address location="http://10.2.12.90:8080/cmdbuild/cxf/soap/cmdbuildSoapService"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
