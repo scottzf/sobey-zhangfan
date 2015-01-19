@@ -79,12 +79,11 @@ public class SyncTest implements PbulicProperties {
 		ConfigSystemInterfaceParameter parameter = TestData.randomConfigSystemInterfaceParameter();
 
 		sb.append("config system interface").append(ENTER_SIGN);
-		sb.append("edit ").append("\"").append(parameter.getInterfaceName()).append("\"").append(ENTER_SIGN);
-		sb.append("set ip ").append(parameter.getGateway()).append(" ").append(parameter.getSubnetMask())
-				.append(ENTER_SIGN);
+		sb.append("edit ").append("\"").append("port8").append("\"").append(ENTER_SIGN);
+		sb.append("set ip ").append("125.71.203.23").append(" ").append("255.255.255.0").append(ENTER_SIGN);
 		sb.append("set allowaccess ping https ssh telnet http").append(ENTER_SIGN);
 		sb.append("set type physical").append(ENTER_SIGN);
-		sb.append("set snmp-index 8").append(ENTER_SIGN);
+		// sb.append("set snmp-index 8").append(ENTER_SIGN);
 
 		System.out.println(sb.toString());
 	}
@@ -111,11 +110,11 @@ public class SyncTest implements PbulicProperties {
 
 		sb.append("config router static").append(ENTER_SIGN);
 		sb.append("edit ").append(0).append(ENTER_SIGN);
-		sb.append("set device ").append(parameter.getInterfaceName()).append(ENTER_SIGN);
-		sb.append("set gateway ").append(parameter.getIspGateway()).append(ENTER_SIGN);
+		sb.append("set device ").append("port8").append(ENTER_SIGN);
+		sb.append("set gateway ").append("125.71.203.1").append(ENTER_SIGN);
 
 		System.out.println(sb.toString());
-		SSHUtil.executeCommand("10.2.253.60", "admin", "mcloud@sobey.com", sb.toString());
+//		SSHUtil.executeCommand("10.2.253.60", "admin", "mcloud@sobey.com", sb.toString());
 
 	}
 
