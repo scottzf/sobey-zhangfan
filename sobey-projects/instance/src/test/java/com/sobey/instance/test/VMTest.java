@@ -20,6 +20,8 @@ import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
+import com.sobey.instance.webservice.response.dto.RunNetworkDeviceVMParameter;
+import com.sobey.instance.webservice.response.dto.RunVMParameter;
 import com.vmware.vim25.InvalidProperty;
 import com.vmware.vim25.ManagedObjectReference;
 import com.vmware.vim25.RuntimeFault;
@@ -49,10 +51,6 @@ public class VMTest {
 	private static final String url = "https://10.2.7.250/sdk";
 	private static final String user = "administrator@vsphere.local";
 	private static final String password = "Newmed!@s0bey";
-
-	// private static final String url = "https://172.16.2.252/sdk";
-	// private static final String user = "administrator@vsphere.local";
-	// private static final String password = "vmware";
 
 	@Test
 	public void getVMHostRelationship() throws RemoteException, MalformedURLException {
@@ -159,7 +157,7 @@ public class VMTest {
 		Folder rootFolder = si.getRootFolder();
 
 		VirtualMachine myVM = (VirtualMachine) new InventoryNavigator(rootFolder).searchManagedEntity("VirtualMachine",
-				"Windows 2008 R2 Mod");
+				"liukai");
 
 		/**
 		 * VM是否关机只和status有关系,
@@ -235,14 +233,9 @@ public class VMTest {
 
 	@Test
 	public void cloneVM() {
-		CloneVMParameter parameter = TestData.randomCloneVMParameter();
-		service.cloneVM(parameter);
-	}
-
-	@Test
-	public void cloneNetworkDevice() {
+		// CloneVMParameter parameter = TestData.randomCloneVMParameter();
 		CloneVMParameter parameter = TestData.randomCloneNetworkDeviceParameter();
-		service.cloneNetworkDevice(parameter);
+		service.cloneVM(parameter);
 	}
 
 	@Test
@@ -271,7 +264,18 @@ public class VMTest {
 			System.out.println("Host:" + element.getValue());
 			System.out.println("************************");
 		}
+	}
 
+	@Test
+	public void runVM() {
+		RunVMParameter parameter = TestData.randomRunVMParameter();
+		service.runVM(parameter);
+	}
+
+	@Test
+	public void runNetworkDeviceVM() {
+		RunNetworkDeviceVMParameter parameter = TestData.randomRunNetworkDeviceVMParameter();
+		service.runNetworkDeviceVM(parameter);
 	}
 
 }

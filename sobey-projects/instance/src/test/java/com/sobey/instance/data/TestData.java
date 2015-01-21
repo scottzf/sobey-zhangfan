@@ -9,6 +9,8 @@ import com.sobey.instance.webservice.response.dto.CreateStandardSwitchParameter;
 import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
+import com.sobey.instance.webservice.response.dto.RunNetworkDeviceVMParameter;
+import com.sobey.instance.webservice.response.dto.RunVMParameter;
 import com.sobey.instance.webservice.response.dto.VMDiskParameter;
 
 public class TestData {
@@ -18,21 +20,18 @@ public class TestData {
 		CloneVMParameter parameter = new CloneVMParameter();
 
 		parameter.setDescription("CMOP");
-		parameter.setGateway("10.2.12.254");
-		parameter.setIpaddress("10.2.12.92");
-		parameter.setSubNetMask("255.255.255.0");
-		parameter.setVmName("10.2.12.92");
+		parameter.setVmName("random-1");
 		parameter.setResourcePool("resgroup-133");
 		parameter.setHostId("host-236");
 		parameter.setDatacenter(DataCenterEnum.成都核心数据中心.toString());
 
 		// Linux
-		// parameter.setVmTemplateName("CnetOS6.5");
-		// parameter.setVmTemplateOS("Linux");
+		parameter.setVmTemplateName("random-1");
+		parameter.setVmTemplateOS("Linux");
 
 		// Windows
-		parameter.setVmTemplateName("Windows 2008 R2 Mod");
-		parameter.setVmTemplateOS("Windows");
+		// parameter.setVmTemplateName("Windows 2008 R2 Mod");
+		// parameter.setVmTemplateOS("Windows");
 		return parameter;
 	}
 
@@ -41,10 +40,7 @@ public class TestData {
 		CloneVMParameter parameter = new CloneVMParameter();
 
 		parameter.setDescription("这个一个API测试程序");
-		parameter.setGateway("192.168.200.254");
-		parameter.setIpaddress("192.168.200.246");
-		parameter.setSubNetMask("255.255.255.0");
-		parameter.setVmName("router_test");
+		parameter.setVmName("router_Random2");
 		parameter.setResourcePool("resgroup-133");
 		parameter.setHostId("host-236");
 		parameter.setDatacenter(DataCenterEnum.成都核心数据中心.toString());
@@ -54,7 +50,7 @@ public class TestData {
 		// parameter.setVmTemplateOS("Linux");
 
 		// Windows
-		parameter.setVmTemplateName("vRouter_MOD");
+		parameter.setVmTemplateName("vRouter_Telnet");
 		parameter.setVmTemplateOS("Linux");
 		return parameter;
 	}
@@ -70,9 +66,9 @@ public class TestData {
 	public static ReconfigVMParameter randomReconfigVMParameter() {
 		ReconfigVMParameter parameter = new ReconfigVMParameter();
 		parameter.setDatacenter(DataCenterEnum.成都核心数据中心.toString());
-		parameter.setVmName("liukai");
-		parameter.setCpuNumber(2);
-		parameter.setMemoryMB(4096L);
+		parameter.setVmName("random-1");
+		parameter.setCpuNumber(1);
+		parameter.setMemoryMB(1024);
 		return parameter;
 	}
 
@@ -116,6 +112,33 @@ public class TestData {
 		parameter.setVmName("Tenants-jTWsg646-192.168.100.2");
 		parameter.setDiskName("testDB2");
 		parameter.setDiskGB("10");
+		return parameter;
+	}
+
+	public static RunVMParameter randomRunVMParameter() {
+
+		RunVMParameter parameter = new RunVMParameter();
+		parameter.setCpuNumber(2);
+		parameter.setDatacenter(DataCenterEnum.成都核心数据中心.toString());
+		parameter.setGateway("192.168.30.1");
+		parameter.setIpaddress("192.168.30.100");
+		parameter.setMemoryMB(2408);
+		parameter.setSubNetMask("255.255.255.0");
+		parameter.setTempVMName("random-1");
+		parameter.setVmName("liukai");
+		parameter.setVmTemplateOS("Linux");
+
+		return parameter;
+	}
+
+	public static RunNetworkDeviceVMParameter randomRunNetworkDeviceVMParameter() {
+
+		RunNetworkDeviceVMParameter parameter = new RunNetworkDeviceVMParameter();
+		parameter.setDatacenter(DataCenterEnum.成都核心数据中心.toString());
+		parameter.setCpuNumber(1);
+		parameter.setMemoryMB(1024);
+		parameter.setTempVMName("router_Random1");
+		parameter.setVmName("liukai router");
 		return parameter;
 	}
 
