@@ -12,10 +12,14 @@ import com.google.common.collect.Maps;
 import com.sobey.core.utils.MathsUtil;
 import com.sobey.instance.constans.PowerOperationEnum;
 import com.sobey.instance.webservice.response.dto.CloneVMParameter;
+import com.sobey.instance.webservice.response.dto.CustomizeVMParameter;
 import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
+import com.sobey.instance.webservice.response.dto.RenameVMParameter;
+import com.sobey.instance.webservice.response.dto.RunNetworkDeviceVMParameter;
+import com.sobey.instance.webservice.response.dto.RunVMParameter;
 import com.sobey.instance.webservice.response.dto.VMInfoDTO;
 import com.sobey.instance.webservice.response.result.DTOResult;
 import com.sobey.instance.webservice.response.result.WSResult;
@@ -32,8 +36,6 @@ import com.vmware.vim25.CustomizationLinuxOptions;
 import com.vmware.vim25.CustomizationLinuxPrep;
 import com.vmware.vim25.CustomizationPassword;
 import com.vmware.vim25.CustomizationSpec;
-import com.vmware.vim25.CustomizationSpecInfo;
-import com.vmware.vim25.CustomizationSpecItem;
 import com.vmware.vim25.CustomizationSysprep;
 import com.vmware.vim25.CustomizationSysprepRebootOption;
 import com.vmware.vim25.CustomizationUserData;
@@ -49,7 +51,6 @@ import com.vmware.vim25.VirtualMachineConfigInfo;
 import com.vmware.vim25.VirtualMachineConfigSpec;
 import com.vmware.vim25.VirtualMachineRelocateSpec;
 import com.vmware.vim25.VirtualMachineRuntimeInfo;
-import com.vmware.vim25.mo.CustomizationSpecManager;
 import com.vmware.vim25.mo.Datastore;
 import com.vmware.vim25.mo.Folder;
 import com.vmware.vim25.mo.HostSystem;
@@ -74,9 +75,9 @@ public class VMService extends VMWareService {
 	private static final String OrgNme = "Sobey";
 
 	/**
-	 * 克隆VM.
+	 * 克隆Firewall或netscarler等网络设备.
 	 * 
-	 * 根据vCenter中的模板进行克隆.
+	 * 根据vCenter中的网络设备模板进行克隆,不需要进行CustomizationSpec的配置
 	 * 
 	 * @param parameter
 	 *            {@link CloneVMParameter}
@@ -104,7 +105,7 @@ public class VMService extends VMWareService {
 			vm = getVirtualMachine(si, parameter.getVmTemplateName());
 
 			if (vm == null) {
-				result.setError(WSResult.SYSTEM_ERROR, "主机规格不存在,请联系系统管理员.");
+				result.setError(WSResult.SYSTEM_ERROR, "模板不存在,请联系系统管理员.");
 				return result;
 			}
 		} catch (RemoteException e) {
@@ -121,115 +122,6 @@ public class VMService extends VMWareService {
 		// 虚拟机克隆方案创建
 		VirtualMachineCloneSpec cloneSpec = new VirtualMachineCloneSpec();
 
-		// CustomizationSpec数据对象类型包含需要自定义虚拟机部署时或将其迁移到新的主机的信息。
-		CustomizationSpec cspec = new CustomizationSpec();
-		CustomizationSpecInfo info = new CustomizationSpecInfo();
-		CustomizationSpecItem specItem = new CustomizationSpecItem();
-
-		CustomizationAdapterMapping adaptorMap = new CustomizationAdapterMapping();
-		CustomizationIPSettings adapter = new CustomizationIPSettings();
-		CustomizationFixedIp fixedIp = new CustomizationFixedIp();// 指定使用固定ip
-		CustomizationGlobalIPSettings gIP = new CustomizationGlobalIPSettings();
-
-		info.setDescription(parameter.getDescription());
-		info.setName(OrgNme);
-		info.setType(parameter.getVmTemplateOS());// 设置克隆机器的操作系统类型
-
-		specItem.setInfo(info);
-		specItem.setSpec(cspec);
-
-		// dns列表
-		String dnsList[] = new String[] { "8.8.8.8" };
-		String ipAddress = parameter.getIpaddress(); // 自定义的内网IP
-		String subNetMask = parameter.getSubNetMask();
-
-		adapter.setDnsServerList(dnsList);
-		adapter.setGateway(new String[] { parameter.getGateway() });
-		adapter.setIp(fixedIp);
-		adapter.setSubnetMask(subNetMask);
-
-		fixedIp.setIpAddress(ipAddress);
-		adaptorMap.setAdapter(adapter);
-
-		// 不能使用MAC设置
-		String dnsSuffixList[] = new String[] { "sobey.com", "sobey.cn" };
-		gIP.setDnsSuffixList(dnsSuffixList);
-		gIP.setDnsServerList(dnsList);
-
-		CustomizationFixedName computerName = new CustomizationFixedName();
-		computerName.setName(OrgNme);// 目前暂定为所有主机登录名称都是Sobey
-
-		CustomizationAdapterMapping[] nicSettingMap = new CustomizationAdapterMapping[] { adaptorMap };
-
-		CustomizationSpecManager specManager = si.getCustomizationSpecManager();
-
-		if ("Linux".equals(parameter.getVmTemplateOS())) {
-
-			CustomizationLinuxOptions linuxOptions = new CustomizationLinuxOptions();
-			CustomizationLinuxPrep cLinuxPrep = new CustomizationLinuxPrep();
-			cLinuxPrep.setDomain("sobey.com");
-			cLinuxPrep.setHostName(computerName);
-			cLinuxPrep.setHwClockUTC(true);
-			cLinuxPrep.setTimeZone("Asia/Shanghai");
-
-			cspec.setOptions(linuxOptions);
-			cspec.setIdentity(cLinuxPrep);
-
-		} else if ("Windows".equals(parameter.getVmTemplateOS())) {
-
-			CustomizationWinOptions winOptions = new CustomizationWinOptions();
-			CustomizationSysprep cWinSysprep = new CustomizationSysprep();
-
-			CustomizationGuiUnattended guiUnattended = new CustomizationGuiUnattended();
-			guiUnattended.setAutoLogon(false);
-			guiUnattended.setAutoLogonCount(1);
-			// 210为windows系统下的东八区时区标示,详情参考 http://msdn.microsoft.com/en-us/library/ms912391%28v=winembedded.11%29.aspx
-			guiUnattended.setTimeZone(210);
-
-			CustomizationPassword password = new CustomizationPassword();
-			password.setValue(WINDOWS_DEFAULT_PASSWORD);
-			password.setPlainText(true);
-			guiUnattended.setPassword(password);
-			cWinSysprep.setGuiUnattended(guiUnattended);
-
-			CustomizationUserData userData = new CustomizationUserData();
-			userData.setProductId("");
-			userData.setFullName(OrgNme);
-			userData.setOrgName(OrgNme);
-			userData.setComputerName(computerName);
-			cWinSysprep.setUserData(userData);
-
-			// Windows Server 2000, 2003 必须
-			CustomizationLicenseFilePrintData printData = new CustomizationLicenseFilePrintData();
-			printData.setAutoMode(CustomizationLicenseDataMode.perSeat);
-			cWinSysprep.setLicenseFilePrintData(printData);
-
-			CustomizationIdentification identification = new CustomizationIdentification();
-			identification.setJoinWorkgroup(OrgNme);
-			cWinSysprep.setIdentification(identification);
-
-			winOptions.setReboot(CustomizationSysprepRebootOption.shutdown);
-			winOptions.setChangeSID(true);
-			winOptions.setDeleteAccounts(false);
-
-			cspec.setOptions(winOptions);
-			cspec.setIdentity(cWinSysprep);
-
-		} else {
-			logger.info("cloneVM::OS类型不正确");
-			result.setError(WSResult.SYSTEM_ERROR, "操作系统类型不正确.");
-			return result;
-		}
-
-		cspec.setGlobalIPSettings(gIP);
-		cspec.setNicSettingMap(nicSettingMap);
-		cspec.setEncryptionKey(specManager.getEncryptionKey());
-
-		/**
-		 * 重要: 宿主机的ResourcePool可以根据宿主机名称得到.
-		 * 
-		 * CMDBuild查询宿主机的负载能力,找出负载最低的宿主机, 并根据名称查出ManagedObjectReference对象的value.
-		 */
 		ManagedObjectReference pool = new ManagedObjectReference();
 		pool.set_value(parameter.getResourcePool());
 		pool.setType("ResourcePool");
@@ -242,100 +134,16 @@ public class VMService extends VMWareService {
 		relocateSpec.setPool(pool);
 		relocateSpec.setHost(host);
 		cloneSpec.setLocation(relocateSpec);
-		cloneSpec.setPowerOn(true);
+		cloneSpec.setPowerOn(false);
 		cloneSpec.setTemplate(false);
-		cloneSpec.setCustomization(cspec);
 
 		try {
-
-			vm.checkCustomizationSpec(specItem.getSpec());
 
 			Task task = vm.cloneVM_Task((Folder) vm.getParent(), parameter.getVmName(), cloneSpec);
 
 			if (task.waitForTask() != Task.SUCCESS) {
 				logger.info("cloneVM:: VM cannot be cloned");
-				result.setError(WSResult.SYSTEM_ERROR, "主机创建失败,请联系系统管理员.");
-				return result;
-			}
-
-		} catch (RemoteException | InterruptedException e) {
-			result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
-			return result;
-		}
-
-		return result;
-	}
-
-	/**
-	 * 克隆Firewall或netscarler等网络设备.
-	 * 
-	 * 根据vCenter中的网络设备模板进行克隆,不需要进行CustomizationSpec的配置
-	 * 
-	 * @param parameter
-	 *            {@link CloneVMParameter}
-	 * @return
-	 */
-	public WSResult cloneNetworkDevice(CloneVMParameter parameter) {
-
-		WSResult result = new WSResult();
-
-		ServiceInstance si;
-
-		try {
-			si = getServiceInstance(parameter.getDatacenter());
-		} catch (RemoteException | MalformedURLException e) {
-			logger.info("cloneVM::远程连接失败或错误的URL");
-			result.setError(WSResult.SYSTEM_ERROR, ServiceInstance_Init_Error);
-			return result;
-		}
-
-		// 获得模板对象
-		VirtualMachine vm = null;
-
-		try {
-
-			vm = getVirtualMachine(si, parameter.getVmTemplateName());
-
-			if (vm == null) {
-				result.setError(WSResult.SYSTEM_ERROR, "主机规格不存在,请联系系统管理员.");
-				return result;
-			}
-		} catch (RemoteException e) {
-
-			try {
-				logout(si);
-			} catch (RemoteException | MalformedURLException ex) {
-				logger.info("cloneVM::远程连接失败或错误的URL");
-				result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
-				return result;
-			}
-		}
-
-		// 虚拟机克隆方案创建
-		VirtualMachineCloneSpec cloneSpec = new VirtualMachineCloneSpec();
-
-		ManagedObjectReference pool = new ManagedObjectReference();
-		pool.set_value(parameter.getResourcePool());
-		pool.setType("ResourcePool");
-
-		ManagedObjectReference host = new ManagedObjectReference();
-		host.set_value(parameter.getHostId());
-		host.setType("HostSystem");
-
-		VirtualMachineRelocateSpec relocateSpec = new VirtualMachineRelocateSpec();
-		relocateSpec.setPool(pool);
-		relocateSpec.setHost(host);
-		cloneSpec.setLocation(relocateSpec);
-		cloneSpec.setPowerOn(true);
-		cloneSpec.setTemplate(false);
-
-		try {
-
-			Task task = vm.cloneVM_Task((Folder) vm.getParent(), parameter.getVmName(), cloneSpec);
-
-			if (task.waitForTask() != Task.SUCCESS) {
-				logger.info("cloneNetworkDevice:: Network Device cannot be cloned");
-				result.setError(WSResult.SYSTEM_ERROR, "网络设备创建失败,请联系系统管理员.");
+				result.setError(WSResult.SYSTEM_ERROR, "VM创建失败,请联系系统管理员.");
 				return result;
 			}
 
@@ -681,7 +489,7 @@ public class VMService extends VMWareService {
 	}
 
 	/**
-	 * 修改虚拟机
+	 * 修改虚拟机配置
 	 * 
 	 * @param parameter
 	 *            {@link ReconfigVMParameter}
@@ -725,7 +533,7 @@ public class VMService extends VMWareService {
 
 		VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
 
-		vmConfigSpec.setMemoryMB(parameter.getMemoryMB());
+		vmConfigSpec.setMemoryMB(Long.valueOf(parameter.getMemoryMB()));
 		vmConfigSpec.setNumCPUs(parameter.getCpuNumber());
 
 		try {
@@ -745,4 +553,321 @@ public class VMService extends VMWareService {
 
 		return result;
 	}
+
+	/**
+	 * 自定义VM IP配置
+	 * 
+	 * @param parameter
+	 * @return
+	 */
+	public WSResult customizeVM(CustomizeVMParameter parameter) {
+
+		WSResult result = new WSResult();
+
+		ServiceInstance si;
+
+		try {
+			si = getServiceInstance(parameter.getDatacenter());
+		} catch (RemoteException | MalformedURLException e) {
+			logger.info("reconfigVM::远程连接失败或错误的URL");
+			result.setError(WSResult.SYSTEM_ERROR, ServiceInstance_Init_Error);
+			return result;
+		}
+
+		// 获得VM对象
+		VirtualMachine vm = null;
+
+		try {
+
+			vm = getVirtualMachine(si, parameter.getVmName());
+
+			if (vm == null) {
+				result.setError(WSResult.SYSTEM_ERROR, "主机不存在.");
+				return result;
+			}
+		} catch (RemoteException e) {
+
+			try {
+				logout(si);
+			} catch (RemoteException | MalformedURLException ex) {
+				logger.info("reconfigVM::远程连接失败或错误的URL");
+				result.setError(WSResult.SYSTEM_ERROR, "主机不存在.");
+				return result;
+			}
+		}
+
+		CustomizationGlobalIPSettings gIP = new CustomizationGlobalIPSettings();
+
+		String[] dns = { "8.8.8.8" };
+		String[] domain = { "sobey.com" };
+		String[] gateway = { parameter.getGateway() };
+
+		gIP.dnsServerList = dns;
+		gIP.dnsSuffixList = domain;
+
+		CustomizationFixedIp fixedIp = new CustomizationFixedIp();// 指定使用固定ip
+
+		fixedIp.ipAddress = parameter.getIpaddress();
+
+		CustomizationIPSettings adapter = new CustomizationIPSettings();
+		adapter.dnsDomain = domain[0];
+		adapter.dnsServerList = dns;
+		adapter.ip = fixedIp;
+		adapter.gateway = gateway;
+		adapter.subnetMask = parameter.getSubNetMask();
+
+		CustomizationAdapterMapping adaptorMap = new CustomizationAdapterMapping();
+		adaptorMap.adapter = adapter;
+
+		CustomizationAdapterMapping[] nicSettingMap = new CustomizationAdapterMapping[] { adaptorMap };
+
+		CustomizationFixedName computerName = new CustomizationFixedName();
+		computerName.name = OrgNme;
+
+		CustomizationSpec customspec = new CustomizationSpec();
+
+		if ("Linux".equals(parameter.getVmTemplateOS())) {
+
+			CustomizationLinuxOptions linuxOptions = new CustomizationLinuxOptions();
+			CustomizationLinuxPrep linuxPrep = new CustomizationLinuxPrep();
+			linuxPrep.setDomain("sobey.com");
+			linuxPrep.setHostName(computerName);
+			linuxPrep.setHwClockUTC(true);
+			linuxPrep.setTimeZone("Asia/Shanghai");
+
+			customspec.identity = linuxPrep;
+			customspec.options = linuxOptions;
+
+		} else if ("Windows".equals(parameter.getVmTemplateOS())) {
+
+			CustomizationWinOptions winOptions = new CustomizationWinOptions();
+			CustomizationSysprep winSysprep = new CustomizationSysprep();
+
+			CustomizationGuiUnattended guiUnattended = new CustomizationGuiUnattended();
+			guiUnattended.setAutoLogon(false);
+			guiUnattended.setAutoLogonCount(1);
+			// 210为windows系统下的东八区时区标示,详情参考 http://msdn.microsoft.com/en-us/library/ms912391%28v=winembedded.11%29.aspx
+			guiUnattended.setTimeZone(210);
+
+			CustomizationPassword password = new CustomizationPassword();
+			password.setValue(WINDOWS_DEFAULT_PASSWORD);
+			password.setPlainText(true);
+			guiUnattended.setPassword(password);
+			winSysprep.setGuiUnattended(guiUnattended);
+
+			CustomizationUserData userData = new CustomizationUserData();
+			userData.setProductId("");
+			userData.setFullName(OrgNme);
+			userData.setOrgName(OrgNme);
+			userData.setComputerName(computerName);
+			winSysprep.setUserData(userData);
+
+			// Windows Server 2000, 2003 必须
+			CustomizationLicenseFilePrintData printData = new CustomizationLicenseFilePrintData();
+			printData.setAutoMode(CustomizationLicenseDataMode.perSeat);
+			winSysprep.setLicenseFilePrintData(printData);
+
+			CustomizationIdentification identification = new CustomizationIdentification();
+			identification.setJoinWorkgroup(OrgNme);
+			winSysprep.setIdentification(identification);
+
+			winOptions.setReboot(CustomizationSysprepRebootOption.shutdown);
+			winOptions.setChangeSID(true);
+			winOptions.setDeleteAccounts(false);
+
+			customspec.setOptions(winOptions);
+			customspec.setIdentity(winSysprep);
+		}
+
+		customspec.globalIPSettings = gIP;
+		customspec.nicSettingMap = nicSettingMap;
+		customspec.encryptionKey = si.getCustomizationSpecManager().getEncryptionKey();
+
+		try {
+
+			Task task = vm.customizeVM_Task(customspec);
+
+			if (task.waitForTask() != Task.SUCCESS) {
+				logger.info("reconfigVM:: VM cannot be reconfig");
+				result.setError(WSResult.SYSTEM_ERROR, "主机IP定义失败,请联系系统管理员.");
+				return result;
+			}
+
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+			return result;
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+
+			return result;
+		}
+
+		return result;
+	}
+
+	public WSResult runVM(RunVMParameter parameter) {
+
+		WSResult result = new WSResult();
+
+		/**
+		 * Step.1 自定义IP.
+		 * 
+		 * Step.2 自定义CPU和Memory
+		 * 
+		 * Step.3 更改VM名称
+		 * 
+		 * Step.4 启动VM
+		 * 
+		 */
+
+		// Step.1 自定义IP.
+
+		// 注意开始的vmname应该是vcenter中 VM Pool中已经创建好的一个VM名称
+		CustomizeVMParameter customizeVMParameter = new CustomizeVMParameter(parameter.getDatacenter(),
+				parameter.getGateway(), parameter.getIpaddress(), parameter.getSubNetMask(), parameter.getTempVMName(),
+				parameter.getVmTemplateOS());
+
+		WSResult customizeVMWSResult = customizeVM(customizeVMParameter);
+
+		if (WSResult.SYSTEM_ERROR.equals(customizeVMWSResult.getCode())) {
+			return customizeVMWSResult;
+		}
+
+		// Step.2 自定义CPU和Memory
+		ReconfigVMParameter reconfigVMParameter = new ReconfigVMParameter(parameter.getCpuNumber(),
+				parameter.getDatacenter(), parameter.getMemoryMB(), parameter.getTempVMName());
+
+		WSResult reconfigVMWSResult = reconfigVM(reconfigVMParameter);
+
+		if (WSResult.SYSTEM_ERROR.equals(reconfigVMWSResult.getCode())) {
+			return reconfigVMWSResult;
+		}
+
+		// Step.3 更改VM名称
+		RenameVMParameter renameVMParameter = new RenameVMParameter(parameter.getDatacenter(),
+				parameter.getTempVMName(), parameter.getVmName());
+
+		WSResult renameVMWSResult = renameVM(renameVMParameter);
+
+		if (WSResult.SYSTEM_ERROR.equals(renameVMWSResult.getCode())) {
+			return renameVMWSResult;
+		}
+
+		// Step.4 启动VM
+		PowerVMParameter powerVMParameter = new PowerVMParameter(parameter.getDatacenter(),
+				PowerOperationEnum.poweron.toString(), parameter.getVmName());
+
+		WSResult powerVMWSResult = powerVM(powerVMParameter);
+
+		if (WSResult.SYSTEM_ERROR.equals(powerVMWSResult.getCode())) {
+			return powerVMWSResult;
+		}
+
+		return result;
+
+	}
+
+	public WSResult renameVM(RenameVMParameter parameter) {
+
+		WSResult result = new WSResult();
+
+		ServiceInstance si;
+
+		try {
+			si = getServiceInstance(parameter.getDatacenter());
+		} catch (RemoteException | MalformedURLException e) {
+			logger.info("cloneVM::远程连接失败或错误的URL");
+			result.setError(WSResult.SYSTEM_ERROR, ServiceInstance_Init_Error);
+			return result;
+		}
+
+		// 获得模板对象
+		VirtualMachine vm = null;
+
+		try {
+
+			vm = getVirtualMachine(si, parameter.getTempVMName());
+
+			if (vm == null) {
+				result.setError(WSResult.SYSTEM_ERROR, "主机规格不存在,请联系系统管理员.");
+				return result;
+			}
+		} catch (RemoteException e) {
+
+			try {
+				logout(si);
+			} catch (RemoteException | MalformedURLException ex) {
+				logger.info("cloneVM::远程连接失败或错误的URL");
+				result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+				return result;
+			}
+		}
+
+		try {
+
+			Task task = vm.rename_Task(parameter.getVmName());
+
+			if (task.waitForTask() != Task.SUCCESS) {
+				logger.info("cloneNetworkDevice:: Network Device cannot be cloned");
+				result.setError(WSResult.SYSTEM_ERROR, "网络设备创建失败,请联系系统管理员.");
+				return result;
+			}
+
+		} catch (RemoteException | InterruptedException e) {
+			result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+			return result;
+		}
+
+		return result;
+	}
+
+	public WSResult runNetworkDeviceVM(RunNetworkDeviceVMParameter parameter) {
+
+		WSResult result = new WSResult();
+
+		/**
+		 * 
+		 * Step.1 自定义CPU和Memory
+		 * 
+		 * Step.2 更改VM名称
+		 * 
+		 * Step.3 启动VM
+		 * 
+		 */
+
+		// Step.1 自定义CPU和Memory
+		ReconfigVMParameter reconfigVMParameter = new ReconfigVMParameter(parameter.getCpuNumber(),
+				parameter.getDatacenter(), parameter.getMemoryMB(), parameter.getTempVMName());
+
+		WSResult reconfigVMWSResult = reconfigVM(reconfigVMParameter);
+
+		if (WSResult.SYSTEM_ERROR.equals(reconfigVMWSResult.getCode())) {
+			return reconfigVMWSResult;
+		}
+
+		// Step.3 更改VM名称
+		RenameVMParameter renameVMParameter = new RenameVMParameter(parameter.getDatacenter(),
+				parameter.getTempVMName(), parameter.getVmName());
+
+		WSResult renameVMWSResult = renameVM(renameVMParameter);
+
+		if (WSResult.SYSTEM_ERROR.equals(renameVMWSResult.getCode())) {
+			return renameVMWSResult;
+		}
+
+		// Step.4 启动VM
+		PowerVMParameter powerVMParameter = new PowerVMParameter(parameter.getDatacenter(),
+				PowerOperationEnum.poweron.toString(), parameter.getVmName());
+
+		WSResult powerVMWSResult = powerVM(powerVMParameter);
+
+		if (WSResult.SYSTEM_ERROR.equals(powerVMWSResult.getCode())) {
+			return powerVMWSResult;
+		}
+
+		return result;
+
+	}
+
 }

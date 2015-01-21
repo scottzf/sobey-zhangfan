@@ -22,6 +22,8 @@ import com.sobey.instance.webservice.response.dto.HostInfoDTO;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
+import com.sobey.instance.webservice.response.dto.RunNetworkDeviceVMParameter;
+import com.sobey.instance.webservice.response.dto.RunVMParameter;
 import com.sobey.instance.webservice.response.dto.VMDiskParameter;
 import com.sobey.instance.webservice.response.dto.VMInfoDTO;
 import com.sobey.instance.webservice.response.dto.VMRCDTO;
@@ -51,11 +53,6 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	@Override
 	public WSResult cloneVMByInstance(CloneVMParameter cloneVMParameter) {
 		return vmService.cloneVM(cloneVMParameter);
-	}
-
-	@Override
-	public WSResult cloneNetworkDeviceByInstance(CloneVMParameter cloneVMParameter) {
-		return vmService.cloneNetworkDevice(cloneVMParameter);
 	}
 
 	@Override
@@ -132,6 +129,16 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	@Override
 	public DTOResult<VMRCDTO> findVMRCDTO(String vmName, String datacenter) {
 		return vmrcService.connectVMRC(vmName, datacenter);
+	}
+
+	@Override
+	public WSResult runVMByInstance(RunVMParameter runVMParameter) {
+		return vmService.runVM(runVMParameter);
+	}
+
+	@Override
+	public WSResult runNetworkDeviceVMByInstance(RunNetworkDeviceVMParameter networkDeviceVMParameter) {
+		return vmService.runNetworkDeviceVM(networkDeviceVMParameter);
 	}
 
 }
