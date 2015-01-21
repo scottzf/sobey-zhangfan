@@ -890,7 +890,7 @@
   </wsdl:binding>
   <wsdl:service name="InstanceSoapService">
     <wsdl:port binding="tns:InstanceSoapServiceSoapBinding" name="InstanceSoapServiceImplPort">
-      <soap:address location="http://10.2.12.92:8081/instance/cxf/soap/instanceSoapService"/>
+      <soap:address location="http://localhost:8081/instance/cxf/soap/instanceSoapService"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
