@@ -8,14 +8,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.sobey.instance.constans.WsConstants;
 
 /**
- * VM电源操作的参数对象
+ * 修改VM名称的参数对象
  * 
  * @author Administrator
  *
  */
-@XmlRootElement(name = "PowerVMParameter")
-@XmlType(name = "PowerVMParameter", namespace = WsConstants.NS)
-public class PowerVMParameter {
+@XmlRootElement(name = "RenameVMParameter")
+@XmlType(name = "RenameVMParameter", namespace = WsConstants.NS)
+public class RenameVMParameter {
 
 	/**
 	 * 数据中心
@@ -23,22 +23,23 @@ public class PowerVMParameter {
 	private String datacenter;
 
 	/**
-	 * 电源操作 eg:poweroff, poweron
+	 * vCenter中临时VM的名称
+	 * 
 	 */
-	private String powerOperation;
+	private String tempVMName;
 
 	/**
 	 * VM名称
 	 */
 	private String vmName;
 
-	public PowerVMParameter() {
+	public RenameVMParameter() {
 	}
 
-	public PowerVMParameter(String datacenter, String powerOperation, String vmName) {
+	public RenameVMParameter(String datacenter, String tempVMName, String vmName) {
 		super();
 		this.datacenter = datacenter;
-		this.powerOperation = powerOperation;
+		this.tempVMName = tempVMName;
 		this.vmName = vmName;
 	}
 
@@ -46,8 +47,8 @@ public class PowerVMParameter {
 		return datacenter;
 	}
 
-	public String getPowerOperation() {
-		return powerOperation;
+	public String getTempVMName() {
+		return tempVMName;
 	}
 
 	public String getVmName() {
@@ -58,8 +59,8 @@ public class PowerVMParameter {
 		this.datacenter = datacenter;
 	}
 
-	public void setPowerOperation(String powerOperation) {
-		this.powerOperation = powerOperation;
+	public void setTempVMName(String tempVMName) {
+		this.tempVMName = tempVMName;
 	}
 
 	public void setVmName(String vmName) {
@@ -73,4 +74,5 @@ public class PowerVMParameter {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
+
 }

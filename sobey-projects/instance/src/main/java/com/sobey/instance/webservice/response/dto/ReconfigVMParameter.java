@@ -30,12 +30,23 @@ public class ReconfigVMParameter {
 	/**
 	 * 内存大小(MB)
 	 */
-	private Long memoryMB;
+	private Integer memoryMB;
 
 	/**
 	 * VM名称
 	 */
 	private String vmName;
+
+	public ReconfigVMParameter() {
+	}
+
+	public ReconfigVMParameter(Integer cpuNumber, String datacenter, Integer memoryMB, String vmName) {
+		super();
+		this.cpuNumber = cpuNumber;
+		this.datacenter = datacenter;
+		this.memoryMB = memoryMB;
+		this.vmName = vmName;
+	}
 
 	public Integer getCpuNumber() {
 		return cpuNumber;
@@ -45,7 +56,7 @@ public class ReconfigVMParameter {
 		return datacenter;
 	}
 
-	public Long getMemoryMB() {
+	public Integer getMemoryMB() {
 		return memoryMB;
 	}
 
@@ -61,7 +72,7 @@ public class ReconfigVMParameter {
 		this.datacenter = datacenter;
 	}
 
-	public void setMemoryMB(Long memoryMB) {
+	public void setMemoryMB(Integer memoryMB) {
 		this.memoryMB = memoryMB;
 	}
 

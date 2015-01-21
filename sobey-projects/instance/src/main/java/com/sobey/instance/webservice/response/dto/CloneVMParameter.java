@@ -28,29 +28,14 @@ public class CloneVMParameter {
 	private String description;
 
 	/**
-	 * 网关
-	 */
-	private String gateway;
-
-	/**
 	 * 宿主机在vCenter中的Id
 	 */
 	private String hostId;
 
 	/**
-	 * VM IP
-	 */
-	private String ipaddress;
-
-	/**
 	 * 宿主机在vCenter中,resourcePool的Id
 	 */
 	private String resourcePool;
-
-	/**
-	 * 子网掩码
-	 */
-	private String subNetMask;
 
 	/**
 	 * VM名称
@@ -67,80 +52,71 @@ public class CloneVMParameter {
 	 */
 	private String vmTemplateOS;
 
+	public CloneVMParameter() {
+	}
+
+	public CloneVMParameter(String datacenter, String description, String hostId, String resourcePool, String vmName,
+			String vmTemplateName, String vmTemplateOS) {
+		super();
+		this.datacenter = datacenter;
+		this.description = description;
+		this.hostId = hostId;
+		this.resourcePool = resourcePool;
+		this.vmName = vmName;
+		this.vmTemplateName = vmTemplateName;
+		this.vmTemplateOS = vmTemplateOS;
+	}
+
 	public String getDatacenter() {
 		return datacenter;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public String getGateway() {
-		return gateway;
-	}
-
-	public String getHostId() {
-		return hostId;
-	}
-
-	public String getIpaddress() {
-		return ipaddress;
-	}
-
-	public String getResourcePool() {
-		return resourcePool;
-	}
-
-	public String getSubNetMask() {
-		return subNetMask;
-	}
-
-	public String getVmName() {
-		return vmName;
-	}
-
-	public String getVmTemplateName() {
-		return vmTemplateName;
-	}
-
-	public String getVmTemplateOS() {
-		return vmTemplateOS;
 	}
 
 	public void setDatacenter(String datacenter) {
 		this.datacenter = datacenter;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	public void setGateway(String gateway) {
-		this.gateway = gateway;
+	public String getHostId() {
+		return hostId;
 	}
 
 	public void setHostId(String hostId) {
 		this.hostId = hostId;
 	}
 
-	public void setIpaddress(String ipaddress) {
-		this.ipaddress = ipaddress;
+	public String getResourcePool() {
+		return resourcePool;
 	}
 
 	public void setResourcePool(String resourcePool) {
 		this.resourcePool = resourcePool;
 	}
 
-	public void setSubNetMask(String subNetMask) {
-		this.subNetMask = subNetMask;
+	public String getVmName() {
+		return vmName;
 	}
 
 	public void setVmName(String vmName) {
 		this.vmName = vmName;
 	}
 
+	public String getVmTemplateName() {
+		return vmTemplateName;
+	}
+
 	public void setVmTemplateName(String vmTemplateName) {
 		this.vmTemplateName = vmTemplateName;
+	}
+
+	public String getVmTemplateOS() {
+		return vmTemplateOS;
 	}
 
 	public void setVmTemplateOS(String vmTemplateOS) {
