@@ -65,6 +65,8 @@
 
   <xs:element name="NicPortDTO" type="tns:NicPortDTO"/>
 
+  <xs:element name="ProducedDTO" type="tns:ProducedDTO"/>
+
   <xs:element name="RackDTO" type="tns:RackDTO"/>
 
   <xs:element name="RouterDTO" type="tns:RouterDTO"/>
@@ -220,6 +222,10 @@
   <xs:element name="createNicPortResponse" type="tns:createNicPortResponse"/>
 
   <xs:element name="createNicResponse" type="tns:createNicResponse"/>
+
+  <xs:element name="createProduced" type="tns:createProduced"/>
+
+  <xs:element name="createProducedResponse" type="tns:createProducedResponse"/>
 
   <xs:element name="createRack" type="tns:createRack"/>
 
@@ -392,6 +398,10 @@
   <xs:element name="deleteNicPortResponse" type="tns:deleteNicPortResponse"/>
 
   <xs:element name="deleteNicResponse" type="tns:deleteNicResponse"/>
+
+  <xs:element name="deleteProduced" type="tns:deleteProduced"/>
+
+  <xs:element name="deleteProducedResponse" type="tns:deleteProducedResponse"/>
 
   <xs:element name="deleteRack" type="tns:deleteRack"/>
 
@@ -696,6 +706,14 @@
   <xs:element name="findNicPortResponse" type="tns:findNicPortResponse"/>
 
   <xs:element name="findNicResponse" type="tns:findNicResponse"/>
+
+  <xs:element name="findProduced" type="tns:findProduced"/>
+
+  <xs:element name="findProducedByParams" type="tns:findProducedByParams"/>
+
+  <xs:element name="findProducedByParamsResponse" type="tns:findProducedByParamsResponse"/>
+
+  <xs:element name="findProducedResponse" type="tns:findProducedResponse"/>
 
   <xs:element name="findRack" type="tns:findRack"/>
 
@@ -1073,6 +1091,14 @@
 
   <xs:element name="getNicPortPaginationResponse" type="tns:getNicPortPaginationResponse"/>
 
+  <xs:element name="getProducedList" type="tns:getProducedList"/>
+
+  <xs:element name="getProducedListResponse" type="tns:getProducedListResponse"/>
+
+  <xs:element name="getProducedPagination" type="tns:getProducedPagination"/>
+
+  <xs:element name="getProducedPaginationResponse" type="tns:getProducedPaginationResponse"/>
+
   <xs:element name="getRackList" type="tns:getRackList"/>
 
   <xs:element name="getRackListResponse" type="tns:getRackListResponse"/>
@@ -1284,6 +1310,10 @@
   <xs:element name="updateNicPortResponse" type="tns:updateNicPortResponse"/>
 
   <xs:element name="updateNicResponse" type="tns:updateNicResponse"/>
+
+  <xs:element name="updateProduced" type="tns:updateProduced"/>
+
+  <xs:element name="updateProducedResponse" type="tns:updateProducedResponse"/>
 
   <xs:element name="updateRack" type="tns:updateRack"/>
 
@@ -1559,6 +1589,30 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
     </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findProducedByParams">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findProducedByParamsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ProducedDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:serviceBasicDTO">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ecsSpec" type="xs:int"/>
+          <xs:element minOccurs="0" name="osType" type="xs:int"/>
+          <xs:element minOccurs="0" name="server" type="xs:int"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="findFirewallPolicyByParams">
@@ -2214,6 +2268,20 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:complexType name="getProducedPagination">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
+      <xs:element minOccurs="0" name="pageNumber" type="xs:int"/>
+      <xs:element minOccurs="0" name="pageSize" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getProducedPaginationResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:PaginationResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="getIpaddressPagination">
     <xs:sequence>
       <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
@@ -2386,11 +2454,8 @@
     <xs:complexContent>
       <xs:extension base="tns:basicDTO">
         <xs:sequence>
-          <xs:element minOccurs="0" name="cpuNumber" type="xs:int"/>
-          <xs:element minOccurs="0" name="diskSize" type="xs:int"/>
           <xs:element minOccurs="0" name="idc" type="xs:int"/>
           <xs:element minOccurs="0" name="imageName" type="xs:string"/>
-          <xs:element minOccurs="0" name="memory" type="xs:int"/>
           <xs:element minOccurs="0" name="osType" type="xs:int"/>
         </xs:sequence>
       </xs:extension>
@@ -2730,9 +2795,13 @@
     <xs:complexContent>
       <xs:extension base="tns:serviceBasicDTO">
         <xs:sequence>
-          <xs:element minOccurs="0" name="ecs" type="xs:int"/>
+          <xs:element minOccurs="0" name="cpuNumber" type="xs:string"/>
+          <xs:element minOccurs="0" name="diskSize" type="xs:string"/>
+          <xs:element minOccurs="0" name="ecsSpec" type="xs:int"/>
           <xs:element minOccurs="0" name="firewallService" type="xs:int"/>
           <xs:element minOccurs="0" name="ipaddress" type="xs:int"/>
+          <xs:element minOccurs="0" name="memorySize" type="xs:string"/>
+          <xs:element minOccurs="0" name="server" type="xs:int"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -4117,6 +4186,18 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="getProducedList">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getProducedListResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOListResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="getElbPolicyList">
     <xs:sequence>
       <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
@@ -4274,6 +4355,18 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="findProduced">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findProducedResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="getMemoryPagination">
     <xs:sequence>
       <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
@@ -4395,6 +4488,18 @@
   </xs:complexType>
 
   <xs:complexType name="createMapEcsEs3Response">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createProduced">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="producedDTO" type="tns:ProducedDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createProducedResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
     </xs:sequence>
@@ -4729,18 +4834,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="findLoadBalancerPort">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="id" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="findLoadBalancerPortResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="getFirewallPolicyPagination">
     <xs:sequence>
       <xs:element minOccurs="0" name="searchParams" type="tns:SearchParams"/>
@@ -4752,6 +4845,18 @@
   <xs:complexType name="getFirewallPolicyPaginationResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:PaginationResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findLoadBalancerPort">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findLoadBalancerPortResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -5344,6 +5449,18 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="deleteProduced">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteProducedResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="deleteIdc">
     <xs:sequence>
       <xs:element minOccurs="0" name="id" type="xs:int"/>
@@ -5717,6 +5834,19 @@
   <xs:complexType name="findElbResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="updateProduced">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:int"/>
+      <xs:element minOccurs="0" name="producedDTO" type="tns:ProducedDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="updateProducedResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -6185,6 +6315,10 @@
     <wsdl:part element="tns:findRouterByParams" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="deleteProducedResponse">
+    <wsdl:part element="tns:deleteProducedResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="createDeviceSpec">
     <wsdl:part element="tns:createDeviceSpec" name="parameters">
     </wsdl:part>
@@ -6269,12 +6403,12 @@
     <wsdl:part element="tns:createVpn" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getEcsSpecListResponse">
-    <wsdl:part element="tns:getEcsSpecListResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="findRouterResponse">
     <wsdl:part element="tns:findRouterResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getEcsSpecListResponse">
+    <wsdl:part element="tns:getEcsSpecListResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findMapEipElb">
@@ -6371,6 +6505,10 @@
   </wsdl:message>
   <wsdl:message name="updateEcsResponse">
     <wsdl:part element="tns:updateEcsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createProduced">
+    <wsdl:part element="tns:createProduced" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findTenantsByParamsResponse">
@@ -6525,6 +6663,10 @@
     <wsdl:part element="tns:findVlan" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="findProducedByParamsResponse">
+    <wsdl:part element="tns:findProducedByParamsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getTagPagination">
     <wsdl:part element="tns:getTagPagination" name="parameters">
     </wsdl:part>
@@ -6567,6 +6709,10 @@
   </wsdl:message>
   <wsdl:message name="findDnsByParams">
     <wsdl:part element="tns:findDnsByParams" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getProducedPagination">
+    <wsdl:part element="tns:getProducedPagination" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteMapEipDns">
@@ -6731,6 +6877,10 @@
   </wsdl:message>
   <wsdl:message name="createSwitchPortResponse">
     <wsdl:part element="tns:createSwitchPortResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getProducedListResponse">
+    <wsdl:part element="tns:getProducedListResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createServerPortResponse">
@@ -6985,6 +7135,10 @@
     <wsdl:part element="tns:updateServerPort" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="findProduced">
+    <wsdl:part element="tns:findProduced" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="findStorageByParamsResponse">
     <wsdl:part element="tns:findStorageByParamsResponse" name="parameters">
     </wsdl:part>
@@ -7007,6 +7161,10 @@
   </wsdl:message>
   <wsdl:message name="findTagResponse">
     <wsdl:part element="tns:findTagResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getProducedPaginationResponse">
+    <wsdl:part element="tns:getProducedPaginationResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findTagByParams">
@@ -7397,6 +7555,10 @@
     <wsdl:part element="tns:getEcsPaginationResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="findProducedResponse">
+    <wsdl:part element="tns:findProducedResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="deleteElbPolicy">
     <wsdl:part element="tns:deleteElbPolicy" name="parameters">
     </wsdl:part>
@@ -7637,6 +7799,14 @@
     <wsdl:part element="tns:deleteMapEipElb" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="updateProducedResponse">
+    <wsdl:part element="tns:updateProducedResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getProducedList">
+    <wsdl:part element="tns:getProducedList" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="findFirewallByParamsResponse">
     <wsdl:part element="tns:findFirewallByParamsResponse" name="parameters">
     </wsdl:part>
@@ -7659,6 +7829,10 @@
   </wsdl:message>
   <wsdl:message name="updateLoadBalancerResponse">
     <wsdl:part element="tns:updateLoadBalancerResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteProduced">
+    <wsdl:part element="tns:deleteProduced" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getStorageBoxList">
@@ -7869,16 +8043,20 @@
     <wsdl:part element="tns:createNicPortResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="createProducedResponse">
+    <wsdl:part element="tns:createProducedResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getStorageBoxPagination">
     <wsdl:part element="tns:getStorageBoxPagination" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="findMapEipElbResponse">
-    <wsdl:part element="tns:findMapEipElbResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="findRouter">
     <wsdl:part element="tns:findRouter" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findMapEipElbResponse">
+    <wsdl:part element="tns:findMapEipElbResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getMapEipDnsList">
@@ -8221,6 +8399,10 @@
     <wsdl:part element="tns:deleteVpn" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="updateProduced">
+    <wsdl:part element="tns:updateProduced" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getMemoryListResponse">
     <wsdl:part element="tns:getMemoryListResponse" name="parameters">
     </wsdl:part>
@@ -8353,6 +8535,10 @@
     <wsdl:part element="tns:findStorage" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="findProducedByParams">
+    <wsdl:part element="tns:findProducedByParams" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getFirewallServiceList">
     <wsdl:part element="tns:getFirewallServiceList" name="parameters">
     </wsdl:part>
@@ -8458,6 +8644,12 @@
       <wsdl:input message="tns:createIdc" name="createIdc">
     </wsdl:input>
       <wsdl:output message="tns:createIdcResponse" name="createIdcResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findProducedByParams">
+      <wsdl:input message="tns:findProducedByParams" name="findProducedByParams">
+    </wsdl:input>
+      <wsdl:output message="tns:findProducedByParamsResponse" name="findProducedByParamsResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="findFirewallPolicyByParams">
@@ -8638,6 +8830,12 @@
       <wsdl:input message="tns:getServerPagination" name="getServerPagination">
     </wsdl:input>
       <wsdl:output message="tns:getServerPaginationResponse" name="getServerPaginationResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProducedPagination">
+      <wsdl:input message="tns:getProducedPagination" name="getProducedPagination">
+    </wsdl:input>
+      <wsdl:output message="tns:getProducedPaginationResponse" name="getProducedPaginationResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getIpaddressPagination">
@@ -9426,6 +9624,12 @@
       <wsdl:output message="tns:findEcsSpecResponse" name="findEcsSpecResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getProducedList">
+      <wsdl:input message="tns:getProducedList" name="getProducedList">
+    </wsdl:input>
+      <wsdl:output message="tns:getProducedListResponse" name="getProducedListResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getElbPolicyList">
       <wsdl:input message="tns:getElbPolicyList" name="getElbPolicyList">
     </wsdl:input>
@@ -9498,6 +9702,12 @@
       <wsdl:output message="tns:deleteStorageBoxResponse" name="deleteStorageBoxResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="findProduced">
+      <wsdl:input message="tns:findProduced" name="findProduced">
+    </wsdl:input>
+      <wsdl:output message="tns:findProducedResponse" name="findProducedResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getMemoryPagination">
       <wsdl:input message="tns:getMemoryPagination" name="getMemoryPagination">
     </wsdl:input>
@@ -9556,6 +9766,12 @@
       <wsdl:input message="tns:createMapEcsEs3" name="createMapEcsEs3">
     </wsdl:input>
       <wsdl:output message="tns:createMapEcsEs3Response" name="createMapEcsEs3Response">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createProduced">
+      <wsdl:input message="tns:createProduced" name="createProduced">
+    </wsdl:input>
+      <wsdl:output message="tns:createProducedResponse" name="createProducedResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="findRouter">
@@ -9714,16 +9930,16 @@
       <wsdl:output message="tns:updateEipPolicyResponse" name="updateEipPolicyResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="findLoadBalancerPort">
-      <wsdl:input message="tns:findLoadBalancerPort" name="findLoadBalancerPort">
-    </wsdl:input>
-      <wsdl:output message="tns:findLoadBalancerPortResponse" name="findLoadBalancerPortResponse">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getFirewallPolicyPagination">
       <wsdl:input message="tns:getFirewallPolicyPagination" name="getFirewallPolicyPagination">
     </wsdl:input>
       <wsdl:output message="tns:getFirewallPolicyPaginationResponse" name="getFirewallPolicyPaginationResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findLoadBalancerPort">
+      <wsdl:input message="tns:findLoadBalancerPort" name="findLoadBalancerPort">
+    </wsdl:input>
+      <wsdl:output message="tns:findLoadBalancerPortResponse" name="findLoadBalancerPortResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="deleteRouter">
@@ -10008,6 +10224,12 @@
       <wsdl:output message="tns:updateIdcResponse" name="updateIdcResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="deleteProduced">
+      <wsdl:input message="tns:deleteProduced" name="deleteProduced">
+    </wsdl:input>
+      <wsdl:output message="tns:deleteProducedResponse" name="deleteProducedResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="deleteIdc">
       <wsdl:input message="tns:deleteIdc" name="deleteIdc">
     </wsdl:input>
@@ -10188,6 +10410,12 @@
       <wsdl:output message="tns:findElbResponse" name="findElbResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="updateProduced">
+      <wsdl:input message="tns:updateProduced" name="updateProduced">
+    </wsdl:input>
+      <wsdl:output message="tns:updateProducedResponse" name="updateProducedResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="findMapEipDns">
       <wsdl:input message="tns:findMapEipDns" name="findMapEipDns">
     </wsdl:input>
@@ -10341,6 +10569,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="findDnsPolicyResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findProducedByParams">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findProducedByParams">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findProducedByParamsResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -10620,6 +10857,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getIpaddressPaginationResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProducedPagination">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getProducedPagination">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getProducedPaginationResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -11811,6 +12057,15 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getProducedList">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getProducedList">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getProducedListResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getNicPortPagination">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="getNicPortPagination">
@@ -11901,6 +12156,15 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="findProduced">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findProduced">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findProducedResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getMemoryPagination">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="getMemoryPagination">
@@ -11988,6 +12252,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="createMapEcsEs3Response">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createProduced">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createProduced">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createProducedResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -12225,21 +12498,21 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getFirewallPolicyPagination">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="getFirewallPolicyPagination">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="getFirewallPolicyPaginationResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="findLoadBalancerPort">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="findLoadBalancerPort">
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="findLoadBalancerPortResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFirewallPolicyPagination">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getFirewallPolicyPagination">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getFirewallPolicyPaginationResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -12675,6 +12948,15 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="deleteProduced">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteProduced">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteProducedResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="updateVlan">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="updateVlan">
@@ -12933,6 +13215,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="findElbResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateProduced">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="updateProduced">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateProducedResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
