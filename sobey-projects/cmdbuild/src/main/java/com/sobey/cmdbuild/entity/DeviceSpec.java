@@ -31,17 +31,14 @@ public class DeviceSpec extends BasicEntity {
 	private Integer power;
 	private Integer ramNumber;
 	private String remark;
-	
+
 	public DeviceSpec() {
 	}
-
-
 
 	@Column(name = "brand")
 	public Integer getBrand() {
 		return brand;
 	}
-
 
 	@Column(name = "cpu_model")
 	public String getCpuModel() {

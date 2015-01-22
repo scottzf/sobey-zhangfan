@@ -12,12 +12,19 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.ServiceBasicDTO;
 @XmlType(name = "RouterDTO", namespace = WsConstants.NS)
 public class RouterDTO extends ServiceBasicDTO {
 
-	private Integer ecs;
+	private String cpuNumber;
+	private String diskSize;
 	private Integer firewallService;
 	private Integer ipaddress;
+	private String memorySize;
+	private Integer server;
 
-	public Integer getEcs() {
-		return ecs;
+	public String getCpuNumber() {
+		return cpuNumber;
+	}
+
+	public String getDiskSize() {
+		return diskSize;
 	}
 
 	public Integer getFirewallService() {
@@ -28,8 +35,20 @@ public class RouterDTO extends ServiceBasicDTO {
 		return ipaddress;
 	}
 
-	public void setEcs(Integer ecs) {
-		this.ecs = ecs;
+	public String getMemorySize() {
+		return memorySize;
+	}
+
+	public Integer getServer() {
+		return server;
+	}
+
+	public void setCpuNumber(String cpuNumber) {
+		this.cpuNumber = cpuNumber;
+	}
+
+	public void setDiskSize(String diskSize) {
+		this.diskSize = diskSize;
 	}
 
 	public void setFirewallService(Integer firewallService) {
@@ -38,6 +57,14 @@ public class RouterDTO extends ServiceBasicDTO {
 
 	public void setIpaddress(Integer ipaddress) {
 		this.ipaddress = ipaddress;
+	}
+
+	public void setMemorySize(String memorySize) {
+		this.memorySize = memorySize;
+	}
+
+	public void setServer(Integer server) {
+		this.server = server;
 	}
 
 	/**

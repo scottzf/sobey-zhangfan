@@ -35,6 +35,7 @@ import com.sobey.cmdbuild.webservice.response.dto.MapTagServiceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MemoryDTO;
 import com.sobey.cmdbuild.webservice.response.dto.NicDTO;
 import com.sobey.cmdbuild.webservice.response.dto.NicPortDTO;
+import com.sobey.cmdbuild.webservice.response.dto.ProducedDTO;
 import com.sobey.cmdbuild.webservice.response.dto.RackDTO;
 import com.sobey.cmdbuild.webservice.response.dto.RouterDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ServerDTO;
@@ -978,6 +979,25 @@ public interface CmdbuildSoapService {
 
 	PaginationResult<FirewallPolicyDTO> getFirewallPolicyPagination(
 			@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// ============ IDC =============//
+	// ==============================//
+
+	DTOResult<ProducedDTO> findProduced(@WebParam(name = "id") Integer id);
+
+	DTOResult<ProducedDTO> findProducedByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createProduced(@WebParam(name = "producedDTO") ProducedDTO producedDTO);
+
+	IdResult updateProduced(@WebParam(name = "id") Integer id, @WebParam(name = "producedDTO") ProducedDTO producedDTO);
+
+	IdResult deleteProduced(@WebParam(name = "id") Integer id);
+
+	DTOListResult<ProducedDTO> getProducedList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<ProducedDTO> getProducedPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 }

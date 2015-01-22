@@ -12,20 +12,9 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 @XmlType(name = "EcsSpecDTO", namespace = WsConstants.NS)
 public class EcsSpecDTO extends BasicDTO {
 
-	private Integer cpuNumber;
-	private Integer diskSize;
 	private Integer idc;
 	private String imageName;
-	private Integer memory;
 	private Integer osType;
-
-	public Integer getCpuNumber() {
-		return cpuNumber;
-	}
-
-	public Integer getDiskSize() {
-		return diskSize;
-	}
 
 	public Integer getIdc() {
 		return idc;
@@ -35,20 +24,8 @@ public class EcsSpecDTO extends BasicDTO {
 		return imageName;
 	}
 
-	public Integer getMemory() {
-		return memory;
-	}
-
 	public Integer getOsType() {
 		return osType;
-	}
-
-	public void setCpuNumber(Integer cpuNumber) {
-		this.cpuNumber = cpuNumber;
-	}
-
-	public void setDiskSize(Integer diskSize) {
-		this.diskSize = diskSize;
 	}
 
 	public void setIdc(Integer idc) {
@@ -57,10 +34,6 @@ public class EcsSpecDTO extends BasicDTO {
 
 	public void setImageName(String imageName) {
 		this.imageName = imageName;
-	}
-
-	public void setMemory(Integer memory) {
-		this.memory = memory;
 	}
 
 	public void setOsType(Integer osType) {

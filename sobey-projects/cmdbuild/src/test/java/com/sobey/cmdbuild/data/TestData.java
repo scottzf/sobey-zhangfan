@@ -163,9 +163,6 @@ public class TestData {
 		esc.setNotes(RandomData.randomName("note"));
 		esc.setDescription("CentOS6.5");
 		esc.setBeginDate(startDate);
-		esc.setCpuNumber(RandomData.randomInt());
-		esc.setDiskSize(RandomData.randomInt());
-		esc.setMemory(RandomData.randomInt());
 		esc.setRemark(RandomData.randomName("remark"));
 		esc.setOsType(osTypeId);
 		esc.setImageName("CentOS6.5");
@@ -251,9 +248,6 @@ public class TestData {
 
 		return es3;
 	}
-
- 
- 
 
 	public static Firewall randomFirewall() {
 		Firewall firewall = new Firewall();

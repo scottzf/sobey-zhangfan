@@ -46,6 +46,7 @@ import com.sobey.cmdbuild.entity.MapTagService;
 import com.sobey.cmdbuild.entity.Memory;
 import com.sobey.cmdbuild.entity.Nic;
 import com.sobey.cmdbuild.entity.NicPort;
+import com.sobey.cmdbuild.entity.Produced;
 import com.sobey.cmdbuild.entity.Rack;
 import com.sobey.cmdbuild.entity.Router;
 import com.sobey.cmdbuild.entity.Server;
@@ -92,6 +93,7 @@ import com.sobey.cmdbuild.webservice.response.dto.MapTagServiceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MemoryDTO;
 import com.sobey.cmdbuild.webservice.response.dto.NicDTO;
 import com.sobey.cmdbuild.webservice.response.dto.NicPortDTO;
+import com.sobey.cmdbuild.webservice.response.dto.ProducedDTO;
 import com.sobey.cmdbuild.webservice.response.dto.RackDTO;
 import com.sobey.cmdbuild.webservice.response.dto.RouterDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ServerDTO;
@@ -8282,6 +8284,185 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			return comm.firewallPolicyService.getFirewallPolicyDTOPagination(searchParams.getParamsMap(), pageNumber,
 					pageSize);
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<ProducedDTO> findProduced(Integer id) {
+
+		DTOResult<ProducedDTO> result = new DTOResult<ProducedDTO>();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Produced produced = comm.producedService.findProduced(id);
+
+			Validate.notNull(produced, ERROR.OBJECT_NULL);
+
+			ProducedDTO dto = BeanMapper.map(produced, ProducedDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOResult<ProducedDTO> findProducedByParams(SearchParams searchParams) {
+
+		DTOResult<ProducedDTO> result = new DTOResult<ProducedDTO>();
+
+		try {
+
+			Validate.notNull(searchParams, ERROR.INPUT_NULL);
+
+			Produced produced = comm.producedService.findProduced(searchParams.getParamsMap());
+
+			Validate.notNull(produced, ERROR.OBJECT_NULL);
+
+			ProducedDTO dto = BeanMapper.map(produced, ProducedDTO.class);
+
+			result.setDto(dto);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult createProduced(ProducedDTO producedDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(producedDTO, ERROR.INPUT_NULL);
+
+			String code = generateCode("Produced");
+			Produced produced = BeanMapper.map(producedDTO, Produced.class);
+			produced.setCode(code);
+			produced.setUser(DEFAULT_USER);
+			produced.setId(0);
+
+			BeanValidators.validateWithException(validator, produced);
+
+			comm.producedService.saveOrUpdate(produced);
+
+			result.setMessage(code);
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult updateProduced(Integer id, ProducedDTO producedDTO) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(producedDTO, ERROR.INPUT_NULL);
+
+			Produced produced = comm.producedService.findProduced(id);
+
+			Validate.notNull(produced, ERROR.OBJECT_NULL);
+
+			BeanMapper.copy(BeanMapper.map(producedDTO, Produced.class), produced);
+
+			produced.setUser(DEFAULT_USER);
+			produced.setStatus(CMDBuildConstants.STATUS_ACTIVE);
+			produced.setIdClass(TableNameUtil.getTableName(Produced.class));
+
+			// 调用JSR303的validate方法, 验证失败时抛出ConstraintViolationException.
+			BeanValidators.validateWithException(validator, produced);
+
+			comm.producedService.saveOrUpdate(produced);
+
+			return result;
+
+		} catch (ConstraintViolationException e) {
+			String message = StringUtils.join(BeanValidators.extractPropertyAndMessageAsList(e, " "), "\n");
+			return handleParameterError(result, e, message);
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public IdResult deleteProduced(Integer id) {
+
+		IdResult result = new IdResult();
+
+		try {
+
+			Validate.notNull(id, ERROR.INPUT_NULL);
+
+			Produced produced = comm.producedService.findProduced(id);
+
+			Validate.notNull(produced, ERROR.OBJECT_NULL);
+
+			produced.setStatus(CMDBuildConstants.STATUS_NON_ACTIVE);
+
+			comm.producedService.saveOrUpdate(produced);
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public DTOListResult<ProducedDTO> getProducedList(SearchParams searchParams) {
+
+		DTOListResult<ProducedDTO> result = new DTOListResult<ProducedDTO>();
+
+		try {
+
+			result.setDtos(BeanMapper.mapList(comm.producedService.getProducedList(searchParams.getParamsMap()),
+					ProducedDTO.class));
+
+			return result;
+
+		} catch (IllegalArgumentException e) {
+			return handleParameterError(result, e);
+		} catch (RuntimeException e) {
+			return handleGeneralError(result, e);
+		}
+	}
+
+	@Override
+	public PaginationResult<ProducedDTO> getProducedPagination(SearchParams searchParams, Integer pageNumber,
+			Integer pageSize) {
+
+		PaginationResult<ProducedDTO> result = new PaginationResult<ProducedDTO>();
+
+		try {
+
+			return comm.producedService.getProducedDTOPagination(searchParams.getParamsMap(), pageNumber, pageSize);
 
 		} catch (IllegalArgumentException e) {
 			return handleParameterError(result, e);

@@ -112,6 +112,9 @@ public class CommonService {
 	public NicService nicService;
 
 	@Autowired
+	public ProducedService producedService;
+
+	@Autowired
 	public RackService rackService;
 
 	@Autowired

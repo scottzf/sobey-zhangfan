@@ -18,31 +18,24 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "ecs_spec", schema = "public")
 public class EcsSpec extends BasicEntity {
 
-	private Integer cpuNumber;
-	private Integer diskSize;
 	private Set<EcsSpecHistory> ecsSpecHistories = new HashSet<EcsSpecHistory>(0);
+	private Integer ecsType;
 	private Integer idc;
 	private String imageName;
-	private Integer memory;
 	private Integer osType;
 	private String remark;
 
 	public EcsSpec() {
 	}
 
-	@Column(name = "cpu_number")
-	public Integer getCpuNumber() {
-		return cpuNumber;
-	}
-
-	@Column(name = "disk_size")
-	public Integer getDiskSize() {
-		return diskSize;
-	}
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ecsSpec")
 	public Set<EcsSpecHistory> getEcsSpecHistories() {
 		return ecsSpecHistories;
+	}
+
+	@Column(name = "ecs_type")
+	public Integer getEcsType() {
+		return ecsType;
 	}
 
 	@Column(name = "idc")
@@ -55,11 +48,6 @@ public class EcsSpec extends BasicEntity {
 		return imageName;
 	}
 
-	@Column(name = "memory")
-	public Integer getMemory() {
-		return memory;
-	}
-
 	@Column(name = "os_type")
 	public Integer getOsType() {
 		return osType;
@@ -70,16 +58,12 @@ public class EcsSpec extends BasicEntity {
 		return remark;
 	}
 
-	public void setCpuNumber(Integer cpuNumber) {
-		this.cpuNumber = cpuNumber;
-	}
-
-	public void setDiskSize(Integer diskSize) {
-		this.diskSize = diskSize;
-	}
-
 	public void setEcsSpecHistories(Set<EcsSpecHistory> ecsSpecHistories) {
 		this.ecsSpecHistories = ecsSpecHistories;
+	}
+
+	public void setEcsType(Integer ecsType) {
+		this.ecsType = ecsType;
 	}
 
 	public void setIdc(Integer idc) {
@@ -88,10 +72,6 @@ public class EcsSpec extends BasicEntity {
 
 	public void setImageName(String imageName) {
 		this.imageName = imageName;
-	}
-
-	public void setMemory(Integer memory) {
-		this.memory = memory;
 	}
 
 	public void setOsType(Integer osType) {
