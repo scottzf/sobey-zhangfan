@@ -13,12 +13,15 @@ import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.FirewallPolicyDTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
+import com.sobey.generate.cmdbuild.ProducedDTO;
+import com.sobey.generate.cmdbuild.RouterDTO;
 import com.sobey.generate.cmdbuild.SubnetDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
+import com.sobey.test.data.RandomData;
 
 public class TestData {
 
-	private static final Integer tenantsId = 164;
+	private static final Integer tenantsId = 228;
 
 	public static TenantsDTO randomTenantsDTO() {
 		TenantsDTO dto = new TenantsDTO();
@@ -49,25 +52,25 @@ public class TestData {
 	public static EcsDTO randomEcsDTO() {
 		EcsDTO dto = new EcsDTO();
 		dto.setDescription("测试专用主机A");
-		dto.setServer(124);
-		dto.setSubnet(1466);// 165:默认子网 1466 : 200子网
-		dto.setEcsType(109); // 109 instance 110 firewall
-		dto.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
-		dto.setIdc(ConstansData.idcId);
-		dto.setTenants(tenantsId);
-		dto.setEcsSpec(130);// centos
-		return dto;
-	}
-
-	public static EcsDTO randomRouterDTO() {
-		EcsDTO dto = new EcsDTO();
-		dto.setDescription("路由");
-		dto.setServer(124);
+		dto.setSubnet(229);// 165:默认子网 1466 : 200子网
 		dto.setEcsType(110); // 109 instance 110 firewall
 		dto.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
 		dto.setIdc(ConstansData.idcId);
 		dto.setTenants(tenantsId);
-		dto.setEcsSpec(134);
+		dto.setEcsSpec(120);// centos
+		dto.setCpuNumber("2");
+		dto.setMemorySize("2048");
+		return dto;
+	}
+
+	public static RouterDTO randomRouterDTO() {
+		RouterDTO dto = new RouterDTO();
+		dto.setDescription("路由2");
+		dto.setIdc(ConstansData.idcId);
+		dto.setTenants(tenantsId);
+		dto.setEcsSpec(122);
+		dto.setCpuNumber("1");
+		dto.setMemorySize("1024");
 		return dto;
 	}
 
@@ -122,7 +125,7 @@ public class TestData {
 		DnsPolicyDTO dnsPolicyDTO = new DnsPolicyDTO();
 		dnsPolicyDTO.setDnsProtocol(39); // 39 HTTP ; 59 HTTPS
 		dnsPolicyDTO.setPort("80");
-		dnsPolicyDTO.setIpaddress("125.71.203.22");//EIP的IP
+		dnsPolicyDTO.setIpaddress("125.71.203.22");// EIP的IP
 		dnsPolicyDTOs.add(dnsPolicyDTO);
 		return dnsPolicyDTOs;
 	}
@@ -156,5 +159,14 @@ public class TestData {
 		eipDTO.setBandwidth(1);
 
 		return eipDTO;
+	}
+
+	public static ProducedDTO randomProducedDTO() {
+		ProducedDTO dto = new ProducedDTO();
+		dto.setEcsSpec(130);
+		dto.setIdc(ConstansData.idcId);
+		dto.setDescription(RandomData.randomName("windows2008R2-"));
+
+		return dto;
 	}
 }

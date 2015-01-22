@@ -24,6 +24,7 @@ import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.FirewallPolicyDTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
 import com.sobey.generate.cmdbuild.IdResult;
+import com.sobey.generate.cmdbuild.ProducedDTO;
 import com.sobey.generate.cmdbuild.RouterDTO;
 import com.sobey.generate.cmdbuild.ServiceDTO;
 import com.sobey.generate.cmdbuild.SubnetDTO;
@@ -59,13 +60,13 @@ public class ApiServiceTest extends TestCase {
 
 	@Test
 	public void createRouter() {
-		EcsDTO ecsDTO = TestData.randomRouterDTO();
+		RouterDTO routerDTO = TestData.randomRouterDTO();
 
-		Integer fsId = 0;
+		Integer fsId = 1499;
 		FirewallServiceDTO firewallServiceDTO = (FirewallServiceDTO) cmdbuildSoapService.findFirewallService(fsId)
 				.getDto();
 
-		service.createRouter(ecsDTO, firewallServiceDTO);
+		service.createRouter(routerDTO, firewallServiceDTO);
 	}
 
 	@Test
@@ -163,6 +164,14 @@ public class ApiServiceTest extends TestCase {
 		eipDTOs.add(eipDTO);
 
 		service.createDNS(dnsDTO, dnsPolicyDTOs, eipDTOs);
+	}
 
+	@Test
+	public void createProduced() {
+
+		for (int i = 0; i < 4; i++) {
+			ProducedDTO producedDTO = TestData.randomProducedDTO();
+			service.createProduced(producedDTO);
+		}
 	}
 }
