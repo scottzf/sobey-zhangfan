@@ -1027,7 +1027,7 @@ public class SDNServiceImpl implements SDNService {
 		Folder rootFolder = si.getRootFolder();
 
 		String sslThumbprintStr = si.getSessionManager().acquireCloneTicket();
-		
+
 		String hostSSLThumbprint = StringUtils.substringAfter(sslThumbprintStr, "tp-"); // 主机认证证书指纹
 		vmrcParameter.setHostSSLThumbprint(hostSSLThumbprint);
 
@@ -1035,8 +1035,119 @@ public class SDNServiceImpl implements SDNService {
 				vmName);
 		String vmId = vm.getMOR().getVal();
 		vmrcParameter.setVmId(vmId);
-		
+
 		return vmrcParameter;
 
 	}
+
+	@Override
+	public String createFolder(String folderName, String parentFolder) throws Exception {
+
+		ServiceInstance si = VcenterUtil.getServiceInstance();
+
+		Folder pFolder = null;
+		if (StringUtils.isEmpty(parentFolder)) {// parentFolder为空，则默认为vcenter的根目录
+			pFolder = si.getRootFolder();
+		} else {// parentFolder不为空，查找对应父目录
+			pFolder = (Folder) new InventoryNavigator(si.getRootFolder()).searchManagedEntity("Folder", parentFolder);
+		}
+
+		if (pFolder == null) {
+			return "指定父目录不存在!";
+		} else {
+			Boolean mark = checkFolderIsNotExist(folderName, parentFolder);
+
+			if (mark) {
+				pFolder.createFolder(folderName);
+			} else {
+				return "该目录已存在!";
+			}
+
+		}
+
+		return null;
+	}
+
+	/**
+	 * 判断文件夹是否存在
+	 * 
+	 * @param folderName
+	 * @param parentFolder
+	 * @return
+	 * @throws Exception
+	 */
+	private Boolean checkFolderIsNotExist(String folderName, String parentFolder) throws Exception {
+
+		ServiceInstance si = VcenterUtil.getServiceInstance();
+
+		List<String> folderNames = new ArrayList<String>();
+
+		Folder pFolder = (Folder) new InventoryNavigator(si.getRootFolder())
+				.searchManagedEntity("Folder", parentFolder);
+
+		ManagedEntity[] folders = pFolder.getChildEntity();
+
+		for (int i = 0; i < folders.length; i++) {
+
+			if (folders[i] instanceof Folder) {
+
+				Folder folder = (Folder) folders[i];
+				folderNames.add(folder.getName());
+
+			}
+		}
+
+		if (folderNames.contains(folderName)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	@Override
+	public List<String> queryVmsInFolder(String folderName) throws Exception {
+
+		List<String> vms = new ArrayList<String>();
+
+		ServiceInstance si = VcenterUtil.getServiceInstance();
+		Folder rootFolder = si.getRootFolder();
+
+		Folder mfolder = (Folder) new InventoryNavigator(rootFolder).searchManagedEntity("Folder", folderName);
+
+		ManagedEntity[] entities = mfolder.getChildEntity();
+
+		for (int i = 0; i < entities.length; i++) {
+			if (entities[i] instanceof VirtualMachine) {
+
+				VirtualMachine vm = (VirtualMachine) entities[i];
+				vms.add(vm.getName());
+			}
+		}
+
+		return vms;
+	}
+
+	@Override
+	public String moveVmToOtherFolder(String vmName, String folderName) throws Exception {
+
+		ServiceInstance si = VcenterUtil.getServiceInstance();
+		Folder rootFolder = si.getRootFolder();
+
+		VirtualMachine vm = (VirtualMachine) new InventoryNavigator(rootFolder).searchManagedEntity("VirtualMachine",
+				vmName);
+
+		Folder targetFolder = (Folder) new InventoryNavigator(rootFolder).searchManagedEntity("Folder", folderName);
+		
+		Task moveTask = targetFolder.moveIntoFolder_Task(new ManagedEntity[] { vm });
+		
+		String result = moveTask.waitForTask();
+		
+		if (!result.equals(Task.SUCCESS)) {
+			return "移动虚拟机失败！";
+		}else {
+			return null;
+		}
+		
+	}
+
 }

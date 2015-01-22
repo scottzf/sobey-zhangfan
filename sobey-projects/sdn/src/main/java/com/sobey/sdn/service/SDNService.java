@@ -1,5 +1,7 @@
 package com.sobey.sdn.service;
 
+import java.util.List;
+
 import com.sobey.sdn.bean.CreateEipParameter;
 import com.sobey.sdn.bean.Firewall;
 import com.sobey.sdn.bean.Router;
@@ -19,17 +21,17 @@ import com.sobey.sdn.test.testParameter.CreateRouterParameter;
  *
  */
 public interface SDNService {
-    /**
-     * 创建云主机
-     * 
-     * @param ecs
-     * @param vlanId
-     * @param hostIp
-     * @param tenantId
-     * @param vmName
-     * @param subnet
-     * @return
-     */
+	/**
+	 * 创建云主机
+	 * 
+	 * @param ecs
+	 * @param vlanId
+	 * @param hostIp
+	 * @param tenantId
+	 * @param vmName
+	 * @param subnet
+	 * @return
+	 */
 	public String createECS(CreateECSParameter createECSParameter);
 
 	/**
@@ -96,7 +98,7 @@ public interface SDNService {
 	 * @throws Exception
 	 */
 	public void bindingFirewall(BindingFirewallParameter parameter) throws Exception;
-	
+
 	/**
 	 * 创建EIP
 	 * 
@@ -104,7 +106,7 @@ public interface SDNService {
 	 * @throws Exception
 	 */
 	public void createEip(CreateEipParameter createEipParameter) throws Exception;
-	
+
 	/**
 	 * 创建VPN用户
 	 * 
@@ -112,7 +114,7 @@ public interface SDNService {
 	 * @throws Exception
 	 */
 	public void createVPNUser(VPNParameter vpnParameter) throws Exception;
-	
+
 	/**
 	 * 远程连接虚拟机控制台
 	 * 
@@ -120,7 +122,36 @@ public interface SDNService {
 	 * @throws Exception
 	 */
 	public VMRCParameter connectVMRC(String vmName) throws Exception;
-	
-	//public void createLoadBalancer(Firewall firewall) throws Exception;
+
+	/**
+	 * 在指定父目录下新建文件夹
+	 * 
+	 * @param folderName
+	 *            文件夹名
+	 * @param parentFolder
+	 *            父目录名 若为空，则默认为vcenter的根目录
+	 * @throws Exception
+	 */
+	public String createFolder(String folderName, String parentFolder) throws Exception;
+
+	/**
+	 * 查询指定目录下的虚拟机集合
+	 * 
+	 * @param folderName
+	 *            指定文件夹
+	 * @return 虚拟机机名称集合
+	 * @throws Exception
+	 */
+	public List<String> queryVmsInFolder(String folderName) throws Exception;
+
+	/**
+	 * 移动虚拟机到另外文件夹
+	 * 
+	 * @param vmName
+	 * @param folderName
+	 * @return
+	 * @throws Exception
+	 */
+	public String moveVmToOtherFolder(String vmName, String folderName) throws Exception;
 
 }
