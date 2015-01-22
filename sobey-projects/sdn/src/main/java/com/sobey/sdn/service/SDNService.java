@@ -126,19 +126,32 @@ public interface SDNService {
 	/**
 	 * 在指定父目录下新建文件夹
 	 * 
-	 * @param folderName    文件夹名
-	 * @param parentFolder  父目录名   若为空，则默认为vcenter的根目录
+	 * @param folderName
+	 *            文件夹名
+	 * @param parentFolder
+	 *            父目录名 若为空，则默认为vcenter的根目录
 	 * @throws Exception
 	 */
 	public String createFolder(String folderName, String parentFolder) throws Exception;
-	
+
 	/**
 	 * 查询指定目录下的虚拟机集合
 	 * 
-	 * @param folderName  指定文件夹
-	 * @return   虚拟机机名称集合
+	 * @param folderName
+	 *            指定文件夹
+	 * @return 虚拟机机名称集合
 	 * @throws Exception
 	 */
 	public List<String> queryVmsInFolder(String folderName) throws Exception;
+
+	/**
+	 * 移动虚拟机到另外文件夹
+	 * 
+	 * @param vmName
+	 * @param folderName
+	 * @return
+	 * @throws Exception
+	 */
+	public String moveVmToOtherFolder(String vmName, String folderName) throws Exception;
 
 }

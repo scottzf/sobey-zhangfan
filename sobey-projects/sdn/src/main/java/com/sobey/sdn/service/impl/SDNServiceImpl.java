@@ -1127,4 +1127,27 @@ public class SDNServiceImpl implements SDNService {
 		return vms;
 	}
 
+	@Override
+	public String moveVmToOtherFolder(String vmName, String folderName) throws Exception {
+
+		ServiceInstance si = VcenterUtil.getServiceInstance();
+		Folder rootFolder = si.getRootFolder();
+
+		VirtualMachine vm = (VirtualMachine) new InventoryNavigator(rootFolder).searchManagedEntity("VirtualMachine",
+				vmName);
+
+		Folder targetFolder = (Folder) new InventoryNavigator(rootFolder).searchManagedEntity("Folder", folderName);
+		
+		Task moveTask = targetFolder.moveIntoFolder_Task(new ManagedEntity[] { vm });
+		
+		String result = moveTask.waitForTask();
+		
+		if (!result.equals(Task.SUCCESS)) {
+			return "移动虚拟机失败！";
+		}else {
+			return null;
+		}
+		
+	}
+
 }
