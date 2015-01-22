@@ -17,6 +17,7 @@ public class Router extends ServiceBasic {
 
 	private String cpuNumber;
 	private String diskSize;
+	private Integer ecsSpec;
 	private Integer firewallService;
 	private Integer ipaddress;
 	private String memorySize;
@@ -35,6 +36,11 @@ public class Router extends ServiceBasic {
 	@Column(name = "disk_size", length = 100)
 	public String getDiskSize() {
 		return diskSize;
+	}
+
+	@Column(name = "ecs_spec")
+	public Integer getEcsSpec() {
+		return ecsSpec;
 	}
 
 	@Column(name = "firewall_service")
@@ -68,6 +74,10 @@ public class Router extends ServiceBasic {
 
 	public void setDiskSize(String diskSize) {
 		this.diskSize = diskSize;
+	}
+
+	public void setEcsSpec(Integer ecsSpec) {
+		this.ecsSpec = ecsSpec;
 	}
 
 	public void setFirewallService(Integer firewallService) {

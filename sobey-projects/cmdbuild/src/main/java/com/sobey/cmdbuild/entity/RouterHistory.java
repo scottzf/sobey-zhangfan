@@ -18,6 +18,7 @@ public class RouterHistory extends ServiceHistoryBasic {
 
 	private String cpuNumber;
 	private String diskSize;
+	private Integer ecsSpec;
 	private Integer firewallService;
 	private Integer ipaddress;
 	private String memorySize;
@@ -34,6 +35,11 @@ public class RouterHistory extends ServiceHistoryBasic {
 	@Column(name = "disk_size", length = 100)
 	public String getDiskSize() {
 		return diskSize;
+	}
+
+	@Column(name = "ecs_spec")
+	public Integer getEcsSpec() {
+		return ecsSpec;
 	}
 
 	@Column(name = "firewall_service")
@@ -63,6 +69,10 @@ public class RouterHistory extends ServiceHistoryBasic {
 
 	public void setDiskSize(String diskSize) {
 		this.diskSize = diskSize;
+	}
+
+	public void setEcsSpec(Integer ecsSpec) {
+		this.ecsSpec = ecsSpec;
 	}
 
 	public void setFirewallService(Integer firewallService) {

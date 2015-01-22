@@ -14,6 +14,7 @@ public class RouterDTO extends ServiceBasicDTO {
 
 	private String cpuNumber;
 	private String diskSize;
+	private Integer ecsSpec;
 	private Integer firewallService;
 	private Integer ipaddress;
 	private String memorySize;
@@ -25,6 +26,10 @@ public class RouterDTO extends ServiceBasicDTO {
 
 	public String getDiskSize() {
 		return diskSize;
+	}
+
+	public Integer getEcsSpec() {
+		return ecsSpec;
 	}
 
 	public Integer getFirewallService() {
@@ -49,6 +54,10 @@ public class RouterDTO extends ServiceBasicDTO {
 
 	public void setDiskSize(String diskSize) {
 		this.diskSize = diskSize;
+	}
+
+	public void setEcsSpec(Integer ecsSpec) {
+		this.ecsSpec = ecsSpec;
 	}
 
 	public void setFirewallService(Integer firewallService) {
