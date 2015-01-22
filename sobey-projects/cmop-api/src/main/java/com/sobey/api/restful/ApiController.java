@@ -116,12 +116,6 @@ public class ApiController {
 		return servie.powerOpsECS(code, powerOperation, accessKey);
 	}
 
-	@RequestMapping(value = "/reconfigECS/", method = RequestMethod.POST)
-	public WSResult reconfigECS(@RequestParam(value = "code") String code,
-			@RequestParam(value = "ecsSpec") String ecsSpec, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.reconfigECS(code, ecsSpec, accessKey);
-	}
-
 	/********** ES3 ***********/
 	@RequestMapping(value = "/ES3Result/{code}/{accessKey}", method = RequestMethod.GET)
 	public DTOResult<Es3Entity> ES3Result(@PathVariable("code") String code, @PathVariable("accessKey") String accessKey) {

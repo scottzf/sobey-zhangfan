@@ -37,8 +37,6 @@ public interface RestfulService {
 
 	public WSResult powerOpsECS(String code, String powerOperation, String accessKey);
 
-	public WSResult reconfigECS(String code, String ecsSpec, String accessKey);
-
 	/******** ES3 ********/
 
 	public DTOResult<Es3Entity> findES3(String code, String accessKey);

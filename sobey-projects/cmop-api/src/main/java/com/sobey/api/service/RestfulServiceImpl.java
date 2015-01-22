@@ -360,28 +360,6 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult reconfigECS(String code, String ecsSpec, String accessKey) {
-
-		WSResult result = new WSResult();
-		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
-		if (tenantsDTO == null) {
-			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
-			return result;
-		}
-		EcsSpecDTO ecsSpecDTO = findEcsSpecDTO(ecsSpec);
-		if (ecsSpecDTO == null) {
-			result.setError(WSResult.PARAMETER_ERROR, "规格不存在.");
-			return result;
-		}
-		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), code);
-		if (ecsDTO == null) {
-			result.setError(WSResult.PARAMETER_ERROR, "ECS不存在.");
-			return result;
-		}
-		return apiService.reconfigECS(ecsDTO.getId(), ecsSpecDTO.getId());
-	}
-
-	@Override
 	public DTOResult<Es3Entity> findES3(String code, String accessKey) {
 
 		DTOResult<Es3Entity> result = new DTOResult<Es3Entity>();
@@ -659,15 +637,15 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		EcsDTO ecsDTO = new EcsDTO();
-		ecsDTO.setAgentType(LookUpConstants.AgentType.Fortigate.getValue());
-		ecsDTO.setDescription(routerName);
-		ecsDTO.setEcsSpec(ecsSpecDTO.getId());
-		ecsDTO.setIdc(idcDTO.getId());
-		ecsDTO.setRemark(remark);
-		ecsDTO.setTenants(tenantsDTO.getId());
+		RouterDTO routerDTO = new RouterDTO();
+		routerDTO.setAgentType(LookUpConstants.AgentType.Fortigate.getValue());
+		routerDTO.setDescription(routerName);
+		routerDTO.setEcsSpec(ecsSpecDTO.getId());
+		routerDTO.setIdc(idcDTO.getId());
+		routerDTO.setRemark(remark);
+		routerDTO.setTenants(tenantsDTO.getId());
 
-		result.setMessage(apiService.createRouter(ecsDTO, firewallServiceDTO).getMessage());
+		result.setMessage(apiService.createRouter(routerDTO, firewallServiceDTO).getMessage());
 
 		return result;
 	}

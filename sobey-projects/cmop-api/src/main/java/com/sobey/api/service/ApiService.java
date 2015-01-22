@@ -11,6 +11,7 @@ import com.sobey.generate.cmdbuild.EipPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.FirewallPolicyDTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
+import com.sobey.generate.cmdbuild.ProducedDTO;
 import com.sobey.generate.cmdbuild.RouterDTO;
 import com.sobey.generate.cmdbuild.ServiceDTO;
 import com.sobey.generate.cmdbuild.SubnetDTO;
@@ -35,8 +36,6 @@ public interface ApiService {
 
 	public WSResult powerOpsECS(Integer ecsId, String powerOperation);
 
-	public WSResult reconfigECS(Integer ecsId, Integer ecsSpecId);
-
 	// ==================== ES3 ====================//
 
 	public WSResult createES3(Es3DTO es3DTO, Integer ecsId);
@@ -45,7 +44,7 @@ public interface ApiService {
 
 	// ==================== Router ====================//
 
-	public WSResult createRouter(EcsDTO ecsDTO, FirewallServiceDTO firewallServiceDTO);
+	public WSResult createRouter(RouterDTO routerDTO, FirewallServiceDTO firewallServiceDTO);
 
 	public WSResult bindingRouter(List<SubnetDTO> subnetDTOs, RouterDTO routerDTO);
 
@@ -75,5 +74,9 @@ public interface ApiService {
 	// ==================== VMRC ====================//
 
 	public VMRCDTO findVMRCDTO(EcsDTO ecsDTO);
+
+	// ==================== Produced ====================//
+
+	public WSResult createProduced(ProducedDTO producedDTO);
 
 }
