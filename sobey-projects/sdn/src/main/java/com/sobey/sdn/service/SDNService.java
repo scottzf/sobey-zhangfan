@@ -1,5 +1,7 @@
 package com.sobey.sdn.service;
 
+import java.util.List;
+
 import com.sobey.sdn.bean.CreateEipParameter;
 import com.sobey.sdn.bean.Firewall;
 import com.sobey.sdn.bean.Router;
@@ -129,5 +131,14 @@ public interface SDNService {
 	 * @throws Exception
 	 */
 	public String createFolder(String folderName, String parentFolder) throws Exception;
+	
+	/**
+	 * 查询指定目录下的虚拟机集合
+	 * 
+	 * @param folderName  指定文件夹
+	 * @return   虚拟机机名称集合
+	 * @throws Exception
+	 */
+	public List<String> queryVmsInFolder(String folderName) throws Exception;
 
 }

@@ -71,7 +71,6 @@ import com.vmware.vim25.VirtualMachineRelocateSpec;
 import com.vmware.vim25.VirtualVmxnet3;
 import com.vmware.vim25.mo.ComputeResource;
 import com.vmware.vim25.mo.CustomizationSpecManager;
-import com.vmware.vim25.mo.Datacenter;
 import com.vmware.vim25.mo.DistributedVirtualPortgroup;
 import com.vmware.vim25.mo.DistributedVirtualSwitch;
 import com.vmware.vim25.mo.Folder;
@@ -1057,13 +1056,13 @@ public class SDNServiceImpl implements SDNService {
 			return "指定父目录不存在!";
 		} else {
 			Boolean mark = checkFolderIsNotExist(folderName, parentFolder);
-			
-			if(mark){
+
+			if (mark) {
 				pFolder.createFolder(folderName);
-			}else {
+			} else {
 				return "该目录已存在!";
 			}
-			
+
 		}
 
 		return null;
@@ -1087,7 +1086,7 @@ public class SDNServiceImpl implements SDNService {
 				.searchManagedEntity("Folder", parentFolder);
 
 		ManagedEntity[] folders = pFolder.getChildEntity();
-		
+
 		for (int i = 0; i < folders.length; i++) {
 
 			if (folders[i] instanceof Folder) {
@@ -1098,11 +1097,34 @@ public class SDNServiceImpl implements SDNService {
 			}
 		}
 
-		if(folderNames.contains(folderName)){
+		if (folderNames.contains(folderName)) {
 			return false;
-		}else {
+		} else {
 			return true;
 		}
+	}
+
+	@Override
+	public List<String> queryVmsInFolder(String folderName) throws Exception {
+
+		List<String> vms = new ArrayList<String>();
+
+		ServiceInstance si = VcenterUtil.getServiceInstance();
+		Folder rootFolder = si.getRootFolder();
+
+		Folder mfolder = (Folder) new InventoryNavigator(rootFolder).searchManagedEntity("Folder", folderName);
+
+		ManagedEntity[] entities = mfolder.getChildEntity();
+
+		for (int i = 0; i < entities.length; i++) {
+			if (entities[i] instanceof VirtualMachine) {
+
+				VirtualMachine vm = (VirtualMachine) entities[i];
+				vms.add(vm.getName());
+			}
+		}
+
+		return vms;
 	}
 
 }
