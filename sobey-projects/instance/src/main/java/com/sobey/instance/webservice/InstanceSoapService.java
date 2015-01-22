@@ -215,4 +215,58 @@ public interface InstanceSoapService {
 	WSResult runNetworkDeviceVMByInstance(
 			@WebParam(name = "runNetworkDeviceVMParameter") RunNetworkDeviceVMParameter runNetworkDeviceVMParameter);
 
+	// =============== Folder ===============//
+
+	/**
+	 * 在vCenter根文件夹下创建文件夹
+	 * 
+	 * @param datacenter
+	 *            数据中心
+	 * @param folderName
+	 *            文件夹名称
+	 * @return
+	 */
+	WSResult createFolderByInstance(@WebParam(name = "datacenter") String datacenter,
+			@WebParam(name = "folderName") String folderName);
+
+	/**
+	 * 在指定的文件夹下创建文件夹
+	 * 
+	 * @param datacenter
+	 *            数据中心
+	 * @param folderName
+	 *            文件夹名称
+	 * @param parentFolderName
+	 *            父文件夹名称
+	 * @return
+	 */
+	WSResult createFolderByInstance(@WebParam(name = "datacenter") String datacenter,
+			@WebParam(name = "folderName") String folderName,
+			@WebParam(name = "parentFolderName") String parentFolderName);
+
+	/**
+	 * 移动VM至指定的文件夹
+	 * 
+	 * @param datacenter
+	 *            数据中心
+	 * @param vmName
+	 *            虚拟机名称
+	 * @param folderName
+	 *            文件夹名称
+	 * @return
+	 */
+	WSResult moveVMByInstance(@WebParam(name = "datacenter") String datacenter,
+			@WebParam(name = "vmName") String vmName, @WebParam(name = "folderName") String folderName);
+
+	/**
+	 * 获得指定文件夹下的所有VM名称
+	 * 
+	 * @param datacenter
+	 *            数据中心
+	 * @param folderName
+	 *            文件夹名称
+	 * @return
+	 */
+	DTOListResult<String> queryVMInFolderByInstance(@WebParam(name = "datacenter") String datacenter,
+			@WebParam(name = "folderName") String folderName);
 }

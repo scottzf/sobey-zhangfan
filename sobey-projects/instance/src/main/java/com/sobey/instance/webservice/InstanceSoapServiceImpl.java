@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sobey.instance.constans.WsConstants;
 import com.sobey.instance.service.DiskService;
+import com.sobey.instance.service.FolderService;
 import com.sobey.instance.service.HostService;
 import com.sobey.instance.service.NetworkService;
 import com.sobey.instance.service.VMRCService;
@@ -37,6 +38,9 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 
 	@Autowired
 	public VMService vmService;
+
+	@Autowired
+	public FolderService folderService;
 
 	@Autowired
 	public NetworkService networkService;
@@ -139,6 +143,26 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	@Override
 	public WSResult runNetworkDeviceVMByInstance(RunNetworkDeviceVMParameter networkDeviceVMParameter) {
 		return vmService.runNetworkDeviceVM(networkDeviceVMParameter);
+	}
+
+	@Override
+	public WSResult createFolderByInstance(String datacenter, String folderName) {
+		return folderService.createFolder(datacenter, folderName, null);
+	}
+
+	@Override
+	public WSResult createFolderByInstance(String datacenter, String folderName, String parentFolderName) {
+		return folderService.createFolder(datacenter, folderName, parentFolderName);
+	}
+
+	@Override
+	public WSResult moveVMByInstance(String datacenter, String vmName, String folderName) {
+		return folderService.moveVM(datacenter, vmName, folderName);
+	}
+
+	@Override
+	public DTOListResult<String> queryVMInFolderByInstance(String datacenter, String folderName) {
+		return folderService.queryVMInFolder(datacenter, folderName);
 	}
 
 }
