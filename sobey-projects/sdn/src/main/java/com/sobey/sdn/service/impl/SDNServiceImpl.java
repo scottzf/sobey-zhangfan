@@ -71,6 +71,7 @@ import com.vmware.vim25.VirtualMachineRelocateSpec;
 import com.vmware.vim25.VirtualVmxnet3;
 import com.vmware.vim25.mo.ComputeResource;
 import com.vmware.vim25.mo.CustomizationSpecManager;
+import com.vmware.vim25.mo.Datacenter;
 import com.vmware.vim25.mo.DistributedVirtualPortgroup;
 import com.vmware.vim25.mo.DistributedVirtualSwitch;
 import com.vmware.vim25.mo.Folder;
@@ -1027,7 +1028,7 @@ public class SDNServiceImpl implements SDNService {
 		Folder rootFolder = si.getRootFolder();
 
 		String sslThumbprintStr = si.getSessionManager().acquireCloneTicket();
-		
+
 		String hostSSLThumbprint = StringUtils.substringAfter(sslThumbprintStr, "tp-"); // 主机认证证书指纹
 		vmrcParameter.setHostSSLThumbprint(hostSSLThumbprint);
 
@@ -1035,8 +1036,73 @@ public class SDNServiceImpl implements SDNService {
 				vmName);
 		String vmId = vm.getMOR().getVal();
 		vmrcParameter.setVmId(vmId);
-		
+
 		return vmrcParameter;
 
 	}
+
+	@Override
+	public String createFolder(String folderName, String parentFolder) throws Exception {
+
+		ServiceInstance si = VcenterUtil.getServiceInstance();
+
+		Folder pFolder = null;
+		if (StringUtils.isEmpty(parentFolder)) {// parentFolder为空，则默认为vcenter的根目录
+			pFolder = si.getRootFolder();
+		} else {// parentFolder不为空，查找对应父目录
+			pFolder = (Folder) new InventoryNavigator(si.getRootFolder()).searchManagedEntity("Folder", parentFolder);
+		}
+
+		if (pFolder == null) {
+			return "指定父目录不存在!";
+		} else {
+			Boolean mark = checkFolderIsNotExist(folderName, parentFolder);
+			
+			if(mark){
+				pFolder.createFolder(folderName);
+			}else {
+				return "该目录已存在!";
+			}
+			
+		}
+
+		return null;
+	}
+
+	/**
+	 * 判断文件夹是否存在
+	 * 
+	 * @param folderName
+	 * @param parentFolder
+	 * @return
+	 * @throws Exception
+	 */
+	private Boolean checkFolderIsNotExist(String folderName, String parentFolder) throws Exception {
+
+		ServiceInstance si = VcenterUtil.getServiceInstance();
+
+		List<String> folderNames = new ArrayList<String>();
+
+		Folder pFolder = (Folder) new InventoryNavigator(si.getRootFolder())
+				.searchManagedEntity("Folder", parentFolder);
+
+		ManagedEntity[] folders = pFolder.getChildEntity();
+		
+		for (int i = 0; i < folders.length; i++) {
+
+			if (folders[i] instanceof Folder) {
+
+				Folder folder = (Folder) folders[i];
+				folderNames.add(folder.getName());
+
+			}
+		}
+
+		if(folderNames.contains(folderName)){
+			return false;
+		}else {
+			return true;
+		}
+	}
+
 }
