@@ -144,9 +144,9 @@ public class RestfulServiceImpl implements RestfulService {
 				CMDBuildUtil.wrapperSearchParams(map)).getDto();
 	}
 
-	private EcsSpecDTO findEcsSpecDTO(String description) {
+	private EcsSpecDTO findEcsSpecDTO(String imageName) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_description", description);
+		map.put("EQ_imageName", imageName);
 		return (EcsSpecDTO) cmdbuildSoapService.findEcsSpecByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
 	}
 
@@ -283,8 +283,8 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult createECS(String ecsName, String subnetCode, String remark, String ecsSpec, String idc,
-			String accessKey) {
+	public WSResult createECS(String ecsName, String subnetCode, String remark, String imageName, String cpuNumber,
+			String memoryMB, String idc, String accessKey) {
 
 		WSResult result = new WSResult();
 
@@ -294,7 +294,7 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		EcsSpecDTO ecsSpecDTO = findEcsSpecDTO(ecsSpec);
+		EcsSpecDTO ecsSpecDTO = findEcsSpecDTO(imageName);
 		if (ecsSpecDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "规格不存在.");
 			return result;
@@ -316,6 +316,8 @@ public class RestfulServiceImpl implements RestfulService {
 		ecsDTO.setRemark(remark);
 		ecsDTO.setTenants(tenantsDTO.getId());
 		ecsDTO.setSubnet(subnetDTO.getId());
+		ecsDTO.setCpuNumber(cpuNumber);
+		ecsDTO.setMemorySize(memoryMB);
 
 		result.setMessage(apiService.createECS(ecsDTO).getMessage());
 		return result;
@@ -608,8 +610,8 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult createRouter(String routerName, String remark, String routerSpec, String idc,
-			String firewallServiceCode, String accessKey) {
+	public WSResult createRouter(String routerName, String remark, String imageName, String cpuNumber, String memoryMB,
+			String idc, String firewallServiceCode, String accessKey) {
 
 		WSResult result = new WSResult();
 
@@ -619,7 +621,7 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		EcsSpecDTO ecsSpecDTO = findEcsSpecDTO(routerSpec);
+		EcsSpecDTO ecsSpecDTO = findEcsSpecDTO(imageName);
 		if (ecsSpecDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "规格不存在.");
 			return result;
@@ -644,6 +646,8 @@ public class RestfulServiceImpl implements RestfulService {
 		routerDTO.setIdc(idcDTO.getId());
 		routerDTO.setRemark(remark);
 		routerDTO.setTenants(tenantsDTO.getId());
+		routerDTO.setMemorySize(memoryMB);
+		routerDTO.setCpuNumber(cpuNumber);
 
 		result.setMessage(apiService.createRouter(routerDTO, firewallServiceDTO).getMessage());
 

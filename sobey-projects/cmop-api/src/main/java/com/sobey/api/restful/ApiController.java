@@ -76,11 +76,13 @@ public class ApiController {
 
 	@RequestMapping(value = "/createRouter/", method = RequestMethod.POST)
 	public WSResult createRouter(@RequestParam(value = "routerName") String routerName,
-			@RequestParam(value = "remark") String remark, @RequestParam(value = "routerSpec") String routerSpec,
+			@RequestParam(value = "remark") String remark, @RequestParam(value = "imageName") String imageName,
+			@RequestParam(value = "cpuNumber") String cpuNumber, @RequestParam(value = "memoryMB") String memoryMB,
 			@RequestParam(value = "idc") String idc,
 			@RequestParam(value = "firewallServiceCode") String firewallServiceCode,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.createRouter(routerName, remark, routerSpec, idc, firewallServiceCode, accessKey);
+		return servie.createRouter(routerName, remark, imageName, cpuNumber, memoryMB, idc, firewallServiceCode,
+				accessKey);
 	}
 
 	@RequestMapping(value = "/bindingRouter/", method = RequestMethod.POST)
@@ -97,10 +99,11 @@ public class ApiController {
 
 	@RequestMapping(value = "/createECS/", method = RequestMethod.POST)
 	public WSResult createECS(@RequestParam(value = "ecsName") String ecsName,
-			@RequestParam(value = "remark") String remark, @RequestParam(value = "ecsSpec") String ecsSpec,
+			@RequestParam(value = "remark") String remark, @RequestParam(value = "imageName") String imageName,
+			@RequestParam(value = "cpuNumber") String cpuNumber, @RequestParam(value = "memoryMB") String memoryMB,
 			@RequestParam(value = "subnetCode") String subnetCode, @RequestParam(value = "idc") String idc,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.createECS(ecsName, subnetCode, remark, ecsSpec, idc, accessKey);
+		return servie.createECS(ecsName, subnetCode, remark, imageName, cpuNumber, memoryMB, idc, accessKey);
 	}
 
 	@RequestMapping(value = "/destroyECS/", method = RequestMethod.POST)
