@@ -63,12 +63,6 @@ public class DiskService extends VMWareService {
 	private static final String SCSI_Controller_Name_EN = "SCSI Controller 0";
 
 	/**
-	 * 默认存储分配存储器: vsanDatastore
-	 * 
-	 */
-	private static final String Default_Datastore = "vsanDatastore";
-
-	/**
 	 * 对新增的存储进行设置
 	 * 
 	 * @param vm
@@ -96,7 +90,6 @@ public class DiskService extends VMWareService {
 		int key = 0;
 
 		for (int k = 0; k < vds.length; k++) {
-			// System.out.println(vds[k].getDeviceInfo().getLabel());
 			if (StringUtils.equalsIgnoreCase(SCSI_Controller_Name_CN, vds[k].getDeviceInfo().getLabel())
 					|| StringUtils.equalsIgnoreCase(SCSI_Controller_Name_EN, vds[k].getDeviceInfo().getLabel())) {
 				key = vds[k].getKey();
@@ -112,15 +105,9 @@ public class DiskService extends VMWareService {
 
 		int unitNumber = j;
 
-		// String dsName = getFreeDatastoreName(vm, diskSize);
-		String dsName = Default_Datastore;
-
-		if (dsName == null) {
-			return null;
-		}
-
 		// 自定义存储路径
-		String fileName = "[" + dsName + "] " + vm.getName() + "/" + diskName + ".vmdk";
+
+		String fileName = getFilePath(vmConfig.getFiles().vmPathName) + "/" + diskName + ".vmdk";
 
 		diskfileBacking.setDiskMode(diskMode);
 		diskfileBacking.setFileName(fileName);
@@ -187,6 +174,7 @@ public class DiskService extends VMWareService {
 	 * @param size
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private static String getFreeDatastoreName(VirtualMachine vm, long size) {
 
 		String dsName = null;
@@ -337,9 +325,10 @@ public class DiskService extends VMWareService {
 			}
 		}
 
-		String dsName = getFreeDatastoreName(vm, Long.valueOf(parameter.getDiskGB()));
+		VirtualMachineConfigInfo vmConfig = (VirtualMachineConfigInfo) vm.getConfig();
+
 		String diskName = parameter.getDiskName();
-		String fileName = "[" + dsName + "] " + vm.getName() + "/" + diskName + ".vmdk";
+		String fileName = getFilePath(vmConfig.getFiles().vmPathName) + "/" + diskName + ".vmdk";
 
 		VirtualDeviceConfigSpec vdiskSpec = createRemoveDiskConfigSpec(vm.getConfig(), fileName);
 		vmConfigSpec.setDeviceChange(new VirtualDeviceConfigSpec[] { vdiskSpec });
@@ -360,6 +349,16 @@ public class DiskService extends VMWareService {
 		}
 
 		return result;
+	}
+
+	/**
+	 * 获得VM所在的文件夹路径
+	 * 
+	 * @param vmPathName
+	 * @return
+	 */
+	private static String getFilePath(String vmPathName) {
+		return StringUtils.substringBeforeLast(vmPathName, "/");
 	}
 
 }
