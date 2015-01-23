@@ -671,7 +671,7 @@ public class VMService extends VMWareService {
 			identification.setJoinWorkgroup(OrgNme);
 			winSysprep.setIdentification(identification);
 
-			winOptions.setReboot(CustomizationSysprepRebootOption.noreboot);
+			winOptions.setReboot(CustomizationSysprepRebootOption.reboot);
 			winOptions.setChangeSID(true);
 			winOptions.setDeleteAccounts(false);
 
