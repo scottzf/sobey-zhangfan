@@ -1003,11 +1003,11 @@ public class ApiServiceImpl implements ApiService {
 		addressParameters.getConfigFirewallAddressParameters().addAll(addressArrayList);
 		firewallSoapService.configFirewallAddressParameterListByFirewall(addressParameters);
 
-		Threads.sleep(2000);
+		Threads.sleep(100);
 
 		interfaceParameters.getConfigSystemInterfaceParameters().addAll(interfaceArrayList);
 		firewallSoapService.configSystemInterfaceListByFirewall(interfaceParameters);
-		Threads.sleep(2000);
+		Threads.sleep(100);
 
 		// Step.5 在vRouter上执行脚本(配置子网策略 config firewall policy)
 		policyParameters.getConfigFirewallPolicyParameters().addAll(wrapperSubnetInFirewallPolicy(subnetDTOs));
