@@ -162,7 +162,7 @@ public class TestData {
 
 	public static ProducedDTO randomProducedDTO() {
 		ProducedDTO dto = new ProducedDTO();
-		dto.setEcsSpec(122); // 120 122 130
+		dto.setEcsSpec(130); // 120 122 130
 		dto.setIdc(ConstansData.idcId);
 
 		return dto;

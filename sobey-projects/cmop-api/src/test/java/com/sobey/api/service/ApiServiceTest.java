@@ -199,55 +199,59 @@ public class ApiServiceTest extends TestCase {
 		 * 将文件夹的vm同步至CMDB中
 		 */
 
-		Integer ecsSpecId = 122; // 120 122 130
-
-		EcsSpecDTO ecsSpecDTO = (EcsSpecDTO) cmdbuildSoapService.findEcsSpec(ecsSpecId).getDto();
-
-		// vcenter中的数据
-		List<Object> list = instanceSoapService
-				.queryVMInFolderByInstance(DataCenterEnum.成都核心数据中心.toString(), ecsSpecDTO.getDescription())
+		HashMap<String, Object> allMap = new HashMap<String, Object>();
+		List<Object> allECSSPec = cmdbuildSoapService.getEcsSpecList(CMDBuildUtil.wrapperSearchParams(allMap))
 				.getDtoList().getDto();
 
-		List<Object> list2 = new ArrayList<Object>();
-		list2.addAll(list);
+		for (Object object : allECSSPec) {
+			EcsSpecDTO ecsSpecDTO = (EcsSpecDTO) object;
 
-		// CMDB中的数据
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_ecsSpec", ecsSpecId);
-		List<Object> objs = cmdbuildSoapService.getProducedList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
-				.getDto();
+			// vcenter中的数据
+			List<Object> list = instanceSoapService
+					.queryVMInFolderByInstance(DataCenterEnum.成都核心数据中心.toString(), ecsSpecDTO.getDescription())
+					.getDtoList().getDto();
 
-		List<Object> objs2 = new ArrayList<Object>();
-		objs2.addAll(objs);
+			List<Object> list2 = new ArrayList<Object>();
+			list2.addAll(list);
 
-		// 得到cmdb中,vcenter不存在的数据.
-		objs2.removeAll(list2);
+			// CMDB中的数据
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("EQ_ecsSpec", ecsSpecDTO.getId());
+			List<Object> objs = cmdbuildSoapService.getProducedList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+					.getDto();
 
-		// 删除
-		for (Object object : objs2) {
+			List<Object> objs2 = new ArrayList<Object>();
+			objs2.addAll(objs);
 
-			ProducedDTO producedDTO = (ProducedDTO) object;
+			// 得到cmdb中,vcenter不存在的数据.
+			objs2.removeAll(list2);
 
-			cmdbuildSoapService.deleteProduced(producedDTO.getId());
-		}
+			// 删除
+			for (Object obj2 : objs2) {
 
-		for (Object object : list) {
+				ProducedDTO producedDTO = (ProducedDTO) obj2;
 
-			String vmName = (String) object;
-
-			map.put("EQ_description", vmName);
-			ProducedDTO dto = (ProducedDTO) cmdbuildSoapService.findProducedByParams(
-					CMDBuildUtil.wrapperSearchParams(map)).getDto();
-
-			if (dto == null) {
-
-				ProducedDTO producedDTO = new ProducedDTO();
-				producedDTO.setEcsSpec(ecsSpecId);
-				producedDTO.setDescription(vmName);
-				producedDTO.setIdc(ConstansData.idcId);
-				cmdbuildSoapService.createProduced(producedDTO);
+				cmdbuildSoapService.deleteProduced(producedDTO.getId());
 			}
 
+			for (Object obj : list) {
+
+				String vmName = (String) obj;
+
+				map.put("EQ_description", vmName);
+				ProducedDTO dto = (ProducedDTO) cmdbuildSoapService.findProducedByParams(
+						CMDBuildUtil.wrapperSearchParams(map)).getDto();
+
+				if (dto == null) {
+
+					ProducedDTO producedDTO = new ProducedDTO();
+					producedDTO.setEcsSpec(ecsSpecDTO.getId());
+					producedDTO.setDescription(vmName);
+					producedDTO.setIdc(ConstansData.idcId);
+					cmdbuildSoapService.createProduced(producedDTO);
+				}
+
+			}
 		}
 
 	}

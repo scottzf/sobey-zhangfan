@@ -30,7 +30,7 @@ public class VMDiskTest {
 
 	@Test
 	public void VMRC() {
-		DTOResult<VMRCDTO> result = vmrcService.connectVMRC("Tenants-zOw0lt4c-192.168.1.3", "成都核心数据中心");
+		DTOResult<VMRCDTO> result = vmrcService.connectVMRC("Tenants-IGSnaJvT-192.168.1.2", "成都核心数据中心");
 		System.out.println(result.getDto());
 	}
 
