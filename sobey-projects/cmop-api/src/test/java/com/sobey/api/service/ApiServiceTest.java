@@ -12,12 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.sobey.api.constans.DataCenterEnum;
 import com.sobey.api.data.TestData;
+import com.sobey.api.service.data.ConstansData;
 import com.sobey.api.utils.CMDBuildUtil;
+import com.sobey.core.utils.Identities;
 import com.sobey.generate.cmdbuild.CmdbuildSoapService;
 import com.sobey.generate.cmdbuild.DnsDTO;
 import com.sobey.generate.cmdbuild.DnsPolicyDTO;
 import com.sobey.generate.cmdbuild.EcsDTO;
+import com.sobey.generate.cmdbuild.EcsSpecDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
@@ -29,6 +33,7 @@ import com.sobey.generate.cmdbuild.RouterDTO;
 import com.sobey.generate.cmdbuild.ServiceDTO;
 import com.sobey.generate.cmdbuild.SubnetDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
+import com.sobey.generate.instance.InstanceSoapService;
 
 @ContextConfiguration({ "classpath:applicationContext.xml", "classpath:applicationContext-api.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -39,6 +44,9 @@ public class ApiServiceTest extends TestCase {
 
 	@Autowired
 	private CmdbuildSoapService cmdbuildSoapService;
+
+	@Autowired
+	private InstanceSoapService instanceSoapService;
 
 	@Test
 	public void createTenants() {
@@ -169,9 +177,78 @@ public class ApiServiceTest extends TestCase {
 	@Test
 	public void createProduced() {
 
-		for (int i = 0; i < 4; i++) {
+		Integer ecsSpecId = TestData.randomProducedDTO().getEcsSpec();
+		EcsSpecDTO ecsSpecDTO = (EcsSpecDTO) cmdbuildSoapService.findEcsSpec(ecsSpecId).getDto();
+
+		instanceSoapService.createFolderOnParentByInstance(DataCenterEnum.成都核心数据中心.toString(),
+				ecsSpecDTO.getDescription(), "Produced");
+
+		for (int i = 0; i < 8; i++) {
 			ProducedDTO producedDTO = TestData.randomProducedDTO();
+			producedDTO.setDescription(ecsSpecDTO.getDescription() + "-" + Identities.randomBase62(8));
 			service.createProduced(producedDTO);
+			instanceSoapService.moveVMByInstance(DataCenterEnum.成都核心数据中心.toString(), producedDTO.getDescription(),
+					ecsSpecDTO.getDescription());
 		}
+	}
+
+	@Test
+	public void queryVMInFolder() {
+
+		/**
+		 * 将文件夹的vm同步至CMDB中
+		 */
+
+		Integer ecsSpecId = 122; // 120 122 130
+
+		EcsSpecDTO ecsSpecDTO = (EcsSpecDTO) cmdbuildSoapService.findEcsSpec(ecsSpecId).getDto();
+
+		// vcenter中的数据
+		List<Object> list = instanceSoapService
+				.queryVMInFolderByInstance(DataCenterEnum.成都核心数据中心.toString(), ecsSpecDTO.getDescription())
+				.getDtoList().getDto();
+
+		List<Object> list2 = new ArrayList<Object>();
+		list2.addAll(list);
+
+		// CMDB中的数据
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_ecsSpec", ecsSpecId);
+		List<Object> objs = cmdbuildSoapService.getProducedList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+				.getDto();
+
+		List<Object> objs2 = new ArrayList<Object>();
+		objs2.addAll(objs);
+
+		// 得到cmdb中,vcenter不存在的数据.
+		objs2.removeAll(list2);
+
+		// 删除
+		for (Object object : objs2) {
+
+			ProducedDTO producedDTO = (ProducedDTO) object;
+
+			cmdbuildSoapService.deleteProduced(producedDTO.getId());
+		}
+
+		for (Object object : list) {
+
+			String vmName = (String) object;
+
+			map.put("EQ_description", vmName);
+			ProducedDTO dto = (ProducedDTO) cmdbuildSoapService.findProducedByParams(
+					CMDBuildUtil.wrapperSearchParams(map)).getDto();
+
+			if (dto == null) {
+
+				ProducedDTO producedDTO = new ProducedDTO();
+				producedDTO.setEcsSpec(ecsSpecId);
+				producedDTO.setDescription(vmName);
+				producedDTO.setIdc(ConstansData.idcId);
+				cmdbuildSoapService.createProduced(producedDTO);
+			}
+
+		}
+
 	}
 }

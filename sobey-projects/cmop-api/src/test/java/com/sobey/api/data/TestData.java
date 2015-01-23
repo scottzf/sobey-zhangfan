@@ -17,7 +17,6 @@ import com.sobey.generate.cmdbuild.ProducedDTO;
 import com.sobey.generate.cmdbuild.RouterDTO;
 import com.sobey.generate.cmdbuild.SubnetDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
-import com.sobey.test.data.RandomData;
 
 public class TestData {
 
@@ -57,7 +56,7 @@ public class TestData {
 		dto.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
 		dto.setIdc(ConstansData.idcId);
 		dto.setTenants(tenantsId);
-		dto.setEcsSpec(120);// centos
+		dto.setEcsSpec(130);// centos
 		dto.setCpuNumber("2");
 		dto.setMemorySize("2048");
 		return dto;
@@ -163,9 +162,8 @@ public class TestData {
 
 	public static ProducedDTO randomProducedDTO() {
 		ProducedDTO dto = new ProducedDTO();
-		dto.setEcsSpec(130);
+		dto.setEcsSpec(122); // 120 122 130
 		dto.setIdc(ConstansData.idcId);
-		dto.setDescription(RandomData.randomName("windows2008R2-"));
 
 		return dto;
 	}
