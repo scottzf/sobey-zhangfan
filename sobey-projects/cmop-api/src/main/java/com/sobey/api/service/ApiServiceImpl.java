@@ -107,6 +107,11 @@ public class ApiServiceImpl implements ApiService {
 	private static final String datacenter = DataCenterEnum.成都核心数据中心.toString();
 
 	/**
+	 * 所有租户的上级目录.
+	 */
+	private static final String Tenants_Folder_Name = "租户";
+
+	/**
 	 * 密钥生成:基于Base62编码的SecureRandom随机生成bytes.
 	 * 
 	 * @return
@@ -493,6 +498,10 @@ public class ApiServiceImpl implements ApiService {
 
 		instanceSoapService.runVMByInstance(runVMParameter);
 
+		// 将VM移动到租户的文件夹中.
+		instanceSoapService.createFolderOnParentByInstance(datacenter, tenantsDTO.getCode(), Tenants_Folder_Name);
+		instanceSoapService.moveVMByInstance(datacenter, vmName, tenantsDTO.getCode());
+
 		// Step.3 获得端口组Vlan
 		VlanDTO vlanDTO = findSuitableVlanDTO(serverDTO, subnetDTO);
 
@@ -768,6 +777,10 @@ public class ApiServiceImpl implements ApiService {
 		runNetworkDeviceVMParameter.setVmName(vmName);
 
 		instanceSoapService.runNetworkDeviceVMByInstance(runNetworkDeviceVMParameter);
+
+		// 将VM移动到租户的文件夹中.
+		instanceSoapService.createFolderOnParentByInstance(datacenter, tenantsDTO.getCode(), Tenants_Folder_Name);
+		instanceSoapService.moveVMByInstance(datacenter, vmName, tenantsDTO.getCode());
 
 		// 暂停30s等待vRouter启动完毕,便于后续通过命令行更换vRouter的管理IP.
 		Threads.sleep(30 * 1000);
