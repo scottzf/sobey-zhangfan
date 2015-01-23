@@ -151,7 +151,7 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	}
 
 	@Override
-	public WSResult createFolderByInstance(String datacenter, String folderName, String parentFolderName) {
+	public WSResult createFolderOnParentByInstance(String datacenter, String folderName, String parentFolderName) {
 		return folderService.createFolder(datacenter, folderName, parentFolderName);
 	}
 

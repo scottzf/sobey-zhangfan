@@ -240,7 +240,7 @@ public interface InstanceSoapService {
 	 *            父文件夹名称
 	 * @return
 	 */
-	WSResult createFolderByInstance(@WebParam(name = "datacenter") String datacenter,
+	WSResult createFolderOnParentByInstance(@WebParam(name = "datacenter") String datacenter,
 			@WebParam(name = "folderName") String folderName,
 			@WebParam(name = "parentFolderName") String parentFolderName);
 
