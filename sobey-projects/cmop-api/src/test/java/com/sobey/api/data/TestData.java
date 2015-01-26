@@ -20,7 +20,7 @@ import com.sobey.generate.cmdbuild.TenantsDTO;
 
 public class TestData {
 
-	private static final Integer tenantsId = 228;
+	private static final Integer tenantsId = 287;
 
 	public static TenantsDTO randomTenantsDTO() {
 		TenantsDTO dto = new TenantsDTO();
@@ -52,12 +52,12 @@ public class TestData {
 	public static EcsDTO randomEcsDTO() {
 		EcsDTO dto = new EcsDTO();
 		dto.setDescription("测试专用主机A");
-		dto.setSubnet(229);// 165:默认子网 1466 : 200子网
+		dto.setSubnet(288);// 165:默认子网 1466 : 200子网
 		dto.setEcsType(110); // 109 instance 110 firewall
 		dto.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
 		dto.setIdc(ConstansData.idcId);
 		dto.setTenants(tenantsId);
-		dto.setEcsSpec(130);// centos
+		dto.setEcsSpec(120);// centos
 		dto.setCpuNumber("2");
 		dto.setMemorySize("2048");
 		return dto;
@@ -141,7 +141,6 @@ public class TestData {
 		es3DTO.setVolumeName(Identities.randomBase62(8));
 		es3DTO.setTenants(tenantsId);
 		es3DTO.setRemark("无所谓");
-		es3DTO.setSubnet(192);
 
 		return es3DTO;
 	}

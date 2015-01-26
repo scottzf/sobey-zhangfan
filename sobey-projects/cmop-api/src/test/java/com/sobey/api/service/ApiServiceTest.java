@@ -79,9 +79,17 @@ public class ApiServiceTest extends TestCase {
 
 	@Test
 	public void createES3() {
-
 		Es3DTO es3DTO = TestData.randomEs3DTO();
-		service.createES3(es3DTO, 2742);
+		service.createES3(es3DTO);
+	}
+
+	@Test
+	public void bindingES3() {
+		Integer es3Id = 3181;
+		Integer ecsId = 3265;
+		Es3DTO es3DTO = (Es3DTO) cmdbuildSoapService.findEs3(es3Id).getDto();
+		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
+		service.bindingES3(es3DTO, ecsDTO);
 	}
 
 	@Test

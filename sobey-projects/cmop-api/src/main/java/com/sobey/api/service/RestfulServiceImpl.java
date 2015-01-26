@@ -408,10 +408,6 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), ecsCode);
-
-		SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(ecsDTO.getSubnet()).getDto();
-
 		Es3DTO es3DTO = new Es3DTO();
 		es3DTO.setAgentType(LookUpConstants.AgentType.VMware.getValue());
 		es3DTO.setDescription(es3Name);
@@ -421,8 +417,34 @@ public class RestfulServiceImpl implements RestfulService {
 		es3DTO.setVolumeName(es3Name);
 		es3DTO.setTenants(tenantsDTO.getId());
 		es3DTO.setRemark(remark);
-		es3DTO.setSubnet(subnetDTO.getId());
-		return apiService.createES3(es3DTO, ecsDTO.getId());
+
+		return apiService.createES3(es3DTO);
+	}
+
+	@Override
+	public WSResult bindingES3(String es3Code, String ecsCode, String accessKey) {
+
+		WSResult result = new WSResult();
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		Es3DTO es3DTO = findEs3DTO(tenantsDTO.getId(), es3Code);
+		if (es3DTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "ES3不存在.");
+			return result;
+		}
+
+		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), ecsCode);
+		if (ecsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "ECS不存在.");
+			return result;
+		}
+
+		return apiService.bindingES3(es3DTO, ecsDTO);
 	}
 
 	@Override

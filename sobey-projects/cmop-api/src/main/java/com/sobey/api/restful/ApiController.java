@@ -133,6 +133,12 @@ public class ApiController {
 		return servie.createES3(es3Name, es3Size, es3Type, idc, ecsCode, remark, accessKey);
 	}
 
+	@RequestMapping(value = "/bindingES3/", method = RequestMethod.POST)
+	public WSResult bindingES3(@RequestParam(value = "es3Code") String es3Code,
+			@RequestParam(value = "ecsCode") String ecsCode, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.bindingES3(es3Code, ecsCode, accessKey);
+	}
+
 	@RequestMapping(value = "/deleteES3/", method = RequestMethod.POST)
 	public WSResult deleteES3(@RequestParam(value = "code") String code,
 			@RequestParam(value = "accessKey") String accessKey) {
