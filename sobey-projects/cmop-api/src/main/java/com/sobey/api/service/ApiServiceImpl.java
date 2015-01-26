@@ -655,7 +655,7 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public WSResult createES3(Es3DTO es3DTO, Integer ecsId) {
+	public WSResult createES3(Es3DTO es3DTO) {
 
 		/**
 		 * Step.1 获得ECS信息
@@ -668,11 +668,31 @@ public class ApiServiceImpl implements ApiService {
 
 		WSResult result = new WSResult();
 
-		// Step.1 获得ECS信息
-		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(ecsId).getDto();
-		IdcDTO idcDTO = (IdcDTO) cmdbuildSoapService.findIdc(es3DTO.getIdc()).getDto();
+		// Step.3 写入CMDBuild
+		IdResult idResult = cmdbuildSoapService.createEs3(es3DTO);
+
+		result.setMessage(idResult.getMessage());
+
+		return result;
+	}
+
+	@Override
+	public WSResult bindingES3(Es3DTO es3DTO, EcsDTO ecsDTO) {
+
+		WSResult result = new WSResult();
+
+		SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(ecsDTO.getSubnet()).getDto();
+
+		// 将VM的Subnent也分配给ES3
+		es3DTO.setSubnet(subnetDTO.getId());
+		cmdbuildSoapService.updateEs3(es3DTO.getId(), es3DTO);
+
+		// 创建ECS和ES3的关联关系
+		cmdbuildSoapService.createMapEcsEs3(ecsDTO.getId(), es3DTO.getId());
+
 		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(ecsDTO.getTenants()).getDto();
 		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
+		IdcDTO idcDTO = (IdcDTO) cmdbuildSoapService.findIdc(ecsDTO.getIdc()).getDto();
 		String vmName = generateVMName(tenantsDTO, ipaddressDTO);
 
 		// Step.2 为ECS分配存储空间
@@ -682,21 +702,9 @@ public class ApiServiceImpl implements ApiService {
 		vmDiskParameter.setDiskName(es3DTO.getVolumeName());
 		vmDiskParameter.setVmName(vmName);
 
-		instanceSoapService.createVMDiskByInstance(vmDiskParameter);
-
-		// Step.3 写入CMDBuild
-		IdResult idResult = cmdbuildSoapService.createEs3(es3DTO);
-
-		// ECS和ES3的关联关系
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("EQ_code", idResult.getMessage());
-
-		Es3DTO queryEs3DTO = (Es3DTO) cmdbuildSoapService.findEs3ByParams(CMDBuildUtil.wrapperSearchParams(map))
-				.getDto();
-		cmdbuildSoapService.createMapEcsEs3(ecsId, queryEs3DTO.getId());
-
-		result.setMessage(idResult.getMessage());
-
+		com.sobey.generate.instance.WSResult wsResult = instanceSoapService.createVMDiskByInstance(vmDiskParameter);
+		result.setCode(wsResult.getCode());
+		result.setMessage(wsResult.getMessage());
 		return result;
 	}
 

@@ -2258,6 +2258,7 @@
         <xs:sequence>
           <xs:element minOccurs="0" name="cpuHz" type="xs:string"/>
           <xs:element minOccurs="0" name="cpuNumber" type="xs:string"/>
+          <xs:element minOccurs="0" name="host" type="xs:int"/>
           <xs:element minOccurs="0" name="hostgroup" type="xs:string"/>
           <xs:element minOccurs="0" name="memorySize" type="xs:string"/>
           <xs:element minOccurs="0" name="model" type="xs:string"/>
@@ -2614,6 +2615,7 @@
     <xs:complexContent>
       <xs:extension base="tns:basicDTO">
         <xs:sequence>
+          <xs:element minOccurs="0" name="defaultSubnet" type="xs:int"/>
           <xs:element minOccurs="0" name="gateway" type="xs:string"/>
           <xs:element minOccurs="0" name="idc" type="xs:int"/>
           <xs:element minOccurs="0" name="netMask" type="xs:string"/>

@@ -20,6 +20,7 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "subnet_history", schema = "public")
 public class SubnetHistory extends BasicEntity {
 
+	private Integer defaultSubnet;
 	private Date endDate;
 	private String gateway;
 	private Integer idc;
@@ -32,6 +33,11 @@ public class SubnetHistory extends BasicEntity {
 	private Integer tenants;
 
 	public SubnetHistory() {
+	}
+
+	@Column(name = "default_subnet")
+	public Integer getDefaultSubnet() {
+		return defaultSubnet;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -84,6 +90,10 @@ public class SubnetHistory extends BasicEntity {
 	@Column(name = "tenants")
 	public Integer getTenants() {
 		return tenants;
+	}
+
+	public void setDefaultSubnet(Integer defaultSubnet) {
+		this.defaultSubnet = defaultSubnet;
 	}
 
 	public void setEndDate(Date endDate) {

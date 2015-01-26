@@ -236,6 +236,52 @@ public class LookUpConstants {
 		}
 	}
 
+	public enum DefaultSubnet {
+
+		Yes("Yes", 79),
+
+		No("No", 78);
+
+		private String name;
+		private Integer value;
+
+		private DefaultSubnet(String name, Integer value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public Integer getValue() {
+			return value;
+		}
+	}
+
+	public enum isHost {
+
+		Yes("Yes", 79),
+
+		No("No", 78);
+
+		private String name;
+		private Integer value;
+
+		private isHost(String name, Integer value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public Integer getValue() {
+			return value;
+		}
+	}
+
 	/**
 	 * 描述ES3Type中AgentType的Description和Id.
 	 * 

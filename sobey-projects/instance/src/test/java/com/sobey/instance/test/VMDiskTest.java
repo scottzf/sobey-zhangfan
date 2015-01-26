@@ -12,7 +12,6 @@ import com.sobey.instance.service.DiskService;
 import com.sobey.instance.service.FolderService;
 import com.sobey.instance.service.VMRCService;
 import com.sobey.instance.webservice.response.dto.VMRCDTO;
-import com.sobey.instance.webservice.response.result.DTOListResult;
 import com.sobey.instance.webservice.response.result.DTOResult;
 
 @ContextConfiguration({ "classpath:applicationContext.xml" })
@@ -37,15 +36,6 @@ public class VMDiskTest {
 	@Test
 	public void createFolder() {
 		folderService.createFolder(DataCenterEnum.成都核心数据中心.toString(), "Tenants-2", "vm");
-	}
-
-	@Test
-	public void queryVMInFolder() {
-
-		DTOListResult<String> dtoListResult = folderService.queryVMInFolder(DataCenterEnum.成都核心数据中心.toString(), "租户");
-		for (String str : dtoListResult.getDtos()) {
-			System.out.println(str);
-		}
 	}
 
 	@Test

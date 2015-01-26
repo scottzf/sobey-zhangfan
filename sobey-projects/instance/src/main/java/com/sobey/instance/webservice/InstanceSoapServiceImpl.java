@@ -161,8 +161,8 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	}
 
 	@Override
-	public DTOListResult<String> queryVMInFolderByInstance(String datacenter, String folderName) {
-		return folderService.queryVMInFolder(datacenter, folderName);
+	public DTOListResult<VMInfoDTO> getVMInfoDTOInFolderByInstance(String datacenter, String folderName) {
+		return vmService.getVMInfoDTOInFolder(datacenter, folderName);
 	}
 
 }

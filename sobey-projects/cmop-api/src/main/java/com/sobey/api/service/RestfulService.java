@@ -44,6 +44,8 @@ public interface RestfulService {
 	public WSResult createES3(String es3Name, Double es3Size, String es3Type, String idc, String ecsCode,
 			String remark, String accessKey);
 
+	public WSResult bindingES3(String es3Code, String ecsCode, String accessKey);
+
 	public WSResult deleteES3(String code, String accessKey);
 
 	/******** DNS ********/
@@ -57,8 +59,8 @@ public interface RestfulService {
 	/******** Router ********/
 	public DTOResult<RouterEntity> findRouter(String code, String accessKey);
 
-	public WSResult createRouter(String routerName, String remark, String imageName, String cpuNumber,
-			String memoryMB, String idc, String firewallServiceCode, String accessKey);
+	public WSResult createRouter(String routerName, String remark, String imageName, String cpuNumber, String memoryMB,
+			String idc, String firewallServiceCode, String accessKey);
 
 	public WSResult bindingRouter(String routerCode, String subnetCodes, String accessKey);
 

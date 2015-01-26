@@ -32,6 +32,11 @@ public class VMInfoDTO {
 	private String guestFullName;
 
 	/**
+	 * VM所属Host名称
+	 */
+	private String hostName;
+
+	/**
 	 * VM IP地址
 	 */
 	private String ipaddress;
@@ -77,6 +82,10 @@ public class VMInfoDTO {
 		return guestFullName;
 	}
 
+	public String getHostName() {
+		return hostName;
+	}
+
 	public String getIpaddress() {
 		return ipaddress;
 	}
@@ -115,6 +124,10 @@ public class VMInfoDTO {
 
 	public void setGuestFullName(String guestFullName) {
 		this.guestFullName = guestFullName;
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
 	}
 
 	public void setIpaddress(String ipaddress) {

@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.sobey.instance.webservice.response.result.DTOListResult;
 import com.sobey.instance.webservice.response.result.WSResult;
 import com.vmware.vim25.mo.Folder;
 import com.vmware.vim25.mo.InventoryNavigator;
@@ -218,76 +217,6 @@ public class FolderService extends VMWareService {
 			result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
 			return result;
 		}
-
-		return result;
-
-	}
-
-	public DTOListResult<String> queryVMInFolder(String datacenter, String folderName) {
-
-		DTOListResult<String> result = new DTOListResult<String>();
-
-		List<String> vms = new ArrayList<String>();
-
-		ServiceInstance si;
-
-		try {
-			si = getServiceInstance(datacenter);
-		} catch (RemoteException | MalformedURLException e) {
-			logger.info("moveVM::远程连接失败或错误的URL");
-			result.setError(WSResult.SYSTEM_ERROR, ServiceInstance_Init_Error);
-			return result;
-		}
-
-		Folder rootFolder = si.getRootFolder();
-
-		Folder folder = null;
-
-		try {
-
-			folder = (Folder) new InventoryNavigator(rootFolder).searchManagedEntity("Folder", folderName);
-
-			if (folder == null) {
-				result.setError(WSResult.SYSTEM_ERROR, "文件夹不存在,请联系系统管理员.");
-				return result;
-			}
-
-		} catch (RemoteException e) {
-			try {
-				logout(si);
-			} catch (RemoteException | MalformedURLException ex) {
-				logger.info("queryVMInFolder::远程连接失败或错误的URL");
-				result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
-				return result;
-			}
-		}
-
-		ManagedEntity[] entities;
-
-		try {
-			entities = folder.getChildEntity();
-
-			for (ManagedEntity entity : entities) {
-
-				if (entity instanceof VirtualMachine) {
-
-					VirtualMachine vm = (VirtualMachine) entity;
-					vms.add(vm.getName());
-				}
-
-			}
-
-		} catch (RemoteException e) {
-			try {
-				logout(si);
-			} catch (RemoteException | MalformedURLException ex) {
-				logger.info("queryVMInFolder::远程连接失败或错误的URL");
-				result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
-				return result;
-			}
-		}
-
-		result.setDtos(vms);
 
 		return result;
 	}

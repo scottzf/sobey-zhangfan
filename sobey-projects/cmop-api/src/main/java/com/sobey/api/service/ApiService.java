@@ -38,7 +38,9 @@ public interface ApiService {
 
 	// ==================== ES3 ====================//
 
-	public WSResult createES3(Es3DTO es3DTO, Integer ecsId);
+	public WSResult createES3(Es3DTO es3DTO);
+
+	public WSResult bindingES3(Es3DTO es3DTO, EcsDTO ecsDTO);
 
 	public WSResult deleteES3(Integer es3Id);
 
