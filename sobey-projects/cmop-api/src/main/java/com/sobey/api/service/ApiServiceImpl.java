@@ -681,11 +681,11 @@ public class ApiServiceImpl implements ApiService {
 
 		WSResult result = new WSResult();
 
-		SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(ecsDTO.getSubnet()).getDto();
+		// SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(ecsDTO.getSubnet()).getDto();
 
 		// 将VM的Subnent也分配给ES3
-		es3DTO.setSubnet(subnetDTO.getId());
-		cmdbuildSoapService.updateEs3(es3DTO.getId(), es3DTO);
+		// es3DTO.setSubnet(subnetDTO.getId());
+		// cmdbuildSoapService.updateEs3(es3DTO.getId(), es3DTO);
 
 		// 创建ECS和ES3的关联关系
 		cmdbuildSoapService.createMapEcsEs3(ecsDTO.getId(), es3DTO.getId());
