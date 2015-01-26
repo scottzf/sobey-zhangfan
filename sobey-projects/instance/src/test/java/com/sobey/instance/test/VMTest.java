@@ -22,6 +22,8 @@ import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
 import com.sobey.instance.webservice.response.dto.RunNetworkDeviceVMParameter;
 import com.sobey.instance.webservice.response.dto.RunVMParameter;
+import com.sobey.instance.webservice.response.dto.VMInfoDTO;
+import com.sobey.instance.webservice.response.result.DTOListResult;
 import com.vmware.vim25.InvalidProperty;
 import com.vmware.vim25.ManagedObjectReference;
 import com.vmware.vim25.RuntimeFault;
@@ -51,6 +53,17 @@ public class VMTest {
 	private static final String url = "https://10.2.7.250/sdk";
 	private static final String user = "administrator@vsphere.local";
 	private static final String password = "Newmed!@s0bey";
+
+	@Test
+	public void queryVMInFolder() {
+
+		DTOListResult<VMInfoDTO> dtoListResult = service.getVMInfoDTOInFolder(DataCenterEnum.成都核心数据中心.toString(),
+				"Centos 6.3");
+		for (VMInfoDTO vmInfoDTO : dtoListResult.getDtos()) {
+			System.out.println(vmInfoDTO.getVmName());
+			System.out.println(vmInfoDTO.getHostName());
+		}
+	}
 
 	@Test
 	public void getVMHostRelationship() throws RemoteException, MalformedURLException {
@@ -157,7 +170,13 @@ public class VMTest {
 		Folder rootFolder = si.getRootFolder();
 
 		VirtualMachine myVM = (VirtualMachine) new InventoryNavigator(rootFolder).searchManagedEntity("VirtualMachine",
-				"liukai");
+				"5000_172.16.0.14");
+
+		ManagedObjectReference managedObjectReference = new ManagedObjectReference();
+		managedObjectReference.setType("HostSystem");
+		managedObjectReference.setVal(myVM.getRuntime().getHost().get_value());
+		ManagedEntity hostManagedEntity = MorUtil.createExactManagedEntity(si.getServerConnection(),
+				managedObjectReference);
 
 		/**
 		 * VM是否关机只和status有关系,
@@ -172,6 +191,7 @@ public class VMTest {
 
 		VirtualHardware vmHardware = myVMInfo.getHardware();
 
+		System.err.println("============ 所属Host：" + hostManagedEntity.getName());
 		System.err.println("============ VM状态：" + myVM.getGuest().getGuestState());
 		System.out.println("============ 操作系统：" + myVMInfo.getGuestFullName());
 		System.out.println("============ IP地址：" + myVM.getGuest().getIpAddress());

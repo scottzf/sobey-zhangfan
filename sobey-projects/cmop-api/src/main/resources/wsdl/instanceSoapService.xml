@@ -99,6 +99,10 @@
 
   <xs:element name="getRelationByInstanceResponse" type="tns:getRelationByInstanceResponse"/>
 
+  <xs:element name="getVMInfoDTOInFolderByInstance" type="tns:getVMInfoDTOInFolderByInstance"/>
+
+  <xs:element name="getVMInfoDTOInFolderByInstanceResponse" type="tns:getVMInfoDTOInFolderByInstanceResponse"/>
+
   <xs:element name="moveVMByInstance" type="tns:moveVMByInstance"/>
 
   <xs:element name="moveVMByInstanceResponse" type="tns:moveVMByInstanceResponse"/>
@@ -106,10 +110,6 @@
   <xs:element name="powerVMByInstance" type="tns:powerVMByInstance"/>
 
   <xs:element name="powerVMByInstanceResponse" type="tns:powerVMByInstanceResponse"/>
-
-  <xs:element name="queryVMInFolderByInstance" type="tns:queryVMInFolderByInstance"/>
-
-  <xs:element name="queryVMInFolderByInstanceResponse" type="tns:queryVMInFolderByInstanceResponse"/>
 
   <xs:element name="reconfigVMByInstance" type="tns:reconfigVMByInstance"/>
 
@@ -175,35 +175,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="queryVMInFolderByInstance">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
-      <xs:element minOccurs="0" name="folderName" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="queryVMInFolderByInstanceResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:DTOListResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="DTOListResult">
-    <xs:complexContent>
-      <xs:extension base="tns:WSResult">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="dtoList">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element maxOccurs="unbounded" minOccurs="0" name="dto" type="xs:anyType"/>
-              </xs:sequence>
-            </xs:complexType>
-          </xs:element>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
   <xs:complexType name="destroyVMByInstance">
     <xs:sequence>
       <xs:element minOccurs="0" name="destroyVMParameter" type="tns:DestroyVMParameter"/>
@@ -252,6 +223,51 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getVMInfoDTOInFolderByInstance">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
+      <xs:element minOccurs="0" name="folderName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getVMInfoDTOInFolderByInstanceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:DTOListResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DTOListResult">
+    <xs:complexContent>
+      <xs:extension base="tns:WSResult">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="dtoList">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="dto" type="xs:anyType"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="VMInfoDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="cpuNumber" type="xs:string"/>
+      <xs:element minOccurs="0" name="datastore" type="xs:string"/>
+      <xs:element minOccurs="0" name="diskGB" type="xs:string"/>
+      <xs:element minOccurs="0" name="guestFullName" type="xs:string"/>
+      <xs:element minOccurs="0" name="hostName" type="xs:string"/>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="macIPaddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="memoryMB" type="xs:string"/>
+      <xs:element minOccurs="0" name="portGroups" type="xs:string"/>
+      <xs:element minOccurs="0" name="status" type="xs:string"/>
+      <xs:element minOccurs="0" name="vmName" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -407,21 +423,6 @@
   <xs:complexType name="findVMInfoDTOResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:DTOResult"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="VMInfoDTO">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="cpuNumber" type="xs:string"/>
-      <xs:element minOccurs="0" name="datastore" type="xs:string"/>
-      <xs:element minOccurs="0" name="diskGB" type="xs:string"/>
-      <xs:element minOccurs="0" name="guestFullName" type="xs:string"/>
-      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
-      <xs:element minOccurs="0" name="macIPaddress" type="xs:string"/>
-      <xs:element minOccurs="0" name="memoryMB" type="xs:string"/>
-      <xs:element minOccurs="0" name="portGroups" type="xs:string"/>
-      <xs:element minOccurs="0" name="status" type="xs:string"/>
-      <xs:element minOccurs="0" name="vmName" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -685,6 +686,10 @@
     <wsdl:part element="tns:bindingNetworkDevicePortGroupByInstanceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getVMInfoDTOInFolderByInstanceResponse">
+    <wsdl:part element="tns:getVMInfoDTOInFolderByInstanceResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="destroyVMByInstanceResponse">
     <wsdl:part element="tns:destroyVMByInstanceResponse" name="parameters">
     </wsdl:part>
@@ -761,10 +766,6 @@
     <wsdl:part element="tns:getHostInfoDTOResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="queryVMInFolderByInstanceResponse">
-    <wsdl:part element="tns:queryVMInFolderByInstanceResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="deleteVMDiskByInstanceResponse">
     <wsdl:part element="tns:deleteVMDiskByInstanceResponse" name="parameters">
     </wsdl:part>
@@ -777,8 +778,8 @@
     <wsdl:part element="tns:findHostInfoDTO" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="queryVMInFolderByInstance">
-    <wsdl:part element="tns:queryVMInFolderByInstance" name="parameters">
+  <wsdl:message name="getVMInfoDTOInFolderByInstance">
+    <wsdl:part element="tns:getVMInfoDTOInFolderByInstance" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="InstanceSoapService">
@@ -794,12 +795,6 @@
       <wsdl:output message="tns:cloneVMByInstanceResponse" name="cloneVMByInstanceResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="queryVMInFolderByInstance">
-      <wsdl:input message="tns:queryVMInFolderByInstance" name="queryVMInFolderByInstance">
-    </wsdl:input>
-      <wsdl:output message="tns:queryVMInFolderByInstanceResponse" name="queryVMInFolderByInstanceResponse">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="destroyVMByInstance">
       <wsdl:input message="tns:destroyVMByInstance" name="destroyVMByInstance">
     </wsdl:input>
@@ -810,6 +805,12 @@
       <wsdl:input message="tns:getRelationByInstance" name="getRelationByInstance">
     </wsdl:input>
       <wsdl:output message="tns:getRelationByInstanceResponse" name="getRelationByInstanceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getVMInfoDTOInFolderByInstance">
+      <wsdl:input message="tns:getVMInfoDTOInFolderByInstance" name="getVMInfoDTOInFolderByInstance">
+    </wsdl:input>
+      <wsdl:output message="tns:getVMInfoDTOInFolderByInstanceResponse" name="getVMInfoDTOInFolderByInstanceResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="moveVMByInstance">
@@ -935,15 +936,6 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="queryVMInFolderByInstance">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="queryVMInFolderByInstance">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="queryVMInFolderByInstanceResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="destroyVMByInstance">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="destroyVMByInstance">
@@ -959,6 +951,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getRelationByInstanceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getVMInfoDTOInFolderByInstance">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getVMInfoDTOInFolderByInstance">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getVMInfoDTOInFolderByInstanceResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>

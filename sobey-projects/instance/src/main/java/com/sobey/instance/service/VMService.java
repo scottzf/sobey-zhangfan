@@ -2,7 +2,9 @@ package com.sobey.instance.service;
 
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +23,7 @@ import com.sobey.instance.webservice.response.dto.RenameVMParameter;
 import com.sobey.instance.webservice.response.dto.RunNetworkDeviceVMParameter;
 import com.sobey.instance.webservice.response.dto.RunVMParameter;
 import com.sobey.instance.webservice.response.dto.VMInfoDTO;
+import com.sobey.instance.webservice.response.result.DTOListResult;
 import com.sobey.instance.webservice.response.result.DTOResult;
 import com.sobey.instance.webservice.response.result.WSResult;
 import com.vmware.vim25.CustomizationAdapterMapping;
@@ -278,6 +281,16 @@ public class VMService extends VMWareService {
 				vmInfoDTO.setDatastore(datastores);
 			}
 
+			// 获得Host相关信息
+			ManagedObjectReference managedObjectReference = new ManagedObjectReference();
+			managedObjectReference.setType("HostSystem");
+			managedObjectReference.setVal(vm.getRuntime().getHost().get_value());
+
+			// 注意这行关键代码:将ManagedObjectReference -> ManagedObjectReference
+			ManagedEntity hostManagedEntity = MorUtil.createExactManagedEntity(si.getServerConnection(),
+					managedObjectReference);
+
+			vmInfoDTO.setHostName(hostManagedEntity.getName());
 			vmInfoDTO.setGuestFullName(vmConfigInfo.getGuestFullName());
 			vmInfoDTO.setIpaddress(vm.getGuest().getIpAddress());
 			vmInfoDTO.setCpuNumber(Integer.valueOf(vmHardware.getNumCPU()).toString());
@@ -867,7 +880,75 @@ public class VMService extends VMWareService {
 		}
 
 		return result;
+	}
 
+	public DTOListResult<VMInfoDTO> getVMInfoDTOInFolder(String datacenter, String folderName) {
+
+		DTOListResult<VMInfoDTO> result = new DTOListResult<VMInfoDTO>();
+
+		List<VMInfoDTO> vmInfoDTOs = new ArrayList<VMInfoDTO>();
+
+		ServiceInstance si;
+
+		try {
+			si = getServiceInstance(datacenter);
+		} catch (RemoteException | MalformedURLException e) {
+			logger.info("moveVM::远程连接失败或错误的URL");
+			result.setError(WSResult.SYSTEM_ERROR, ServiceInstance_Init_Error);
+			return result;
+		}
+
+		Folder rootFolder = si.getRootFolder();
+
+		Folder folder = null;
+
+		try {
+
+			folder = (Folder) new InventoryNavigator(rootFolder).searchManagedEntity("Folder", folderName);
+
+			if (folder == null) {
+				result.setError(WSResult.SYSTEM_ERROR, "文件夹不存在,请联系系统管理员.");
+				return result;
+			}
+
+		} catch (RemoteException e) {
+			try {
+				logout(si);
+			} catch (RemoteException | MalformedURLException ex) {
+				logger.info("queryVMInFolder::远程连接失败或错误的URL");
+				result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+				return result;
+			}
+		}
+
+		ManagedEntity[] entities;
+
+		try {
+			entities = folder.getChildEntity();
+
+			for (ManagedEntity entity : entities) {
+
+				if (entity instanceof VirtualMachine) {
+
+					VirtualMachine vm = (VirtualMachine) entity;
+					vmInfoDTOs.add(findVMInfoDTO(vm.getName(), datacenter).getDto());
+				}
+
+			}
+
+		} catch (RemoteException e) {
+			try {
+				logout(si);
+			} catch (RemoteException | MalformedURLException ex) {
+				logger.info("queryVMInFolder::远程连接失败或错误的URL");
+				result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+				return result;
+			}
+		}
+
+		result.setDtos(vmInfoDTOs);
+
+		return result;
 	}
 
 }

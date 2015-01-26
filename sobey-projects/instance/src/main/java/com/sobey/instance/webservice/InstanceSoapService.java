@@ -267,6 +267,6 @@ public interface InstanceSoapService {
 	 *            文件夹名称
 	 * @return
 	 */
-	DTOListResult<String> queryVMInFolderByInstance(@WebParam(name = "datacenter") String datacenter,
+	DTOListResult<VMInfoDTO> getVMInfoDTOInFolderByInstance(@WebParam(name = "datacenter") String datacenter,
 			@WebParam(name = "folderName") String folderName);
 }
