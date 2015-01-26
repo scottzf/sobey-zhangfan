@@ -41,8 +41,8 @@ public interface RestfulService {
 
 	public DTOResult<Es3Entity> findES3(String code, String accessKey);
 
-	public WSResult createES3(String es3Name, Double es3Size, String es3Type, String idc, String ecsCode,
-			String remark, String accessKey);
+	public WSResult createES3(String es3Name, Double es3Size, String es3Type, String idc, String remark,
+			String accessKey);
 
 	public WSResult bindingES3(String es3Code, String ecsCode, String accessKey);
 

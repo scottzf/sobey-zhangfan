@@ -128,9 +128,9 @@ public class ApiController {
 	@RequestMapping(value = "/createES3/", method = RequestMethod.POST)
 	public WSResult createES3(@RequestParam(value = "es3Name") String es3Name,
 			@RequestParam(value = "es3Size") Double es3Size, @RequestParam(value = "es3Type") String es3Type,
-			@RequestParam(value = "idc") String idc, @RequestParam(value = "ecsCode") String ecsCode,
-			@RequestParam(value = "remark") String remark, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.createES3(es3Name, es3Size, es3Type, idc, ecsCode, remark, accessKey);
+			@RequestParam(value = "idc") String idc, @RequestParam(value = "remark") String remark,
+			@RequestParam(value = "accessKey") String accessKey) {
+		return servie.createES3(es3Name, es3Size, es3Type, idc, remark, accessKey);
 	}
 
 	@RequestMapping(value = "/bindingES3/", method = RequestMethod.POST)
