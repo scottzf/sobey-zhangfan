@@ -385,8 +385,8 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult createES3(String es3Name, Double es3Size, String es3Type, String idc, String ecsCode,
-			String remark, String accessKey) {
+	public WSResult createES3(String es3Name, Double es3Size, String es3Type, String idc, String remark,
+			String accessKey) {
 
 		WSResult result = new WSResult();
 
