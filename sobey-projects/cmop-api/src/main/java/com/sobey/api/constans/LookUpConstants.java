@@ -238,9 +238,9 @@ public class LookUpConstants {
 
 	public enum DefaultSubnet {
 
-		Yes("Yes", 79),
+		Yes("Yes", 117),
 
-		No("No", 78);
+		No("No", 118);
 
 		private String name;
 		private Integer value;
@@ -261,9 +261,9 @@ public class LookUpConstants {
 
 	public enum isHost {
 
-		Yes("Yes", 79),
+		Yes("Yes", 119),
 
-		No("No", 78);
+		No("No", 120);
 
 		private String name;
 		private Integer value;

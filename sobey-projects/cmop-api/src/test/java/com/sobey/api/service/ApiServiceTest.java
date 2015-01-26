@@ -6,6 +6,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.apache.cxf.jaxrs.model.wadl.Description;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -268,10 +269,10 @@ public class ApiServiceTest extends TestCase {
 				if (dto == null) {
 
 					VMInfoDTO vmInfoDTO = (VMInfoDTO) instanceSoapService.findVMInfoDTO(vmName,
-							ConstansData.idcId.toString()).getDto();
+							DataCenterEnum.成都核心数据中心.toString()).getDto();
 
 					HashMap<String, Object> serverMap = new HashMap<String, Object>();
-					serverMap.put("EQ_descrip", vmInfoDTO.getHostName());
+					serverMap.put("EQ_description", vmInfoDTO.getHostName());
 
 					ServerDTO serverDTO = (ServerDTO) cmdbuildSoapService.findServerByParams(
 							CMDBuildUtil.wrapperSearchParams(serverMap)).getDto();
