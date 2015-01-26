@@ -42,6 +42,7 @@ public class TestData {
 		dto.setIdc(ConstansData.idcId);
 		dto.setGateway(gateway);
 		dto.setNetMask(netmask);
+		dto.setDefaultSubnet(LookUpConstants.DefaultSubnet.No.getValue());
 		dto.setTenants(tenantsId);
 		dto.setSegment(segment);
 		dto.setDescription("200子网");

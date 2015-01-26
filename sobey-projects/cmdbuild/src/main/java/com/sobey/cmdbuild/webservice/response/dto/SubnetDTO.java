@@ -12,6 +12,7 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 @XmlType(name = "SubnetDTO", namespace = WsConstants.NS)
 public class SubnetDTO extends BasicDTO {
 
+	private Integer defaultSubnet;
 	private String gateway;
 	private Integer idc;
 	private String netMask;
@@ -20,6 +21,10 @@ public class SubnetDTO extends BasicDTO {
 	private Integer router;
 	private String segment;
 	private Integer tenants;
+
+	public Integer getDefaultSubnet() {
+		return defaultSubnet;
+	}
 
 	public String getGateway() {
 		return gateway;
@@ -51,6 +56,10 @@ public class SubnetDTO extends BasicDTO {
 
 	public Integer getTenants() {
 		return tenants;
+	}
+
+	public void setDefaultSubnet(Integer defaultSubnet) {
+		this.defaultSubnet = defaultSubnet;
 	}
 
 	public void setGateway(String gateway) {

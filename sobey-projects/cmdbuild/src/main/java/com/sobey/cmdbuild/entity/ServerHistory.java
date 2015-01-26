@@ -18,6 +18,7 @@ public class ServerHistory extends DeviceHistoryBasic {
 
 	private String cpuHz;
 	private String cpuNumber;
+	private Integer host;
 	private String hostgroup;
 	private String memorySize;
 	private String model;
@@ -36,6 +37,11 @@ public class ServerHistory extends DeviceHistoryBasic {
 	@Column(name = "cpu_number", length = 100)
 	public String getCpuNumber() {
 		return cpuNumber;
+	}
+
+	@Column(name = "host")
+	public Integer getHost() {
+		return host;
 	}
 
 	@Column(name = "hostgroup", length = 100)
@@ -75,6 +81,10 @@ public class ServerHistory extends DeviceHistoryBasic {
 
 	public void setCpuNumber(String cpuNumber) {
 		this.cpuNumber = cpuNumber;
+	}
+
+	public void setHost(Integer host) {
+		this.host = host;
 	}
 
 	public void setHostgroup(String hostgroup) {

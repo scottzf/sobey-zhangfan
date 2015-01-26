@@ -18,6 +18,7 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "subnet", schema = "public")
 public class Subnet extends BasicEntity {
 
+	private Integer defaultSubnet;
 	private String gateway;
 	private Integer idc;
 	private String netMask;
@@ -29,6 +30,11 @@ public class Subnet extends BasicEntity {
 	private Integer tenants;
 
 	public Subnet() {
+	}
+
+	@Column(name = "default_subnet")
+	public Integer getDefaultSubnet() {
+		return defaultSubnet;
 	}
 
 	@Column(name = "gateway", length = 100)
@@ -74,6 +80,10 @@ public class Subnet extends BasicEntity {
 	@Column(name = "tenants")
 	public Integer getTenants() {
 		return tenants;
+	}
+
+	public void setDefaultSubnet(Integer defaultSubnet) {
+		this.defaultSubnet = defaultSubnet;
 	}
 
 	public void setGateway(String gateway) {

@@ -14,6 +14,7 @@ public class ServerDTO extends DeviceBasicDTO {
 
 	private String cpuHz;
 	private String cpuNumber;
+	private Integer host;
 	private String hostgroup;
 	private String memorySize;
 	private String model;
@@ -26,6 +27,10 @@ public class ServerDTO extends DeviceBasicDTO {
 
 	public String getCpuNumber() {
 		return cpuNumber;
+	}
+
+	public Integer getHost() {
+		return host;
 	}
 
 	public String getHostgroup() {
@@ -54,6 +59,10 @@ public class ServerDTO extends DeviceBasicDTO {
 
 	public void setCpuNumber(String cpuNumber) {
 		this.cpuNumber = cpuNumber;
+	}
+
+	public void setHost(Integer host) {
+		this.host = host;
 	}
 
 	public void setHostgroup(String hostgroup) {

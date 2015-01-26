@@ -51,6 +51,7 @@ public class ConstansData {
 		subnetDTO.setNetMask(netmask);
 		subnetDTO.setTenants(tenantsId);
 		subnetDTO.setSegment(segment);
+		subnetDTO.setDefaultSubnet(LookUpConstants.DefaultSubnet.Yes.getValue());
 		subnetDTO.setDescription("默认子网");
 
 		return subnetDTO;
