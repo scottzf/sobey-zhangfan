@@ -337,6 +337,7 @@ public class ApiServiceImpl implements ApiService {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_idc", idcDTO.getId());
+		map.put("EQ_host", LookUpConstants.isHost.Yes.getValue());
 		List<Object> list = cmdbuildSoapService.getServerList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
 				.getDto();
 
