@@ -239,7 +239,7 @@ public class ApiServiceImpl implements ApiService {
 		String prefixIP = StringUtils.substringBeforeLast(subnetDTO.getSegment(), ".");
 
 		// IP从2-254 ,共253个IP
-		for (int i = 2; i < 255; i++) {
+		for (int i = 1; i < 254; i++) {
 			IpaddressDTO ipaddressDTO = new IpaddressDTO();
 			ipaddressDTO.setGateway(subnetDTO.getGateway());
 			ipaddressDTO.setIdc(subnetDTO.getIdc());

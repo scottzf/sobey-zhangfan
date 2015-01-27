@@ -41,7 +41,7 @@ public class ConstansData {
 
 	public static SubnetDTO defaultSubnetDTO(Integer tenantsId) {
 
-		String gateway = "192.168.1.1";
+		String gateway = "192.168.1.254";
 		String netmask = "255.255.255.0";
 		String segment = "192.168.1.0";
 
