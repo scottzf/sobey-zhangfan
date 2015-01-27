@@ -45,6 +45,8 @@ import com.sobey.generate.instance.VMInfoDTO;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ApiServiceTest extends TestCase {
 
+	private static final Integer subnetId = 148;
+
 	@Autowired
 	private ApiService service;
 
@@ -76,7 +78,7 @@ public class ApiServiceTest extends TestCase {
 	public void createRouter() {
 		RouterDTO routerDTO = TestData.randomRouterDTO();
 
-		Integer fsId = 1499;
+		Integer fsId = 1862;
 		FirewallServiceDTO firewallServiceDTO = (FirewallServiceDTO) cmdbuildSoapService.findFirewallService(fsId)
 				.getDto();
 
@@ -197,7 +199,7 @@ public class ApiServiceTest extends TestCase {
 		instanceSoapService.createFolderOnParentByInstance(DataCenterEnum.成都核心数据中心.toString(),
 				ecsSpecDTO.getDescription(), "Produced");
 
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < 10; i++) {
 			ProducedDTO producedDTO = TestData.randomProducedDTO();
 			producedDTO.setDescription(ecsSpecDTO.getDescription() + "-" + Identities.randomBase62(8));
 			service.createProduced(producedDTO);
@@ -320,6 +322,7 @@ public class ApiServiceTest extends TestCase {
 					CMDBuildUtil.wrapperSearchParams(map)).getDto();
 
 			if (serverDTO != null) {
+
 				serverDTO.setDescription(hostInfoDTO.getHostName());
 				serverDTO.setIdc(ConstansData.idcId);
 				serverDTO.setResgroup(hostInfoDTO.getResourcePool());
@@ -330,12 +333,14 @@ public class ApiServiceTest extends TestCase {
 				serverDTO.setVendor(hostInfoDTO.getVendor());
 				serverDTO.setModel(hostInfoDTO.getModel());
 				cmdbuildSoapService.updateServer(serverDTO.getId(), serverDTO);
+
 			} else {
+
 				ServerDTO newServerDTO = new ServerDTO();
 				newServerDTO.setDescription(hostInfoDTO.getHostName());
 				newServerDTO.setIdc(ConstansData.idcId);
-				newServerDTO.setDeviceSpec(180);
-				newServerDTO.setRack(176);
+				newServerDTO.setDeviceSpec(128);
+				newServerDTO.setRack(124);
 				newServerDTO.setSite("1");
 				newServerDTO.setResgroup(hostInfoDTO.getResourcePool());
 				newServerDTO.setResgroup(hostInfoDTO.getResourcePool());
@@ -347,6 +352,7 @@ public class ApiServiceTest extends TestCase {
 				newServerDTO.setModel(hostInfoDTO.getModel());
 				HashMap<String, Object> ipMap = new HashMap<String, Object>();
 				System.out.println(hostInfoDTO.getHostName());
+
 				ipMap.put("EQ_description", hostInfoDTO.getHostName());
 				IpaddressDTO serverIp = (IpaddressDTO) cmdbuildSoapService.findIpaddressByParams(
 						CMDBuildUtil.wrapperSearchParams(ipMap)).getDto();
@@ -371,31 +377,34 @@ public class ApiServiceTest extends TestCase {
 	}
 
 	private void insertHostIP(String datacenter, List<Object> dtos) {
+
 		for (Object obj : dtos) {
+
 			HostInfoDTO host = (HostInfoDTO) obj;
+
 			IpaddressDTO ipaddressDTO = null;
+
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("EQ_description", host.getHostName());
 			ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddressByParams(
 					CMDBuildUtil.wrapperSearchParams(map)).getDto();
 
 			if (ipaddressDTO == null) {
+
 				ipaddressDTO = new IpaddressDTO();
 				ipaddressDTO.setDescription(host.getHostName());
 				ipaddressDTO.setIdc(ConstansData.idcId);
 				ipaddressDTO.setIpAddressStatus(LookUpConstants.IPAddressStatus.已使用.getValue());
 				ipaddressDTO.setIpAddressPool(LookUpConstants.IPAddressPool.ManagerPool.getValue()); // private pool
-
 				ipaddressDTO.setGateway(host.getHostName());
 				ipaddressDTO.setNetMask("255.255.255.0");
 				ipaddressDTO.setSegment(host.getHostName());
+				ipaddressDTO.setSubnet(subnetId);
 
-				// TODO 注意需要一个subnet
-				ipaddressDTO.setSubnet(204);
-
-				// 遍历所有的vlan,比较虚拟机的IP属于哪个vlan中,再将vlanID获得
 				cmdbuildSoapService.createIpaddress(ipaddressDTO);
+
 			} else {
+
 				ipaddressDTO.setIpAddressStatus(LookUpConstants.IPAddressStatus.已使用.getValue());
 				cmdbuildSoapService.updateIpaddress(ipaddressDTO.getId(), ipaddressDTO);
 			}
