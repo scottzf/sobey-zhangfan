@@ -430,6 +430,15 @@ public class ApiServiceImpl implements ApiService {
 				VlanDTO queryVlanDTO = (VlanDTO) cmdbuildSoapService.findVlanByParams(
 						CMDBuildUtil.wrapperSearchParams(queryVlanMap)).getDto();
 
+				IpaddressDTO serverIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(serverDTO.getIpaddress())
+						.getDto();
+
+				// 在盛科交换机上写入策略,允许同一subnet下通信.重要!
+				SwitchPolicyParameter switchPolicyParameter = new SwitchPolicyParameter();
+				switchPolicyParameter.setHostIp(serverIP.getDescription());
+				switchPolicyParameter.setVlanId(queryVlanDTO.getVlanId());
+				switchesSoapService.createPolicyInSwitch(switchPolicyParameter);
+
 				return queryVlanDTO;
 			}
 

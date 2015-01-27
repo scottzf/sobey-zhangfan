@@ -16,6 +16,7 @@ public class HostRelationMap {
 		relationMap.put("10.2.5.27", "TOR-A eth-0-14");
 		relationMap.put("10.2.5.28", "TOR-A eth-0-16");
 		relationMap.put("10.2.5.29", "TOR-A eth-0-18");
+		relationMap.put("10.2.5.30", "TOR-A eth-0-20");
 
 	}
 }
