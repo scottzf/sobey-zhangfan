@@ -18,8 +18,13 @@ public class SwitchesSoapServiceImpl implements SwitchesSoapService {
 	private SwitchService service;
 
 	@Override
-	public WSResult createPolicyInSwitch(SwitchPolicyParameter switchPolicyParameter) {
-		return service.createPolicyInSwitch(switchPolicyParameter);
+	public WSResult createSinglePolicyBySwitch(SwitchPolicyParameter switchPolicyParameter) {
+		return service.createSinglePolicy(switchPolicyParameter);
+	}
+
+	@Override
+	public WSResult createMultiplePolicyBySwitch(SwitchPolicyParameter switchPolicyParameter) {
+		return service.createMultiplePolicy(switchPolicyParameter);
 	}
 
 }

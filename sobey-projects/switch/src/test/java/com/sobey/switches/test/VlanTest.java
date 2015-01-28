@@ -27,7 +27,7 @@ public class VlanTest extends TestCase implements PbulicProperties {
 
 	@Test
 	public void createPolicyInSwitch() {
-		service.createPolicyInSwitch(TestData.randomSwitchPolicyParameter());
+		service.createSinglePolicy(TestData.randomSwitchPolicyParameter());
 	}
 
 }

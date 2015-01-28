@@ -22,7 +22,13 @@ public class SwitchService {
 
 	private static Logger logger = LoggerFactory.getLogger(SwitchService.class);
 
-	public WSResult createPolicyInSwitch(SwitchPolicyParameter parameter) {
+	/**
+	 * 用于创建一个Subnet时,同一Subnet的通信.
+	 * 
+	 * @param parameter
+	 * @return
+	 */
+	public WSResult createSinglePolicy(SwitchPolicyParameter parameter) {
 
 		WSResult result = new WSResult();
 
@@ -46,7 +52,34 @@ public class SwitchService {
 			JsonRPCUtil.executeJsonRPCRequest(switchUrl, nvgreConfig); // 交换机ip地址暂时空着
 
 		} catch (Exception e) {
-			logger.info("createPolicyInSwitch::" + e);
+			logger.info("createSinglePolicy::" + e);
+			result.setError(WSResult.SYSTEM_ERROR, "交换机策略创建错误,请联系系统管理员.");
+		}
+
+		return result;
+	}
+
+	/**
+	 * 不同子网之间的通信.(Subnent绑定Router)
+	 * 
+	 * @param parameter
+	 * @return
+	 */
+	public WSResult createMultiplePolicy(SwitchPolicyParameter parameter) {
+
+		WSResult result = new WSResult();
+
+		try {
+
+			String switchUrl = getSwitchUrl(parameter);
+
+			// 生成交换机执行命令
+			String[] interfaceConfig = generateInterfaceConfigString(parameter); // 配置面向服务器的接口的命令
+
+			JsonRPCUtil.executeJsonRPCRequest(switchUrl, interfaceConfig); // 交换机ip地址暂时空着
+
+		} catch (Exception e) {
+			logger.info("createMultiplePolicy::" + e);
 			result.setError(WSResult.SYSTEM_ERROR, "交换机策略创建错误,请联系系统管理员.");
 		}
 
