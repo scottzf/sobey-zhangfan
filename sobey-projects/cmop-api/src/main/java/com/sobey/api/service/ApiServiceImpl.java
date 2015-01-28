@@ -157,7 +157,7 @@ public class ApiServiceImpl implements ApiService {
 		List<FirewallPolicyDTO> firewallPolicyDTOs = new ArrayList<FirewallPolicyDTO>();
 		createFirewallService(ConstansData.defaultFirewallServiceDTO(queryTenantsDTO.getId()), firewallPolicyDTOs);
 
-		// // 获得默认防火墙对象
+		// 获得默认防火墙对象
 		// HashMap<String, Object> firewallServiceMap = new HashMap<String, Object>();
 		// firewallServiceMap.put("EQ_code", firewallIdResult.getMessage());
 		// FirewallServiceDTO queryFirewallServiceDTO = (FirewallServiceDTO) cmdbuildSoapService
@@ -238,7 +238,7 @@ public class ApiServiceImpl implements ApiService {
 
 		String prefixIP = StringUtils.substringBeforeLast(subnetDTO.getSegment(), ".");
 
-		// IP从2-254 ,共253个IP
+		// IP从1-253 ,共253个IP,254为网关
 		for (int i = 1; i < 254; i++) {
 			IpaddressDTO ipaddressDTO = new IpaddressDTO();
 			ipaddressDTO.setGateway(subnetDTO.getGateway());
@@ -335,6 +335,7 @@ public class ApiServiceImpl implements ApiService {
 	 */
 	private ServerDTO findSuitableServerDTO(IdcDTO idcDTO) {
 
+		//查询可创建VM的Server
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_idc", idcDTO.getId());
 		map.put("EQ_host", LookUpConstants.isHost.Yes.getValue());
