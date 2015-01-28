@@ -18,7 +18,9 @@ public class CreateECSParameter {
 	
 	private String hostIp;      //主机IP
 	
-	private int vlanId;
+	private int vlanId;   //虚拟机所属vlan ID
+	
+	private int tunnelId;   //虚拟机
 
 	public String getTemplateName() {
 		return templateName;
@@ -90,7 +92,13 @@ public class CreateECSParameter {
 
 	public void setVlanId(int vlanId) {
 		this.vlanId = vlanId;
+	}
+
+	public int getTunnelId() {
+		return tunnelId;
+	}
+
+	public void setTunnelId(int tunnelId) {
+		this.tunnelId = tunnelId;
 	}    
-	
-	
 }

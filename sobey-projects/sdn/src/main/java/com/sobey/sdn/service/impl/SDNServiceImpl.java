@@ -98,6 +98,7 @@ public class SDNServiceImpl implements SDNService {
 			String localIp = createECSParameter.getLocalIp(); // 内网IP
 			String templateName = createECSParameter.getTemplateName(); // 模板
 			String templateOS = createECSParameter.getTemplateOS(); // 操作系统
+			int tunnelId = createECSParameter.getTunnelId(); // NVGRE隧道ID
 
 			// 按规则生成租户对应的本地VLAN
 			String portGroupName = tenantId + "_vlan" + vlanId;
@@ -139,7 +140,7 @@ public class SDNServiceImpl implements SDNService {
 			String swIp = getSwIpByMark(whichSW);
 
 			// 在盛科交换机上创建策略
-			createPolicyInSwitch(vlanId, swIp, swInterface);
+			createPolicyInSwitch(vlanId, tunnelId, swIp, swInterface);
 
 			/**
 			 * 后期用命令在核心交换机上获得交换机接口 *********代码保留，勿删**********
@@ -195,7 +196,7 @@ public class SDNServiceImpl implements SDNService {
 		return mac;
 	}
 
-	private void createPolicyInSwitch(int vlanId, String swUrl, String swInterface) throws IOException {
+	private void createPolicyInSwitch(int vlanId, int tunnelId, String swUrl, String swInterface) throws IOException {
 
 		// 配置VLAN
 		String[] vlan_Config_cmds = CentecSwitchService.generateVlanConfigString(vlanId); // 配置面向服务器的接口的命令
@@ -209,7 +210,7 @@ public class SDNServiceImpl implements SDNService {
 		JsonRPCUtil.executeJsonRPCRequest(swUrl, interfaceConfig_cmds); // 执行
 
 		// 在置顶交换机之间建NVGRE隧道ID
-		String[] nvgre_cmds = CentecSwitchService.generateNvgreConfigString(swUrl, vlanId); // 配置NVGRE的命令
+		String[] nvgre_cmds = CentecSwitchService.generateNvgreConfigString(swUrl, vlanId, tunnelId); // 配置NVGRE的命令
 
 		JsonRPCUtil.executeJsonRPCRequest(swUrl, nvgre_cmds); // 执行
 
@@ -1137,17 +1138,17 @@ public class SDNServiceImpl implements SDNService {
 				vmName);
 
 		Folder targetFolder = (Folder) new InventoryNavigator(rootFolder).searchManagedEntity("Folder", folderName);
-		
+
 		Task moveTask = targetFolder.moveIntoFolder_Task(new ManagedEntity[] { vm });
-		
+
 		String result = moveTask.waitForTask();
-		
+
 		if (!result.equals(Task.SUCCESS)) {
 			return "移动虚拟机失败！";
-		}else {
+		} else {
 			return null;
 		}
-		
+
 	}
 
 }
