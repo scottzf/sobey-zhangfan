@@ -40,4 +40,10 @@ public class scanner {
 		System.out.println("VM同步完成!");
 	}
 
+	public void createProduced() {
+
+		// service.createProduced(producedDTO);
+		System.out.println("VM同步完成!");
+	}
+
 }
