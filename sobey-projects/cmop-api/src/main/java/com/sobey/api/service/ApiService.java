@@ -81,4 +81,13 @@ public interface ApiService {
 
 	public WSResult createProduced(ProducedDTO producedDTO);
 
+	/**
+	 * 定时器,空闲时段创建VM
+	 * 
+	 * @return
+	 */
+	public WSResult schedulerProduced();
+
+	public WSResult syncFolder();
+
 }
