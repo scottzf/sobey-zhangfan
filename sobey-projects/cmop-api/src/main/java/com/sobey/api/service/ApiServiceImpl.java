@@ -67,6 +67,7 @@ import com.sobey.generate.instance.PowerVMParameter;
 import com.sobey.generate.instance.RunNetworkDeviceVMParameter;
 import com.sobey.generate.instance.RunVMParameter;
 import com.sobey.generate.instance.VMDiskParameter;
+import com.sobey.generate.instance.VMInfoDTO;
 import com.sobey.generate.instance.VMRCDTO;
 import com.sobey.generate.loadbalancer.LoadbalancerSoapService;
 import com.sobey.generate.storage.StorageSoapService;
@@ -1651,4 +1652,137 @@ public class ApiServiceImpl implements ApiService {
 		return result;
 	}
 
+	@Override
+	public WSResult schedulerProduced() {
+
+		WSResult result = new WSResult();
+
+		HashMap<String, Object> idcMap = new HashMap<String, Object>();
+		idcMap.put("EQ_description", DataCenterEnum.成都核心数据中心.toString());
+		IdcDTO idcDTO = (IdcDTO) cmdbuildSoapService.findIdcByParams(CMDBuildUtil.wrapperSearchParams(idcMap)).getDto();
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		List<Object> list = cmdbuildSoapService.getEcsSpecList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+				.getDto();
+
+		// 创建虚拟机
+		for (Object object : list) {
+
+			EcsSpecDTO ecsSpecDTO = (EcsSpecDTO) object;
+
+			// 创建文件夹
+			instanceSoapService.createFolderOnParentByInstance(DataCenterEnum.成都核心数据中心.toString(),
+					ecsSpecDTO.getDescription(), "Produced");
+
+			for (int i = 0; i < ecsSpecDTO.getProducedNumber(); i++) {
+
+				ProducedDTO producedDTO = new ProducedDTO();
+				producedDTO.setEcsSpec(ecsSpecDTO.getId());
+				producedDTO.setIdc(idcDTO.getId());
+				producedDTO.setDescription(ecsSpecDTO.getDescription() + "-" + Identities.randomBase62(8));
+
+				createProduced(producedDTO);
+
+				// 将vm移动到对应的镜像文件夹下
+				instanceSoapService.moveVMByInstance(DataCenterEnum.成都核心数据中心.toString(), producedDTO.getDescription(),
+						ecsSpecDTO.getDescription());
+			}
+		}
+
+		syncFolder();
+
+		return result;
+	}
+
+	@Override
+	public WSResult syncFolder() {
+
+		/**
+		 * 将文件夹的vm同步至CMDB中
+		 */
+
+		WSResult result = new WSResult();
+
+		// 获得所有的规格
+
+		HashMap<String, Object> idcMap = new HashMap<String, Object>();
+		idcMap.put("EQ_description", DataCenterEnum.成都核心数据中心.toString());
+		IdcDTO idcDTO = (IdcDTO) cmdbuildSoapService.findIdcByParams(CMDBuildUtil.wrapperSearchParams(idcMap)).getDto();
+
+		HashMap<String, Object> allMap = new HashMap<String, Object>();
+		List<Object> allECSSPec = cmdbuildSoapService.getEcsSpecList(CMDBuildUtil.wrapperSearchParams(allMap))
+				.getDtoList().getDto();
+
+		for (Object object : allECSSPec) {
+
+			EcsSpecDTO ecsSpecDTO = (EcsSpecDTO) object;
+
+			// vcenter中的数据,返回的是List<VMInfoDTO>
+
+			List<Object> VMInfoDTOs = instanceSoapService
+					.getVMInfoDTOInFolderByInstance(idcDTO.getDescription(), ecsSpecDTO.getDescription()).getDtoList()
+					.getDto();
+
+			List<Object> list = new ArrayList<Object>();
+
+			for (Object o : VMInfoDTOs) {
+				VMInfoDTO infoDTO = (VMInfoDTO) o;
+				list.add(infoDTO.getVmName());
+			}
+
+			List<Object> list2 = new ArrayList<Object>();
+			list2.addAll(list);
+
+			// CMDB中的指定规格下所有的数据
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("EQ_ecsSpec", ecsSpecDTO.getId());
+			List<Object> objs = cmdbuildSoapService.getProducedList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+					.getDto();
+
+			List<Object> objs2 = new ArrayList<Object>();
+			objs2.addAll(objs);
+
+			// 得到cmdb中,vcenter不存在的数据.
+			objs2.removeAll(list2);
+
+			// 删除
+			for (Object obj2 : objs2) {
+
+				ProducedDTO producedDTO = (ProducedDTO) obj2;
+
+				cmdbuildSoapService.deleteProduced(producedDTO.getId());
+			}
+
+			for (Object obj : list) {
+
+				String vmName = (String) obj;
+
+				map.put("EQ_description", vmName);
+				ProducedDTO dto = (ProducedDTO) cmdbuildSoapService.findProducedByParams(
+						CMDBuildUtil.wrapperSearchParams(map)).getDto();
+
+				if (dto == null) {
+
+					VMInfoDTO vmInfoDTO = (VMInfoDTO) instanceSoapService
+							.findVMInfoDTO(vmName, idcDTO.getDescription()).getDto();
+
+					HashMap<String, Object> serverMap = new HashMap<String, Object>();
+					serverMap.put("EQ_description", vmInfoDTO.getHostName());
+
+					ServerDTO serverDTO = (ServerDTO) cmdbuildSoapService.findServerByParams(
+							CMDBuildUtil.wrapperSearchParams(serverMap)).getDto();
+
+					ProducedDTO producedDTO = new ProducedDTO();
+					producedDTO.setEcsSpec(ecsSpecDTO.getId());
+					producedDTO.setDescription(vmName);
+					producedDTO.setIdc(idcDTO.getId());
+					producedDTO.setServer(serverDTO.getId());
+					cmdbuildSoapService.createProduced(producedDTO);
+				}
+
+			}
+		}
+
+		return result;
+	}
 }
