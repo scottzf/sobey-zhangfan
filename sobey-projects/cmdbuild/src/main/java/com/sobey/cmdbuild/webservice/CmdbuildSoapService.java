@@ -74,6 +74,8 @@ public interface CmdbuildSoapService {
 
 	Integer getMaxPortIndex(Integer tenantsId);
 
+	Integer getMaxTunnelId();
+
 	// ==============================//
 	// =========== LookUp ===========//
 	// == 系统默认表,只读取,不写入 ==//

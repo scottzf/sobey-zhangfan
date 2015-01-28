@@ -23,4 +23,10 @@ public class CustomDaoImp implements CustomDao {
 		return (Integer) em.createNativeQuery(sqlString).getSingleResult();
 	}
 
+	@Override
+	public Integer selectMaxTunnelId() {
+		String sqlString = "SELECT MAX(tunnel_id) from subnet where \"Status\"= 'A' ";
+		return (Integer) em.createNativeQuery(sqlString).getSingleResult();
+	}
+
 }
