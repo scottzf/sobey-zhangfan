@@ -31,7 +31,6 @@ public class SubnetHistory extends BasicEntity {
 	private String segment;
 	private Subnet subnet;
 	private Integer tenants;
-	private Integer tunnelId;
 
 	public SubnetHistory() {
 	}
@@ -93,11 +92,6 @@ public class SubnetHistory extends BasicEntity {
 		return tenants;
 	}
 
-	@Column(name = "tunnel_id")
-	public Integer getTunnelId() {
-		return tunnelId;
-	}
-
 	public void setDefaultSubnet(Integer defaultSubnet) {
 		this.defaultSubnet = defaultSubnet;
 	}
@@ -140,10 +134,6 @@ public class SubnetHistory extends BasicEntity {
 
 	public void setTenants(Integer tenants) {
 		this.tenants = tenants;
-	}
-
-	public void setTunnelId(Integer tunnelId) {
-		this.tunnelId = tunnelId;
 	}
 
 }

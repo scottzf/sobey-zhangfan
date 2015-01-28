@@ -25,8 +25,6 @@ public class EcsSpecHistory extends BasicEntity {
 	private Date endDate;
 	private String imageName;
 	private Integer osType;
-	private Integer producedNumber;
-
 	private String remark;
 
 	public EcsSpecHistory() {
@@ -59,11 +57,6 @@ public class EcsSpecHistory extends BasicEntity {
 		return osType;
 	}
 
-	@Column(name = "produced number")
-	public Integer getProducedNumber() {
-		return producedNumber;
-	}
-
 	@Column(name = "remark", length = 200)
 	public String getRemark() {
 		return remark;
@@ -87,10 +80,6 @@ public class EcsSpecHistory extends BasicEntity {
 
 	public void setOsType(Integer osType) {
 		this.osType = osType;
-	}
-
-	public void setProducedNumber(Integer producedNumber) {
-		this.producedNumber = producedNumber;
 	}
 
 	public void setRemark(String remark) {

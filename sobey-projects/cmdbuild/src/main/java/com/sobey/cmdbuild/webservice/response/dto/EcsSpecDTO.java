@@ -15,11 +15,6 @@ public class EcsSpecDTO extends BasicDTO {
 	private Integer idc;
 	private String imageName;
 	private Integer osType;
-	private Integer producedNumber;
-
-	
-	
- 
 
 	public Integer getIdc() {
 		return idc;
@@ -33,10 +28,6 @@ public class EcsSpecDTO extends BasicDTO {
 		return osType;
 	}
 
-	public Integer getProducedNumber() {
-		return producedNumber;
-	}
-
 	public void setIdc(Integer idc) {
 		this.idc = idc;
 	}
@@ -47,10 +38,6 @@ public class EcsSpecDTO extends BasicDTO {
 
 	public void setOsType(Integer osType) {
 		this.osType = osType;
-	}
-
-	public void setProducedNumber(Integer producedNumber) {
-		this.producedNumber = producedNumber;
 	}
 
 	/**

@@ -23,7 +23,6 @@ public class EcsSpec extends BasicEntity {
 	private Integer idc;
 	private String imageName;
 	private Integer osType;
-	private Integer producedNumber;
 	private String remark;
 
 	public EcsSpec() {
@@ -54,11 +53,6 @@ public class EcsSpec extends BasicEntity {
 		return osType;
 	}
 
-	@Column(name = "produced number")
-	public Integer getProducedNumber() {
-		return producedNumber;
-	}
-
 	@Column(name = "remark", length = 200)
 	public String getRemark() {
 		return remark;
@@ -82,10 +76,6 @@ public class EcsSpec extends BasicEntity {
 
 	public void setOsType(Integer osType) {
 		this.osType = osType;
-	}
-
-	public void setProducedNumber(Integer producedNumber) {
-		this.producedNumber = producedNumber;
 	}
 
 	public void setRemark(String remark) {

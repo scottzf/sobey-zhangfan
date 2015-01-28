@@ -43,14 +43,4 @@ public class CustomService {
 		return (int) MathsUtil.add(portIndex == null ? 0 : portIndex, 1);
 	}
 
-	/**
-	 * 获得所有Subnet中最大的tunnelId
-	 * 
-	 * @return
-	 */
-	public Integer selectMaxTunnelId() {
-		Integer tunnelId = customDao.selectMaxTunnelId();
-		return (int) MathsUtil.add(tunnelId == null ? 0 : tunnelId, 1);
-	}
-
 }

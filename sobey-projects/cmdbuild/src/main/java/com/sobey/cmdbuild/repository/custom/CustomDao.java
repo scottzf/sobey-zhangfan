@@ -19,10 +19,4 @@ public interface CustomDao {
 	 */
 	public Integer selectMaxPortIndex(Integer tenantsId);
 
-	/**
-	 * 获得所有子网中最大的TunnelId
-	 * 
-	 * @return
-	 */
-	public Integer selectMaxTunnelId();
 }
