@@ -40,18 +40,18 @@ public class TestData {
 		CloneVMParameter parameter = new CloneVMParameter();
 
 		parameter.setDescription("这个一个API测试程序");
-		parameter.setVmName("router_Random2");
+		parameter.setVmName("Random2");
 		parameter.setResourcePool("resgroup-133");
 		parameter.setHostId("host-236");
 		parameter.setDatacenter(DataCenterEnum.成都核心数据中心.toString());
 
 		// Linux
-		// parameter.setVmTemplateName("CnetOS6.5");
-		// parameter.setVmTemplateOS("Linux");
+		parameter.setVmTemplateName("CnetOS6.5");
+		parameter.setVmTemplateOS("Linux");
 
 		// Windows
-		parameter.setVmTemplateName("vRouter_Telnet");
-		parameter.setVmTemplateOS("Linux");
+		// parameter.setVmTemplateName("vRouter_Telnet");
+		// parameter.setVmTemplateOS("Linux");
 		return parameter;
 	}
 

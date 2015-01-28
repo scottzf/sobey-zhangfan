@@ -386,11 +386,11 @@ public class LookUpConstants {
 
 	public enum ECSType {
 
-		instance("instance", 34),
+		instance("instance", 109),
 
-		netscarler("netscarler", 34),
+		netscarler("netscarler", 111),
 
-		firewall("firewall", 71);
+		firewall("firewall", 110);
 
 		private String name;
 		private Integer value;

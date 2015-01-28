@@ -16,6 +16,10 @@ import com.sobey.switches.webservice.response.result.WSResult;
 @WebService(name = "SwitchesSoapService", targetNamespace = WsConstants.NS)
 public interface SwitchesSoapService {
 
-	WSResult createPolicyInSwitch(@WebParam(name = "switchPolicyParameter") SwitchPolicyParameter switchPolicyParameter);
+	WSResult createSingleSubnetPolicyBySwitch(
+			@WebParam(name = "switchPolicyParameter") SwitchPolicyParameter switchPolicyParameter);
+
+	WSResult createMultipleSubnetPolicyBySwitch(
+			@WebParam(name = "switchPolicyParameter") SwitchPolicyParameter switchPolicyParameter);
 
 }

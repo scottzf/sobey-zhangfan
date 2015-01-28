@@ -157,7 +157,7 @@ public class ApiServiceImpl implements ApiService {
 		List<FirewallPolicyDTO> firewallPolicyDTOs = new ArrayList<FirewallPolicyDTO>();
 		createFirewallService(ConstansData.defaultFirewallServiceDTO(queryTenantsDTO.getId()), firewallPolicyDTOs);
 
-		// // 获得默认防火墙对象
+		// 获得默认防火墙对象
 		// HashMap<String, Object> firewallServiceMap = new HashMap<String, Object>();
 		// firewallServiceMap.put("EQ_code", firewallIdResult.getMessage());
 		// FirewallServiceDTO queryFirewallServiceDTO = (FirewallServiceDTO) cmdbuildSoapService
@@ -238,8 +238,8 @@ public class ApiServiceImpl implements ApiService {
 
 		String prefixIP = StringUtils.substringBeforeLast(subnetDTO.getSegment(), ".");
 
-		// IP从2-254 ,共253个IP
-		for (int i = 2; i < 255; i++) {
+		// IP从1-253 ,共253个IP,254为网关
+		for (int i = 1; i < 254; i++) {
 			IpaddressDTO ipaddressDTO = new IpaddressDTO();
 			ipaddressDTO.setGateway(subnetDTO.getGateway());
 			ipaddressDTO.setIdc(subnetDTO.getIdc());
@@ -335,8 +335,10 @@ public class ApiServiceImpl implements ApiService {
 	 */
 	private ServerDTO findSuitableServerDTO(IdcDTO idcDTO) {
 
+		// 查询可创建VM的Server
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_idc", idcDTO.getId());
+		map.put("EQ_host", LookUpConstants.isHost.Yes.getValue());
 		List<Object> list = cmdbuildSoapService.getServerList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
 				.getDto();
 
@@ -396,6 +398,7 @@ public class ApiServiceImpl implements ApiService {
 				// 如果为null,表示subnet在该网卡上没有关联的端口组.创建一个新的Vlan.
 
 				Integer vlanId = cmdbuildSoapService.getMaxVlanId(nicDTO.getId());
+				Integer tunnelId = cmdbuildSoapService.getMaxTunnelId();
 
 				TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(subnetDTO.getTenants()).getDto();
 
@@ -411,6 +414,7 @@ public class ApiServiceImpl implements ApiService {
 				insertVlanDTO.setSegment(subnetDTO.getSegment());
 				insertVlanDTO.setGateway(subnetDTO.getGateway());
 				insertVlanDTO.setVlanId(vlanId);
+				insertVlanDTO.setTenants(tunnelId);
 				cmdbuildSoapService.createVlan(insertVlanDTO);
 
 				// 在Host的网卡上创建端口组.
@@ -428,6 +432,16 @@ public class ApiServiceImpl implements ApiService {
 				queryVlanMap.put("EQ_description", vlanName);
 				VlanDTO queryVlanDTO = (VlanDTO) cmdbuildSoapService.findVlanByParams(
 						CMDBuildUtil.wrapperSearchParams(queryVlanMap)).getDto();
+
+				IpaddressDTO serverIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(serverDTO.getIpaddress())
+						.getDto();
+
+				// 在盛科交换机上写入策略,允许同一subnet下通信.重要!
+				SwitchPolicyParameter switchPolicyParameter = new SwitchPolicyParameter();
+				switchPolicyParameter.setHostIp(serverIP.getDescription());
+				switchPolicyParameter.setVlanId(queryVlanDTO.getVlanId());
+				switchPolicyParameter.setTunnelId(tunnelId);
+				switchesSoapService.createSingleSubnetPolicyBySwitch(switchPolicyParameter);
 
 				return queryVlanDTO;
 			}
@@ -985,7 +999,7 @@ public class ApiServiceImpl implements ApiService {
 			SwitchPolicyParameter switchPolicyParameter = new SwitchPolicyParameter();
 			switchPolicyParameter.setHostIp(serverIP.getDescription());
 			switchPolicyParameter.setVlanId(vlanDTO.getVlanId());
-			switchesSoapService.createPolicyInSwitch(switchPolicyParameter);
+			switchesSoapService.createMultipleSubnetPolicyBySwitch(switchPolicyParameter);
 		}
 
 		for (SubnetDTO subnetDTO : subnetDTOs) {

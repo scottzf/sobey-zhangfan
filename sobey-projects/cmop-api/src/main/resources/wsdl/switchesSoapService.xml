@@ -5,11 +5,15 @@
 
   <xs:element name="SwitchPolicyParameter" type="tns:SwitchPolicyParameter"/>
 
-  <xs:element name="createPolicyInSwitch" type="tns:createPolicyInSwitch"/>
+  <xs:element name="createMultipleSubnetPolicyBySwitch" type="tns:createMultipleSubnetPolicyBySwitch"/>
 
-  <xs:element name="createPolicyInSwitchResponse" type="tns:createPolicyInSwitchResponse"/>
+  <xs:element name="createMultipleSubnetPolicyBySwitchResponse" type="tns:createMultipleSubnetPolicyBySwitchResponse"/>
 
-  <xs:complexType name="createPolicyInSwitch">
+  <xs:element name="createSingleSubnetPolicyBySwitch" type="tns:createSingleSubnetPolicyBySwitch"/>
+
+  <xs:element name="createSingleSubnetPolicyBySwitchResponse" type="tns:createSingleSubnetPolicyBySwitchResponse"/>
+
+  <xs:complexType name="createSingleSubnetPolicyBySwitch">
     <xs:sequence>
       <xs:element minOccurs="0" name="switchPolicyParameter" type="tns:SwitchPolicyParameter"/>
     </xs:sequence>
@@ -18,11 +22,12 @@
   <xs:complexType name="SwitchPolicyParameter">
     <xs:sequence>
       <xs:element minOccurs="0" name="hostIp" type="xs:string"/>
+      <xs:element minOccurs="0" name="tunnelId" type="xs:int"/>
       <xs:element minOccurs="0" name="vlanId" type="xs:int"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="createPolicyInSwitchResponse">
+  <xs:complexType name="createSingleSubnetPolicyBySwitchResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
     </xs:sequence>
@@ -35,32 +40,67 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="createMultipleSubnetPolicyBySwitch">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="switchPolicyParameter" type="tns:SwitchPolicyParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createMultipleSubnetPolicyBySwitchResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
 </xs:schema>
   </wsdl:types>
-  <wsdl:message name="createPolicyInSwitchResponse">
-    <wsdl:part element="tns:createPolicyInSwitchResponse" name="parameters">
+  <wsdl:message name="createMultipleSubnetPolicyBySwitch">
+    <wsdl:part element="tns:createMultipleSubnetPolicyBySwitch" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="createPolicyInSwitch">
-    <wsdl:part element="tns:createPolicyInSwitch" name="parameters">
+  <wsdl:message name="createSingleSubnetPolicyBySwitch">
+    <wsdl:part element="tns:createSingleSubnetPolicyBySwitch" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createMultipleSubnetPolicyBySwitchResponse">
+    <wsdl:part element="tns:createMultipleSubnetPolicyBySwitchResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createSingleSubnetPolicyBySwitchResponse">
+    <wsdl:part element="tns:createSingleSubnetPolicyBySwitchResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="SwitchesSoapService">
-    <wsdl:operation name="createPolicyInSwitch">
-      <wsdl:input message="tns:createPolicyInSwitch" name="createPolicyInSwitch">
+    <wsdl:operation name="createSingleSubnetPolicyBySwitch">
+      <wsdl:input message="tns:createSingleSubnetPolicyBySwitch" name="createSingleSubnetPolicyBySwitch">
     </wsdl:input>
-      <wsdl:output message="tns:createPolicyInSwitchResponse" name="createPolicyInSwitchResponse">
+      <wsdl:output message="tns:createSingleSubnetPolicyBySwitchResponse" name="createSingleSubnetPolicyBySwitchResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createMultipleSubnetPolicyBySwitch">
+      <wsdl:input message="tns:createMultipleSubnetPolicyBySwitch" name="createMultipleSubnetPolicyBySwitch">
+    </wsdl:input>
+      <wsdl:output message="tns:createMultipleSubnetPolicyBySwitchResponse" name="createMultipleSubnetPolicyBySwitchResponse">
     </wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="SwitchesSoapServiceSoapBinding" type="tns:SwitchesSoapService">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-    <wsdl:operation name="createPolicyInSwitch">
+    <wsdl:operation name="createSingleSubnetPolicyBySwitch">
       <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="createPolicyInSwitch">
+      <wsdl:input name="createSingleSubnetPolicyBySwitch">
         <soap:body use="literal"/>
       </wsdl:input>
-      <wsdl:output name="createPolicyInSwitchResponse">
+      <wsdl:output name="createSingleSubnetPolicyBySwitchResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createMultipleSubnetPolicyBySwitch">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createMultipleSubnetPolicyBySwitch">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createMultipleSubnetPolicyBySwitchResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>

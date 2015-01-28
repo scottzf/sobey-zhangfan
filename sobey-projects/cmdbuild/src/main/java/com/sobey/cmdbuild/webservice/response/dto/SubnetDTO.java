@@ -21,6 +21,7 @@ public class SubnetDTO extends BasicDTO {
 	private Integer router;
 	private String segment;
 	private Integer tenants;
+	private Integer tunnelId;
 
 	public Integer getDefaultSubnet() {
 		return defaultSubnet;
@@ -58,6 +59,10 @@ public class SubnetDTO extends BasicDTO {
 		return tenants;
 	}
 
+	public Integer getTunnelId() {
+		return tunnelId;
+	}
+
 	public void setDefaultSubnet(Integer defaultSubnet) {
 		this.defaultSubnet = defaultSubnet;
 	}
@@ -92,6 +97,10 @@ public class SubnetDTO extends BasicDTO {
 
 	public void setTenants(Integer tenants) {
 		this.tenants = tenants;
+	}
+
+	public void setTunnelId(Integer tunnelId) {
+		this.tunnelId = tunnelId;
 	}
 
 	/**

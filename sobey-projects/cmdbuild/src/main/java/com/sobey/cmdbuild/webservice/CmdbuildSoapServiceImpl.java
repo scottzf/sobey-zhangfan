@@ -150,6 +150,11 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 	}
 
 	@Override
+	public Integer getMaxTunnelId() {
+		return comm.customService.selectMaxTunnelId();
+	}
+
+	@Override
 	public DTOResult<LookUpDTO> findLookUp(@WebParam(name = "id") Integer id) {
 
 		DTOResult<LookUpDTO> result = new DTOResult<LookUpDTO>();
