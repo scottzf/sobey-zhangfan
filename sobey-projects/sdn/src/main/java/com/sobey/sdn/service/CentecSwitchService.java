@@ -10,6 +10,7 @@ public class CentecSwitchService {
 	/**
 	 * 生成配置VLAN的命令脚本
 	 * 
+	 * 
 	 * @param vlanId
 	 * @return
 	 */
@@ -48,7 +49,8 @@ public class CentecSwitchService {
 	 * @param vlanId
 	 * @return
 	 */
-	public static String[] generateNvgreConfigString(String swUrl, int vlanId) {
+	public static String[] generateNvgreConfigString(String swUrl, int vlanId, int tunnelId) {
+
 		String str1 = "configure terminal"; // 进入配置模式
 		String str2 = "nvgre"; // 进入NVGRE模式
 		String sourceIp = SDNPropertiesUtil.getProperty("TOR-B_SWITCH_NVGRE_SOURCEIP"); // 置顶交换机源IP
@@ -58,7 +60,7 @@ public class CentecSwitchService {
 			peerIp = SDNPropertiesUtil.getProperty("TOR-B_SWITCH_NVGRE_SOURCEIP");
 		}
 		String str3 = "source " + sourceIp; // 设置NVGRE报文的外层IP源地址
-		String str4 = "vlan " + vlanId + " tunnel-id " + vlanId; // 将id为vlanId的VLAN映射到tunnel ID中
+		String str4 = "vlan " + vlanId + " tunnel-id " + tunnelId; // 将id为vlanId的VLAN映射到tunnel ID隧道中
 		String str5 = "vlan " + vlanId + " peer " + peerIp; // 在id为vlanId的vlanId中创建到TOR B的隧道
 		String[] cmds = { str1, str2, str3, str4, str5 };
 		return cmds;
