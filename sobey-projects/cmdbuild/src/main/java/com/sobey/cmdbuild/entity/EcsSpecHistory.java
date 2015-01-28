@@ -59,7 +59,7 @@ public class EcsSpecHistory extends BasicEntity {
 		return osType;
 	}
 
-	@Column(name = "produced number")
+	@Column(name = "produced_number")
 	public Integer getProducedNumber() {
 		return producedNumber;
 	}
