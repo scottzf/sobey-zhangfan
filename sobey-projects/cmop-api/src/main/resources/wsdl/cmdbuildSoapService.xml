@@ -1063,6 +1063,10 @@
 
   <xs:element name="getMaxPortIndexResponse" type="tns:getMaxPortIndexResponse"/>
 
+  <xs:element name="getMaxTunnelId" type="tns:getMaxTunnelId"/>
+
+  <xs:element name="getMaxTunnelIdResponse" type="tns:getMaxTunnelIdResponse"/>
+
   <xs:element name="getMaxVlanId" type="tns:getMaxVlanId"/>
 
   <xs:element name="getMaxVlanIdResponse" type="tns:getMaxVlanIdResponse"/>
@@ -2458,6 +2462,7 @@
           <xs:element minOccurs="0" name="idc" type="xs:int"/>
           <xs:element minOccurs="0" name="imageName" type="xs:string"/>
           <xs:element minOccurs="0" name="osType" type="xs:int"/>
+          <xs:element minOccurs="0" name="producedNumber" type="xs:int"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -2623,6 +2628,7 @@
           <xs:element minOccurs="0" name="router" type="xs:int"/>
           <xs:element minOccurs="0" name="segment" type="xs:string"/>
           <xs:element minOccurs="0" name="tenants" type="xs:int"/>
+          <xs:element minOccurs="0" name="tunnelId" type="xs:int"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -2690,6 +2696,16 @@
   <xs:complexType name="createServerResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:IdResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getMaxTunnelId">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="getMaxTunnelIdResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:int"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -6789,6 +6805,10 @@
     <wsdl:part element="tns:findServerPortResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getMaxTunnelIdResponse">
+    <wsdl:part element="tns:getMaxTunnelIdResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="findServerByParams">
     <wsdl:part element="tns:findServerByParams" name="parameters">
     </wsdl:part>
@@ -7075,6 +7095,10 @@
   </wsdl:message>
   <wsdl:message name="getTenantsPaginationResponse">
     <wsdl:part element="tns:getTenantsPaginationResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getMaxTunnelId">
+    <wsdl:part element="tns:getMaxTunnelId" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getDnsList">
@@ -7453,12 +7477,12 @@
     <wsdl:part element="tns:findNicPortByParamsResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getIpaddressList">
-    <wsdl:part element="tns:getIpaddressList" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="createMapEcsEs3">
     <wsdl:part element="tns:createMapEcsEs3" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getIpaddressList">
+    <wsdl:part element="tns:getIpaddressList" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="findEcsResponse">
@@ -8976,6 +9000,12 @@
       <wsdl:input message="tns:createServer" name="createServer">
     </wsdl:input>
       <wsdl:output message="tns:createServerResponse" name="createServerResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMaxTunnelId">
+      <wsdl:input message="tns:getMaxTunnelId" name="getMaxTunnelId">
+    </wsdl:input>
+      <wsdl:output message="tns:getMaxTunnelIdResponse" name="getMaxTunnelIdResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateMemory">
@@ -11066,6 +11096,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="updateSubnetResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMaxTunnelId">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getMaxTunnelId">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getMaxTunnelIdResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>

@@ -23,6 +23,11 @@ public class SwitchPolicyParameter {
 	private String hostIp;
 
 	/**
+	 * tunnel编号
+	 */
+	private Integer tunnelId;
+
+	/**
 	 * Vlan编号
 	 */
 	private Integer vlanId;
@@ -31,12 +36,20 @@ public class SwitchPolicyParameter {
 		return hostIp;
 	}
 
+	public Integer getTunnelId() {
+		return tunnelId;
+	}
+
 	public Integer getVlanId() {
 		return vlanId;
 	}
 
 	public void setHostIp(String hostIp) {
 		this.hostIp = hostIp;
+	}
+
+	public void setTunnelId(Integer tunnelId) {
+		this.tunnelId = tunnelId;
 	}
 
 	public void setVlanId(Integer vlanId) {

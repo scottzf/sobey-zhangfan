@@ -122,7 +122,7 @@ public class SwitchService {
 
 		String str3 = "source " + sourceIp; // 设置NVGRE报文的外层IP源地址
 		// 将id为vlanId的VLAN映射到tunnel ID中
-		String str4 = "vlan " + parameter.getVlanId() + " tunnel-id " + parameter.getVlanId();
+		String str4 = "vlan " + parameter.getVlanId() + " tunnel-id " + parameter.getTunnelId();
 		String str5 = "vlan " + parameter.getVlanId() + " peer " + peerIp; // 在id为vlanId的vlanId中创建到TOR B的隧道
 		String[] cmds = { str1, str2, str3, str4, str5 };
 		return cmds;

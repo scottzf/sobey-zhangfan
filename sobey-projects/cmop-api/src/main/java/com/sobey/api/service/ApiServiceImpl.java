@@ -335,7 +335,7 @@ public class ApiServiceImpl implements ApiService {
 	 */
 	private ServerDTO findSuitableServerDTO(IdcDTO idcDTO) {
 
-		//查询可创建VM的Server
+		// 查询可创建VM的Server
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_idc", idcDTO.getId());
 		map.put("EQ_host", LookUpConstants.isHost.Yes.getValue());
@@ -398,6 +398,7 @@ public class ApiServiceImpl implements ApiService {
 				// 如果为null,表示subnet在该网卡上没有关联的端口组.创建一个新的Vlan.
 
 				Integer vlanId = cmdbuildSoapService.getMaxVlanId(nicDTO.getId());
+				Integer tunnelId = cmdbuildSoapService.getMaxTunnelId();
 
 				TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(subnetDTO.getTenants()).getDto();
 
@@ -413,6 +414,7 @@ public class ApiServiceImpl implements ApiService {
 				insertVlanDTO.setSegment(subnetDTO.getSegment());
 				insertVlanDTO.setGateway(subnetDTO.getGateway());
 				insertVlanDTO.setVlanId(vlanId);
+				insertVlanDTO.setTenants(tunnelId);
 				cmdbuildSoapService.createVlan(insertVlanDTO);
 
 				// 在Host的网卡上创建端口组.
@@ -438,7 +440,8 @@ public class ApiServiceImpl implements ApiService {
 				SwitchPolicyParameter switchPolicyParameter = new SwitchPolicyParameter();
 				switchPolicyParameter.setHostIp(serverIP.getDescription());
 				switchPolicyParameter.setVlanId(queryVlanDTO.getVlanId());
-				switchesSoapService.createPolicyInSwitch(switchPolicyParameter);
+				switchPolicyParameter.setTunnelId(tunnelId);
+				switchesSoapService.createSingleSubnetPolicyBySwitch(switchPolicyParameter);
 
 				return queryVlanDTO;
 			}
@@ -996,7 +999,7 @@ public class ApiServiceImpl implements ApiService {
 			SwitchPolicyParameter switchPolicyParameter = new SwitchPolicyParameter();
 			switchPolicyParameter.setHostIp(serverIP.getDescription());
 			switchPolicyParameter.setVlanId(vlanDTO.getVlanId());
-			switchesSoapService.createPolicyInSwitch(switchPolicyParameter);
+			switchesSoapService.createMultipleSubnetPolicyBySwitch(switchPolicyParameter);
 		}
 
 		for (SubnetDTO subnetDTO : subnetDTOs) {
