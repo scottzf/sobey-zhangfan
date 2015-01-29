@@ -53,7 +53,7 @@ import com.sobey.zabbix.webservice.response.dto.ZItemDTO;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ZabbixTest extends TestCase {
 
-	private static String ZABBIX_API_URL = "http://113.142.30.36:82/zabbix/api_jsonrpc.php";
+	private static String ZABBIX_API_URL = "http://10.2.12.1/zabbix/api_jsonrpc.php";
 
 	@Autowired
 	public ZabbixApiService service;
@@ -126,9 +126,11 @@ public class ZabbixTest extends TestCase {
 	@Test
 	public void gethistory() throws JSONException, IOException {
 
-		String hostId = getHostId("10.10.101.1");
+		String hostId = getHostId("Centos 6.3-r9BWGjxb");
+		System.out.println(hostId);
 
-		ZItemDTO item = getItem(hostId, ItemEnum.系统盘可用空间百分比.getValue());
+		ZItemDTO item = getItem(hostId, ItemEnum.内存总大小.getValue());
+		System.out.println(item.getItemid());
 
 		ZHistoryItemDTO zHistoryItemDTO = gethistory(hostId, item.getItemid());
 
@@ -137,7 +139,6 @@ public class ZabbixTest extends TestCase {
 			System.out.println(zItemDTO.getValue());
 			System.out.println(zItemDTO.getClock());
 			System.out.println(zItemDTO.getItemid());
-			System.out.println();
 		}
 
 	}
@@ -145,12 +146,12 @@ public class ZabbixTest extends TestCase {
 	@Test
 	public void zabbixAPITest() throws JsonGenerationException, JsonMappingException, IOException, JSONException {
 
-		String hostId = getHostId("netapp-1");
+		String hostId = getHostId("Tenants-7Io6mxdH-172.16.0.10");
 
 		System.out.println("hostId:" + hostId);
 
 		// 监控netapp卷大小,需要注意获得卷所在的controller,获得controller的hostID后,在根据key查询卷大小.key 的组合格式.
-		ZItemDTO item = getItem(hostId, "VolSpace[/vol/data_gdsyxh/]");
+		ZItemDTO item = getItem(hostId, ItemEnum.内存总大小.getValue());
 
 		// VolSpacePercent 已用百分比
 		// VolStatus
@@ -423,11 +424,8 @@ public class ZabbixTest extends TestCase {
 		jsonObj.put("jsonrpc", "2.0");
 		jsonObj.put("method", "history.get");
 		jsonObj.put("auth", getToken());
-		jsonObj.put(
-				"params",
-				(new JSONObject().put("output", "extend").put("limit", limits).put("sortfield", "clock")
-						.put("sortorder", "DESC").put("history", 0).put("itemids", zItemDTO.getItemid()).put("hostids",
-						hostId)));
+		jsonObj.put("params", (new JSONObject().put("output", "extend").put("limit", limits).put("sortfield", "clock")
+				.put("sortorder", "DESC").put("itemids", zItemDTO.getItemid()).put("hostids", hostId)));
 
 		String resStr = executeZabbixMethod(jsonObj);
 
