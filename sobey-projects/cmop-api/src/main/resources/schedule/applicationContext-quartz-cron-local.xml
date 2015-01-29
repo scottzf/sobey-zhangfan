@@ -31,8 +31,8 @@
 	<!-- Cron式Trigger定义 -->
 	<bean id="producedTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="producedJobDetail" />
-		<!-- 每天12点触发 -->
-		<property name="cronExpression" value="0 0 12 * * ?" />
+		<!-- 每天23点执行一次 -->
+		<property name="cronExpression" value="0 0 23 * * ?" />
 		<!-- [秒] [分] [小时] [日] [月] [周] [年] -->
 	</bean>
 
@@ -48,7 +48,7 @@
 	<!-- Cron式Trigger定义 -->
 	<bean id="dnsTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="dnsJobDetail" />
-		<property name="cronExpression" value="0 0 12 * * ?" />
+		<property name="cronExpression" value="0 0 23 * * ?" />
 	</bean>
 
 	<!-- JobDetajil, 基于MethodInvokingJobDetailFactoryBean调用普通Spring Bean -->
@@ -63,7 +63,7 @@
 	<!-- ELB -->
 	<bean id="elbTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="elbJobDetail" />
-		<property name="cronExpression" value="0 0 12 * * ?" />
+		<property name="cronExpression" value="0 0 23 * * ?" />
 	</bean>
 
 	<bean id="elbJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -76,7 +76,7 @@
 	<!-- VM -->
 	<bean id="vmTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="vmJobDetail" />
-		<property name="cronExpression" value="0 0 12 * * ?" />
+		<property name="cronExpression" value="0 0 23 * * ?" />
 	</bean>
 
 	<bean id="vmJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -89,7 +89,7 @@
 	<!-- netapp -->
 	<bean id="netappTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="netappJobDetail" />
-		<property name="cronExpression" value="0 0 12 * * ?" />
+		<property name="cronExpression" value="0 0 23 * * ?" />
 	</bean>
 
 	<bean id="netappJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">

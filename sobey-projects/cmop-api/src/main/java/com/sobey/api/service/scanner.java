@@ -42,8 +42,8 @@ public class scanner {
 
 	public void createProduced() {
 
-		// service.createProduced(producedDTO);
-		System.out.println("VM同步完成!");
+		service.schedulerProduced();
+		System.out.println("schedulerProduced完成!");
 	}
 
 }

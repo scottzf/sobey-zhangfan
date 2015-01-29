@@ -193,6 +193,8 @@ public class ApiServiceImpl implements ApiService {
 
 		// 获得为每个子网分配一个从1开始递增的portIndex.portIndex主要和 防火墙-> 网络-> 接口中的名称对应,公网IP 8-9,子网为1-7
 		subnetDTO.setPortIndex(cmdbuildSoapService.getMaxPortIndex(subnetDTO.getTenants()));
+		// 用于nevgre的tunnelId
+		subnetDTO.setTunnelId(cmdbuildSoapService.getMaxTunnelId());
 
 		IdResult idResult = cmdbuildSoapService.createSubnet(subnetDTO);
 
@@ -388,6 +390,7 @@ public class ApiServiceImpl implements ApiService {
 		if (!nicList.isEmpty()) {
 
 			NicDTO nicDTO = (NicDTO) nicList.get(0);// 随机获得一个网卡,并默认Server上肯定有网卡
+			Integer tunnelId = subnetDTO.getTunnelId();// tunnelId,在不同主机或交换机上通过tunnelId实现NVGRE隧道通信
 
 			HashMap<String, Object> vlanMap = new HashMap<String, Object>();
 			vlanMap.put("EQ_nic", nicDTO.getId());
@@ -399,7 +402,6 @@ public class ApiServiceImpl implements ApiService {
 				// 如果为null,表示subnet在该网卡上没有关联的端口组.创建一个新的Vlan.
 
 				Integer vlanId = cmdbuildSoapService.getMaxVlanId(nicDTO.getId());
-				Integer tunnelId = cmdbuildSoapService.getMaxTunnelId();
 
 				TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(subnetDTO.getTenants()).getDto();
 
