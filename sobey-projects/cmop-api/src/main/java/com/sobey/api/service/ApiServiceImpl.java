@@ -353,16 +353,24 @@ public class ApiServiceImpl implements ApiService {
 
 			ServerDTO serverDTO = (ServerDTO) object;
 
-			HashMap<String, Object> ecsMap = new HashMap<String, Object>();
-			ecsMap.put("EQ_server", serverDTO.getId());
+			/**
+			 * Host负载的VM在CMDB中是分两部分记录.一个是Produced ,一个是ECS.所以需要将两者数量都统计出来并想加,才能得到Host准确的负载.
+			 */
 
-			List<Object> ecsList = cmdbuildSoapService.getEcsList(CMDBuildUtil.wrapperSearchParams(ecsMap))
+			HashMap<String, Object> searchMap = new HashMap<String, Object>();
+			searchMap.put("EQ_server", serverDTO.getId());
+			List<Object> ecsList = cmdbuildSoapService.getEcsList(CMDBuildUtil.wrapperSearchParams(searchMap))
 					.getDtoList().getDto();
 
-			// 获得Server关联ECS数量最少的.
-			if (size > ecsList.size()) {
+			List<Object> produceds = cmdbuildSoapService.getProducedList(CMDBuildUtil.wrapperSearchParams(searchMap))
+					.getDtoList().getDto();
+
+			Integer totelSize = ecsList.size() + produceds.size();
+
+			// 获得Server关联Produced数量最少的.
+			if (size > totelSize) {
 				minimumLoadServerDTO = serverDTO;
-				size = ecsList.size();
+				size = produceds.size();
 			}
 		}
 
