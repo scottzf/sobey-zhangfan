@@ -278,16 +278,16 @@ public class ApiServiceImpl implements ApiService {
 	/**
 	 * 生成vCenter中端口组的名称.<br>
 	 *
-	 * 端口组名称设置为 "租户标识符-VlanId",同一个Server中端口组名称和vlanId是唯一的.
+	 * 端口组名称设置为 "租户标识符-Server名称-VlanId",同一个Server中端口组名称和vlanId是唯一的.
 	 * 
-	 * eg: Tenants-vMTpvWGq-100
+	 * eg: Tenants-vMTpvWGq-10.2.2.5-100
 	 * 
 	 * @param tenantsDTO
 	 * @param ipaddressDTO
 	 * @return
 	 */
-	private String generatVlanName(TenantsDTO tenantsDTO, Integer vlanId) {
-		return tenantsDTO.getCode() + "-" + vlanId;
+	private String generatVlanName(TenantsDTO tenantsDTO, ServerDTO serverDTO, Integer vlanId) {
+		return tenantsDTO.getCode() + "-" + serverDTO.getDescription() + "-" + vlanId;
 	}
 
 	/**
@@ -413,9 +413,10 @@ public class ApiServiceImpl implements ApiService {
 
 				TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(subnetDTO.getTenants()).getDto();
 
-				String vlanName = generatVlanName(tenantsDTO, vlanId);
+				String vlanName = generatVlanName(tenantsDTO, serverDTO, vlanId);
 
 				VlanDTO insertVlanDTO = new VlanDTO();
+
 				insertVlanDTO.setDescription(vlanName);
 				insertVlanDTO.setIdc(subnetDTO.getIdc());
 				insertVlanDTO.setNetMask(subnetDTO.getNetMask());
@@ -425,7 +426,6 @@ public class ApiServiceImpl implements ApiService {
 				insertVlanDTO.setSegment(subnetDTO.getSegment());
 				insertVlanDTO.setGateway(subnetDTO.getGateway());
 				insertVlanDTO.setVlanId(vlanId);
-				insertVlanDTO.setTenants(tunnelId);
 				cmdbuildSoapService.createVlan(insertVlanDTO);
 
 				// 在Host的网卡上创建端口组.
@@ -438,6 +438,7 @@ public class ApiServiceImpl implements ApiService {
 				instanceSoapService.createPortGroupByInstance(createPortGroupParameter);
 
 				HashMap<String, Object> queryVlanMap = new HashMap<String, Object>();
+
 				queryVlanMap.put("EQ_nic", nicDTO.getId());
 				queryVlanMap.put("EQ_subnet", subnetDTO.getId());
 				queryVlanMap.put("EQ_description", vlanName);
