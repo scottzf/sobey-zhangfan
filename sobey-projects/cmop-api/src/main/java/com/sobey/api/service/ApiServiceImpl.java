@@ -1668,6 +1668,9 @@ public class ApiServiceImpl implements ApiService {
 
 		WSResult result = new WSResult();
 
+		// 先同步文件夹下的VM信息
+		syncFolder();
+
 		HashMap<String, Object> idcMap = new HashMap<String, Object>();
 		idcMap.put("EQ_description", DataCenterEnum.成都核心数据中心.toString());
 		IdcDTO idcDTO = (IdcDTO) cmdbuildSoapService.findIdcByParams(CMDBuildUtil.wrapperSearchParams(idcMap)).getDto();
@@ -1685,7 +1688,19 @@ public class ApiServiceImpl implements ApiService {
 			instanceSoapService.createFolderOnParentByInstance(DataCenterEnum.成都核心数据中心.toString(),
 					ecsSpecDTO.getDescription(), "Produced");
 
-			for (int i = 0; i < ecsSpecDTO.getProducedNumber(); i++) {
+			// 先统计Produced下有多少VM
+			HashMap<String, Object> producedMap = new HashMap<String, Object>();
+			producedMap.put("EQ_ecsSpec", ecsSpecDTO.getId());
+			List<Object> produceds = cmdbuildSoapService.getProducedList(CMDBuildUtil.wrapperSearchParams(producedMap))
+					.getDtoList().getDto();
+
+			// 将每个image预定的创建数量减去vcenter已有的数量得到需要创建的VM数量
+			int subResults = ecsSpecDTO.getProducedNumber().intValue() - produceds.size();
+
+			// 如果vcenter里的Produced数量大于规格中预定的数量,则不创建.
+			int createNumber = subResults < 0 ? 0 : subResults;
+
+			for (int i = 0; i < createNumber; i++) {
 
 				ProducedDTO producedDTO = new ProducedDTO();
 				producedDTO.setEcsSpec(ecsSpecDTO.getId());
@@ -1699,8 +1714,6 @@ public class ApiServiceImpl implements ApiService {
 						ecsSpecDTO.getDescription());
 			}
 		}
-
-		syncFolder();
 
 		return result;
 	}
