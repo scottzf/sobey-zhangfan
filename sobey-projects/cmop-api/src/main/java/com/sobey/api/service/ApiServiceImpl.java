@@ -384,6 +384,8 @@ public class ApiServiceImpl implements ApiService {
 	 * 
 	 * 如果Host物理网卡上没有Vlan,创建一个新的Vlan,并且Vlan的名称和Id应该唯一.
 	 * 
+	 * TODO 有时间好好重构下.
+	 * 
 	 * @param serverDTO
 	 * @return
 	 */
@@ -407,53 +409,78 @@ public class ApiServiceImpl implements ApiService {
 					.getDto();
 
 			if (vlanDTO == null) {
+
+				/**
+				 * 如果没有CMDB中没有Subnet下的Vlan记录,那么在每个Host上都创建一个相同VlanId的端口组.
+				 * 
+				 * 即同一Subnet下,会有若干个vlan,每个vlan对应了一个Server.他们的vlanId都相同
+				 */
+
 				// 如果为null,表示subnet在该网卡上没有关联的端口组.创建一个新的Vlan.
 
 				Integer vlanId = cmdbuildSoapService.getMaxVlanId(nicDTO.getId());
 
 				TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(subnetDTO.getTenants()).getDto();
 
-				String vlanName = generatVlanName(tenantsDTO, serverDTO, vlanId);
+				// 获得所有可以创建VM的Server
+				HashMap<String, Object> serverMap = new HashMap<String, Object>();
+				serverMap.put("EQ_host", LookUpConstants.isHost.Yes.getValue());
+				List<Object> servers = cmdbuildSoapService.getServerList(CMDBuildUtil.wrapperSearchParams(serverMap))
+						.getDtoList().getDto();
 
-				VlanDTO insertVlanDTO = new VlanDTO();
+				for (Object object : servers) {
 
-				insertVlanDTO.setDescription(vlanName);
-				insertVlanDTO.setIdc(subnetDTO.getIdc());
-				insertVlanDTO.setNetMask(subnetDTO.getNetMask());
-				insertVlanDTO.setNic(nicDTO.getId());
-				insertVlanDTO.setTenants(subnetDTO.getTenants());
-				insertVlanDTO.setSubnet(subnetDTO.getId());
-				insertVlanDTO.setSegment(subnetDTO.getSegment());
-				insertVlanDTO.setGateway(subnetDTO.getGateway());
-				insertVlanDTO.setVlanId(vlanId);
-				cmdbuildSoapService.createVlan(insertVlanDTO);
+					ServerDTO dto = (ServerDTO) object;
 
-				// 在Host的网卡上创建端口组.
-				CreatePortGroupParameter createPortGroupParameter = new CreatePortGroupParameter();
-				createPortGroupParameter.setDatacenter(datacenter);
-				createPortGroupParameter.setHostName(serverDTO.getDescription());
-				createPortGroupParameter.setPortGroupName(vlanName);
-				createPortGroupParameter.setVirtualSwitchName(nicDTO.getVirtualSwitchName());
-				createPortGroupParameter.setVlanId(vlanId);
-				instanceSoapService.createPortGroupByInstance(createPortGroupParameter);
+					HashMap<String, Object> nicMap = new HashMap<String, Object>();
+					nicMap.put("EQ_server", dto.getId());
+					List<Object> nics = cmdbuildSoapService.getNicList(CMDBuildUtil.wrapperSearchParams(nicMap))
+							.getDtoList().getDto();
+					NicDTO nicDTO1 = (NicDTO) nics.get(0);
+
+					String vlanName = generatVlanName(tenantsDTO, dto, vlanId);
+
+					VlanDTO insertVlanDTO = new VlanDTO();
+
+					insertVlanDTO.setDescription(vlanName);
+					insertVlanDTO.setIdc(subnetDTO.getIdc());
+					insertVlanDTO.setNetMask(subnetDTO.getNetMask());
+					insertVlanDTO.setNic(nicDTO1.getId());
+					insertVlanDTO.setTenants(subnetDTO.getTenants());
+					insertVlanDTO.setSubnet(subnetDTO.getId());
+					insertVlanDTO.setSegment(subnetDTO.getSegment());
+					insertVlanDTO.setGateway(subnetDTO.getGateway());
+					insertVlanDTO.setVlanId(vlanId);
+					cmdbuildSoapService.createVlan(insertVlanDTO);
+
+					// 在Host的网卡上创建端口组.
+					CreatePortGroupParameter createPortGroupParameter = new CreatePortGroupParameter();
+					createPortGroupParameter.setDatacenter(datacenter);
+					createPortGroupParameter.setHostName(dto.getDescription());
+					createPortGroupParameter.setPortGroupName(vlanName);
+					createPortGroupParameter.setVirtualSwitchName(nicDTO.getVirtualSwitchName());
+					createPortGroupParameter.setVlanId(vlanId);
+					instanceSoapService.createPortGroupByInstance(createPortGroupParameter);
+
+					IpaddressDTO serverIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(dto.getIpaddress())
+							.getDto();
+
+					// 在盛科交换机上写入策略,允许同一subnet下通信.重要!
+					SwitchPolicyParameter switchPolicyParameter = new SwitchPolicyParameter();
+					switchPolicyParameter.setHostIp(serverIP.getDescription());
+					switchPolicyParameter.setVlanId(vlanId);
+					switchPolicyParameter.setTunnelId(tunnelId);
+					switchesSoapService.createSingleSubnetPolicyBySwitch(switchPolicyParameter);
+
+				}
 
 				HashMap<String, Object> queryVlanMap = new HashMap<String, Object>();
 
 				queryVlanMap.put("EQ_nic", nicDTO.getId());
 				queryVlanMap.put("EQ_subnet", subnetDTO.getId());
-				queryVlanMap.put("EQ_description", vlanName);
+				queryVlanMap.put("EQ_description", generatVlanName(tenantsDTO, serverDTO, vlanId));
 				VlanDTO queryVlanDTO = (VlanDTO) cmdbuildSoapService.findVlanByParams(
 						CMDBuildUtil.wrapperSearchParams(queryVlanMap)).getDto();
-
-				IpaddressDTO serverIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(serverDTO.getIpaddress())
-						.getDto();
-
-				// 在盛科交换机上写入策略,允许同一subnet下通信.重要!
-				SwitchPolicyParameter switchPolicyParameter = new SwitchPolicyParameter();
-				switchPolicyParameter.setHostIp(serverIP.getDescription());
-				switchPolicyParameter.setVlanId(queryVlanDTO.getVlanId());
-				switchPolicyParameter.setTunnelId(tunnelId);
-				switchesSoapService.createSingleSubnetPolicyBySwitch(switchPolicyParameter);
 
 				return queryVlanDTO;
 			}
