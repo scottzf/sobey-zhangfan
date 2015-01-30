@@ -1005,13 +1005,20 @@ public class ApiServiceImpl implements ApiService {
 			// 获得子网对应的VlanId
 			HashMap<String, Object> vlanMap = new HashMap<String, Object>();
 			vlanMap.put("EQ_subnet", subnetDTO.getId());
-			VlanDTO vlanDTO = (VlanDTO) cmdbuildSoapService.findVlanByParams(CMDBuildUtil.wrapperSearchParams(vlanMap))
-					.getDto();
 
-			SwitchPolicyParameter switchPolicyParameter = new SwitchPolicyParameter();
-			switchPolicyParameter.setHostIp(serverIP.getDescription());
-			switchPolicyParameter.setVlanId(vlanDTO.getVlanId());
-			switchesSoapService.createMultipleSubnetPolicyBySwitch(switchPolicyParameter);
+			List<Object> vlans = cmdbuildSoapService.getVlanList(CMDBuildUtil.wrapperSearchParams(vlanMap))
+					.getDtoList().getDto();
+
+			for (Object object : vlans) {
+
+				VlanDTO vlanDTO = (VlanDTO) object;
+
+				SwitchPolicyParameter switchPolicyParameter = new SwitchPolicyParameter();
+				switchPolicyParameter.setHostIp(serverIP.getDescription());
+				switchPolicyParameter.setVlanId(vlanDTO.getVlanId());
+				switchesSoapService.createMultipleSubnetPolicyBySwitch(switchPolicyParameter);
+			}
+
 		}
 
 		for (SubnetDTO subnetDTO : subnetDTOs) {
