@@ -182,6 +182,7 @@ public class RestfulServiceImpl implements RestfulService {
 
 	@Override
 	public WSResult createTenants(String company, String name, String email, String phone) {
+		WSResult result = new WSResult();
 
 		TenantsDTO tenantsDTO = new TenantsDTO();
 
@@ -189,8 +190,6 @@ public class RestfulServiceImpl implements RestfulService {
 		tenantsDTO.setDescription(email);
 		tenantsDTO.setEmail(email);
 		tenantsDTO.setPhone(phone);
-
-		WSResult result = new WSResult();
 
 		result.setMessage(apiService.createTenants(tenantsDTO).getMessage());
 

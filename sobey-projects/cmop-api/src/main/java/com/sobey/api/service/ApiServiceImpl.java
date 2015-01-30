@@ -409,11 +409,16 @@ public class ApiServiceImpl implements ApiService {
 			if (vlanDTO == null) {
 				// 如果为null,表示subnet在该网卡上没有关联的端口组.创建一个新的Vlan.
 
-				Integer vlanId = cmdbuildSoapService.getMaxVlanId(nicDTO.getId());
+				/**
+				 * SDN架构下,同一个交换机下的某个子网在该交换机下所有宿主机上的vlanId应该相同.
+				 * 
+				 * 故,这里暂时用tunnelId(所有Subnet都有唯一的一个tunnelId,用于NVGRE隧道通信)
+				 */
+				// Integer vlanId = cmdbuildSoapService.getMaxVlanId(nicDTO.getId());
 
 				TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(subnetDTO.getTenants()).getDto();
 
-				String vlanName = generatVlanName(tenantsDTO, serverDTO, vlanId);
+				String vlanName = generatVlanName(tenantsDTO, serverDTO, tunnelId);
 
 				VlanDTO insertVlanDTO = new VlanDTO();
 
@@ -425,7 +430,7 @@ public class ApiServiceImpl implements ApiService {
 				insertVlanDTO.setSubnet(subnetDTO.getId());
 				insertVlanDTO.setSegment(subnetDTO.getSegment());
 				insertVlanDTO.setGateway(subnetDTO.getGateway());
-				insertVlanDTO.setVlanId(vlanId);
+				insertVlanDTO.setVlanId(tunnelId);
 				cmdbuildSoapService.createVlan(insertVlanDTO);
 
 				// 在Host的网卡上创建端口组.
@@ -434,7 +439,7 @@ public class ApiServiceImpl implements ApiService {
 				createPortGroupParameter.setHostName(serverDTO.getDescription());
 				createPortGroupParameter.setPortGroupName(vlanName);
 				createPortGroupParameter.setVirtualSwitchName(nicDTO.getVirtualSwitchName());
-				createPortGroupParameter.setVlanId(vlanId);
+				createPortGroupParameter.setVlanId(tunnelId);
 				instanceSoapService.createPortGroupByInstance(createPortGroupParameter);
 
 				HashMap<String, Object> queryVlanMap = new HashMap<String, Object>();
@@ -1005,13 +1010,20 @@ public class ApiServiceImpl implements ApiService {
 			// 获得子网对应的VlanId
 			HashMap<String, Object> vlanMap = new HashMap<String, Object>();
 			vlanMap.put("EQ_subnet", subnetDTO.getId());
-			VlanDTO vlanDTO = (VlanDTO) cmdbuildSoapService.findVlanByParams(CMDBuildUtil.wrapperSearchParams(vlanMap))
-					.getDto();
 
-			SwitchPolicyParameter switchPolicyParameter = new SwitchPolicyParameter();
-			switchPolicyParameter.setHostIp(serverIP.getDescription());
-			switchPolicyParameter.setVlanId(vlanDTO.getVlanId());
-			switchesSoapService.createMultipleSubnetPolicyBySwitch(switchPolicyParameter);
+			List<Object> vlans = cmdbuildSoapService.getVlanList(CMDBuildUtil.wrapperSearchParams(vlanMap))
+					.getDtoList().getDto();
+
+			for (Object object : vlans) {
+
+				VlanDTO vlanDTO = (VlanDTO) object;
+
+				SwitchPolicyParameter switchPolicyParameter = new SwitchPolicyParameter();
+				switchPolicyParameter.setHostIp(serverIP.getDescription());
+				switchPolicyParameter.setVlanId(vlanDTO.getVlanId());
+				switchesSoapService.createMultipleSubnetPolicyBySwitch(switchPolicyParameter);
+			}
+
 		}
 
 		for (SubnetDTO subnetDTO : subnetDTOs) {
