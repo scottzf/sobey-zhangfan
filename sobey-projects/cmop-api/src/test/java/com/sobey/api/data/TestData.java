@@ -20,13 +20,13 @@ import com.sobey.generate.cmdbuild.TenantsDTO;
 
 public class TestData {
 
-	private static final Integer tenantsId = 591;
+	private static final Integer tenantsId = 2419;
 
 	public static TenantsDTO randomTenantsDTO() {
 		TenantsDTO dto = new TenantsDTO();
 		dto.setCompany("Sobey");
-		dto.setDescription("全媒体");
-		dto.setEmail("fengjing@sobey.com");
+		dto.setDescription("索贝学院");
+		dto.setEmail("liukai@sobey.com");
 		dto.setPhone("130000000");
 		return dto;
 	}
@@ -51,13 +51,13 @@ public class TestData {
 
 	public static EcsDTO randomEcsDTO() {
 		EcsDTO dto = new EcsDTO();
-		dto.setDescription("全媒体");
-		dto.setSubnet(592);// 165:默认子网 1466 : 200子网
+		dto.setDescription("200子网主机A");
+		dto.setSubnet(3695);// 2420:默认子网 3695 : 200子网
 		dto.setEcsType(110); // 109 instance 110 firewall
 		dto.setEcsStatus(LookUpConstants.ECSStatus.运行.getValue());
 		dto.setIdc(ConstansData.idcId);
 		dto.setTenants(tenantsId);
-		dto.setEcsSpec(136);// 132 136 140 144
+		dto.setEcsSpec(128);// 132 136 140 144
 		dto.setCpuNumber("4");
 		dto.setMemorySize("4096");
 		return dto;

@@ -6297,9 +6297,10 @@ public class CmdbuildSoapServiceImpl extends BasicSoapSevcie implements Cmdbuild
 
 			Vlan vlan = comm.vlanService.findVlan(searchParams.getParamsMap());
 
-			Validate.notNull(vlan, ERROR.OBJECT_NULL);
-
-			VlanDTO dto = BeanMapper.map(vlan, VlanDTO.class);
+			VlanDTO dto = null;
+			if (vlan != null) {
+				dto = BeanMapper.map(vlan, VlanDTO.class);
+			}
 
 			result.setDto(dto);
 
