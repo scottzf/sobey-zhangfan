@@ -17,6 +17,7 @@ import com.sobey.generate.cmdbuild.ServiceDTO;
 import com.sobey.generate.cmdbuild.SubnetDTO;
 import com.sobey.generate.cmdbuild.TenantsDTO;
 import com.sobey.generate.instance.VMRCDTO;
+import com.sobey.generate.zabbix.ZItemDTO;
 
 public interface ApiService {
 
@@ -89,5 +90,9 @@ public interface ApiService {
 	public WSResult schedulerProduced();
 
 	public WSResult syncFolder();
+
+	public ZItemDTO getCurrentData(EcsDTO ecsDTO, String itemKey);
+
+	public List<ZItemDTO> getHistoryData(EcsDTO ecsDTO, String itemKey);
 
 }

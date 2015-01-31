@@ -9,8 +9,10 @@ import com.sobey.api.entity.RouterEntity;
 import com.sobey.api.entity.SubnetEntity;
 import com.sobey.api.entity.TenantsEntity;
 import com.sobey.api.entity.VMRCEntity;
+import com.sobey.api.webservice.response.result.DTOListResult;
 import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
+import com.sobey.generate.zabbix.ZItemDTO;
 
 public interface RestfulService {
 
@@ -86,6 +88,10 @@ public interface RestfulService {
 	public WSResult dissociateEIP(String eipCode, String serviceCode, String accessKey);
 
 	/******** VMRC ********/
-	public DTOResult<VMRCEntity> findVMRC(String code, String accessKey);
+	public DTOResult<VMRCEntity> findVMRC(String ecsCode, String accessKey);
+
+	public DTOResult<ZItemDTO> getCurrentData(String ecsCode, String itemKey, String accessKey);
+
+	public DTOListResult<ZItemDTO> getHistoryData(String ecsCode, String itemKey, String accessKey);
 
 }
