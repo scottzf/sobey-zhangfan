@@ -12,21 +12,19 @@ import com.google.common.collect.Maps;
  */
 public enum ItemEnum {
 
-	系统盘已用空间("vfs.fs.size[/,used]"),
+	系统盘已用空间("vmware.vm.vfs.fs.size[{$URL},{HOST.HOST},/,used]"),
 
-	系统盘总大小("vfs.fs.size[/,total]"),
+	系统盘总大小("vmware.vm.vfs.fs.size[{$URL},{HOST.HOST},/,total]"),
 
-	系统盘可用空间百分比("vfs.fs.size[/,pfree]"),
+	系统盘占用率("vmware.vm.vfs.fs.size[{$URL},{HOST.HOST},/,pfree]"),
 
-	CPU占用率("system.cpu.util[,idle]"),
+	CPU使用情况("vmware.vm.cpu.usage[{$URL},{HOST.HOST}]"),
 
-	内存可用大小("vm.memory.size[available]"),
+	内存使用情况("vmware.vm.memory.size.usage.guest[{$URL},{HOST.HOST}]"),
 
-	内存总大小("vmware.vm.memory.size[{$URL},{HOST.HOST}]"),
+	读速率("vfs.dev.read[/dev/sda,sps,]"),
 
-	读性能("check_readk"),
-
-	写性能("check_writek"),
+	写速率("vfs.dev.write[/dev/sda,sps,] "),
 
 	网络流量out("net.if.out[eth1]"),
 

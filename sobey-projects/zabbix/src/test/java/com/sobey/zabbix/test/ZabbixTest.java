@@ -126,19 +126,21 @@ public class ZabbixTest extends TestCase {
 	@Test
 	public void gethistory() throws JSONException, IOException {
 
-		String hostId = getHostId("Centos 6.3-r9BWGjxb");
+		String hostId = getHostId("Tenants-7Io6mxdH-172.16.0.6");
 		System.out.println(hostId);
 
-		ZItemDTO item = getItem(hostId, ItemEnum.内存总大小.getValue());
+		ZItemDTO item = getItem(hostId, ItemEnum.读速率.getValue());
+
 		System.out.println(item.getItemid());
 
 		ZHistoryItemDTO zHistoryItemDTO = gethistory(hostId, item.getItemid());
 
 		for (ZItemDTO zItemDTO : zHistoryItemDTO.getzItemDTOs()) {
-			System.out.println(zItemDTO.getUnits());
-			System.out.println(zItemDTO.getValue());
-			System.out.println(zItemDTO.getClock());
-			System.out.println(zItemDTO.getItemid());
+			System.out.println("时间:" + zItemDTO.getClock());
+			System.out.println("值:" + zItemDTO.getValue());
+			System.out.println("单位:" + zItemDTO.getUnits());
+			System.out.println();
+			// System.out.println(zItemDTO.getItemid());
 		}
 
 	}
@@ -146,12 +148,12 @@ public class ZabbixTest extends TestCase {
 	@Test
 	public void zabbixAPITest() throws JsonGenerationException, JsonMappingException, IOException, JSONException {
 
-		String hostId = getHostId("Tenants-7Io6mxdH-172.16.0.10");
+		String hostId = getHostId("Tenants-7Io6mxdH-172.16.0.6");
 
 		System.out.println("hostId:" + hostId);
 
 		// 监控netapp卷大小,需要注意获得卷所在的controller,获得controller的hostID后,在根据key查询卷大小.key 的组合格式.
-		ZItemDTO item = getItem(hostId, ItemEnum.内存总大小.getValue());
+		ZItemDTO item = getItem(hostId, ItemEnum.网络流量out.getValue());
 
 		// VolSpacePercent 已用百分比
 		// VolStatus

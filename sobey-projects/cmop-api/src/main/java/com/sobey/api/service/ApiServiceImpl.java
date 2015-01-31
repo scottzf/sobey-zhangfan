@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sobey.api.constans.DataCenterEnum;
+import com.sobey.api.constans.ItemEnum;
 import com.sobey.api.constans.LookUpConstants;
 import com.sobey.api.constans.PowerOperationEnum;
 import com.sobey.api.service.data.ConstansData;
@@ -73,6 +74,8 @@ import com.sobey.generate.loadbalancer.LoadbalancerSoapService;
 import com.sobey.generate.storage.StorageSoapService;
 import com.sobey.generate.switches.SwitchPolicyParameter;
 import com.sobey.generate.switches.SwitchesSoapService;
+import com.sobey.generate.zabbix.ZHistoryItemDTO;
+import com.sobey.generate.zabbix.ZItemDTO;
 import com.sobey.generate.zabbix.ZabbixSoapService;
 
 @Service
@@ -1820,5 +1823,29 @@ public class ApiServiceImpl implements ApiService {
 		}
 
 		return result;
+	}
+
+	@Override
+	public ZItemDTO getCurrentData(EcsDTO ecsDTO, String itemKey) {
+
+		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(ecsDTO.getTenants()).getDto();
+		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
+		String vmName = generateVMName(tenantsDTO, ipaddressDTO);
+
+		ZItemDTO itemDTO = zabbixSoapService.getZItem(vmName, ItemEnum.map.get(itemKey));
+
+		return itemDTO;
+	}
+
+	@Override
+	public List<ZItemDTO> getHistoryData(EcsDTO ecsDTO, String itemKey) {
+
+		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(ecsDTO.getTenants()).getDto();
+		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
+		String vmName = generateVMName(tenantsDTO, ipaddressDTO);
+
+		ZHistoryItemDTO zHistoryItemDTO = zabbixSoapService.getZHistoryItem(vmName, ItemEnum.map.get(itemKey));
+
+		return zHistoryItemDTO.getZItemDTOs();
 	}
 }

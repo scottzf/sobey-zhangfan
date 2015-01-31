@@ -17,10 +17,6 @@ public class EcsSpecDTO extends BasicDTO {
 	private Integer osType;
 	private Integer producedNumber;
 
-	
-	
- 
-
 	public Integer getIdc() {
 		return idc;
 	}

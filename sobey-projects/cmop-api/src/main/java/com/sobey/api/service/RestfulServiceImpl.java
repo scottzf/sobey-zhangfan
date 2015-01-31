@@ -21,6 +21,7 @@ import com.sobey.api.entity.SubnetEntity;
 import com.sobey.api.entity.TenantsEntity;
 import com.sobey.api.entity.VMRCEntity;
 import com.sobey.api.utils.CMDBuildUtil;
+import com.sobey.api.webservice.response.result.DTOListResult;
 import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
 import com.sobey.generate.cmdbuild.CmdbuildSoapService;
@@ -51,6 +52,7 @@ import com.sobey.generate.instance.VMRCDTO;
 import com.sobey.generate.loadbalancer.LoadbalancerSoapService;
 import com.sobey.generate.storage.StorageSoapService;
 import com.sobey.generate.switches.SwitchesSoapService;
+import com.sobey.generate.zabbix.ZItemDTO;
 import com.sobey.generate.zabbix.ZabbixSoapService;
 
 @Service
@@ -1019,7 +1021,7 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public DTOResult<VMRCEntity> findVMRC(String code, String accessKey) {
+	public DTOResult<VMRCEntity> findVMRC(String ecsCode, String accessKey) {
 
 		DTOResult<VMRCEntity> result = new DTOResult<VMRCEntity>();
 
@@ -1029,7 +1031,7 @@ public class RestfulServiceImpl implements RestfulService {
 			return result;
 		}
 
-		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), code);
+		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), ecsCode);
 		if (ecsDTO == null) {
 			result.setError(WSResult.PARAMETER_ERROR, "ECS不存在.");
 			return result;
@@ -1041,6 +1043,57 @@ public class RestfulServiceImpl implements RestfulService {
 				vmrcdto.getHostSSLThumbprint(), vmrcdto.getPassword(), vmrcdto.getUserName(), vmrcdto.getVmId());
 
 		result.setDto(entity);
+
+		return result;
+
+	}
+
+	@Override
+	public DTOResult<ZItemDTO> getCurrentData(String ecsCode, String itemKey, String accessKey) {
+
+		DTOResult<ZItemDTO> result = new DTOResult<ZItemDTO>();
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), ecsCode);
+		if (ecsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "ECS不存在.");
+			return result;
+		}
+
+		ZItemDTO zItemDTO = apiService.getCurrentData(ecsDTO, itemKey);
+
+		result.setDto(zItemDTO);
+
+		return result;
+	}
+
+	@Override
+	public DTOListResult<ZItemDTO> getHistoryData(String ecsCode, String itemKey, String accessKey) {
+
+		DTOListResult<ZItemDTO> result = new DTOListResult<ZItemDTO>();
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), ecsCode);
+		if (ecsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "ECS不存在.");
+			return result;
+		}
+
+		List<ZItemDTO> zItemDTOs = apiService.getHistoryData(ecsDTO, itemKey);
+
+		result.setDtos(zItemDTOs);
 
 		return result;
 
