@@ -232,16 +232,14 @@ public class ApiController {
 
 	@RequestMapping(value = "/currentData/{ecsCode}/{itemKey}/{accessKey}", method = RequestMethod.GET)
 	public DTOResult<ZItemDTO> getCurrentData(@PathVariable("ecsCode") String ecsCode,
-			@PathVariable("itemKey") String itemKey, @PathVariable("accessKey") String accessKey)
-			throws UnsupportedEncodingException {
-		return servie.getCurrentData(URLEscape(ecsCode), itemKey, accessKey);
+			@PathVariable("itemKey") String itemKey, @PathVariable("accessKey") String accessKey) {
+		return servie.getCurrentData(ecsCode, itemKey, accessKey);
 	}
 
 	@RequestMapping(value = "/historyData/{ecsCode}/{itemKey}/{accessKey}", method = RequestMethod.GET)
 	public DTOListResult<ZItemDTO> getHistoryData(@PathVariable("ecsCode") String ecsCode,
-			@PathVariable("itemKey") String itemKey, @PathVariable("accessKey") String accessKey)
-			throws UnsupportedEncodingException {
-		return servie.getHistoryData(URLEscape(ecsCode), itemKey, accessKey);
+			@PathVariable("itemKey") String itemKey, @PathVariable("accessKey") String accessKey) {
+		return servie.getHistoryData(ecsCode, itemKey, accessKey);
 	}
 
 }
