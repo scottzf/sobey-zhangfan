@@ -224,7 +224,7 @@ public class ApiController {
 		return servie.dissociateEIP(code, serviceCode, accessKey);
 	}
 
-	@RequestMapping(value = "/VMRCResult/{code}/{accessKey}", method = RequestMethod.GET)
+	@RequestMapping(value = "/VMRCResult/{ecsCode}/{accessKey}", method = RequestMethod.GET)
 	public DTOResult<VMRCEntity> VMRCResult(@PathVariable("ecsCode") String ecsCode,
 			@PathVariable("accessKey") String accessKey) {
 		return servie.findVMRC(URLEscape(ecsCode), accessKey);
@@ -233,13 +233,13 @@ public class ApiController {
 	@RequestMapping(value = "/currentData/{ecsCode}/{itemKey}/{accessKey}", method = RequestMethod.GET)
 	public DTOResult<ZItemDTO> getCurrentData(@PathVariable("ecsCode") String ecsCode,
 			@PathVariable("itemKey") String itemKey, @PathVariable("accessKey") String accessKey) {
-		return servie.getCurrentData(ecsCode, itemKey, accessKey);
+		return servie.getCurrentData(URLEscape(ecsCode), itemKey, accessKey);
 	}
 
 	@RequestMapping(value = "/historyData/{ecsCode}/{itemKey}/{accessKey}", method = RequestMethod.GET)
 	public DTOListResult<ZItemDTO> getHistoryData(@PathVariable("ecsCode") String ecsCode,
 			@PathVariable("itemKey") String itemKey, @PathVariable("accessKey") String accessKey) {
-		return servie.getHistoryData(ecsCode, itemKey, accessKey);
+		return servie.getHistoryData(URLEscape(ecsCode), itemKey, accessKey);
 	}
 
 }
