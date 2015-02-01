@@ -12,23 +12,22 @@ import com.google.common.collect.Maps;
  */
 public enum ItemEnum {
 
-	系统盘已用空间("vmware.vm.vfs.fs.size[{$URL},{HOST.HOST},/,used]"),
+	// 系统盘已用空间("vmware.vm.vfs.fs.size[{$URL},{HOST.HOST},/,used]"),
+	// 系统盘总大小("vmware.vm.vfs.fs.size[{$URL},{HOST.HOST},/,total]"),
 
-	系统盘总大小("vmware.vm.vfs.fs.size[{$URL},{HOST.HOST},/,total]"),
+	Disk("vmware.vm.vfs.fs.size[{$URL},{HOST.HOST},/,pfree]"),
 
-	系统盘占用率("vmware.vm.vfs.fs.size[{$URL},{HOST.HOST},/,pfree]"),
+	CPU("vmware.vm.cpu.usage[{$URL},{HOST.HOST}]"),
 
-	CPU使用情况("vmware.vm.cpu.usage[{$URL},{HOST.HOST}]"),
+	Memory("vmware.vm.memory.size.usage.guest[{$URL},{HOST.HOST}]"),
 
-	内存使用情况("vmware.vm.memory.size.usage.guest[{$URL},{HOST.HOST}]"),
+	Disk_Read("vfs.dev.read[/dev/sda,sps,]"),
 
-	读速率("vfs.dev.read[/dev/sda,sps,]"),
+	Disk_Wirte("vfs.dev.write[/dev/sda,sps,] "),
 
-	写速率("vfs.dev.write[/dev/sda,sps,] "),
+	Network_Out("net.if.out[eth1]"),
 
-	网络流量out("net.if.out[eth1]"),
-
-	网络流量in("net.if.in[eth1]");
+	Network_In("net.if.in[eth1]");
 
 	public static final Map<String, String> map = Maps.newLinkedHashMap();
 
