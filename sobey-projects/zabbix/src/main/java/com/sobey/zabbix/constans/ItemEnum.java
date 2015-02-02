@@ -12,22 +12,19 @@ import com.google.common.collect.Maps;
  */
 public enum ItemEnum {
 
-	// 系统盘已用空间("vmware.vm.vfs.fs.size[{$URL},{HOST.HOST},/,used]"),
-	// 系统盘总大小("vmware.vm.vfs.fs.size[{$URL},{HOST.HOST},/,total]"),
-
 	Disk("vmware.vm.vfs.fs.size[{$URL},{HOST.HOST},/,pfree]"),
 
 	CPU("vmware.vm.cpu.usage[{$URL},{HOST.HOST}]"),
 
 	Memory("vmware.vm.memory.size.usage.guest[{$URL},{HOST.HOST}]"),
 
-	Disk_Read("vfs.dev.read[/dev/sda,sps,]"),
+	Disk_Read("vmware.vm.vfs.dev.read[{$URL},{HOST.HOST},scsi0:0,bps]"),
 
-	Disk_Wirte("vfs.dev.write[/dev/sda,sps,] "),
+	Disk_Wirte("vmware.vm.vfs.dev.write[{$URL},{HOST.HOST},scsi0:0,bps]"),
 
-	Network_Out("net.if.out[eth1]"),
+	Network_Out("vmware.vm.net.if.out[{$URL},{HOST.HOST},4000,bps]"),
 
-	Network_In("net.if.in[eth1]");
+	Network_In("vmware.vm.net.if.in[{$URL},{HOST.HOST},4000,bps]");
 
 	public static final Map<String, String> map = Maps.newLinkedHashMap();
 
