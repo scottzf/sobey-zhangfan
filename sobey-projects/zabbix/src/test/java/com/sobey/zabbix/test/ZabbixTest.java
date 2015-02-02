@@ -127,20 +127,16 @@ public class ZabbixTest extends TestCase {
 	public void gethistory() throws JSONException, IOException {
 
 		String hostId = getHostId("Tenants-7Io6mxdH-172.16.0.6");
+
 		System.out.println(hostId);
 
-		ZItemDTO item = getItem(hostId, ItemEnum.读速率.getValue());
-
-		System.out.println(item.getItemid());
-
-		ZHistoryItemDTO zHistoryItemDTO = gethistory(hostId, item.getItemid());
+		ZHistoryItemDTO zHistoryItemDTO = gethistory(hostId, ItemEnum.Network_Out.getValue());
 
 		for (ZItemDTO zItemDTO : zHistoryItemDTO.getzItemDTOs()) {
 			System.out.println("时间:" + zItemDTO.getClock());
 			System.out.println("值:" + zItemDTO.getValue());
 			System.out.println("单位:" + zItemDTO.getUnits());
 			System.out.println();
-			// System.out.println(zItemDTO.getItemid());
 		}
 
 	}
@@ -153,7 +149,7 @@ public class ZabbixTest extends TestCase {
 		System.out.println("hostId:" + hostId);
 
 		// 监控netapp卷大小,需要注意获得卷所在的controller,获得controller的hostID后,在根据key查询卷大小.key 的组合格式.
-		ZItemDTO item = getItem(hostId, ItemEnum.网络流量out.getValue());
+		ZItemDTO item = getItem(hostId, ItemEnum.Disk.getValue());
 
 		// VolSpacePercent 已用百分比
 		// VolStatus
@@ -161,6 +157,7 @@ public class ZabbixTest extends TestCase {
 		System.out.println(item.getClock());
 		System.out.println(item.getValue());
 		System.out.println(item.getUnits());
+		System.out.println(item.getValueType());
 
 	}
 
@@ -409,6 +406,9 @@ public class ZabbixTest extends TestCase {
 			item.setClock(subResult(node, "lastclock"));
 			item.setValue(subResult(node, "lastvalue"));
 			item.setUnits(subResult(node, "units"));
+			Integer valueType = Integer.valueOf(subResult(node, "value_type") == null ? "0" : subResult(node,
+					"value_type"));
+			item.setValueType(valueType);
 		}
 
 		return item;
@@ -426,8 +426,10 @@ public class ZabbixTest extends TestCase {
 		jsonObj.put("jsonrpc", "2.0");
 		jsonObj.put("method", "history.get");
 		jsonObj.put("auth", getToken());
-		jsonObj.put("params", (new JSONObject().put("output", "extend").put("limit", limits).put("sortfield", "clock")
-				.put("sortorder", "DESC").put("itemids", zItemDTO.getItemid()).put("hostids", hostId)));
+		jsonObj.put("params",
+				(new JSONObject().put("output", "extend").put("history", zItemDTO.getValueType()).put("limit", limits)
+						.put("sortfield", "clock").put("sortorder", "DESC").put("itemids", zItemDTO.getItemid()).put(
+						"hostids", hostId)));
 
 		String resStr = executeZabbixMethod(jsonObj);
 
