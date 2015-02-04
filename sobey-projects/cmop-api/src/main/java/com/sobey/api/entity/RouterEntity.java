@@ -4,13 +4,19 @@ import java.util.List;
 
 public class RouterEntity {
 
+	private String identifier;
 	private String routerName;
 	private List<SubnetEntity> subnetEntities;
 
-	public RouterEntity(String routerName, List<SubnetEntity> subnetEntities) {
+	public RouterEntity(String identifier, String routerName, List<SubnetEntity> subnetEntities) {
 		super();
+		this.identifier = identifier;
 		this.routerName = routerName;
 		this.subnetEntities = subnetEntities;
+	}
+
+	public String getIdentifier() {
+		return identifier;
 	}
 
 	public String getRouterName() {
@@ -19,6 +25,10 @@ public class RouterEntity {
 
 	public List<SubnetEntity> getSubnetEntities() {
 		return subnetEntities;
+	}
+
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
 	}
 
 	public void setRouterName(String routerName) {

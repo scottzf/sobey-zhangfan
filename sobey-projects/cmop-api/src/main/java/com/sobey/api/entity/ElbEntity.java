@@ -4,39 +4,39 @@ import java.util.List;
 
 public class ElbEntity {
 
-	private String identifier;
-	private String elbName;
 	private List<EcsEntity> ecsEntities;
+	private String elbName;
+	private String identifier;
 
-	public ElbEntity(String identifier, String elbName, List<EcsEntity> ecsEntities) {
+	public ElbEntity(List<EcsEntity> ecsEntities, String elbName, String identifier) {
 		super();
-		this.identifier = identifier;
-		this.elbName = elbName;
 		this.ecsEntities = ecsEntities;
-	}
-
-	public String getIdentifier() {
-		return identifier;
-	}
-
-	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
-	}
-
-	public String getElbName() {
-		return elbName;
-	}
-
-	public void setElbName(String elbName) {
 		this.elbName = elbName;
+		this.identifier = identifier;
 	}
 
 	public List<EcsEntity> getEcsEntities() {
 		return ecsEntities;
 	}
 
+	public String getElbName() {
+		return elbName;
+	}
+
+	public String getIdentifier() {
+		return identifier;
+	}
+
 	public void setEcsEntities(List<EcsEntity> ecsEntities) {
 		this.ecsEntities = ecsEntities;
+	}
+
+	public void setElbName(String elbName) {
+		this.elbName = elbName;
+	}
+
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
 	}
 
 }

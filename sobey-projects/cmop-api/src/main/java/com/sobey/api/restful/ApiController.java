@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sobey.api.entity.DnsEntity;
 import com.sobey.api.entity.EcsEntity;
 import com.sobey.api.entity.EipEntity;
+import com.sobey.api.entity.ElbEntity;
 import com.sobey.api.entity.Es3Entity;
 import com.sobey.api.entity.FirewallServiceEntity;
 import com.sobey.api.entity.RouterEntity;
@@ -240,6 +241,26 @@ public class ApiController {
 	public DTOListResult<ZItemDTO> getHistoryData(@PathVariable("ecsCode") String ecsCode,
 			@PathVariable("itemKey") String itemKey, @PathVariable("accessKey") String accessKey) {
 		return servie.getHistoryData(URLEscape(ecsCode), itemKey, accessKey);
+	}
+
+	/********** EIP ***********/
+
+	@RequestMapping(value = "/ELBResult/{elbCode}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<ElbEntity> ELBResult(@PathVariable("elbCode") String elbCode,
+			@PathVariable("accessKey") String accessKey) {
+		return servie.findELB(URLEscape(elbCode), accessKey);
+	}
+
+	@RequestMapping(value = "/createELB/", method = RequestMethod.POST)
+	public WSResult createELB(@RequestParam(value = "ecsCodes") String ecsCodes,
+			@RequestParam(value = "protocols") String protocols, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.createELB(ecsCodes, protocols, accessKey);
+	}
+
+	@RequestMapping(value = "/deleteELB/", method = RequestMethod.POST)
+	public WSResult deleteELB(@RequestParam(value = "elbCode") String elbCode,
+			@RequestParam(value = "accessKey") String accessKey) {
+		return servie.deleteELB(elbCode, accessKey);
 	}
 
 }

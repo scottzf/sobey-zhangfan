@@ -8,6 +8,8 @@ import com.sobey.generate.cmdbuild.DnsPolicyDTO;
 import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
+import com.sobey.generate.cmdbuild.ElbDTO;
+import com.sobey.generate.cmdbuild.ElbPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.FirewallPolicyDTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
@@ -94,5 +96,11 @@ public interface ApiService {
 	public ZItemDTO getCurrentData(EcsDTO ecsDTO, String itemKey);
 
 	public List<ZItemDTO> getHistoryData(EcsDTO ecsDTO, String itemKey);
+
+	// ==================== ELB ====================//
+
+	public WSResult createELB(ElbDTO elbDTO, List<ElbPolicyDTO> elbPolicyDTOs, Integer[] ecsIds);
+
+	public WSResult deleteELB(Integer id);
 
 }
