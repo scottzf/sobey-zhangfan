@@ -286,8 +286,8 @@ public class LookUpConstants {
 	 * 描述ES3Type中AgentType的Description和Id.
 	 * 
 	 * <pre>
-	 * 高IOPS
-	 * 高吞吐
+	 * 媒体存储
+	 * 通用存储
 	 * </pre>
 	 * 
 	 * @author Administrator
@@ -295,9 +295,9 @@ public class LookUpConstants {
 	 */
 	public enum ES3Type {
 
-		高IOPS("高IOPS", 73),
+		媒体存储("媒体存储", 73),
 
-		高吞吐("高吞吐", 44);
+		通用存储("通用存储", 44);
 
 		private String name;
 		private Integer value;
