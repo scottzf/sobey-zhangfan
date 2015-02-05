@@ -1843,7 +1843,7 @@ public class ApiServiceImpl implements ApiService {
 		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(ecsDTO.getTenants()).getDto();
 		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
 		String vmName = generateVMName(tenantsDTO, ipaddressDTO);
-
+		System.out.println("监控主机名称:" + vmName);
 		ZHistoryItemDTO zHistoryItemDTO = zabbixSoapService.getZHistoryItem(vmName, ItemEnum.map.get(itemKey));
 
 		return zHistoryItemDTO.getZItemDTOs();
