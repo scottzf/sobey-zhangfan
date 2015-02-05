@@ -16,7 +16,7 @@ public enum ItemEnum {
 
 	CPU("vmware.vm.cpu.usage[{$URL},{HOST.HOST}]"),
 
-	Memory("vmware.vm.memory.size.usage.guest[{$URL},{HOST.HOST}]"),
+	Memory("vmware.vm.memory.size.usage.host[{$URL},{HOST.HOST}]"),
 
 	Disk_Read("vmware.vm.vfs.dev.read[{$URL},{HOST.HOST},scsi0:0,bps]"),
 
