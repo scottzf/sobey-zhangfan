@@ -101,6 +101,9 @@ public class ZabbixApiDao {
 			item.setClock(subResult(node, "lastclock"));
 			item.setValue(subResult(node, "lastvalue"));
 			item.setUnits(subResult(node, "units"));
+			Integer valueType = Integer.valueOf(subResult(node, "value_type") == null ? "0" : subResult(node,
+					"value_type"));
+			item.setValueType(valueType);
 		}
 
 		return item;
