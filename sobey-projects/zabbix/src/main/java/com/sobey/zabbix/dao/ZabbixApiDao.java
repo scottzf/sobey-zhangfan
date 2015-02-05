@@ -101,6 +101,9 @@ public class ZabbixApiDao {
 			item.setClock(subResult(node, "lastclock"));
 			item.setValue(subResult(node, "lastvalue"));
 			item.setUnits(subResult(node, "units"));
+			Integer valueType = Integer.valueOf(subResult(node, "value_type") == null ? "0" : subResult(node,
+					"value_type"));
+			item.setValueType(valueType);
 		}
 
 		return item;
@@ -127,11 +130,10 @@ public class ZabbixApiDao {
 		jsonObj.put("jsonrpc", "2.0");
 		jsonObj.put("method", "history.get");
 		jsonObj.put("auth", getToken());
-		jsonObj.put(
-				"params",
-				(new JSONObject().put("output", "extend").put("limit", limits).put("sortfield", "clock")
-						.put("sortorder", "DESC").put("history", 0).put("itemids", zItemDTO.getItemid()).put("hostids",
-						hostId)));
+		jsonObj.put("params",
+				(new JSONObject().put("output", "extend").put("history", zItemDTO.getValueType()).put("limit", limits)
+						.put("sortfield", "clock").put("sortorder", "DESC").put("itemids", zItemDTO.getItemid()).put(
+						"hostids", hostId)));
 
 		String resStr = executeZabbixMethod(jsonObj);
 
