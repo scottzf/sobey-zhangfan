@@ -127,11 +127,10 @@ public class ZabbixApiDao {
 		jsonObj.put("jsonrpc", "2.0");
 		jsonObj.put("method", "history.get");
 		jsonObj.put("auth", getToken());
-		jsonObj.put(
-				"params",
-				(new JSONObject().put("output", "extend").put("limit", limits).put("sortfield", "clock")
-						.put("sortorder", "DESC").put("history", 0).put("itemids", zItemDTO.getItemid()).put("hostids",
-						hostId)));
+		jsonObj.put("params",
+				(new JSONObject().put("output", "extend").put("history", zItemDTO.getValueType()).put("limit", limits)
+						.put("sortfield", "clock").put("sortorder", "DESC").put("itemids", zItemDTO.getItemid()).put(
+						"hostids", hostId)));
 
 		String resStr = executeZabbixMethod(jsonObj);
 
