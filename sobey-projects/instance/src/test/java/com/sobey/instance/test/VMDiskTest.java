@@ -40,7 +40,7 @@ public class VMDiskTest {
 
 	@Test
 	public void moveVM() {
-		folderService.moveVM(DataCenterEnum.成都核心数据中心.toString(), "Tenants-r44klzKq-10.2.253.60", "租户");
+		folderService.moveVM(DataCenterEnum.成都核心数据中心.toString(), "K1-001", "MediaInstance");
 	}
 
 	@Test

@@ -20,12 +20,12 @@ public class LoadbalancerSoapServiceImpl implements LoadbalancerSoapService {
 	public LoadbalanceService service;
 
 	@Override
-	public WSResult createELBByLoadbalancer(  ELBParameter elbParameter) {
+	public WSResult createELBByLoadbalancer(ELBParameter elbParameter) {
 		return service.createElb(elbParameter);
 	}
 
 	@Override
-	public WSResult deleteELBByLoadbalancer( ELBParameter elbParameter) {
+	public WSResult deleteELBByLoadbalancer(ELBParameter elbParameter) {
 		return service.deleteElb(elbParameter);
 	}
 

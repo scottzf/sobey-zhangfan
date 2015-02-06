@@ -25,6 +25,8 @@ import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EcsSpecDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
+import com.sobey.generate.cmdbuild.ElbDTO;
+import com.sobey.generate.cmdbuild.ElbPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.FirewallPolicyDTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
@@ -89,6 +91,25 @@ public class ApiServiceTest extends TestCase {
 	public void createES3() {
 		Es3DTO es3DTO = TestData.randomEs3DTO();
 		service.createES3(es3DTO);
+	}
+
+	@Test
+	public void createELB() {
+
+		Integer[] ecsIds = { 5677, 5701 };
+		ElbDTO elbDTO = new ElbDTO();
+		elbDTO.setAgentType(LookUpConstants.AgentType.Netscaler.getValue());
+
+		ElbPolicyDTO policyDTO = new ElbPolicyDTO();
+		policyDTO.setElbProtocol(37);
+		policyDTO.setSourcePort(80);
+		policyDTO.setTargetPort(80);
+
+		List<ElbPolicyDTO> elbPolicyDTOs = new ArrayList<ElbPolicyDTO>();
+
+		elbPolicyDTOs.add(policyDTO);
+
+		service.createELB(elbDTO, elbPolicyDTOs, ecsIds);
 	}
 
 	@Test

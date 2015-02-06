@@ -3490,6 +3490,8 @@
       <xs:extension base="tns:serviceBasicDTO">
         <xs:sequence>
           <xs:element minOccurs="0" name="ipaddress" type="xs:int"/>
+          <xs:element minOccurs="0" name="managerIpaddress" type="xs:int"/>
+          <xs:element minOccurs="0" name="subIpaddress" type="xs:int"/>
           <xs:element minOccurs="0" name="subnet" type="xs:int"/>
         </xs:sequence>
       </xs:extension>

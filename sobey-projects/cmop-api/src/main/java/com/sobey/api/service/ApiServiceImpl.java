@@ -1877,17 +1877,46 @@ public class ApiServiceImpl implements ApiService {
 		WSResult result = new WSResult();
 
 		// Step.1 获得未使用的VIP.
-		IpaddressDTO ipaddressDTO = getVIP();
+
+		HashMap<String, Object> subnetMap = new HashMap<String, Object>();
+		subnetMap.put("EQ_defaultSubnet", LookUpConstants.DefaultSubnet.Yes.getValue());
+		SubnetDTO defaultSubnetDTO = (SubnetDTO) cmdbuildSoapService
+				.getSubnetList(CMDBuildUtil.wrapperSearchParams(subnetMap)).getDtoList().getDto().get(0);
+
+		// VIP
+		IpaddressDTO ipaddressDTO = findAvailableIPAddressDTO(defaultSubnetDTO);
 
 		if (ipaddressDTO == null) {
 			result.setError(WSResult.SYSTEM_ERROR, "VIP资源不足,请联系管理员.");
 			return result;
 		}
+		// 更改VIP状态
+		cmdbuildSoapService.allocateIpaddress(ipaddressDTO.getId());
+
+		IpaddressDTO subIpaddressDTO = findAvailableIPAddressDTO(defaultSubnetDTO);
+		if (subIpaddressDTO == null) {
+			result.setError(WSResult.SYSTEM_ERROR, "IP资源不足,请联系管理员.");
+			return result;
+		}
+		// 更改SubIP状态
+		cmdbuildSoapService.allocateIpaddress(subIpaddressDTO.getId());
+
+		// 管理IP
+		IpaddressDTO manangerIpaddressDTO = findAvailableManagerIPAddressDTO();
+
+		if (manangerIpaddressDTO == null) {
+			result.setError(WSResult.SYSTEM_ERROR, "管理IP资源不足,请联系管理员.");
+			return result;
+		}
+		// 更改管理IP状态
+		cmdbuildSoapService.allocateIpaddress(manangerIpaddressDTO.getId());
 
 		// Step.2 将ELB信息写入CMDBuild
 		elbDTO.setIdc(ipaddressDTO.getIdc());
 		elbDTO.setIpaddress(ipaddressDTO.getId());
 		elbDTO.setDescription(ipaddressDTO.getDescription());
+		elbDTO.setManagerIpaddress(manangerIpaddressDTO.getId());
+		elbDTO.setSubIpaddress(subIpaddressDTO.getId());
 		IdResult idResult = cmdbuildSoapService.createElb(elbDTO);
 
 		// Step.3 将ELB端口信息写入CMDBuild
@@ -1899,8 +1928,13 @@ public class ApiServiceImpl implements ApiService {
 
 		for (ElbPolicyDTO policyDTO : elbPolicyDTOs) {
 
+			HashMap<String, Object> tenantsMap = new HashMap<String, Object>();
+			tenantsMap.put("EQ_code", idResult.getMessage());
+
 			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(policyDTO.getElbProtocol()).getDto();
+
 			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(Integer.valueOf(policyDTO.getIpaddress())).getDto();
+
 			IpaddressDTO ipDto = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
 
 			ElbPolicyDTO elbPolicyDTO = new ElbPolicyDTO();
@@ -1923,17 +1957,9 @@ public class ApiServiceImpl implements ApiService {
 		// Step.5 调用loadbalancer 接口创建ELB对象
 		loadbalancerSoapService.createELBByLoadbalancer(wrapperELBParameter(queryElbDTO));
 
-		// Step.6 更改VIP状态
-		cmdbuildSoapService.allocateIpaddress(ipaddressDTO.getId());
-
 		result.setMessage("ELB创建成功");
 		return result;
 
-	}
-
-	private IpaddressDTO getVIP() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	private ELBParameter wrapperELBParameter(ElbDTO elbDTO) {
@@ -1963,8 +1989,16 @@ public class ApiServiceImpl implements ApiService {
 		}
 		ELBParameter elbParameter = new ELBParameter();
 		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(elbDTO.getIpaddress()).getDto();
+		IpaddressDTO manangerIpaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(
+				elbDTO.getManagerIpaddress()).getDto();
+
 		elbParameter.setVip(ipaddressDTO.getDescription());
 		elbParameter.getPublicIPs().addAll(publicIPParameters);
+		elbParameter.setUrl(manangerIpaddressDTO.getDescription());
+		elbParameter.setPort(80);
+		elbParameter.setProtocol("http");
+		elbParameter.setUserName("nsroot");
+		elbParameter.setPassword("nsroot");
 		return elbParameter;
 	}
 
