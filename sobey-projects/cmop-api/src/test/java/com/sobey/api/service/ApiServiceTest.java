@@ -57,6 +57,11 @@ public class ApiServiceTest extends TestCase {
 	private InstanceSoapService instanceSoapService;
 
 	@Test
+	public void schedulerProduced() {
+		service.schedulerProduced();
+	}
+
+	@Test
 	public void createTenants() {
 		TenantsDTO tenantsDTO = TestData.randomTenantsDTO();
 		service.createTenants(tenantsDTO);
