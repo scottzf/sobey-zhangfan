@@ -25,6 +25,8 @@
 
   <xs:element name="RelationVMParameter" type="tns:RelationVMParameter"/>
 
+  <xs:element name="RenameVMParameter" type="tns:RenameVMParameter"/>
+
   <xs:element name="RunNetworkDeviceVMParameter" type="tns:RunNetworkDeviceVMParameter"/>
 
   <xs:element name="RunVMParameter" type="tns:RunVMParameter"/>
@@ -114,6 +116,10 @@
   <xs:element name="reconfigVMByInstance" type="tns:reconfigVMByInstance"/>
 
   <xs:element name="reconfigVMByInstanceResponse" type="tns:reconfigVMByInstanceResponse"/>
+
+  <xs:element name="renameVMByInstance" type="tns:renameVMByInstance"/>
+
+  <xs:element name="renameVMByInstanceResponse" type="tns:renameVMByInstanceResponse"/>
 
   <xs:element name="runNetworkDeviceVMByInstance" type="tns:runNetworkDeviceVMByInstance"/>
 
@@ -447,6 +453,26 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="renameVMByInstance">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="renameVMParameter" type="tns:RenameVMParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RenameVMParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="datacenter" type="xs:string"/>
+      <xs:element minOccurs="0" name="tempVMName" type="xs:string"/>
+      <xs:element minOccurs="0" name="vmName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="renameVMByInstanceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:WSResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="runNetworkDeviceVMByInstance">
     <xs:sequence>
       <xs:element minOccurs="0" name="runNetworkDeviceVMParameter" type="tns:RunNetworkDeviceVMParameter"/>
@@ -626,6 +652,10 @@
     <wsdl:part element="tns:runNetworkDeviceVMByInstanceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="renameVMByInstance">
+    <wsdl:part element="tns:renameVMByInstance" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="createFolderOnParentByInstance">
     <wsdl:part element="tns:createFolderOnParentByInstance" name="parameters">
     </wsdl:part>
@@ -644,6 +674,10 @@
   </wsdl:message>
   <wsdl:message name="bindingNetworkDevicePortGroupByInstance">
     <wsdl:part element="tns:bindingNetworkDevicePortGroupByInstance" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="renameVMByInstanceResponse">
+    <wsdl:part element="tns:renameVMByInstanceResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="runVMByInstanceResponse">
@@ -867,6 +901,12 @@
       <wsdl:output message="tns:bindingDVSPortGroupByInstanceResponse" name="bindingDVSPortGroupByInstanceResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="renameVMByInstance">
+      <wsdl:input message="tns:renameVMByInstance" name="renameVMByInstance">
+    </wsdl:input>
+      <wsdl:output message="tns:renameVMByInstanceResponse" name="renameVMByInstanceResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="runNetworkDeviceVMByInstance">
       <wsdl:input message="tns:runNetworkDeviceVMByInstance" name="runNetworkDeviceVMByInstance">
     </wsdl:input>
@@ -1041,6 +1081,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="createPortGroupByInstanceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="renameVMByInstance">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="renameVMByInstance">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="renameVMByInstanceResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
