@@ -513,7 +513,7 @@ public class ApiServiceImpl implements ApiService {
 		LookUpDTO OsType = (LookUpDTO) cmdbuildSoapService.findLookUp(ecsSpecDTO.getOsType()).getDto();
 
 		boolean flag = true;
-		if (ecsSpecDTO.getDescription().equals("MediaInstance")) {
+		if (ecsSpecDTO.getDescription().equals("MediaInstance") || ecsSpecDTO.getDescription().equals("MediaInstance_Application")) {
 			flag = false;
 		}
 
