@@ -15,6 +15,7 @@ import com.sobey.instance.webservice.response.dto.HostInfoDTO;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
+import com.sobey.instance.webservice.response.dto.RenameVMParameter;
 import com.sobey.instance.webservice.response.dto.RunNetworkDeviceVMParameter;
 import com.sobey.instance.webservice.response.dto.RunVMParameter;
 import com.sobey.instance.webservice.response.dto.VMDiskParameter;
@@ -204,6 +205,14 @@ public interface InstanceSoapService {
 	 * @return
 	 */
 	WSResult runVMByInstance(@WebParam(name = "runVMParameter") RunVMParameter runVMParameter);
+
+	/**
+	 * 更改VM名称
+	 * 
+	 * @param renameVMParameter
+	 * @return
+	 */
+	WSResult renameVMByInstance(@WebParam(name = "renameVMParameter") RenameVMParameter renameVMParameter);
 
 	/**
 	 * 根据自定义项为VM分配内存,cpu等.

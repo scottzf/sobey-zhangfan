@@ -23,6 +23,7 @@ import com.sobey.instance.webservice.response.dto.HostInfoDTO;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
+import com.sobey.instance.webservice.response.dto.RenameVMParameter;
 import com.sobey.instance.webservice.response.dto.RunNetworkDeviceVMParameter;
 import com.sobey.instance.webservice.response.dto.RunVMParameter;
 import com.sobey.instance.webservice.response.dto.VMDiskParameter;
@@ -163,6 +164,11 @@ public class InstanceSoapServiceImpl implements InstanceSoapService {
 	@Override
 	public DTOListResult<VMInfoDTO> getVMInfoDTOInFolderByInstance(String datacenter, String folderName) {
 		return vmService.getVMInfoDTOInFolder(datacenter, folderName);
+	}
+
+	@Override
+	public WSResult renameVMByInstance(RenameVMParameter renameVMParameter) {
+		return vmService.renameVM(renameVMParameter);
 	}
 
 }
