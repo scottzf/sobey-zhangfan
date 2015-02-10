@@ -105,14 +105,28 @@ public class ApiServiceTest extends TestCase {
 		ElbDTO elbDTO = new ElbDTO();
 		elbDTO.setAgentType(LookUpConstants.AgentType.Netscaler.getValue());
 
+		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(5677).getDto();
+		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
+
+		EcsDTO ecsDTO2 = (EcsDTO) cmdbuildSoapService.findEcs(5701).getDto();
+		IpaddressDTO ipaddressDTO2 = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO2.getIpaddress()).getDto();
+
 		ElbPolicyDTO policyDTO = new ElbPolicyDTO();
 		policyDTO.setElbProtocol(37);
 		policyDTO.setSourcePort(80);
 		policyDTO.setTargetPort(80);
+		policyDTO.setIpaddress(ipaddressDTO.getId().toString());
+
+		ElbPolicyDTO policyDTO2 = new ElbPolicyDTO();
+		policyDTO2.setElbProtocol(37);
+		policyDTO2.setSourcePort(80);
+		policyDTO2.setTargetPort(80);
+		policyDTO2.setIpaddress(ipaddressDTO2.getId().toString());
 
 		List<ElbPolicyDTO> elbPolicyDTOs = new ArrayList<ElbPolicyDTO>();
 
 		elbPolicyDTOs.add(policyDTO);
+		elbPolicyDTOs.add(policyDTO2);
 
 		service.createELB(elbDTO, elbPolicyDTOs, ecsIds);
 	}

@@ -1,5 +1,6 @@
 package com.sobey.api.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import com.sobey.api.utils.CMDBuildUtil;
 import com.sobey.api.webservice.response.result.WSResult;
 import com.sobey.core.utils.Encodes;
 import com.sobey.core.utils.Identities;
+import com.sobey.core.utils.SSHUtil;
 import com.sobey.core.utils.Threads;
 import com.sobey.generate.cmdbuild.CmdbuildSoapService;
 import com.sobey.generate.cmdbuild.DnsDTO;
@@ -1873,38 +1875,35 @@ public class ApiServiceImpl implements ApiService {
 	public WSResult createELB(ElbDTO elbDTO, List<ElbPolicyDTO> elbPolicyDTOs, Integer[] ecsIds) {
 
 		/**
-		 * Step.1 获得未使用的VIP.
+		 * Step.1 获得未使用的VIP,管理IP,SubnetIP,并更改IP的状态,后期应该为租户创建不同类型的默认子网.
 		 *
 		 * Step.2 将ELB信息写入CMDBuild
 		 *
 		 * Step.3 将ELB端口信息写入CMDBuild
 		 *
-		 * Step.4 创建关联关系
+		 * Step.4 创建ELB和ECS的关联关系
 		 *
-		 * Step.5 调用loadbalancer 接口创建ELB对象
+		 * Step.5 为netscarler增加subnetIP
 		 *
-		 * Step.6 更改VIP状态
-		 *
-		 * Step.7 写入日志
+		 * Step.6 调用loadbalancer 接口创建ELB对象
 		 *
 		 */
 
 		WSResult result = new WSResult();
-
-		// Step.1 获得未使用的VIP.
 
 		HashMap<String, Object> subnetMap = new HashMap<String, Object>();
 		subnetMap.put("EQ_defaultSubnet", LookUpConstants.DefaultSubnet.Yes.getValue());
 		SubnetDTO defaultSubnetDTO = (SubnetDTO) cmdbuildSoapService
 				.getSubnetList(CMDBuildUtil.wrapperSearchParams(subnetMap)).getDtoList().getDto().get(0);
 
-		// VIP
+		// Step.1 获得未使用的VIP,管理IP,SubnetIP,并更改IP的状态,后期应该为租户创建不同类型的默认子网.
 		IpaddressDTO ipaddressDTO = findAvailableIPAddressDTO(defaultSubnetDTO);
 
 		if (ipaddressDTO == null) {
 			result.setError(WSResult.SYSTEM_ERROR, "VIP资源不足,请联系管理员.");
 			return result;
 		}
+
 		// 更改VIP状态
 		cmdbuildSoapService.allocateIpaddress(ipaddressDTO.getId());
 
@@ -1913,6 +1912,7 @@ public class ApiServiceImpl implements ApiService {
 			result.setError(WSResult.SYSTEM_ERROR, "IP资源不足,请联系管理员.");
 			return result;
 		}
+
 		// 更改SubIP状态
 		cmdbuildSoapService.allocateIpaddress(subIpaddressDTO.getId());
 
@@ -1923,6 +1923,7 @@ public class ApiServiceImpl implements ApiService {
 			result.setError(WSResult.SYSTEM_ERROR, "管理IP资源不足,请联系管理员.");
 			return result;
 		}
+
 		// 更改管理IP状态
 		cmdbuildSoapService.allocateIpaddress(manangerIpaddressDTO.getId());
 
@@ -1932,6 +1933,8 @@ public class ApiServiceImpl implements ApiService {
 		elbDTO.setDescription(ipaddressDTO.getDescription());
 		elbDTO.setManagerIpaddress(manangerIpaddressDTO.getId());
 		elbDTO.setSubIpaddress(subIpaddressDTO.getId());
+		elbDTO.setSubnet(defaultSubnetDTO.getId());
+		elbDTO.setTenants(defaultSubnetDTO.getTenants());
 		IdResult idResult = cmdbuildSoapService.createElb(elbDTO);
 
 		// Step.3 将ELB端口信息写入CMDBuild
@@ -1943,14 +1946,11 @@ public class ApiServiceImpl implements ApiService {
 
 		for (ElbPolicyDTO policyDTO : elbPolicyDTOs) {
 
-			HashMap<String, Object> tenantsMap = new HashMap<String, Object>();
-			tenantsMap.put("EQ_code", idResult.getMessage());
-
 			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(policyDTO.getElbProtocol()).getDto();
 
-			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(Integer.valueOf(policyDTO.getIpaddress())).getDto();
-
-			IpaddressDTO ipDto = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
+			// 负载VM的IP
+			IpaddressDTO ipDto = (IpaddressDTO) cmdbuildSoapService.findIpaddress(
+					Integer.valueOf(policyDTO.getIpaddress())).getDto();
 
 			ElbPolicyDTO elbPolicyDTO = new ElbPolicyDTO();
 
@@ -1964,17 +1964,41 @@ public class ApiServiceImpl implements ApiService {
 			cmdbuildSoapService.createElbPolicy(elbPolicyDTO);
 		}
 
-		// Step.4 创建关联关系
+		// Step.4 创建ELB和ECS的关联关系
 		for (Integer ecsId : ecsIds) {
 			cmdbuildSoapService.createMapEcsElb(ecsId, queryElbDTO.getId());
 		}
+		ELBParameter elbParameter = wrapperELBParameter(queryElbDTO);
 
-		// Step.5 调用loadbalancer 接口创建ELB对象
-		loadbalancerSoapService.createELBByLoadbalancer(wrapperELBParameter(queryElbDTO));
+		// Step.5 为netscarler增加subnetIP
+		try {
+			configSubnetIPForNetscarler(elbParameter, subIpaddressDTO);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		// Step.6 调用loadbalancer 接口创建ELB对象
+		loadbalancerSoapService.createELBByLoadbalancer(elbParameter);
 
 		result.setMessage("ELB创建成功");
 		return result;
 
+	}
+
+	/**
+	 * 为ns增加subnet ip
+	 * 
+	 * <pre>
+	 * add ns ip 'ip' 'netmask' -vServer DISABLED
+	 * 
+	 * eg：add ns ip 172.16.0.253 255.255.255.0 -vServer DISABLED
+	 * </pre>
+	 * 
+	 * @param elbParameter
+	 * @throws IOException
+	 */
+	private void configSubnetIPForNetscarler(ELBParameter elbParameter, IpaddressDTO ipaddressDTO) throws IOException {
+		String cmd = "add ns ip " + ipaddressDTO.getDescription() + " 255.255.255.0 -vServer DISABLED";
+		SSHUtil.executeCommand(elbParameter.getUrl(), elbParameter.getUserName(), elbParameter.getPassword(), cmd);
 	}
 
 	private ELBParameter wrapperELBParameter(ElbDTO elbDTO) {
@@ -2002,6 +2026,7 @@ public class ApiServiceImpl implements ApiService {
 			publicIPParameter.getPolicyParameters().addAll(policyParameters);
 			publicIPParameters.add(publicIPParameter);
 		}
+
 		ELBParameter elbParameter = new ELBParameter();
 		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(elbDTO.getIpaddress()).getDto();
 		IpaddressDTO manangerIpaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(
