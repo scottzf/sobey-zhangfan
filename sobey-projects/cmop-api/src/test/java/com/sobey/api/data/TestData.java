@@ -20,7 +20,7 @@ import com.sobey.generate.cmdbuild.TenantsDTO;
 
 public class TestData {
 
-	private static final Integer tenantsId = 2419;
+	private static final Integer tenantsId = 6178;
 
 	public static TenantsDTO randomTenantsDTO() {
 		TenantsDTO dto = new TenantsDTO();
@@ -151,7 +151,7 @@ public class TestData {
 		eipDTO.setEipStatus(LookUpConstants.EIPStatus.未使用.getValue());
 		eipDTO.setTenants(tenantsId);
 		eipDTO.setIsp(29);
-		eipDTO.setIpaddress(149);
+		eipDTO.setIpaddress(11107);
 		eipDTO.setIdc(ConstansData.idcId);
 		eipDTO.setDescription("125.71.203.22");
 		eipDTO.setAgentType(LookUpConstants.AgentType.Fortigate.getValue());

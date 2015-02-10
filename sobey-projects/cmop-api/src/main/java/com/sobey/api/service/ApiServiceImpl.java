@@ -1448,18 +1448,26 @@ public class ApiServiceImpl implements ApiService {
 
 		WSResult result = new WSResult();
 		// Step.1 获得EIP、ECS、ELB的信息
-
 		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(serviceDTO.getId()).getDto();
+		ElbDTO elbDTO = (ElbDTO) cmdbuildSoapService.findElb(serviceDTO.getId()).getDto();
+		SubnetDTO subnetDTO = null;
+		IpaddressDTO ipaddressDTO = null;
 
-		SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(ecsDTO.getSubnet()).getDto();
+		if (ecsDTO != null) {
+			subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(ecsDTO.getSubnet()).getDto();
+			ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
+
+			// Step.2 与其他资源(ECS)建立关联关系
+			cmdbuildSoapService.createMapEcsEip(ecsDTO.getId(), eipDTO.getId());
+		} else {
+			subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(elbDTO.getSubnet()).getDto();
+			ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(elbDTO.getIpaddress()).getDto();
+			// Step.2 与其他资源(ELB)建立关联关系
+			cmdbuildSoapService.createMapEipElb(eipDTO.getId(), elbDTO.getId());
+		}
+
 		RouterDTO routerDTO = (RouterDTO) cmdbuildSoapService.findRouter(subnetDTO.getRouter()).getDto();
 		IpaddressDTO managerIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(routerDTO.getIpaddress()).getDto();
-
-		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
-
-		// Step.2 与其他资源(ECS & ELB)建立关联关系
-		// 因为可能绑定ELB或ECS,无法区分.但是ECS和ELB同属一个service,id是不可能重复的,所以先通过ID查询,判断对象是否为null,如果不为null说明绑定的是该服务对象.
-		cmdbuildSoapService.createMapEcsEip(ecsDTO.getId(), eipDTO.getId());
 
 		// Step.3 firwall创建虚拟IP
 
@@ -1893,6 +1901,7 @@ public class ApiServiceImpl implements ApiService {
 
 		HashMap<String, Object> subnetMap = new HashMap<String, Object>();
 		subnetMap.put("EQ_defaultSubnet", LookUpConstants.DefaultSubnet.Yes.getValue());
+		subnetMap.put("EQ_tenants", elbDTO.getTenants());
 		SubnetDTO defaultSubnetDTO = (SubnetDTO) cmdbuildSoapService
 				.getSubnetList(CMDBuildUtil.wrapperSearchParams(subnetMap)).getDtoList().getDto().get(0);
 
@@ -1917,7 +1926,8 @@ public class ApiServiceImpl implements ApiService {
 		cmdbuildSoapService.allocateIpaddress(subIpaddressDTO.getId());
 
 		// 管理IP
-		IpaddressDTO manangerIpaddressDTO = findAvailableManagerIPAddressDTO();
+		// IpaddressDTO manangerIpaddressDTO = findAvailableManagerIPAddressDTO();
+		IpaddressDTO manangerIpaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(9191).getDto();
 
 		if (manangerIpaddressDTO == null) {
 			result.setError(WSResult.SYSTEM_ERROR, "管理IP资源不足,请联系管理员.");
@@ -1979,7 +1989,7 @@ public class ApiServiceImpl implements ApiService {
 		// Step.6 调用loadbalancer 接口创建ELB对象
 		loadbalancerSoapService.createELBByLoadbalancer(elbParameter);
 
-		result.setMessage("ELB创建成功");
+		result.setMessage(idResult.getMessage());
 		return result;
 
 	}

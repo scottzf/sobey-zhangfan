@@ -168,6 +168,16 @@ public class RestfulServiceImpl implements RestfulService {
 		return (LookUpDTO) cmdbuildSoapService.findLookUpByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
 	}
 
+	/**
+	 * 根据协议获得对应的端口:
+	 * 
+	 * HTTP -> 80 ;
+	 * 
+	 * HTTPS ->443
+	 * 
+	 * @param protocol
+	 * @return
+	 */
 	private static Integer getPortFromProtocol(String protocol) {
 		return "HTTPS".equals(protocol.toUpperCase()) ? 443 : 80;
 	}
@@ -1194,12 +1204,20 @@ public class RestfulServiceImpl implements RestfulService {
 				return result;
 			}
 
+			IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress())
+					.getDto();
+
+			if (ipaddressDTO == null) {
+				result.setError(WSResult.PARAMETER_ERROR, "ECS内网IP不存在.");
+				return result;
+			}
+
 			ecsIds[i] = ecsDTO.getId();
 			ElbPolicyDTO policyDTO = new ElbPolicyDTO();
 			policyDTO.setElbProtocol(lookUpDTO.getId());
 			policyDTO.setSourcePort(getPortFromProtocol(lookUpDTO.getDescription()));
 			policyDTO.setTargetPort(getPortFromProtocol(lookUpDTO.getDescription()));
-			policyDTO.setIpaddress(ecsDTO.getId().toString());
+			policyDTO.setIpaddress(ipaddressDTO.getId().toString());
 			elbPolicyDTOs.add(policyDTO);
 		}
 

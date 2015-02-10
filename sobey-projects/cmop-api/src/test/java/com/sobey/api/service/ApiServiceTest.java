@@ -207,11 +207,11 @@ public class ApiServiceTest extends TestCase {
 	@Test
 	public void bindingEIP() {
 
-		Integer eipId = 2799;
-		Integer ecsId = 1440;
+		Integer eipId = 11152;
+		Integer serviceId = 11131;// ELB or ECS
 
 		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(eipId).getDto();
-		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(ecsId).getDto();
+		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(serviceId).getDto();
 
 		service.bindingEIP(eipDTO, serviceDTO);
 	}
