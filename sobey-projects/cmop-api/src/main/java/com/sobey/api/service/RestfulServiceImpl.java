@@ -871,7 +871,7 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult allocateEIP(String isp, String protocols, String sourcePorts, String targetPorts, String bandwidth,
+	public WSResult createEIP(String isp, String protocols, String sourcePorts, String targetPorts, String bandwidth,
 			String remark, String accessKey) {
 
 		String[] protocolsArray = StringUtils.split(protocols, ",");
@@ -918,7 +918,7 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult recoverEIP(String eipCode, String accessKey) {
+	public WSResult deleteEIP(String eipCode, String accessKey) {
 
 		WSResult result = new WSResult();
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
@@ -936,7 +936,7 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult associateEIP(String eipCode, String serviceCode, String accessKey) {
+	public WSResult bindingEIP(String eipCode, String serviceCode, String accessKey) {
 
 		WSResult result = new WSResult();
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
@@ -958,7 +958,7 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult dissociateEIP(String eipCode, String serviceCode, String accessKey) {
+	public WSResult unbindingEIP(String eipCode, String serviceCode, String accessKey) {
 
 		WSResult result = new WSResult();
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
@@ -978,6 +978,32 @@ public class RestfulServiceImpl implements RestfulService {
 		}
 		apiService.unbindingEIP(eipDTO, serviceDTO);
 		return result;
+	}
+
+	@Override
+	public WSResult bindingEIPToRouter(String eipCode, String routerCode, String accessKey) {
+
+		WSResult result = new WSResult();
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		EipDTO eipDTO = findEipDTO(tenantsDTO.getId(), eipCode);
+		if (eipDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "EIP不存在.");
+			return result;
+		}
+
+		RouterDTO routerDTO = findRouterDTO(tenantsDTO.getId(), routerCode);
+		if (routerDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "Router不存在.");
+			return result;
+		}
+
+		return apiService.bindingEIPToRouter(eipDTO, routerDTO);
 	}
 
 	@Override

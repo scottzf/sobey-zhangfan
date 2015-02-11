@@ -194,7 +194,7 @@ public class ApiServiceTest extends TestCase {
 				.getDto();
 
 		EipPolicyDTO policyDTO = new EipPolicyDTO();
-		policyDTO.setDescription("25.71.203.22");
+		policyDTO.setDescription("25.71.203.19");
 		policyDTO.setEip(queryEipDTO.getId());
 		policyDTO.setEipProtocol(38);
 		policyDTO.setSourcePort(80);
@@ -205,10 +205,20 @@ public class ApiServiceTest extends TestCase {
 	}
 
 	@Test
+	public void bindingEIPToRouter() {
+		Integer eipId = 11119;
+		Integer routerId = 11069;
+		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(eipId).getDto();
+		RouterDTO routerDTO = (RouterDTO) cmdbuildSoapService.findRouter(routerId).getDto();
+
+		service.bindingEIPToRouter(eipDTO, routerDTO);
+	}
+
+	@Test
 	public void bindingEIP() {
 
-		Integer eipId = 11152;
-		Integer serviceId = 11131;// ELB or ECS
+		Integer eipId = 11108;
+		Integer serviceId = 11158;// ELB or ECS
 
 		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(eipId).getDto();
 		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(serviceId).getDto();

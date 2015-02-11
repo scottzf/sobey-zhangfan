@@ -79,14 +79,16 @@ public interface RestfulService {
 	/******** EIP ********/
 	public DTOResult<EipEntity> findEIP(String eipCode, String accessKey);
 
-	public WSResult allocateEIP(String isp, String protocols, String sourcePorts, String targetPorts, String bandwidth,
+	public WSResult createEIP(String isp, String protocols, String sourcePorts, String targetPorts, String bandwidth,
 			String remark, String accessKey);
 
-	public WSResult recoverEIP(String eipCode, String accessKey);
+	public WSResult deleteEIP(String eipCode, String accessKey);
 
-	public WSResult associateEIP(String eipCode, String serviceCode, String accessKey);
+	public WSResult bindingEIP(String eipCode, String serviceCode, String accessKey);
 
-	public WSResult dissociateEIP(String eipCode, String serviceCode, String accessKey);
+	public WSResult unbindingEIP(String eipCode, String serviceCode, String accessKey);
+
+	public WSResult bindingEIPToRouter(String eipCode, String routerCode, String accessKey);
 
 	/******** VMRC ********/
 	public DTOResult<VMRCEntity> findVMRC(String ecsCode, String accessKey);

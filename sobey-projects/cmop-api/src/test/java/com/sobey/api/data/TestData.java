@@ -151,9 +151,9 @@ public class TestData {
 		eipDTO.setEipStatus(LookUpConstants.EIPStatus.未使用.getValue());
 		eipDTO.setTenants(tenantsId);
 		eipDTO.setIsp(29);
-		eipDTO.setIpaddress(11107);
+		eipDTO.setIpaddress(10876);
 		eipDTO.setIdc(ConstansData.idcId);
-		eipDTO.setDescription("125.71.203.22");
+		eipDTO.setDescription("125.71.203.19");
 		eipDTO.setAgentType(LookUpConstants.AgentType.Fortigate.getValue());
 		eipDTO.setBandwidth(1);
 

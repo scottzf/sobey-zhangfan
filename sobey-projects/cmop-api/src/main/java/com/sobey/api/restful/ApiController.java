@@ -199,30 +199,36 @@ public class ApiController {
 		return servie.findEIP(URLEscape(code), accessKey);
 	}
 
-	@RequestMapping(value = "/allocateEIP/", method = RequestMethod.POST)
-	public WSResult allocateEIP(@RequestParam(value = "isp") String isp, @RequestParam(value = "remark") String remark,
+	@RequestMapping(value = "/createEIP/", method = RequestMethod.POST)
+	public WSResult createEIP(@RequestParam(value = "isp") String isp, @RequestParam(value = "remark") String remark,
 			@RequestParam(value = "bandwidth") String bandwidth, @RequestParam(value = "protocols") String protocols,
 			@RequestParam(value = "sourcePorts") String sourcePorts,
 			@RequestParam(value = "targetPorts") String targetPorts, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.allocateEIP(isp, protocols, sourcePorts, targetPorts, bandwidth, remark, accessKey);
+		return servie.createEIP(isp, protocols, sourcePorts, targetPorts, bandwidth, remark, accessKey);
 	}
 
-	@RequestMapping(value = "/recoverEIP/", method = RequestMethod.POST)
-	public WSResult recoverEIP(@RequestParam(value = "code") String code,
+	@RequestMapping(value = "/deleteEIP/", method = RequestMethod.POST)
+	public WSResult deleteEIP(@RequestParam(value = "code") String code,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.recoverEIP(code, accessKey);
+		return servie.deleteEIP(code, accessKey);
 	}
 
-	@RequestMapping(value = "/associateEIP/", method = RequestMethod.POST)
-	public WSResult associateEIP(@RequestParam(value = "code") String code,
+	@RequestMapping(value = "/bindingEIP/", method = RequestMethod.POST)
+	public WSResult bindingEIP(@RequestParam(value = "code") String code,
 			@RequestParam(value = "serviceCode") String serviceCode, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.associateEIP(code, serviceCode, accessKey);
+		return servie.bindingEIP(code, serviceCode, accessKey);
 	}
 
-	@RequestMapping(value = "/dissociateEIP/", method = RequestMethod.POST)
+	@RequestMapping(value = "/bindingEIPToRouter/", method = RequestMethod.POST)
+	public WSResult bindingEIPToRouter(@RequestParam(value = "eipCode") String eipCode,
+			@RequestParam(value = "routerCode") String routerCode, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.bindingEIPToRouter(eipCode, routerCode, accessKey);
+	}
+
+	@RequestMapping(value = "/unbindingEIP/", method = RequestMethod.POST)
 	public WSResult dissociateEIP(@RequestParam(value = "code") String code,
 			@RequestParam(value = "serviceCode") String serviceCode, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.dissociateEIP(code, serviceCode, accessKey);
+		return servie.unbindingEIP(code, serviceCode, accessKey);
 	}
 
 	@RequestMapping(value = "/VMRCResult/{ecsCode}/{accessKey}", method = RequestMethod.GET)
