@@ -21,7 +21,6 @@ public class EipHistory extends ServiceHistoryBasic {
 	private Integer eipStatus;
 	private Integer ipaddress;
 	private Integer isp;
-	private Integer router;
 
 	public EipHistory() {
 	}
@@ -52,11 +51,6 @@ public class EipHistory extends ServiceHistoryBasic {
 		return isp;
 	}
 
-	@Column(name = "router")
-	public Integer getRouter() {
-		return router;
-	}
-
 	public void setBandwidth(Integer bandwidth) {
 		this.bandwidth = bandwidth;
 	}
@@ -75,10 +69,6 @@ public class EipHistory extends ServiceHistoryBasic {
 
 	public void setIsp(Integer isp) {
 		this.isp = isp;
-	}
-
-	public void setRouter(Integer router) {
-		this.router = router;
 	}
 
 }

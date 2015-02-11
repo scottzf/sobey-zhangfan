@@ -15,6 +15,7 @@ public class RouterDTO extends ServiceBasicDTO {
 	private String cpuNumber;
 	private String diskSize;
 	private Integer ecsSpec;
+	private Integer eip;
 	private Integer firewallService;
 	private Integer ipaddress;
 	private String memorySize;
@@ -30,6 +31,10 @@ public class RouterDTO extends ServiceBasicDTO {
 
 	public Integer getEcsSpec() {
 		return ecsSpec;
+	}
+
+	public Integer getEip() {
+		return eip;
 	}
 
 	public Integer getFirewallService() {
@@ -58,6 +63,10 @@ public class RouterDTO extends ServiceBasicDTO {
 
 	public void setEcsSpec(Integer ecsSpec) {
 		this.ecsSpec = ecsSpec;
+	}
+
+	public void setEip(Integer eip) {
+		this.eip = eip;
 	}
 
 	public void setFirewallService(Integer firewallService) {
