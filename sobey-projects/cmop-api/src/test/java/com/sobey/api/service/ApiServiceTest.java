@@ -25,6 +25,8 @@ import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EcsSpecDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
+import com.sobey.generate.cmdbuild.ElbDTO;
+import com.sobey.generate.cmdbuild.ElbPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.FirewallPolicyDTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
@@ -97,6 +99,39 @@ public class ApiServiceTest extends TestCase {
 	}
 
 	@Test
+	public void createELB() {
+
+		Integer[] ecsIds = { 5677, 5701 };
+		ElbDTO elbDTO = new ElbDTO();
+		elbDTO.setAgentType(LookUpConstants.AgentType.Netscaler.getValue());
+
+		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(5677).getDto();
+		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
+
+		EcsDTO ecsDTO2 = (EcsDTO) cmdbuildSoapService.findEcs(5701).getDto();
+		IpaddressDTO ipaddressDTO2 = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO2.getIpaddress()).getDto();
+
+		ElbPolicyDTO policyDTO = new ElbPolicyDTO();
+		policyDTO.setElbProtocol(37);
+		policyDTO.setSourcePort(80);
+		policyDTO.setTargetPort(80);
+		policyDTO.setIpaddress(ipaddressDTO.getId().toString());
+
+		ElbPolicyDTO policyDTO2 = new ElbPolicyDTO();
+		policyDTO2.setElbProtocol(37);
+		policyDTO2.setSourcePort(80);
+		policyDTO2.setTargetPort(80);
+		policyDTO2.setIpaddress(ipaddressDTO2.getId().toString());
+
+		List<ElbPolicyDTO> elbPolicyDTOs = new ArrayList<ElbPolicyDTO>();
+
+		elbPolicyDTOs.add(policyDTO);
+		elbPolicyDTOs.add(policyDTO2);
+
+		service.createELB(elbDTO, elbPolicyDTOs, ecsIds);
+	}
+
+	@Test
 	public void bindingES3() {
 		Integer es3Id = 1480;
 		Integer ecsId = 1620;
@@ -159,7 +194,7 @@ public class ApiServiceTest extends TestCase {
 				.getDto();
 
 		EipPolicyDTO policyDTO = new EipPolicyDTO();
-		policyDTO.setDescription("25.71.203.22");
+		policyDTO.setDescription("25.71.203.19");
 		policyDTO.setEip(queryEipDTO.getId());
 		policyDTO.setEipProtocol(38);
 		policyDTO.setSourcePort(80);
@@ -170,13 +205,23 @@ public class ApiServiceTest extends TestCase {
 	}
 
 	@Test
+	public void bindingEIPToRouter() {
+		Integer eipId = 11119;
+		Integer routerId = 11069;
+		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(eipId).getDto();
+		RouterDTO routerDTO = (RouterDTO) cmdbuildSoapService.findRouter(routerId).getDto();
+
+		service.bindingEIPToRouter(eipDTO, routerDTO);
+	}
+
+	@Test
 	public void bindingEIP() {
 
-		Integer eipId = 2799;
-		Integer ecsId = 1440;
+		Integer eipId = 11108;
+		Integer serviceId = 11158;// ELB or ECS
 
 		EipDTO eipDTO = (EipDTO) cmdbuildSoapService.findEip(eipId).getDto();
-		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(ecsId).getDto();
+		ServiceDTO serviceDTO = (ServiceDTO) cmdbuildSoapService.findService(serviceId).getDto();
 
 		service.bindingEIP(eipDTO, serviceDTO);
 	}

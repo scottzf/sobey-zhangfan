@@ -23,7 +23,6 @@ public class Eip extends ServiceBasic {
 	private Integer eipStatus;
 	private Integer ipaddress;
 	private Integer isp;
-	private Integer router;
 
 	public Eip() {
 	}
@@ -53,11 +52,6 @@ public class Eip extends ServiceBasic {
 		return isp;
 	}
 
-	@Column(name = "router")
-	public Integer getRouter() {
-		return router;
-	}
-
 	public void setBandwidth(Integer bandwidth) {
 		this.bandwidth = bandwidth;
 	}
@@ -76,10 +70,6 @@ public class Eip extends ServiceBasic {
 
 	public void setIsp(Integer isp) {
 		this.isp = isp;
-	}
-
-	public void setRouter(Integer router) {
-		this.router = router;
 	}
 
 }

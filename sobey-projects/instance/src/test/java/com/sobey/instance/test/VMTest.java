@@ -58,7 +58,7 @@ public class VMTest {
 	public void queryVMInFolder() {
 
 		DTOListResult<VMInfoDTO> dtoListResult = service.getVMInfoDTOInFolder(DataCenterEnum.成都核心数据中心.toString(),
-				"Centos 6.3");
+				"Xen K1 172.16.16.16");
 		for (VMInfoDTO vmInfoDTO : dtoListResult.getDtos()) {
 			System.out.println(vmInfoDTO.getVmName());
 			System.out.println(vmInfoDTO.getHostName());
@@ -170,7 +170,7 @@ public class VMTest {
 		Folder rootFolder = si.getRootFolder();
 
 		VirtualMachine myVM = (VirtualMachine) new InventoryNavigator(rootFolder).searchManagedEntity("VirtualMachine",
-				"5000_172.16.0.14");
+				"Xen K1 172.16.16.16");
 
 		ManagedObjectReference managedObjectReference = new ManagedObjectReference();
 		managedObjectReference.setType("HostSystem");

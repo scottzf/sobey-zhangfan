@@ -2503,7 +2503,6 @@
           <xs:element minOccurs="0" name="eipStatus" type="xs:int"/>
           <xs:element minOccurs="0" name="ipaddress" type="xs:int"/>
           <xs:element minOccurs="0" name="isp" type="xs:int"/>
-          <xs:element minOccurs="0" name="router" type="xs:int"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -2816,6 +2815,7 @@
           <xs:element minOccurs="0" name="cpuNumber" type="xs:string"/>
           <xs:element minOccurs="0" name="diskSize" type="xs:string"/>
           <xs:element minOccurs="0" name="ecsSpec" type="xs:int"/>
+          <xs:element minOccurs="0" name="eip" type="xs:int"/>
           <xs:element minOccurs="0" name="firewallService" type="xs:int"/>
           <xs:element minOccurs="0" name="ipaddress" type="xs:int"/>
           <xs:element minOccurs="0" name="memorySize" type="xs:string"/>
@@ -3490,6 +3490,8 @@
       <xs:extension base="tns:serviceBasicDTO">
         <xs:sequence>
           <xs:element minOccurs="0" name="ipaddress" type="xs:int"/>
+          <xs:element minOccurs="0" name="managerIpaddress" type="xs:int"/>
+          <xs:element minOccurs="0" name="subIpaddress" type="xs:int"/>
           <xs:element minOccurs="0" name="subnet" type="xs:int"/>
         </xs:sequence>
       </xs:extension>

@@ -13,10 +13,20 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.ServiceBasicDTO;
 public class ElbDTO extends ServiceBasicDTO {
 
 	private Integer ipaddress;
+	private Integer managerIpaddress;
+	private Integer subIpaddress;
 	private Integer subnet;
 
 	public Integer getIpaddress() {
 		return ipaddress;
+	}
+
+	public Integer getManagerIpaddress() {
+		return managerIpaddress;
+	}
+
+	public Integer getSubIpaddress() {
+		return subIpaddress;
 	}
 
 	public Integer getSubnet() {
@@ -25,6 +35,14 @@ public class ElbDTO extends ServiceBasicDTO {
 
 	public void setIpaddress(Integer ipaddress) {
 		this.ipaddress = ipaddress;
+	}
+
+	public void setManagerIpaddress(Integer managerIpaddress) {
+		this.managerIpaddress = managerIpaddress;
+	}
+
+	public void setSubIpaddress(Integer subIpaddress) {
+		this.subIpaddress = subIpaddress;
 	}
 
 	public void setSubnet(Integer subnet) {

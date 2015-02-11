@@ -32,6 +32,7 @@ import com.sobey.generate.cmdbuild.EcsSpecDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
 import com.sobey.generate.cmdbuild.ElbDTO;
+import com.sobey.generate.cmdbuild.ElbPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.FirewallPolicyDTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
@@ -39,6 +40,7 @@ import com.sobey.generate.cmdbuild.IdcDTO;
 import com.sobey.generate.cmdbuild.IpaddressDTO;
 import com.sobey.generate.cmdbuild.LookUpDTO;
 import com.sobey.generate.cmdbuild.MapEcsEipDTO;
+import com.sobey.generate.cmdbuild.MapEcsElbDTO;
 import com.sobey.generate.cmdbuild.MapEipDnsDTO;
 import com.sobey.generate.cmdbuild.MapEipElbDTO;
 import com.sobey.generate.cmdbuild.RouterDTO;
@@ -110,6 +112,13 @@ public class RestfulServiceImpl implements RestfulService {
 		return (Es3DTO) cmdbuildSoapService.findEs3ByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
 	}
 
+	private ElbDTO findElbDTO(Integer tenantsId, String code) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_tenants", tenantsId);
+		map.put("EQ_code", code);
+		return (ElbDTO) cmdbuildSoapService.findElbByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
+	}
+
 	private DnsDTO findDnsDTO(Integer tenantsId, String code) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("EQ_tenants", tenantsId);
@@ -159,6 +168,16 @@ public class RestfulServiceImpl implements RestfulService {
 		return (LookUpDTO) cmdbuildSoapService.findLookUpByParams(CMDBuildUtil.wrapperSearchParams(map)).getDto();
 	}
 
+	/**
+	 * 根据协议获得对应的端口:
+	 * 
+	 * HTTP -> 80 ;
+	 * 
+	 * HTTPS ->443
+	 * 
+	 * @param protocol
+	 * @return
+	 */
 	private static Integer getPortFromProtocol(String protocol) {
 		return "HTTPS".equals(protocol.toUpperCase()) ? 443 : 80;
 	}
@@ -627,7 +646,7 @@ public class RestfulServiceImpl implements RestfulService {
 			subnetEntities.add(entity);
 		}
 
-		RouterEntity entity = new RouterEntity(routerDTO.getDescription(), subnetEntities);
+		RouterEntity entity = new RouterEntity(routerDTO.getCode(), routerDTO.getDescription(), subnetEntities);
 		result.setDto(entity);
 		return result;
 	}
@@ -837,7 +856,7 @@ public class RestfulServiceImpl implements RestfulService {
 		for (Object object : mapEipElblist) {
 			MapEipElbDTO mapEcsElbDTO = (MapEipElbDTO) object;
 			ElbDTO elbDTO = (ElbDTO) cmdbuildSoapService.findElb(Integer.valueOf(mapEcsElbDTO.getIdObj2())).getDto();
-			ElbEntity entity = new ElbEntity(elbDTO.getCode(), elbDTO.getDescription(), null);
+			ElbEntity entity = new ElbEntity(null, elbDTO.getDescription(), elbDTO.getCode());
 			elbEntities.add(entity);
 		}
 
@@ -852,7 +871,7 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult allocateEIP(String isp, String protocols, String sourcePorts, String targetPorts, String bandwidth,
+	public WSResult createEIP(String isp, String protocols, String sourcePorts, String targetPorts, String bandwidth,
 			String remark, String accessKey) {
 
 		String[] protocolsArray = StringUtils.split(protocols, ",");
@@ -899,7 +918,7 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult recoverEIP(String eipCode, String accessKey) {
+	public WSResult deleteEIP(String eipCode, String accessKey) {
 
 		WSResult result = new WSResult();
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
@@ -917,7 +936,7 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult associateEIP(String eipCode, String serviceCode, String accessKey) {
+	public WSResult bindingEIP(String eipCode, String serviceCode, String accessKey) {
 
 		WSResult result = new WSResult();
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
@@ -939,7 +958,7 @@ public class RestfulServiceImpl implements RestfulService {
 	}
 
 	@Override
-	public WSResult dissociateEIP(String eipCode, String serviceCode, String accessKey) {
+	public WSResult unbindingEIP(String eipCode, String serviceCode, String accessKey) {
 
 		WSResult result = new WSResult();
 		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
@@ -959,6 +978,32 @@ public class RestfulServiceImpl implements RestfulService {
 		}
 		apiService.unbindingEIP(eipDTO, serviceDTO);
 		return result;
+	}
+
+	@Override
+	public WSResult bindingEIPToRouter(String eipCode, String routerCode, String accessKey) {
+
+		WSResult result = new WSResult();
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		EipDTO eipDTO = findEipDTO(tenantsDTO.getId(), eipCode);
+		if (eipDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "EIP不存在.");
+			return result;
+		}
+
+		RouterDTO routerDTO = findRouterDTO(tenantsDTO.getId(), routerCode);
+		if (routerDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "Router不存在.");
+			return result;
+		}
+
+		return apiService.bindingEIPToRouter(eipDTO, routerDTO);
 	}
 
 	@Override
@@ -1097,6 +1142,139 @@ public class RestfulServiceImpl implements RestfulService {
 
 		return result;
 
+	}
+
+	@Override
+	public DTOResult<ElbEntity> findELB(String elbCode, String accessKey) {
+
+		DTOResult<ElbEntity> result = new DTOResult<ElbEntity>();
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		ElbDTO elbDTO = findElbDTO(tenantsDTO.getId(), elbCode);
+		if (elbDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "ELB不存在.");
+			return result;
+		}
+
+		List<EcsEntity> ecsEntities = new ArrayList<EcsEntity>();
+
+		// 查询出ELB负载的ECS信息
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_idObj2", elbDTO.getId());
+		List<Object> list = cmdbuildSoapService.getMapEcsElbList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList()
+				.getDto();
+
+		for (Object object : list) {
+
+			MapEcsElbDTO mapEcsElbDTO = (MapEcsElbDTO) object;
+
+			EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(Integer.valueOf(mapEcsElbDTO.getIdObj1())).getDto();
+			IdcDTO idcDTO = (IdcDTO) cmdbuildSoapService.findIdc(ecsDTO.getIdc()).getDto();
+			IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress())
+					.getDto();
+			EcsSpecDTO ecsSpecDTO = (EcsSpecDTO) cmdbuildSoapService.findEcsSpec(ecsDTO.getEcsSpec()).getDto();
+			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(ecsDTO.getEcsStatus()).getDto();
+
+			EcsEntity entity = new EcsEntity(ecsDTO.getCpuNumber(), ecsDTO.getDescription(), idcDTO.getDescription(),
+					ecsDTO.getCode(), ipaddressDTO.getDescription(), ecsDTO.isIsDesktop(), ecsDTO.isIsGpu(),
+					ecsDTO.getMemorySize(), ecsDTO.getRemark(), ecsSpecDTO.getDescription(), lookUpDTO.getDescription());
+
+			ecsEntities.add(entity);
+		}
+
+		ElbEntity entity = new ElbEntity(ecsEntities, elbDTO.getDescription(), elbDTO.getCode());
+		result.setDto(entity);
+		return result;
+	}
+
+	@Override
+	public WSResult createELB(String ecsCodes, String protocols, String accessKey) {
+
+		String[] ecsCodesArray = StringUtils.split(ecsCodes, ",");
+		String[] protocolsArray = StringUtils.split(protocols, ",");
+		WSResult result = new WSResult();
+
+		if (protocolsArray.length != ecsCodesArray.length) {
+			result.setError(WSResult.PARAMETER_ERROR, "参数错误.");
+			return result;
+		}
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		List<ElbPolicyDTO> elbPolicyDTOs = new ArrayList<ElbPolicyDTO>();
+
+		Integer[] ecsIds = new Integer[protocolsArray.length];// 存放ecsId的数组
+
+		for (int i = 0; i < protocolsArray.length; i++) {
+
+			EcsDTO ecsDTO = findEcsDTO(tenantsDTO.getId(), ecsCodesArray[i]);
+
+			if (ecsDTO == null) {
+				result.setError(WSResult.PARAMETER_ERROR, "ECS不存在.");
+				return result;
+			}
+
+			LookUpDTO lookUpDTO = findLookUpDTO(protocolsArray[i], "ELBProtocol");
+
+			if (lookUpDTO == null) {
+				result.setError(WSResult.PARAMETER_ERROR, "协议不存在.");
+				return result;
+			}
+
+			IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress())
+					.getDto();
+
+			if (ipaddressDTO == null) {
+				result.setError(WSResult.PARAMETER_ERROR, "ECS内网IP不存在.");
+				return result;
+			}
+
+			ecsIds[i] = ecsDTO.getId();
+			ElbPolicyDTO policyDTO = new ElbPolicyDTO();
+			policyDTO.setElbProtocol(lookUpDTO.getId());
+			policyDTO.setSourcePort(getPortFromProtocol(lookUpDTO.getDescription()));
+			policyDTO.setTargetPort(getPortFromProtocol(lookUpDTO.getDescription()));
+			policyDTO.setIpaddress(ipaddressDTO.getId().toString());
+			elbPolicyDTOs.add(policyDTO);
+		}
+
+		ElbDTO elbDTO = new ElbDTO();
+		elbDTO.setAgentType(LookUpConstants.AgentType.Netscaler.getValue());
+		elbDTO.setTenants(tenantsDTO.getId());
+
+		return apiService.createELB(elbDTO, elbPolicyDTOs, ecsIds);
+
+	}
+
+	@Override
+	public WSResult deleteELB(String elbCode, String accessKey) {
+
+		WSResult result = new WSResult();
+
+		TenantsDTO tenantsDTO = findTenantsDTO(accessKey);
+
+		if (tenantsDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "权限鉴证失败.");
+			return result;
+		}
+
+		ElbDTO elbDTO = findElbDTO(tenantsDTO.getId(), elbCode);
+
+		if (elbDTO == null) {
+			result.setError(WSResult.PARAMETER_ERROR, "ELB不存在.");
+			return result;
+		}
+
+		return apiService.deleteELB(elbDTO.getId());
 	}
 
 }

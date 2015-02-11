@@ -1,5 +1,6 @@
 package com.sobey.api.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import com.sobey.api.utils.CMDBuildUtil;
 import com.sobey.api.webservice.response.result.WSResult;
 import com.sobey.core.utils.Encodes;
 import com.sobey.core.utils.Identities;
+import com.sobey.core.utils.SSHUtil;
 import com.sobey.core.utils.Threads;
 import com.sobey.generate.cmdbuild.CmdbuildSoapService;
 import com.sobey.generate.cmdbuild.DnsDTO;
@@ -25,6 +27,8 @@ import com.sobey.generate.cmdbuild.EcsDTO;
 import com.sobey.generate.cmdbuild.EcsSpecDTO;
 import com.sobey.generate.cmdbuild.EipDTO;
 import com.sobey.generate.cmdbuild.EipPolicyDTO;
+import com.sobey.generate.cmdbuild.ElbDTO;
+import com.sobey.generate.cmdbuild.ElbPolicyDTO;
 import com.sobey.generate.cmdbuild.Es3DTO;
 import com.sobey.generate.cmdbuild.FirewallPolicyDTO;
 import com.sobey.generate.cmdbuild.FirewallServiceDTO;
@@ -71,6 +75,9 @@ import com.sobey.generate.instance.RunVMParameter;
 import com.sobey.generate.instance.VMDiskParameter;
 import com.sobey.generate.instance.VMInfoDTO;
 import com.sobey.generate.instance.VMRCDTO;
+import com.sobey.generate.loadbalancer.ELBParameter;
+import com.sobey.generate.loadbalancer.ELBPolicyParameter;
+import com.sobey.generate.loadbalancer.ELBPublicIPParameter;
 import com.sobey.generate.loadbalancer.LoadbalancerSoapService;
 import com.sobey.generate.storage.StorageSoapService;
 import com.sobey.generate.switches.SwitchPolicyParameter;
@@ -922,7 +929,6 @@ public class ApiServiceImpl implements ApiService {
 		ConfigRouterStaticParameters configRouterStaticParameters = new ConfigRouterStaticParameters();
 		configRouterStaticParameters.getConfigRouterStaticParameters().addAll(staticParameters);
 		firewallSoapService.configRouterStaticParameterListByFirewall(configRouterStaticParameters);
-
 	}
 
 	/**
@@ -1441,18 +1447,26 @@ public class ApiServiceImpl implements ApiService {
 
 		WSResult result = new WSResult();
 		// Step.1 获得EIP、ECS、ELB的信息
-
 		EcsDTO ecsDTO = (EcsDTO) cmdbuildSoapService.findEcs(serviceDTO.getId()).getDto();
+		ElbDTO elbDTO = (ElbDTO) cmdbuildSoapService.findElb(serviceDTO.getId()).getDto();
+		SubnetDTO subnetDTO = null;
+		IpaddressDTO ipaddressDTO = null;
 
-		SubnetDTO subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(ecsDTO.getSubnet()).getDto();
+		if (ecsDTO != null) {
+			subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(ecsDTO.getSubnet()).getDto();
+			ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
+
+			// Step.2 与其他资源(ECS)建立关联关系
+			cmdbuildSoapService.createMapEcsEip(ecsDTO.getId(), eipDTO.getId());
+		} else {
+			subnetDTO = (SubnetDTO) cmdbuildSoapService.findSubnet(elbDTO.getSubnet()).getDto();
+			ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(elbDTO.getIpaddress()).getDto();
+			// Step.2 与其他资源(ELB)建立关联关系
+			cmdbuildSoapService.createMapEipElb(eipDTO.getId(), elbDTO.getId());
+		}
+
 		RouterDTO routerDTO = (RouterDTO) cmdbuildSoapService.findRouter(subnetDTO.getRouter()).getDto();
 		IpaddressDTO managerIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(routerDTO.getIpaddress()).getDto();
-
-		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(ecsDTO.getIpaddress()).getDto();
-
-		// Step.2 与其他资源(ECS & ELB)建立关联关系
-		// 因为可能绑定ELB或ECS,无法区分.但是ECS和ELB同属一个service,id是不可能重复的,所以先通过ID查询,判断对象是否为null,如果不为null说明绑定的是该服务对象.
-		cmdbuildSoapService.createMapEcsEip(ecsDTO.getId(), eipDTO.getId());
 
 		// Step.3 firwall创建虚拟IP
 
@@ -1469,6 +1483,48 @@ public class ApiServiceImpl implements ApiService {
 
 		result.setMessage("EIP关联成功");
 		return result;
+	}
+
+	@Override
+	public WSResult bindingEIPToRouter(EipDTO eipDTO, RouterDTO routerDTO) {
+
+		WSResult result = new WSResult();
+
+		IpaddressDTO managerIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(routerDTO.getIpaddress()).getDto();
+		IpaddressDTO internetIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(eipDTO.getIpaddress()).getDto();
+		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(routerDTO.getTenants()).getDto();
+
+		routerDTO.setEip(eipDTO.getId());
+		cmdbuildSoapService.updateRouter(routerDTO.getId(), routerDTO);
+
+		// 给vRouter绑定一个电信的端口组
+		String vmName = generateVMName(tenantsDTO, managerIP);
+
+		BindingDVSPortGroupParameter bindingDVSPortGroupParameter = new BindingDVSPortGroupParameter();
+		bindingDVSPortGroupParameter.setDatacenter(datacenter);
+		bindingDVSPortGroupParameter.setVmName(vmName);
+		bindingDVSPortGroupParameter.setPortGroupName(ConstansData.CTC_DEFAULT_PORTGROUPNAME);
+		bindingDVSPortGroupParameter.setPortIndex(ConstansData.CTC_DEFAULT_PORTNO);
+		instanceSoapService.bindingDVSPortGroupByInstance(bindingDVSPortGroupParameter);
+
+		// 在防火墙中添加电信的接口
+		List<ConfigSystemInterfaceParameter> parameters = new ArrayList<ConfigSystemInterfaceParameter>();
+		ConfigSystemInterfaceParameter configSystemInterfaceParameter = new ConfigSystemInterfaceParameter();
+		configSystemInterfaceParameter.setSubnetMask("255.255.255.0");
+		configSystemInterfaceParameter.setGateway(internetIP.getDescription());// 公网IP
+		configSystemInterfaceParameter.setInterfaceName("port8"); // TODO "port8" 为防火墙->网络->接口名,电信接口,写死.后续视情况决定是否抽象成常量.
+		parameters.add(configSystemInterfaceParameter);
+
+		ConfigSystemInterfaceParameters configSystemInterfaceParameters = new ConfigSystemInterfaceParameters();
+		configSystemInterfaceParameters.setUrl(managerIP.getDescription());
+		configSystemInterfaceParameters.setUserName(ConstansData.firewall_username);
+		configSystemInterfaceParameters.setPassword(ConstansData.firewall_password);
+		configSystemInterfaceParameters.getConfigSystemInterfaceParameters().addAll(parameters);
+		firewallSoapService.configSystemInterfaceListByFirewall(configSystemInterfaceParameters);
+
+		result.setMessage("EIP关联Router成功");
+		return result;
+
 	}
 
 	/**
@@ -1863,4 +1919,191 @@ public class ApiServiceImpl implements ApiService {
 
 		return zHistoryItemDTO.getZItemDTOs();
 	}
+
+	@Override
+	public WSResult createELB(ElbDTO elbDTO, List<ElbPolicyDTO> elbPolicyDTOs, Integer[] ecsIds) {
+
+		/**
+		 * Step.1 获得未使用的VIP,管理IP,SubnetIP,并更改IP的状态,后期应该为租户创建不同类型的默认子网.
+		 *
+		 * Step.2 将ELB信息写入CMDBuild
+		 *
+		 * Step.3 将ELB端口信息写入CMDBuild
+		 *
+		 * Step.4 创建ELB和ECS的关联关系
+		 *
+		 * Step.5 为netscarler增加subnetIP
+		 *
+		 * Step.6 调用loadbalancer 接口创建ELB对象
+		 *
+		 */
+
+		WSResult result = new WSResult();
+
+		HashMap<String, Object> subnetMap = new HashMap<String, Object>();
+		subnetMap.put("EQ_defaultSubnet", LookUpConstants.DefaultSubnet.Yes.getValue());
+		subnetMap.put("EQ_tenants", elbDTO.getTenants());
+		SubnetDTO defaultSubnetDTO = (SubnetDTO) cmdbuildSoapService
+				.getSubnetList(CMDBuildUtil.wrapperSearchParams(subnetMap)).getDtoList().getDto().get(0);
+
+		// Step.1 获得未使用的VIP,管理IP,SubnetIP,并更改IP的状态,后期应该为租户创建不同类型的默认子网.
+		IpaddressDTO ipaddressDTO = findAvailableIPAddressDTO(defaultSubnetDTO);
+
+		if (ipaddressDTO == null) {
+			result.setError(WSResult.SYSTEM_ERROR, "VIP资源不足,请联系管理员.");
+			return result;
+		}
+
+		// 更改VIP状态
+		cmdbuildSoapService.allocateIpaddress(ipaddressDTO.getId());
+
+		IpaddressDTO subIpaddressDTO = findAvailableIPAddressDTO(defaultSubnetDTO);
+		if (subIpaddressDTO == null) {
+			result.setError(WSResult.SYSTEM_ERROR, "IP资源不足,请联系管理员.");
+			return result;
+		}
+
+		// 更改SubIP状态
+		cmdbuildSoapService.allocateIpaddress(subIpaddressDTO.getId());
+
+		// 管理IP
+		// IpaddressDTO manangerIpaddressDTO = findAvailableManagerIPAddressDTO();
+		// TODO 临时,因为netscarler的管理IP无法修改,故只能采用写死的方法.后面一定要修改!!!!!!!!!
+		IpaddressDTO manangerIpaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(9191).getDto();
+
+		if (manangerIpaddressDTO == null) {
+			result.setError(WSResult.SYSTEM_ERROR, "管理IP资源不足,请联系管理员.");
+			return result;
+		}
+
+		// 更改管理IP状态
+		cmdbuildSoapService.allocateIpaddress(manangerIpaddressDTO.getId());
+
+		// Step.2 将ELB信息写入CMDBuild
+		elbDTO.setIdc(ipaddressDTO.getIdc());
+		elbDTO.setIpaddress(ipaddressDTO.getId());
+		elbDTO.setDescription(ipaddressDTO.getDescription());
+		elbDTO.setManagerIpaddress(manangerIpaddressDTO.getId());
+		elbDTO.setSubIpaddress(subIpaddressDTO.getId());
+		elbDTO.setSubnet(defaultSubnetDTO.getId());
+		elbDTO.setTenants(defaultSubnetDTO.getTenants());
+		IdResult idResult = cmdbuildSoapService.createElb(elbDTO);
+
+		// Step.3 将ELB端口信息写入CMDBuild
+
+		HashMap<String, Object> elbMap = new HashMap<String, Object>();
+		elbMap.put("EQ_code", idResult.getMessage());
+		ElbDTO queryElbDTO = (ElbDTO) cmdbuildSoapService.findElbByParams(CMDBuildUtil.wrapperSearchParams(elbMap))
+				.getDto();
+
+		for (ElbPolicyDTO policyDTO : elbPolicyDTOs) {
+
+			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(policyDTO.getElbProtocol()).getDto();
+
+			// 负载VM的IP
+			IpaddressDTO ipDto = (IpaddressDTO) cmdbuildSoapService.findIpaddress(
+					Integer.valueOf(policyDTO.getIpaddress())).getDto();
+
+			ElbPolicyDTO elbPolicyDTO = new ElbPolicyDTO();
+
+			elbPolicyDTO.setElb(queryElbDTO.getId());
+			elbPolicyDTO.setDescription(lookUpDTO.getDescription() + "-" + policyDTO.getSourcePort() + "-"
+					+ policyDTO.getTargetPort());
+			elbPolicyDTO.setElbProtocol(policyDTO.getElbProtocol());
+			elbPolicyDTO.setSourcePort(policyDTO.getSourcePort());
+			elbPolicyDTO.setTargetPort(policyDTO.getTargetPort());
+			elbPolicyDTO.setIpaddress(ipDto.getDescription());
+			cmdbuildSoapService.createElbPolicy(elbPolicyDTO);
+		}
+
+		// Step.4 创建ELB和ECS的关联关系
+		for (Integer ecsId : ecsIds) {
+			cmdbuildSoapService.createMapEcsElb(ecsId, queryElbDTO.getId());
+		}
+		ELBParameter elbParameter = wrapperELBParameter(queryElbDTO);
+
+		// Step.5 为netscarler增加subnetIP
+		try {
+			configSubnetIPForNetscarler(elbParameter, subIpaddressDTO);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		// Step.6 调用loadbalancer 接口创建ELB对象
+		loadbalancerSoapService.createELBByLoadbalancer(elbParameter);
+
+		result.setMessage(idResult.getMessage());
+		return result;
+
+	}
+
+	/**
+	 * 为ns增加subnet ip
+	 * 
+	 * <pre>
+	 * add ns ip 'ip' 'netmask' -vServer DISABLED
+	 * 
+	 * eg：add ns ip 172.16.0.253 255.255.255.0 -vServer DISABLED
+	 * </pre>
+	 * 
+	 * @param elbParameter
+	 * @throws IOException
+	 */
+	private void configSubnetIPForNetscarler(ELBParameter elbParameter, IpaddressDTO ipaddressDTO) throws IOException {
+		String cmd = "add ns ip " + ipaddressDTO.getDescription() + " 255.255.255.0 -vServer DISABLED";
+		SSHUtil.executeCommand(elbParameter.getUrl(), elbParameter.getUserName(), elbParameter.getPassword(), cmd);
+	}
+
+	private ELBParameter wrapperELBParameter(ElbDTO elbDTO) {
+
+		List<ELBPublicIPParameter> publicIPParameters = new ArrayList<ELBPublicIPParameter>();
+
+		List<Object> policies = getElbPolicyList(elbDTO.getId());
+
+		for (Object obj : policies) {
+
+			List<ELBPolicyParameter> policyParameters = new ArrayList<ELBPolicyParameter>();
+
+			ElbPolicyDTO policyDTO = (ElbPolicyDTO) obj;
+
+			LookUpDTO lookUpDTO = (LookUpDTO) cmdbuildSoapService.findLookUp(policyDTO.getElbProtocol()).getDto();
+
+			ELBPolicyParameter elbPolicyParameter = new ELBPolicyParameter();
+			elbPolicyParameter.setProtocolText(lookUpDTO.getDescription());
+			elbPolicyParameter.setSourcePort(policyDTO.getSourcePort());
+			elbPolicyParameter.setTargetPort(policyDTO.getTargetPort());
+			policyParameters.add(elbPolicyParameter);
+
+			ELBPublicIPParameter publicIPParameter = new ELBPublicIPParameter();
+			publicIPParameter.setIpaddress(policyDTO.getIpaddress());
+			publicIPParameter.getPolicyParameters().addAll(policyParameters);
+			publicIPParameters.add(publicIPParameter);
+		}
+
+		ELBParameter elbParameter = new ELBParameter();
+		IpaddressDTO ipaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(elbDTO.getIpaddress()).getDto();
+		IpaddressDTO manangerIpaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(
+				elbDTO.getManagerIpaddress()).getDto();
+
+		elbParameter.setVip(ipaddressDTO.getDescription());
+		elbParameter.getPublicIPs().addAll(publicIPParameters);
+		elbParameter.setUrl(manangerIpaddressDTO.getDescription());
+		elbParameter.setPort(80);
+		elbParameter.setProtocol("http");
+		elbParameter.setUserName("nsroot");
+		elbParameter.setPassword("nsroot");
+		return elbParameter;
+	}
+
+	private List<Object> getElbPolicyList(Integer elbId) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("EQ_elb", elbId);
+		return cmdbuildSoapService.getElbPolicyList(CMDBuildUtil.wrapperSearchParams(map)).getDtoList().getDto();
+	}
+
+	@Override
+	public WSResult deleteELB(Integer id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

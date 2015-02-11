@@ -16,7 +16,6 @@ public class EipDTO extends ServiceBasicDTO {
 	private Integer eipStatus;
 	private Integer ipaddress;
 	private Integer isp;
-	private Integer router;
 
 	public Integer getBandwidth() {
 		return bandwidth;
@@ -34,10 +33,6 @@ public class EipDTO extends ServiceBasicDTO {
 		return isp;
 	}
 
-	public Integer getRouter() {
-		return router;
-	}
-
 	public void setBandwidth(Integer bandwidth) {
 		this.bandwidth = bandwidth;
 	}
@@ -52,10 +47,6 @@ public class EipDTO extends ServiceBasicDTO {
 
 	public void setIsp(Integer isp) {
 		this.isp = isp;
-	}
-
-	public void setRouter(Integer router) {
-		this.router = router;
 	}
 
 	/**

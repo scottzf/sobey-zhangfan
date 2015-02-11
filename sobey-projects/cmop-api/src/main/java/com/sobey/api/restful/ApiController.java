@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sobey.api.entity.DnsEntity;
 import com.sobey.api.entity.EcsEntity;
 import com.sobey.api.entity.EipEntity;
+import com.sobey.api.entity.ElbEntity;
 import com.sobey.api.entity.Es3Entity;
 import com.sobey.api.entity.FirewallServiceEntity;
 import com.sobey.api.entity.RouterEntity;
@@ -198,30 +199,36 @@ public class ApiController {
 		return servie.findEIP(URLEscape(code), accessKey);
 	}
 
-	@RequestMapping(value = "/allocateEIP/", method = RequestMethod.POST)
-	public WSResult allocateEIP(@RequestParam(value = "isp") String isp, @RequestParam(value = "remark") String remark,
+	@RequestMapping(value = "/createEIP/", method = RequestMethod.POST)
+	public WSResult createEIP(@RequestParam(value = "isp") String isp, @RequestParam(value = "remark") String remark,
 			@RequestParam(value = "bandwidth") String bandwidth, @RequestParam(value = "protocols") String protocols,
 			@RequestParam(value = "sourcePorts") String sourcePorts,
 			@RequestParam(value = "targetPorts") String targetPorts, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.allocateEIP(isp, protocols, sourcePorts, targetPorts, bandwidth, remark, accessKey);
+		return servie.createEIP(isp, protocols, sourcePorts, targetPorts, bandwidth, remark, accessKey);
 	}
 
-	@RequestMapping(value = "/recoverEIP/", method = RequestMethod.POST)
-	public WSResult recoverEIP(@RequestParam(value = "code") String code,
+	@RequestMapping(value = "/deleteEIP/", method = RequestMethod.POST)
+	public WSResult deleteEIP(@RequestParam(value = "code") String code,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.recoverEIP(code, accessKey);
+		return servie.deleteEIP(code, accessKey);
 	}
 
-	@RequestMapping(value = "/associateEIP/", method = RequestMethod.POST)
-	public WSResult associateEIP(@RequestParam(value = "code") String code,
+	@RequestMapping(value = "/bindingEIP/", method = RequestMethod.POST)
+	public WSResult bindingEIP(@RequestParam(value = "code") String code,
 			@RequestParam(value = "serviceCode") String serviceCode, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.associateEIP(code, serviceCode, accessKey);
+		return servie.bindingEIP(code, serviceCode, accessKey);
 	}
 
-	@RequestMapping(value = "/dissociateEIP/", method = RequestMethod.POST)
+	@RequestMapping(value = "/bindingEIPToRouter/", method = RequestMethod.POST)
+	public WSResult bindingEIPToRouter(@RequestParam(value = "eipCode") String eipCode,
+			@RequestParam(value = "routerCode") String routerCode, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.bindingEIPToRouter(eipCode, routerCode, accessKey);
+	}
+
+	@RequestMapping(value = "/unbindingEIP/", method = RequestMethod.POST)
 	public WSResult dissociateEIP(@RequestParam(value = "code") String code,
 			@RequestParam(value = "serviceCode") String serviceCode, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.dissociateEIP(code, serviceCode, accessKey);
+		return servie.unbindingEIP(code, serviceCode, accessKey);
 	}
 
 	@RequestMapping(value = "/VMRCResult/{ecsCode}/{accessKey}", method = RequestMethod.GET)
@@ -240,6 +247,26 @@ public class ApiController {
 	public DTOListResult<ZItemDTO> getHistoryData(@PathVariable("ecsCode") String ecsCode,
 			@PathVariable("itemKey") String itemKey, @PathVariable("accessKey") String accessKey) {
 		return servie.getHistoryData(URLEscape(ecsCode), itemKey, accessKey);
+	}
+
+	/********** EIP ***********/
+
+	@RequestMapping(value = "/ELBResult/{elbCode}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<ElbEntity> ELBResult(@PathVariable("elbCode") String elbCode,
+			@PathVariable("accessKey") String accessKey) {
+		return servie.findELB(URLEscape(elbCode), accessKey);
+	}
+
+	@RequestMapping(value = "/createELB/", method = RequestMethod.POST)
+	public WSResult createELB(@RequestParam(value = "ecsCodes") String ecsCodes,
+			@RequestParam(value = "protocols") String protocols, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.createELB(ecsCodes, protocols, accessKey);
+	}
+
+	@RequestMapping(value = "/deleteELB/", method = RequestMethod.POST)
+	public WSResult deleteELB(@RequestParam(value = "elbCode") String elbCode,
+			@RequestParam(value = "accessKey") String accessKey) {
+		return servie.deleteELB(elbCode, accessKey);
 	}
 
 }

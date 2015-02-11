@@ -3,6 +3,7 @@ package com.sobey.api.service;
 import com.sobey.api.entity.DnsEntity;
 import com.sobey.api.entity.EcsEntity;
 import com.sobey.api.entity.EipEntity;
+import com.sobey.api.entity.ElbEntity;
 import com.sobey.api.entity.Es3Entity;
 import com.sobey.api.entity.FirewallServiceEntity;
 import com.sobey.api.entity.RouterEntity;
@@ -78,20 +79,30 @@ public interface RestfulService {
 	/******** EIP ********/
 	public DTOResult<EipEntity> findEIP(String eipCode, String accessKey);
 
-	public WSResult allocateEIP(String isp, String protocols, String sourcePorts, String targetPorts, String bandwidth,
+	public WSResult createEIP(String isp, String protocols, String sourcePorts, String targetPorts, String bandwidth,
 			String remark, String accessKey);
 
-	public WSResult recoverEIP(String eipCode, String accessKey);
+	public WSResult deleteEIP(String eipCode, String accessKey);
 
-	public WSResult associateEIP(String eipCode, String serviceCode, String accessKey);
+	public WSResult bindingEIP(String eipCode, String serviceCode, String accessKey);
 
-	public WSResult dissociateEIP(String eipCode, String serviceCode, String accessKey);
+	public WSResult unbindingEIP(String eipCode, String serviceCode, String accessKey);
+
+	public WSResult bindingEIPToRouter(String eipCode, String routerCode, String accessKey);
 
 	/******** VMRC ********/
 	public DTOResult<VMRCEntity> findVMRC(String ecsCode, String accessKey);
 
+	/******** Zabbix ********/
 	public DTOResult<ZItemDTO> getCurrentData(String ecsCode, String itemKey, String accessKey);
 
 	public DTOListResult<ZItemDTO> getHistoryData(String ecsCode, String itemKey, String accessKey);
+
+	/******** ELB ********/
+	public DTOResult<ElbEntity> findELB(String elbCode, String accessKey);
+
+	public WSResult createELB(String ecsCodes, String protocols, String accessKey);
+
+	public WSResult deleteELB(String elbCode, String accessKey);
 
 }
