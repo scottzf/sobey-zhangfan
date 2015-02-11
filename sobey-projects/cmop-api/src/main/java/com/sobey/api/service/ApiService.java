@@ -68,6 +68,8 @@ public interface ApiService {
 
 	public WSResult bindingEIP(EipDTO eipDTO, ServiceDTO serviceDTO);
 
+	public WSResult bindingEIPToRouter(EipDTO eipDTO, RouterDTO routerDTO);
+
 	public WSResult unbindingEIP(EipDTO eipDTO, ServiceDTO serviceDTO);
 
 	// ==================== DNS ====================//

@@ -929,7 +929,6 @@ public class ApiServiceImpl implements ApiService {
 		ConfigRouterStaticParameters configRouterStaticParameters = new ConfigRouterStaticParameters();
 		configRouterStaticParameters.getConfigRouterStaticParameters().addAll(staticParameters);
 		firewallSoapService.configRouterStaticParameterListByFirewall(configRouterStaticParameters);
-
 	}
 
 	/**
@@ -1486,6 +1485,48 @@ public class ApiServiceImpl implements ApiService {
 		return result;
 	}
 
+	@Override
+	public WSResult bindingEIPToRouter(EipDTO eipDTO, RouterDTO routerDTO) {
+
+		WSResult result = new WSResult();
+
+		IpaddressDTO managerIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(routerDTO.getIpaddress()).getDto();
+		IpaddressDTO internetIP = (IpaddressDTO) cmdbuildSoapService.findIpaddress(eipDTO.getIpaddress()).getDto();
+		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(routerDTO.getTenants()).getDto();
+
+		routerDTO.setEip(eipDTO.getId());
+		cmdbuildSoapService.updateRouter(routerDTO.getId(), routerDTO);
+
+		// 给vRouter绑定一个电信的端口组
+		String vmName = generateVMName(tenantsDTO, managerIP);
+
+		BindingDVSPortGroupParameter bindingDVSPortGroupParameter = new BindingDVSPortGroupParameter();
+		bindingDVSPortGroupParameter.setDatacenter(datacenter);
+		bindingDVSPortGroupParameter.setVmName(vmName);
+		bindingDVSPortGroupParameter.setPortGroupName(ConstansData.CTC_DEFAULT_PORTGROUPNAME);
+		bindingDVSPortGroupParameter.setPortIndex(ConstansData.CTC_DEFAULT_PORTNO);
+		instanceSoapService.bindingDVSPortGroupByInstance(bindingDVSPortGroupParameter);
+
+		// 在防火墙中添加电信的接口
+		List<ConfigSystemInterfaceParameter> parameters = new ArrayList<ConfigSystemInterfaceParameter>();
+		ConfigSystemInterfaceParameter configSystemInterfaceParameter = new ConfigSystemInterfaceParameter();
+		configSystemInterfaceParameter.setSubnetMask("255.255.255.0");
+		configSystemInterfaceParameter.setGateway(internetIP.getDescription());// 公网IP
+		configSystemInterfaceParameter.setInterfaceName("port8"); // TODO "port8" 为防火墙->网络->接口名,电信接口,写死.后续视情况决定是否抽象成常量.
+		parameters.add(configSystemInterfaceParameter);
+
+		ConfigSystemInterfaceParameters configSystemInterfaceParameters = new ConfigSystemInterfaceParameters();
+		configSystemInterfaceParameters.setUrl(managerIP.getDescription());
+		configSystemInterfaceParameters.setUserName(ConstansData.firewall_username);
+		configSystemInterfaceParameters.setPassword(ConstansData.firewall_password);
+		configSystemInterfaceParameters.getConfigSystemInterfaceParameters().addAll(parameters);
+		firewallSoapService.configSystemInterfaceListByFirewall(configSystemInterfaceParameters);
+
+		result.setMessage("EIP关联Router成功");
+		return result;
+
+	}
+
 	/**
 	 * EipDTO -> EIPParameter
 	 *
@@ -1927,6 +1968,7 @@ public class ApiServiceImpl implements ApiService {
 
 		// 管理IP
 		// IpaddressDTO manangerIpaddressDTO = findAvailableManagerIPAddressDTO();
+		// TODO 临时,因为netscarler的管理IP无法修改,故只能采用写死的方法.后面一定要修改!!!!!!!!!
 		IpaddressDTO manangerIpaddressDTO = (IpaddressDTO) cmdbuildSoapService.findIpaddress(9191).getDto();
 
 		if (manangerIpaddressDTO == null) {
@@ -2063,4 +2105,5 @@ public class ApiServiceImpl implements ApiService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 }
