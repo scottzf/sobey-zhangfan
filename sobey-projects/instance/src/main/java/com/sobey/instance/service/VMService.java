@@ -75,7 +75,7 @@ public class VMService extends VMWareService {
 
 	private static Logger logger = LoggerFactory.getLogger(VMService.class);
 
-	private static final String OrgNme = "Administrator";
+	private static final String OrgNme = "Sobey";
 
 	/**
 	 * 克隆Firewall或netscarler等网络设备.
@@ -657,7 +657,7 @@ public class VMService extends VMWareService {
 			CustomizationSysprep winSysprep = new CustomizationSysprep();
 
 			CustomizationGuiUnattended guiUnattended = new CustomizationGuiUnattended();
-			guiUnattended.setAutoLogon(true);
+			guiUnattended.setAutoLogon(false);
 			guiUnattended.setAutoLogonCount(1);
 			// 210为windows系统下的东八区时区标示,详情参考 http://msdn.microsoft.com/en-us/library/ms912391%28v=winembedded.11%29.aspx
 			guiUnattended.setTimeZone(210);
