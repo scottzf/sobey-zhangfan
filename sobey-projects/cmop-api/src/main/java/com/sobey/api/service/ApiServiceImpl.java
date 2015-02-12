@@ -69,7 +69,6 @@ import com.sobey.generate.instance.CreatePortGroupParameter;
 import com.sobey.generate.instance.DestroyVMParameter;
 import com.sobey.generate.instance.InstanceSoapService;
 import com.sobey.generate.instance.PowerVMParameter;
-import com.sobey.generate.instance.RenameVMParameter;
 import com.sobey.generate.instance.RunNetworkDeviceVMParameter;
 import com.sobey.generate.instance.RunVMParameter;
 import com.sobey.generate.instance.VMDiskParameter;
@@ -519,11 +518,6 @@ public class ApiServiceImpl implements ApiService {
 		TenantsDTO tenantsDTO = (TenantsDTO) cmdbuildSoapService.findTenants(subnetDTO.getTenants()).getDto();
 		LookUpDTO OsType = (LookUpDTO) cmdbuildSoapService.findLookUp(ecsSpecDTO.getOsType()).getDto();
 
-		boolean flag = true;
-		if (ecsSpecDTO.getDescription().equals("MediaInstance") || ecsSpecDTO.getDescription().equals("MediaInstance_Application")) {
-			flag = false;
-		}
-
 		// Step.2 创建ECS
 
 		// 从子网中选择一个IP.
@@ -543,15 +537,7 @@ public class ApiServiceImpl implements ApiService {
 		runVMParameter.setVmName(vmName);
 		runVMParameter.setVmTemplateOS(OsType.getDescription());
 
-		if (flag) {
-			instanceSoapService.runVMByInstance(runVMParameter);
-		} else {
-			RenameVMParameter renameVMParameter = new RenameVMParameter();
-			renameVMParameter.setDatacenter(datacenter);
-			renameVMParameter.setTempVMName(producedDTO.getDescription());
-			renameVMParameter.setVmName(vmName);
-			instanceSoapService.renameVMByInstance(renameVMParameter);
-		}
+		instanceSoapService.runVMByInstance(runVMParameter);
 
 		// 将VM移动到租户的文件夹中.
 		instanceSoapService.createFolderOnParentByInstance(datacenter, tenantsDTO.getCode(), Tenants_Folder_Name);
@@ -566,9 +552,8 @@ public class ApiServiceImpl implements ApiService {
 		bindingPortGroupParameter.setDatacenter(datacenter);
 		bindingPortGroupParameter.setPortGroupName(vlanDTO.getDescription());
 		bindingPortGroupParameter.setVmName(vmName);
-		if (flag) {
-			instanceSoapService.bindingPortGroupByInstance(bindingPortGroupParameter);
-		}
+
+		instanceSoapService.bindingPortGroupByInstance(bindingPortGroupParameter);
 
 		// Step.5 保存至CMDB
 
