@@ -1961,6 +1961,22 @@ public class ApiServiceImpl implements ApiService {
 			return result;
 		}
 
+		// TODO 老朱临时创建的netscarler所在的宿主机
+		ServerDTO serverDTO = (ServerDTO) cmdbuildSoapService.findServer(2042).getDto();
+		VlanDTO vlanDTO = findSuitableVlanDTO(serverDTO, defaultSubnetDTO);// 添加端口组
+
+		System.out.println(vlanDTO.getDescription());
+		// TODO 为netscarler绑定端口组
+
+		BindingNetworkDevicePortGroupParameter bindingNetworkDevicePortGroupParameter = new BindingNetworkDevicePortGroupParameter();
+
+		bindingNetworkDevicePortGroupParameter.setDatacenter(datacenter);
+		bindingNetworkDevicePortGroupParameter.setPortGroupName(vlanDTO.getDescription());
+		bindingNetworkDevicePortGroupParameter.setVmName(manangerIpaddressDTO.getDescription());
+		bindingNetworkDevicePortGroupParameter.setPortIndex(2);
+
+		instanceSoapService.bindingNetworkDevicePortGroupByInstance(bindingNetworkDevicePortGroupParameter);
+
 		// 更改管理IP状态
 		cmdbuildSoapService.allocateIpaddress(manangerIpaddressDTO.getId());
 
