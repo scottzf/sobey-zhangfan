@@ -23,6 +23,5 @@
 		<module>dns</module>
 		<module>cmop-api</module>
 		<module>zabbix</module>
-		<module>sdn</module>
 	</modules>
 </project>
