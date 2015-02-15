@@ -14,6 +14,7 @@
 				<ref bean="elbTrigger" />
 				<ref bean="netappTrigger" />
 				<ref bean="vmTrigger" />
+				<ref bean="producedTrigger" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -26,12 +27,28 @@
 		<property name="startupDelay" value="2" />
 	</bean>
 
+	<!-- Produced -->
+	<!-- Cron式Trigger定义 -->
+	<bean id="producedTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="producedJobDetail" />
+		<!-- 每天23点执行一次 -->
+		<property name="cronExpression" value="0 0 23 * * ?" />
+		<!-- [秒] [分] [小时] [日] [月] [周] [年] -->
+	</bean>
+
+	<!-- JobDetajil, 基于MethodInvokingJobDetailFactoryBean调用普通Spring Bean -->
+	<bean id="producedJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="scanner" />
+		<property name="targetMethod" value="createProduced" />
+		<!-- 同一任务在前一次执行未完成而Trigger时间又到时是否并发开始新的执行, 默认为true. -->
+		<property name="concurrent" value="true" />
+	</bean>
+
 	<!-- DNS -->
 	<!-- Cron式Trigger定义 -->
 	<bean id="dnsTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="dnsJobDetail" />
-		<!-- 周一至五,朝九晚五工作时间内每半小时执行一次 -->
-		<property name="cronExpression" value="0 0/30 9-17 ? * MON-FRI" />
+		<property name="cronExpression" value="0 0 23 * * ?" />
 	</bean>
 
 	<!-- JobDetajil, 基于MethodInvokingJobDetailFactoryBean调用普通Spring Bean -->
@@ -46,8 +63,7 @@
 	<!-- ELB -->
 	<bean id="elbTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="elbJobDetail" />
-		<!-- 周一至五,朝九晚五工作时间内每半小时执行一次 -->
-		<property name="cronExpression" value="0 0/30 9-17 ? * MON-FRI" />
+		<property name="cronExpression" value="0 0 23 * * ?" />
 	</bean>
 
 	<bean id="elbJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -60,8 +76,7 @@
 	<!-- VM -->
 	<bean id="vmTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="vmJobDetail" />
-		<!-- 周一至五,朝九晚五工作时间内每半小时执行一次 -->
-		<property name="cronExpression" value="0 0/30 9-17 ? * MON-FRI" />
+		<property name="cronExpression" value="0 0 23 * * ?" />
 	</bean>
 
 	<bean id="vmJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -74,8 +89,7 @@
 	<!-- netapp -->
 	<bean id="netappTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="netappJobDetail" />
-		<!-- 周一至五,朝九晚五工作时间内每半小时执行一次 -->
-		<property name="cronExpression" value="0 0/30 9-17 ? * MON-FRI" />
+		<property name="cronExpression" value="0 0 23 * * ?" />
 	</bean>
 
 	<bean id="netappJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">

@@ -14,7 +14,6 @@ import com.google.common.collect.Maps;
 import com.sobey.cmdbuild.constants.CMDBuildConstants;
 import com.sobey.cmdbuild.data.TestData;
 import com.sobey.cmdbuild.entity.MapEcsEs3;
-import com.sobey.cmdbuild.service.iaas.MapEcsEs3Service;
 
 /**
  * MapEcsEs3 的测试用例,测试sevice层的业务逻辑

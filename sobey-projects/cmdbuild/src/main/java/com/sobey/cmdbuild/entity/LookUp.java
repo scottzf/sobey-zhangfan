@@ -10,37 +10,15 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "\"LookUp\"", schema = "public")
 public class LookUp extends BasicEntity {
 
-	private String parentType;
-	private Integer parentId;
-	private Integer number;
 	private Boolean isDefault;
+	private Integer number;
+	private Integer parentId;
+	private String parentType;
 	private String type;
 
-	@Column(name = "\"Type\"", length = 64)
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	@Column(name = "\"ParentType\"", length = 64)
-	public String getParentType() {
-		return parentType;
-	}
-
-	public void setParentType(String parentType) {
-		this.parentType = parentType;
-	}
-
-	@Column(name = "\"ParentId\"")
-	public Integer getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(Integer parentId) {
-		this.parentId = parentId;
+	@Column(name = "\"IsDefault\"")
+	public Boolean getIsDefault() {
+		return isDefault;
 	}
 
 	@Column(name = "\"Number\"")
@@ -48,17 +26,39 @@ public class LookUp extends BasicEntity {
 		return number;
 	}
 
-	public void setNumber(Integer number) {
-		this.number = number;
+	@Column(name = "\"ParentId\"")
+	public Integer getParentId() {
+		return parentId;
 	}
 
-	@Column(name = "\"IsDefault\"")
-	public Boolean getIsDefault() {
-		return isDefault;
+	@Column(name = "\"ParentType\"", length = 64)
+	public String getParentType() {
+		return parentType;
+	}
+
+	@Column(name = "\"Type\"", length = 64)
+	public String getType() {
+		return type;
 	}
 
 	public void setIsDefault(Boolean isDefault) {
 		this.isDefault = isDefault;
+	}
+
+	public void setNumber(Integer number) {
+		this.number = number;
+	}
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
+
+	public void setParentType(String parentType) {
+		this.parentType = parentType;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }

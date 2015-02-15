@@ -1,16 +1,13 @@
 package com.sobey.cmdbuild.webservice.response.dto.basic;
 
-import com.sobey.cmdbuild.webservice.response.dto.IdcDTO;
-import com.sobey.cmdbuild.webservice.response.dto.TenantsDTO;
+import java.util.Date;
 
 public abstract class ServiceBasicDTO extends BasicDTO {
 
 	protected Integer agentType;
-	protected String agentTypeText;
+	protected Date createTime;
 	protected Integer idc;
-	protected IdcDTO idcDTO;
 	protected Integer tenants;
-	protected TenantsDTO tenantsDTO;
 
 	public Integer getAgentType() {
 		return agentType;
@@ -20,12 +17,12 @@ public abstract class ServiceBasicDTO extends BasicDTO {
 		this.agentType = agentType;
 	}
 
-	public String getAgentTypeText() {
-		return agentTypeText;
+	public Date getCreateTime() {
+		return createTime;
 	}
 
-	public void setAgentTypeText(String agentTypeText) {
-		this.agentTypeText = agentTypeText;
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 
 	public Integer getIdc() {
@@ -36,28 +33,12 @@ public abstract class ServiceBasicDTO extends BasicDTO {
 		this.idc = idc;
 	}
 
-	public IdcDTO getIdcDTO() {
-		return idcDTO;
-	}
-
-	public void setIdcDTO(IdcDTO idcDTO) {
-		this.idcDTO = idcDTO;
-	}
-
 	public Integer getTenants() {
 		return tenants;
 	}
 
 	public void setTenants(Integer tenants) {
 		this.tenants = tenants;
-	}
-
-	public TenantsDTO getTenantsDTO() {
-		return tenantsDTO;
-	}
-
-	public void setTenantsDTO(TenantsDTO tenantsDTO) {
-		this.tenantsDTO = tenantsDTO;
 	}
 
 }

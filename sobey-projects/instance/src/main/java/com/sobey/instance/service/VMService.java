@@ -1,7 +1,6 @@
 package com.sobey.instance.service;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,17 +12,20 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Maps;
 import com.sobey.core.utils.MathsUtil;
-import com.sobey.core.utils.PropertiesLoader;
-import com.sobey.instance.constans.DataCenterEnum;
+import com.sobey.instance.constans.PowerOperationEnum;
 import com.sobey.instance.webservice.response.dto.CloneVMParameter;
-import com.sobey.instance.webservice.response.dto.CreateVMDiskParameter;
-import com.sobey.instance.webservice.response.dto.DeleteVMDiskParameter;
+import com.sobey.instance.webservice.response.dto.CustomizeVMParameter;
 import com.sobey.instance.webservice.response.dto.DestroyVMParameter;
-import com.sobey.instance.webservice.response.dto.HostInfoDTO;
 import com.sobey.instance.webservice.response.dto.PowerVMParameter;
 import com.sobey.instance.webservice.response.dto.ReconfigVMParameter;
 import com.sobey.instance.webservice.response.dto.RelationVMParameter;
+import com.sobey.instance.webservice.response.dto.RenameVMParameter;
+import com.sobey.instance.webservice.response.dto.RunNetworkDeviceVMParameter;
+import com.sobey.instance.webservice.response.dto.RunVMParameter;
 import com.sobey.instance.webservice.response.dto.VMInfoDTO;
+import com.sobey.instance.webservice.response.result.DTOListResult;
+import com.sobey.instance.webservice.response.result.DTOResult;
+import com.sobey.instance.webservice.response.result.WSResult;
 import com.vmware.vim25.CustomizationAdapterMapping;
 import com.vmware.vim25.CustomizationFixedIp;
 import com.vmware.vim25.CustomizationFixedName;
@@ -37,1187 +39,916 @@ import com.vmware.vim25.CustomizationLinuxOptions;
 import com.vmware.vim25.CustomizationLinuxPrep;
 import com.vmware.vim25.CustomizationPassword;
 import com.vmware.vim25.CustomizationSpec;
-import com.vmware.vim25.CustomizationSpecInfo;
-import com.vmware.vim25.CustomizationSpecItem;
 import com.vmware.vim25.CustomizationSysprep;
 import com.vmware.vim25.CustomizationSysprepRebootOption;
 import com.vmware.vim25.CustomizationUserData;
 import com.vmware.vim25.CustomizationWinOptions;
-import com.vmware.vim25.DVPortgroupConfigSpec;
-import com.vmware.vim25.DatastoreSummary;
-import com.vmware.vim25.DistributedVirtualSwitchPortConnection;
 import com.vmware.vim25.GuestNicInfo;
-import com.vmware.vim25.InvalidProperty;
 import com.vmware.vim25.ManagedObjectReference;
-import com.vmware.vim25.RuntimeFault;
-import com.vmware.vim25.TaskInfo;
-import com.vmware.vim25.TaskInfoState;
-import com.vmware.vim25.VMwareDVSPortSetting;
 import com.vmware.vim25.VirtualDevice;
-import com.vmware.vim25.VirtualDeviceConfigSpec;
-import com.vmware.vim25.VirtualDeviceConfigSpecFileOperation;
-import com.vmware.vim25.VirtualDeviceConfigSpecOperation;
-import com.vmware.vim25.VirtualDeviceConnectInfo;
 import com.vmware.vim25.VirtualDisk;
-import com.vmware.vim25.VirtualDiskFlatVer2BackingInfo;
 import com.vmware.vim25.VirtualEthernetCard;
-import com.vmware.vim25.VirtualEthernetCardDistributedVirtualPortBackingInfo;
 import com.vmware.vim25.VirtualHardware;
 import com.vmware.vim25.VirtualMachineCloneSpec;
 import com.vmware.vim25.VirtualMachineConfigInfo;
 import com.vmware.vim25.VirtualMachineConfigSpec;
 import com.vmware.vim25.VirtualMachineRelocateSpec;
 import com.vmware.vim25.VirtualMachineRuntimeInfo;
-import com.vmware.vim25.VirtualVmxnet3;
-import com.vmware.vim25.VmwareDistributedVirtualSwitchVlanIdSpec;
-import com.vmware.vim25.mo.ComputeResource;
-import com.vmware.vim25.mo.CustomizationSpecManager;
-import com.vmware.vim25.mo.Datacenter;
 import com.vmware.vim25.mo.Datastore;
-import com.vmware.vim25.mo.DistributedVirtualPortgroup;
-import com.vmware.vim25.mo.DistributedVirtualSwitch;
 import com.vmware.vim25.mo.Folder;
 import com.vmware.vim25.mo.HostSystem;
 import com.vmware.vim25.mo.InventoryNavigator;
 import com.vmware.vim25.mo.ManagedEntity;
-import com.vmware.vim25.mo.Network;
 import com.vmware.vim25.mo.ServiceInstance;
 import com.vmware.vim25.mo.Task;
 import com.vmware.vim25.mo.VirtualMachine;
 import com.vmware.vim25.mo.util.MorUtil;
 
+/**
+ * VM Service
+ * 
+ * @author Administrator
+ *
+ */
 @Service
-public class VMService {
+public class VMService extends VMWareService {
 
 	private static Logger logger = LoggerFactory.getLogger(VMService.class);
 
-	/**
-	 * 加载applicationContext.propertie文件
-	 */
-	private static PropertiesLoader INSTANCE_LOADER = new PropertiesLoader("classpath:/instance.properties");
-
-	/* 脚本参数 */
+	private static final String OrgNme = "Administrator";
 
 	/**
-	 * windows模板默认密码.
-	 */
-	private static final String WINDOWS_DEFAULT_PASSWORD = INSTANCE_LOADER.getProperty("WINDOWS_DEFAULT_PASSWORD");
-
-	/********** 成都 ***********/
-	/**
-	 * IP
-	 */
-	private static final String INSTANCE_IP_CD = INSTANCE_LOADER.getProperty("INSTANCE_IP_CD");
-
-	/**
-	 * Username
-	 */
-	private static final String INSTANCE_USERNAME_CD = INSTANCE_LOADER.getProperty("INSTANCE_USERNAME_CD");
-
-	/**
-	 * password
-	 */
-	private static final String INSTANCE_PASSWORD_CD = INSTANCE_LOADER.getProperty("INSTANCE_PASSWORD_CD");
-
-	/********** 西安 ***********/
-	/**
-	 * IP
-	 */
-	private static final String INSTANCE_IP_XA = INSTANCE_LOADER.getProperty("INSTANCE_IP_XA");
-
-	/**
-	 * Username
-	 */
-	private static final String INSTANCE_USERNAME_XA = INSTANCE_LOADER.getProperty("INSTANCE_USERNAME_XA");
-
-	/**
-	 * password
-	 */
-	private static final String INSTANCE_PASSWORD_XA = INSTANCE_LOADER.getProperty("INSTANCE_PASSWORD_XA");
-
-	/********** 西安2 ***********/
-	/**
-	 * IP
-	 */
-	private static final String INSTANCE_IP_XA2 = INSTANCE_LOADER.getProperty("INSTANCE_IP_XA2");
-
-	/**
-	 * Username
-	 */
-	private static final String INSTANCE_USERNAME_XA2 = INSTANCE_LOADER.getProperty("INSTANCE_USERNAME_XA2");
-
-	/**
-	 * password
-	 */
-	private static final String INSTANCE_PASSWORD_XA2 = INSTANCE_LOADER.getProperty("INSTANCE_PASSWORD_XA2");
-
-	/**
-	 * 网卡名
-	 */
-	private static final String INSTANCE_NIC_NAME = INSTANCE_LOADER.getProperty("INSTANCE_NIC_NAME");
-
-	/**
-	 * 分布式交换机名
-	 */
-	private static final String INSTANCE_DVS_NAME = INSTANCE_LOADER.getProperty("INSTANCE_DVS_NAME");
-
-	public boolean addDVSPortGroup(Integer vlanId, String datacenter) {
-
-		boolean flag = false;
-
-		// 先判断vcneter中是否有该端口组.如果有则返回false.
-		if (getNetworkList(datacenter).contains(getPortGroupName(vlanId))) {
-			return flag;
-		}
-
-		try {
-
-			ServiceInstance si = getServiceInstance(datacenter);
-
-			DistributedVirtualSwitch dvs = (DistributedVirtualSwitch) new InventoryNavigator(si.getRootFolder())
-					.searchManagedEntity("DistributedVirtualSwitch", INSTANCE_DVS_NAME);
-
-			if (dvs == null) {
-				return flag;
-			}
-
-			// create port group under this DVS
-			DVPortgroupConfigSpec[] dvpgs = new DVPortgroupConfigSpec[1];
-			dvpgs[0] = new DVPortgroupConfigSpec();
-			dvpgs[0].setName(getPortGroupName(vlanId));
-			dvpgs[0].setNumPorts(128);
-			dvpgs[0].setType("earlyBinding");
-			VMwareDVSPortSetting vport = new VMwareDVSPortSetting();
-			dvpgs[0].setDefaultPortConfig(vport);
-
-			VmwareDistributedVirtualSwitchVlanIdSpec vlan = new VmwareDistributedVirtualSwitchVlanIdSpec();
-			vport.setVlan(vlan);
-			vlan.setInherited(false);
-			vlan.setVlanId(vlanId);
-
-			Task task_pg = dvs.addDVPortgroup_Task(dvpgs);
-
-			TaskInfo ti = waitFor(task_pg);
-
-			if (ti.getState() == TaskInfoState.error) {
-				logger.info("Failed to create a new DVS. Vlan Id is:" + vlanId);
-				return flag;
-			}
-
-		} catch (RemoteException e) {
-			logger.info("RemoteException::addDVSPortGroup::" + e);
-		} catch (MalformedURLException e) {
-			logger.info("MalformedURLException::addDVSPortGroup::" + e);
-		} catch (InterruptedException e) {
-			logger.info("InterruptedException::addDVSPortGroup::" + e);
-		}
-
-		return true;
-
-	}
-
-	private static TaskInfo waitFor(Task task) throws RemoteException, InterruptedException {
-		while (true) {
-			TaskInfo ti = task.getTaskInfo();
-			TaskInfoState state = ti.getState();
-			if (state == TaskInfoState.success || state == TaskInfoState.error) {
-				return ti;
-			}
-			Thread.sleep(1000);
-		}
-	}
-
-	/**
-	 * 所有的网络设备名称的集合
+	 * 克隆Firewall或netscarler等网络设备.
 	 * 
-	 * @param datacenter
-	 *            数据中心
+	 * 根据vCenter中的网络设备模板进行克隆,不需要进行CustomizationSpec的配置
+	 * 
+	 * @param parameter
+	 *            {@link CloneVMParameter}
 	 * @return
 	 */
-	private List<String> getNetworkList(String datacenter) {
+	public WSResult cloneVM(CloneVMParameter parameter) {
 
-		List<String> list = new ArrayList<String>();
-		Datacenter dc = null;
-		List<Network> networks = new ArrayList<Network>();
+		WSResult result = new WSResult();
 
-		Folder rootFolder;
+		ServiceInstance si;
+
 		try {
-
-			rootFolder = getServiceInstance(datacenter).getRootFolder();
-
-			ManagedEntity[] datacenters = rootFolder.getChildEntity();
-
-			// 获得数据中心
-			for (int i = 0; i < datacenters.length; i++) {
-				if (datacenters[i] instanceof Datacenter) {
-					dc = (Datacenter) datacenters[i];
-					break;
-				}
-			}
-
-			// 获得网络
-			for (ManagedEntity entity : dc.getNetworkFolder().getChildEntity()) {
-				if (entity instanceof Network) {
-					networks.add(((Network) entity));
-				}
-			}
-
-			for (Network each : networks) {
-				list.add(each.getName());
-			}
-
+			si = getServiceInstance(parameter.getDatacenter());
 		} catch (RemoteException | MalformedURLException e) {
-			logger.info("Exception::getNetworkList::" + e);
+			logger.info("cloneVM::远程连接失败或错误的URL");
+			result.setError(WSResult.SYSTEM_ERROR, ServiceInstance_Init_Error);
+			return result;
 		}
 
-		return list;
-	}
-
-	/**
-	 * 
-	 * 
-	 * @param vmName
-	 *            虚拟机名
-	 * @param portGroupName
-	 *            分布式端口组名
-	 * @param nicName
-	 *            网卡名(一般是默认的,名字由配置文件中读取)
-	 * @return
-	 */
-
-	/**
-	 * 为虚拟机分配分布式端口组
-	 * 
-	 * @param datacenter
-	 *            数据中心
-	 * @param vmName
-	 *            虚拟机名
-	 * @param vlanId
-	 *            vlan Id
-	 * @return
-	 */
-	public boolean changeVlan(String datacenter, String vmName, Integer vlanId) {
-
-		boolean retVal = false;
-
-		String portGroupName = getPortGroupName(vlanId);
-
-		try {
-			ServiceInstance si = getServiceInstance(datacenter);
-
-			VirtualMachine vm = getVirtualMachine(si, vmName);
-
-			Folder rootFolder = si.getRootFolder();
-
-			Network network = (Network) new InventoryNavigator(rootFolder)
-					.searchManagedEntity("Network", portGroupName);
-
-			if (network == null) {
-				logger.info("Error::changeVlan::Could not find network," + portGroupName + " 不存在");
-				return retVal;
-			}
-
-			ManagedEntity[] entity = new InventoryNavigator(rootFolder)
-					.searchManagedEntities("DistributedVirtualSwitch");
-
-			DistributedVirtualSwitch dvs = null;
-			String key = "";
-			boolean found = false;
-
-			for (ManagedEntity me : entity) {
-
-				if (me instanceof DistributedVirtualSwitch) {
-
-					DistributedVirtualSwitch tmpDvs = (DistributedVirtualSwitch) me;
-					DistributedVirtualPortgroup[] vpgs = tmpDvs.getPortgroup();
-
-					for (DistributedVirtualPortgroup vpg : vpgs) {
-						// 查找是否有分布式端口组.
-						if (portGroupName.equals(vpg.getName())) {
-							key = vpg.getConfig().getKey();
-							dvs = tmpDvs;
-							found = true;
-							break;
-						}
-					}
-
-					if (found) {
-						break;
-					}
-				}
-			}
-
-			VirtualMachineConfigSpec vmSpec = new VirtualMachineConfigSpec();
-
-			VirtualMachineConfigInfo vmConfigInfo = vm.getConfig();
-
-			String uuid = dvs.getConfig().getUuid();
-
-			ArrayList<VirtualDeviceConfigSpec> nicSpecList = new ArrayList<VirtualDeviceConfigSpec>();
-
-			VirtualDevice[] vds = vmConfigInfo.getHardware().getDevice();
-			for (VirtualDevice vd : vds) {
-				if (vd instanceof VirtualEthernetCard) {
-
-					VirtualDeviceConfigSpec nicSpec = new VirtualDeviceConfigSpec();
-					nicSpec.setOperation(VirtualDeviceConfigSpecOperation.edit);
-
-					VirtualEthernetCard nic = (VirtualEthernetCard) vd;
-
-					if (nic.getDeviceInfo().getLabel().equalsIgnoreCase(INSTANCE_NIC_NAME)) {
-
-						VirtualEthernetCard newNic = new VirtualVmxnet3();
-						newNic.setKey(nic.getKey());
-						newNic.setDeviceInfo(nic.getDeviceInfo());
-
-						newNic.getDeviceInfo().setLabel(INSTANCE_NIC_NAME);
-
-						VirtualEthernetCardDistributedVirtualPortBackingInfo backing9 = new VirtualEthernetCardDistributedVirtualPortBackingInfo();
-
-						DistributedVirtualSwitchPortConnection port10 = new DistributedVirtualSwitchPortConnection();
-						port10.setSwitchUuid(uuid);
-						port10.setPortgroupKey(key);
-						backing9.setPort(port10);
-
-						newNic.setBacking(backing9);
-						newNic.setAddressType("assigned");
-						newNic.setMacAddress(nic.getMacAddress());
-						newNic.setControllerKey(nic.getControllerKey());
-						newNic.setUnitNumber(nic.getUnitNumber());
-
-						VirtualDeviceConnectInfo connectable11 = new VirtualDeviceConnectInfo();
-						connectable11.startConnected = true;
-						connectable11.allowGuestControl = true;
-						connectable11.connected = true;
-						connectable11.status = "untried";
-
-						newNic.setConnectable(connectable11);
-
-						// System.out.println("Setting UUID: " + uuid);
-						// System.out.println("Setting portgroupKey: " + key);
-
-						nicSpec.setDevice(newNic);
-
-						nicSpecList.add(nicSpec);
-
-					}
-
-				}
-			}
-
-			VirtualDeviceConfigSpec[] configSpec = new VirtualDeviceConfigSpec[nicSpecList.size()];
-			nicSpecList.toArray(configSpec);
-
-			vmSpec.setDeviceChange(configSpec);
-
-			Task vmTask = vm.reconfigVM_Task(vmSpec);
-
-			String result = vmTask.waitForTask();
-
-			retVal = result.equals(Task.SUCCESS);
-
-		} catch (Exception e) {
-			logger.info("Exception::changeVlan::" + e);
-		}
-
-		return retVal;
-	}
-
-	/**
-	 * 删除为VM分配存储空间
-	 * 
-	 * @param parameter
-	 * @return
-	 */
-	public boolean deleteVMDisk(DeleteVMDiskParameter parameter) {
+		// 获得模板对象
+		VirtualMachine vm = null;
 
 		try {
 
-			ServiceInstance si = getServiceInstance(parameter.getDatacenter());
-
-			VirtualMachine vm = getVirtualMachine(si, parameter.getVmName());
-
-			VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
-
-			String dsName = getFreeDatastoreName(vm, Long.valueOf(parameter.getDiskSize()));
-			String diskName = parameter.getDiskName();
-			String fileName = "[" + dsName + "] " + vm.getName() + "/" + diskName + ".vmdk";
-
-			VirtualDeviceConfigSpec vdiskSpec = createRemoveDiskConfigSpec(vm.getConfig(), fileName);
-			vmConfigSpec.setDeviceChange(new VirtualDeviceConfigSpec[] { vdiskSpec });
-			Task task = vm.reconfigVM_Task(vmConfigSpec);
-
-			if (task.waitForTask() != Task.SUCCESS) {
-				logger.info("Failure -:   cannot be created stroage");
-				return false;
-			}
-
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return true;
-	}
-
-	/**
-	 * 为VM分配存储空间
-	 * 
-	 * 磁盘模式VirtualDiskMode包含几种选项。 不同的FileBacking对不同的磁盘模式支持不同。
-	 * 
-	 * append :Changes are appended to the redo log; you revoke changes by removing the undo log.
-	 * 
-	 * independent_nonpersistent :Same as nonpersistent, but not affected by snapshots.
-	 * 
-	 * independent_persistent :Same as persistent, but not affected by snapshots.
-	 * 
-	 * nonpersistent :Changes to virtual disk are made to a redo log and discarded at power off.
-	 * 
-	 * persistent :Changes are immediately and permanently written to the virtual disk.
-	 * 
-	 * undoable :Changes are made to a redo log, but you are given the option to commit or undo.
-	 * 
-	 * @param parameter
-	 * @return
-	 */
-	public boolean createVMDisk(CreateVMDiskParameter parameter) {
-
-		try {
-
-			ServiceInstance si = getServiceInstance(parameter.getDatacenter());
-
-			VirtualMachine vm = getVirtualMachine(si, parameter.getVmName());
-
-			VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
-
-			String diskMode = "persistent";
-			long diskSize = Long.valueOf(parameter.getDiskSize()); // 存储大小,单位GB
-			String diskName = parameter.getDiskName(); // 存储名称
-
-			VirtualDeviceConfigSpec vdiskSpec = createAddDiskConfigSpec(vm, diskSize, diskMode, diskName);
-			VirtualDeviceConfigSpec[] vdiskSpecArray = { vdiskSpec };
-			vmConfigSpec.setDeviceChange(vdiskSpecArray);
-
-			Task task = vm.reconfigVM_Task(vmConfigSpec);
-
-			if (task.waitForTask() != Task.SUCCESS) {
-				logger.info("Failure -:   cannot be created stroage");
-				return false;
-			}
-
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return true;
-	}
-
-	private static VirtualDeviceConfigSpec createAddDiskConfigSpec(VirtualMachine vm, long diskSize, String diskMode,
-			String diskName) throws Exception {
-		VirtualDeviceConfigSpec diskSpec = new VirtualDeviceConfigSpec();
-		VirtualMachineConfigInfo vmConfig = (VirtualMachineConfigInfo) vm.getConfig();
-		VirtualDevice[] vds = vmConfig.getHardware().getDevice();
-
-		VirtualDisk disk = new VirtualDisk();
-		VirtualDiskFlatVer2BackingInfo diskfileBacking = new VirtualDiskFlatVer2BackingInfo();
-
-		int key = 0;
-
-		for (int k = 0; k < vds.length; k++) {
-			if (vds[k].getDeviceInfo().getLabel().equalsIgnoreCase("SCSI Controller 0")) {
-				key = vds[k].getKey();
-			}
-		}
-
-		int j = 0;
-		for (VirtualDevice virtualDevice : vds) {
-			if (virtualDevice instanceof VirtualDisk) {
-				j++;
-			}
-		}
-
-		int unitNumber = j;
-
-		String dsName = getFreeDatastoreName(vm, diskSize);
-		if (dsName == null) {
-			return null;
-		}
-		String fileName = "[" + dsName + "] " + vm.getName() + "/" + diskName + ".vmdk";
-
-		diskfileBacking.setDiskMode(diskMode);
-		diskfileBacking.setFileName(fileName);
-		diskfileBacking.setThinProvisioned(true);
-		diskfileBacking.setSplit(false);// split：标明磁盘文件是以多个不大于2GB的文件，还是单独文件存储
-		diskfileBacking.setWriteThrough(false);// writeThrough：标明磁盘文件是直接写入洗盘还是缓冲
-
-		disk.setControllerKey(key);
-		disk.setUnitNumber(unitNumber);
-		disk.setBacking(diskfileBacking);
-		disk.setCapacityInKB(1024 * 1024 * diskSize);
-		disk.setKey(1);
-
-		diskSpec.setOperation(VirtualDeviceConfigSpecOperation.add);
-		diskSpec.setFileOperation(VirtualDeviceConfigSpecFileOperation.create);
-		diskSpec.setDevice(disk);
-		return diskSpec;
-	}
-
-	private static VirtualDeviceConfigSpec createRemoveDiskConfigSpec(VirtualMachineConfigInfo vmConfig, String diskName)
-			throws Exception {
-		VirtualDeviceConfigSpec diskSpec = new VirtualDeviceConfigSpec();
-		VirtualDisk disk = (VirtualDisk) findVirtualDevice(vmConfig, diskName);
-
-		if (disk != null) {
-			diskSpec.setOperation(VirtualDeviceConfigSpecOperation.remove);
-			// remove the following line can keep the disk file
-			diskSpec.setFileOperation(VirtualDeviceConfigSpecFileOperation.destroy);
-			diskSpec.setDevice(disk);
-			return diskSpec;
-		} else {
-			throw new Exception("No device found: " + diskName);
-		}
-	}
-
-	private static VirtualDevice findVirtualDevice(VirtualMachineConfigInfo cfg, String name) {
-		VirtualDevice[] devices = cfg.getHardware().getDevice();
-
-		for (int i = 0; devices != null && i < devices.length; i++) {
-
-			if (devices[i] instanceof VirtualDisk) {
-
-				VirtualDiskFlatVer2BackingInfo backingInfo = (VirtualDiskFlatVer2BackingInfo) devices[i].getBacking();
-
-				if (backingInfo.getFileName().equals(name)) {
-					return devices[i];
-				}
-
-			}
-		}
-		return null;
-	}
-
-	private static String getFreeDatastoreName(VirtualMachine vm, long size) throws Exception {
-		String dsName = null;
-		Datastore[] datastores = vm.getDatastores();
-		for (int i = 0; i < datastores.length; i++) {
-			DatastoreSummary ds = datastores[i].getSummary();
-			if (ds.getFreeSpace() > size) {
-				dsName = ds.getName();
-				break;
-			}
-		}
-		return dsName;
-	}
-
-	public boolean cloneVM(CloneVMParameter parameter) {
-
-		try {
-
-			ServiceInstance si = getServiceInstance(parameter.getDatacenter());
-
-			VirtualMachine vm = getVirtualMachine(si, parameter.getvMTemplateName());
+			vm = getVirtualMachine(si, parameter.getVmTemplateName());
 
 			if (vm == null) {
-				logout(si);
-				return false;
+				result.setError(WSResult.SYSTEM_ERROR, "模板不存在,请联系系统管理员.");
+				return result;
 			}
-
-			// 虚拟机克隆方案创建
-			VirtualMachineCloneSpec cloneSpec = new VirtualMachineCloneSpec();
-
-			// CustomizationSpec数据对象类型包含需要自定义虚拟机部署时或将其迁移到新的主机的信息。
-			CustomizationSpec cspec = new CustomizationSpec();
-			CustomizationSpecInfo info = new CustomizationSpecInfo();
-			CustomizationSpecItem specItem = new CustomizationSpecItem();
-
-			CustomizationAdapterMapping adaptorMap = new CustomizationAdapterMapping();
-			CustomizationIPSettings adapter = new CustomizationIPSettings();
-			CustomizationFixedIp fixedIp = new CustomizationFixedIp();// 指定使用固定ip
-			CustomizationGlobalIPSettings gIP = new CustomizationGlobalIPSettings();
-
-			info.setDescription(parameter.getvMTemplateOS());
-			info.setName("Sobey");
-			info.setType(parameter.getvMTemplateOS());// 设置克隆机器的操作系统类型
-
-			specItem.setInfo(info);
-			specItem.setSpec(cspec);
-
-			// dns列表
-			String dnsList[] = new String[] { "8.8.8.8" };
-			String ipAddress = parameter.getIpaddress(); // 自定义的内网IP
-			String subNetMask = parameter.getSubNetMask();
-
-			adapter.setDnsServerList(dnsList);
-			adapter.setGateway(new String[] { parameter.getGateway() });
-			adapter.setIp(fixedIp);
-			adapter.setSubnetMask(subNetMask);
-
-			fixedIp.setIpAddress(ipAddress);
-			adaptorMap.setAdapter(adapter);
-
-			// 不能使用MAC设置
-			String dnsSuffixList[] = new String[] { "sobey.com", "sobey.cn" };
-			gIP.setDnsSuffixList(dnsSuffixList);
-			gIP.setDnsServerList(dnsList);
-
-			CustomizationFixedName computerName = new CustomizationFixedName();
-			computerName.setName("cmop");// 无法确认VM用户名是否能为中文,目前暂定为所有都是cmop
-
-			CustomizationAdapterMapping[] nicSettingMap = new CustomizationAdapterMapping[] { adaptorMap };
-
-			CustomizationSpecManager specManager = si.getCustomizationSpecManager();
-
-			if ("Linux".equals(parameter.getvMTemplateOS())) {
-
-				CustomizationLinuxOptions linuxOptions = new CustomizationLinuxOptions();
-				CustomizationLinuxPrep cLinuxPrep = new CustomizationLinuxPrep();
-				cLinuxPrep.setDomain("sobey.com");
-				cLinuxPrep.setHostName(computerName);
-				cLinuxPrep.setHwClockUTC(true);
-				cLinuxPrep.setTimeZone("Asia/Shanghai");
-
-				cspec.setOptions(linuxOptions);
-				cspec.setIdentity(cLinuxPrep);
-
-			} else if ("Windows".equals(parameter.getvMTemplateOS())) {
-
-				CustomizationWinOptions winOptions = new CustomizationWinOptions();
-				CustomizationSysprep cWinSysprep = new CustomizationSysprep();
-
-				CustomizationGuiUnattended guiUnattended = new CustomizationGuiUnattended();
-				guiUnattended.setAutoLogon(false);
-				guiUnattended.setAutoLogonCount(1);
-				guiUnattended.setTimeZone(210); // http://msdn.microsoft.com/en-us/library/ms912391%28v=winembedded.11%29.aspx
-
-				CustomizationPassword password = new CustomizationPassword();
-				password.setValue(WINDOWS_DEFAULT_PASSWORD);
-				password.setPlainText(true);
-				guiUnattended.setPassword(password);
-				cWinSysprep.setGuiUnattended(guiUnattended);
-
-				CustomizationUserData userData = new CustomizationUserData();
-				userData.setProductId("");
-				userData.setFullName("Sobey");
-				userData.setOrgName("Sobey");
-				userData.setComputerName(computerName);
-				cWinSysprep.setUserData(userData);
-
-				// Windows Server 2000, 2003 必须
-				CustomizationLicenseFilePrintData printData = new CustomizationLicenseFilePrintData();
-				printData.setAutoMode(CustomizationLicenseDataMode.perSeat);
-				cWinSysprep.setLicenseFilePrintData(printData);
-
-				CustomizationIdentification identification = new CustomizationIdentification();
-				identification.setJoinWorkgroup("Sobey");
-				cWinSysprep.setIdentification(identification);
-
-				winOptions.setReboot(CustomizationSysprepRebootOption.shutdown);
-				winOptions.setChangeSID(true);
-				winOptions.setDeleteAccounts(false);
-
-				cspec.setOptions(winOptions);
-				cspec.setIdentity(cWinSysprep);
-
-			} else {
-				logger.info("cloneVM::OS类型不正确");
-				return false;
-			}
-
-			cspec.setGlobalIPSettings(gIP);
-			cspec.setNicSettingMap(nicSettingMap);
-			cspec.setEncryptionKey(specManager.getEncryptionKey());
-
-			// 设置ResourcePool
-			/**
-			 * TODO 重要:宿主机暂时写死,宿主机的ResourcePool可以根据宿主机名称得到.
-			 * 
-			 * 后期应该做到CMDBuild查询宿主机的负载能力,找出负载最低的宿主机, 并根据名称查出ManagedObjectReference对象的value.
-			 */
-			ManagedObjectReference pool = new ManagedObjectReference();
-			pool.set_value("resgroup-42");
-			pool.setType("ResourcePool");
-
-			VirtualMachineRelocateSpec relocateSpec = new VirtualMachineRelocateSpec();
-			relocateSpec.setPool(pool);
-			cloneSpec.setLocation(relocateSpec);
-			cloneSpec.setPowerOn(true);
-			cloneSpec.setTemplate(false);
-			cloneSpec.setCustomization(cspec);
-
-			vm.checkCustomizationSpec(specItem.getSpec());
-
-			Task task = vm.cloneVM_Task((Folder) vm.getParent(), parameter.getvMName(), cloneSpec);
-
-			if (task.waitForTask() != Task.SUCCESS) {
-				logger.info("Failure -: VM cannot be cloned");
-				return false;
-			}
-
-			// 为虚拟机设置网络适配器相关信息:设备状态设置为已连接、网络标签、虚拟机的备注.
-
-		} catch (InvalidProperty e) {
-			logger.info("cloneVM::InvalidProperty:" + e);
-			return false;
-		} catch (RuntimeFault e) {
-			logger.info("cloneVM::RuntimeFault:" + e);
-			return false;
 		} catch (RemoteException e) {
-			logger.info("cloneVM::RemoteException:" + e);
-			return false;
-		} catch (MalformedURLException e) {
-			logger.info("cloneVM::MalformedURLException:" + e);
-			return false;
-		} catch (InterruptedException e) {
-			logger.info("cloneVM::InterruptedException:" + e);
-			return false;
+
+			try {
+				logout(si);
+			} catch (RemoteException | MalformedURLException ex) {
+				logger.info("cloneVM::远程连接失败或错误的URL");
+				result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+				return result;
+			}
 		}
 
-		return true;
+		// 虚拟机克隆方案创建
+		VirtualMachineCloneSpec cloneSpec = new VirtualMachineCloneSpec();
+
+		ManagedObjectReference pool = new ManagedObjectReference();
+		pool.set_value(parameter.getResourcePool());
+		pool.setType("ResourcePool");
+
+		ManagedObjectReference host = new ManagedObjectReference();
+		host.set_value(parameter.getHostId());
+		host.setType("HostSystem");
+
+		VirtualMachineRelocateSpec relocateSpec = new VirtualMachineRelocateSpec();
+		relocateSpec.setPool(pool);
+		relocateSpec.setHost(host);
+		cloneSpec.setLocation(relocateSpec);
+		cloneSpec.setPowerOn(false);
+		cloneSpec.setTemplate(false);
+
+		try {
+
+			Task task = vm.cloneVM_Task((Folder) vm.getParent(), parameter.getVmName(), cloneSpec);
+
+			if (task.waitForTask() != Task.SUCCESS) {
+				logger.info("cloneVM:: VM cannot be cloned");
+				result.setError(WSResult.SYSTEM_ERROR, "VM创建失败,请联系系统管理员.");
+				return result;
+			}
+
+		} catch (RemoteException | InterruptedException e) {
+			result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+			return result;
+		}
+
+		return result;
 	}
 
 	/**
-	 * 返回vcneter中分布式端口组名.
-	 * 
-	 * 分布式端口组名是按 vlan+Id 的格式组成
-	 * 
-	 * @param vlanId
-	 * @return
-	 */
-	private static String getPortGroupName(Integer vlanId) {
-		return "vlan" + vlanId;
-	}
-
-	/**
-	 * 销毁一个虚拟机
+	 * 销毁虚拟机
 	 * 
 	 * @param parameter
 	 *            {@link DestroyVMParameter}
 	 * @return
 	 */
-	public boolean destroyVM(DestroyVMParameter parameter) {
+	public WSResult destroyVM(DestroyVMParameter parameter) {
+
+		WSResult result = new WSResult();
+
+		ServiceInstance si;
 
 		try {
-
-			ServiceInstance si = getServiceInstance(parameter.getDatacenter());
-
-			VirtualMachine vm = (VirtualMachine) new InventoryNavigator(si.getRootFolder()).searchManagedEntity(
-					"VirtualMachine", parameter.getvMName());
-
-			if (vm == null) {
-				logout(si);
-				return false;
-			}
-
-			vm.destroy_Task();
-
-		} catch (RemoteException e) {
-			logger.info("destroyVM::RemoteException:" + e);
-			return false;
-		} catch (MalformedURLException e) {
-			logger.info("destroyVM::MalformedURLException:" + e);
-			return false;
+			si = getServiceInstance(parameter.getDatacenter());
+		} catch (RemoteException | MalformedURLException e) {
+			logger.info("destroyVM::远程连接失败或错误的URL");
+			result.setError(WSResult.SYSTEM_ERROR, ServiceInstance_Init_Error);
+			return result;
 		}
 
-		return true;
-	}
-
-	public boolean reconfigVM(ReconfigVMParameter parameter) {
+		// 获得VM对象
+		VirtualMachine vm = null;
 
 		try {
 
-			ServiceInstance si = getServiceInstance(parameter.getDatacenter());
-			VirtualMachine vm = getVirtualMachine(si, parameter.getvMName());
+			vm = getVirtualMachine(si, parameter.getVmName());
 
-			VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
+			if (vm == null) {
+				result.setError(WSResult.SYSTEM_ERROR, "主机不存在.");
+				return result;
+			}
+		} catch (RemoteException e) {
 
-			vmConfigSpec.setMemoryMB(parameter.getMemoryMB()); // in MB
-			vmConfigSpec.setNumCPUs(parameter.getcPUNumber());
+			try {
+				logout(si);
+			} catch (RemoteException | MalformedURLException ex) {
+				logger.info("destroyVM::远程连接失败或错误的URL");
+				result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+				return result;
+			}
+		}
 
-			Task task = vm.reconfigVM_Task(vmConfigSpec);
+		try {
+
+			Task task = vm.destroy_Task();
 
 			if (task.waitForTask() != Task.SUCCESS) {
-				logger.info("Failure -: VM cannot be cloned");
-				return false;
+				logger.info("destroyVM:: VM cannot be destroy");
+				result.setError(WSResult.SYSTEM_ERROR, "主机删除失败,请联系系统管理员.");
+				return result;
 			}
 
-		} catch (RemoteException e) {
-			logger.info("reconfigVM::RemoteException:" + e);
-			return false;
-		} catch (MalformedURLException e) {
-			logger.info("reconfigVM::MalformedURLException:" + e);
-			return false;
-		} catch (InterruptedException e) {
-			logger.info("reconfigVM::InterruptedException:" + e);
-			return false;
+		} catch (RemoteException | InterruptedException e) {
+			result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+			return result;
 		}
 
-		return true;
-
-	}
-
-	public boolean powerVM(PowerVMParameter parameter) {
-
-		try {
-
-			ServiceInstance si = getServiceInstance(parameter.getDatacenter());
-			VirtualMachine vm = getVirtualMachine(si, parameter.getvMName());
-
-			if (vm == null) {
-				logout(si);
-				return false;
-			}
-
-			if ("reboot".equalsIgnoreCase(parameter.getPowerOperation())) {
-				vm.rebootGuest();
-			} else if ("poweron".equalsIgnoreCase(parameter.getPowerOperation())) {
-
-				Task task = vm.powerOnVM_Task(null);
-				if (task.waitForTask() != Task.SUCCESS) {
-					return false;
-				}
-
-			} else if ("poweroff".equalsIgnoreCase(parameter.getPowerOperation())) {
-
-				Task task = vm.powerOffVM_Task();
-				if (task.waitForTask() != Task.SUCCESS) {
-					return false;
-				}
-
-			} else if ("reset".equalsIgnoreCase(parameter.getPowerOperation())) {
-
-				Task task = vm.resetVM_Task();
-				if (task.waitForTask() != Task.SUCCESS) {
-					return false;
-				}
-
-			} else if ("standby".equalsIgnoreCase(parameter.getPowerOperation())) {
-
-				vm.standbyGuest();
-
-			} else if ("suspend".equalsIgnoreCase(parameter.getPowerOperation())) {
-
-				Task task = vm.suspendVM_Task();
-				if (task.waitForTask() != Task.SUCCESS) {
-					return false;
-				}
-
-			} else if ("shutdown".equalsIgnoreCase(parameter.getPowerOperation())) {
-
-				Task task = vm.suspendVM_Task();
-				if (task.waitForTask() != Task.SUCCESS) {
-					return false;
-				}
-
-			} else {
-				return false;
-			}
-
-			logout(si);
-
-		} catch (RemoteException e) {
-			logger.info("powerVM::RemoteException:" + e);
-			return false;
-		} catch (MalformedURLException e) {
-			logger.info("powerVM::MalformedURLException:" + e);
-			return false;
-		} catch (InterruptedException e) {
-			logger.info("powerVM::InterruptedException:" + e);
-			return false;
-		}
-
-		return true;
-
+		return result;
 	}
 
 	/**
-	 * 通过HashMap获得Host和VM的关联关系.<br>
+	 * 根据虚拟机名称获得虚拟机的具体信息.
+	 * 
+	 * @param name
+	 *            VM名称
+	 * @param datacenter
+	 *            数据中心
+	 * @return
+	 */
+	public DTOResult<VMInfoDTO> findVMInfoDTO(String vmName, String datacenter) {
+
+		DTOResult<VMInfoDTO> dtoResult = new DTOResult<VMInfoDTO>();
+
+		VMInfoDTO vmInfoDTO = new VMInfoDTO();
+
+		ServiceInstance si;
+
+		try {
+			si = getServiceInstance(datacenter);
+		} catch (RemoteException | MalformedURLException e) {
+			logger.info("findVMInfoDTO::远程连接失败或错误的URL");
+			dtoResult.setError(WSResult.SYSTEM_ERROR, ServiceInstance_Init_Error);
+			return dtoResult;
+		}
+
+		// 获得VM对象
+		VirtualMachine vm = null;
+
+		try {
+
+			vm = getVirtualMachine(si, vmName);
+
+			if (vm == null) {
+				dtoResult.setError(WSResult.SYSTEM_ERROR, "主机不存在.");
+				return dtoResult;
+			}
+
+			// 判断虚拟机是否安装有vmware tools.
+
+			VirtualMachineConfigInfo vmConfigInfo = vm.getConfig();
+
+			VirtualHardware vmHardware = vmConfigInfo.getHardware();
+
+			// 网络适配器
+			if (vm.getGuest().getNet() != null && vm.getGuest().getNet().length != 0) {
+				String portGroups = "";
+				for (GuestNicInfo nicInfo : vm.getGuest().getNet()) {
+					portGroups += nicInfo.getNetwork() + " ";
+				}
+				vmInfoDTO.setPortGroups(portGroups);
+			}
+
+			// 存储器
+			if (vm.getDatastores() != null && vm.getDatastores().length != 0) {
+
+				String datastores = "";
+				for (Datastore datastore : vm.getDatastores()) {
+					datastores += datastore.getName() + " ";
+				}
+				vmInfoDTO.setDatastore(datastores);
+			}
+
+			// 获得Host相关信息
+			ManagedObjectReference managedObjectReference = new ManagedObjectReference();
+			managedObjectReference.setType("HostSystem");
+			managedObjectReference.setVal(vm.getRuntime().getHost().get_value());
+
+			// 注意这行关键代码:将ManagedObjectReference -> ManagedObjectReference
+			ManagedEntity hostManagedEntity = MorUtil.createExactManagedEntity(si.getServerConnection(),
+					managedObjectReference);
+
+			vmInfoDTO.setHostName(hostManagedEntity.getName());
+			vmInfoDTO.setGuestFullName(vmConfigInfo.getGuestFullName());
+			vmInfoDTO.setIpaddress(vm.getGuest().getIpAddress());
+			vmInfoDTO.setCpuNumber(Integer.valueOf(vmHardware.getNumCPU()).toString());
+			vmInfoDTO.setMemoryMB(Integer.valueOf(vmHardware.getMemoryMB()).toString());
+			vmInfoDTO.setVmName(vmName);
+			vmInfoDTO.setStatus(vm.getGuest().getGuestState());// running or notRunning
+
+			if (vmHardware != null) {
+				VirtualDevice[] vmDevices = vmHardware.getDevice();
+				for (int i = 0; i < vmDevices.length; i++) {
+
+					if (vmDevices[i] instanceof VirtualEthernetCard) {
+						VirtualEthernetCard card = (VirtualEthernetCard) vmDevices[i];
+						vmInfoDTO.setMacIPaddress(card.getMacAddress());
+					}
+
+					if (vmDevices[i] instanceof VirtualDisk) {
+						VirtualDisk vmDisk = (VirtualDisk) vmDevices[i];
+						// 硬盘空间大小单位为KB,此处将硬盘大小除以1024*1024得到GB的单位.
+						vmInfoDTO.setDiskGB(String.valueOf(MathsUtil.div(vmDisk.getCapacityInKB(), 1048576)));
+					}
+
+				}
+			}
+
+			dtoResult.setDto(vmInfoDTO);
+
+		} catch (RemoteException e) {
+
+			try {
+				logout(si);
+			} catch (RemoteException | MalformedURLException ex) {
+				logger.info("findVMInfoDTO::远程连接失败或错误的URL");
+				dtoResult.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+				return dtoResult;
+			}
+		}
+
+		return dtoResult;
+	}
+
+	/**
+	 * 获得Host和VM的关联关系.<br>
 	 * 
 	 * 利用HashMap key不能重复,value可以重复的特性,将VM名保存在key中,而Host名因为有重复的存在,所以放在value.<br>
 	 * 这样保证了每个key(VM)对应一个Value(Host),key永远不会重复
 	 * 
 	 * @return
 	 */
-	public RelationVMParameter getVMAndHostRelation(String datacenter) {
+	public RelationVMParameter getRelationVM(String datacenter) {
 
 		HashMap<String, String> map = Maps.newHashMap();
 
+		ServiceInstance si;
+
 		try {
 
-			ServiceInstance si = getServiceInstance(datacenter);
+			si = getServiceInstance(datacenter);
 
-			ManagedEntity[] mes = new InventoryNavigator(si.getRootFolder()).searchManagedEntities("VirtualMachine");
+			ManagedEntity[] entities = new InventoryNavigator(si.getRootFolder())
+					.searchManagedEntities("VirtualMachine");
 
-			if (mes == null || mes.length == 0) {
-				return null;
-			}
+			for (ManagedEntity managedEntity : entities) {
 
-			for (int i = 0; i < mes.length; i++) {
+				VirtualMachine vm = (VirtualMachine) managedEntity;
 
-				VirtualMachine vm = (VirtualMachine) mes[i];
 				VirtualMachineRuntimeInfo vmri = (VirtualMachineRuntimeInfo) vm.getRuntime();
-
 				ManagedObjectReference host = vmri.getHost();
+
 				ManagedObjectReference managedObjectReference = new ManagedObjectReference();
+
 				managedObjectReference.setType("HostSystem");
 				managedObjectReference.setVal(host.getVal());
 				HostSystem hostSystem = (HostSystem) MorUtil.createExactManagedEntity(si.getServerConnection(),
 						managedObjectReference);
 
 				map.put(vm.getName(), hostSystem.getName());
-
 			}
 
-		} catch (RemoteException e) {
-			logger.info("RelationVMParameter::RemoteException:" + e);
-		} catch (MalformedURLException e) {
-			logger.info("RelationVMParameter::MalformedURLException:" + e);
+		} catch (RemoteException | MalformedURLException e) {
+			logger.info("getVMAndHostRelation::远程连接失败或错误的URL");
 		}
 
 		RelationVMParameter parameter = new RelationVMParameter();
+		parameter.setDatacenter(datacenter);
 		parameter.setRelationMaps(map);
+
 		return parameter;
 	}
 
-	public VMInfoDTO getVMInfoDTO(String name, String datacenter) {
+	/**
+	 * 对虚拟机的电源操作,操作内容可参考 {@link PowerOperationEnum}
+	 * 
+	 * @param parameter
+	 *            {@link PowerVMParameter}
+	 * @return
+	 */
+	public WSResult powerVM(PowerVMParameter parameter) {
 
-		ServiceInstance si = null;
+		WSResult result = new WSResult();
 
-		VMInfoDTO vmInfoDTO = new VMInfoDTO();
+		ServiceInstance si;
+
+		try {
+			si = getServiceInstance(parameter.getDatacenter());
+		} catch (RemoteException | MalformedURLException e) {
+			logger.info("powerVM::远程连接失败或错误的URL");
+			result.setError(WSResult.SYSTEM_ERROR, ServiceInstance_Init_Error);
+			return result;
+		}
+
+		// 获得VM对象
+		VirtualMachine vm = null;
 
 		try {
 
+			vm = getVirtualMachine(si, parameter.getVmName());
+
+			if (vm == null) {
+				result.setError(WSResult.SYSTEM_ERROR, "主机不存在.");
+				return result;
+			}
+		} catch (RemoteException e) {
+
+			try {
+				logout(si);
+			} catch (RemoteException | MalformedURLException ex) {
+				logger.info("powerVM::远程连接失败或错误的URL");
+				result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+				return result;
+			}
+		}
+
+		try {
+
+			Task task;
+
+			switch (PowerOperationEnum.valueOf(parameter.getPowerOperation())) {
+
+			case poweroff:
+
+				task = vm.powerOffVM_Task();
+
+				if (task.waitForTask() != Task.SUCCESS) {
+					result.setError(WSResult.SYSTEM_ERROR, "主机关机失败,请联系系统管理员.");
+				}
+
+				break;
+
+			case poweron:
+
+				task = vm.powerOnVM_Task(null);
+				if (task.waitForTask() != Task.SUCCESS) {
+					result.setError(WSResult.SYSTEM_ERROR, "主机开机失败,请联系系统管理员.");
+				}
+
+				break;
+
+			case reboot:
+				vm.rebootGuest();
+				break;
+
+			case reset:
+
+				task = vm.resetVM_Task();
+				if (task.waitForTask() != Task.SUCCESS) {
+					result.setError(WSResult.SYSTEM_ERROR, "主机重置失败,请联系系统管理员.");
+				}
+
+				break;
+
+			case shutdown:
+
+				task = vm.suspendVM_Task();
+				if (task.waitForTask() != Task.SUCCESS) {
+					result.setError(WSResult.SYSTEM_ERROR, "主机暂停失败,请联系系统管理员.");
+				}
+
+				break;
+
+			case standby:
+
+				vm.standbyGuest();
+				break;
+
+			case suspend:
+
+				task = vm.suspendVM_Task();
+				if (task.waitForTask() != Task.SUCCESS) {
+					result.setError(WSResult.SYSTEM_ERROR, "主机暂停失败,请联系系统管理员.");
+				}
+
+				break;
+
+			default:
+
+				result.setError(WSResult.SYSTEM_ERROR, "该电源操作不存在.");
+				break;
+			}
+
+		} catch (RemoteException | InterruptedException e) {
+			logger.info("powerVM::远程连接失败");
+			result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+			return result;
+		}
+
+		return result;
+
+	}
+
+	/**
+	 * 修改虚拟机配置
+	 * 
+	 * @param parameter
+	 *            {@link ReconfigVMParameter}
+	 * @return
+	 */
+	public WSResult reconfigVM(ReconfigVMParameter parameter) {
+
+		WSResult result = new WSResult();
+
+		ServiceInstance si;
+
+		try {
+			si = getServiceInstance(parameter.getDatacenter());
+		} catch (RemoteException | MalformedURLException e) {
+			logger.info("reconfigVM::远程连接失败或错误的URL");
+			result.setError(WSResult.SYSTEM_ERROR, ServiceInstance_Init_Error);
+			return result;
+		}
+
+		// 获得VM对象
+		VirtualMachine vm = null;
+
+		try {
+
+			vm = getVirtualMachine(si, parameter.getVmName());
+
+			if (vm == null) {
+				result.setError(WSResult.SYSTEM_ERROR, "主机不存在.");
+				return result;
+			}
+		} catch (RemoteException e) {
+
+			try {
+				logout(si);
+			} catch (RemoteException | MalformedURLException ex) {
+				logger.info("reconfigVM::远程连接失败或错误的URL");
+				result.setError(WSResult.SYSTEM_ERROR, "主机不存在.");
+				return result;
+			}
+		}
+
+		VirtualMachineConfigSpec vmConfigSpec = new VirtualMachineConfigSpec();
+
+		vmConfigSpec.setMemoryMB(Long.valueOf(parameter.getMemoryMB()));
+		vmConfigSpec.setNumCPUs(parameter.getCpuNumber());
+
+		try {
+
+			Task task = vm.reconfigVM_Task(vmConfigSpec);
+
+			if (task.waitForTask() != Task.SUCCESS) {
+				logger.info("reconfigVM:: VM cannot be reconfig");
+				result.setError(WSResult.SYSTEM_ERROR, "主机修改失败,请联系系统管理员.");
+				return result;
+			}
+
+		} catch (RemoteException | InterruptedException e) {
+			result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+			return result;
+		}
+
+		return result;
+	}
+
+	/**
+	 * 自定义VM IP配置
+	 * 
+	 * @param parameter
+	 * @return
+	 */
+	public WSResult customizeVM(CustomizeVMParameter parameter) {
+
+		WSResult result = new WSResult();
+
+		ServiceInstance si;
+
+		try {
+			si = getServiceInstance(parameter.getDatacenter());
+		} catch (RemoteException | MalformedURLException e) {
+			logger.info("customizeVM::远程连接失败或错误的URL");
+			result.setError(WSResult.SYSTEM_ERROR, ServiceInstance_Init_Error);
+			return result;
+		}
+
+		// 获得VM对象
+		VirtualMachine vm = null;
+
+		try {
+
+			vm = getVirtualMachine(si, parameter.getVmName());
+
+			if (vm == null) {
+				result.setError(WSResult.SYSTEM_ERROR, "主机不存在.");
+				return result;
+			}
+		} catch (RemoteException e) {
+
+			try {
+				logout(si);
+			} catch (RemoteException | MalformedURLException ex) {
+				logger.info("customizeVM::远程连接失败或错误的URL");
+				result.setError(WSResult.SYSTEM_ERROR, "主机不存在.");
+				return result;
+			}
+		}
+
+		CustomizationGlobalIPSettings gIP = new CustomizationGlobalIPSettings();
+
+		String[] dns = { "8.8.8.8" };
+		String[] domain = { "sobey.com" };
+		String[] gateway = { parameter.getGateway() };
+
+		gIP.dnsServerList = dns;
+		gIP.dnsSuffixList = domain;
+
+		CustomizationFixedIp fixedIp = new CustomizationFixedIp();// 指定使用固定ip
+
+		fixedIp.ipAddress = parameter.getIpaddress();
+
+		CustomizationIPSettings adapter = new CustomizationIPSettings();
+		adapter.dnsDomain = domain[0];
+		adapter.dnsServerList = dns;
+		adapter.ip = fixedIp;
+		adapter.gateway = gateway;
+		adapter.subnetMask = parameter.getSubNetMask();
+
+		CustomizationAdapterMapping adaptorMap = new CustomizationAdapterMapping();
+		adaptorMap.adapter = adapter;
+
+		CustomizationAdapterMapping[] nicSettingMap = new CustomizationAdapterMapping[] { adaptorMap };
+
+		CustomizationFixedName computerName = new CustomizationFixedName();
+		computerName.name = OrgNme;
+
+		CustomizationSpec customspec = new CustomizationSpec();
+
+		if ("Linux".equals(parameter.getVmTemplateOS())) {
+
+			CustomizationLinuxOptions linuxOptions = new CustomizationLinuxOptions();
+			CustomizationLinuxPrep linuxPrep = new CustomizationLinuxPrep();
+			linuxPrep.setDomain("sobey.com");
+			linuxPrep.setHostName(computerName);
+			linuxPrep.setHwClockUTC(true);
+			linuxPrep.setTimeZone("Asia/Shanghai");
+
+			customspec.identity = linuxPrep;
+			customspec.options = linuxOptions;
+
+		} else if ("Windows".equals(parameter.getVmTemplateOS())) {
+
+			CustomizationWinOptions winOptions = new CustomizationWinOptions();
+			CustomizationSysprep winSysprep = new CustomizationSysprep();
+
+			CustomizationGuiUnattended guiUnattended = new CustomizationGuiUnattended();
+			guiUnattended.setAutoLogon(true);
+			guiUnattended.setAutoLogonCount(1);
+			// 210为windows系统下的东八区时区标示,详情参考 http://msdn.microsoft.com/en-us/library/ms912391%28v=winembedded.11%29.aspx
+			guiUnattended.setTimeZone(210);
+
+			CustomizationPassword password = new CustomizationPassword();
+			password.setValue(WINDOWS_DEFAULT_PASSWORD);
+			password.setPlainText(true);
+			guiUnattended.setPassword(password);
+			winSysprep.setGuiUnattended(guiUnattended);
+
+			CustomizationUserData userData = new CustomizationUserData();
+			userData.setProductId("");
+			userData.setFullName(OrgNme);
+			userData.setOrgName(OrgNme);
+			userData.setComputerName(computerName);
+			winSysprep.setUserData(userData);
+
+			// Windows Server 2000, 2003 必须
+			CustomizationLicenseFilePrintData printData = new CustomizationLicenseFilePrintData();
+			printData.setAutoMode(CustomizationLicenseDataMode.perSeat);
+			winSysprep.setLicenseFilePrintData(printData);
+
+			CustomizationIdentification identification = new CustomizationIdentification();
+			identification.setJoinWorkgroup(OrgNme);
+			winSysprep.setIdentification(identification);
+
+			winOptions.setReboot(CustomizationSysprepRebootOption.reboot);
+			winOptions.setChangeSID(true);
+			winOptions.setDeleteAccounts(false);
+
+			customspec.setOptions(winOptions);
+			customspec.setIdentity(winSysprep);
+		}
+
+		customspec.globalIPSettings = gIP;
+		customspec.nicSettingMap = nicSettingMap;
+		customspec.encryptionKey = si.getCustomizationSpecManager().getEncryptionKey();
+
+		try {
+
+			Task task = vm.customizeVM_Task(customspec);
+
+			if (task.waitForTask() != Task.SUCCESS) {
+				logger.info("customizeVM:: VM cannot be reconfig");
+				result.setError(WSResult.SYSTEM_ERROR, "主机IP定义失败,请联系系统管理员.");
+				return result;
+			}
+
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+			return result;
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+
+			return result;
+		}
+
+		return result;
+	}
+
+	public WSResult runVM(RunVMParameter parameter) {
+
+		WSResult result = new WSResult();
+
+		/**
+		 * Step.1 自定义IP.
+		 * 
+		 * Step.2 自定义CPU和Memory
+		 * 
+		 * Step.3 更改VM名称
+		 * 
+		 * Step.4 启动VM
+		 * 
+		 */
+
+		// Step.1 自定义IP.
+
+		// 注意开始的vmname应该是vcenter中 VM Pool中已经创建好的一个VM名称
+		CustomizeVMParameter customizeVMParameter = new CustomizeVMParameter(parameter.getDatacenter(),
+				parameter.getGateway(), parameter.getIpaddress(), parameter.getSubNetMask(), parameter.getTempVMName(),
+				parameter.getVmTemplateOS());
+
+		WSResult customizeVMWSResult = customizeVM(customizeVMParameter);
+
+		if (WSResult.SYSTEM_ERROR.equals(customizeVMWSResult.getCode())) {
+			return customizeVMWSResult;
+		}
+
+		// Step.2 自定义CPU和Memory
+		ReconfigVMParameter reconfigVMParameter = new ReconfigVMParameter(parameter.getCpuNumber(),
+				parameter.getDatacenter(), parameter.getMemoryMB(), parameter.getTempVMName());
+
+		WSResult reconfigVMWSResult = reconfigVM(reconfigVMParameter);
+
+		if (WSResult.SYSTEM_ERROR.equals(reconfigVMWSResult.getCode())) {
+			return reconfigVMWSResult;
+		}
+
+		// Step.3 更改VM名称
+		RenameVMParameter renameVMParameter = new RenameVMParameter(parameter.getDatacenter(),
+				parameter.getTempVMName(), parameter.getVmName());
+
+		WSResult renameVMWSResult = renameVM(renameVMParameter);
+
+		if (WSResult.SYSTEM_ERROR.equals(renameVMWSResult.getCode())) {
+			return renameVMWSResult;
+		}
+
+		// Step.4 启动VM
+		PowerVMParameter powerVMParameter = new PowerVMParameter(parameter.getDatacenter(),
+				PowerOperationEnum.poweron.toString(), parameter.getVmName());
+
+		WSResult powerVMWSResult = powerVM(powerVMParameter);
+
+		if (WSResult.SYSTEM_ERROR.equals(powerVMWSResult.getCode())) {
+			return powerVMWSResult;
+		}
+
+		return result;
+
+	}
+
+	public WSResult renameVM(RenameVMParameter parameter) {
+
+		WSResult result = new WSResult();
+
+		ServiceInstance si;
+
+		try {
+			si = getServiceInstance(parameter.getDatacenter());
+		} catch (RemoteException | MalformedURLException e) {
+			logger.info("renameVM::远程连接失败或错误的URL");
+			result.setError(WSResult.SYSTEM_ERROR, ServiceInstance_Init_Error);
+			return result;
+		}
+
+		// 获得模板对象
+		VirtualMachine vm = null;
+
+		try {
+
+			vm = getVirtualMachine(si, parameter.getTempVMName());
+
+			if (vm == null) {
+				result.setError(WSResult.SYSTEM_ERROR, "主机规格不存在,请联系系统管理员.");
+				return result;
+			}
+		} catch (RemoteException e) {
+
+			try {
+				logout(si);
+			} catch (RemoteException | MalformedURLException ex) {
+				logger.info("renameVM::远程连接失败或错误的URL");
+				result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+				return result;
+			}
+		}
+
+		try {
+
+			Task task = vm.rename_Task(parameter.getVmName());
+
+			if (task.waitForTask() != Task.SUCCESS) {
+				logger.info("renameVM:: Network Device cannot be cloned");
+				result.setError(WSResult.SYSTEM_ERROR, "网络设备创建失败,请联系系统管理员.");
+				return result;
+			}
+
+		} catch (RemoteException | InterruptedException e) {
+			result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+			return result;
+		}
+
+		return result;
+	}
+
+	public WSResult runNetworkDeviceVM(RunNetworkDeviceVMParameter parameter) {
+
+		WSResult result = new WSResult();
+
+		/**
+		 * 
+		 * Step.1 自定义CPU和Memory
+		 * 
+		 * Step.2 更改VM名称
+		 * 
+		 * Step.3 启动VM
+		 * 
+		 */
+
+		// Step.1 自定义CPU和Memory
+		ReconfigVMParameter reconfigVMParameter = new ReconfigVMParameter(parameter.getCpuNumber(),
+				parameter.getDatacenter(), parameter.getMemoryMB(), parameter.getTempVMName());
+
+		WSResult reconfigVMWSResult = reconfigVM(reconfigVMParameter);
+
+		if (WSResult.SYSTEM_ERROR.equals(reconfigVMWSResult.getCode())) {
+			return reconfigVMWSResult;
+		}
+
+		// Step.3 更改VM名称
+		RenameVMParameter renameVMParameter = new RenameVMParameter(parameter.getDatacenter(),
+				parameter.getTempVMName(), parameter.getVmName());
+
+		WSResult renameVMWSResult = renameVM(renameVMParameter);
+
+		if (WSResult.SYSTEM_ERROR.equals(renameVMWSResult.getCode())) {
+			return renameVMWSResult;
+		}
+
+		// Step.4 启动VM
+		PowerVMParameter powerVMParameter = new PowerVMParameter(parameter.getDatacenter(),
+				PowerOperationEnum.poweron.toString(), parameter.getVmName());
+
+		WSResult powerVMWSResult = powerVM(powerVMParameter);
+
+		if (WSResult.SYSTEM_ERROR.equals(powerVMWSResult.getCode())) {
+			return powerVMWSResult;
+		}
+
+		return result;
+	}
+
+	public DTOListResult<VMInfoDTO> getVMInfoDTOInFolder(String datacenter, String folderName) {
+
+		DTOListResult<VMInfoDTO> result = new DTOListResult<VMInfoDTO>();
+
+		List<VMInfoDTO> vmInfoDTOs = new ArrayList<VMInfoDTO>();
+
+		ServiceInstance si;
+
+		try {
 			si = getServiceInstance(datacenter);
+		} catch (RemoteException | MalformedURLException e) {
+			logger.info("getVMInfoDTOInFolder::远程连接失败或错误的URL");
+			result.setError(WSResult.SYSTEM_ERROR, ServiceInstance_Init_Error);
+			return result;
+		}
 
-			VirtualMachine vm = getVirtualMachine(si, name);
+		Folder rootFolder = si.getRootFolder();
 
-			if (vm != null) {
+		Folder folder = null;
 
-				// 判断虚拟机是否安装有vmware tools.
+		try {
 
-				VirtualMachineConfigInfo vmConfigInfo = vm.getConfig();
+			folder = (Folder) new InventoryNavigator(rootFolder).searchManagedEntity("Folder", folderName);
 
-				VirtualHardware vmHardware = vmConfigInfo.getHardware();
+			if (folder == null) {
+				result.setError(WSResult.SYSTEM_ERROR, "文件夹不存在,请联系系统管理员.");
+				return result;
+			}
 
-				// 网络适配器
-				if (vm.getGuest().getNet() != null && vm.getGuest().getNet().length != 0) {
-					String vlanName = "";
-					for (GuestNicInfo nicInfo : vm.getGuest().getNet()) {
-						vlanName += nicInfo.getNetwork() + " ";
-					}
-					vmInfoDTO.setVlanName(vlanName);
-				}
+		} catch (RemoteException e) {
+			try {
+				logout(si);
+			} catch (RemoteException | MalformedURLException ex) {
+				logger.info("getVMInfoDTOInFolder::远程连接失败或错误的URL");
+				result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+				return result;
+			}
+		}
 
-				// 存储器
-				if (vm.getDatastores() != null && vm.getDatastores().length != 0) {
+		ManagedEntity[] entities;
 
-					String datastores = "";
-					for (Datastore datastore : vm.getDatastores()) {
-						datastores += datastore.getName() + " ";
-					}
-					vmInfoDTO.setDatastore(datastores);
-				}
+		try {
+			entities = folder.getChildEntity();
 
-				vmInfoDTO.setGuestFullName(vmConfigInfo.getGuestFullName());
-				vmInfoDTO.setIpaddress(vm.getGuest().getIpAddress());
-				vmInfoDTO.setCpuNumber(Integer.valueOf(vmHardware.getNumCPU()).toString());
-				vmInfoDTO.setMemorySize(Integer.valueOf(vmHardware.getMemoryMB()).toString());
-				vmInfoDTO.setName(name);
-				vmInfoDTO.setStatus(vm.getGuest().getGuestState());// running or notRunning
+			for (ManagedEntity entity : entities) {
 
-				if (vmHardware != null) {
-					VirtualDevice[] vmDevices = vmHardware.getDevice();
-					for (int i = 0; i < vmDevices.length; i++) {
+				if (entity instanceof VirtualMachine) {
 
-						if (vmDevices[i] instanceof VirtualEthernetCard) {
-							VirtualEthernetCard card = (VirtualEthernetCard) vmDevices[i];
-							vmInfoDTO.setMacIPaddress(card.getMacAddress());
-						}
-
-						if (vmDevices[i] instanceof VirtualDisk) {
-							VirtualDisk vmDisk = (VirtualDisk) vmDevices[i];
-							// 硬盘空间大小单位为KB,此处将硬盘大小除以1024*1024得到GB的单位.
-							vmInfoDTO.setDiskSize(String.valueOf(MathsUtil.div(vmDisk.getCapacityInKB(), 1048576)));
-						}
-
-					}
+					VirtualMachine vm = (VirtualMachine) entity;
+					vmInfoDTOs.add(findVMInfoDTO(vm.getName(), datacenter).getDto());
 				}
 
 			}
 
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (InvalidProperty e) {
-			e.printStackTrace();
-		} catch (RuntimeFault e) {
-			e.printStackTrace();
 		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-
-		return vmInfoDTO;
-	}
-
-	/**
-	 * HostSystem -> HostInfoDTO
-	 * 
-	 * @param host
-	 * @return
-	 */
-	private HostInfoDTO wrapHostInfoDTO(HostSystem host) {
-
-		ComputeResource computeResource = (ComputeResource) host.getParent();
-
-		HostInfoDTO hostInfoDTO = new HostInfoDTO();
-
-		// 频率由HZ -> GHZ = HZ/1024*1024*1024
-		hostInfoDTO.setCpuHz(String.valueOf(MathsUtil.div(Double.valueOf(host.getHardware().getCpuInfo().getHz()),
-				1073741824)));
-
-		// 转换成MB 1024*1024 = 1048576
-		hostInfoDTO.setMemorySize(String.valueOf(MathsUtil.div(host.getHardware().getMemorySize(), 1048576)));
-
-		hostInfoDTO.setCpuNumber(String.valueOf(host.getHardware().getCpuInfo().getNumCpuCores()));
-		hostInfoDTO.setModel(host.getHardware().getSystemInfo().getModel());
-		hostInfoDTO.setName(host.getName());
-		hostInfoDTO.setResourcePool(computeResource.getResourcePool().getMOR().getVal());
-		hostInfoDTO.setVendor(host.getHardware().getSystemInfo().getVendor());
-		return hostInfoDTO;
-
-	}
-
-	public HostInfoDTO findHostInfoDTO(String datacenter, String hostName) {
-
-		ServiceInstance si = null;
-
-		HostInfoDTO dto = null;
-
-		try {
-
-			si = getServiceInstance(datacenter);
-
-			HostSystem host = (HostSystem) new InventoryNavigator(si.getRootFolder()).searchManagedEntity("HostSystem",
-					hostName);
-
-			dto = wrapHostInfoDTO(host);
-
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (InvalidProperty e) {
-			e.printStackTrace();
-		} catch (RuntimeFault e) {
-			e.printStackTrace();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-
-		return dto;
-	}
-
-	public ArrayList<HostInfoDTO> getHostInfoDTO(String datacenter) {
-
-		ServiceInstance si = null;
-
-		ArrayList<HostInfoDTO> list = new ArrayList<HostInfoDTO>();
-
-		try {
-
-			si = getServiceInstance(datacenter);
-
-			ManagedEntity[] entities = new InventoryNavigator(si.getRootFolder()).searchManagedEntities("HostSystem");
-
-			for (int i = 0; i < entities.length; i++) {
-
-				HostSystem host = (HostSystem) entities[i];
-
-				list.add(wrapHostInfoDTO(host));
+			try {
+				logout(si);
+			} catch (RemoteException | MalformedURLException ex) {
+				logger.info("getVMInfoDTOInFolder::远程连接失败或错误的URL");
+				result.setError(WSResult.SYSTEM_ERROR, Remote_Error);
+				return result;
 			}
-
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (InvalidProperty e) {
-			e.printStackTrace();
-		} catch (RuntimeFault e) {
-			e.printStackTrace();
-		} catch (RemoteException e) {
-			e.printStackTrace();
 		}
 
-		return list;
-	}
+		result.setDtos(vmInfoDTOs);
 
-	/**
-	 * 初始化一个服务实例
-	 * 
-	 * @return
-	 * @throws RemoteException
-	 * @throws MalformedURLException
-	 */
-	private ServiceInstance getServiceInstance(String datacenter) throws RemoteException, MalformedURLException {
-
-		ServiceInstance serviceInstance = null;
-
-		switch (DataCenterEnum.valueOf(datacenter)) {
-		case 西安核心数据中心:
-
-			serviceInstance = new ServiceInstance(new URL(INSTANCE_IP_XA), INSTANCE_USERNAME_XA, INSTANCE_PASSWORD_XA,
-					true);
-			break;
-
-		case 西安核心数据中心2:
-
-			serviceInstance = new ServiceInstance(new URL(INSTANCE_IP_XA2), INSTANCE_USERNAME_XA2,
-					INSTANCE_PASSWORD_XA2, true);
-			break;
-
-		case 成都核心数据中心:
-
-			serviceInstance = new ServiceInstance(new URL(INSTANCE_IP_CD), INSTANCE_USERNAME_CD, INSTANCE_PASSWORD_CD,
-					true);
-			break;
-
-		default:
-			break;
-		}
-
-		return serviceInstance;
-
-	}
-
-	/**
-	 * 根据虚拟机名获得虚拟机对象
-	 * 
-	 * @param si
-	 *            服务实例
-	 * @param vmname
-	 *            虚拟机名
-	 * @return
-	 * @throws InvalidProperty
-	 * @throws RuntimeFault
-	 * @throws RemoteException
-	 */
-	private VirtualMachine getVirtualMachine(ServiceInstance si, String vmname) throws InvalidProperty, RuntimeFault,
-			RemoteException {
-		return (VirtualMachine) new InventoryNavigator(si.getRootFolder())
-				.searchManagedEntity("VirtualMachine", vmname);
-
-	}
-
-	/**
-	 * 退出服务实例
-	 * 
-	 * @param si
-	 * @throws RemoteException
-	 * @throws MalformedURLException
-	 */
-	private void logout(ServiceInstance si) throws RemoteException, MalformedURLException {
-		si.getServerConnection().logout();
+		return result;
 	}
 
 }

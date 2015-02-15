@@ -16,20 +16,44 @@ import com.sobey.cmdbuild.entity.basic.ServiceHistoryBasic;
 @Table(name = "ecs_history", schema = "public")
 public class EcsHistory extends ServiceHistoryBasic {
 
-	private Ecs ecs;
-	private Integer ipaddress;
-	private Integer ecsSpec;
-	private Integer server;
-	private Integer ecsStatus;
-	private String osName;
 	private String adapterName;
 	private String cpuNumber;
-	private String memorySize;
 	private String datastoreName;
 	private String diskSize;
+	private Ecs ecs;
+	private Integer ecsSpec;
+	private Integer ecsStatus;
+	private Integer ecsType;
+	private Integer ipaddress;
+	private Boolean isDesktop;
+	private Boolean isGpu;
 	private String macAddress;
+	private String memorySize;
+	private String osName;
+	private Integer server;
+	private Integer subnet;
 
 	public EcsHistory() {
+	}
+
+	@Column(name = "adapter_name", length = 200)
+	public String getAdapterName() {
+		return adapterName;
+	}
+
+	@Column(name = "cpu_number", length = 100)
+	public String getCpuNumber() {
+		return cpuNumber;
+	}
+
+	@Column(name = "datastore_name", length = 200)
+	public String getDatastoreName() {
+		return datastoreName;
+	}
+
+	@Column(name = "disk_size", length = 100)
+	public String getDiskSize() {
+		return diskSize;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -38,35 +62,9 @@ public class EcsHistory extends ServiceHistoryBasic {
 		return ecs;
 	}
 
-	public void setEcs(Ecs ecs) {
-		this.ecs = ecs;
-	}
-
-	@Column(name = "ipaddress")
-	public Integer getIpaddress() {
-		return ipaddress;
-	}
-
-	public void setIpaddress(Integer ipaddress) {
-		this.ipaddress = ipaddress;
-	}
-
 	@Column(name = "ecs_spec")
 	public Integer getEcsSpec() {
 		return ecsSpec;
-	}
-
-	public void setEcsSpec(Integer ecsSpec) {
-		this.ecsSpec = ecsSpec;
-	}
-
-	@Column(name = "server")
-	public Integer getServer() {
-		return server;
-	}
-
-	public void setServer(Integer server) {
-		this.server = server;
 	}
 
 	@Column(name = "ecs_status")
@@ -74,62 +72,24 @@ public class EcsHistory extends ServiceHistoryBasic {
 		return ecsStatus;
 	}
 
-	public void setEcsStatus(Integer ecsStatus) {
-		this.ecsStatus = ecsStatus;
+	@Column(name = "ecs_type")
+	public Integer getEcsType() {
+		return ecsType;
 	}
 
-	@Column(name = "os_name", length = 100)
-	public String getOsName() {
-		return osName;
+	@Column(name = "ipaddress")
+	public Integer getIpaddress() {
+		return ipaddress;
 	}
 
-	public void setOsName(String osName) {
-		this.osName = osName;
+	@Column(name = "is_desktop")
+	public Boolean getIsDesktop() {
+		return isDesktop;
 	}
 
-	@Column(name = "adapter_name", length = 200)
-	public String getAdapterName() {
-		return adapterName;
-	}
-
-	public void setAdapterName(String adapterName) {
-		this.adapterName = adapterName;
-	}
-
-	@Column(name = "cpu_number", length = 100)
-	public String getCpuNumber() {
-		return cpuNumber;
-	}
-
-	public void setCpuNumber(String cpuNumber) {
-		this.cpuNumber = cpuNumber;
-	}
-
-	@Column(name = "memory_size", length = 100)
-	public String getMemorySize() {
-		return memorySize;
-	}
-
-	public void setMemorySize(String memorySize) {
-		this.memorySize = memorySize;
-	}
-
-	@Column(name = "datastore_name", length = 200)
-	public String getDatastoreName() {
-		return datastoreName;
-	}
-
-	public void setDatastoreName(String datastoreName) {
-		this.datastoreName = datastoreName;
-	}
-
-	@Column(name = "disk_size", length = 100)
-	public String getDiskSize() {
-		return diskSize;
-	}
-
-	public void setDiskSize(String diskSize) {
-		this.diskSize = diskSize;
+	@Column(name = "is_gpu")
+	public Boolean getIsGpu() {
+		return isGpu;
 	}
 
 	@Column(name = "mac_address", length = 100)
@@ -137,8 +97,88 @@ public class EcsHistory extends ServiceHistoryBasic {
 		return macAddress;
 	}
 
+	@Column(name = "memory_size", length = 100)
+	public String getMemorySize() {
+		return memorySize;
+	}
+
+	@Column(name = "os_name", length = 100)
+	public String getOsName() {
+		return osName;
+	}
+
+	@Column(name = "server")
+	public Integer getServer() {
+		return server;
+	}
+
+	@Column(name = "subnet")
+	public Integer getSubnet() {
+		return subnet;
+	}
+
+	public void setAdapterName(String adapterName) {
+		this.adapterName = adapterName;
+	}
+
+	public void setCpuNumber(String cpuNumber) {
+		this.cpuNumber = cpuNumber;
+	}
+
+	public void setDatastoreName(String datastoreName) {
+		this.datastoreName = datastoreName;
+	}
+
+	public void setDiskSize(String diskSize) {
+		this.diskSize = diskSize;
+	}
+
+	public void setEcs(Ecs ecs) {
+		this.ecs = ecs;
+	}
+
+	public void setEcsSpec(Integer ecsSpec) {
+		this.ecsSpec = ecsSpec;
+	}
+
+	public void setEcsStatus(Integer ecsStatus) {
+		this.ecsStatus = ecsStatus;
+	}
+
+	public void setEcsType(Integer ecsType) {
+		this.ecsType = ecsType;
+	}
+
+	public void setIpaddress(Integer ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public void setIsDesktop(Boolean isDesktop) {
+		this.isDesktop = isDesktop;
+	}
+
+	public void setIsGpu(Boolean isGpu) {
+		this.isGpu = isGpu;
+	}
+
 	public void setMacAddress(String macAddress) {
 		this.macAddress = macAddress;
+	}
+
+	public void setMemorySize(String memorySize) {
+		this.memorySize = memorySize;
+	}
+
+	public void setOsName(String osName) {
+		this.osName = osName;
+	}
+
+	public void setServer(Integer server) {
+		this.server = server;
+	}
+
+	public void setSubnet(Integer subnet) {
+		this.subnet = subnet;
 	}
 
 }

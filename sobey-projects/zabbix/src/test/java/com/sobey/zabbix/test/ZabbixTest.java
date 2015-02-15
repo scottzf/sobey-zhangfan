@@ -53,7 +53,7 @@ import com.sobey.zabbix.webservice.response.dto.ZItemDTO;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ZabbixTest extends TestCase {
 
-	private static String ZABBIX_API_URL = "http://113.142.30.36:82/zabbix/api_jsonrpc.php";
+	private static String ZABBIX_API_URL = "http://10.2.12.1/zabbix/api_jsonrpc.php";
 
 	@Autowired
 	public ZabbixApiService service;
@@ -126,17 +126,16 @@ public class ZabbixTest extends TestCase {
 	@Test
 	public void gethistory() throws JSONException, IOException {
 
-		String hostId = getHostId("10.10.101.1");
+		String hostId = getHostId("Tenants-7Io6mxdH-172.16.0.6");
 
-		ZItemDTO item = getItem(hostId, ItemEnum.系统盘可用空间百分比.getValue());
+		System.out.println(hostId);
 
-		ZHistoryItemDTO zHistoryItemDTO = gethistory(hostId, item.getItemid());
+		ZHistoryItemDTO zHistoryItemDTO = gethistory(hostId, ItemEnum.Network_Out.getValue());
 
 		for (ZItemDTO zItemDTO : zHistoryItemDTO.getzItemDTOs()) {
-			System.out.println(zItemDTO.getUnits());
-			System.out.println(zItemDTO.getValue());
-			System.out.println(zItemDTO.getClock());
-			System.out.println(zItemDTO.getItemid());
+			System.out.println("时间:" + zItemDTO.getClock());
+			System.out.println("值:" + zItemDTO.getValue());
+			System.out.println("单位:" + zItemDTO.getUnits());
 			System.out.println();
 		}
 
@@ -145,12 +144,12 @@ public class ZabbixTest extends TestCase {
 	@Test
 	public void zabbixAPITest() throws JsonGenerationException, JsonMappingException, IOException, JSONException {
 
-		String hostId = getHostId("netapp-1");
+		String hostId = getHostId("Tenants-7Io6mxdH-172.16.0.6");
 
 		System.out.println("hostId:" + hostId);
 
 		// 监控netapp卷大小,需要注意获得卷所在的controller,获得controller的hostID后,在根据key查询卷大小.key 的组合格式.
-		ZItemDTO item = getItem(hostId, "VolSpace[/vol/data_gdsyxh/]");
+		ZItemDTO item = getItem(hostId, ItemEnum.Disk.getValue());
 
 		// VolSpacePercent 已用百分比
 		// VolStatus
@@ -158,6 +157,7 @@ public class ZabbixTest extends TestCase {
 		System.out.println(item.getClock());
 		System.out.println(item.getValue());
 		System.out.println(item.getUnits());
+		System.out.println(item.getValueType());
 
 	}
 
@@ -406,6 +406,9 @@ public class ZabbixTest extends TestCase {
 			item.setClock(subResult(node, "lastclock"));
 			item.setValue(subResult(node, "lastvalue"));
 			item.setUnits(subResult(node, "units"));
+			Integer valueType = Integer.valueOf(subResult(node, "value_type") == null ? "0" : subResult(node,
+					"value_type"));
+			item.setValueType(valueType);
 		}
 
 		return item;
@@ -423,11 +426,10 @@ public class ZabbixTest extends TestCase {
 		jsonObj.put("jsonrpc", "2.0");
 		jsonObj.put("method", "history.get");
 		jsonObj.put("auth", getToken());
-		jsonObj.put(
-				"params",
-				(new JSONObject().put("output", "extend").put("limit", limits).put("sortfield", "clock")
-						.put("sortorder", "DESC").put("history", 0).put("itemids", zItemDTO.getItemid()).put("hostids",
-						hostId)));
+		jsonObj.put("params",
+				(new JSONObject().put("output", "extend").put("history", zItemDTO.getValueType()).put("limit", limits)
+						.put("sortfield", "clock").put("sortorder", "DESC").put("itemids", zItemDTO.getItemid()).put(
+						"hostids", hostId)));
 
 		String resStr = executeZabbixMethod(jsonObj);
 

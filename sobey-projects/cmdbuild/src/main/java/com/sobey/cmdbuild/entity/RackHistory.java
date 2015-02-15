@@ -20,29 +20,24 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "rack_history", schema = "public")
 public class RackHistory extends BasicEntity {
 
-	private Rack rack;
-	private Date endDate;
-	private Integer idc;
-	private Integer height;
-	private Integer power;
 	private Integer brand;
-	private String model;
-	private Integer unitNumber;
-	private String sn;
+	private Date endDate;
 	private String gdzcSn;
+	private Integer height;
+	private Integer idc;
+	private String model;
+	private Integer power;
+	private Rack rack;
 	private String remark;
+	private String sn;
+	private Integer unitNumber;
 
 	public RackHistory() {
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "\"CurrentId\"", nullable = false)
-	public Rack getRack() {
-		return rack;
-	}
-
-	public void setRack(Rack rack) {
-		this.rack = rack;
+	@Column(name = "brand")
+	public Integer getBrand() {
+		return brand;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -51,17 +46,9 @@ public class RackHistory extends BasicEntity {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	@Column(name = "idc")
-	public Integer getIdc() {
-		return idc;
-	}
-
-	public void setIdc(Integer idc) {
-		this.idc = idc;
+	@Column(name = "gdzcsn", length = 100)
+	public String getGdzcSn() {
+		return gdzcSn;
 	}
 
 	@Column(name = "height")
@@ -69,26 +56,9 @@ public class RackHistory extends BasicEntity {
 		return height;
 	}
 
-	public void setHeight(Integer height) {
-		this.height = height;
-	}
-
-	@Column(name = "power")
-	public Integer getPower() {
-		return power;
-	}
-
-	public void setPower(Integer power) {
-		this.power = power;
-	}
-
-	@Column(name = "brand")
-	public Integer getBrand() {
-		return brand;
-	}
-
-	public void setBrand(Integer brand) {
-		this.brand = brand;
+	@Column(name = "idc")
+	public Integer getIdc() {
+		return idc;
 	}
 
 	@Column(name = "model", length = 100)
@@ -96,35 +66,15 @@ public class RackHistory extends BasicEntity {
 		return model;
 	}
 
-	public void setModel(String model) {
-		this.model = model;
+	@Column(name = "power")
+	public Integer getPower() {
+		return power;
 	}
 
-	@Column(name = "unit_number")
-	public Integer getUnitNumber() {
-		return unitNumber;
-	}
-
-	public void setUnitNumber(Integer unitNumber) {
-		this.unitNumber = unitNumber;
-	}
-
-	@Column(name = "sn", length = 100)
-	public String getSn() {
-		return sn;
-	}
-
-	public void setSn(String sn) {
-		this.sn = sn;
-	}
-
-	@Column(name = "gdzcsn", length = 100)
-	public String getGdzcSn() {
-		return gdzcSn;
-	}
-
-	public void setGdzcSn(String gdzcSn) {
-		this.gdzcSn = gdzcSn;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "\"CurrentId\"", nullable = false)
+	public Rack getRack() {
+		return rack;
 	}
 
 	@Column(name = "remark", length = 200)
@@ -132,8 +82,58 @@ public class RackHistory extends BasicEntity {
 		return remark;
 	}
 
+	@Column(name = "sn", length = 100)
+	public String getSn() {
+		return sn;
+	}
+
+	@Column(name = "unit_number")
+	public Integer getUnitNumber() {
+		return unitNumber;
+	}
+
+	public void setBrand(Integer brand) {
+		this.brand = brand;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public void setGdzcSn(String gdzcSn) {
+		this.gdzcSn = gdzcSn;
+	}
+
+	public void setHeight(Integer height) {
+		this.height = height;
+	}
+
+	public void setIdc(Integer idc) {
+		this.idc = idc;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public void setPower(Integer power) {
+		this.power = power;
+	}
+
+	public void setRack(Rack rack) {
+		this.rack = rack;
+	}
+
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public void setSn(String sn) {
+		this.sn = sn;
+	}
+
+	public void setUnitNumber(Integer unitNumber) {
+		this.unitNumber = unitNumber;
 	}
 
 }

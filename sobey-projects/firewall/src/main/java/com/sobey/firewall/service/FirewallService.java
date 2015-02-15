@@ -1,12 +1,24 @@
 package com.sobey.firewall.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
 import com.sobey.core.utils.Collections3;
 import com.sobey.core.utils.PropertiesLoader;
+import com.sobey.firewall.webservice.response.dto.AuthenticateFirewallParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameters;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallPolicyParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallPolicyParameters;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallServiceCategoryParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigRouterStaticParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigRouterStaticParameters;
+import com.sobey.firewall.webservice.response.dto.ConfigSystemInterfaceParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigSystemInterfaceParameters;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
 import com.sobey.firewall.webservice.response.dto.EIPPolicyParameter;
 import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
@@ -33,11 +45,6 @@ public class FirewallService {
 	 * extintf
 	 */
 	private static final String FIREWALL_EXTINTF = FIREWALL_LOADER.getProperty("FIREWALL_EXTINTF");
-
-	/**
-	 * portforward
-	 */
-	private static final String FIREWALL_PORTFORWARD = FIREWALL_LOADER.getProperty("FIREWALL_PORTFORWARD");
 
 	/**
 	 * 联通
@@ -107,6 +114,7 @@ public class FirewallService {
 	 * @return
 	 */
 	private static String generateFormatString(List<String> list) {
+		list.remove("");
 		return Collections3.convertToString(list, "\"", "\" ");
 	}
 
@@ -205,9 +213,28 @@ public class FirewallService {
 	 * end
 	 * 
 	 * config firewall  vipgrp
-	 * edit "CNC_All_Services"
+	 * edit "CTC_ALL_Server"
 	 * set interface "wan1"
 	 * set member  "119.6.200.219-tcp-8080" "119.6.200.219-tcp-80"   
+	 * end
+	 * 
+	 * config firewall policy    电信 和联通各做一次.
+	 * edit 20
+	 *         
+	 * set srcintf "port3" //公网IP接口
+	 *         
+	 * set dstintf "inbound"   //子网的接口
+	 *         
+	 * set srcaddr "all"
+	 *         
+	 * set dstaddr "CTC_ALL_Server"
+	 *         
+	 * set action accept
+	 *         
+	 * set schedule "always"
+	 *        
+	 *  set service "ALL"
+	 * next
 	 * end
 	 * </pre>
 	 * 
@@ -219,14 +246,14 @@ public class FirewallService {
 	 *            (用于区分在scrip或web中的显示效果)
 	 * @return
 	 */
-	public String createEip(EIPParameter parameter) {
+	public String configFirewallVIPScrip(EIPParameter parameter) {
 
 		StringBuilder sb = new StringBuilder();
 
 		// 生成端口的映射策略脚本. 一个端口对应一条脚本
 		for (EIPPolicyParameter policy : parameter.getPolicies()) {
 
-			String vipName = generateVIPMappingName(parameter.getInternetIP(), policy.getProtocolText(),
+			String vipName = generateVIPMappingName(parameter.getInternetIP(), policy.getProtocol(),
 					policy.getTargetPort());
 
 			parameter.getAllPolicies().add(vipName);
@@ -234,27 +261,36 @@ public class FirewallService {
 			sb.append("config firewall vip").append(DEFAULT_SYMBOL);
 			sb.append("edit ").append("\"").append(vipName).append("\"").append(DEFAULT_SYMBOL);
 			sb.append("set extip ").append(parameter.getInternetIP()).append(DEFAULT_SYMBOL);
-			sb.append("set extintf ").append("\"").append(FIREWALL_EXTINTF).append("\"").append(DEFAULT_SYMBOL);
-			sb.append("set portforward ").append(FIREWALL_PORTFORWARD).append(DEFAULT_SYMBOL);
+			sb.append("set extintf ").append("\"").append(parameter.getVipIntefaceName()).append("\"")
+					.append(DEFAULT_SYMBOL);
+			sb.append("set portforward enable").append(DEFAULT_SYMBOL);
 			sb.append("set mappedip ").append(parameter.getPrivateIP()).append(DEFAULT_SYMBOL);
-
-			// 当协议为udp时,增加协议的设置,为tcp时,不需要设置.
-			if ("udp".equalsIgnoreCase(policy.getProtocolText())) {
-				sb.append("set protocol udp").append(DEFAULT_SYMBOL);
-			}
+			sb.append("set protocol ").append(policy.getProtocol()).append(DEFAULT_SYMBOL);
 			sb.append("set extport ").append(policy.getSourcePort()).append(DEFAULT_SYMBOL);
 			sb.append("set mappedport ").append(policy.getTargetPort()).append(DEFAULT_SYMBOL);
 			sb.append("next").append(DEFAULT_SYMBOL);
 			sb.append("end").append(DEFAULT_SYMBOL);
-			sb.append(DEFAULT_SYMBOL);
 		}
 
 		sb.append("config firewall vipgrp").append(DEFAULT_SYMBOL);
-		sb.append("edit ").append("\"").append(getVipgrpByISP(parameter)).append("\"").append(DEFAULT_SYMBOL);
-		sb.append("set interface ").append("\"").append(FIREWALL_EXTINTF).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("edit ").append("\"").append(parameter.getVipGroupName()).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set interface ").append("\"").append(parameter.getVipIntefaceName()).append("\"")
+				.append(DEFAULT_SYMBOL);
 		sb.append("set member ").append(generateFormatString(parameter.getAllPolicies())).append(DEFAULT_SYMBOL);
 		sb.append("end").append(DEFAULT_SYMBOL);
-		sb.append("quit").append(DEFAULT_SYMBOL);
+
+		sb.append("config firewall policy").append(DEFAULT_SYMBOL);
+		sb.append("edit 0").append(DEFAULT_SYMBOL);
+		sb.append("set srcintf ").append("\"").append(parameter.getVipIntefaceName()).append("\"")
+				.append(DEFAULT_SYMBOL);
+		sb.append("set srcaddr ").append("\"").append("all").append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set dstintf ").append("\"").append(parameter.getInterfaceName()).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set dstaddr ").append("\"").append(parameter.getVipGroupName()).append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set action accept").append(DEFAULT_SYMBOL);
+		sb.append("set schedule ").append("\"").append("always").append("\"").append(DEFAULT_SYMBOL);
+		sb.append("set service ").append("\"").append("ALL").append("\"").append(DEFAULT_SYMBOL);
+		sb.append("next").append(DEFAULT_SYMBOL);
+		sb.append("end").append(DEFAULT_SYMBOL);
 
 		return sb.toString();
 	}
@@ -305,8 +341,7 @@ public class FirewallService {
 
 		// 获得要删除EIP的映射策略名
 		for (EIPPolicyParameter policy : parameter.getPolicies()) {
-			policies.add(generateVIPMappingName(parameter.getInternetIP(), policy.getProtocolText(),
-					policy.getTargetPort()));
+			policies.add(generateVIPMappingName(parameter.getInternetIP(), policy.getProtocol(), policy.getTargetPort()));
 		}
 
 		// Step.2 从所有的映射策略中移除要删除的eip映射策略.
@@ -407,7 +442,7 @@ public class FirewallService {
 		 * 如果是网关,则接下来的两个参数应该为: 网关 和 255.255.255.0
 		 */
 
-		for (String ipaddress : parameter.getIpaddress()) {
+		for (String ipaddress : parameter.getIpaddresses()) {
 			sb.append("config firewall address").append(DEFAULT_SYMBOL);
 			sb.append("edit ").append("\"").append(generateAddressNameByIP(ipaddress)).append("\"")
 					.append(DEFAULT_SYMBOL);
@@ -448,7 +483,7 @@ public class FirewallService {
 		sb.append(DEFAULT_SYMBOL);
 
 		sb.append("config firewall policy").append(DEFAULT_SYMBOL);
-		sb.append("edit ").append(parameter.getFirewallPolicyId()).append(DEFAULT_SYMBOL);
+		sb.append("edit ").append(parameter.getPolicyId()).append(DEFAULT_SYMBOL);
 		sb.append("set srcintf ").append("\"").append(FIREWALL_SRCINTF).append("\"").append(DEFAULT_SYMBOL);
 		sb.append("set dstintf ").append("\"").append(FIREWALL_DSTINTF).append("\"").append(DEFAULT_SYMBOL);
 		sb.append("set srcaddr ").append("\"").append(FIREWALL_SRCADDR).append("\"").append(DEFAULT_SYMBOL);
@@ -548,7 +583,7 @@ public class FirewallService {
 		 * 
 		 * 如果是网关,则接下来的两个参数应该为: 网关 和 255.255.255.0
 		 */
-		for (String ipaddress : parameter.getIpaddress()) {
+		for (String ipaddress : parameter.getIpaddresses()) {
 			sb.append("config firewall address").append(DEFAULT_SYMBOL);
 			sb.append("edit ").append("\"").append(generateAddressNameByIP(ipaddress)).append("\"")
 					.append(DEFAULT_SYMBOL);
@@ -574,7 +609,7 @@ public class FirewallService {
 
 		// Step.2
 		sb.append("config firewall policy").append(DEFAULT_SYMBOL);
-		sb.append("edit ").append(parameter.getFirewallPolicyId()).append(DEFAULT_SYMBOL);
+		sb.append("edit ").append(parameter.getPolicyId()).append(DEFAULT_SYMBOL);
 		sb.append("set srcintf ").append("\"").append(FIREWALL_SRCINTF).append("\"").append(DEFAULT_SYMBOL);
 		sb.append("set dstintf ").append("\"").append(FIREWALL_DSTINTF).append("\"").append(DEFAULT_SYMBOL);
 		sb.append("set srcaddr ").append("\"").append(FIREWALL_SRCADDR).append("\"").append(DEFAULT_SYMBOL);
@@ -661,7 +696,7 @@ public class FirewallService {
 		 * 
 		 * 如果是网关,则接下来的两个参数应该为: 网关 和 255.255.255.0
 		 */
-		for (String ipaddress : parameter.getIpaddress()) {
+		for (String ipaddress : parameter.getIpaddresses()) {
 			addressList.add(generateAddressNameByIP(ipaddress));
 		}
 
@@ -671,7 +706,7 @@ public class FirewallService {
 
 		// Step.1
 		sb.append("config firewall policy").append(DEFAULT_SYMBOL);
-		sb.append("delete ").append(parameter.getFirewallPolicyId()).append(DEFAULT_SYMBOL);
+		sb.append("delete ").append(parameter.getPolicyId()).append(DEFAULT_SYMBOL);
 		sb.append("end").append(DEFAULT_SYMBOL);
 		sb.append(DEFAULT_SYMBOL);
 
@@ -697,6 +732,192 @@ public class FirewallService {
 
 		sb.append("quit").append(DEFAULT_SYMBOL);
 
+		return sb.toString();
+	}
+
+	/**
+	 * <pre>
+	 * config system interface
+	 * edit port1
+	 * set ip 192.168.100.1 255.255.255.0
+	 * set allowaccess ping https ssh telnet
+	 * set type physical
+	 * set snmp-index 8
+	 * end                 
+	 * config system interface
+	 * edit port2
+	 * set ip 192.168.200.1 255.255.255.0
+	 * set allowaccess ping https ssh telnet
+	 * set type physical
+	 * set snmp-index 8
+	 * end
+	 * </pre>
+	 * 
+	 * @param configSystemInterfaceParameters
+	 * @return
+	 */
+	public String configSystemInterfaceScrip(ConfigSystemInterfaceParameters configSystemInterfaceParameters) {
+
+		StringBuilder sb = new StringBuilder();
+
+		for (ConfigSystemInterfaceParameter parameter : configSystemInterfaceParameters
+				.getConfigSystemInterfaceParameters()) {
+
+			sb.append("config system interface").append(DEFAULT_SYMBOL);
+			sb.append("edit ").append(parameter.getInterfaceName()).append(DEFAULT_SYMBOL);
+			sb.append("set ip ").append(parameter.getGateway()).append(" ").append(parameter.getSubnetMask())
+					.append(DEFAULT_SYMBOL); // parameter.getGateway() 此处必须以1结尾,表示这个IP起始,配合后面子网掩码
+			sb.append("set allowaccess ping https ssh telnet").append(DEFAULT_SYMBOL);
+			sb.append("set type physical").append(DEFAULT_SYMBOL);
+			sb.append("end").append(DEFAULT_SYMBOL);
+		}
+
+		return sb.toString();
+	}
+
+	/**
+	 * 
+	 * 配置防火墙地址
+	 * 
+	 * <pre>
+	 * config firewall address
+	 * edit "192.168.100.0"
+	 * set subnet 192.168.100.0 255.255.255.0
+	 * next
+	 * config firewall address
+	 * edit "192.168.200.0"
+	 * set subnet 192.168.200.0 255.255.255.0
+	 * next
+	 * </pre>
+	 * 
+	 * @param configFirewallAddressParameters
+	 * @return
+	 */
+	public String configFirewallAddressScrip(ConfigFirewallAddressParameters configFirewallAddressParameters) {
+
+		StringBuilder sb = new StringBuilder();
+
+		for (ConfigFirewallAddressParameter parameter : configFirewallAddressParameters
+				.getConfigFirewallAddressParameters()) {
+			sb.append("config firewall address").append(DEFAULT_SYMBOL);
+			sb.append("edit ").append("\"").append(parameter.getSegment()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set subnet ").append(parameter.getSegment()).append(" ").append(parameter.getSubnetMask())
+					.append(DEFAULT_SYMBOL);
+			sb.append("next").append(DEFAULT_SYMBOL);
+		}
+
+		return sb.toString();
+	}
+
+	/**
+	 * 配置防火墙策略
+	 * 
+	 * @param configFirewallPolicyParameters
+	 * @return
+	 */
+	public String configFirewallPolicyScrip(ConfigFirewallPolicyParameters configFirewallPolicyParameters) {
+
+		StringBuilder sb = new StringBuilder();
+
+		for (ConfigFirewallPolicyParameter parameter : configFirewallPolicyParameters
+				.getConfigFirewallPolicyParameters()) {
+			sb.append("config firewall policy").append(DEFAULT_SYMBOL);
+			sb.append("edit ").append(parameter.getPolicyId()).append(DEFAULT_SYMBOL);
+			sb.append("set srcintf ").append("\"").append(parameter.getSrcintf()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set srcaddr ").append("\"").append(parameter.getSrcaddr()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set dstintf ").append("\"").append(parameter.getDstintf()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set dstaddr ").append("\"").append(parameter.getDstaddr()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set action accept").append(DEFAULT_SYMBOL);
+			sb.append("set schedule ").append("\"").append("always").append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set service ").append("\"").append("ALL").append("\"").append(DEFAULT_SYMBOL);
+
+			if (StringUtils.equalsIgnoreCase("Internet", parameter.getPolicyType())) {
+				sb.append("set nat enable").append(DEFAULT_SYMBOL);
+			}
+			sb.append("next").append(DEFAULT_SYMBOL);
+			sb.append("end").append(DEFAULT_SYMBOL);
+		}
+
+		return sb.toString();
+	}
+
+	public String configRouterStaticScrip(ConfigRouterStaticParameters configRouterStaticParameters) {
+
+		StringBuilder sb = new StringBuilder();
+
+		for (ConfigRouterStaticParameter parameter : configRouterStaticParameters.getConfigRouterStaticParameters()) {
+			sb.append("config router static").append(DEFAULT_SYMBOL);
+			sb.append("edit ").append(parameter.getRouterId()).append(DEFAULT_SYMBOL);
+			sb.append("set device ").append("\"").append(parameter.getInterfaceName()).append("\"")
+					.append(DEFAULT_SYMBOL);
+			sb.append("set gateway ").append(parameter.getIspGateway()).append(DEFAULT_SYMBOL);
+			sb.append("end").append(DEFAULT_SYMBOL);
+
+		}
+
+		return sb.toString();
+	}
+
+	public String ConfigFirewallServiceCategoryScrip(
+			ArrayList<ConfigFirewallServiceCategoryParameter> configFirewallServiceCategoryParameters) {
+
+		StringBuilder sb = new StringBuilder();
+
+		for (ConfigFirewallServiceCategoryParameter parameter : configFirewallServiceCategoryParameters) {
+
+			sb.append("config firewall service category").append(DEFAULT_SYMBOL);
+			sb.append("edit ").append("\"").append(parameter.getCategoryName()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set ").append(parameter.getProtocol()).append("-portrange ").append(parameter.getPortrange())
+					.append(":0").append(DEFAULT_SYMBOL);
+
+			sb.append("edit ").append(parameter.getPolicyId()).append(DEFAULT_SYMBOL);
+			sb.append("set srcintf ").append("\"").append(parameter.getSrcintf()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set dstintf ").append("\"").append(parameter.getDstintf()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set srcaddr ").append("\"").append(parameter.getSrcaddr()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set dstaddr ").append("\"").append(parameter.getDstaddr()).append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set action accept").append(DEFAULT_SYMBOL);
+			sb.append("set schedule ").append("\"").append("always").append("\"").append(DEFAULT_SYMBOL);
+			sb.append("set service ").append("\"").append(parameter.getCategoryName()).append("\"")
+					.append(DEFAULT_SYMBOL);
+			if (StringUtils.equalsIgnoreCase("deny", parameter.getAction())) {
+				sb.append("set logtraffic all").append(DEFAULT_SYMBOL);
+			}
+			sb.append(DEFAULT_SYMBOL);
+
+		}
+
+		return sb.toString();
+	}
+
+	public String RegisteredScrip() {
+		return "exec update-now";
+	}
+
+	public String modifyConfigSystemInterfaceScrip(ConfigSystemInterfaceParameter parameter) {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("config system interface").append(DEFAULT_SYMBOL);
+		sb.append("edit ").append(parameter.getInterfaceName()).append(DEFAULT_SYMBOL);
+		sb.append("set ip ").append(parameter.getGateway()).append(" ").append(parameter.getSubnetMask())
+				.append(DEFAULT_SYMBOL);
+		// sb.append("next").append(DEFAULT_SYMBOL);
+		sb.append("end").append(DEFAULT_SYMBOL);
+		sb.append("execute backup config flash").append(DEFAULT_SYMBOL);
+		return sb.toString();
+	}
+
+	/**
+	 * 删除防火墙中所有的策略.
+	 * 
+	 * @param authenticateFirewallParameter
+	 * @return
+	 */
+	public String PurgeConfigFirewallPolicyScrip(AuthenticateFirewallParameter authenticateFirewallParameter) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("config firewall policy").append(DEFAULT_SYMBOL);
+		sb.append("purge").append(DEFAULT_SYMBOL);
+		sb.append("Y").append(DEFAULT_SYMBOL);
+		sb.append("end").append(DEFAULT_SYMBOL);
 		return sb.toString();
 	}
 

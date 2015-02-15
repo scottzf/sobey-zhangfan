@@ -9,8 +9,8 @@ public class TestData {
 
 		Params params = new Params();
 
-		params.setUser("admin");
-		params.setPassword("gsdw_zy@qq.com");
+		params.setUser("Admin");
+		params.setPassword("zabbix");
 
 		Authenticate authenticate = new Authenticate(params);
 

@@ -18,71 +18,14 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "tenants", schema = "public")
 public class Tenants extends BasicEntity {
 
-	private Integer aclNumber;
-	private String password;
+	private String accessKey;
+	private String company;
 	private String email;
 	private String phone;
-	private String company;
-	private String createInfo;
-	private String accessKey;
 	private String remark;
 	private Set<TenantsHistory> tenantsHistories = new HashSet<TenantsHistory>(0);
 
 	public Tenants() {
-	}
-
-	@Column(name = "acl_number")
-	public Integer getAclNumber() {
-		return aclNumber;
-	}
-
-	public void setAclNumber(Integer aclNumber) {
-		this.aclNumber = aclNumber;
-	}
-
-	@Column(name = "password", length = 100)
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	@Column(name = "email", length = 100)
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	@Column(name = "phone", length = 100)
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	@Column(name = "company", length = 100)
-	public String getCompany() {
-		return company;
-	}
-
-	public void setCompany(String company) {
-		this.company = company;
-	}
-
-	@Column(name = "create_info", length = 100)
-	public String getCreateInfo() {
-		return createInfo;
-	}
-
-	public void setCreateInfo(String createInfo) {
-		this.createInfo = createInfo;
 	}
 
 	@Column(name = "access_key", length = 200)
@@ -90,8 +33,19 @@ public class Tenants extends BasicEntity {
 		return accessKey;
 	}
 
-	public void setAccessKey(String accessKey) {
-		this.accessKey = accessKey;
+	@Column(name = "company", length = 100)
+	public String getCompany() {
+		return company;
+	}
+
+	@Column(name = "email", length = 100)
+	public String getEmail() {
+		return email;
+	}
+
+	@Column(name = "phone", length = 100)
+	public String getPhone() {
+		return phone;
 	}
 
 	@Column(name = "remark", length = 200)
@@ -99,13 +53,29 @@ public class Tenants extends BasicEntity {
 		return remark;
 	}
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tenants")
 	public Set<TenantsHistory> getTenantsHistories() {
 		return tenantsHistories;
+	}
+
+	public void setAccessKey(String accessKey) {
+		this.accessKey = accessKey;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 	public void setTenantsHistories(Set<TenantsHistory> tenantsHistories) {

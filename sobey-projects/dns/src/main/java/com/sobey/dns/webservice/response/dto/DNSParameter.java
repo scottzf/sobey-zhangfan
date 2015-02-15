@@ -36,32 +36,97 @@ public class DNSParameter {
 	private String domianType;
 
 	/**
+	 * netscaler登录密码
+	 */
+	private String password;
+
+	/**
+	 * 端口
+	 */
+	private Integer port;
+
+	/**
+	 * 登录协议, HTTP
+	 */
+	private String protocol;
+
+	/**
 	 * 公网IP集合
 	 */
 	private ArrayList<DNSPublicIPParameter> publicIPs;
 
+	/**
+	 * netscaler IP地址
+	 */
+	private String url;
+
+	/**
+	 * netscaler登录名
+	 */
+	private String userName;
+
 	public String getDomianName() {
 		return domianName;
-	}
-
-	public void setDomianName(String domianName) {
-		this.domianName = domianName;
 	}
 
 	public String getDomianType() {
 		return domianType;
 	}
 
-	public void setDomianType(String domianType) {
-		this.domianType = domianType;
+	public String getPassword() {
+		return password;
+	}
+
+	public Integer getPort() {
+		return port;
+	}
+
+	public String getProtocol() {
+		return protocol;
 	}
 
 	public ArrayList<DNSPublicIPParameter> getPublicIPs() {
 		return publicIPs;
 	}
 
+	public String getUrl() {
+		return url;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setDomianName(String domianName) {
+		this.domianName = domianName;
+	}
+
+	public void setDomianType(String domianType) {
+		this.domianType = domianType;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setPort(Integer port) {
+		this.port = port;
+	}
+
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
+	}
+
 	public void setPublicIPs(ArrayList<DNSPublicIPParameter> publicIPs) {
 		this.publicIPs = publicIPs;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	/**

@@ -4,6 +4,17 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import com.sobey.firewall.constans.WsConstants;
+import com.sobey.firewall.webservice.response.dto.AuthenticateFirewallParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameters;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallPolicyParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallPolicyParameters;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallServiceCategoryParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallServiceCategoryParameters;
+import com.sobey.firewall.webservice.response.dto.ConfigRouterStaticParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigRouterStaticParameters;
+import com.sobey.firewall.webservice.response.dto.ConfigSystemInterfaceParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigSystemInterfaceParameters;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
 import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
 import com.sobey.firewall.webservice.response.result.WSResult;
@@ -62,5 +73,44 @@ public interface FirewallSoapService {
 	 */
 	WSResult changeVPNUserAccesssAddressByFirewall(
 			@WebParam(name = "vpnUserParameter") VPNUserParameter vpnUserParameter);
+
+	WSResult ConfigSystemInterfaceByFirewall(
+			@WebParam(name = "configSystemInterfaceParameter") ConfigSystemInterfaceParameter configSystemInterfaceParameter);
+
+	WSResult ConfigSystemInterfaceListByFirewall(
+			@WebParam(name = "configSystemInterfaceParameters") ConfigSystemInterfaceParameters configSystemInterfaceParameters);
+
+	WSResult ModifyConfigSystemInterfaceByFirewall(
+			@WebParam(name = "configSystemInterfaceParameter") ConfigSystemInterfaceParameter configSystemInterfaceParameter);
+
+	WSResult ConfigFirewallAddressParameterByFirewall(
+			@WebParam(name = "configFirewallAddressParameter") ConfigFirewallAddressParameter configFirewallAddressParameter);
+
+	WSResult ConfigFirewallAddressParameterListByFirewall(
+			@WebParam(name = "configFirewallAddressParameters") ConfigFirewallAddressParameters configFirewallAddressParameters);
+
+	WSResult ConfigFirewallPolicyParameterByFirewall(
+			@WebParam(name = "configFirewallPolicyParameter") ConfigFirewallPolicyParameter configFirewallPolicyParameter);
+
+	WSResult ConfigFirewallPolicyParameterListByFirewall(
+			@WebParam(name = "configFirewallPolicyParameters") ConfigFirewallPolicyParameters configFirewallPolicyParameters);
+
+	WSResult ConfigRouterStaticParameterByFirewall(
+			@WebParam(name = "configRouterStaticParameter") ConfigRouterStaticParameter configRouterStaticParameter);
+
+	WSResult ConfigRouterStaticParameterListByFirewall(
+			@WebParam(name = "configRouterStaticParameters") ConfigRouterStaticParameters configRouterStaticParameters);
+
+	WSResult ConfigFirewallServiceCategoryParameterByFirewall(
+			@WebParam(name = "configFirewallServiceCategoryParameter") ConfigFirewallServiceCategoryParameter configFirewallServiceCategoryParameter);
+
+	WSResult ConfigFirewallServiceCategoryParameterListByFirewall(
+			@WebParam(name = "configFirewallServiceCategoryParameters") ConfigFirewallServiceCategoryParameters configFirewallServiceCategoryParameters);
+
+	WSResult RegisteredByFirewall(
+			@WebParam(name = "authenticateFirewallParameter") AuthenticateFirewallParameter authenticateFirewallParameter);
+
+	WSResult PurgeConfigFirewallPolicyByFirewall(
+			@WebParam(name = "authenticateFirewallParameter") AuthenticateFirewallParameter authenticateFirewallParameter);
 
 }

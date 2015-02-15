@@ -37,10 +37,12 @@ public interface LoadbalancerSoapService {
 	WSResult deleteELBByLoadbalancer(@WebParam(name = "elbParameter") ELBParameter elbParameter);
 
 	/**
-	 * 获得物理设备上elb相关的所有配置信息.
+	 * 获得物理设备上elb相关的所有配置信息. 参数对象中,只需要填写登录相关的 Url,Username,protocol,Port.
 	 * 
+	 * @param parameter
+	 *            {@link ELBParameter}
 	 * @return
 	 */
-	DTOListResult<ElbSync> getELBConfig();
+	DTOListResult<ElbSync> getELBConfig(@WebParam(name = "elbParameter") ELBParameter elbParameter);
 
 }

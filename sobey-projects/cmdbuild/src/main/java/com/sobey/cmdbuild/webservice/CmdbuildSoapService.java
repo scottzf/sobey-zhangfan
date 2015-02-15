@@ -1,7 +1,5 @@
 package com.sobey.cmdbuild.webservice;
 
-import java.util.List;
-
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
@@ -16,10 +14,10 @@ import com.sobey.cmdbuild.webservice.response.dto.EipPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ElbDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ElbPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.Es3DTO;
-import com.sobey.cmdbuild.webservice.response.dto.EsgDTO;
-import com.sobey.cmdbuild.webservice.response.dto.EsgPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.FirewallDTO;
+import com.sobey.cmdbuild.webservice.response.dto.FirewallPolicyDTO;
 import com.sobey.cmdbuild.webservice.response.dto.FirewallPortDTO;
+import com.sobey.cmdbuild.webservice.response.dto.FirewallServiceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.HardDiskDTO;
 import com.sobey.cmdbuild.webservice.response.dto.IdcDTO;
 import com.sobey.cmdbuild.webservice.response.dto.IpaddressDTO;
@@ -30,24 +28,26 @@ import com.sobey.cmdbuild.webservice.response.dto.LookUpDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapEcsEipDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapEcsElbDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapEcsEs3DTO;
-import com.sobey.cmdbuild.webservice.response.dto.MapEcsEsgDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapEipDnsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapEipElbDTO;
+import com.sobey.cmdbuild.webservice.response.dto.MapRouterFirewallServiceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MapTagServiceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.MemoryDTO;
 import com.sobey.cmdbuild.webservice.response.dto.NicDTO;
 import com.sobey.cmdbuild.webservice.response.dto.NicPortDTO;
+import com.sobey.cmdbuild.webservice.response.dto.ProducedDTO;
 import com.sobey.cmdbuild.webservice.response.dto.RackDTO;
+import com.sobey.cmdbuild.webservice.response.dto.RouterDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ServerDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ServerPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.ServiceDTO;
 import com.sobey.cmdbuild.webservice.response.dto.StorageBoxDTO;
 import com.sobey.cmdbuild.webservice.response.dto.StorageDTO;
 import com.sobey.cmdbuild.webservice.response.dto.StoragePortDTO;
+import com.sobey.cmdbuild.webservice.response.dto.SubnetDTO;
 import com.sobey.cmdbuild.webservice.response.dto.SwitchPortDTO;
 import com.sobey.cmdbuild.webservice.response.dto.SwitchesDTO;
 import com.sobey.cmdbuild.webservice.response.dto.TagDTO;
-import com.sobey.cmdbuild.webservice.response.dto.TagRelation;
 import com.sobey.cmdbuild.webservice.response.dto.TenantsDTO;
 import com.sobey.cmdbuild.webservice.response.dto.VlanDTO;
 import com.sobey.cmdbuild.webservice.response.dto.VpnDTO;
@@ -69,9 +69,12 @@ public interface CmdbuildSoapService {
 	/*************************************************
 	 ****************** Custom ***********************
 	 *************************************************/
-	Integer getMaxAclNumber();
 
-	Integer getMaxPolicyId();
+	Integer getMaxVlanId(Integer nicId);
+
+	Integer getMaxPortIndex(Integer tenantsId);
+
+	Integer getMaxTunnelId();
 
 	// ==============================//
 	// =========== LookUp ===========//
@@ -127,8 +130,6 @@ public interface CmdbuildSoapService {
 
 	PaginationResult<TagDTO> getTagPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
-	List<TagRelation> getTagRelation(@WebParam(name = "serviceId") Integer serviceId);
 
 	// ==============================//
 	// ============ IDC =============//
@@ -233,6 +234,46 @@ public interface CmdbuildSoapService {
 	/********** Service **************/
 
 	// ==============================//
+	// ============= Router ============//
+	// ==============================//
+
+	DTOResult<RouterDTO> findRouter(@WebParam(name = "id") Integer id);
+
+	DTOResult<RouterDTO> findRouterByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createRouter(@WebParam(name = "routerDTO") RouterDTO routerDTO);
+
+	IdResult updateRouter(@WebParam(name = "id") Integer id, @WebParam(name = "routerDTO") RouterDTO routerDTO);
+
+	IdResult deleteRouter(@WebParam(name = "id") Integer id);
+
+	DTOListResult<RouterDTO> getRouterList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<RouterDTO> getRouterPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// ======= FirewallService ======//
+	// ==============================//
+
+	DTOResult<FirewallServiceDTO> findFirewallService(@WebParam(name = "id") Integer id);
+
+	DTOResult<FirewallServiceDTO> findFirewallServiceByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createFirewallService(@WebParam(name = "firewallServiceDTO") FirewallServiceDTO firewallServiceDTO);
+
+	IdResult updateFirewallService(@WebParam(name = "id") Integer id,
+			@WebParam(name = "firewallServiceDTO") FirewallServiceDTO firewallServiceDTO);
+
+	IdResult deleteFirewallService(@WebParam(name = "id") Integer id);
+
+	DTOListResult<FirewallServiceDTO> getFirewallServiceList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<FirewallServiceDTO> getFirewallServicePagination(
+			@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
 	// ============= Ecs ============//
 	// ==============================//
 
@@ -328,25 +369,6 @@ public interface CmdbuildSoapService {
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
-	// ============ Esg =============//
-	// ==============================//
-
-	DTOResult<EsgDTO> findEsg(@WebParam(name = "id") Integer id);
-
-	DTOResult<EsgDTO> findEsgByParams(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	IdResult createEsg(@WebParam(name = "esgDTO") EsgDTO esgDTO);
-
-	IdResult updateEsg(@WebParam(name = "id") Integer id, @WebParam(name = "esgDTO") EsgDTO esgDTO);
-
-	IdResult deleteEsg(@WebParam(name = "id") Integer id);
-
-	DTOListResult<EsgDTO> getEsgList(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	PaginationResult<EsgDTO> getEsgPagination(@WebParam(name = "searchParams") SearchParams searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
-	// ==============================//
 	// ============ Vpn =============//
 	// ==============================//
 
@@ -427,44 +449,7 @@ public interface CmdbuildSoapService {
 	PaginationResult<DnsPolicyDTO> getDnsPolicyPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
-	// ==============================//
-	// ========= EsgPolicy ==========//
-	// ==============================//
-
-	DTOResult<EsgPolicyDTO> findEsgPolicy(@WebParam(name = "id") Integer id);
-
-	DTOResult<EsgPolicyDTO> findEsgPolicyByParams(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	IdResult createEsgPolicy(@WebParam(name = "esgPolicyDTO") EsgPolicyDTO esgPolicyDTO);
-
-	IdResult updateEsgPolicy(@WebParam(name = "id") Integer id,
-			@WebParam(name = "esgPolicyDTO") EsgPolicyDTO esgPolicyDTO);
-
-	IdResult deleteEsgPolicy(@WebParam(name = "id") Integer id);
-
-	DTOListResult<EsgPolicyDTO> getEsgPolicyList(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	PaginationResult<EsgPolicyDTO> getEsgPolicyPagination(@WebParam(name = "searchParams") SearchParams searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
-
 	/********** Map **************/
-
-	// ==============================//
-	// ========= MapEcsEsg ==========//
-	// ==============================//
-
-	DTOResult<MapEcsEsgDTO> findMapEcsEsg(@WebParam(name = "id") Integer id);
-
-	DTOResult<MapEcsEsgDTO> findMapEcsEsgByParams(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	IdResult createMapEcsEsg(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "esgId") Integer esgId);
-
-	IdResult deleteMapEcsEsg(@WebParam(name = "ecsId") Integer ecsId, @WebParam(name = "esgId") Integer esgId);
-
-	DTOListResult<MapEcsEsgDTO> getMapEcsEsgList(@WebParam(name = "searchParams") SearchParams searchParams);
-
-	PaginationResult<MapEcsEsgDTO> getMapEcsEsgPagination(@WebParam(name = "searchParams") SearchParams searchParams,
-			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	// ==============================//
 	// ========= MapEcsEs3 ==========//
@@ -568,6 +553,28 @@ public interface CmdbuildSoapService {
 	DTOListResult<MapTagServiceDTO> getMapTagServiceList(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	PaginationResult<MapTagServiceDTO> getMapTagServicePagination(
+			@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// ======= MapRouterFirewallService ========//
+	// ==============================//
+
+	DTOResult<MapRouterFirewallServiceDTO> findMapRouterFirewallService(@WebParam(name = "id") Integer id);
+
+	DTOResult<MapRouterFirewallServiceDTO> findMapRouterFirewallServiceByParams(
+			@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createMapRouterFirewallService(@WebParam(name = "routerId") Integer routerId,
+			@WebParam(name = "firewallServiceId") Integer firewallServiceId);
+
+	IdResult deleteMapRouterFirewallService(@WebParam(name = "routerId") Integer routerId,
+			@WebParam(name = "firewallServiceId") Integer firewallServiceId);
+
+	DTOListResult<MapRouterFirewallServiceDTO> getMapRouterFirewallServiceList(
+			@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<MapRouterFirewallServiceDTO> getMapRouterFirewallServicePagination(
 			@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
@@ -774,24 +781,9 @@ public interface CmdbuildSoapService {
 	PaginationResult<IpaddressDTO> getIpaddressPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
-	/**
-	 * 分配 IPAddress。将 IPAddress 的状态设置为 “使用”状态
-	 */
-	IdResult allocateIpaddress(@WebParam(name = "id") Integer id);
-
-	/**
-	 * 批量插入 IPAddress
-	 * 
-	 * 先判断是否有相同的 code，如果有相同的 code 则跳过
-	 * 
-	 * 初始的状态为“未使用”
-	 */
-	IdResult insertIpaddress(@WebParam(name = "ipaddressDTOList") List<IpaddressDTO> ipaddressDTOList);
-
-	/**
-	 * 初始化 IPAddress , 将 IPAddress 的状态设置为 “未使用”状态
-	 */
 	IdResult initIpaddress(@WebParam(name = "id") Integer id);
+
+	IdResult allocateIpaddress(@WebParam(name = "id") Integer id);
 
 	// ==============================//
 	// ============ Vlan ============//
@@ -812,11 +804,24 @@ public interface CmdbuildSoapService {
 	PaginationResult<VlanDTO> getVlanPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
-	/**
-	 * 
-	 * 批量插入 Vlan. 先判断是否有相同的 code，如果有相同的 code 则跳过.
-	 */
-	IdResult insertVlan(@WebParam(name = "vlanDTOList") List<VlanDTO> vlanDTOList);
+	// ==============================//
+	// =========== Subnet ==========//
+	// ==============================//
+
+	DTOResult<SubnetDTO> findSubnet(@WebParam(name = "id") Integer id);
+
+	DTOResult<SubnetDTO> findSubnetByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createSubnet(@WebParam(name = "subnetDTO") SubnetDTO subnetDTO);
+
+	IdResult updateSubnet(@WebParam(name = "id") Integer id, @WebParam(name = "subnetDTO") SubnetDTO subnetDTO);
+
+	IdResult deleteSubnet(@WebParam(name = "id") Integer id);
+
+	DTOListResult<SubnetDTO> getSubnetList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<SubnetDTO> getSubnetPagination(@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 	/********** Port **************/
 
@@ -955,6 +960,46 @@ public interface CmdbuildSoapService {
 	DTOListResult<ServiceDTO> getServiceList(@WebParam(name = "searchParams") SearchParams searchParams);
 
 	PaginationResult<ServiceDTO> getServicePagination(@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// ======= FirewallPolicy ======//
+	// ==============================//
+
+	DTOResult<FirewallPolicyDTO> findFirewallPolicy(@WebParam(name = "id") Integer id);
+
+	DTOResult<FirewallPolicyDTO> findFirewallPolicyByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createFirewallPolicy(@WebParam(name = "firewallPolicyDTO") FirewallPolicyDTO firewallPolicyDTO);
+
+	IdResult updateFirewallPolicy(@WebParam(name = "id") Integer id,
+			@WebParam(name = "firewallPolicyDTO") FirewallPolicyDTO firewallPolicyDTO);
+
+	IdResult deleteFirewallPolicy(@WebParam(name = "id") Integer id);
+
+	DTOListResult<FirewallPolicyDTO> getFirewallPolicyList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<FirewallPolicyDTO> getFirewallPolicyPagination(
+			@WebParam(name = "searchParams") SearchParams searchParams,
+			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
+
+	// ==============================//
+	// ============ IDC =============//
+	// ==============================//
+
+	DTOResult<ProducedDTO> findProduced(@WebParam(name = "id") Integer id);
+
+	DTOResult<ProducedDTO> findProducedByParams(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	IdResult createProduced(@WebParam(name = "producedDTO") ProducedDTO producedDTO);
+
+	IdResult updateProduced(@WebParam(name = "id") Integer id, @WebParam(name = "producedDTO") ProducedDTO producedDTO);
+
+	IdResult deleteProduced(@WebParam(name = "id") Integer id);
+
+	DTOListResult<ProducedDTO> getProducedList(@WebParam(name = "searchParams") SearchParams searchParams);
+
+	PaginationResult<ProducedDTO> getProducedPagination(@WebParam(name = "searchParams") SearchParams searchParams,
 			@WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "pageSize") Integer pageSize);
 
 }

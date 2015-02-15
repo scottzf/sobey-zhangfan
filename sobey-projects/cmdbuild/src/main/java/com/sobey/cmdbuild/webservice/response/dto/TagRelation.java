@@ -11,50 +11,50 @@ import com.sobey.cmdbuild.constants.WsConstants;
 @XmlType(name = "TagRelation", namespace = WsConstants.NS)
 public class TagRelation {
 
+	private String parentTagName;
 	private String serviceCode;
 	private String serviceName;
 	private String tagName;
 	private String tagTypeName;
-	private String parentTagName;
+
+	public String getParentTagName() {
+		return parentTagName;
+	}
 
 	public String getServiceCode() {
 		return serviceCode;
-	}
-
-	public void setServiceCode(String serviceCode) {
-		this.serviceCode = serviceCode;
 	}
 
 	public String getServiceName() {
 		return serviceName;
 	}
 
-	public void setServiceName(String serviceName) {
-		this.serviceName = serviceName;
-	}
-
 	public String getTagName() {
 		return tagName;
-	}
-
-	public void setTagName(String tagName) {
-		this.tagName = tagName;
 	}
 
 	public String getTagTypeName() {
 		return tagTypeName;
 	}
 
-	public void setTagTypeName(String tagTypeName) {
-		this.tagTypeName = tagTypeName;
-	}
-
-	public String getParentTagName() {
-		return parentTagName;
-	}
-
 	public void setParentTagName(String parentTagName) {
 		this.parentTagName = parentTagName;
+	}
+
+	public void setServiceCode(String serviceCode) {
+		this.serviceCode = serviceCode;
+	}
+
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
+	}
+
+	public void setTagName(String tagName) {
+		this.tagName = tagName;
+	}
+
+	public void setTagTypeName(String tagTypeName) {
+		this.tagTypeName = tagTypeName;
 	}
 
 	/**

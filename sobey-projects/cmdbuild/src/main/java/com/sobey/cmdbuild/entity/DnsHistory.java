@@ -16,12 +16,17 @@ import com.sobey.cmdbuild.entity.basic.ServiceHistoryBasic;
 @Table(name = "dns_history", schema = "public")
 public class DnsHistory extends ServiceHistoryBasic {
 
-	private Dns dns;
-	private Integer domainType;
-	private String domainName;
 	private String cnameDomain;
+	private Dns dns;
+	private String domainName;
+	private Integer domainType;
 
 	public DnsHistory() {
+	}
+
+	@Column(name = "\"cnameDomain\"", length = 100)
+	public String getCnameDomain() {
+		return cnameDomain;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -30,8 +35,9 @@ public class DnsHistory extends ServiceHistoryBasic {
 		return dns;
 	}
 
-	public void setDns(Dns dns) {
-		this.dns = dns;
+	@Column(name = "\"domainName\"", length = 100)
+	public String getDomainName() {
+		return domainName;
 	}
 
 	@Column(name = "domain_type")
@@ -39,26 +45,20 @@ public class DnsHistory extends ServiceHistoryBasic {
 		return domainType;
 	}
 
-	public void setDomainType(Integer domainType) {
-		this.domainType = domainType;
+	public void setCnameDomain(String cnameDomain) {
+		this.cnameDomain = cnameDomain;
 	}
 
-	@Column(name = "\"domainName\"", length = 100)
-	public String getDomainName() {
-		return domainName;
+	public void setDns(Dns dns) {
+		this.dns = dns;
 	}
 
 	public void setDomainName(String domainName) {
 		this.domainName = domainName;
 	}
 
-	@Column(name = "\"cnameDomain\"", length = 100)
-	public String getCnameDomain() {
-		return cnameDomain;
-	}
-
-	public void setCnameDomain(String cnameDomain) {
-		this.cnameDomain = cnameDomain;
+	public void setDomainType(Integer domainType) {
+		this.domainType = domainType;
 	}
 
 }

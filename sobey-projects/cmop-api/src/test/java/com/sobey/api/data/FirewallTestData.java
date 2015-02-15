@@ -25,12 +25,12 @@ public class FirewallTestData {
 		List<EIPPolicyParameter> policies = Lists.newArrayList();
 
 		EIPPolicyParameter policyParameter = new EIPPolicyParameter();
-		policyParameter.setProtocolText("udp");
+		policyParameter.setProtocol("udp");
 		policyParameter.setSourcePort(8080);
 		policyParameter.setTargetPort(8080);
 
 		EIPPolicyParameter policyParameter2 = new EIPPolicyParameter();
-		policyParameter2.setProtocolText("tcp");
+		policyParameter2.setProtocol("tcp");
 		policyParameter2.setSourcePort(80);
 		policyParameter2.setTargetPort(80);
 
@@ -46,7 +46,7 @@ public class FirewallTestData {
 
 		VPNUserParameter parameter = new VPNUserParameter();
 
-		parameter.setFirewallPolicyId(2000);
+		parameter.setPolicyId(2000);
 		parameter.setNetMask("255.255.255.0");
 		parameter.setVlanId(80);
 		parameter.setVpnUser("liukai01");
@@ -63,7 +63,7 @@ public class FirewallTestData {
 		ipaddress.add(ip);
 
 		parameter.getSegments().addAll(segments);
-		parameter.getIpaddress().addAll(ipaddress);
+		parameter.getIpaddresses().addAll(ipaddress);
 		return parameter;
 	}
 

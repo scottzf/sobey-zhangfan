@@ -7,20 +7,65 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.instance.constans.WsConstants;
 
+/**
+ * 克隆VM的参数对象
+ * 
+ * @author Administrator
+ *
+ */
 @XmlRootElement(name = "CloneVMParameter")
 @XmlType(name = "CloneVMParameter", namespace = WsConstants.NS)
 public class CloneVMParameter {
 
+	/**
+	 * 数据中心
+	 */
 	private String datacenter;
+
+	/**
+	 * 说明
+	 */
 	private String description;
-	private String gateway;
-	private String ipaddress;
-	private String subNetMask;
-	private Integer vlanId;
-	private String vMName;
-	private String vMSUserName;
-	private String vMTemplateName;
-	private String vMTemplateOS;
+
+	/**
+	 * 宿主机在vCenter中的Id
+	 */
+	private String hostId;
+
+	/**
+	 * 宿主机在vCenter中,resourcePool的Id
+	 */
+	private String resourcePool;
+
+	/**
+	 * VM名称
+	 */
+	private String vmName;
+
+	/**
+	 * 所克隆的模板名称
+	 */
+	private String vmTemplateName;
+
+	/**
+	 * 模板操作系统类型:linux or windows
+	 */
+	private String vmTemplateOS;
+
+	public CloneVMParameter() {
+	}
+
+	public CloneVMParameter(String datacenter, String description, String hostId, String resourcePool, String vmName,
+			String vmTemplateName, String vmTemplateOS) {
+		super();
+		this.datacenter = datacenter;
+		this.description = description;
+		this.hostId = hostId;
+		this.resourcePool = resourcePool;
+		this.vmName = vmName;
+		this.vmTemplateName = vmTemplateName;
+		this.vmTemplateOS = vmTemplateOS;
+	}
 
 	public String getDatacenter() {
 		return datacenter;
@@ -38,68 +83,44 @@ public class CloneVMParameter {
 		this.description = description;
 	}
 
-	public String getGateway() {
-		return gateway;
+	public String getHostId() {
+		return hostId;
 	}
 
-	public void setGateway(String gateway) {
-		this.gateway = gateway;
+	public void setHostId(String hostId) {
+		this.hostId = hostId;
 	}
 
-	public String getIpaddress() {
-		return ipaddress;
+	public String getResourcePool() {
+		return resourcePool;
 	}
 
-	public void setIpaddress(String ipaddress) {
-		this.ipaddress = ipaddress;
+	public void setResourcePool(String resourcePool) {
+		this.resourcePool = resourcePool;
 	}
 
-	public String getSubNetMask() {
-		return subNetMask;
+	public String getVmName() {
+		return vmName;
 	}
 
-	public void setSubNetMask(String subNetMask) {
-		this.subNetMask = subNetMask;
+	public void setVmName(String vmName) {
+		this.vmName = vmName;
 	}
 
-	public Integer getVlanId() {
-		return vlanId;
+	public String getVmTemplateName() {
+		return vmTemplateName;
 	}
 
-	public void setVlanId(Integer vlanId) {
-		this.vlanId = vlanId;
+	public void setVmTemplateName(String vmTemplateName) {
+		this.vmTemplateName = vmTemplateName;
 	}
 
-	public String getvMName() {
-		return vMName;
+	public String getVmTemplateOS() {
+		return vmTemplateOS;
 	}
 
-	public void setvMName(String vMName) {
-		this.vMName = vMName;
-	}
-
-	public String getvMSUserName() {
-		return vMSUserName;
-	}
-
-	public void setvMSUserName(String vMSUserName) {
-		this.vMSUserName = vMSUserName;
-	}
-
-	public String getvMTemplateName() {
-		return vMTemplateName;
-	}
-
-	public void setvMTemplateName(String vMTemplateName) {
-		this.vMTemplateName = vMTemplateName;
-	}
-
-	public String getvMTemplateOS() {
-		return vMTemplateOS;
-	}
-
-	public void setvMTemplateOS(String vMTemplateOS) {
-		this.vMTemplateOS = vMTemplateOS;
+	public void setVmTemplateOS(String vmTemplateOS) {
+		this.vmTemplateOS = vmTemplateOS;
 	}
 
 	/**

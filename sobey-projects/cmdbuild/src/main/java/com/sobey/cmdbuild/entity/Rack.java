@@ -18,45 +18,18 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "rack", schema = "public")
 public class Rack extends BasicEntity {
 
-	private Integer idc;
-	private Integer height;
-	private Integer power;
 	private Integer brand;
-	private String model;
-	private Integer unitNumber;
-	private String sn;
 	private String gdzcSn;
-	private String remark;
+	private Integer height;
+	private Integer idc;
+	private String model;
+	private Integer power;
 	private Set<RackHistory> rackHistories = new HashSet<RackHistory>(0);
+	private String remark;
+	private String sn;
+	private Integer unitNumber;
 
 	public Rack() {
-	}
-
-	@Column(name = "idc")
-	public Integer getIdc() {
-		return idc;
-	}
-
-	public void setIdc(Integer idc) {
-		this.idc = idc;
-	}
-
-	@Column(name = "height")
-	public Integer getHeight() {
-		return height;
-	}
-
-	public void setHeight(Integer height) {
-		this.height = height;
-	}
-
-	@Column(name = "power")
-	public Integer getPower() {
-		return power;
-	}
-
-	public void setPower(Integer power) {
-		this.power = power;
 	}
 
 	@Column(name = "brand")
@@ -64,8 +37,19 @@ public class Rack extends BasicEntity {
 		return brand;
 	}
 
-	public void setBrand(Integer brand) {
-		this.brand = brand;
+	@Column(name = "gdzcsn", length = 100)
+	public String getGdzcSn() {
+		return gdzcSn;
+	}
+
+	@Column(name = "height")
+	public Integer getHeight() {
+		return height;
+	}
+
+	@Column(name = "idc")
+	public Integer getIdc() {
+		return idc;
 	}
 
 	@Column(name = "model", length = 100)
@@ -73,44 +57,9 @@ public class Rack extends BasicEntity {
 		return model;
 	}
 
-	public void setModel(String model) {
-		this.model = model;
-	}
-
-	@Column(name = "unit_number")
-	public Integer getUnitNumber() {
-		return unitNumber;
-	}
-
-	public void setUnitNumber(Integer unitNumber) {
-		this.unitNumber = unitNumber;
-	}
-
-	@Column(name = "sn", length = 100)
-	public String getSn() {
-		return sn;
-	}
-
-	public void setSn(String sn) {
-		this.sn = sn;
-	}
-
-	@Column(name = "gdzcsn", length = 100)
-	public String getGdzcSn() {
-		return gdzcSn;
-	}
-
-	public void setGdzcSn(String gdzcSn) {
-		this.gdzcSn = gdzcSn;
-	}
-
-	@Column(name = "remark", length = 200)
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
+	@Column(name = "power")
+	public Integer getPower() {
+		return power;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rack")
@@ -118,8 +67,59 @@ public class Rack extends BasicEntity {
 		return rackHistories;
 	}
 
+	@Column(name = "remark", length = 200)
+	public String getRemark() {
+		return remark;
+	}
+
+	@Column(name = "sn", length = 100)
+	public String getSn() {
+		return sn;
+	}
+
+	@Column(name = "unit_number")
+	public Integer getUnitNumber() {
+		return unitNumber;
+	}
+
+	public void setBrand(Integer brand) {
+		this.brand = brand;
+	}
+
+	public void setGdzcSn(String gdzcSn) {
+		this.gdzcSn = gdzcSn;
+	}
+
+	public void setHeight(Integer height) {
+		this.height = height;
+	}
+
+	public void setIdc(Integer idc) {
+		this.idc = idc;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public void setPower(Integer power) {
+		this.power = power;
+	}
+
 	public void setRackHistories(Set<RackHistory> rackHistories) {
 		this.rackHistories = rackHistories;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public void setSn(String sn) {
+		this.sn = sn;
+	}
+
+	public void setUnitNumber(Integer unitNumber) {
+		this.unitNumber = unitNumber;
 	}
 
 }

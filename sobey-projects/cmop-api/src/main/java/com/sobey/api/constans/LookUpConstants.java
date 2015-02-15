@@ -67,6 +67,87 @@ public class LookUpConstants {
 	}
 
 	/**
+	 * 防火墙动作
+	 * 
+	 * @author Administrator
+	 *
+	 */
+	public enum FirewallAction {
+
+		Allow("Allow", 99),
+
+		Deny("Deny", 100);
+
+		private String name;
+		private Integer value;
+
+		private FirewallAction(String name, Integer value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public Integer getValue() {
+			return value;
+		}
+	}
+
+	/**
+	 * 防火墙方向
+	 * 
+	 * @author Administrator
+	 *
+	 */
+	public enum FirewallDirection {
+
+		上行("上行", 112),
+
+		下行("下行", 113);
+
+		private String name;
+		private Integer value;
+
+		private FirewallDirection(String name, Integer value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public Integer getValue() {
+			return value;
+		}
+	}
+
+	public enum FirewallProtocol {
+
+		TCP("TCP", 115),
+
+		UDP("UDP", 116);
+
+		private String name;
+		private Integer value;
+
+		private FirewallProtocol(String name, Integer value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public Integer getValue() {
+			return value;
+		}
+	}
+
+	/**
 	 * 描述LookUp中ServiceType的Description和Id.
 	 * 
 	 * <pre>
@@ -155,12 +236,58 @@ public class LookUpConstants {
 		}
 	}
 
+	public enum DefaultSubnet {
+
+		Yes("Yes", 117),
+
+		No("No", 118);
+
+		private String name;
+		private Integer value;
+
+		private DefaultSubnet(String name, Integer value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public Integer getValue() {
+			return value;
+		}
+	}
+
+	public enum isHost {
+
+		Yes("Yes", 119),
+
+		No("No", 120);
+
+		private String name;
+		private Integer value;
+
+		private isHost(String name, Integer value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public Integer getValue() {
+			return value;
+		}
+	}
+
 	/**
 	 * 描述ES3Type中AgentType的Description和Id.
 	 * 
 	 * <pre>
-	 * 高IOPS
-	 * 高吞吐
+	 * 媒体存储
+	 * 通用存储
 	 * </pre>
 	 * 
 	 * @author Administrator
@@ -168,9 +295,9 @@ public class LookUpConstants {
 	 */
 	public enum ES3Type {
 
-		高IOPS("高IOPS", 73),
+		媒体存储("媒体存储", 73),
 
-		高吞吐("高吞吐", 44);
+		通用存储("通用存储", 44);
 
 		private String name;
 		private Integer value;
@@ -187,17 +314,6 @@ public class LookUpConstants {
 		public Integer getValue() {
 			return value;
 		}
-	}
-
-	/**
-	 * ECS电源操作
-	 * 
-	 * 
-	 * @author Administrator
-	 * 
-	 */
-	public enum powerOperation {
-		poweroff, poweron;
 	}
 
 	/**
@@ -255,6 +371,31 @@ public class LookUpConstants {
 		private Integer value;
 
 		private ECSStatus(String name, Integer value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public Integer getValue() {
+			return value;
+		}
+	}
+
+	public enum ECSType {
+
+		instance("instance", 109),
+
+		netscarler("netscarler", 111),
+
+		firewall("firewall", 110);
+
+		private String name;
+		private Integer value;
+
+		private ECSType(String name, Integer value) {
 			this.name = name;
 			this.value = value;
 		}
@@ -365,7 +506,9 @@ public class LookUpConstants {
 
 		InternetPool("InternetPool", 28),
 
-		VIPPool("VIPPool", 67);
+		VIPPool("VIPPool", 67),
+
+		ManagerPool("ManagerPool", 114);
 
 		private String name;
 		private Integer value;

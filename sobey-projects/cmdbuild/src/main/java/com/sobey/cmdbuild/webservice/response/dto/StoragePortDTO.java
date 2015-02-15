@@ -13,7 +13,6 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.PortBasicDTO;
 public class StoragePortDTO extends PortBasicDTO {
 
 	private Integer Storage;
-	private StorageDTO storageDTO;
 
 	public Integer getStorage() {
 		return Storage;
@@ -21,14 +20,6 @@ public class StoragePortDTO extends PortBasicDTO {
 
 	public void setStorage(Integer storage) {
 		Storage = storage;
-	}
-
-	public StorageDTO getStorageDTO() {
-		return storageDTO;
-	}
-
-	public void setStorageDTO(StorageDTO storageDTO) {
-		this.storageDTO = storageDTO;
 	}
 
 	/**

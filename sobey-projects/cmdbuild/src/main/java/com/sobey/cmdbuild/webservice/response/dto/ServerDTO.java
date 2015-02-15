@@ -14,6 +14,8 @@ public class ServerDTO extends DeviceBasicDTO {
 
 	private String cpuHz;
 	private String cpuNumber;
+	private Integer host;
+	private String hostgroup;
 	private String memorySize;
 	private String model;
 	private String resgroup;
@@ -23,44 +25,60 @@ public class ServerDTO extends DeviceBasicDTO {
 		return cpuHz;
 	}
 
-	public void setCpuHz(String cpuHz) {
-		this.cpuHz = cpuHz;
-	}
-
 	public String getCpuNumber() {
 		return cpuNumber;
 	}
 
-	public void setCpuNumber(String cpuNumber) {
-		this.cpuNumber = cpuNumber;
+	public Integer getHost() {
+		return host;
+	}
+
+	public String getHostgroup() {
+		return hostgroup;
 	}
 
 	public String getMemorySize() {
 		return memorySize;
 	}
 
-	public void setMemorySize(String memorySize) {
-		this.memorySize = memorySize;
-	}
-
 	public String getModel() {
 		return model;
-	}
-
-	public void setModel(String model) {
-		this.model = model;
 	}
 
 	public String getResgroup() {
 		return resgroup;
 	}
 
-	public void setResgroup(String resgroup) {
-		this.resgroup = resgroup;
-	}
-
 	public String getVendor() {
 		return vendor;
+	}
+
+	public void setCpuHz(String cpuHz) {
+		this.cpuHz = cpuHz;
+	}
+
+	public void setCpuNumber(String cpuNumber) {
+		this.cpuNumber = cpuNumber;
+	}
+
+	public void setHost(Integer host) {
+		this.host = host;
+	}
+
+	public void setHostgroup(String hostgroup) {
+		this.hostgroup = hostgroup;
+	}
+
+	public void setMemorySize(String memorySize) {
+		this.memorySize = memorySize;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public void setResgroup(String resgroup) {
+		this.resgroup = resgroup;
 	}
 
 	public void setVendor(String vendor) {

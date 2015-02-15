@@ -28,6 +28,13 @@ import com.sobey.firewall.constans.WsConstants;
 public class EIPParameter {
 
 	/**
+	 * 所有映射策略集合
+	 */
+	private ArrayList<String> allPolicies;
+
+	private String interfaceName;
+
+	/**
 	 * 公网IP
 	 */
 	private String internetIP;
@@ -38,9 +45,9 @@ public class EIPParameter {
 	private Integer isp;
 
 	/**
-	 * 内网IP
+	 * 防火墙(路由)登录密码
 	 */
-	private String privateIP;
+	private String password;
 
 	/**
 	 * 映射策略集合
@@ -48,48 +55,116 @@ public class EIPParameter {
 	private ArrayList<EIPPolicyParameter> policies;
 
 	/**
-	 * 所有映射策略集合
+	 * 内网IP
 	 */
-	private ArrayList<String> allPolicies;
+	private String privateIP;
+
+	/**
+	 * 防火墙(路由)IP地址
+	 */
+	private String url;
+
+	/**
+	 * 防火墙(路由)登录名
+	 */
+	private String userName;
+
+	/**
+	 * vip Group Name
+	 */
+	private String vipGroupName;
+
+	/**
+	 * vip IntefaceName
+	 */
+	private String vipIntefaceName;
+
+	public ArrayList<String> getAllPolicies() {
+		return allPolicies;
+	}
+
+	public String getInterfaceName() {
+		return interfaceName;
+	}
 
 	public String getInternetIP() {
 		return internetIP;
-	}
-
-	public void setInternetIP(String internetIP) {
-		this.internetIP = internetIP;
 	}
 
 	public Integer getIsp() {
 		return isp;
 	}
 
-	public void setIsp(Integer isp) {
-		this.isp = isp;
-	}
-
-	public String getPrivateIP() {
-		return privateIP;
-	}
-
-	public void setPrivateIP(String privateIP) {
-		this.privateIP = privateIP;
+	public String getPassword() {
+		return password;
 	}
 
 	public ArrayList<EIPPolicyParameter> getPolicies() {
 		return policies;
 	}
 
-	public void setPolicies(ArrayList<EIPPolicyParameter> policies) {
-		this.policies = policies;
+	public String getPrivateIP() {
+		return privateIP;
 	}
 
-	public ArrayList<String> getAllPolicies() {
-		return allPolicies;
+	public String getUrl() {
+		return url;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public String getVipGroupName() {
+		return vipGroupName;
+	}
+
+	public String getVipIntefaceName() {
+		return vipIntefaceName;
 	}
 
 	public void setAllPolicies(ArrayList<String> allPolicies) {
 		this.allPolicies = allPolicies;
+	}
+
+	public void setInterfaceName(String interfaceName) {
+		this.interfaceName = interfaceName;
+	}
+
+	public void setInternetIP(String internetIP) {
+		this.internetIP = internetIP;
+	}
+
+	public void setIsp(Integer isp) {
+		this.isp = isp;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setPolicies(ArrayList<EIPPolicyParameter> policies) {
+		this.policies = policies;
+	}
+
+	public void setPrivateIP(String privateIP) {
+		this.privateIP = privateIP;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public void setVipGroupName(String vipGroupName) {
+		this.vipGroupName = vipGroupName;
+	}
+
+	public void setVipIntefaceName(String vipIntefaceName) {
+		this.vipIntefaceName = vipIntefaceName;
 	}
 
 	/**

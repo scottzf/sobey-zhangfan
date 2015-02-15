@@ -29,13 +29,13 @@ public class StoragePort extends PortBasic {
 		return storage;
 	}
 
-	public void setStorage(Integer storage) {
-		this.storage = storage;
-	}
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "storagePort")
 	public Set<StoragePortHistory> getStorageHistories() {
 		return storageHistories;
+	}
+
+	public void setStorage(Integer storage) {
+		this.storage = storage;
 	}
 
 	public void setStorageHistories(Set<StoragePortHistory> storageHistories) {

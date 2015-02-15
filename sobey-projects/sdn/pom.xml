@@ -203,7 +203,6 @@
 		<dependency>
 			<groupId>com.vmware</groupId>
 			<artifactId>vijava</artifactId>
-			<version>5.1</version>
 		</dependency>
 
 		<!--telnet相关jar包 -->
@@ -235,8 +234,7 @@
 
 		<dependency>
 			<groupId>ch.ethz.ganymed</groupId>
-			<artifactId>ganymed-ssh2</artifactId>
-			<version>262</version>
+			<artifactId>ganymed-ssh2</artifactId> 
 		</dependency>
 	</dependencies>
 

@@ -7,36 +7,63 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.instance.constans.WsConstants;
 
+/**
+ * VM电源操作的参数对象
+ * 
+ * @author Administrator
+ *
+ */
 @XmlRootElement(name = "PowerVMParameter")
 @XmlType(name = "PowerVMParameter", namespace = WsConstants.NS)
 public class PowerVMParameter {
 
-	private String vMName;
-	private String powerOperation;
+	/**
+	 * 数据中心
+	 */
 	private String datacenter;
 
-	public String getvMName() {
-		return vMName;
+	/**
+	 * 电源操作 eg:poweroff, poweron
+	 */
+	private String powerOperation;
+
+	/**
+	 * VM名称
+	 */
+	private String vmName;
+
+	public PowerVMParameter() {
 	}
 
-	public void setvMName(String vMName) {
-		this.vMName = vMName;
-	}
-
-	public String getPowerOperation() {
-		return powerOperation;
-	}
-
-	public void setPowerOperation(String powerOperation) {
+	public PowerVMParameter(String datacenter, String powerOperation, String vmName) {
+		super();
+		this.datacenter = datacenter;
 		this.powerOperation = powerOperation;
+		this.vmName = vmName;
 	}
 
 	public String getDatacenter() {
 		return datacenter;
 	}
 
+	public String getPowerOperation() {
+		return powerOperation;
+	}
+
+	public String getVmName() {
+		return vmName;
+	}
+
 	public void setDatacenter(String datacenter) {
 		this.datacenter = datacenter;
+	}
+
+	public void setPowerOperation(String powerOperation) {
+		this.powerOperation = powerOperation;
+	}
+
+	public void setVmName(String vmName) {
+		this.vmName = vmName;
 	}
 
 	/**

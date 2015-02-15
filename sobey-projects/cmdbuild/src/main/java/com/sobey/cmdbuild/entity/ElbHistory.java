@@ -18,6 +18,9 @@ public class ElbHistory extends ServiceHistoryBasic {
 
 	private Elb elb;
 	private Integer ipaddress;
+	private Integer managerIpaddress;
+	private Integer subIpaddress;
+	private Integer subnet;
 
 	public ElbHistory() {
 	}
@@ -28,17 +31,44 @@ public class ElbHistory extends ServiceHistoryBasic {
 		return elb;
 	}
 
-	public void setElb(Elb elb) {
-		this.elb = elb;
-	}
-
 	@Column(name = "ipaddress")
 	public Integer getIpaddress() {
 		return ipaddress;
 	}
 
+	@Column(name = "manager_ipaddress")
+	public Integer getManagerIpaddress() {
+		return managerIpaddress;
+	}
+
+	@Column(name = "sub_ipaddress")
+	public Integer getSubIpaddress() {
+		return subIpaddress;
+	}
+
+	@Column(name = "subnet")
+	public Integer getSubnet() {
+		return subnet;
+	}
+
+	public void setElb(Elb elb) {
+		this.elb = elb;
+	}
+
 	public void setIpaddress(Integer ipaddress) {
 		this.ipaddress = ipaddress;
+	}
+
+	public void setManagerIpaddress(Integer managerIpaddress) {
+		this.managerIpaddress = managerIpaddress;
+	}
+
+	public void setSubIpaddress(Integer subIpaddress) {
+		this.subIpaddress = subIpaddress;
+	}
+
+	public void setSubnet(Integer subnet) {
+		this.subnet = subnet;
 	}
 
 }

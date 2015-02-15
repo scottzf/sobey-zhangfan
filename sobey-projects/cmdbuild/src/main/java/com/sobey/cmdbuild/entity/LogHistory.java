@@ -20,23 +20,13 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "log_history", schema = "public")
 public class LogHistory extends BasicEntity {
 
-	private Log log;
 	private Date endDate;
-	private Integer tenants;
+	private Log log;
 	private Integer operateType;
 	private Integer result;
+	private Integer tenants;
 
 	public LogHistory() {
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "\"CurrentId\"", nullable = false)
-	public Log getLog() {
-		return log;
-	}
-
-	public void setLog(Log log) {
-		this.log = log;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -45,17 +35,10 @@ public class LogHistory extends BasicEntity {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	@Column(name = "tenants")
-	public Integer getTenants() {
-		return tenants;
-	}
-
-	public void setTenants(Integer tenants) {
-		this.tenants = tenants;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "\"CurrentId\"", nullable = false)
+	public Log getLog() {
+		return log;
 	}
 
 	@Column(name = "operate_type")
@@ -63,17 +46,34 @@ public class LogHistory extends BasicEntity {
 		return operateType;
 	}
 
-	public void setOperateType(Integer operateType) {
-		this.operateType = operateType;
-	}
-
 	@Column(name = "result")
 	public Integer getResult() {
 		return result;
 	}
 
+	@Column(name = "tenants")
+	public Integer getTenants() {
+		return tenants;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public void setLog(Log log) {
+		this.log = log;
+	}
+
+	public void setOperateType(Integer operateType) {
+		this.operateType = operateType;
+	}
+
 	public void setResult(Integer result) {
 		this.result = result;
+	}
+
+	public void setTenants(Integer tenants) {
+		this.tenants = tenants;
 	}
 
 }

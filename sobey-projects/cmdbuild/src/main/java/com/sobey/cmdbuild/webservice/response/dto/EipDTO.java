@@ -13,76 +13,40 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.ServiceBasicDTO;
 public class EipDTO extends ServiceBasicDTO {
 
 	private Integer bandwidth;
-	private String bandwidthText;
 	private Integer eipStatus;
-	private String eipStatusText;
 	private Integer ipaddress;
-	private IpaddressDTO ipaddressDTO;
 	private Integer isp;
-	private String ispText;
 
 	public Integer getBandwidth() {
 		return bandwidth;
-	}
-
-	public void setBandwidth(Integer bandwidth) {
-		this.bandwidth = bandwidth;
-	}
-
-	public String getBandwidthText() {
-		return bandwidthText;
-	}
-
-	public void setBandwidthText(String bandwidthText) {
-		this.bandwidthText = bandwidthText;
 	}
 
 	public Integer getEipStatus() {
 		return eipStatus;
 	}
 
-	public void setEipStatus(Integer eipStatus) {
-		this.eipStatus = eipStatus;
-	}
-
-	public String getEipStatusText() {
-		return eipStatusText;
-	}
-
-	public void setEipStatusText(String eipStatusText) {
-		this.eipStatusText = eipStatusText;
-	}
-
 	public Integer getIpaddress() {
 		return ipaddress;
-	}
-
-	public void setIpaddress(Integer ipaddress) {
-		this.ipaddress = ipaddress;
-	}
-
-	public IpaddressDTO getIpaddressDTO() {
-		return ipaddressDTO;
-	}
-
-	public void setIpaddressDTO(IpaddressDTO ipaddressDTO) {
-		this.ipaddressDTO = ipaddressDTO;
 	}
 
 	public Integer getIsp() {
 		return isp;
 	}
 
+	public void setBandwidth(Integer bandwidth) {
+		this.bandwidth = bandwidth;
+	}
+
+	public void setEipStatus(Integer eipStatus) {
+		this.eipStatus = eipStatus;
+	}
+
+	public void setIpaddress(Integer ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
 	public void setIsp(Integer isp) {
 		this.isp = isp;
-	}
-
-	public String getIspText() {
-		return ispText;
-	}
-
-	public void setIspText(String ispText) {
-		this.ispText = ispText;
 	}
 
 	/**

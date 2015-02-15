@@ -16,10 +16,15 @@ import com.sobey.cmdbuild.entity.basic.PortHistoryBasic;
 @Table(name = "firewall_port_history", schema = "public")
 public class FirewallPortHistory extends PortHistoryBasic {
 
-	private FirewallPort firewallPort;
 	private Integer firewall;
+	private FirewallPort firewallPort;
 
 	public FirewallPortHistory() {
+	}
+
+	@Column(name = "firewall")
+	public Integer getFirewall() {
+		return firewall;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -28,17 +33,12 @@ public class FirewallPortHistory extends PortHistoryBasic {
 		return firewallPort;
 	}
 
-	public void setFirewallPort(FirewallPort firewallPort) {
-		this.firewallPort = firewallPort;
-	}
-
-	@Column(name = "firewall")
-	public Integer getFirewall() {
-		return firewall;
-	}
-
 	public void setFirewall(Integer firewall) {
 		this.firewall = firewall;
+	}
+
+	public void setFirewallPort(FirewallPort firewallPort) {
+		this.firewallPort = firewallPort;
 	}
 
 }

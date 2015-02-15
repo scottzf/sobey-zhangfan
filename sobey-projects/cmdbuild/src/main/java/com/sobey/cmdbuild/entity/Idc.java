@@ -18,32 +18,14 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "idc", schema = "public")
 public class Idc extends BasicEntity {
 
-	private String city;
-	private String zip;
 	private String address;
+	private String city;
+	private Set<IdcHistory> idcHistories = new HashSet<IdcHistory>(0);
 	private String phone;
 	private String remark;
-	private Set<IdcHistory> idcHistories = new HashSet<IdcHistory>(0);
+	private String zip;
 
 	public Idc() {
-	}
-
-	@Column(name = "city", length = 100)
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	@Column(name = "zip", length = 200)
-	public String getZip() {
-		return zip;
-	}
-
-	public void setZip(String zip) {
-		this.zip = zip;
 	}
 
 	@Column(name = "address", length = 200)
@@ -51,26 +33,9 @@ public class Idc extends BasicEntity {
 		return address;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	@Column(name = "phone", length = 100)
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	@Column(name = "remark", length = 200)
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
+	@Column(name = "city", length = 100)
+	public String getCity() {
+		return city;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "idc")
@@ -78,8 +43,43 @@ public class Idc extends BasicEntity {
 		return idcHistories;
 	}
 
+	@Column(name = "phone", length = 100)
+	public String getPhone() {
+		return phone;
+	}
+
+	@Column(name = "remark", length = 200)
+	public String getRemark() {
+		return remark;
+	}
+
+	@Column(name = "zip", length = 200)
+	public String getZip() {
+		return zip;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
 	public void setIdcHistories(Set<IdcHistory> idcHistories) {
 		this.idcHistories = idcHistories;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public void setZip(String zip) {
+		this.zip = zip;
 	}
 
 }

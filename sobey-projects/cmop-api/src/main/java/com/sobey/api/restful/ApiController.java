@@ -14,13 +14,15 @@ import com.sobey.api.entity.EcsEntity;
 import com.sobey.api.entity.EipEntity;
 import com.sobey.api.entity.ElbEntity;
 import com.sobey.api.entity.Es3Entity;
-import com.sobey.api.entity.EsgEntity;
-import com.sobey.api.entity.TagEntity;
+import com.sobey.api.entity.FirewallServiceEntity;
+import com.sobey.api.entity.RouterEntity;
+import com.sobey.api.entity.SubnetEntity;
 import com.sobey.api.entity.TenantsEntity;
+import com.sobey.api.entity.VMRCEntity;
 import com.sobey.api.service.RestfulService;
+import com.sobey.api.webservice.response.result.DTOListResult;
 import com.sobey.api.webservice.response.result.DTOResult;
 import com.sobey.api.webservice.response.result.WSResult;
-import com.sobey.generate.zabbix.ZHistoryItemDTO;
 import com.sobey.generate.zabbix.ZItemDTO;
 
 @RestController
@@ -38,46 +40,92 @@ public class ApiController {
 		return value;
 	}
 
-	/********** ECS ***********/
+	/********** Tenants ***********/
 
-	@RequestMapping(value = "/ECSResult/{ecsName}/{accessKey}", method = RequestMethod.GET)
-	public DTOResult<EcsEntity> ECSResult(@PathVariable("ecsName") String ecsName,
+	@RequestMapping(value = "/TenantsResult/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<TenantsEntity> TenantsResult(@PathVariable("accessKey") String accessKey) {
+		return servie.findTenants(accessKey);
+	}
+
+	@RequestMapping(value = "/createTenants/", method = RequestMethod.POST)
+	public WSResult createTenants(@RequestParam(value = "company", required = false) String company,
+			@RequestParam(value = "name") String name, @RequestParam(value = "email") String email,
+			@RequestParam(value = "phone") String phone) {
+		return servie.createTenants(company, name, email, phone);
+	}
+
+	/********** Subnet ***********/
+
+	@RequestMapping(value = "/SubnetResult/{code}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<SubnetEntity> SubnetResult(@PathVariable("code") String code,
 			@PathVariable("accessKey") String accessKey) {
-		return servie.findECS(URLEscape(ecsName), accessKey);
+		return servie.findSubnet(code, accessKey);
+	}
+
+	@RequestMapping(value = "/createSubnet/", method = RequestMethod.POST)
+	public WSResult createSubnet(@RequestParam(value = "subnetName") String subnetName,
+			@RequestParam(value = "segment") String segment, @RequestParam(value = "gateway") String gateway,
+			@RequestParam(value = "netmask") String netmask, @RequestParam(value = "idc") String idc,
+			@RequestParam(value = "accessKey") String accessKey) {
+		return servie.createSubnet(subnetName, segment, gateway, netmask, idc, accessKey);
+	}
+
+	/********** Router ***********/
+	@RequestMapping(value = "/RouterResult/{code}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<RouterEntity> RouterResult(@PathVariable("code") String code,
+			@PathVariable("accessKey") String accessKey) {
+		return servie.findRouter(code, accessKey);
+	}
+
+	@RequestMapping(value = "/createRouter/", method = RequestMethod.POST)
+	public WSResult createRouter(@RequestParam(value = "routerName") String routerName,
+			@RequestParam(value = "remark") String remark, @RequestParam(value = "imageName") String imageName,
+			@RequestParam(value = "cpuNumber") String cpuNumber, @RequestParam(value = "memoryMB") String memoryMB,
+			@RequestParam(value = "idc") String idc,
+			@RequestParam(value = "firewallServiceCode") String firewallServiceCode,
+			@RequestParam(value = "accessKey") String accessKey) {
+		return servie.createRouter(routerName, remark, imageName, cpuNumber, memoryMB, idc, firewallServiceCode,
+				accessKey);
+	}
+
+	@RequestMapping(value = "/bindingRouter/", method = RequestMethod.POST)
+	public WSResult bindingRouter(@RequestParam(value = "routerCode") String routerCode,
+			@RequestParam(value = "subnetCodes") String subnetCodes, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.bindingRouter(routerCode, subnetCodes, accessKey);
+	}
+
+	/********** ECS ***********/
+	@RequestMapping(value = "/ECSResult/{code}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<EcsEntity> ECSResult(@PathVariable("code") String code, @PathVariable("accessKey") String accessKey) {
+		return servie.findECS(URLEscape(code), accessKey);
 	}
 
 	@RequestMapping(value = "/createECS/", method = RequestMethod.POST)
 	public WSResult createECS(@RequestParam(value = "ecsName") String ecsName,
-			@RequestParam(value = "remark") String remark, @RequestParam(value = "ecsSpec") String ecsSpec,
-			@RequestParam(value = "idc") String idc, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.createECS(ecsName, remark, ecsSpec, idc, accessKey);
+			@RequestParam(value = "remark") String remark, @RequestParam(value = "imageName") String imageName,
+			@RequestParam(value = "cpuNumber") String cpuNumber, @RequestParam(value = "memoryMB") String memoryMB,
+			@RequestParam(value = "subnetCode") String subnetCode, @RequestParam(value = "idc") String idc,
+			@RequestParam(value = "accessKey") String accessKey) {
+		return servie.createECS(ecsName, subnetCode, remark, imageName, cpuNumber, memoryMB, idc, accessKey);
 	}
 
 	@RequestMapping(value = "/destroyECS/", method = RequestMethod.POST)
-	public WSResult destroyECS(@RequestParam(value = "ecsName") String ecsName,
+	public WSResult destroyECS(@RequestParam(value = "code") String code,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.destroyECS(ecsName, accessKey);
+		return servie.destroyECS(code, accessKey);
 	}
 
 	@RequestMapping(value = "/powerOpsECS/", method = RequestMethod.POST)
-	public WSResult powerOpsECS(@RequestParam(value = "ecsName") String ecsName,
+	public WSResult powerOpsECS(@RequestParam(value = "code") String code,
 			@RequestParam(value = "powerOperation") String powerOperation,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.powerOpsECS(ecsName, powerOperation, accessKey);
-	}
-
-	@RequestMapping(value = "/reconfigECS/", method = RequestMethod.POST)
-	public WSResult reconfigECS(@RequestParam(value = "ecsName") String ecsName,
-			@RequestParam(value = "ecsSpec") String ecsSpec, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.reconfigECS(ecsName, ecsSpec, accessKey);
+		return servie.powerOpsECS(code, powerOperation, accessKey);
 	}
 
 	/********** ES3 ***********/
-
-	@RequestMapping(value = "/ES3Result/{es3Name}/{accessKey}", method = RequestMethod.GET)
-	public DTOResult<Es3Entity> ES3Result(@PathVariable("es3Name") String es3Name,
-			@PathVariable("accessKey") String accessKey) {
-		return servie.findES3(URLEscape(es3Name), accessKey);
+	@RequestMapping(value = "/ES3Result/{code}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<Es3Entity> ES3Result(@PathVariable("code") String code, @PathVariable("accessKey") String accessKey) {
+		return servie.findES3(URLEscape(code), accessKey);
 	}
 
 	@RequestMapping(value = "/createES3/", method = RequestMethod.POST)
@@ -88,205 +136,137 @@ public class ApiController {
 		return servie.createES3(es3Name, es3Size, es3Type, idc, remark, accessKey);
 	}
 
-	@RequestMapping(value = "/attachES3/", method = RequestMethod.POST)
-	public WSResult attachES3(@RequestParam(value = "es3Name") String es3Name,
-			@RequestParam(value = "ecsName") String ecsName, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.attachES3(es3Name, ecsName, accessKey);
-	}
-
-	@RequestMapping(value = "/detachES3/", method = RequestMethod.POST)
-	public WSResult detachES3(@RequestParam(value = "es3Name") String es3Name,
-			@RequestParam(value = "ecsName") String ecsName, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.detachES3(es3Name, ecsName, accessKey);
+	@RequestMapping(value = "/bindingES3/", method = RequestMethod.POST)
+	public WSResult bindingES3(@RequestParam(value = "es3Code") String es3Code,
+			@RequestParam(value = "ecsCode") String ecsCode, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.bindingES3(es3Code, ecsCode, accessKey);
 	}
 
 	@RequestMapping(value = "/deleteES3/", method = RequestMethod.POST)
-	public WSResult deleteES3(@RequestParam(value = "es3Name") String es3Name,
+	public WSResult deleteES3(@RequestParam(value = "code") String code,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.deleteES3(es3Name, accessKey);
-	}
-
-	/********** ELB ***********/
-
-	@RequestMapping(value = "/ELBResult/{elbName}/{accessKey}", method = RequestMethod.GET)
-	public DTOResult<ElbEntity> ELBResult(@PathVariable("elbName") String elbName,
-			@PathVariable("accessKey") String accessKey) {
-		return servie.findELB(URLEscape(elbName), accessKey);
-	}
-
-	@RequestMapping(value = "/createELB/", method = RequestMethod.POST)
-	public WSResult createELB(@RequestParam(value = "ecsNames") String ecsNames,
-			@RequestParam(value = "protocols") String protocols, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.createELB(ecsNames, protocols, accessKey);
-	}
-
-	@RequestMapping(value = "/deleteELB/", method = RequestMethod.POST)
-	public WSResult deleteELB(@RequestParam(value = "elbName") String elbName,
-			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.deleteELB(elbName, accessKey);
-	}
-
-	/********** EIP ***********/
-
-	@RequestMapping(value = "/EIPResult/{eipName}/{accessKey}", method = RequestMethod.GET)
-	public DTOResult<EipEntity> EIPResult(@PathVariable("eipName") String eipName,
-			@PathVariable("accessKey") String accessKey) {
-		return servie.findEIP(URLEscape(eipName), accessKey);
-	}
-
-	@RequestMapping(value = "/allocateEIP/", method = RequestMethod.POST)
-	public WSResult allocateEIP(@RequestParam(value = "isp") String isp, @RequestParam(value = "remark") String remark,
-			@RequestParam(value = "bandwidth") String bandwidth, @RequestParam(value = "protocols") String protocols,
-			@RequestParam(value = "sourcePorts") String sourcePorts,
-			@RequestParam(value = "targetPorts") String targetPorts, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.allocateEIP(isp, protocols, sourcePorts, targetPorts, bandwidth, remark, accessKey);
-	}
-
-	@RequestMapping(value = "/recoverEIP/", method = RequestMethod.POST)
-	public WSResult recoverEIP(@RequestParam(value = "eipName") String eipName,
-			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.recoverEIP(eipName, accessKey);
-	}
-
-	@RequestMapping(value = "/associateEIP/", method = RequestMethod.POST)
-	public WSResult associateEIP(@RequestParam(value = "eipName") String eipName,
-			@RequestParam(value = "serviceId") String serviceId, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.associateEIP(eipName, serviceId, accessKey);
-	}
-
-	@RequestMapping(value = "/dissociateEIP/", method = RequestMethod.POST)
-	public WSResult dissociateEIP(@RequestParam(value = "eipName") String eipName,
-			@RequestParam(value = "serviceId") String serviceId, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.dissociateEIP(eipName, serviceId, accessKey);
+		return servie.deleteES3(code, accessKey);
 	}
 
 	/********** DNS ***********/
-
-	@RequestMapping(value = "/DNSResult/{dnsName}/{accessKey}", method = RequestMethod.GET)
-	public DTOResult<DnsEntity> DNSResult(@PathVariable("dnsName") String dnsName,
-			@PathVariable("accessKey") String accessKey) {
-		return servie.findDNS(URLEscape(dnsName), accessKey);
+	@RequestMapping(value = "/DNSResult/{code}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<DnsEntity> DNSResult(@PathVariable("code") String code, @PathVariable("accessKey") String accessKey) {
+		return servie.findDNS(URLEscape(code), accessKey);
 	}
 
 	@RequestMapping(value = "/createDNS/", method = RequestMethod.POST)
 	public WSResult createDNS(@RequestParam(value = "domainName") String domainName,
-			@RequestParam(value = "eipNames") String eipNames, @RequestParam(value = "protocols") String protocols,
-			@RequestParam(value = "remark") String remark, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.createDNS(domainName, eipNames, protocols, remark, accessKey);
+			@RequestParam(value = "eipCodes") String eipCodes, @RequestParam(value = "protocols") String protocols,
+			@RequestParam(value = "remark", required = false) String remark, @RequestParam(value = "idc") String idc,
+			@RequestParam(value = "accessKey") String accessKey) {
+		return servie.createDNS(domainName, eipCodes, protocols, idc, remark, accessKey);
 	}
 
 	@RequestMapping(value = "/deleteDNS/", method = RequestMethod.POST)
-	public WSResult deleteDNS(@RequestParam(value = "domainName") String domainName,
+	public WSResult deleteDNS(@RequestParam(value = "code") String code,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.deleteDNS(domainName, accessKey);
+		return servie.deleteDNS(code, accessKey);
 	}
 
-	/********** ESG ***********/
-
-	@RequestMapping(value = "/ESGResult/{esgName}/{accessKey}", method = RequestMethod.GET)
-	public DTOResult<EsgEntity> ESGResult(@PathVariable("esgName") String esgName,
+	/******** FirewallService ********/
+	@RequestMapping(value = "/FirewallServiceResult/{code}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<FirewallServiceEntity> firewallServiceResult(@PathVariable("code") String code,
 			@PathVariable("accessKey") String accessKey) {
-		return servie.findESG(URLEscape(esgName), accessKey);
+		return servie.findFirewallService(code, accessKey);
 	}
 
-	@RequestMapping(value = "/createESG/", method = RequestMethod.POST)
-	public WSResult createESG(@RequestParam(value = "esgName") String esgName,
-			@RequestParam(value = "policyTypes") String policyTypes, @RequestParam(value = "remark") String remark,
-			@RequestParam(value = "targetIPs") String targetIPs, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.createESG(esgName, policyTypes, targetIPs, remark, accessKey);
+	@RequestMapping(value = "/createFirewallService/", method = RequestMethod.POST)
+	public WSResult createFirewallService(@RequestParam(value = "firewallServiceName") String firewallServiceName,
+			@RequestParam(value = "directions") String directions,
+			@RequestParam(value = "rulesNames") String rulesNames, @RequestParam(value = "protocols") String protocols,
+			@RequestParam(value = "actions") String actions, @RequestParam(value = "startPorts") String startPorts,
+			@RequestParam(value = "endPorts") String endPorts, @RequestParam(value = "ipaddresses") String ipaddresses,
+			@RequestParam(value = "idc") String idc, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.createFirewallService(firewallServiceName, directions, rulesNames, protocols, actions,
+				startPorts, endPorts, ipaddresses, idc, accessKey);
 	}
 
-	@RequestMapping(value = "/deleteESG/", method = RequestMethod.POST)
-	public WSResult deleteESG(@RequestParam(value = "esgName") String esgName,
+	@RequestMapping(value = "/bindingFirewallService/", method = RequestMethod.POST)
+	public WSResult bindingFirewallService(@RequestParam(value = "routerCode") String routerCode,
+			@RequestParam(value = "firewallServiceCode") String firewallServiceCode,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.deleteESG(esgName, accessKey);
+		return servie.bindingFirewallService(routerCode, firewallServiceCode, accessKey);
 	}
 
-	@RequestMapping(value = "/associateESG/", method = RequestMethod.POST)
-	public WSResult associateESG(@RequestParam(value = "esgName") String esgName,
-			@RequestParam(value = "ecsName") String ecsName, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.associateESG(ecsName, esgName, accessKey);
+	/********** EIP ***********/
+	@RequestMapping(value = "/EIPResult/{code}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<EipEntity> EIPResult(@PathVariable("code") String code, @PathVariable("accessKey") String accessKey) {
+		return servie.findEIP(URLEscape(code), accessKey);
 	}
 
-	@RequestMapping(value = "/dissociateESG/", method = RequestMethod.POST)
-	public WSResult dissociateESG(@RequestParam(value = "esgName") String esgName,
-			@RequestParam(value = "ecsName") String ecsName, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.dissociateESG(ecsName, esgName, accessKey);
+	@RequestMapping(value = "/createEIP/", method = RequestMethod.POST)
+	public WSResult createEIP(@RequestParam(value = "isp") String isp, @RequestParam(value = "remark") String remark,
+			@RequestParam(value = "bandwidth") String bandwidth, @RequestParam(value = "protocols") String protocols,
+			@RequestParam(value = "sourcePorts") String sourcePorts,
+			@RequestParam(value = "targetPorts") String targetPorts, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.createEIP(isp, protocols, sourcePorts, targetPorts, bandwidth, remark, accessKey);
 	}
 
-	/********** TAG ***********/
+	@RequestMapping(value = "/deleteEIP/", method = RequestMethod.POST)
+	public WSResult deleteEIP(@RequestParam(value = "code") String code,
+			@RequestParam(value = "accessKey") String accessKey) {
+		return servie.deleteEIP(code, accessKey);
+	}
 
-	@RequestMapping(value = "/TagResult/{tagName}/{accessKey}", method = RequestMethod.GET)
-	public DTOResult<TagEntity> TagResult(@PathVariable("tagName") String tagName,
+	@RequestMapping(value = "/bindingEIP/", method = RequestMethod.POST)
+	public WSResult bindingEIP(@RequestParam(value = "code") String code,
+			@RequestParam(value = "serviceCode") String serviceCode, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.bindingEIP(code, serviceCode, accessKey);
+	}
+
+	@RequestMapping(value = "/bindingEIPToRouter/", method = RequestMethod.POST)
+	public WSResult bindingEIPToRouter(@RequestParam(value = "eipCode") String eipCode,
+			@RequestParam(value = "routerCode") String routerCode, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.bindingEIPToRouter(eipCode, routerCode, accessKey);
+	}
+
+	@RequestMapping(value = "/unbindingEIP/", method = RequestMethod.POST)
+	public WSResult dissociateEIP(@RequestParam(value = "code") String code,
+			@RequestParam(value = "serviceCode") String serviceCode, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.unbindingEIP(code, serviceCode, accessKey);
+	}
+
+	@RequestMapping(value = "/VMRCResult/{ecsCode}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<VMRCEntity> VMRCResult(@PathVariable("ecsCode") String ecsCode,
 			@PathVariable("accessKey") String accessKey) {
-		return servie.findTag(URLEscape(tagName), accessKey);
+		return servie.findVMRC(URLEscape(ecsCode), accessKey);
 	}
 
-	@RequestMapping(value = "/createTag/", method = RequestMethod.POST)
-	public WSResult createTag(@RequestParam(value = "tagName") String tagName,
-			@RequestParam(value = "parentTag") String parentTag, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.createTag(tagName, parentTag, accessKey);
+	@RequestMapping(value = "/currentData/{ecsCode}/{itemKey}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<ZItemDTO> getCurrentData(@PathVariable("ecsCode") String ecsCode,
+			@PathVariable("itemKey") String itemKey, @PathVariable("accessKey") String accessKey) {
+		return servie.getCurrentData(URLEscape(ecsCode), itemKey, accessKey);
 	}
 
-	@RequestMapping(value = "/deleteTag/", method = RequestMethod.POST)
-	public WSResult deleteTag(@RequestParam(value = "tagName") String tagName,
+	@RequestMapping(value = "/historyData/{ecsCode}/{itemKey}/{accessKey}", method = RequestMethod.GET)
+	public DTOListResult<ZItemDTO> getHistoryData(@PathVariable("ecsCode") String ecsCode,
+			@PathVariable("itemKey") String itemKey, @PathVariable("accessKey") String accessKey) {
+		return servie.getHistoryData(URLEscape(ecsCode), itemKey, accessKey);
+	}
+
+	/********** EIP ***********/
+
+	@RequestMapping(value = "/ELBResult/{elbCode}/{accessKey}", method = RequestMethod.GET)
+	public DTOResult<ElbEntity> ELBResult(@PathVariable("elbCode") String elbCode,
+			@PathVariable("accessKey") String accessKey) {
+		return servie.findELB(URLEscape(elbCode), accessKey);
+	}
+
+	@RequestMapping(value = "/createELB/", method = RequestMethod.POST)
+	public WSResult createELB(@RequestParam(value = "ecsCodes") String ecsCodes,
+			@RequestParam(value = "protocols") String protocols, @RequestParam(value = "accessKey") String accessKey) {
+		return servie.createELB(ecsCodes, protocols, accessKey);
+	}
+
+	@RequestMapping(value = "/deleteELB/", method = RequestMethod.POST)
+	public WSResult deleteELB(@RequestParam(value = "elbCode") String elbCode,
 			@RequestParam(value = "accessKey") String accessKey) {
-		return servie.deleteTag(tagName, accessKey);
-	}
-
-	@RequestMapping(value = "/associateTag/", method = RequestMethod.POST)
-	public WSResult associateTag(@RequestParam(value = "tagName") String tagName,
-			@RequestParam(value = "serviceId") String serviceId, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.associateTag(tagName, serviceId, accessKey);
-	}
-
-	@RequestMapping(value = "/dssociateTag/", method = RequestMethod.POST)
-	public WSResult dssociateTag(@RequestParam(value = "tagName") String tagName,
-			@RequestParam(value = "serviceId") String serviceId, @RequestParam(value = "accessKey") String accessKey) {
-		return servie.dssociateTag(tagName, serviceId, accessKey);
-	}
-
-	/********** Zabbix ***********/
-
-	@RequestMapping(value = "/currentData/{ecsName}/{itemKey}/{accessKey}", method = RequestMethod.GET)
-	public ZItemDTO getCurrentData(@PathVariable("ecsName") String ecsName, @PathVariable("itemKey") String itemKey,
-			@PathVariable("accessKey") String accessKey) throws UnsupportedEncodingException {
-		return servie.getCurrentData(URLEscape(ecsName), URLEscape(itemKey), accessKey);
-	}
-
-	@RequestMapping(value = "/historyData/{ecsName}/{itemKey}/{accessKey}", method = RequestMethod.GET)
-	public ZHistoryItemDTO getHistoryData(@PathVariable("ecsName") String ecsName,
-			@PathVariable("itemKey") String itemKey, @PathVariable("accessKey") String accessKey)
-			throws UnsupportedEncodingException {
-		return servie.getHistoryData(URLEscape(ecsName), URLEscape(itemKey), accessKey);
-	}
-
-	@RequestMapping(value = "/storageCurrentData/{es3Name}/{itemKey}/{accessKey}", method = RequestMethod.GET)
-	public ZItemDTO getStorageCurrentData(@PathVariable("es3Name") String es3Name,
-			@PathVariable("itemKey") String itemKey, @PathVariable("accessKey") String accessKey)
-			throws UnsupportedEncodingException {
-		return servie.getStorageCurrentData(URLEscape(es3Name), URLEscape(itemKey), accessKey);
-	}
-
-	@RequestMapping(value = "/storageHistoryData/{es3Name}/{itemKey}/{accessKey}", method = RequestMethod.GET)
-	public ZHistoryItemDTO gettStorageHistoryData(@PathVariable("es3Name") String es3Name,
-			@PathVariable("itemKey") String itemKey, @PathVariable("accessKey") String accessKey)
-			throws UnsupportedEncodingException {
-		return servie.getStorageHistoryData(URLEscape(es3Name), URLEscape(itemKey), accessKey);
-	}
-
-	/********** Tenants ***********/
-
-	@RequestMapping(value = "/TenantsResult/{accessKey}", method = RequestMethod.GET)
-	public DTOResult<TenantsEntity> TenantsResult(@PathVariable("accessKey") String accessKey) {
-		return servie.findTenants(accessKey);
-	}
-
-	@RequestMapping(value = "/createTenants/", method = RequestMethod.POST)
-	public WSResult createTenants(@RequestParam(value = "company") String company,
-			@RequestParam(value = "name") String name, @RequestParam(value = "email") String email,
-			@RequestParam(value = "password") String password, @RequestParam(value = "phone") String phone) {
-		return servie.createTenants(company, name, email, password, phone);
+		return servie.deleteELB(elbCode, accessKey);
 	}
 
 }

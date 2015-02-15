@@ -29,13 +29,13 @@ public class NicPort extends PortBasic {
 		return nic;
 	}
 
-	public void setNic(Integer nic) {
-		this.nic = nic;
-	}
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "nicPort")
 	public Set<NicPortHistory> getNicPortHistories() {
 		return nicPortHistories;
+	}
+
+	public void setNic(Integer nic) {
+		this.nic = nic;
 	}
 
 	public void setNicPortHistories(Set<NicPortHistory> nicPortHistories) {

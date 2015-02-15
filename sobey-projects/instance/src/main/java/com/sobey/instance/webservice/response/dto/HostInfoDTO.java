@@ -11,68 +11,108 @@ import com.sobey.instance.constans.WsConstants;
 @XmlType(name = "HostInfoDTO", namespace = WsConstants.NS)
 public class HostInfoDTO {
 
-	private String name;
-	private String resourcePool;
-	private String vendor;
-	private String model;
-	private String memorySize;
-	private String cpuNumber;
+	/**
+	 * cpu频率(GHZ)
+	 */
 	private String cpuHz;
 
-	public String getName() {
-		return name;
-	}
+	/**
+	 * CPU数量
+	 */
+	private String cpuNumber;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+	/**
+	 * 宿主机的ID
+	 */
+	private String hostId;
 
-	public String getResourcePool() {
-		return resourcePool;
-	}
+	/**
+	 * 宿主机名称
+	 */
+	private String hostName;
 
-	public void setResourcePool(String resourcePool) {
-		this.resourcePool = resourcePool;
-	}
+	/**
+	 * 内存大小(MB)
+	 */
+	private String memoryMB;
 
-	public String getVendor() {
-		return vendor;
-	}
+	/**
+	 * 型号
+	 */
+	private String model;
 
-	public void setVendor(String vendor) {
-		this.vendor = vendor;
-	}
+	/**
+	 * 宿主机在vCenter中,resourcePool的Id
+	 */
+	private String resourcePool;
 
-	public String getModel() {
-		return model;
-	}
+	/**
+	 * 厂商
+	 */
+	private String vendor;
 
-	public void setModel(String model) {
-		this.model = model;
-	}
-
-	public String getMemorySize() {
-		return memorySize;
-	}
-
-	public void setMemorySize(String memorySize) {
-		this.memorySize = memorySize;
+	public String getCpuHz() {
+		return cpuHz;
 	}
 
 	public String getCpuNumber() {
 		return cpuNumber;
 	}
 
-	public void setCpuNumber(String cpuNumber) {
-		this.cpuNumber = cpuNumber;
+	public String getHostId() {
+		return hostId;
 	}
 
-	public String getCpuHz() {
-		return cpuHz;
+	public String getHostName() {
+		return hostName;
+	}
+
+	public String getMemoryMB() {
+		return memoryMB;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public String getResourcePool() {
+		return resourcePool;
+	}
+
+	public String getVendor() {
+		return vendor;
 	}
 
 	public void setCpuHz(String cpuHz) {
 		this.cpuHz = cpuHz;
+	}
+
+	public void setCpuNumber(String cpuNumber) {
+		this.cpuNumber = cpuNumber;
+	}
+
+	public void setHostId(String hostId) {
+		this.hostId = hostId;
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
+	}
+
+	public void setMemoryMB(String memoryMB) {
+		this.memoryMB = memoryMB;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public void setResourcePool(String resourcePool) {
+		this.resourcePool = resourcePool;
+	}
+
+	public void setVendor(String vendor) {
+		this.vendor = vendor;
 	}
 
 	/**

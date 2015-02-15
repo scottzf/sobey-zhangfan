@@ -40,4 +40,11 @@ public class scanner {
 		System.out.println("VM同步完成!");
 	}
 
+	public void createProduced() {
+
+		System.out.println("开始schedulerProduced!");
+		service.schedulerProduced();
+		System.out.println("schedulerProduced完成!");
+	}
+
 }

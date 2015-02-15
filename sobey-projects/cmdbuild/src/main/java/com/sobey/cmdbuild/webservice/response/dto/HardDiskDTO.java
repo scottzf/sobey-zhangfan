@@ -13,49 +13,31 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.ComponentBasicDTO;
 public class HardDiskDTO extends ComponentBasicDTO {
 
 	private Integer diskType;
-	private String diskTypeText;
 	private Integer hdSize;
 	private Integer rotationalSpeed;
-	private String rotationalSpeedText;
 
 	public Integer getDiskType() {
 		return diskType;
-	}
-
-	public void setDiskType(Integer diskType) {
-		this.diskType = diskType;
-	}
-
-	public String getDiskTypeText() {
-		return diskTypeText;
-	}
-
-	public void setDiskTypeText(String diskTypeText) {
-		this.diskTypeText = diskTypeText;
 	}
 
 	public Integer getHdSize() {
 		return hdSize;
 	}
 
-	public void setHdSize(Integer hdSize) {
-		this.hdSize = hdSize;
-	}
-
 	public Integer getRotationalSpeed() {
 		return rotationalSpeed;
 	}
 
+	public void setDiskType(Integer diskType) {
+		this.diskType = diskType;
+	}
+
+	public void setHdSize(Integer hdSize) {
+		this.hdSize = hdSize;
+	}
+
 	public void setRotationalSpeed(Integer rotationalSpeed) {
 		this.rotationalSpeed = rotationalSpeed;
-	}
-
-	public String getRotationalSpeedText() {
-		return rotationalSpeedText;
-	}
-
-	public void setRotationalSpeedText(String rotationalSpeedText) {
-		this.rotationalSpeedText = rotationalSpeedText;
 	}
 
 	/**

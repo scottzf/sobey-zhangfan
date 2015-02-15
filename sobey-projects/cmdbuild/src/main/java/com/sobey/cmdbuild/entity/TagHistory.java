@@ -20,24 +20,14 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "tag_history", schema = "public")
 public class TagHistory extends BasicEntity {
 
-	private Tag tag;
 	private Date endDate;
-	private Integer tenants;
 	private Integer parentTag;
-	private Integer tagType;
 	private String remark;
+	private Tag tag;
+	private Integer tagType;
+	private Integer tenants;
 
 	public TagHistory() {
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "\"CurrentId\"", nullable = false)
-	public Tag getTag() {
-		return tag;
-	}
-
-	public void setTag(Tag tag) {
-		this.tag = tag;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -46,35 +36,9 @@ public class TagHistory extends BasicEntity {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	@Column(name = "tenants")
-	public Integer getTenants() {
-		return tenants;
-	}
-
-	public void setTenants(Integer tenants) {
-		this.tenants = tenants;
-	}
-
 	@Column(name = "parent_tag")
 	public Integer getParentTag() {
 		return parentTag;
-	}
-
-	public void setParentTag(Integer parentTag) {
-		this.parentTag = parentTag;
-	}
-
-	@Column(name = "tag_type")
-	public Integer getTagType() {
-		return tagType;
-	}
-
-	public void setTagType(Integer tagType) {
-		this.tagType = tagType;
 	}
 
 	@Column(name = "remark", length = 200)
@@ -82,8 +46,44 @@ public class TagHistory extends BasicEntity {
 		return remark;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "\"CurrentId\"", nullable = false)
+	public Tag getTag() {
+		return tag;
+	}
+
+	@Column(name = "tag_type")
+	public Integer getTagType() {
+		return tagType;
+	}
+
+	@Column(name = "tenants")
+	public Integer getTenants() {
+		return tenants;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public void setParentTag(Integer parentTag) {
+		this.parentTag = parentTag;
+	}
+
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public void setTag(Tag tag) {
+		this.tag = tag;
+	}
+
+	public void setTagType(Integer tagType) {
+		this.tagType = tagType;
+	}
+
+	public void setTenants(Integer tenants) {
+		this.tenants = tenants;
 	}
 
 }

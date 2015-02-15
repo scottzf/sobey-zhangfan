@@ -16,11 +16,21 @@ import com.sobey.cmdbuild.entity.basic.ComponentHistoryBasic;
 @Table(name = "storage_box_history", schema = "public")
 public class StorageBoxHistory extends ComponentHistoryBasic {
 
-	private StorageBox storageBox;
-	private Integer diskType;
 	private Integer diskNumber;
+	private Integer diskType;
+	private StorageBox storageBox;
 
 	public StorageBoxHistory() {
+	}
+
+	@Column(name = "disk_number")
+	public Integer getDiskNumber() {
+		return diskNumber;
+	}
+
+	@Column(name = "disk_type")
+	public Integer getDiskType() {
+		return diskType;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -29,26 +39,16 @@ public class StorageBoxHistory extends ComponentHistoryBasic {
 		return storageBox;
 	}
 
-	public void setStorageBox(StorageBox storageBox) {
-		this.storageBox = storageBox;
-	}
-
-	@Column(name = "disk_type")
-	public Integer getDiskType() {
-		return diskType;
+	public void setDiskNumber(Integer diskNumber) {
+		this.diskNumber = diskNumber;
 	}
 
 	public void setDiskType(Integer diskType) {
 		this.diskType = diskType;
 	}
 
-	@Column(name = "disk_number")
-	public Integer getDiskNumber() {
-		return diskNumber;
-	}
-
-	public void setDiskNumber(Integer diskNumber) {
-		this.diskNumber = diskNumber;
+	public void setStorageBox(StorageBox storageBox) {
+		this.storageBox = storageBox;
 	}
 
 }

@@ -7,45 +7,77 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.instance.constans.WsConstants;
 
+/**
+ * 修改VM配置的参数对象
+ * 
+ * @author Administrator
+ *
+ */
 @XmlRootElement(name = "ReconfigVMParameter")
 @XmlType(name = "ReconfigVMParameter", namespace = WsConstants.NS)
 public class ReconfigVMParameter {
 
-	private String vMName;
-	private Long memoryMB;
-	private Integer cPUNumber;
+	/**
+	 * CPU数量
+	 */
+	private Integer cpuNumber;
+
+	/**
+	 * 数据中心
+	 */
 	private String datacenter;
 
-	public String getvMName() {
-		return vMName;
+	/**
+	 * 内存大小(MB)
+	 */
+	private Integer memoryMB;
+
+	/**
+	 * VM名称
+	 */
+	private String vmName;
+
+	public ReconfigVMParameter() {
 	}
 
-	public void setvMName(String vMName) {
-		this.vMName = vMName;
-	}
-
-	public Long getMemoryMB() {
-		return memoryMB;
-	}
-
-	public void setMemoryMB(Long memoryMB) {
+	public ReconfigVMParameter(Integer cpuNumber, String datacenter, Integer memoryMB, String vmName) {
+		super();
+		this.cpuNumber = cpuNumber;
+		this.datacenter = datacenter;
 		this.memoryMB = memoryMB;
+		this.vmName = vmName;
 	}
 
-	public Integer getcPUNumber() {
-		return cPUNumber;
-	}
-
-	public void setcPUNumber(Integer cPUNumber) {
-		this.cPUNumber = cPUNumber;
+	public Integer getCpuNumber() {
+		return cpuNumber;
 	}
 
 	public String getDatacenter() {
 		return datacenter;
 	}
 
+	public Integer getMemoryMB() {
+		return memoryMB;
+	}
+
+	public String getVmName() {
+		return vmName;
+	}
+
+	public void setCpuNumber(Integer cpuNumber) {
+		this.cpuNumber = cpuNumber;
+	}
+
 	public void setDatacenter(String datacenter) {
 		this.datacenter = datacenter;
+	}
+
+	public void setMemoryMB(Integer memoryMB) {
+		this.memoryMB = memoryMB;
+	}
+
+	public void setVmName(String vmName) {
+		this.vmName = vmName;
 	}
 
 	/**

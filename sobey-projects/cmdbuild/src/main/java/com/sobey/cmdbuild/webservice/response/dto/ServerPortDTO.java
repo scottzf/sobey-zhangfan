@@ -13,7 +13,6 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.PortBasicDTO;
 public class ServerPortDTO extends PortBasicDTO {
 
 	private Integer server;
-	private ServerDTO serverDTO;
 
 	public Integer getServer() {
 		return server;
@@ -21,14 +20,6 @@ public class ServerPortDTO extends PortBasicDTO {
 
 	public void setServer(Integer server) {
 		this.server = server;
-	}
-
-	public ServerDTO getServerDTO() {
-		return serverDTO;
-	}
-
-	public void setServerDTO(ServerDTO serverDTO) {
-		this.serverDTO = serverDTO;
 	}
 
 	/**

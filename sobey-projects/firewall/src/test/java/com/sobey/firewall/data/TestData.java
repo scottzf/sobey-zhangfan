@@ -3,6 +3,10 @@ package com.sobey.firewall.data;
 import java.util.ArrayList;
 
 import com.google.common.collect.Lists;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallAddressParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigFirewallPolicyParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigRouterStaticParameter;
+import com.sobey.firewall.webservice.response.dto.ConfigSystemInterfaceParameter;
 import com.sobey.firewall.webservice.response.dto.EIPParameter;
 import com.sobey.firewall.webservice.response.dto.EIPPolicyParameter;
 import com.sobey.firewall.webservice.response.dto.VPNUserParameter;
@@ -13,18 +17,19 @@ public class TestData {
 
 		ArrayList<String> allPolicies = Lists.newArrayList();
 
-		allPolicies.add("119.6.200.204");
-
 		EIPParameter parameter = new EIPParameter();
 		parameter.setAllPolicies(allPolicies);
-		parameter.setInternetIP("119.6.200.203");
+		parameter.setInternetIP("125.71.203.22");
 		parameter.setIsp(1);
-		parameter.setPrivateIP("10.10.2.51");
+		parameter.setPrivateIP("172.16.5.3");
+		parameter.setVipGroupName("CTC_ALL_Server");
+		parameter.setVipIntefaceName("port8");
+		parameter.setInterfaceName("port1");
 
 		ArrayList<EIPPolicyParameter> policies = Lists.newArrayList();
 
 		EIPPolicyParameter policyParameter = new EIPPolicyParameter();
-		policyParameter.setProtocolText("tcp");
+		policyParameter.setProtocol("tcp");
 		policyParameter.setSourcePort(80);
 		policyParameter.setTargetPort(80);
 
@@ -39,9 +44,9 @@ public class TestData {
 
 		VPNUserParameter parameter = new VPNUserParameter();
 
-		parameter.setFirewallPolicyId(2000);
+		parameter.setPolicyId(2000);
 		parameter.setNetMask("255.255.255.0");
-		parameter.setVlanId(80);
+		parameter.setVlanId(10);
 		parameter.setVpnUser("liukai01");
 		parameter.setVpnPassword("123456");
 
@@ -54,7 +59,47 @@ public class TestData {
 		ipaddress.add(ip);
 
 		parameter.setSegments(segments);
-		parameter.setIpaddress(ipaddress);
+		parameter.setIpaddresses(ipaddress);
+		return parameter;
+	}
+
+	public static ConfigSystemInterfaceParameter randomConfigSystemInterfaceParameter() {
+
+		ConfigSystemInterfaceParameter parameter = new ConfigSystemInterfaceParameter();
+		parameter.setGateway("173.20.10.254");
+		parameter.setInterfaceName("port9");
+		parameter.setSubnetMask("255.255.255.0");
+
+		return parameter;
+	}
+
+	public static ConfigRouterStaticParameter randomConfigRouterStaticParameter() {
+
+		ConfigRouterStaticParameter parameter = new ConfigRouterStaticParameter();
+		parameter.setInterfaceName("port8");
+		parameter.setRouterId(5);
+		parameter.setIspGateway("125.71.203.1");
+
+		return parameter;
+	}
+
+	public static ConfigFirewallAddressParameter randomConfigFirewallAddressParameter() {
+		ConfigFirewallAddressParameter parameter = new ConfigFirewallAddressParameter();
+		parameter.setSegment("173.20.10.0");
+		parameter.setSubnetMask("255.255.255.0");
+		return parameter;
+	}
+
+	public static ConfigFirewallPolicyParameter randomConfigFirewallPolicyParameter() {
+
+		ConfigFirewallPolicyParameter parameter = new ConfigFirewallPolicyParameter();
+		parameter.setSrcintf("port5");
+		parameter.setSrcaddr("172.20.20.0/24");
+		parameter.setDstintf("port6");
+		parameter.setDstaddr("172.20.30./24");
+		parameter.setPolicyId(58);
+		parameter.setPolicyType("Subnet");
+
 		return parameter;
 	}
 

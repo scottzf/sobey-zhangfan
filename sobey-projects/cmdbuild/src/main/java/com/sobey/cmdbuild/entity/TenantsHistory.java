@@ -20,28 +20,30 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "tenants_history", schema = "public")
 public class TenantsHistory extends BasicEntity {
 
-	private Tenants tenants;
-	private Date endDate;
-	private Integer aclNumber;
-	private String password;
-	private String email;
-	private String phone;
-	private String company;
-	private String createInfo;
 	private String accessKey;
+	private String company;
+	private String email;
+	private Date endDate;
+	private String phone;
 	private String remark;
+	private Tenants tenants;
 
 	public TenantsHistory() {
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "\"CurrentId\"", nullable = false)
-	public Tenants getTenants() {
-		return tenants;
+	@Column(name = "access_key", length = 100)
+	public String getAccessKey() {
+		return accessKey;
 	}
 
-	public void setTenants(Tenants tenants) {
-		this.tenants = tenants;
+	@Column(name = "company", length = 100)
+	public String getCompany() {
+		return company;
+	}
+
+	@Column(name = "email", length = 100)
+	public String getEmail() {
+		return email;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -50,71 +52,9 @@ public class TenantsHistory extends BasicEntity {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	@Column(name = "acl_number")
-	public Integer getAclNumber() {
-		return aclNumber;
-	}
-
-	public void setAclNumber(Integer aclNumber) {
-		this.aclNumber = aclNumber;
-	}
-
-	@Column(name = "password", length = 100)
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	@Column(name = "email", length = 100)
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 	@Column(name = "phone", length = 100)
 	public String getPhone() {
 		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	@Column(name = "company", length = 100)
-	public String getCompany() {
-		return company;
-	}
-
-	public void setCompany(String company) {
-		this.company = company;
-	}
-
-	@Column(name = "create_info", length = 100)
-	public String getCreateInfo() {
-		return createInfo;
-	}
-
-	public void setCreateInfo(String createInfo) {
-		this.createInfo = createInfo;
-	}
-
-	@Column(name = "access_key", length = 100)
-	public String getAccessKey() {
-		return accessKey;
-	}
-
-	public void setAccessKey(String accessKey) {
-		this.accessKey = accessKey;
 	}
 
 	@Column(name = "remark", length = 200)
@@ -122,8 +62,38 @@ public class TenantsHistory extends BasicEntity {
 		return remark;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "\"CurrentId\"", nullable = false)
+	public Tenants getTenants() {
+		return tenants;
+	}
+
+	public void setAccessKey(String accessKey) {
+		this.accessKey = accessKey;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public void setTenants(Tenants tenants) {
+		this.tenants = tenants;
 	}
 
 }

@@ -18,69 +18,15 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "ecs_spec", schema = "public")
 public class EcsSpec extends BasicEntity {
 
-	private Integer cpuNumber;
-	private Integer memory;
-	private Integer osType;
-	private Integer diskSize;
-	private String imageName;
-	private String remark;
 	private Set<EcsSpecHistory> ecsSpecHistories = new HashSet<EcsSpecHistory>(0);
+	private Integer ecsType;
+	private Integer idc;
+	private String imageName;
+	private Integer osType;
+	private Integer producedNumber;
+	private String remark;
 
 	public EcsSpec() {
-	}
-
-	@Column(name = "cpu_number")
-	public Integer getCpuNumber() {
-		return cpuNumber;
-	}
-
-	public void setCpuNumber(Integer cpuNumber) {
-		this.cpuNumber = cpuNumber;
-	}
-
-	@Column(name = "memory")
-	public Integer getMemory() {
-		return memory;
-	}
-
-	public void setMemory(Integer memory) {
-		this.memory = memory;
-	}
-
-	@Column(name = "os_type")
-	public Integer getOsType() {
-		return osType;
-	}
-
-	public void setOsType(Integer osType) {
-		this.osType = osType;
-	}
-
-	@Column(name = "disk_size")
-	public Integer getDiskSize() {
-		return diskSize;
-	}
-
-	public void setDiskSize(Integer diskSize) {
-		this.diskSize = diskSize;
-	}
-
-	@Column(name = "image_name", length = 200)
-	public String getImageName() {
-		return imageName;
-	}
-
-	public void setImageName(String imageName) {
-		this.imageName = imageName;
-	}
-
-	@Column(name = "remark", length = 200)
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ecsSpec")
@@ -88,8 +34,62 @@ public class EcsSpec extends BasicEntity {
 		return ecsSpecHistories;
 	}
 
+	@Column(name = "ecs_type")
+	public Integer getEcsType() {
+		return ecsType;
+	}
+
+	@Column(name = "idc")
+	public Integer getIdc() {
+		return idc;
+	}
+
+	@Column(name = "image_name", length = 200)
+	public String getImageName() {
+		return imageName;
+	}
+
+	@Column(name = "os_type")
+	public Integer getOsType() {
+		return osType;
+	}
+
+	@Column(name = "produced_number")
+	public Integer getProducedNumber() {
+		return producedNumber;
+	}
+
+	@Column(name = "remark", length = 200)
+	public String getRemark() {
+		return remark;
+	}
+
 	public void setEcsSpecHistories(Set<EcsSpecHistory> ecsSpecHistories) {
 		this.ecsSpecHistories = ecsSpecHistories;
+	}
+
+	public void setEcsType(Integer ecsType) {
+		this.ecsType = ecsType;
+	}
+
+	public void setIdc(Integer idc) {
+		this.idc = idc;
+	}
+
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+
+	public void setOsType(Integer osType) {
+		this.osType = osType;
+	}
+
+	public void setProducedNumber(Integer producedNumber) {
+		this.producedNumber = producedNumber;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 }

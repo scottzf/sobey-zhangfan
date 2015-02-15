@@ -20,25 +20,25 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "idc_history", schema = "public")
 public class IdcHistory extends BasicEntity {
 
-	private Idc idc;
-	private Date endDate;
-	private String city;
-	private String zip;
 	private String address;
+	private String city;
+	private Date endDate;
+	private Idc idc;
 	private String phone;
 	private String remark;
+	private String zip;
 
 	public IdcHistory() {
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "\"CurrentId\"", nullable = false)
-	public Idc getIdc() {
-		return idc;
+	@Column(name = "address", length = 200)
+	public String getAddress() {
+		return address;
 	}
 
-	public void setIdc(Idc idc) {
-		this.idc = idc;
+	@Column(name = "city", length = 100)
+	public String getCity() {
+		return city;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -47,35 +47,10 @@ public class IdcHistory extends BasicEntity {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	@Column(name = "city", length = 100)
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	@Column(name = "zip", length = 200)
-	public String getZip() {
-		return zip;
-	}
-
-	public void setZip(String zip) {
-		this.zip = zip;
-	}
-
-	@Column(name = "address", length = 200)
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "\"CurrentId\"", nullable = false)
+	public Idc getIdc() {
+		return idc;
 	}
 
 	@Column(name = "phone", length = 100)
@@ -83,17 +58,42 @@ public class IdcHistory extends BasicEntity {
 		return phone;
 	}
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
 	@Column(name = "remark", length = 200)
 	public String getRemark() {
 		return remark;
 	}
 
+	@Column(name = "zip", length = 200)
+	public String getZip() {
+		return zip;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public void setIdc(Idc idc) {
+		this.idc = idc;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public void setZip(String zip) {
+		this.zip = zip;
 	}
 
 }

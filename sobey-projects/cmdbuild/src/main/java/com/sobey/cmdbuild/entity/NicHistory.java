@@ -19,6 +19,7 @@ public class NicHistory extends ComponentHistoryBasic {
 	private Nic nic;
 	private Integer nicRate;
 	private Integer portNumber;
+	private String virtualSwitchName;
 
 	public NicHistory() {
 	}
@@ -29,17 +30,9 @@ public class NicHistory extends ComponentHistoryBasic {
 		return nic;
 	}
 
-	public void setNic(Nic nic) {
-		this.nic = nic;
-	}
-
 	@Column(name = "nic_rate")
 	public Integer getNicRate() {
 		return nicRate;
-	}
-
-	public void setNicRate(Integer nicRate) {
-		this.nicRate = nicRate;
 	}
 
 	@Column(name = "port_num")
@@ -47,8 +40,25 @@ public class NicHistory extends ComponentHistoryBasic {
 		return portNumber;
 	}
 
+	@Column(name = "virtual_switch_name", length = 100)
+	public String getVirtualSwitchName() {
+		return virtualSwitchName;
+	}
+
+	public void setNic(Nic nic) {
+		this.nic = nic;
+	}
+
+	public void setNicRate(Integer nicRate) {
+		this.nicRate = nicRate;
+	}
+
 	public void setPortNumber(Integer portNumber) {
 		this.portNumber = portNumber;
+	}
+
+	public void setVirtualSwitchName(String virtualSwitchName) {
+		this.virtualSwitchName = virtualSwitchName;
 	}
 
 }

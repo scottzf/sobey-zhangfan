@@ -16,13 +16,18 @@ import com.sobey.cmdbuild.entity.basic.ServiceHistoryBasic;
 @Table(name = "eip_history", schema = "public")
 public class EipHistory extends ServiceHistoryBasic {
 
+	private Integer bandwidth;
 	private Eip eip;
+	private Integer eipStatus;
 	private Integer ipaddress;
 	private Integer isp;
-	private Integer bandwidth;
-	private Integer eipStatus;
 
 	public EipHistory() {
+	}
+
+	@Column(name = "bandwidth")
+	public Integer getBandwidth() {
+		return bandwidth;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -31,8 +36,9 @@ public class EipHistory extends ServiceHistoryBasic {
 		return eip;
 	}
 
-	public void setEip(Eip eip) {
-		this.eip = eip;
+	@Column(name = "eip_status")
+	public Integer getEipStatus() {
+		return eipStatus;
 	}
 
 	@Column(name = "ipaddress")
@@ -40,35 +46,29 @@ public class EipHistory extends ServiceHistoryBasic {
 		return ipaddress;
 	}
 
-	public void setIpaddress(Integer ipaddress) {
-		this.ipaddress = ipaddress;
-	}
-
 	@Column(name = "isp")
 	public Integer getIsp() {
 		return isp;
-	}
-
-	public void setIsp(Integer isp) {
-		this.isp = isp;
-	}
-
-	@Column(name = "bandwidth")
-	public Integer getBandwidth() {
-		return bandwidth;
 	}
 
 	public void setBandwidth(Integer bandwidth) {
 		this.bandwidth = bandwidth;
 	}
 
-	@Column(name = "eip_status")
-	public Integer getEipStatus() {
-		return eipStatus;
+	public void setEip(Eip eip) {
+		this.eip = eip;
 	}
 
 	public void setEipStatus(Integer eipStatus) {
 		this.eipStatus = eipStatus;
+	}
+
+	public void setIpaddress(Integer ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public void setIsp(Integer isp) {
+		this.isp = isp;
 	}
 
 }

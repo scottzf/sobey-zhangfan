@@ -18,22 +18,13 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "tag", schema = "public")
 public class Tag extends BasicEntity {
 
-	private Integer tenants;
 	private Integer parentTag;
-	private Integer tagType;
 	private String remark;
 	private Set<TagHistory> tagHistories = new HashSet<TagHistory>(0);
+	private Integer tagType;
+	private Integer tenants;
 
 	public Tag() {
-	}
-
-	@Column(name = "tenants")
-	public Integer getTenants() {
-		return tenants;
-	}
-
-	public void setTenants(Integer tenants) {
-		this.tenants = tenants;
 	}
 
 	@Column(name = "parent_tag")
@@ -41,26 +32,9 @@ public class Tag extends BasicEntity {
 		return parentTag;
 	}
 
-	public void setParentTag(Integer parentTag) {
-		this.parentTag = parentTag;
-	}
-
-	@Column(name = "tag_type")
-	public Integer getTagType() {
-		return tagType;
-	}
-
-	public void setTagType(Integer tagType) {
-		this.tagType = tagType;
-	}
-
 	@Column(name = "remark", length = 200)
 	public String getRemark() {
 		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tag")
@@ -68,8 +42,34 @@ public class Tag extends BasicEntity {
 		return tagHistories;
 	}
 
+	@Column(name = "tag_type")
+	public Integer getTagType() {
+		return tagType;
+	}
+
+	@Column(name = "tenants")
+	public Integer getTenants() {
+		return tenants;
+	}
+
+	public void setParentTag(Integer parentTag) {
+		this.parentTag = parentTag;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
 	public void setTagHistories(Set<TagHistory> tagHistories) {
 		this.tagHistories = tagHistories;
+	}
+
+	public void setTagType(Integer tagType) {
+		this.tagType = tagType;
+	}
+
+	public void setTenants(Integer tenants) {
+		this.tenants = tenants;
 	}
 
 }

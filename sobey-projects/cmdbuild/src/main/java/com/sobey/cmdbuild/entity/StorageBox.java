@@ -18,20 +18,11 @@ import com.sobey.cmdbuild.entity.basic.ComponentBasic;
 @Table(name = "storage_box", schema = "public")
 public class StorageBox extends ComponentBasic {
 
-	private Integer diskType;
 	private Integer diskNumber;
+	private Integer diskType;
 	private Set<StorageBoxHistory> storageBoxHistories = new HashSet<StorageBoxHistory>(0);
 
 	public StorageBox() {
-	}
-
-	@Column(name = "disk_type")
-	public Integer getDiskType() {
-		return diskType;
-	}
-
-	public void setDiskType(Integer diskType) {
-		this.diskType = diskType;
 	}
 
 	@Column(name = "disk_number")
@@ -39,13 +30,22 @@ public class StorageBox extends ComponentBasic {
 		return diskNumber;
 	}
 
-	public void setDiskNumber(Integer diskNumber) {
-		this.diskNumber = diskNumber;
+	@Column(name = "disk_type")
+	public Integer getDiskType() {
+		return diskType;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "storageBox")
 	public Set<StorageBoxHistory> getStorageBoxHistories() {
 		return storageBoxHistories;
+	}
+
+	public void setDiskNumber(Integer diskNumber) {
+		this.diskNumber = diskNumber;
+	}
+
+	public void setDiskType(Integer diskType) {
+		this.diskType = diskType;
 	}
 
 	public void setStorageBoxHistories(Set<StorageBoxHistory> storageBoxHistories) {

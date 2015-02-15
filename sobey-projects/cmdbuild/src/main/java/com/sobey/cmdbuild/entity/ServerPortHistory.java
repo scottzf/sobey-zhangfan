@@ -16,10 +16,15 @@ import com.sobey.cmdbuild.entity.basic.PortHistoryBasic;
 @Table(name = "server_port_history", schema = "public")
 public class ServerPortHistory extends PortHistoryBasic {
 
-	private ServerPort serverPort;
 	private Integer server;
+	private ServerPort serverPort;
 
 	public ServerPortHistory() {
+	}
+
+	@Column(name = "server")
+	public Integer getServer() {
+		return server;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -28,17 +33,12 @@ public class ServerPortHistory extends PortHistoryBasic {
 		return serverPort;
 	}
 
-	public void setServerPort(ServerPort serverPort) {
-		this.serverPort = serverPort;
-	}
-
-	@Column(name = "server")
-	public Integer getServer() {
-		return server;
-	}
-
 	public void setServer(Integer server) {
 		this.server = server;
+	}
+
+	public void setServerPort(ServerPort serverPort) {
+		this.serverPort = serverPort;
 	}
 
 }

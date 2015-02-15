@@ -14,30 +14,21 @@ public class StorageBoxDTO extends ComponentBasicDTO {
 
 	private Integer diskNumber;
 	private Integer diskType;
-	private String diskTypeText;
 
 	public Integer getDiskNumber() {
 		return diskNumber;
-	}
-
-	public void setDiskNumber(Integer diskNumber) {
-		this.diskNumber = diskNumber;
 	}
 
 	public Integer getDiskType() {
 		return diskType;
 	}
 
+	public void setDiskNumber(Integer diskNumber) {
+		this.diskNumber = diskNumber;
+	}
+
 	public void setDiskType(Integer diskType) {
 		this.diskType = diskType;
-	}
-
-	public String getDiskTypeText() {
-		return diskTypeText;
-	}
-
-	public void setDiskTypeText(String diskTypeText) {
-		this.diskTypeText = diskTypeText;
 	}
 
 	/**

@@ -29,13 +29,13 @@ public class SwitchPort extends PortBasic {
 		return switches;
 	}
 
-	public void setSwitches(Integer switches) {
-		this.switches = switches;
-	}
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "switchPort")
 	public Set<SwitchPortHistory> getSwitchPortHistories() {
 		return this.switchPortHistories;
+	}
+
+	public void setSwitches(Integer switches) {
+		this.switches = switches;
 	}
 
 	public void setSwitchPortHistories(Set<SwitchPortHistory> switchPortHistories) {

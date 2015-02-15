@@ -10,6 +10,6 @@ package com.sobey.instance.constans;
  */
 public enum DataCenterEnum {
 
-	西安核心数据中心, 西安核心数据中心2, 成都核心数据中心;
+	成都核心数据中心, 西安核心数据中心, 西安核心数据中心2;
 
 }

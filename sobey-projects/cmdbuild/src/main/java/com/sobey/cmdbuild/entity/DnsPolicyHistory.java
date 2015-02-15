@@ -20,14 +20,19 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "dns_policy_history", schema = "public")
 public class DnsPolicyHistory extends BasicEntity {
 
-	private DnsPolicy dnsPolicy;
-	private Date endDate;
 	private Integer dns;
+	private DnsPolicy dnsPolicy;
 	private Integer dnsProtocol;
+	private Date endDate;
 	private String ipaddress;
 	private Integer port;
 
 	public DnsPolicyHistory() {
+	}
+
+	@Column(name = "dns")
+	public Integer getDns() {
+		return dns;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -36,8 +41,9 @@ public class DnsPolicyHistory extends BasicEntity {
 		return dnsPolicy;
 	}
 
-	public void setDnsPolicy(DnsPolicy dnsPolicy) {
-		this.dnsPolicy = dnsPolicy;
+	@Column(name = "dns_protocol")
+	public Integer getDnsProtocol() {
+		return dnsProtocol;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -46,40 +52,34 @@ public class DnsPolicyHistory extends BasicEntity {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
+	@Column(name = "ipaddress", length = 100)
+	public String getIpaddress() {
+		return ipaddress;
 	}
 
-	@Column(name = "dns")
-	public Integer getDns() {
-		return dns;
+	@Column(name = "port")
+	public Integer getPort() {
+		return port;
 	}
 
 	public void setDns(Integer dns) {
 		this.dns = dns;
 	}
 
-	@Column(name = "dns_protocol")
-	public Integer getDnsProtocol() {
-		return dnsProtocol;
+	public void setDnsPolicy(DnsPolicy dnsPolicy) {
+		this.dnsPolicy = dnsPolicy;
 	}
 
 	public void setDnsProtocol(Integer dnsProtocol) {
 		this.dnsProtocol = dnsProtocol;
 	}
 
-	@Column(name = "ipaddress", length = 100)
-	public String getIpaddress() {
-		return ipaddress;
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 
 	public void setIpaddress(String ipaddress) {
 		this.ipaddress = ipaddress;
-	}
-
-	@Column(name = "port")
-	public Integer getPort() {
-		return port;
 	}
 
 	public void setPort(Integer port) {

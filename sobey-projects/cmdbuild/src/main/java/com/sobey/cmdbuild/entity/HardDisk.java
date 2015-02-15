@@ -18,30 +18,12 @@ import com.sobey.cmdbuild.entity.basic.ComponentBasic;
 @Table(name = "hard_disk", schema = "public")
 public class HardDisk extends ComponentBasic {
 
-	private Integer rotationalSpeed;
-	private Integer hdSize;
 	private Integer diskType;
 	private Set<HardDiskHistory> hardDiskHistories = new HashSet<HardDiskHistory>(0);
+	private Integer hdSize;
+	private Integer rotationalSpeed;
 
 	public HardDisk() {
-	}
-
-	@Column(name = "rotational_speed")
-	public Integer getRotationalSpeed() {
-		return rotationalSpeed;
-	}
-
-	public void setRotationalSpeed(Integer rotationalSpeed) {
-		this.rotationalSpeed = rotationalSpeed;
-	}
-
-	@Column(name = "hd_size")
-	public Integer getHdSize() {
-		return hdSize;
-	}
-
-	public void setHdSize(Integer hdSize) {
-		this.hdSize = hdSize;
 	}
 
 	@Column(name = "disk_type")
@@ -49,17 +31,35 @@ public class HardDisk extends ComponentBasic {
 		return diskType;
 	}
 
-	public void setDiskType(Integer diskType) {
-		this.diskType = diskType;
-	}
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hardDisk")
 	public Set<HardDiskHistory> getHardDiskHistories() {
 		return hardDiskHistories;
 	}
 
+	@Column(name = "hd_size")
+	public Integer getHdSize() {
+		return hdSize;
+	}
+
+	@Column(name = "rotational_speed")
+	public Integer getRotationalSpeed() {
+		return rotationalSpeed;
+	}
+
+	public void setDiskType(Integer diskType) {
+		this.diskType = diskType;
+	}
+
 	public void setHardDiskHistories(Set<HardDiskHistory> hardDiskHistories) {
 		this.hardDiskHistories = hardDiskHistories;
+	}
+
+	public void setHdSize(Integer hdSize) {
+		this.hdSize = hdSize;
+	}
+
+	public void setRotationalSpeed(Integer rotationalSpeed) {
+		this.rotationalSpeed = rotationalSpeed;
 	}
 
 }

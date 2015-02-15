@@ -19,10 +19,10 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 public class EipPolicy extends BasicEntity {
 
 	private Integer eip;
+	private Set<EipPolicyHistory> eipPolicyHistories = new HashSet<EipPolicyHistory>(0);
 	private Integer eipProtocol;
 	private Integer sourcePort;
 	private Integer targetPort;
-	private Set<EipPolicyHistory> eipPolicyHistories = new HashSet<EipPolicyHistory>(0);
 
 	public EipPolicy() {
 	}
@@ -32,8 +32,9 @@ public class EipPolicy extends BasicEntity {
 		return eip;
 	}
 
-	public void setEip(Integer eip) {
-		this.eip = eip;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "eipPolicy")
+	public Set<EipPolicyHistory> getEipPolicyHistories() {
+		return eipPolicyHistories;
 	}
 
 	@Column(name = "eip_protocol")
@@ -41,17 +42,9 @@ public class EipPolicy extends BasicEntity {
 		return eipProtocol;
 	}
 
-	public void setEipProtocol(Integer eipProtocol) {
-		this.eipProtocol = eipProtocol;
-	}
-
 	@Column(name = "source_port")
 	public Integer getSourcePort() {
 		return sourcePort;
-	}
-
-	public void setSourcePort(Integer sourcePort) {
-		this.sourcePort = sourcePort;
 	}
 
 	@Column(name = "target_port")
@@ -59,17 +52,24 @@ public class EipPolicy extends BasicEntity {
 		return targetPort;
 	}
 
-	public void setTargetPort(Integer targetPort) {
-		this.targetPort = targetPort;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "eipPolicy")
-	public Set<EipPolicyHistory> getEipPolicyHistories() {
-		return eipPolicyHistories;
+	public void setEip(Integer eip) {
+		this.eip = eip;
 	}
 
 	public void setEipPolicyHistories(Set<EipPolicyHistory> eipPolicyHistories) {
 		this.eipPolicyHistories = eipPolicyHistories;
+	}
+
+	public void setEipProtocol(Integer eipProtocol) {
+		this.eipProtocol = eipProtocol;
+	}
+
+	public void setSourcePort(Integer sourcePort) {
+		this.sourcePort = sourcePort;
+	}
+
+	public void setTargetPort(Integer targetPort) {
+		this.targetPort = targetPort;
 	}
 
 }

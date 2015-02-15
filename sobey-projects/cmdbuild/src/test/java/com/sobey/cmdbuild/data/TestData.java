@@ -15,8 +15,6 @@ import com.sobey.cmdbuild.entity.EipPolicy;
 import com.sobey.cmdbuild.entity.Elb;
 import com.sobey.cmdbuild.entity.ElbPolicy;
 import com.sobey.cmdbuild.entity.Es3;
-import com.sobey.cmdbuild.entity.Esg;
-import com.sobey.cmdbuild.entity.EsgPolicy;
 import com.sobey.cmdbuild.entity.Firewall;
 import com.sobey.cmdbuild.entity.FirewallPort;
 import com.sobey.cmdbuild.entity.HardDisk;
@@ -28,7 +26,6 @@ import com.sobey.cmdbuild.entity.Log;
 import com.sobey.cmdbuild.entity.MapEcsEip;
 import com.sobey.cmdbuild.entity.MapEcsElb;
 import com.sobey.cmdbuild.entity.MapEcsEs3;
-import com.sobey.cmdbuild.entity.MapEcsEsg;
 import com.sobey.cmdbuild.entity.MapEipDns;
 import com.sobey.cmdbuild.entity.MapEipElb;
 import com.sobey.cmdbuild.entity.MapTagService;
@@ -166,9 +163,6 @@ public class TestData {
 		esc.setNotes(RandomData.randomName("note"));
 		esc.setDescription("CentOS6.5");
 		esc.setBeginDate(startDate);
-		esc.setCpuNumber(RandomData.randomInt());
-		esc.setDiskSize(RandomData.randomInt());
-		esc.setMemory(RandomData.randomInt());
 		esc.setRemark(RandomData.randomName("remark"));
 		esc.setOsType(osTypeId);
 		esc.setImageName("CentOS6.5");
@@ -255,35 +249,6 @@ public class TestData {
 		return es3;
 	}
 
-	public static Esg randomEsg() {
-
-		Esg esg = new Esg();
-
-		esg.setId(0);
-		esg.setDescription(RandomData.randomName("description"));
-		esg.setIdc(idcId);
-		esg.setRemark(RandomData.randomName("remark"));
-		esg.setTenants(tenantsId);
-		esg.setAgentType(agentTypeId);
-		esg.setIsDefault(true);
-		return esg;
-	}
-
-	public static EsgPolicy randomEsgPolicy() {
-
-		EsgPolicy policy = new EsgPolicy();
-
-		policy.setId(0);
-		policy.setDescription(RandomData.randomName("description"));
-		policy.setEsg(esgId);
-		policy.setSourceIp(RandomData.randomName("SourceIp"));
-		policy.setTargetIp(RandomData.randomName("TargetIp"));
-		policy.setPort(RandomData.randomInt());
-		policy.setPolicyType(98);
-
-		return policy;
-	}
-
 	public static Firewall randomFirewall() {
 		Firewall firewall = new Firewall();
 		firewall.setId(0);
@@ -360,7 +325,6 @@ public class TestData {
 		ipaddress.setDescription(RandomData.randomName("description"));
 		ipaddress.setIpaddressStatus(LookUpConstants.IPAddressStatus.未使用.getValue());
 		ipaddress.setIpaddressPool(ipaddressPoolId);
-		ipaddress.setVlan(vlanId);
 		ipaddress.setIdc(idcId);
 		ipaddress.setIsp(ispId);
 		ipaddress.setBeginDate(startDate);
@@ -460,19 +424,6 @@ public class TestData {
 		map.setIdObj2(es3Id);
 		map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
 		map.setIdClass2(TableNameUtil.getTableName(Es3.class));
-
-		return map;
-	}
-
-	public static MapEcsEsg randomMapEcsEsg() {
-
-		MapEcsEsg map = new MapEcsEsg();
-
-		map.setId(0);
-		map.setIdObj1(ecsId);
-		map.setIdObj2(esgId);
-		map.setIdClass1(TableNameUtil.getTableName(Ecs.class));
-		map.setIdClass2(TableNameUtil.getTableName(Esg.class));
 
 		return map;
 	}
@@ -744,12 +695,9 @@ public class TestData {
 		tenants.setDescription(RandomData.randomName("description"));
 		tenants.setPhone(RandomData.randomName("phone"));
 		tenants.setRemark(RandomData.randomName("remark"));
-		tenants.setPassword(RandomData.randomName("password"));
 		tenants.setEmail(RandomData.randomName("email"));
 		tenants.setAccessKey(RandomData.randomName("accessKey"));
 		tenants.setCompany(RandomData.randomName("company"));
-		tenants.setCreateInfo(RandomData.randomName("createInfo"));
-		tenants.setAclNumber(RandomData.randomInt());
 		return tenants;
 	}
 
@@ -762,7 +710,6 @@ public class TestData {
 		vlan.setBeginDate(startDate);
 		vlan.setTenants(tenantsId);
 		vlan.setIdc(idcId);
-		vlan.setVlanStatus(vlanStatusId);
 		vlan.setRemark(RandomData.randomName("remark"));
 		vlan.setSegment(RandomData.randomName("segment"));
 		vlan.setNetMask(RandomData.randomName("netMask"));
@@ -782,7 +729,6 @@ public class TestData {
 		vpn.setTenants(tenantsId);
 		vpn.setAgentType(agentTypeId);
 		vpn.setPassword(RandomData.randomName("password"));
-		vpn.setPolicyId(RandomData.randomInt());
 
 		return vpn;
 	}

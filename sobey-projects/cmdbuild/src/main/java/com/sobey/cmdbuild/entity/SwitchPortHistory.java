@@ -16,10 +16,15 @@ import com.sobey.cmdbuild.entity.basic.PortHistoryBasic;
 @Table(name = "switch_port_history", schema = "public")
 public class SwitchPortHistory extends PortHistoryBasic {
 
-	private SwitchPort switchPort;
 	private Integer switches;
+	private SwitchPort switchPort;
 
 	public SwitchPortHistory() {
+	}
+
+	@Column(name = "switches")
+	public Integer getSwitches() {
+		return switches;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -28,17 +33,12 @@ public class SwitchPortHistory extends PortHistoryBasic {
 		return switchPort;
 	}
 
-	public void setSwitchPort(SwitchPort switchPort) {
-		this.switchPort = switchPort;
-	}
-
-	@Column(name = "switches")
-	public Integer getSwitches() {
-		return switches;
-	}
-
 	public void setSwitches(Integer switches) {
 		this.switches = switches;
+	}
+
+	public void setSwitchPort(SwitchPort switchPort) {
+		this.switchPort = switchPort;
 	}
 
 }

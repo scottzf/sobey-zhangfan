@@ -27,6 +27,8 @@ import com.sobey.loadbalancer.webservice.response.dto.ELBPolicyParameter;
 import com.sobey.loadbalancer.webservice.response.dto.ELBPublicIPParameter;
 import com.sobey.loadbalancer.webservice.response.dto.ElbPolicySync;
 import com.sobey.loadbalancer.webservice.response.dto.ElbSync;
+import com.sobey.loadbalancer.webservice.response.result.DTOListResult;
+import com.sobey.loadbalancer.webservice.response.result.WSResult;
 
 @Service
 public class LoadbalanceService {
@@ -37,26 +39,6 @@ public class LoadbalanceService {
 	 * 加载applicationContext.propertie文件
 	 */
 	private static PropertiesLoader LOADBALANCER_LOADER = new PropertiesLoader("classpath:/loadbalancer.properties");
-
-	/**
-	 * IP
-	 */
-	private static final String LOADBALANCER_IP = LOADBALANCER_LOADER.getProperty("LOADBALANCER_IP");
-
-	/**
-	 * Username
-	 */
-	private static final String LOADBALANCER_USERNAME = LOADBALANCER_LOADER.getProperty("LOADBALANCER_USERNAME");
-
-	/**
-	 * password
-	 */
-	private static final String LOADBALANCER_PASSWORD = LOADBALANCER_LOADER.getProperty("LOADBALANCER_PASSWORD");
-
-	/**
-	 * protocol
-	 */
-	private static final String LOADBALANCER_PROTOCOL = LOADBALANCER_LOADER.getProperty("LOADBALANCER_PROTOCOL");
 
 	/**
 	 * persistencetype
@@ -81,12 +63,14 @@ public class LoadbalanceService {
 			.getProperty("LOADBALANCER_SERVICEGROUPNAME");
 
 	/**
-	 * server默认端口
+	 * 获得elb所有配置信息
+	 * 
+	 * @param elbParameter
+	 * @return
 	 */
-	private static final String LOADBALANCER_DEFAULT_SERVER_PORT = LOADBALANCER_LOADER
-			.getProperty("LOADBALANCER_DEFAULT_SERVER_PORT");
+	public DTOListResult<ElbSync> getElbSyncList(ELBParameter elbParameter) {
 
-	public List<ElbSync> getElbSyncList() {
+		DTOListResult<ElbSync> dtoListResult = new DTOListResult<ElbSync>();
 
 		List<ElbSync> syncs = new ArrayList<ElbSync>();
 
@@ -94,8 +78,8 @@ public class LoadbalanceService {
 
 		try {
 
-			client = new nitro_service(LOADBALANCER_IP, LOADBALANCER_PROTOCOL); // 创建nitro的session
-			client.set_credential(LOADBALANCER_USERNAME, LOADBALANCER_PASSWORD);
+			client = new nitro_service(elbParameter.getUrl(), elbParameter.getProtocol()); // 创建nitro的session
+			client.set_credential(elbParameter.getUserName(), elbParameter.getPassword());
 			client.set_onerror(OnerrorEnum.CONTINUE);
 			client.set_warning(true);
 			client.set_certvalidation(false);
@@ -142,11 +126,16 @@ public class LoadbalanceService {
 
 		} catch (nitro_exception e) {
 			logger.info("Exception::getElbSyncList::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
+			dtoListResult.setError(WSResult.SYSTEM_ERROR, e.getMessage());
+			return dtoListResult;
 		} catch (Exception e) {
 			logger.info("Exception::getElbSyncList::message=" + e);
+			dtoListResult.setError(WSResult.SYSTEM_ERROR, e.getMessage());
+			return dtoListResult;
 		}
-		return syncs;
 
+		dtoListResult.setDtos(syncs);
+		return dtoListResult;
 	}
 
 	/**
@@ -156,14 +145,16 @@ public class LoadbalanceService {
 	 *            {@link ELBParameter}
 	 * @return
 	 */
-	public boolean createElb(ELBParameter elbParameter) {
+	public WSResult createElb(ELBParameter elbParameter) {
+
+		WSResult result = new WSResult();
 
 		nitro_service client = null;
 
 		try {
 
-			client = new nitro_service(LOADBALANCER_IP, LOADBALANCER_PROTOCOL); // 创建nitro的session
-			client.set_credential(LOADBALANCER_USERNAME, LOADBALANCER_PASSWORD);
+			client = new nitro_service(elbParameter.getUrl(), elbParameter.getProtocol()); // 创建nitro的session
+			client.set_credential(elbParameter.getUserName(), elbParameter.getPassword());
 			client.set_onerror(OnerrorEnum.CONTINUE);
 			client.set_warning(true);
 			client.set_certvalidation(false);
@@ -191,26 +182,38 @@ public class LoadbalanceService {
 			// Step.6 保存配置
 			saveconfig(client);
 
-			client.logout();// 登出
+			client.logout();
 
 		} catch (nitro_exception e) {
 			logger.info("Exception::createElb::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
-			return false;
+			result.setError(WSResult.SYSTEM_ERROR, e.getMessage());
+			return result;
+
 		} catch (Exception e) {
-			logger.info("Exception::createElb::message=" + e);
-			return false;
+			logger.info("Exception::createElb:" + e.getMessage());
+			result.setError(WSResult.SYSTEM_ERROR, e.getMessage());
+			return result;
 		}
-		return true;
+
+		return result;
 	}
 
-	public boolean deleteElb(ELBParameter elbParameter) {
+	/**
+	 * 删除elb
+	 * 
+	 * @param elbParameter
+	 * @return
+	 */
+	public WSResult deleteElb(ELBParameter elbParameter) {
+
+		WSResult result = new WSResult();
 
 		nitro_service client = null;
 
 		try {
 
-			client = new nitro_service(LOADBALANCER_IP, LOADBALANCER_PROTOCOL); // 创建nitro的session
-			client.set_credential(LOADBALANCER_USERNAME, LOADBALANCER_PASSWORD);
+			client = new nitro_service(elbParameter.getUrl(), elbParameter.getProtocol()); // 创建nitro的session
+			client.set_credential(elbParameter.getUserName(), elbParameter.getPassword());
 			client.set_onerror(OnerrorEnum.CONTINUE);
 			client.set_warning(true);
 			client.set_certvalidation(false);
@@ -233,39 +236,34 @@ public class LoadbalanceService {
 
 		} catch (nitro_exception e) {
 			logger.info("Exception::deleteElb::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
-			return false;
+
+			result.setError(WSResult.SYSTEM_ERROR, e.getMessage());
+			return result;
+
 		} catch (Exception e) {
-			logger.info("Exception::deleteElb::message=" + e);
-			return false;
+			logger.info("Exception::deleteElb:" + e.getMessage());
+			result.setError(WSResult.SYSTEM_ERROR, e.getMessage());
+			return result;
 		}
-		return true;
+		return result;
 	}
 
 	/**
 	 * 添加监控
 	 * 
 	 * @param client
+	 * @throws Exception
 	 */
-	public void bind_lbmonitor_service(nitro_service service, ELBParameter elbParameter) {
+	public void bind_lbmonitor_service(nitro_service service, ELBParameter elbParameter) throws Exception {
 
-		try {
-
-			for (ELBPublicIPParameter ipParameter : elbParameter.getPublicIPs()) {
-				for (ELBPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
-
-					lbmonitor_service_binding binding = new lbmonitor_service_binding();
-					binding.set_servicename(generateServiceName(ipParameter.getIpaddress(),
-							policyParameter.getProtocolText(), policyParameter.getSourcePort()));
-					binding.set_monitorname("tcp");
-					lbmonitor_service_binding.add(service, binding);
-				}
+		for (ELBPublicIPParameter ipParameter : elbParameter.getPublicIPs()) {
+			for (ELBPolicyParameter policyParameter : ipParameter.getPolicyParameters()) {
+				lbmonitor_service_binding binding = new lbmonitor_service_binding();
+				binding.set_servicename(generateServiceName(ipParameter.getIpaddress(),
+						policyParameter.getProtocolText(), policyParameter.getSourcePort()));
+				binding.set_monitorname("tcp");
+				lbmonitor_service_binding.add(service, binding);
 			}
-
-		} catch (nitro_exception e) {
-			System.out.println("Exception::bind_lbmonitor_service::errorcode=" + e.getErrorCode() + ",message="
-					+ e.getMessage());
-		} catch (Exception e) {
-			System.err.println("Exception::bind_lbmonitor_service::message=" + e);
 		}
 	}
 
@@ -400,7 +398,7 @@ public class LoadbalanceService {
 	 * @param service
 	 * @param elbParameter
 	 */
-	private static void add_lbvserver(nitro_service service, ELBParameter elbParameter) {
+	private void add_lbvserver(nitro_service service, ELBParameter elbParameter) {
 
 		// 将重复的去掉
 		HashSet<String> set = new HashSet<String>();
@@ -439,7 +437,7 @@ public class LoadbalanceService {
 	 * @param service
 	 * @param elbParameter
 	 */
-	private static void bind_servicegroup_server(nitro_service service, ELBParameter elbParameter) {
+	private void bind_servicegroup_server(nitro_service service, ELBParameter elbParameter) {
 
 		try {
 
@@ -448,7 +446,7 @@ public class LoadbalanceService {
 				servicegroup_servicegroupmember_binding obj = new servicegroup_servicegroupmember_binding();
 				obj.set_servicegroupname(LOADBALANCER_SERVICEGROUPNAME);
 				obj.set_ip(ipParameter.getIpaddress());
-				obj.set_port(Integer.valueOf(LOADBALANCER_DEFAULT_SERVER_PORT));
+				obj.set_port(elbParameter.getPort());
 				servicegroup_servicegroupmember_binding.add(service, obj);
 			}
 
@@ -468,7 +466,7 @@ public class LoadbalanceService {
 	 * @param elbParameter
 	 */
 	@SuppressWarnings("unused")
-	private static void add_servicegroup(nitro_service service, ELBParameter elbParameter) {
+	private void add_servicegroup(nitro_service service, ELBParameter elbParameter) {
 		try {
 			servicegroup grp = new servicegroup();
 			grp.set_servicegroupname(LOADBALANCER_SERVICEGROUPNAME);
@@ -488,7 +486,7 @@ public class LoadbalanceService {
 	 * @param ns_service
 	 * @param elbParameter
 	 */
-	private static void add_service(nitro_service ns_service, ELBParameter elbParameter) {
+	private void add_service(nitro_service ns_service, ELBParameter elbParameter) {
 
 		try {
 			for (ELBPublicIPParameter ipParameter : elbParameter.getPublicIPs()) {
@@ -525,7 +523,7 @@ public class LoadbalanceService {
 	 *            目标端口
 	 * @return
 	 */
-	private static String generateServiceName(String ip, String protocolText, Integer port) {
+	private String generateServiceName(String ip, String protocolText, Integer port) {
 		return ip + "-" + protocolText + "-" + port;
 	}
 

@@ -18,60 +18,17 @@ import com.sobey.cmdbuild.entity.basic.DeviceBasic;
 @Table(name = "server", schema = "public")
 public class Server extends DeviceBasic {
 
-	private String resgroup;
-	private String vendor;
-	private String model;
-	private String memorySize;
-	private String cpuNumber;
 	private String cpuHz;
+	private String cpuNumber;
+	private Integer host;
+	private String hostgroup;
+	private String memorySize;
+	private String model;
+	private String resgroup;
 	private Set<ServerHistory> serverHistories = new HashSet<ServerHistory>(0);
+	private String vendor;
 
 	public Server() {
-	}
-
-	@Column(name = "resgroup", length = 100)
-	public String getResgroup() {
-		return resgroup;
-	}
-
-	public void setResgroup(String resgroup) {
-		this.resgroup = resgroup;
-	}
-
-	@Column(name = "vendor", length = 100)
-	public String getVendor() {
-		return vendor;
-	}
-
-	public void setVendor(String vendor) {
-		this.vendor = vendor;
-	}
-
-	@Column(name = "model", length = 100)
-	public String getModel() {
-		return model;
-	}
-
-	public void setModel(String model) {
-		this.model = model;
-	}
-
-	@Column(name = "memory_size", length = 100)
-	public String getMemorySize() {
-		return memorySize;
-	}
-
-	public void setMemorySize(String memorySize) {
-		this.memorySize = memorySize;
-	}
-
-	@Column(name = "cpu_number", length = 100)
-	public String getCpuNumber() {
-		return cpuNumber;
-	}
-
-	public void setCpuNumber(String cpuNumber) {
-		this.cpuNumber = cpuNumber;
 	}
 
 	@Column(name = "cpu_hz", length = 100)
@@ -79,8 +36,34 @@ public class Server extends DeviceBasic {
 		return cpuHz;
 	}
 
-	public void setCpuHz(String cpuHz) {
-		this.cpuHz = cpuHz;
+	@Column(name = "cpu_number", length = 100)
+	public String getCpuNumber() {
+		return cpuNumber;
+	}
+
+	@Column(name = "host")
+	public Integer getHost() {
+		return host;
+	}
+
+	@Column(name = "hostgroup", length = 100)
+	public String getHostgroup() {
+		return hostgroup;
+	}
+
+	@Column(name = "memory_size", length = 100)
+	public String getMemorySize() {
+		return memorySize;
+	}
+
+	@Column(name = "model", length = 100)
+	public String getModel() {
+		return model;
+	}
+
+	@Column(name = "resgroup", length = 100)
+	public String getResgroup() {
+		return resgroup;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "server")
@@ -88,8 +71,45 @@ public class Server extends DeviceBasic {
 		return this.serverHistories;
 	}
 
+	@Column(name = "vendor", length = 100)
+	public String getVendor() {
+		return vendor;
+	}
+
+	public void setCpuHz(String cpuHz) {
+		this.cpuHz = cpuHz;
+	}
+
+	public void setCpuNumber(String cpuNumber) {
+		this.cpuNumber = cpuNumber;
+	}
+
+	public void setHost(Integer host) {
+		this.host = host;
+	}
+
+	public void setHostgroup(String hostgroup) {
+		this.hostgroup = hostgroup;
+	}
+
+	public void setMemorySize(String memorySize) {
+		this.memorySize = memorySize;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public void setResgroup(String resgroup) {
+		this.resgroup = resgroup;
+	}
+
 	public void setServerHistories(Set<ServerHistory> serverHistories) {
 		this.serverHistories = serverHistories;
+	}
+
+	public void setVendor(String vendor) {
+		this.vendor = vendor;
 	}
 
 }

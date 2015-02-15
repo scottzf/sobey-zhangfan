@@ -13,63 +13,36 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.BasicDTO;
 public class TenantsDTO extends BasicDTO {
 
 	private String accessKey;
-	private Integer aclNumber;
 	private String company;
-	private String createInfo;
 	private String email;
-	private String password;
 	private String phone;
 
 	public String getAccessKey() {
 		return accessKey;
 	}
 
-	public void setAccessKey(String accessKey) {
-		this.accessKey = accessKey;
-	}
-
-	public Integer getAclNumber() {
-		return aclNumber;
-	}
-
-	public void setAclNumber(Integer aclNumber) {
-		this.aclNumber = aclNumber;
-	}
-
 	public String getCompany() {
 		return company;
-	}
-
-	public void setCompany(String company) {
-		this.company = company;
-	}
-
-	public String getCreateInfo() {
-		return createInfo;
-	}
-
-	public void setCreateInfo(String createInfo) {
-		this.createInfo = createInfo;
 	}
 
 	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 	public String getPhone() {
 		return phone;
+	}
+
+	public void setAccessKey(String accessKey) {
+		this.accessKey = accessKey;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public void setPhone(String phone) {

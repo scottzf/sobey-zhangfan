@@ -45,6 +45,11 @@ public class ZabbixApiDao {
 	private static final String ZABBIX_PASSWORD = ZABBIX_LOADER.getProperty("ZABBIX_PASSWORD");
 
 	/**
+	 * 历史数据显示数量
+	 */
+	private static final int ZABBIX_limit = 5;
+
+	/**
 	 * 根据hostId删除Host
 	 * 
 	 * @param hostId
@@ -101,6 +106,9 @@ public class ZabbixApiDao {
 			item.setClock(subResult(node, "lastclock"));
 			item.setValue(subResult(node, "lastvalue"));
 			item.setUnits(subResult(node, "units"));
+			Integer valueType = Integer.valueOf(subResult(node, "value_type") == null ? "0" : subResult(node,
+					"value_type"));
+			item.setValueType(valueType);
 		}
 
 		return item;
@@ -117,8 +125,6 @@ public class ZabbixApiDao {
 	 */
 	public ZHistoryItemDTO gethistory(String hostId, String itemKey) throws IOException, JSONException {
 
-		int limits = 10; // 历史数据显示数量
-
 		ZItemDTO zItemDTO = getItem(hostId, itemKey);
 
 		JSONObject jsonObj = new JSONObject();
@@ -129,9 +135,9 @@ public class ZabbixApiDao {
 		jsonObj.put("auth", getToken());
 		jsonObj.put(
 				"params",
-				(new JSONObject().put("output", "extend").put("limit", limits).put("sortfield", "clock")
-						.put("sortorder", "DESC").put("history", 0).put("itemids", zItemDTO.getItemid()).put("hostids",
-						hostId)));
+				(new JSONObject().put("output", "extend").put("history", zItemDTO.getValueType())
+						.put("limit", ZABBIX_limit).put("sortfield", "clock").put("sortorder", "DESC")
+						.put("itemids", zItemDTO.getItemid()).put("hostids", hostId)));
 
 		String resStr = executeZabbixMethod(jsonObj);
 
@@ -141,7 +147,7 @@ public class ZabbixApiDao {
 
 		ArrayList<ZItemDTO> zItemDTOs = new ArrayList<ZItemDTO>();
 
-		for (int i = 0; i < limits; i++) {
+		for (int i = 0; i < ZABBIX_limit; i++) {
 
 			JsonNode node = data.get(i);
 

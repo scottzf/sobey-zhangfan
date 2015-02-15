@@ -26,7 +26,36 @@
   <xs:element name="getDNSConfigResponse" type="tns:getDNSConfigResponse"/>
 
   <xs:complexType name="getDNSConfig">
-    <xs:sequence/>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="dnsParameter" type="tns:DNSParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DNSParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="domianName" type="xs:string"/>
+      <xs:element minOccurs="0" name="domianType" type="xs:string"/>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
+      <xs:element minOccurs="0" name="port" type="xs:int"/>
+      <xs:element minOccurs="0" name="protocol" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="publicIPs" nillable="true" type="tns:DNSPublicIPParameter"/>
+      <xs:element minOccurs="0" name="url" type="xs:string"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DNSPublicIPParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="policyParameters" nillable="true" type="tns:DNSPolicyParameter"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DNSPolicyParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="port" type="xs:int"/>
+      <xs:element minOccurs="0" name="protocolText" type="xs:string"/>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="getDNSConfigResponse">
@@ -79,28 +108,6 @@
   <xs:complexType name="deleteDNSByDNS">
     <xs:sequence>
       <xs:element minOccurs="0" name="dnsParameter" type="tns:DNSParameter"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="DNSParameter">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="domianName" type="xs:string"/>
-      <xs:element minOccurs="0" name="domianType" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="publicIPs" nillable="true" type="tns:DNSPublicIPParameter"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="DNSPublicIPParameter">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="ipaddress" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="policyParameters" nillable="true" type="tns:DNSPolicyParameter"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="DNSPolicyParameter">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="port" type="xs:int"/>
-      <xs:element minOccurs="0" name="protocolText" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 

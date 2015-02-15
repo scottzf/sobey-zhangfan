@@ -19,12 +19,12 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 public class ElbPolicy extends BasicEntity {
 
 	private Integer elb;
+	private Set<ElbPolicyHistory> elbPolicyHistories = new HashSet<ElbPolicyHistory>(0);
 	private Integer elbProtocol;
 	private String ipaddress;
 	private Integer sourcePort;
-	private Integer targetPort;
 
-	private Set<ElbPolicyHistory> elbPolicyHistories = new HashSet<ElbPolicyHistory>(0);
+	private Integer targetPort;
 
 	public ElbPolicy() {
 	}
@@ -34,8 +34,9 @@ public class ElbPolicy extends BasicEntity {
 		return elb;
 	}
 
-	public void setElb(Integer elb) {
-		this.elb = elb;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "elbPolicy")
+	public Set<ElbPolicyHistory> getElbPolicyHistories() {
+		return elbPolicyHistories;
 	}
 
 	@Column(name = "elb_protocol")
@@ -43,17 +44,9 @@ public class ElbPolicy extends BasicEntity {
 		return elbProtocol;
 	}
 
-	public void setElbProtocol(Integer elbProtocol) {
-		this.elbProtocol = elbProtocol;
-	}
-
 	@Column(name = "ipaddress", length = 100)
 	public String getIpaddress() {
 		return ipaddress;
-	}
-
-	public void setIpaddress(String ipaddress) {
-		this.ipaddress = ipaddress;
 	}
 
 	@Column(name = "source_port")
@@ -61,26 +54,33 @@ public class ElbPolicy extends BasicEntity {
 		return sourcePort;
 	}
 
-	public void setSourcePort(Integer sourcePort) {
-		this.sourcePort = sourcePort;
-	}
-
 	@Column(name = "target_port")
 	public Integer getTargetPort() {
 		return targetPort;
 	}
 
-	public void setTargetPort(Integer targetPort) {
-		this.targetPort = targetPort;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "elbPolicy")
-	public Set<ElbPolicyHistory> getElbPolicyHistories() {
-		return elbPolicyHistories;
+	public void setElb(Integer elb) {
+		this.elb = elb;
 	}
 
 	public void setElbPolicyHistories(Set<ElbPolicyHistory> elbPolicyHistories) {
 		this.elbPolicyHistories = elbPolicyHistories;
+	}
+
+	public void setElbProtocol(Integer elbProtocol) {
+		this.elbProtocol = elbProtocol;
+	}
+
+	public void setIpaddress(String ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public void setSourcePort(Integer sourcePort) {
+		this.sourcePort = sourcePort;
+	}
+
+	public void setTargetPort(Integer targetPort) {
+		this.targetPort = targetPort;
 	}
 
 }

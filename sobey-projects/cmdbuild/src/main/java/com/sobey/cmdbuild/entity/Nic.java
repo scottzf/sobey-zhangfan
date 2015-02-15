@@ -18,29 +18,12 @@ import com.sobey.cmdbuild.entity.basic.ComponentBasic;
 @Table(name = "nic", schema = "public")
 public class Nic extends ComponentBasic {
 
+	private Set<NicHistory> nicHistories = new HashSet<NicHistory>(0);
 	private Integer nicRate;
 	private Integer portNumber;
-	private Set<NicHistory> nicHistories = new HashSet<NicHistory>(0);
+	private String virtualSwitchName;
 
 	public Nic() {
-	}
-
-	@Column(name = "nic_rate")
-	public Integer getNicRate() {
-		return nicRate;
-	}
-
-	public void setNicRate(Integer nicRate) {
-		this.nicRate = nicRate;
-	}
-
-	@Column(name = "port_num")
-	public Integer getPortNumber() {
-		return portNumber;
-	}
-
-	public void setPortNumber(Integer portNumber) {
-		this.portNumber = portNumber;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "nic")
@@ -48,8 +31,35 @@ public class Nic extends ComponentBasic {
 		return nicHistories;
 	}
 
+	@Column(name = "nic_rate")
+	public Integer getNicRate() {
+		return nicRate;
+	}
+
+	@Column(name = "port_num")
+	public Integer getPortNumber() {
+		return portNumber;
+	}
+
+	@Column(name = "virtual_switch_name", length = 100)
+	public String getVirtualSwitchName() {
+		return virtualSwitchName;
+	}
+
 	public void setNicHistories(Set<NicHistory> nicHistories) {
 		this.nicHistories = nicHistories;
+	}
+
+	public void setNicRate(Integer nicRate) {
+		this.nicRate = nicRate;
+	}
+
+	public void setPortNumber(Integer portNumber) {
+		this.portNumber = portNumber;
+	}
+
+	public void setVirtualSwitchName(String virtualSwitchName) {
+		this.virtualSwitchName = virtualSwitchName;
 	}
 
 }

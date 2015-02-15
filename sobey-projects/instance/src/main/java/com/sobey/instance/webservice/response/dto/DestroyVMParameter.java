@@ -7,27 +7,40 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.sobey.instance.constans.WsConstants;
 
+/**
+ * 销毁VM的参数对象
+ * 
+ * @author Administrator
+ *
+ */
 @XmlRootElement(name = "DestroyVMParameter")
 @XmlType(name = "DestroyVMParameter", namespace = WsConstants.NS)
 public class DestroyVMParameter {
 
-	private String vMName;
+	/**
+	 * 数据中心
+	 */
 	private String datacenter;
 
-	public String getvMName() {
-		return vMName;
-	}
-
-	public void setvMName(String vMName) {
-		this.vMName = vMName;
-	}
+	/**
+	 * VM名称
+	 */
+	private String vmName;
 
 	public String getDatacenter() {
 		return datacenter;
 	}
 
+	public String getVmName() {
+		return vmName;
+	}
+
 	public void setDatacenter(String datacenter) {
 		this.datacenter = datacenter;
+	}
+
+	public void setVmName(String vmName) {
+		this.vmName = vmName;
 	}
 
 	/**

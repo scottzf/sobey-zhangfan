@@ -20,28 +20,16 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "ipaddress_history", schema = "public")
 public class IpaddressHistory extends BasicEntity {
 
-	private Ipaddress ipaddress;
 	private Date endDate;
-	private Integer vlan;
-	private Integer isp;
+	private String gateway;
+	private Ipaddress ipaddress;
 	private Integer ipaddressPool;
 	private Integer ipaddressStatus;
+	private Integer isp;
 	private String netMask;
-	private String gateway;
 	private String segment;
-	private Integer tenants;
 
 	public IpaddressHistory() {
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "\"CurrentId\"", nullable = false)
-	public Ipaddress getIpaddress() {
-		return ipaddress;
-	}
-
-	public void setIpaddress(Ipaddress ipaddress) {
-		this.ipaddress = ipaddress;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -50,26 +38,15 @@ public class IpaddressHistory extends BasicEntity {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
+	@Column(name = "gateway", length = 100)
+	public String getGateway() {
+		return gateway;
 	}
 
-	@Column(name = "vlan")
-	public Integer getVlan() {
-		return vlan;
-	}
-
-	public void setVlan(Integer vlan) {
-		this.vlan = vlan;
-	}
-
-	@Column(name = "isp")
-	public Integer getIsp() {
-		return isp;
-	}
-
-	public void setIsp(Integer isp) {
-		this.isp = isp;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "\"CurrentId\"", nullable = false)
+	public Ipaddress getIpaddress() {
+		return ipaddress;
 	}
 
 	@Column(name = "ipaddress_pool")
@@ -77,17 +54,14 @@ public class IpaddressHistory extends BasicEntity {
 		return ipaddressPool;
 	}
 
-	public void setIpaddressPool(Integer ipaddressPool) {
-		this.ipaddressPool = ipaddressPool;
-	}
-
 	@Column(name = "ipaddress_status")
 	public Integer getIpaddressStatus() {
 		return ipaddressStatus;
 	}
 
-	public void setIpaddressStatus(Integer ipaddressStatus) {
-		this.ipaddressStatus = ipaddressStatus;
+	@Column(name = "isp")
+	public Integer getIsp() {
+		return isp;
 	}
 
 	@Column(name = "net_mask", length = 100)
@@ -95,35 +69,41 @@ public class IpaddressHistory extends BasicEntity {
 		return netMask;
 	}
 
-	public void setNetMask(String netMask) {
-		this.netMask = netMask;
+	@Column(name = "segment", length = 100)
+	public String getSegment() {
+		return segment;
 	}
 
-	@Column(name = "gateway", length = 100)
-	public String getGateway() {
-		return gateway;
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 
 	public void setGateway(String gateway) {
 		this.gateway = gateway;
 	}
 
-	@Column(name = "segment", length = 100)
-	public String getSegment() {
-		return segment;
+	public void setIpaddress(Ipaddress ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public void setIpaddressPool(Integer ipaddressPool) {
+		this.ipaddressPool = ipaddressPool;
+	}
+
+	public void setIpaddressStatus(Integer ipaddressStatus) {
+		this.ipaddressStatus = ipaddressStatus;
+	}
+
+	public void setIsp(Integer isp) {
+		this.isp = isp;
+	}
+
+	public void setNetMask(String netMask) {
+		this.netMask = netMask;
 	}
 
 	public void setSegment(String segment) {
 		this.segment = segment;
-	}
-
-	@Column(name = "tenants")
-	public Integer getTenants() {
-		return tenants;
-	}
-
-	public void setTenants(Integer tenants) {
-		this.tenants = tenants;
 	}
 
 }

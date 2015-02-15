@@ -18,19 +18,13 @@ import com.sobey.cmdbuild.entity.basic.ServiceBasic;
 @Table(name = "elb", schema = "public")
 public class Elb extends ServiceBasic {
 
-	private Integer ipaddress;
 	private Set<ElbHistory> elbHistories = new HashSet<ElbHistory>(0);
+	private Integer ipaddress;
+	private Integer managerIpaddress;
+	private Integer subIpaddress;
+	private Integer subnet;
 
 	public Elb() {
-	}
-
-	@Column(name = "ipaddress")
-	public Integer getIpaddress() {
-		return ipaddress;
-	}
-
-	public void setIpaddress(Integer ipaddress) {
-		this.ipaddress = ipaddress;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "elb")
@@ -38,8 +32,44 @@ public class Elb extends ServiceBasic {
 		return elbHistories;
 	}
 
+	@Column(name = "ipaddress")
+	public Integer getIpaddress() {
+		return ipaddress;
+	}
+
+	@Column(name = "manager_ipaddress")
+	public Integer getManagerIpaddress() {
+		return managerIpaddress;
+	}
+
+	@Column(name = "sub_ipaddress")
+	public Integer getSubIpaddress() {
+		return subIpaddress;
+	}
+
+	@Column(name = "subnet")
+	public Integer getSubnet() {
+		return subnet;
+	}
+
 	public void setElbHistories(Set<ElbHistory> elbHistories) {
 		this.elbHistories = elbHistories;
+	}
+
+	public void setIpaddress(Integer ipaddress) {
+		this.ipaddress = ipaddress;
+	}
+
+	public void setManagerIpaddress(Integer managerIpaddress) {
+		this.managerIpaddress = managerIpaddress;
+	}
+
+	public void setSubIpaddress(Integer subIpaddress) {
+		this.subIpaddress = subIpaddress;
+	}
+
+	public void setSubnet(Integer subnet) {
+		this.subnet = subnet;
 	}
 
 }

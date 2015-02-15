@@ -28,76 +28,76 @@ public class LookUpDTO {
 		return beginDate;
 	}
 
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
 	public String getCode() {
 		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	public Integer getId() {
 		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public Boolean getIsDefault() {
 		return isDefault;
 	}
 
-	public void setIsDefault(Boolean isDefault) {
-		this.isDefault = isDefault;
-	}
-
 	public String getNotes() {
 		return notes;
-	}
-
-	public void setNotes(String notes) {
-		this.notes = notes;
 	}
 
 	public Integer getNumber() {
 		return number;
 	}
 
-	public void setNumber(Integer number) {
-		this.number = number;
-	}
-
 	public Integer getParentId() {
 		return parentId;
-	}
-
-	public void setParentId(Integer parentId) {
-		this.parentId = parentId;
 	}
 
 	public String getParentType() {
 		return parentType;
 	}
 
-	public void setParentType(String parentType) {
-		this.parentType = parentType;
-	}
-
 	public String getType() {
 		return type;
+	}
+
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setIsDefault(Boolean isDefault) {
+		this.isDefault = isDefault;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+
+	public void setNumber(Integer number) {
+		this.number = number;
+	}
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
+
+	public void setParentType(String parentType) {
+		this.parentType = parentType;
 	}
 
 	public void setType(String type) {

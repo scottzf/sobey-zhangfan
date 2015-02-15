@@ -13,25 +13,19 @@ import com.google.common.collect.Maps;
  */
 public enum ItemEnum {
 
-	系统盘已用空间("vfs.fs.size[/,used]"),
+	Disk("vmware.vm.vfs.fs.size[{$URL},{HOST.HOST},/,pfree]"),
 
-	系统盘总大小("vfs.fs.size[/,total]"),
+	CPU("vmware.vm.cpu.usage[{$URL},{HOST.HOST}]"),
 
-	系统盘可用空间百分比("vfs.fs.size[/,pfree]"),
+	Memory("vmware.vm.memory.size.usage.host[{$URL},{HOST.HOST}]"),
 
-	CPU占用率("system.cpu.util[,idle]"),
+	Disk_Read("vmware.vm.vfs.dev.read[{$URL},{HOST.HOST},scsi0:0,bps]"),
 
-	内存可用大小("vm.memory.size[available]"),
+	Disk_Wirte("vmware.vm.vfs.dev.write[{$URL},{HOST.HOST},scsi0:0,bps]"),
 
-	内存总大小("vm.memory.size[total]"),
+	Network_Out("vmware.vm.net.if.out[{$URL},{HOST.HOST},4000,bps]"),
 
-	读性能("check_readk"),
-
-	写性能("check_writek"),
-
-	网络流量out("net.if.out[eth1]"),
-
-	网络流量in("net.if.in[eth1]");
+	Network_In("vmware.vm.net.if.in[{$URL},{HOST.HOST},4000,bps]");
 
 	public static final Map<String, String> map = Maps.newLinkedHashMap();
 
@@ -52,5 +46,4 @@ public enum ItemEnum {
 	public String getValue() {
 		return value;
 	}
-
 }

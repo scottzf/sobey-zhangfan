@@ -16,10 +16,15 @@ import com.sobey.cmdbuild.entity.basic.PortHistoryBasic;
 @Table(name = "nic_port_history", schema = "public")
 public class NicPortHistory extends PortHistoryBasic {
 
-	private NicPort nicPort;
 	private Integer nic;
+	private NicPort nicPort;
 
 	public NicPortHistory() {
+	}
+
+	@Column(name = "nic")
+	public Integer getNic() {
+		return nic;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -28,17 +33,12 @@ public class NicPortHistory extends PortHistoryBasic {
 		return nicPort;
 	}
 
-	public void setNicPort(NicPort nicPort) {
-		this.nicPort = nicPort;
-	}
-
-	@Column(name = "nic")
-	public Integer getNic() {
-		return nic;
-	}
-
 	public void setNic(Integer nic) {
 		this.nic = nic;
+	}
+
+	public void setNicPort(NicPort nicPort) {
+		this.nicPort = nicPort;
 	}
 
 }

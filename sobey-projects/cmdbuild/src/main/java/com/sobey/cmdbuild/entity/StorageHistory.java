@@ -16,10 +16,15 @@ import com.sobey.cmdbuild.entity.basic.DeviceHistoryBasic;
 @Table(name = "storage_history", schema = "public")
 public class StorageHistory extends DeviceHistoryBasic {
 
-	private Storage storage;
 	private String name;
+	private Storage storage;
 
 	public StorageHistory() {
+	}
+
+	@Column(name = "name", length = 100)
+	public String getName() {
+		return name;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -28,17 +33,12 @@ public class StorageHistory extends DeviceHistoryBasic {
 		return storage;
 	}
 
-	public void setStorage(Storage storage) {
-		this.storage = storage;
-	}
-
-	@Column(name = "name", length = 100)
-	public String getName() {
-		return name;
-	}
-
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public void setStorage(Storage storage) {
+		this.storage = storage;
 	}
 
 }

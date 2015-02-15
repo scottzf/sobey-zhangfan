@@ -13,27 +13,18 @@ import com.sobey.cmdbuild.webservice.response.dto.basic.ComponentBasicDTO;
 public class MemoryDTO extends ComponentBasicDTO {
 
 	private Integer frequency;
-	private Integer frequencyText;
 	private Integer size;
 
 	public Integer getFrequency() {
 		return frequency;
 	}
 
-	public void setFrequency(Integer frequency) {
-		this.frequency = frequency;
-	}
-
-	public Integer getFrequencyText() {
-		return frequencyText;
-	}
-
-	public void setFrequencyText(Integer frequencyText) {
-		this.frequencyText = frequencyText;
-	}
-
 	public Integer getSize() {
 		return size;
+	}
+
+	public void setFrequency(Integer frequency) {
+		this.frequency = frequency;
 	}
 
 	public void setSize(Integer size) {

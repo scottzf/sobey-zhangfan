@@ -18,20 +18,12 @@ import com.sobey.cmdbuild.entity.basic.ServiceBasic;
 @Table(name = "vpn", schema = "public")
 public class Vpn extends ServiceBasic {
 
-	private Integer policyId;
 	private String password;
+	private String username;
+
 	private Set<VpnHistory> vpnHistories = new HashSet<VpnHistory>(0);
 
 	public Vpn() {
-	}
-
-	@Column(name = "policy_id")
-	public Integer getPolicyId() {
-		return policyId;
-	}
-
-	public void setPolicyId(Integer policyId) {
-		this.policyId = policyId;
 	}
 
 	@Column(name = "password", length = 100)
@@ -39,13 +31,21 @@ public class Vpn extends ServiceBasic {
 		return password;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public String getUsername() {
+		return username;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "vpn")
 	public Set<VpnHistory> getVpnHistories() {
 		return vpnHistories;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public void setVpnHistories(Set<VpnHistory> vpnHistories) {

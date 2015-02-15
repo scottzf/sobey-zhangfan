@@ -3,7 +3,6 @@ package com.sobey.dns.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -23,6 +22,8 @@ import com.sobey.dns.webservice.response.dto.DNSPolicyParameter;
 import com.sobey.dns.webservice.response.dto.DNSPublicIPParameter;
 import com.sobey.dns.webservice.response.dto.DnsPolicySync;
 import com.sobey.dns.webservice.response.dto.DnsSync;
+import com.sobey.dns.webservice.response.result.DTOListResult;
+import com.sobey.dns.webservice.response.result.WSResult;
 
 @Service
 public class DnsService {
@@ -33,38 +34,6 @@ public class DnsService {
 	 * 加载applicationContext.propertie文件
 	 */
 	private static PropertiesLoader DNS_LOADER = new PropertiesLoader("classpath:/dns.properties");
-
-	/**
-	 * IP
-	 */
-	private static final String DNS_IP = DNS_LOADER.getProperty("DNS_IP");
-
-	/**
-	 * Username
-	 */
-	private static final String DNS_USERNAME = DNS_LOADER.getProperty("DNS_USERNAME");
-
-	/**
-	 * password
-	 */
-	private static final String DNS_PASSWORD = DNS_LOADER.getProperty("DNS_PASSWORD");
-
-	/**
-	 * protocol
-	 */
-	private static final String DNS_PROTOCOL = DNS_LOADER.getProperty("DNS_PROTOCOL");
-
-	/**
-	 * server默认端口 80
-	 */
-	@SuppressWarnings("unused")
-	private static final String DNS_DEFAULT_SERVER_PORT = DNS_LOADER.getProperty("DNS_DEFAULT_SERVER_PORT");
-
-	/**
-	 * servicegroupname
-	 */
-	@SuppressWarnings("unused")
-	private static final String DNS_SERVICEGROUPNAME = DNS_LOADER.getProperty("DNS_SERVICEGROUPNAME");
 
 	/**
 	 * maxClient
@@ -111,7 +80,9 @@ public class DnsService {
 	 */
 	private static final String DNS_APPFLOWLOG = DNS_LOADER.getProperty("DNS_APPFLOWLOG");
 
-	public List<DnsSync> getDnsSyncList() {
+	public DTOListResult<DnsSync> getDnsSyncList(DNSParameter dnsParameter) {
+
+		DTOListResult<DnsSync> dtoListResult = new DTOListResult<DnsSync>();
 
 		List<DnsSync> syncs = new ArrayList<DnsSync>();
 
@@ -119,15 +90,13 @@ public class DnsService {
 
 		try {
 
-			client = new nitro_service(DNS_IP, DNS_PROTOCOL); // 创建nitro的session
-			client.set_credential(DNS_USERNAME, DNS_PASSWORD);
+			client = new nitro_service(dnsParameter.getUrl(), dnsParameter.getProtocol()); // 创建nitro的session
+			client.set_credential(dnsParameter.getUserName(), dnsParameter.getPassword());
 			client.set_onerror(OnerrorEnum.CONTINUE);
 			client.set_warning(true);
 			client.set_certvalidation(false);
 			client.set_hostnameverification(false);
 			client.login();
-
-			// TODO 代码待实现
 
 			gslbvserver[] result = gslbvserver.get(client);
 
@@ -167,11 +136,16 @@ public class DnsService {
 
 		} catch (nitro_exception e) {
 			logger.info("Exception::getElbSyncList::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
+			dtoListResult.setError(WSResult.SYSTEM_ERROR, e.getMessage());
+			return dtoListResult;
 		} catch (Exception e) {
 			logger.info("Exception::getElbSyncList::message=" + e);
+			dtoListResult.setError(WSResult.SYSTEM_ERROR, e.getMessage());
+			return dtoListResult;
 		}
-		return syncs;
 
+		dtoListResult.setDtos(syncs);
+		return dtoListResult;
 	}
 
 	/**
@@ -180,14 +154,16 @@ public class DnsService {
 	 * @param dnsParameter
 	 * @return
 	 */
-	public boolean createGSLB(DNSParameter dnsParameter) {
+	public WSResult createGSLB(DNSParameter dnsParameter) {
+
+		WSResult result = new WSResult();
 
 		nitro_service client = null;
 
 		try {
 
-			client = new nitro_service(DNS_IP, DNS_PROTOCOL); // 创建nitro的session
-			client.set_credential(DNS_USERNAME, DNS_PASSWORD);
+			client = new nitro_service(dnsParameter.getUrl(), dnsParameter.getProtocol()); // 创建nitro的session
+			client.set_credential(dnsParameter.getUserName(), dnsParameter.getPassword());
 			client.set_onerror(OnerrorEnum.CONTINUE);
 			client.set_warning(true);
 			client.set_certvalidation(false);
@@ -215,23 +191,28 @@ public class DnsService {
 			client.logout();// 登出
 
 		} catch (nitro_exception e) {
-			logger.info("Exception::createGSLB::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
-			return false;
+			logger.info("Exception::createElb::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
+			result.setError(WSResult.SYSTEM_ERROR, e.getMessage());
+			return result;
 		} catch (Exception e) {
-			logger.info("Exception::createGSLB::message=" + e);
-			return false;
+			logger.info("Exception::createElb:" + e.getMessage());
+			result.setError(WSResult.SYSTEM_ERROR, e.getMessage());
+			return result;
 		}
-		return true;
+
+		return result;
 	}
 
-	public boolean deleteGSLB(DNSParameter dnsParameter) {
+	public WSResult deleteGSLB(DNSParameter dnsParameter) {
+
+		WSResult result = new WSResult();
 
 		nitro_service client = null;
 
 		try {
 
-			client = new nitro_service(DNS_IP, DNS_PROTOCOL); // 创建nitro的session
-			client.set_credential(DNS_USERNAME, DNS_PASSWORD);
+			client = new nitro_service(dnsParameter.getUrl(), dnsParameter.getProtocol()); // 创建nitro的session
+			client.set_credential(dnsParameter.getUserName(), dnsParameter.getPassword());
 			client.set_onerror(OnerrorEnum.CONTINUE);
 			client.set_warning(true);
 			client.set_certvalidation(false);
@@ -254,12 +235,16 @@ public class DnsService {
 
 		} catch (nitro_exception e) {
 			logger.info("Exception::deleteGSLB::errorcode=" + e.getErrorCode() + ",message=" + e.getMessage());
-			return false;
+
+			result.setError(WSResult.SYSTEM_ERROR, e.getMessage());
+			return result;
+
 		} catch (Exception e) {
-			logger.info("Exception::deleteGSLB::message=" + e);
-			return false;
+			logger.info("Exception::deleteGSLB:" + e.getMessage());
+			result.setError(WSResult.SYSTEM_ERROR, e.getMessage());
+			return result;
 		}
-		return true;
+		return result;
 	}
 
 	/**
@@ -268,7 +253,7 @@ public class DnsService {
 	 * @param service
 	 * @param dnsParameter
 	 */
-	private static void rm_gslb_service(nitro_service service, DNSParameter dnsParameter) {
+	private void rm_gslb_service(nitro_service service, DNSParameter dnsParameter) {
 
 		try {
 
@@ -293,7 +278,7 @@ public class DnsService {
 	 * @param service
 	 * @param dnsParameter
 	 */
-	private static void rm_gslb_vserver(nitro_service service, DNSParameter dnsParameter) {
+	private void rm_gslb_vserver(nitro_service service, DNSParameter dnsParameter) {
 
 		try {
 
@@ -313,7 +298,7 @@ public class DnsService {
 	 * @param service
 	 * @param dnsParameter
 	 */
-	private static void bind_gslbservice_lbmonitor(nitro_service service, DNSParameter dnsParameter) {
+	private void bind_gslbservice_lbmonitor(nitro_service service, DNSParameter dnsParameter) {
 
 		try {
 
@@ -346,7 +331,7 @@ public class DnsService {
 	 * @param service
 	 * @param dnsParameter
 	 */
-	private static void add_gslb_service(nitro_service service, DNSParameter dnsParameter) {
+	private void add_gslb_service(nitro_service service, DNSParameter dnsParameter) {
 
 		try {
 
@@ -362,7 +347,6 @@ public class DnsService {
 					gsvc.set_port(policyParameter.getPort());
 					gsvc.set_sitename(generateSiteName(ipParameter));
 					gsvc.set_servicetype(policyParameter.getProtocolText());
-
 					gsvc.set_clttimeout(Integer.valueOf(DNS_CLTTIMEOUT));
 					gsvc.set_svrtimeout(Integer.valueOf(DNS_SVRTIMEOUT));
 					gsvc.set_downstateflush(DNS_DOWNSTATEFLUSH);
@@ -387,7 +371,7 @@ public class DnsService {
 	 * @param service
 	 * @param dnsParameter
 	 */
-	private static void add_gslb_vserver(nitro_service service, DNSParameter dnsParameter) {
+	private void add_gslb_vserver(nitro_service service, DNSParameter dnsParameter) {
 
 		// vserver协议必须和service的协议相同,
 		String servicetype = "";
@@ -422,7 +406,7 @@ public class DnsService {
 	 * 
 	 * @param service
 	 */
-	private static void saveconfig(nitro_service service) {
+	private void saveconfig(nitro_service service) {
 
 		try {
 			nsconfig.save(service);
@@ -440,7 +424,7 @@ public class DnsService {
 	 * @param service
 	 * @param dnsParameter
 	 */
-	private static void bind_gslbvs_domain(nitro_service service, DNSParameter dnsParameter) {
+	private void bind_gslbvs_domain(nitro_service service, DNSParameter dnsParameter) {
 
 		try {
 			gslbvserver_domain_binding obj = new gslbvserver_domain_binding();
@@ -462,7 +446,7 @@ public class DnsService {
 	 * @param service
 	 * @param dnsParameter
 	 */
-	private static void unbind_gslbvserver_gslbservice(nitro_service service, DNSParameter dnsParameter) {
+	private void unbind_gslbvserver_gslbservice(nitro_service service, DNSParameter dnsParameter) {
 
 		try {
 			for (DNSPublicIPParameter ipParameter : dnsParameter.getPublicIPs()) {
@@ -488,7 +472,7 @@ public class DnsService {
 	 * @param service
 	 * @param dnsParameter
 	 */
-	private static void bind_gslbvserver_gslbservice(nitro_service service, DNSParameter dnsParameter) {
+	private void bind_gslbvserver_gslbservice(nitro_service service, DNSParameter dnsParameter) {
 
 		try {
 			for (DNSPublicIPParameter ipParameter : dnsParameter.getPublicIPs()) {
@@ -511,7 +495,11 @@ public class DnsService {
 	}
 
 	/**
-	 * 生成 siteName. <br>
+	 *
+	 * TODO 重要! 注意每个NS配置不一样.
+	 *
+	 * 生成 siteName.<br>
+	 * 
 	 * 
 	 * 保留外网IP前三位,用"xxx"替换结尾. <br>
 	 * 
@@ -521,12 +509,14 @@ public class DnsService {
 	 *            {@link DNSPublicIPParameter}
 	 * @return
 	 */
-	private static String generateSiteName(DNSPublicIPParameter ipParameter) {
+	private String generateSiteName(DNSPublicIPParameter ipParameter) {
 
 		// 获得最后一个"."的索引
-		int index = StringUtils.lastIndexOf(ipParameter.getIpaddress(), ".");
+		// int index = StringUtils.lastIndexOf(ipParameter.getIpaddress(), ".");
+		// return "xa_" + StringUtils.substring(ipParameter.getIpaddress(), 0, index + 1) + "x";
 
-		return StringUtils.substring(ipParameter.getIpaddress(), 0, index + 1) + "xxx";
+		return "xa_113.142.30.x";
+		// TODO 只需要写死,提前配置在ns中.Q:如果有多个怎么办?
 	}
 
 	/**
@@ -543,7 +533,7 @@ public class DnsService {
 	 *            {@linkplain DNSPolicyParameter}
 	 * @return
 	 */
-	private static String generateServiceName(DNSPublicIPParameter ipParameter, DNSPolicyParameter dnsPolicyParameter) {
+	private String generateServiceName(DNSPublicIPParameter ipParameter, DNSPolicyParameter dnsPolicyParameter) {
 		return ipParameter.getIpaddress() + "-" + dnsPolicyParameter.getPort();
 	}
 

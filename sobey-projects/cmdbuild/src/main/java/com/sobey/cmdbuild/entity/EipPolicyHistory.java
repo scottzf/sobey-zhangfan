@@ -20,14 +20,19 @@ import com.sobey.cmdbuild.entity.basic.BasicEntity;
 @Table(name = "eip_olicy_history", schema = "public")
 public class EipPolicyHistory extends BasicEntity {
 
-	private EipPolicy eipPolicy;
-	private Date endDate;
 	private Integer eip;
+	private EipPolicy eipPolicy;
 	private Integer eipProtocol;
+	private Date endDate;
 	private Integer sourcePort;
 	private Integer targetPort;
 
 	public EipPolicyHistory() {
+	}
+
+	@Column(name = "eip")
+	public Integer getEip() {
+		return eip;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -36,8 +41,9 @@ public class EipPolicyHistory extends BasicEntity {
 		return eipPolicy;
 	}
 
-	public void setEipPolicy(EipPolicy eipPolicy) {
-		this.eipPolicy = eipPolicy;
+	@Column(name = "eip_protocol")
+	public Integer getEipProtocol() {
+		return eipProtocol;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -46,40 +52,34 @@ public class EipPolicyHistory extends BasicEntity {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
+	@Column(name = "source_port")
+	public Integer getSourcePort() {
+		return sourcePort;
 	}
 
-	@Column(name = "eip")
-	public Integer getEip() {
-		return eip;
+	@Column(name = "target_port")
+	public Integer getTargetPort() {
+		return targetPort;
 	}
 
 	public void setEip(Integer eip) {
 		this.eip = eip;
 	}
 
-	@Column(name = "eip_protocol")
-	public Integer getEipProtocol() {
-		return eipProtocol;
+	public void setEipPolicy(EipPolicy eipPolicy) {
+		this.eipPolicy = eipPolicy;
 	}
 
 	public void setEipProtocol(Integer eipProtocol) {
 		this.eipProtocol = eipProtocol;
 	}
 
-	@Column(name = "source_port")
-	public Integer getSourcePort() {
-		return sourcePort;
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 
 	public void setSourcePort(Integer sourcePort) {
 		this.sourcePort = sourcePort;
-	}
-
-	@Column(name = "target_port")
-	public Integer getTargetPort() {
-		return targetPort;
 	}
 
 	public void setTargetPort(Integer targetPort) {

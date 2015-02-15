@@ -16,8 +16,6 @@ public class CustomSoapTest extends BaseFunctionalTestCase {
 
 	@Test
 	public void testAll() {
-		System.out.println(cmdbuildSoapService.getMaxAclNumber());
-		System.out.println(cmdbuildSoapService.getMaxPolicyId());
 
 	}
 

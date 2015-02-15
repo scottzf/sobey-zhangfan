@@ -16,11 +16,21 @@ import com.sobey.cmdbuild.entity.basic.ServiceHistoryBasic;
 @Table(name = "vpn_history", schema = "public")
 public class VpnHistory extends ServiceHistoryBasic {
 
-	private Vpn vpn;
-	private Integer policyId;
 	private String password;
+	private String username;
+	private Vpn vpn;
 
 	public VpnHistory() {
+	}
+
+	@Column(name = "password", length = 100)
+	public String getPassword() {
+		return password;
+	}
+
+	@Column(name = "username", length = 100)
+	public String getUsername() {
+		return username;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -29,26 +39,16 @@ public class VpnHistory extends ServiceHistoryBasic {
 		return vpn;
 	}
 
-	public void setVpn(Vpn vpn) {
-		this.vpn = vpn;
-	}
-
-	@Column(name = "policy_id")
-	public Integer getPolicyId() {
-		return policyId;
-	}
-
-	public void setPolicyId(Integer policyId) {
-		this.policyId = policyId;
-	}
-
-	@Column(name = "password", length = 100)
-	public String getPassword() {
-		return password;
-	}
-
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setVpn(Vpn vpn) {
+		this.vpn = vpn;
 	}
 
 }
